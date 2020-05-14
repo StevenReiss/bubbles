@@ -1,0 +1,37 @@
+#! /bin/csh -f
+
+#
+# Invoked by bubbles cloud setup to check settings
+#
+#    Arguments:
+#	$1: ssh_host to use
+#	$2: optional actual host : @ if not used
+#	$3: project directory
+#
+#    Returns
+#	0 status (OK) if ssh works and project directory exists as a directory
+#	1 status (FAIL) if ssh fails or project directory not present
+#
+
+set f = /tmp/cloudcheckssh.out
+
+
+set ahost = ""
+if ($2 != '@') then
+   set ahost = "host=$2"
+endif
+
+# MIGHT WANT TO EXPAND $3 based on last used project
+
+rm -rf $f
+
+ssh -t -t $1 ${ahost} ls -ld $3 >! $f
+
+if ($status != 0) exit(1)
+
+set x1 = `fgrep "$3" $f | grep 'drwx'`
+if ("$x1" == '') exit(1)
+
+rm -rf $f
+
+exit(0)

@@ -1,0 +1,344 @@
+<FAIT>
+  <METHOD NAME='org.eclipse.jdt.core.JavaCore.getPlugin' ANNOTATIONS='NonNull' />
+  <PACKAGE NAME='com.sun.imageio.plugins' />
+  <PACKAGE NAME='org.python.pydev.parser' />
+  <PACKAGE NAME='edu.brown.cs.bubbles.rebase' />
+  <PACKAGE NAME='edu.brown.cs.bubbles.nobase' />
+  <PACKAGE NAME='javax.mail' />
+  <PACKAGE NAME='edu.brown.cs.bubbles.pybase' />
+  <METHOD NAME='edu.brown.cs.pybase.PybaseParser.parseDocument' />
+  <METHOD NAME='edu.brown.cs.pybase.PybaseParser.parseDocumentOnly' />
+  <METHOD NAME='edu.brown.cs.bubbles.nobase.NobaseNashorn.parse'
+	RETURN='edu.brown.cs.bubbles.nobase.NobaseNashorn.ParseData' />
+  <METHOD NAME='org.python.pydev.core.Tuple.equals' />
+  <METHOD NAME='java.lang.Object.equals' />
+  <CLASS NAME='edu.brown.cs.bubbles.board.BoardLog' />
+  <CLASS NAME='jdk.internal.ref.CleanerImpl' />
+  <PACKAGE NAME='org.eclipse.jdt.internal' />
+  <CLASS NAME='javax.naming.spi.NamingManager' />
+  <PACKAGE NAME='java.util.zip' />
+  <PACKAGE NAME='marytts' />
+
+  <METHOD NAME='edu.brown.cs.bubbles.bema.BemaMain.setupPackage' ARGS=''>
+     <REPLACE>
+	edu.brown.cs.bubbles.bdoc.BdocFactory.setup()
+	edu.brown.cs.bubbles.bddt.BddtFactory.setup()
+	edu.brown.cs.bubbles.bcon.BconFactory.setup()
+	edu.brown.cs.bubbles.bgta.BgtaFactory.setup()
+	edu.brown.cs.bubbles.bopp.BoppFactory.setup()
+	edu.brown.cs.bubbles.beam.BeamFactory.setup()
+	edu.brown.cs.bubbles.bted.BtedFactory.setup()
+	edu.brown.cs.bubbles.bowi.BowiFactory.setup()
+	edu.brown.cs.bubbles.batt.BattFactory.setup()
+	edu.brown.cs.bubbles.bvcr.BvcrFactory.setup()
+	edu.brown.cs.bubbles.banal.BanalFactory.setup()
+	edu.brown.cs.bubbles.bueno.BuenoFactory.setup()
+	edu.brown.cs.bubbles.bedu.BeduFactory.setup()
+	edu.brown.cs.bubbles.bwiz.BwizFactory.setup()
+	edu.brown.cs.bubbles.bnote.BnoteFactory.setup()
+	edu.brown.cs.bubbles.bbook.BbookFactory.setup()
+	edu.brown.cs.bubbles.bhelp.BhelpFactory.setup()
+	edu.brown.cs.bubbles.bucs.BucsFactory.setup()
+	edu.brown.cs.bubbles.bfix.BfixFactory.setup()
+	edu.brown.cs.bubbles.bicex.BicexFactory.setup()
+	edu.brown.cs.bubbles.brepair.BrepairFactory.setup()
+	edu.brown.cs.bubbles.barr.BarrFactory.setup()
+     </REPLACE>
+  </METHOD>
+
+  <METHOD NAME='edu.brown.cs.bubbles.bema.BemaMain.initializePackage' ARGS='2'>
+     <REPLACE>
+	edu.brown.cs.bubbles.bale.BaleFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bass.BassFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bdoc.BdocFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bddt.BddtFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bcon.BconFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bgta.BgtaFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bopp.BoppFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.beam.BeamFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bted.BtedFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bowi.BowiFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.batt.BattFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bvcr.BvcrFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.banal.BanalFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bueno.BuenoFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bedu.BeduFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bwiz.BwizFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bnote.BnoteFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bbook.BbookFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bhelp.BhelpFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bucs.BucsFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bfix.BfixFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.bicex.BicexFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.brepair.BrepairFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+	edu.brown.cs.bubbles.barr.BarrFactory.initialize(Ledu/brown/cs/bubbles/buda/BudaRoot;)
+     </REPLACE>
+  </METHOD>
+
+  <METHOD NAME='edu.brown.cs.bubbles.board.BoardThreadPool.start'
+	REPLACE="run" ARGS='0' />
+
+  <METHOD NAME='java.lang.reflect.Constructor.newInstance'
+       CONSTRUCTOR='true'
+       ARGS='*' >
+     <WHEN CALLER='edu.brown.cs.bubbles.bfix.BfixFactory.&lt;init&gt;' />
+     <REPLACE>
+	edu.brown.cs.bubbles.bfix.BfixAdapterAddCatch()
+	edu.brown.cs.bubbles.bfix.BfixAdapterImports()
+	edu.brown.cs.bubbles.bfix.BfixAdapterNewField()
+	edu.brown.cs.bubbles.bfix.BfixAdapterNoReturn()
+	edu.brown.cs.bubbles.bfix.BfixAdapterQuotes()
+	edu.brown.cs.bubbles.bfix.BfixAdapterSpelling()
+	edu.brown.cs.bubbles.bfix.BfixAdapterSyntax()
+	edu.brown.cs.bubbles.bfix.BfixAdapterVisibility()
+     </REPLACE>
+  </METHOD>
+
+
+  <PACKAGE NAME='org.jivesoftware.smack' />
+  <METHOD NAME='org.jivesoftware.smack.Chat.addMessageListener' CBARGS='1'
+	CALLBACK='processMessage' />
+  <METHOD NAME='org.jivesoftware.smake.ChatManager.addChatListener' CBARGS='1'
+	CALLBACK='chatCreated' />
+
+  <PACKAGE NAME='com.sun.org.apache.xerces.internal' />
+  <METHOD NAME='javax.swing.LayoutComparator.compare' />
+  <CLASS NAME='javax.swing.SortingFocus.TraversalPolicy' />
+  <METHOD NAME='java.util.ServiceLoader.ProviderImpl.newInstance' />
+
+  <METHOD NAME='edu.brown.cs.bubbles.board.BoardMetrics.noteCommand' />
+
+  <METHOD NAME='edu.brown.cs.bubbles.buda.BudaPlacement.placeBubble' />
+  <METHOD NAME='edu.brown.cs.bubbles.buda.BudaRouter.computeRoute' />
+  <METHOD NAME='edu.brown.cs.bubbles.buda.BudaRoot.convertPoint' />
+  <METHOD NAME='edu.brown.cs.bubbles.bhelp.BhelpAction.checkPoint' />
+
+  <PACKAGE NAME='javax.swing.text' />
+  <METHOD NAME='javax.swing.text.html.parser.ParserDelegator.parse' SCAN='true' />
+     CBARGS='2'
+     CALLBACK='flush handleComment handleEndOfLineString handleEndTag handleError handleSimpleTag handleStartTag handleText' /> >
+
+
+
+</FAIT>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

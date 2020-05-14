@@ -134,3 +134,4 @@ nashorn.rules
 createjar.csh
 test?
 video
+.nfs*

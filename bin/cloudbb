@@ -1,0 +1,54 @@
+#! /bin/csh
+
+if ($?BROWN_IVY_ROOT == 0) then
+   set BUBBLES = /research/bubbles/runarea
+   java -Dedu.brown.cs.bubbles.NO_UPDATE=1 \
+	 -Dedu.brown.cs.bubbles.eclipse=$BUBBLES/eclipse \
+	 -jar $BUBBLES/bubbles.jar -W -S -noupdate
+	 $*
+else
+   set PRO = $BROWN_IVY_ROOT
+   set BUB = $PRO/bubbles
+   set INS = $BUB
+   set CP1 = $BUB/java:$PRO/ivy/java
+
+   set LIB = $BUB/lib
+   set CP2 = $LIB/smack.jar:$LIB/smackx-debug.jar:$LIB/smackx-jingle.jar:$LIB/smackx.jar
+   set CP3 = $LIB/jsyntaxpane.jar:$LIB/gnujpdf.jar
+   set CP4 = $LIB/joscar-client.jar:$LIB/joscar-common.jar:$LIB/joscar-protocol.jar
+   set CP5 = $LIB/derby.jar:$LIB/derbyclient.jar:$LIB/derbynet.jar:$LIB/postgresql.jar:$LIB/mysql.jar
+   set CP6 = $LIB/pydev.jar:$LIB/wikitextcore.jar:$LIB/wikitexttrac.jar
+
+   set CP7 = ""
+   foreach i ($LIB/org.eclipse.*.jar)
+      set CP7 = ${CP7}:$i
+   end
+
+   set CP8 = $LIB/mail.jar:$LIB/activation.jar
+   set CP8 = $LIB/mail.jar
+   set CP9 = $LIB/bubblesasm.jar:$LIB/asm6.jar:$LIB/junit.jar:$LIB/jsoup.jar:$LIB/json.jar
+
+   set CPA = ""
+   foreach i ($LIB/freetts/*)
+      set CPA = ${CPA}:$i
+   end
+   set CPB = ""
+   foreach i ($LIB/marytts/*)
+      set CPB = ${CPB}:$i
+   end
+
+   set CP = ${CP1}:${CP2}:${CP3}:${CP4}:${CP5}:${CP6}:${CP7}:${CP8}:${CP9}:${CPA}:${CPB}
+
+   if ($?BROWN_JAVA_HOME == 0) then
+      set JBIN = /pro/java/linux/jdk-10/bin
+   else
+      set JBIN = $BROWN_JAVA_HOME/bin
+   endif
+
+   set JAVA = $JBIN/java
+   set path = ($JBIN $path)
+
+   echo $JAVA -cp $CP -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain -W -S $*
+   $JAVA -cp $CP -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain -W -S $*
+endif
+

@@ -1,0 +1,44 @@
+#! /bin/csh -f
+
+#
+# Invoked by bubbles cloud setup to run bubbles remotely
+#
+#    Arguments:
+#	$1: ssh_host to use
+#	$2: optional actual host : @ if not used
+#	$3: project directory
+#	$4: mint ID name
+#
+#    Returns
+#	0 status (OK) if ssh works and project directory exists as a directory
+#	1 status (FAIL) if ssh fails or project directory not present
+#
+
+set READY = "Bubbles_Cloud_Server_Ready"
+set c = cloudbb
+set lh = ~/cloudlog.log
+
+set ahost = ""
+if ($2 != '@') then
+   set ahost = "host=$2"
+endif
+
+ssh -t -t $1 ${ahost} xvfb-run -a $c "$3" -m $4 >&! $lh &
+
+while (1)
+   jobs > /tmp/cloudjobs
+   fgrep "[1]" /tmp/cloudjobs
+   if ($status == 1) then
+      break
+   endif
+   fgrep "$READY" ${lh}
+   if ($status == 0) then
+     echo $READY
+     break
+   endif
+   sleep 1
+end
+
+rm -rf /tmp/cloudjobs
+
+wait
