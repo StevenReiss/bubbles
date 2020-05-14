@@ -787,11 +787,11 @@ private class ProblemPanel extends SwingGridPanel implements ActionListener {
       addChoice("Option Set",option_sets.keySet(),current_optionset,this);
       addBoolean("Warnings as Errors",optional_error,this);
       addChoice("Java Source Version",compiler_levels,
-	    option_elements.get(SOURCE_OPTION),this);
+            option_elements.get(SOURCE_OPTION),this);
       addChoice("Java Target Version",compiler_levels,
-	    option_elements.get(TARGET_OPTION),this);
+            option_elements.get(TARGET_OPTION),this);
       addChoice("Java Compliance Version",compiler_levels,
-	       option_elements.get(COMPLIANCE_OPTION),this);
+               option_elements.get(COMPLIANCE_OPTION),this);
     }
 
    boolean needsUpdate()			{ return needs_update; }

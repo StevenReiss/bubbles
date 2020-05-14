@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.bueno;
 
+import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaRoot;
@@ -270,10 +271,10 @@ private class CreationActions implements ActionListener, UndoableEditListener {
       String pnm = project_props.getString(PROJ_PROP_NAME);
       File pdir = null;
       if (pnm != null && pnm.length() > 0 && pnm.matches(NAME_PAT)) {
-	 BoardSetup bs = BoardSetup.getSetup();
-	 File f1 = new File(bs.getDefaultWorkspace());
-	 File f2 = new File(f1,pnm);
-	 if (!f2.exists()) pdir = f2;
+         BoardSetup bs = BoardSetup.getSetup();
+         File f1 = new File(bs.getDefaultWorkspace());
+         File f2 = new File(f1,pnm);
+         if (!f2.exists()) pdir = f2;
        }
       project_props.put(PROJ_PROP_DIRECTORY,pdir);
     }
@@ -308,6 +309,7 @@ private boolean createProject()
 
    if (!generateClassPathFile()) return false;
    if (!generateProjectFile()) return false;
+   if (!generateSettingsFile()) return false;
    if (!generateOtherFiles()) return false;
 
    BumpClient bc = BumpClient.getBump();
@@ -511,6 +513,30 @@ private boolean checkFileProperties(File f)
    catch (IOException e) {
       return false;
     }
+   return true;
+}
+
+
+
+@Override public boolean generateSettingsFile()
+{
+   File pdir = project_props.getFile(PROJ_PROP_DIRECTORY);
+   File sdir = new File(pdir,".settings");
+   sdir.mkdirs();
+   File opts = new File(sdir,"org.eclipse.jdt.core.prefs");
+   BoardProperties props = BoardProperties.getProperties("Bueno");
+   String copts = props.getProperty("Bueno.prop.set.data.1");
+   try (PrintWriter pw = new PrintWriter(new FileWriter(opts))) {
+      if (copts != null) pw.println(copts);
+      String v = System.getProperty("java.specification.version");
+      pw.println("org.eclipse.jdt.core.compiler.complicance=" + v);
+      pw.println("org.eclipse.jdt.core.compiler.source=" + v);
+      pw.println("org.eclipse.jdt.core.codegen.targetPlatform=" + v);
+    }
+   catch (IOException e) {
+      return false;
+    }
+   
    return true;
 }
 

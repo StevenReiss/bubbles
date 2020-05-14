@@ -53,6 +53,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPopupMenu;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
@@ -222,10 +223,11 @@ private void setupPanel()
 	 break;
     }
 
+   FileSystemView fsv = FileSystemView.getFileSystemView();
    log_file = pnl.addFileField("Record Output",launch_config.getLogFile(),
-				  JFileChooser.FILES_ONLY,null,this);
+				  JFileChooser.FILES_ONLY,null,fsv,null,null,this);
    working_directory = pnl.addFileField("Working Directory",launch_config.getWorkingDirectory(),
-					   JFileChooser.DIRECTORIES_ONLY,null,this);
+					   JFileChooser.DIRECTORIES_ONLY,null,fsv,null,null,this);
    pnl.addSeparator();
    debug_button = pnl.addBottomButton("Debug","DEBUG",this);
    save_button = pnl.addBottomButton("Save","SAVE",this);

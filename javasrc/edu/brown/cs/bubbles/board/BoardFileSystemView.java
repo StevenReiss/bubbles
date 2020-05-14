@@ -625,10 +625,13 @@ private static Element sendMessage(String cmd,File f,String x,String q)
    if (q != null) msg += q;
    msg += "</BOARDREMOTE>";
 
-   MintDefaultReply mdr = new MintDefaultReply();
-   mint_control.send(msg,mdr,MINT_MSG_FIRST_NON_NULL);
-
-   Element rslt = mdr.waitForXml();
+   Element rslt = null;
+   for (int i = 0; i < 10; ++i) {
+      MintDefaultReply mdr = new MintDefaultReply();
+      mint_control.send(msg,mdr,MINT_MSG_FIRST_NON_NULL);
+      rslt = mdr.waitForXml(10000 * i*2000);
+      if (rslt != null) break;
+    }
 
    BoardLog.logD("REMOTE","Send: " + msg + " => " + IvyXml.convertXmlToString(rslt));
 
@@ -692,51 +695,53 @@ private static class FileServer implements MintHandler {
       String rslt = null;
       String fnm = IvyXml.getAttrString(xml,"NAME");
       String pnm = IvyXml.getAttrString(xml,"PARENT");
+      BoardLog.logD("BOARD","FILE SYSTEM COMMAND " + cmd);
+      
       IvyXmlWriter xw = new IvyXmlWriter();
       File f = null;
       if (pnm != null) {
-	 f = new File(pnm);
-	 if (fnm != null) f = new File(f,fnm);
+         f = new File(pnm);
+         if (fnm != null) f = new File(f,fnm);
        }
       else if (fnm != null) f = new File(fnm);
-
+   
       if (cmd == null) {
-	 BoardLog.logE("BOARD","Bad Remote file message: " + msg.getText());
+         BoardLog.logE("BOARD","Bad Remote file message: " + msg.getText());
        }
       else if (cmd.equals("FILEINFO")) {
-	 handleFileInfo(f,xw);
+         handleFileInfo(f,xw);
        }
       else if (cmd.equals("SYSINFO")) {
-	 handleSysInfo(xw);
+         handleSysInfo(xw);
        }
       else if (cmd.equals("MKDIR")) {
-	 handleMkdir(f,IvyXml.getAttrBool(xml,"DIRS"),IvyXml.getAttrBool(xml,"NEW"),xw);
+         handleMkdir(f,IvyXml.getAttrBool(xml,"DIRS"),IvyXml.getAttrBool(xml,"NEW"),xw);
        }
       else if (cmd.equals("LIST")) {
-	 handleListFiles(f,xw);
+         handleListFiles(f,xw);
        }
       else if (cmd.equals("DELETE")) {
-	 handleDelete(f,IvyXml.getAttrBool(xml,"EXIT"),xw);
+         handleDelete(f,IvyXml.getAttrBool(xml,"EXIT"),xw);
        }
       else if (cmd.equals("CANON")) {
-	 handleCanonical(f,xw);
+         handleCanonical(f,xw);
        }
       else if (cmd.equals("RENAME")) {
-	 handleRename(f,IvyXml.getAttrString(xml,"TONAME"),xw);
+         handleRename(f,IvyXml.getAttrString(xml,"TONAME"),xw);
        }
       else if (cmd.equals("PING")) {
-	 rslt = "<PONG/>";
+         rslt = "<PONG/>";
        }
       else if (cmd.equals("EXIT")) {
-	 System.exit(0);
+         System.exit(0);
        }
-
+   
       if (rslt == null) {
-	 rslt = xw.toString();
-	 if (rslt.length() == 0) rslt = null;
+         rslt = xw.toString();
+         if (rslt.length() == 0) rslt = null;
       }
       msg.replyTo(rslt);
-
+   
       xw.close();
     }
 

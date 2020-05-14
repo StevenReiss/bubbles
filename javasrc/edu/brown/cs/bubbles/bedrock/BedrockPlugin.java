@@ -488,7 +488,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 bedrock_project.createProject();
 	 break;
       case "IMPORTPROJECT" :
-	 try{
+	 try {
 	    bedrock_project.importExistingProject(proj);
 	  }
 	 catch(Throwable t) {

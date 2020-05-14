@@ -249,6 +249,7 @@ interface BuenoProjectCreationControl {
 
    boolean generateClassPathFile();
    boolean generateProjectFile();
+   boolean generateSettingsFile();
    boolean generateOtherFiles();
    String getPackageName(File f);
 
