@@ -1,0 +1,35 @@
+Manifest-Version: 1.0
+Import-Package: org.eclipse.core.resources,com.ibm.icu.text
+Bundle-ManifestVersion: 2
+Bundle-Name: Bedrock Plug-in
+Bundle-SymbolicName: edu.brown.cs.bubbles.bedrock; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: edu.brown.cs.bubbles.bedrock.BedrockPlugin
+Bundle-Localization: plugin
+Main-Class: org.eclipse.core.launcher.Main
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.debug.core,
+ org.eclipse.debug.ui,
+ org.eclipse.core.resources,
+ org.eclipse.text,
+ org.eclipse.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.jdt,
+ org.eclipse.jdt.core,
+ org.eclipse.jdt.debug,
+ org.eclipse.jdt.ui,
+ org.eclipse.jdt.core.manipulation,
+ org.eclipse.ltk.core.refactoring,
+ org.eclipse.search,
+ org.eclipse.text,
+ org.eclipse.ui.ide,
+ org.eclipse.core.filesystem,
+ org.eclipse.core.net,
+ org.eclipse.jface.text,
+ org.eclipse.core.commands,
+ org.eclipse.ui.workbench.texteditor
+Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+
+
+

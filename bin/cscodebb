@@ -1,0 +1,12 @@
+#! /bin/csh -f
+
+set path = (/pro/java/linux/jdk1.89/bin $path)
+
+set BUBBLES = /research/bubbles/runarea
+set BASE = ~/.csbubbles
+
+java -Dedu.brown.cs.bubbles.NO_UPDATE=1 \
+	 -Dedu.brown.cs.bubbles.eclipse=$BUBBLES/eclipse \
+	 -Dedu.brown.cs.bubbles.BASE=$BASE \
+	 -jar $BUBBLES/bubbles.jar \
+	 $*

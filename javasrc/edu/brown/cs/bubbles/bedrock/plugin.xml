@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin id="edu.brown.cs.bubbles.bedrock"
+		name="BEDROCK interface for BUBBLES"
+		class="edu.brown.cs.bubbles.bedrock.BedrockPlugin"
+		version="1.0.0">
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.jdt" />
+      <import plugin="org.eclipse.jdt.core" />
+      <import plugin="org.eclipse.jdt.ui" />
+      <import plugin="org.eclipse.jdt.debug" />
+      <import plugin="org.eclipse.jdt.core.manipulation" />
+      <import plugin="org.eclipse.jface.text" />
+      <import plugin="org.eclipse.jface.ui" />
+      <import plugin="org.eclipse.debug.core" />
+      <import plugin="org.eclipse.debug.ui" />
+      <import plugin="org.eclipse.core.resources" />
+      <import plugin="org.eclipse.core.net" />
+      <import plugin="org.eclipse.search" />
+      <import plugin="org.eclipse.text" />
+      <import plugin="org.eclipse.ltk.core.refactoring" />
+      <import plugin="org.eclipse.ui.editors" />
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.core.filesystem"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.core.commands" />
+   </requires>
+
+   <extension point="org.eclipse.ui.startup">
+      <startup class='edu.brown.cs.bubbles.bedrock.BedrockStartup' />
+   </extension>
+
+   <extension
+	 id="application"
+	 point="org.eclipse.core.runtime.applications">
+      <application>
+	<run class="edu.brown.cs.bubbles.bedrock.BedrockApplication" />
+      </application>
+   </extension>
+
+</plugin>

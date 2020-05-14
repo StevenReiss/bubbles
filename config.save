@@ -1,0 +1,15 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	precomposeunicode = true
+[remote "origin"]
+	url = ssh://stevenreiss@git.code.sf.net/p/codebubbles/code
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[remote "gitorigin"]
+	url = https://github.com/StevenReiss/bubbles.git
+	fetch = +refs/heads/*:refs/remotes/gitorigin/*

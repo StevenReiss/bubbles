@@ -1,0 +1,100 @@
+<project name='bubbles.nobase' default='compile'>
+
+   <property file='../../../../../../build.properties' />
+   <property name='PRO' value='/pro' />
+   <property name='BUBBLES' value='/pro/bubbles' />
+   <available file="${PRO}/ivy" type="dir" property="ivy.present" />
+   <target name="init1" if="ivy.present" >
+      <property name='IVYBIN' value='${PRO}/ivy/java' />
+      <property name='IVYJAR1' value='${PRO}/ivy/java' />
+      <property name='IVYJAR2' value='**/*.class' />
+   </target>
+   <target name="init2" unless="ivy.present" >
+      <property name='IVYBIN' value='${BUBBLES}/lib/ivy.jar' />
+      <property name='IVYJAR1' value='${BUBBLES}/lib' />
+      <property name='IVYJAR2' value='ivy.jar' />
+   </target>
+   <target name='init' depends='init1,init2' >
+      <path id='bubbles.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <fileset dir='${BUBBLES}/lib/' includes='json.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='asm6.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
+	 <fileset dir='${BUBBLES}/eclipsejar'>
+	    <include name='*.jar' />
+	 </fileset>
+      </path>
+      <path id='test.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <fileset dir='${BUBBLES}/lib/' includes='json.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='asm6.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
+	 <fileset dir='${BUBBLES}/eclipsejar'>
+	    <include name='*.jar' />
+	 </fileset>
+      </path>
+      <path id='test1.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <fileset dir='/home/spr/eclipse35/eclipse/plugins/org.python.pydev.parser_1.6.1.2010080312'>
+	    <include name='parser.jar' />
+	 </fileset>
+	 <fileset dir='/home/spr/eclipse35/eclipse/plugins/org.python.pydev.parser_1.6.1.2010080312'>
+	    <include name='parser.jar' />
+	    <include name='retroweaver-rt.jar' />
+	 </fileset>
+	 <fileset dir='${BUBBLES}/eclipsejar'>
+	    <include name='*.jar' />
+	 </fileset>
+      </path>
+   </target>
+
+   <available file='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' type='file' property='j8'
+       value='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' />
+   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar'
+	type='file' property = 'j8' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar' />
+
+   <target name='compile10' depends='init'>
+      <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
+		includeantruntime='false'>
+	 <classpath refid='bubbles.classpath' />
+	 <compilerarg line='--add-modules jdk.incubator.httpclient' />
+      </javac>
+   </target>
+
+   <target name='compile' depends='init'>
+      <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
+		target='1.8' source='1.8' bootclasspath='${j8}'
+		includeantruntime='false'>
+	 <classpath refid='bubbles.classpath' />
+      </javac>
+   </target>
+
+   <target name='clean'>
+      <delete dir='${BUBBLES}/java/edu/brown/cs/bubbles/nobase' />
+   </target>
+
+   <target name='test' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.nobase.NobaseTest' fork='true' output='test.out' >
+	 <classpath refid='test.classpath' />
+      </java>
+   </target>
+
+   <target name='test1' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.nobase.NobaseTest1' fork='true'>
+	 <classpath refid='test.classpath' />
+      </java>
+   </target>
+
+   <target name='testv' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.nobase.NobaseTest' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <jvmarg value="-verbose" />
+      </java>
+   </target>
+
+</project>

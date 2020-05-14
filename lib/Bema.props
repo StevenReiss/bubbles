@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bema.plugin.0">edu.brown.cs.bubbles.bdoc.BdocFactory</entry>
+<entry key="Bema.plugin.1">edu.brown.cs.bubbles.bddt.BddtFactory</entry>
+<entry key="Bema.plugin.2">edu.brown.cs.bubbles.bcon.BconFactory</entry>
+<entry key="Bema.plugin.3">edu.brown.cs.bubbles.bgta.BgtaFactory</entry>
+<entry key="Bema.plugin.4">edu.brown.cs.bubbles.bopp.BoppFactory</entry>
+<entry key="Bema.plugin.5">edu.brown.cs.bubbles.beam.BeamFactory</entry>
+<entry key="Bema.plugin.6">edu.brown.cs.bubbles.bted.BtedFactory</entry>
+<entry key="Bema.plugin.7">edu.brown.cs.bubbles.bowi.BowiFactory</entry>
+<entry key="Bema.plugin.8">edu.brown.cs.bubbles.batt.BattFactory</entry>
+<entry key="Bema.plugin.9">edu.brown.cs.bubbles.bvcr.BvcrFactory</entry>
+<entry key="Bema.plugin.10">edu.brown.cs.bubbles.banal.BanalFactory</entry>
+<entry key="Bema.plugin.11">edu.brown.cs.bubbles.bueno.BuenoFactory</entry>
+<entry key="Bema.plugin.20">edu.brown.cs.bubbles.bedu.chat.BeduChatFactory</entry>
+<entry key="Bema.plugin.22">edu.brown.cs.bubbles.bedu.BeduFactory</entry>
+<entry key="Bema.plugin.23">edu.brown.cs.bubbles.bwiz.BwizFactory</entry>
+<entry key="Bema.plugin.30">edu.brown.cs.bubbles.bnote.BnoteFactory</entry>
+<entry key="Bema.plugin.31">edu.brown.cs.bubbles.bbook.BbookFactory</entry>
+<entry key="Bema.plugin.32">edu.brown.cs.bubbles.bhelp.BhelpFactory</entry>
+<entry key="Bema.plugin.33">edu.brown.cs.bubbles.barr.BarrFactory</entry>
+<entry key="Bema.plugin.34">edu.brown.cs.bubbles.bucs.BucsFactory</entry>
+<!-- <entry key="Bema.plugin.35">edu.brown.cs.bubbles.bdyn.BdynFactory</entry>  -->
+<entry key="Bema.plugin.36">edu.brown.cs.bubbles.bfix.BfixFactory</entry>
+<entry key="Bema.plugin.37">edu.brown.cs.bubbles.bicex.BicexFactory</entry>
+<entry key="Bema.plugin.38">edu.brown.cs.bubbles.brepair.BrepairFactory</entry>
+<entry key="Bema.web.url">http://conifer.cs.brown.edu:8180/mint/mint</entry>
+</properties>

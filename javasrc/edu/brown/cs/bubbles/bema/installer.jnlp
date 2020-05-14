@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- JNLP file for Bubbles Installer -->
+
+<jnlp spec='1.0+' codebase='http://www.cs.brown.edu/people/spr/bubbles' href='installer.jnlp'>
+  <information>
+    <title>edu.brown.cs.bubbles.Installer</title>
+    <vendor>spr @ fred4</vendor>
+    <description><![CDATA[This installs Code Bubbles.]]></description>
+    <offline-allowed />
+    <shortcut online='false'>
+      <desktop />
+      <menu submenu='Code Bubbles Installer' />
+    </shortcut>
+  </information>
+  <security>
+    <all-permissions />
+  </security>
+  <resources>
+    <j2se version='1.7+' max-heap-size='256m' />
+    <jar href='installer.jar' />
+  </resources>
+  <application-desc main-class='edu.brown.cs.bubbles.bema.BemaInstaller'>
+  </application-desc>
+</jnlp>
+

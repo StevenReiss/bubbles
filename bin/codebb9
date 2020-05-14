@@ -1,0 +1,47 @@
+#! /bin/csh -f
+
+if ($?BROWN_IVY_ROOT == 0) then
+   set PRO = /pro
+else
+   set PRO = $BROWN_IVY_ROOT
+endif
+
+set INS = $PRO/bubbles
+set CP1 = $PRO/bubbles/java:$PRO/ivy/java
+
+set LIB = $PRO/bubbles/lib
+set CP2 = $LIB/smack.jar:$LIB/smackx-debug.jar:$LIB/smackx-jingle.jar:$LIB/smackx.jar
+set CP3 = $LIB/jsyntaxpane.jar:$LIB/gnujpdf.jar
+set CP4 = $LIB/joscar-client.jar:$LIB/joscar-common.jar:$LIB/joscar-protocol.jar
+set CP5 = $LIB/derby.jar:$LIB/derbyclient.jar:$LIB/derbynet.jar:$LIB/postgresql.jar:$LIB/mysql.jar
+set CP6 = $LIB/pydev.jar:$LIB/wikitextcore.jar:$LIB/wikitexttrac.jar
+
+set CP7 = ""
+foreach i ($LIB/org.eclipse.*.jar)
+   set CP7 = ${CP7}:$i
+end
+
+set CP8 = $LIB/mail.jar:$LIB/activation.jar
+set CP9 = $LIB/bubblesasm.jar:$LIB/asm5.jar:$LIB/junit.jar:$LIB/jsoup.jar:$LIB/json.jar
+
+set CPA = ""
+foreach i ($LIB/freetts/*)
+  set CPA = ${CPA}:$i
+end
+set CPB = ""
+foreach i ($LIB/marytts/*)
+  set CPB = ${CPB}:$i
+end
+
+
+set CP = ${CP1}:${CP2}:${CP3}:${CP4}:${CP5}:${CP6}:${CP7}:${CP8}:${CP9}:${CPA}:${CPB}
+
+set JBIN = /pro/java/linux/jdk1.9.0_x64/bin
+
+set JAVA = $JBIN/java
+set path = ($JBIN $path)
+
+
+
+$JAVA -cp $CP -Duser.home=$HOME -Duser.name=$USER -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain $* >&! ~/runlog.log
+

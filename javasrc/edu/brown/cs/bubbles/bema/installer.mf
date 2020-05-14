@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: edu.brown.cs.bubbles.bema.BemaMain
+Codebase: www.cs.brown.edu
+Application-Name: Code Bubbles Installer
+Permissions: all-permissions

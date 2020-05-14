@@ -1,0 +1,26 @@
+@Override public void handlePopupMenu(MouseEvent e)
+{
+   JPopupMenu popup = new JPopupMenu();
+   
+   Point p0 = SwingUtilities.convertPoint(this,e.getPoint(),breakpoint_table);
+   int row = breakpoint_table.rowAtPoint(p0);
+   if (row < 0) return ;
+   BumpBreakpoint bp = breakpoint_table.getActualBreakpoint(row);
+   
+   if (bp == null) return;
+   breakpoint_table.setRowSelectionInterval(row,row);
+
+   String typ = bp.getProperty("TYPE");
+   if (typ.equals("LINE")) {
+      popup.add(new GotoSourceAction(bp));
+   }
+   else if (typ.equals("EXCEPTION")) {
+      popup.add(new ExceptionAction(bp,bp.getBoolProperty("CAUGHT"),true));
+      popup.add(new ExceptionAction(bp,bp.getBoolProperty("UNCAUGHT"),false));
+   }
+   popup.add(new EnableAction(bp,bp.getBoolProperty("ENABLED")));
+   popup.add(new RemoveAction(bp));
+   popup.add("Edit Breakpoint Properties");
+
+   popup.show(this,p0.x,p0.y-5);
+}

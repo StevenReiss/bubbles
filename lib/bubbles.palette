@@ -1,0 +1,450 @@
+Buda.bubbleBorderColor	:	blue
+Buda.bubbleFocusColor	:	orange
+Buda.BubbleBaseColor	:	white
+Buda.BubbleNewColor	:	0x80ffc000
+Buda.userpos.color	:	red
+
+Buda.area.top.color	:	0xff78aac8
+Buda.area.bottom.color	:	white
+Buda.LinkDrawColor	:	orange
+
+Buda.GroupSingleLeftColor :	0x50ffffff
+Buda.GroupSingleRightColor :	0x30ffffff
+Buda.GroupTitleColor	:	0x00000000
+
+Buda.LinkColor		:	black
+Buda.LinkFocusColor	:	191,0,255
+
+Buda.ErrorTextColor	:	red
+
+Buda.help.color 	:	0xfff5deb3
+Buda.help.border.color	:	0xffa52a2a
+
+Buda.HintBackground	:	lightgray
+
+Buda.MenuColor		:	black
+Buda.MenuBackgroundColor :	white
+
+Buda.overview.top.color :	0xffe1e6eb
+Buda.overview.bottom.color :	0xffc4cdd7
+Buda.OverviewNonstylizedViewBorderColor :	   0,0,0,190
+Buda.OverviewStylizedViewBorderColor :	     100,149,237,190
+Buda.OverviewFakeTopColor :	201,201,201,100
+Buda.OverviewFakeBottomColor :	255,255,255,100
+Buda.OverviewFakeTextColor :	white
+
+Buda.RootDemoTextColor	:	0x80ffff00
+Buda.RootDemoPointColor :	0x40ff0000
+Buda.RootGroupColor.1	:	0xfffaf951
+Buda.RootGroupColor.2	:	0xffedf260
+Buda.RootGroupColor.3	:	0xffd0e366
+Buda.RootGroupColor.4	:	0xffb0d271
+Buda.RootGroupColor.5	:	0xff77c172
+Buda.RootGroupColor.6	:	0xff68c3a4
+Buda.RootGroupColor.7	:	0xff50c7cd
+Buda.RootGroupColor.8	:	0xff60c2e5
+Buda.RootGroupColor.9	:	0xff76c9f8
+Buda.RootGroupColor.10	:	0xff86b4ef
+Buda.RootGroupColor.11	:	0xff949edb
+Buda.RootGroupColor.12	:	0xff9186ca
+Buda.RootGroupColor.13	:	0xff8267b4
+Buda.RootGroupColor.14	:	0xffa46bbc
+Buda.RootGroupColor.15	:	0xffbf72c0
+Buda.RootGroupColor.16	:	0xffcf79c4
+Buda.RootGroupColor.17	:	0xffda7ec1
+Buda.RootGroupColor.18	:	0xffe37fbd
+Buda.RootGroupColor.19	:	0xffe681ad
+Buda.RootGroupColor.20	:	0xffe47892
+Buda.RootGroupColor.21	:	0xffee7b7e
+Buda.RootGroupColor.22	:	0xffef6a4b
+Buda.RootGroupColor.23	:	0xfff5a453
+Buda.RootGroupColor.24	:	0xfff8c552
+Buda.RootGroupColor.25	:	0xfffae058
+Buda.tooltip.background :	255,255,192
+Buda.tooltip.foreground :	black
+Buda.DefaultPaleColor	:	red
+Buda.ButtonPanelTopColor :	0xfffcebe2
+Buda.ButtonPanelBottomColor :	0xfffad4c2
+Buda.PdfBackground :		black
+
+Buda.ButtonPanelColor	:	205,201,201
+
+Buda.TaskTreeBackground :	white
+
+Buda.ToolbarBackground :	0,0,0,0
+Buda.ToolbarMenuBackground :	0,0,0,80
+
+Buda.topbar.color	:	0xff80aac0
+Buda.TopbarTopColor	:	0xffa7cde9
+Buda.TopbarBottomColor	:	0xffbbd8ee
+
+Buda.WorkingsetChangedColor :	black
+Buda.WorkingsetDefaultColor :	green
+
+Buda.Bubbles.Color	:	0xff4eaeff
+
+Bale.editor.top.color	:	0xffffffff
+Bale.editor.bottom.color :	0xffcce0e0
+Bale.AnnotBarColor	:	190,190,190,100
+Bale.LineNumberColor	:	black
+
+Bale.CaretBgXor 	:	yellow
+
+Bale.CompletionBorder	:	200,200,200,0
+
+Bale.CrumbPackageColor	:	100,100,100
+Bale.CrumbClassColor	:	127,0,200
+Bale.CrumbMethodColor	:	50,50,50
+
+Bale.CrumbComponentColor :	30,30,30
+Bale.CrumbArrowColor	:	black
+Bale.CrumbDirtyColor	:	black
+Bale.CrumbElidedColor	:	black
+Bale.CrumbRolloverColor :	84,84,84,100
+
+Bale.EditorBubbleInterior :	white
+
+Bale.EditorPaneBackground :	transparent
+Bale.CaretColor 	:	black
+
+Bale.DefaultHighlightColor :	green
+Bale.error.color	:	0xffff0080
+Bale.warning.color	:	0xff4040ff
+
+Bale.FindReplaceBackground :	0,0,0,0
+Bale.FindReplaceBorder :	darkGray
+Bale.FindReplaceCaseBackground :	0,0,0,0
+Bale.FindReplaceNumberBackground :	0,0,0,0
+Bale.FindReplaceTopColor :	white
+Bale.FindReplaceBottomColor :	192,192,192
+
+Bale.identifier.highlight.color :	0x96c0c0c0
+Bale.identifier.write.highlight.color : 0x96ffff00
+Bale.identifier.define.highlight.color : 0x64ffc800
+Bale.bracket.highlight.color :	0xffffffa0
+Bale.FindHighlightColor :	0,100,150,50
+
+Bale.InfoInteriorColor	:	255,255,255,170
+
+Bale.PortAnnotColor	:	0x20ff00ff
+
+Bale.RenameBorderColor	:	200,200,200,0
+
+Bale.error.background	:	0xffffe0e0
+Bale.BudLineColor	:	gray
+Bale.BudImageBackground :	0,0,0,0
+Bale.BudImageColor	:	black
+
+Bale.visualization.gradient.color.1 :	0xcdcbfc
+Bale.visualization.gradient.color.2 :	0xaef6f5
+Bale.visualization.gradient.color.3 :	0x92f5d7
+Bale.visualization.gradient.color.4 :	0xedfec6
+Bale.visualization.gradient.color.5 :	0xf1faad
+Bale.visualization.gradient.color.6 :	0xfafaad
+Bale.visualization.gradient.color.7 :	0xd1d1d2
+Bale.visualization.gradient.color.8 :	0xcffe73
+Bale.visualization.gradient.color.9 :	0xedd0fd
+Bale.visualization.gradient.color.10 :	0xbbfeff
+Bale.visualization.gradient.color.11 :	0xf8fadd
+Bale.visualization.default.color :	white
+Bale.visualization.base.color : 	white
+
+
+
+Bass.DefaultLabelColor	:	0xc0ffff80
+Bass.panel.top.color	:	255,255,255,150
+Bass.panel.bottom.color :	128,128,255,150
+Bass.PanelBorderColor	:	black
+Bass.panel.select.background :	0xb8cfe5
+
+
+Batt.CallMethodInterior :	0xf0d0a0
+Batt.BarType.SUCCESS	:	green
+Batt.BarType.NEED_SUCCESS  :	0,255,255
+Batt.BarType.RUNNING	:	yellow
+Batt.BarType.PENDING	:	gray
+Batt.BarType.CANT_RUN	:	black
+Batt.BarType.STOPPED	:	250,192,64
+Batt.BarType.NEED_FAILURE :	255,0,255
+Batt.BarType.FAILURE	:	red
+Batt.BarType.IGNORED	:	192,255,255
+Batt.BarTypeNone	:	white
+
+
+
+Bbook.OverviewColor	:	cyan
+Bbook.PanelColor	:	cyan
+Bbook.TaskOverviewColor :	cyan
+Bbook.TaskBackgroundColor :	cyan
+
+
+
+Bcon.class.class.color	:	0x00c0c0
+Bcon.class.method.color :	blue
+Bcon.class.field.color	:	magenta
+Bcon.class.initializer.color :	orange
+Bcon.class.comment.color :	0x3f7f5f
+Bcon.class.header.color :	black
+Bcon.class.import.color :	gray
+
+Bcon.noexists.color	:	0x80cccccc
+Bcon.code.color 	:	0,0,255,128
+Bcon.comment.color	:	0x803f7f5f
+Bcon.focus.color	:	red
+Bcon.exists.color	:	yellow
+
+Bcon.LabelFocusColor	:	red
+Bcon.LabelColor 	:	black
+
+Bcon.PackageBorderColor :	black
+Bcon.PackageClassNode	:	red
+Bcon.PackageInterfaceNode :	green
+Bcon.PackageEnumNode	:	orange
+Bcon.PackageThrowableNode :	yellow
+Bcon.PackageAnnotationNode :	magenta
+Bcon.PackagePackageNode :	blue
+Bcon.PackageArc 	:	cyan
+Bcon.PackageCallsArc	:	magenta
+Bcon.PackageClassArc	:	black
+Bcon.PackageInnerArc	:	gray
+
+
+
+Bddt.BreakpointOverviewColor :	247,80,80
+Bddt.BreakpointTopColor :	255,200,200
+Bddt.BreakpointBottomColor :	247,140,140
+Bddt.BreakpointSelectionColor : 247,80,80
+
+Bddt.LinkColor		:	red
+
+Bddt.ConfigTopColor	:	182,182,255
+Bddt.ConfigBottomColor	:	white
+
+Bddt.console.background :	#000000
+Bddt.console.input.background : #404040
+Bddt.console.input.foreground : #00ffff
+Bddt.console.input.caret :	#00ffff
+Bddt.ConsoleTextColor	:	white
+
+Bddt.EvaluationColor	:	255,255,128
+Bddt.EvaluationOutline	:	170,170,85
+
+Bddt.ChannelTopColor	:	255,255,182
+Bddt.ChannelBottomColor :	white
+Bddt.PanelTopColor	:	0xffffffda
+Bddt.PanelBottomColor	:	0xffffffda
+
+Bddt.HistoryBackground	:	white
+Bddt.HistoryBorder	:	black
+Bddt.HistoryText	:	red
+Bddt.HistoryLine	:	black
+Bddt.HistoryNoThread	:	black
+
+Bddt.InteractionColor	:	245,222,179
+Bddt.InteractionOutline :	139,126,102
+
+Bddt.LaunchOverviewColor :	182,182,255
+
+Bddt.execution.annotation.color :	#4000ff00
+Bddt.execution.annotation.exception.color : #40ff0000
+Bddt.frame.annotation.color	:	0x4000ff00
+
+Bddt.PerfTopColor	:	234,135,250
+Bddt.PerfBottomColor	:	white
+
+Bddt.ProcessTopColor	:	125,235,250
+Bddt.ProcessBottomColor :	white
+
+Bddt.StackTopColor	:	153,255,133
+Bddt.StackBottomColor	:	white
+Bddt.StackFrozenTopColor :	153,255,255
+Bddt.StackFrozenBottomColor :	white
+Bddt.StackExtinctTopColor :	255,255,133
+Bddt.StackExtinctBottomColor :	white
+
+Bddt.ThreadSelectionBackground :	white
+Bddt.ThreadSelectionForeground :	black
+Bddt.ThreadTopColor	:	153,255,133
+Bddt.ThreadBottomColor	:	white
+Bddt.ThreadExceptionColor :	red
+
+Bddt.ExecutionAnnotation.color : #4000ff00
+Bddt.ExecutionAnnotation.exception.color : #40ff0000
+Bddt.FrameAnnotation.color :	#40ffff00
+
+
+
+
+Bdoc.ItemForeground	:	blue
+
+Bdoc.ContextColor	:	128,0,134
+Bdoc.TopColor		:	226,226,255
+Bdoc.BottomColor	:	0x9080ff
+Bdoc.NameColor		:	black
+Bdoc.BackgroundColor	:	white
+
+
+
+
+Bdyn.BackgroundColor	:	white
+Bdyn.MarkColor		:	black
+Bdyn.LineColor		:	black
+
+
+
+Beam.NoteAnnotationColor :	0x40ffff00
+Beam.NoteOverviewColor	:	0xf8ed5d
+Beam.note.top.color	:	0xfffefdd1
+Beam.note.bottom.color	:	0xfff8ed5d
+
+Beam.TaskTopColor	:	0xfffffbd8
+Beam.TaskBottomColor	:	0xfffff890
+Beam.TaskOverviewColor	:	0xfffff890
+Beam.problem.top.color	:	0xffffcccc
+Beam.problem.bottom.color :	0xffffa0a0
+Beam.ProblemOverviewColor :	0xffffa0a0
+Beam.ProblemErrorColor	:	red
+Beam.ProblemWarningColor :	black
+Beam.ProblemNoticeColor :	0xff056006
+
+Beam.ProgressDoneColor	:	0xffc0ffc0
+Beam.ProgressTodoColor	:	0xffc0c0c0
+
+
+
+Bgta.BubbleTopColor	:	white
+Bgta.BubbleBottomColor	:	128,206,250
+Bgta.AltButtleTopColor	:	white
+Bgta.AltBubbleBottomColor :	46,139,87
+
+Bgta.LoginErrorColor	:	red
+
+
+
+Bicex.PanelTopColor	:	200,255,100
+Bicex.PanelBottomColor	:	white
+
+Bicex.CallGraphBackground :	255,255,64
+Bicex.CallGraphCurrent	:	160,160,255
+
+Bicex.DataViewBackground :	white
+Bicex.DataViewLine	:	black
+
+Bicex.VarHistoryNode	:	yellow
+Bicex.VarHistoryNodeBorder :	black
+
+
+Bicex.annot.color	:	0x400000ff
+
+Bicex.EvalTopColor	:	200,255,100
+Bicex.EvalBottomColor	:	255,255,150
+Bicex.EvalScrollColor	:	100,128,50
+Bicex.EvalScrollContextColor :	gray
+
+Bicex.StatusDefault	:	white
+Bicex.StatusError	:	255,196,196
+Bicex.StatusTimeout	:	255,255,196
+Bicex.StatusCompilerError :	255,255,196
+Bicex.StatusNormal	:	196,255,196
+Bicex.StatusPending	:	196,196,255
+
+Bicex.LineGraphDefault	:	255,255,64
+Bicex.LineGraphCurrent	:	160,160,255
+
+Bicex.StackDefault	:	black
+
+Bicex.StackViewBackground :	white
+Bicex.StackViewOutline	:	black
+
+
+
+
+Board.SplashColor	:	211,232,248
+Board.SplashFillColor	:	88,88,88
+Board.SplashTextColor	:	black
+
+
+
+Buss.StackTopColor	:	white
+Buss.StackBottomColor	:	0xc0c0ff
+
+Buss.PackageLabelColor	:	gray
+Buss.ClassLabelColor	:	0xa020f0
+
+
+Brepair.AnnotColor	:	255,255,0,128
+
+Brepair.TopColor	:	255,255,225
+Brepair.BottomColor	:	white
+Brepair.RepairAnnotColor :	yellow
+Brepair.SelectionColor	:	255,255,127
+
+
+
+Bvcr.ControlFileAdded	:	150,150,240
+Bvcr.ControlFileDeleted :	240,150,150
+Bvcr.ControlFileIgnored :	240,240,150
+Bvcr.ControlFileModified :	150,240,150
+
+Bvcr.DiffFileNone	:	0x80ffffff
+Bvcr.DiffFileInsert	:	0x8000ff00
+Bvcr.DiffFileDelete	:	0x80ff0000
+Bvcr.DiffFileChange	:	0x800000ff
+Bvcr.DiffBubbleBackground  :	0xffffc0
+Bvcr.DiffCenterBackground :	white
+Bvcr.DiffRevisionBackground :	white
+
+Bvcr.AnnotationColor	:	0x40ff0000
+
+Bvcr.HistroyDefaultColor :	red
+Bvcr.HistoryLineBackground :	white
+Bvcr.HistoryLineFrame	:	black
+
+
+
+
+Bwiz.PanelOverviewColor :	0xbfed97
+
+Bwiz.AccessButtonBackground :	white
+
+Bwiz.FocusTextColor	:	black
+Bwiz.NoFocusTextColor	:	gray
+
+Bwiz.NewBackground	:	white
+Bwiz.NewSecondBackground :	gray
+Bwiz.NewCreateDefault	:	black
+Bwiz.NewCreateActive	:	red
+
+Bwiz.TextFieldError	:	red
+
+
+
+
+Bucs.SolutionTopColor	:	0xf0d0a0
+Bucs.SolutionBottomColor :	white
+
+Bucs.TestCaseInterior	:	0xf0d0a0
+Bucs.TestCaseStatus	:	yellow
+Bucs.TestCaseFailed	:	red
+Bucs.TestCaseSuccess	:	green
+
+Bucs.UserInterior	:	0xf0d0a0
+
+
+
+
+Bted.overview.color	:	ffa9cdf9
+Bted.top.color		:	ffebf5ff
+Bted.bottom.color	:	ffa9cdf9
+Bted.highlight.color	:	ff999999
+Bted.not.found.color	:	ffe27a7a
+Bted.FindBackground	:	white
+
+
+
+Bqst.Background 	:	white
+
+
+
+
+

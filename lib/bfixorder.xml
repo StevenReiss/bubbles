@@ -1,0 +1,145 @@
+<BFIX>
+   <SET>
+      <SELECTOR TYPE='CLASS,ENUM,INTERFACE' POSITION='FILE' />
+      <ORDER>
+	 <DEFINITION />
+      </ORDER>
+      <CODE TYPE='PREFIX' />
+      <SET>
+	 <SELECTOR TYPE='FIELD' />
+	 <ORDER>
+	    <MODIFIER ORDER='NO_STATIC,STATIC' />
+	    <PROTECT ORDER='PUBLIC,PACKAGE,PROTECTED,PRIVATE' />
+	    <NAME CASE='FALSE' />
+	 </ORDER>
+	 <COMMENT AFTER='1' BEFORE='3'>
+/********************************************************************************/
+/*										*/
+/*	Private Storage 							*/
+/*										*/
+/********************************************************************************/
+	 </COMMENT>
+	 <ELEMENT AFTER='1'>
+	    <SELECTOR PROTECT='PUBLIC' />
+	    <CODE />
+	 </ELEMENT>
+	 <ELEMENT AFTER='1'>
+	    <SELECTOR MODIFIER='NO_STATIC' />
+	    <CODE />
+	 </ELEMENT>
+	 <ELEMENT>
+	    <SELECTOR PROTECT='PUBLIC' />
+	    <CODE />
+	 </ELEMENT>
+	 <BLANK LINE='3' />
+      </SET>
+      <SET>
+	 <SELECTOR TYPE='CONSTRUCTOR' />
+	 <ORDER>
+	    <PARAMETER ORDER='SIMPLE_FIRST' />
+	    <PROTECT ORDER='PUBLIC,PACKAGE,PROTECTED,PRIVATE' />
+	 </ORDER>
+	 <COMMENT AFTER='1' BEFORE='3'>
+/********************************************************************************/
+/*										*/
+/*	Constructors								*/
+/*										*/
+/********************************************************************************/
+	 </COMMENT>
+	 <ELEMENT>
+	    <CODE/>
+	    <BLANK LINE='3' />
+	 </ELEMENT>
+      </SET>
+      <SET>
+	 <SELECTOR TYPE='FUNCTION' PATTERH='(get|set|is)[A-Z])' />
+	 <ORDER>
+	    <NAME SELECT='(get|set|is)(.*)' SELECTOR='2' />
+	    <NAME />
+	 </ORDER>
+	 <COMMENT AFTER='1' BEFORE='3'>
+/********************************************************************************/
+/*										*/
+/*	Access Methods								*/
+/*										*/
+/********************************************************************************/
+	 </COMMENT>
+	 <ELEMENT>
+	    <CODE />
+	    <BLANK LINE='3' />
+	 </ELEMENT>
+      </SET>
+      <SET>
+	 <SELECTOR TYPE='FUNCTION' PROTECT='PUBLIC' />
+	 <ORDER>
+	    <NAME />
+	 </ORDER>
+	 <ELEMENT>
+	    <COMMENT AFTER='1' BEFORE='3'>
+/********************************************************************************/
+/*										*/
+/*	${NAME} 								*/
+/*										*/
+/********************************************************************************/
+	    </COMMENT>
+	    <JAVADOC AFTER='1' />
+	    <CODE />
+	    <BLANK LINE='3' />
+	    <SET>
+	       <SELECTOR TYPE='FUNCTION' PROTECT='PRIVATE' SOLEUSE='PARENT' />
+	       <CODE />
+	       <BLANK LINE='3' />
+	    </SET>
+	 </ELEMENT>
+      </SET>
+      <SET>
+	 <SELECTOR TYPE='FUNCTION'/>
+	 <ORDER>
+	    <PROTECT ORDER='PACKAGE,PROTECTED,PRIVATE' />
+	    <NAME />
+	 </ORDER>
+	 <ELEMENT>
+	    <COMMENT AFTER='1' BEFORE='3' >
+/********************************************************************************/
+/*										*/
+/*	${NAME} -- description goes here					*/
+/*										*/
+/********************************************************************************/
+	    </COMMENT>
+	    <CODE/>
+	    <BLANK LINE='3' />
+	 </ELEMENT>
+      </SET>
+      <SET>
+	 <SELECTOR TYPE='CLASS,ENUM,INTERFACE'/>
+	 <ORDER>
+	    <PROTECT ORDER='PACKAGE,PROTECTED,PRIVATE' />
+	    <NAME />
+	 </ORDER>
+	 <ELEMENT>
+	    <COMMENT AFTER='1' BEFORE='3'>
+/********************************************************************************/
+/*										*/
+/*	${NAME} -- description goes here					*/
+/*										*/
+/********************************************************************************/
+	    </COMMENT>
+	    <CODE PREFIX='TRUE'/>
+	    <SET>
+	       <ORDER>
+		  <TYPE ORDER='FIELD,CONSTRUCTOR,FUNCTION' />
+		  <PROTECT ORDER='PUBLIC,PACKAGE,PROTECTED,PRIVATE' />
+		  <DEFINITION />
+	       </ORDER>
+	       <BLANK LINE='1' />
+	       <CODE />
+	    </SET>
+	    <CODE SUFFIX='TRUE' />
+	    <COMMENT AFTER='3' INLINE='TRUE'>
+	// end of inner class ${NAME}
+	    </COMMENT>
+	 </ELEMENT>
+      </SET>
+      <CODE TYPE='SUFFIX' />
+   </SET>
+</BFIX>

@@ -1,0 +1,80 @@
+<project name='bubbles.buda' default='compile'>
+
+   <property file='../../../../../../build.properties' />
+   <property name='PRO' value='/pro' />
+   <property name='BUBBLES' value='/pro/bubbles' />
+   <available file="${PRO}/ivy" type="dir" property="ivy.present" />
+   <target name="init1" if="ivy.present" >
+      <property name='IVYBIN' value='${PRO}/ivy/java' />
+   </target>
+   <target name="init2" unless="ivy.present" >
+      <property name='IVYBIN' value='${BUBBLES}/lib/ivy.jar' />
+   </target>
+   <target name='init' depends='init1,init2' >
+      <path id='bubbles.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <fileset dir='${BUBBLES}/lib/' includes='gnujpdf.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='Lobo/**/*.jar' />
+      </path>
+      <path id='test.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <fileset dir='${BUBBLES}/lib/' includes='gnujpdf.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='Lobo/**/*.jar' />
+      </path>
+   </target>
+
+   <available file='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' type='file' property='j8'
+       value='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' />
+   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar'
+	type='file' property = 'j8' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar' />
+
+   <target name='compile' depends='init'>
+      <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
+		target='1.8' source='1.8' bootclasspath='${j8}'
+		includeantruntime='false'>
+	 <classpath refid='bubbles.classpath' />
+      </javac>
+   </target>
+
+   <target name='clean'>
+      <delete dir='${BUBBLES}/java/edu/brown/cs/bubbles/buda' />
+   </target>
+
+   <target name='test' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.buda.BudaTest' fork='true'>
+	 <classpath refid='test.classpath' />
+      </java>
+   </target>
+
+   <target name='test1' >
+      <java classname='edu.brown.cs.bubbles.buda.BudaTest' fork='true'>
+	 <classpath refid='test.classpath' />
+      </java>
+   </target>
+
+   <target name='test2' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.buda.BudaRoundedBorder' fork='true'>
+	 <classpath refid='test.classpath' />
+      </java>
+   </target>
+
+   <target name='buildhelp' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.buda.BudaHelp' fork='true'>
+	 <classpath refid='test.classpath' />
+      </java>
+      <copy file='helptext.html' tofile='/pro/web/web/people/spr/codebubbles/todohelp.html' />
+      <copy file='helptext.html' tofile='${BUBBLES}/lib/helptext.html' />
+   </target>
+
+   <target name='jar' depends='compile'>
+      <jar destfile="buda.jar" manifest='manifest.mf'>
+	 <fileset dir='${PRO}/ivy/java' includes= '**/*.class' />
+	 <fileset dir='${BUBBLES}/java' includes= '**/*.class' />
+      </jar>
+   </target>
+
+</project>
+
+

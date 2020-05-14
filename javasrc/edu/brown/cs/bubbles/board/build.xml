@@ -1,0 +1,196 @@
+<project name='bubbles.board' default='compile'>
+
+   <property file='../../../../../../build.properties' />
+   <property name='PRO' value='/pro' />
+   <property name='BUBBLES' value='/pro/bubbles' />
+   <available file="${PRO}/ivy" type="dir" property="ivy.present" />
+   <target name="init1" if="ivy.present" >
+      <property name='IVYBIN' value='${PRO}/ivy/java' />
+      <property name='IVYJAR1' value='${PRO}/ivy/java' />
+      <property name='IVYJAR2' value='**/*.class' />
+   </target>
+   <target name="init2" unless="ivy.present" >
+      <property name='IVYBIN' value='${BUBBLES}/lib/ivy.jar' />
+      <property name='IVYJAR1' value='${BUBBLES}/lib' />
+      <property name='IVYJAR2' value='ivy.jar' />
+   </target>
+   <target name='init' depends='init1,init2' >
+      <path id='bubbles.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <pathelement location='${BUBBLES}/lib/mail.jar' />
+	 <pathelement location='${BUBBLES}/lib/activation.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='commons-compress.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
+       </path>
+      <path id='test.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <pathelement location='${BUBBLES}/lib/mail.jar' />
+	 <pathelement location='${BUBBLES}/lib/activation.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='commons-compress.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
+	</path>
+   </target>
+
+   <available file='/pro/java/linux/jdk1.6/jre/lib/rt.jar' type='file' property='j6'
+       value='/pro/java/linux/jdk1.6/jre/lib/rt.jar' />
+   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Classes/classes.jar'
+	type='file' property = 'j6' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Classes/classes.jar' />
+
+   <available file='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' type='file' property='j8'
+       value='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' />
+   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar'
+	type='file' property = 'j8' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar' />
+
+   <target name='compile' depends='init'>
+      <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
+		target='1.8' source='1.8' bootclasspath='${j8}'
+		includeantruntime='false' >
+	 <classpath refid='bubbles.classpath' />
+	 <compilerarg value='-Xlint:all' />
+      </javac>
+   </target>
+
+   <target name='clean'>
+      <delete dir='${BUBBLES}/java/edu/brown/cs/bubbles/board' />
+   </target>
+
+   <target name='testsetup' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.board.BoardSetup' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <assertions><enable/></assertions>
+      </java>
+   </target>
+
+   <target name='testmail' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.board.BoardTest' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <assertions><enable/></assertions>
+      </java>
+   </target>
+
+   <target name='testforce' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.board.BoardSetup' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <assertions><enable/></assertions>
+	 <arg value='-force' />
+      </java>
+   </target>
+
+   <target name='testversion' depends='updatejar'>
+      <java classname='edu.brown.cs.bubbles.board.BoardUpdate' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <assertions><enable/></assertions>
+	 <arg value='-version' />
+      </java>
+      <java classname='edu.brown.cs.bubbles.board.BoardUpdate' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <assertions><enable/></assertions>
+	 <arg value='/pro/bubbles/bubbles.jar' />
+      </java>
+   </target>
+
+   <target name='metrics' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.board.BoardMetricAnalyzer' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value='--anal' />
+	 <arg value='AUTOFIX' />
+	 <arg value='--anal' />
+	 <arg value='SEEDE' />
+	 <arg value='-mtime' />
+	 <arg value='-61' />
+	 <arg value="--output" />
+	 <arg value='/vol/spr/metrics.out' />
+	 <arg value="--save" />
+	 <arg value='/vol/spr/metrics.save' />
+      </java>
+      <java classname='edu.brown.cs.bubbles.board.BoardMetricResults' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value='/vol/spr/metrics.out' />
+      </java>
+   </target>
+
+   <target name='metricsnew' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.board.BoardMetricAnalyzer' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value='--anal' />
+	 <arg value='AUTOFIX' />
+	 <arg value='--anal' />
+	 <arg value='SEEDE' />
+	 <arg value='-mtime' />
+	 <arg value='-91' />
+	 <arg value="--output" />
+	 <arg value='/vol/spr/metricsnew.out' />
+	 <arg value="--save" />
+	 <arg value='/vol/spr/metricsnew.save' />
+      </java>
+      <java classname='edu.brown.cs.bubbles.board.BoardMetricResults' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value='/vol/spr/metrics.out' />
+      </java>
+   </target>
+
+   <target name='metrics1' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.board.BoardMetricAnalyzer' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value='--anal' />
+	 <arg value='AUTOFIX' />
+	 <arg value='--anal' />
+	 <arg value='SEEDE' />
+	 <arg value="--data" />
+	 <arg value='/vol/spr/metrics.save' />
+	 <arg value="--output" />
+	 <arg value='/vol/spr/metrics.out' />
+      </java>
+      <java classname='edu.brown.cs.bubbles.board.BoardMetricResults' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value='/vol/spr/metrics.out' />
+      </java>
+      <java classname='edu.brown.cs.bubbles.board.BoardMetricResults' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value='/vol/spr/metrics.out' />
+	 <arg value='-S' />
+	 <arg value='-o' />
+	 <arg value='/vol/spr/metrics.seede.result' />
+      </java>
+   </target>
+
+   <target name='metrics2' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.board.BoardMetricResults' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value='/vol/spr/metricsnew.out' />
+	 <arg value='-S' />
+	 <arg value='-o' />
+	 <arg value='/vol/spr/metricsnew.seede.result' />
+      </java>
+   </target>
+
+   <target name='metricsresult' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.board.BoardMetricResults' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value='/vol/spr/metrics.out' />
+	 <arg value='-B' />
+	 <arg value='-o' />
+	 <arg value='/vol/spr/metrics.result' />
+      </java>
+      <java classname='edu.brown.cs.bubbles.board.BoardMetricResults' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value='/vol/spr/metrics.out' />
+	 <arg value='-S' />
+	 <arg value='-o' />
+	 <arg value='/vol/spr/metrics.seede.result' />
+      </java>
+   </target>
+
+   <target name='updatejar' depends='compile'>
+      <jar destfile="updater.jar" manifest='update.mf'>
+	 <fileset dir='${BUBBLES}/java' includes= '**/BoardUpdate.class' />
+      </jar>
+      <copy file='updater.jar' tofile='${BUBBLES}/lib/updater.jar' />
+      <copy file='updater.jar' tofile='/pro/web/web/people/spr/bubbles/updater.jar' />
+   </target>
+
+</project>
+
+

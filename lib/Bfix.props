@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bfix.adapter.1">edu.brown.cs.bubbles.bfix.BfixAdapterSpelling</entry>
+<entry key="Bfix.adapter.2">edu.brown.cs.bubbles.bfix.BfixAdapterImports</entry>
+<entry key="Bfix.adapter.3">edu.brown.cs.bubbles.bfix.BfixAdapterSyntax</entry>
+<entry key="Bfix.adapter.4">edu.brown.cs.bubbles.bfix.BfixAdapterQuotes</entry>
+<entry key="Bfix.adapter.5">edu.brown.cs.bubbles.bfix.BfixAdapterNewField</entry>
+<entry key="Bfix.adapter.6">edu.brown.cs.bubbles.bfix.BfixAdapterNoReturn</entry>
+<entry key="Bfix.adapter.7">edu.brown.cs.bubbles.bfix.BfixAdapterAddCatch</entry>
+<entry key="Bfix.adapter.8">edu.brown.cs.bubbles.bfix.BfixAdapterVisibility</entry>
+<entry key="Bfix.correct.spelling.edits">2</entry>
+<entry key="Bfix.correct.spelling.user">5</entry>
+<entry key="Bfix.correct.spelling.problem.1">put,get</entry>
+<entry key="Bfix.correct.spelling.problem.2">^set,get</entry>
+<entry key="Bfix.correct.spelling.problem.3">*,if</entry>
+<entry key="Bfix.correct.spelling.problem.4">is,if</entry>
+<entry key="Bfix.correct.spelling.problem.5">add,do</entry>
+<entry key="Bfix.correct.spelling.problem.6">min,sin</entry>
+<entry key="Bfix.correct.spelling.problem.7">*,*,2D</entry>
+<entry key="Bfix.correct.spelling.problem.8">IOException</entry>
+<entry key="Bfix.correct.spelling.problem.9">JPanel,JLabel</entry>
+<entry key="Bfix.correct.spelling.problem.9">JLabel,JPanel</entry>
+<entry key="Bfix.correct.spelling.problem.10">tree,try</entry>
+<entry key="Bfix.correct.spelling.problem.11">next,new</entry>
+<entry key="Bfix.correct.spelling.problem.12">Paint,int</entry>
+<entry key="Bfix.correct.spelling.problem.13">Point,int</entry>
+<entry key="Bfix.correct.spelling.problem.14">List,int</entry>
+<entry key="Bfix.correct.spelling.problem.15">nt,int</entry>
+<entry key="Bfix.enable.BfixAdapterSpelling">true</entry>
+<entry key="Bfix.enable.BfixAdapterImports">true</entry>
+<entry key="Bfix.enable.BfixAdapterSyntax">true</entry>
+<entry key="Bfix.enable.BfixAdapterQuotes">true</entry>
+<entry key="Bfix.enable.BfixAdapterNewField">false</entry>
+<entry key="Bfix.enable.BfixAdapterNoReturn">true</entry>
+<entry key="Bfix.enable.BfixAdapterAddCatch">false</entry>
+</properties>
+
+

@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="Content-Type">
+  <title>Code Bubbles Setup</title>
+</head>
+<body>
+<h1 style="text-align: center;"><span style="font-weight: bold;">Welcome
+to Code Bubbles</span></h1>
+Here are some instructions on getting set to use Code Bubbles for the
+first time.<br>
+<br>
+<h2>Setting Up Code Bubbles</h2>
+<br>
+Code Bubbles should have brought up two windows.&nbsp; The one in the
+center of your screen is a simple splash screen that shows what part of
+initialization is currently underway.&nbsp; Since initialization
+involves ensuring projects are up-to-date, downloading symbols, and
+getting documentation set up, it can take a minute or two on longer
+projects, so the splash screen is just telling you to be patient.<br>
+<br>
+The other window is probably in the upper left hand corner of your
+display.&nbsp; It is requesting some basic information that the system
+needs in order to run.&nbsp; This information is only requested once
+and then is saved in files in the .bubbles directory inside your home
+directory.<br>
+<br>
+The first field to be filled in in this window is the Eclipse
+Installation Directory.&nbsp; This should be the directory that
+contains the eclipse binary as well as the Eclipse plugins (or dropins)
+directory.&nbsp; If you don't have Eclipse installed yet, you should
+install it first and then rerun bubbles.&nbsp; If you have Eclipse
+installed, browse to and then select that directory.<br>
+<br>
+The next field asks if you want to have bubbles automatically
+update.&nbsp; (This field is omitted in the educational version of the
+system).&nbsp; Automatic updates are checked when the system starts and
+are downloaded and installed at that point if a new version of the
+system exists.&nbsp;&nbsp; <span style="font-weight: bold;">It is
+recommended that you check this box</span>. <br>
+<br>
+The next field asks if you want to run Eclipse in foreground or
+not.&nbsp; Bubbles gives you the option of running both Eclipse and
+Code Bubbles or just Code Bubbles.&nbsp; If you run them both, they
+should cooperate (i.e. edits in one should be reflected immediately by
+edits in the other).&nbsp; Note that this option has not been tested
+that extensively.&nbsp;<span style="font-weight: bold;"> It is
+recommended that you do <span style="font-style: italic;">not</span>
+check this box. </span><br>
+<br>
+Once you have selected an appropriate version of Eclipse, the button at
+the bottom labeled <span style="font-style: italic;">Install Bubbles</span>
+will become active.&nbsp; Clicking this will cause bubbles to install
+its Eclipse plugin into your Eclipse installation.&nbsp; This is
+necessary before Code Bubbles can be run.&nbsp; Note that Eclipse
+should not be running when you click on this.&nbsp; <br>
+<br>
+Once Code Bubbles is installed in your version of Eclipse and you have
+made your selections above, you can click on the <span
+ style="font-style: italic;">OK </span>button to proceed with Code
+Bubbles initialization.<br>
+<br>
+<h2>Choosing a Workspace</h2>
+Code Bubbles uses Eclipse to manage workspaces, projects, files,
+compilation, debugging, etc.&nbsp;&nbsp; Thus, in order to run it needs
+to know what Eclipse workspace it should connect to.<br>
+<br>
+Code Bubbles thus should pop up another dialog box (again in the
+upper-left hand corner of the screen) asking you to select the
+appropriate workspace. If you have an existing Eclipse workspace for
+which you want to use Code Bubbles, simply select the corresponding
+Eclipse workspace at this point.&nbsp; (This is the workspace that
+Eclipse would ask for when it starts up).&nbsp; Code Bubbles will
+automatically provide you with access to all projects, launch
+configurations, etc. for that workspace.<br>
+<br>
+There are two check boxes in this dialog.&nbsp; The first will cause
+the system to create a new workspace at the provided path.&nbsp; This
+will cause Code Bubbles to ask you to define a project when it actually
+initializes since the system needs to have&nbsp; workspace with at
+least one project.&nbsp; (Actually, it will ask Eclipse to ask you to
+define a project.)&nbsp; The second button lets you decide if this
+dialog should always come up or if the system should just start working
+on whatever workspace was last used.&nbsp; <br>
+<br>
+Once you click OK in this dialog Code Bubbles will finish
+initialization.&nbsp; Note that the first time that the system
+initializes might take longer than expected since Code Bubbles wants to
+download indices into the available JavaDoc documentation.&nbsp; This
+information is cached so that later initializations should be
+significantly faster.<br>
+<br>
+</body>
+</html>

@@ -1,0 +1,162 @@
+
+package edu.brown.cs.bubbles.bio;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+
+public class BioClassData {
+
+private String	    _name;
+private ArrayList<String> _modifiers;
+private String	    _package;
+private ArrayList<String> _imports;
+private String	    _topComment, _preImportComment, _preClassComment;
+
+public BioClassData()
+{
+   _modifiers = new ArrayList<String>();
+   _imports = new ArrayList<String>();
+   _topComment = "";
+   _preImportComment = "";
+   _preClassComment = "";
+}
+
+public void setName(String name)
+{
+   _name = name;
+}
+
+public String getName()
+{
+   return _name;
+}
+
+public void addModifier(String mod)
+{
+   _modifiers.add(mod);
+}
+
+public ArrayList<String> getModifiers()
+{
+   return _modifiers;
+}
+
+public void setPackage(String apackage)
+{
+   _package = apackage;
+}
+
+public String getPackage()
+{
+   return _package;
+}
+
+public void addImport(String imp)
+{
+   _imports.add(imp);
+}
+
+public void setImports(ArrayList<String> imps)
+{
+   _imports = imps;
+}
+
+public ArrayList<String> getImports()
+{
+   return _imports;
+}
+
+public void setTopComment(String top)
+{
+   _topComment = top;
+}
+
+public void addToTopComment(String top)
+{
+   _topComment = _topComment.concat(top);
+}
+
+public String getTopComment()
+{
+   return _topComment;
+}
+
+public void setPreImportComment(String comment)
+{
+   _preImportComment = comment;
+}
+
+public void addToPreImportComment(String comment)
+{
+   _preImportComment = _preImportComment.concat(comment);
+}
+
+public String getPreImportComment()
+{
+   return _preImportComment;
+}
+
+public void setPreClassComment(String comment)
+{
+   _preClassComment = comment;
+}
+
+public void addToPreClassComment(String comment)
+{
+   _preClassComment = _preClassComment.concat(comment);
+}
+
+public String getPreClassComment()
+{
+   return _preClassComment;
+}
+
+public String printClass()
+{
+   if (_name == null) {
+      return null;
+   }
+   String output = "";
+   if (_topComment != null) {
+      output = output.concat(_topComment + "\n");
+   }
+   if (_package != null) {
+      output = output.concat("package " + _package + ";\n");
+   }
+   if (_preImportComment != null) {
+      output = output.concat(_preImportComment + "\n");
+   }
+   if (_imports.size() > 0) {
+      Iterator<String> importIt = _imports.iterator();
+      while (importIt.hasNext()) {
+	 output = output.concat("import " + importIt.next() + ";\n");
+      }
+   }
+   if (_preClassComment != null) {
+      output = output.concat(_preClassComment + "\n");
+   }
+   if (_modifiers.size() > 0) {
+      Iterator<String> modIt = _modifiers.iterator();
+      while (modIt.hasNext()) {
+	 output = output.concat(modIt.next() + " ");
+      }
+   }
+   else {
+      output = output.concat("public ");
+   }
+   output = output.concat("class " + _name + " {\n");
+   output = output.concat("\tpublic " + _name + "(){\n");
+   output = output.concat("\t\n");
+   output = output.concat("\t}\n");
+   output = output.concat("}");
+
+   return output;
+}
+
+}	// end of class BioClassData
+
+
+
+
+/* end of BioClassData.java */

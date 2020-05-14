@@ -1,0 +1,252 @@
+package edu.brown.cs.bubbles.bio;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+//TODO return to this after making functional & gui
+class BioClassTemplator {
+   private BioIO _io;
+
+   BioClassTemplator() {
+      _io = new BioIO();
+   }
+
+   public String getTemplate(String path, String className, String packageName) {
+
+      File[] filenames = returnClasses(_io.getFilenames(path));
+
+      if(filenames.length<1){
+	 //stub gen
+	 BioIO gen = new BioIO();
+	 return gen.generateClassStub(className, packageName, null, null);
+      }else if(filenames.length<2){
+	 //keep comments and imports
+	 BioClassData existing = renderClassData(filenames[0]);
+	 existing.setName(className);
+	 existing.setPackage(packageName);
+	 return existing.printClass();
+      }else{
+
+	 ArrayList<BioClassData> parsedClasses = new ArrayList<BioClassData>();
+	 for (int i = 0; i < filenames.length; i++) {
+	    parsedClasses.add(renderClassData(filenames[i]));
+	 }
+
+	 Iterator<BioClassData> ClassIt = parsedClasses.iterator();
+	 double topLen = 0;
+	 String top = "";
+	 double preImportLen = 0;
+	 String preImp = "";
+	 double preClassLen = 0;
+	 String preClass ="";
+	 ArrayList<String> imports = new ArrayList<String>();
+	 while(ClassIt.hasNext()){
+	    BioClassData curr = ClassIt.next();
+	    if(curr.getTopComment().length()>topLen){
+	       top = curr.getTopComment();
+	    }
+	    if(curr.getPreClassComment().length()>preClassLen){
+	       preClass = curr.getPreClassComment();
+	    }
+	    if(curr.getPreImportComment().length()>preImportLen){
+	       preImp = curr.getPreImportComment();
+	    }
+	    ArrayList<String> currImps = curr.getImports();
+	    Iterator<String> ImpIt = currImps.iterator();
+	    while(ImpIt.hasNext()){
+	       String currImp = ImpIt.next();
+	       Iterator<String> ExistImps = imports.iterator();
+	       boolean exists = false;
+	       while(ExistImps.hasNext()){
+		  if(ExistImps.next().equals(currImp)){
+		     exists = true;
+		     break;
+		  }
+	       }
+	       if(!exists){
+		  imports.add(currImp);
+	       }
+	    }
+
+	 }
+	 BioClassData newClass = new BioClassData();
+	 newClass.setName(className);
+	 newClass.setPackage(packageName);
+	 newClass.setImports(imports);
+	 newClass.setPreClassComment(preClass);
+	 newClass.setTopComment(top);
+	 newClass.setPreImportComment(preImp);
+	 return newClass.printClass();
+      }
+   }
+
+   // counts Classes in an array of files
+   public int countClasses(File[] filenames) {
+      int number = 0;
+      for (int x = 0; x < filenames.length; x++) {
+	 if (filenames[x].isFile() && this.isClass(filenames[x])) {
+	    number++;
+	 }
+      }
+      return number;
+   }
+
+   public File[] returnClasses(File[] filenames) {
+      int size = countClasses(filenames);
+      if (size == 0) {
+	 return null;
+      } else {
+	 File[] output = new File[size];
+	 int curr = 0;
+	 for (int x = 0; x < filenames.length; x++) {
+	    if (isClass(filenames[x])) {
+	       output[curr] = filenames[x];
+	       curr++;
+	    }
+	 }
+	 return output;
+      }
+   }
+
+   // checks file to ensure it is a Class
+   public boolean isClass(File file) {
+      if (file.getName().endsWith(".java")) {
+	 BioIO extractor = new BioIO();
+	 String name = file.getName().substring(0,
+	       file.getName().lastIndexOf(".java"));
+	 ArrayList<String> lines = extractor.getFileContents(file);
+	 Iterator<String> lineIt = lines.iterator();
+	 boolean isclass = false;
+	 while (lineIt.hasNext()) {
+	    if (lineIt.next().contains("class " + name)) {
+	       isclass = true;
+	       break;
+	    }
+	 }
+	 return isclass;
+      }
+      return false;
+   }
+
+   public BioClassData renderClassData(File file) {
+      if (!isClass(file)) {
+	 return null;
+      }
+      BioClassData output = new BioClassData();
+      output.setName(file.getName().substring(0,
+	    file.getName().lastIndexOf(".java")));
+      BioIO extractor = new BioIO();
+      ArrayList<String> lines = extractor.getFileContents(file);
+      Iterator<String> lineIt = lines.iterator();
+
+      while (lineIt.hasNext()) {
+	 String line = lineIt.next();
+	 if (line.trim().toLowerCase().startsWith("package ")) {
+	    output.setPackage(line.substring(line.indexOf("package ")+8, line.length()-1));
+	 }else if(line.trim().toLowerCase().startsWith("import ")){
+	    output.addImport(line.substring(line.indexOf("import ")+7, line.length()-1));
+	 }else if(line.trim().toLowerCase().startsWith("class ") || line.trim().toLowerCase().startsWith("abstract ") || line.trim().toLowerCase().startsWith("final ")){
+	    if(line.toLowerCase().contains("abstract")){
+	       output.addModifier("abstract");
+	    }
+	    if(line.toLowerCase().contains("final")){
+	       output.addModifier("final");
+	    }
+	    break;
+	 }else{
+	    if(output.getPackage()==null){
+	       line = line.replace(output.getName(), "<<_CLASSNAME_>>");
+	       output.addToTopComment(line+"\n");
+	    }else if(output.getImports().size() == 0){
+	       line = line.replace(output.getName(), "<<_CLASSNAME_>>");
+	       output.addToPreImportComment(line+"\n");
+	    }else{
+	       line = line.replace(output.getName(), "<<_CLASSNAME_>>");
+	       output.addToPreClassComment(line+"\n");
+	    }
+	 }
+      }
+      return output;
+   }
+   // //takes a list of files
+   // //if empty returns basic file? or null
+   // //if one, returns stripped part
+   // //if multiple, returns parse.
+   // public ArrayList<ArrayList<String>> BestSequential(File[] filenames){
+   //
+   // if(this.countClasses(filenames) <3){
+   // return null;
+   // }else{
+   // //run main algorithm
+   // BioPreParse pre = new BioPreParse();
+   // BioStripDiff differ = new BioStripDiff();
+   //
+   // ArrayList<String> prevDiff =null;
+   // ArrayList<String> currDiff = null;
+   // HashMap<String, Integer> intMap = new HashMap<String, Integer>();
+   // int itCount = 0;
+   // boolean foundPair = false;
+   // //remove non class entries i.e. directories
+   // filenames = returnClasses(filenames);
+   // System.out.println(filenames.length+" files");
+   // for(int i = 0; i < filenames.length; i++){
+   // //scan in files
+   // ArrayList<String> later = _io.i_get_file_contents(filenames[i]);
+   // ArrayList<String> earlier = _io.i_get_file_contents(filenames[i+1]);
+   //
+   // //parser files. splits into imports and else and standardizes name.
+   // ArrayList<ArrayList<String>> LaterParse = pre.parse(later, filenames[i]);
+   // ArrayList<ArrayList<String>> EarlierParse = pre.parse(earlier,
+   // filenames[i+1]);
+   // currDiff = differ.compareByLine(LaterParse.get(1), EarlierParse.get(1));
+   // ArrayList<String> imports = LaterParse.get(0);
+   // for(int j = 0; j < imports.size(); j++){
+   // if(intMap.containsKey(imports.get(j))){
+   // intMap.put(imports.get(j), intMap.get(imports.get(j))+1);
+   // }else{
+   // intMap.put(imports.get(j),1);
+   // }
+   // }
+   // itCount++;
+   // if(prevDiff!=null){
+   // if(prevDiff.size() == currDiff.size()){
+   // foundPair =true;
+   // break;
+   // }
+   // System.out.println(prevDiff.size()-currDiff.size());
+   // }
+   // prevDiff=currDiff;
+   // }
+   // ArrayList<String> LaterParse;
+   // ArrayList<String> EarlierParse;
+   // if(foundPair == false){//failed to find two sequential similars, so
+   // return first.
+   // ArrayList<String> later = _io.i_get_file_contents(filenames[0]);
+   // ArrayList<String> earlier = _io.i_get_file_contents(filenames[1]);
+   // LaterParse = pre.parse(later, filenames[0]).get(1);
+   // EarlierParse = pre.parse(earlier, filenames[1]).get(1);
+   // }else{
+   // LaterParse = prevDiff;
+   // EarlierParse = currDiff;
+   // }
+   // ArrayList<String> importsToUse = new ArrayList<String>();
+   // double minUse = ((double) itCount/100)*BioConstants.ACCEPTABLE_IMPORTS;
+   // Set<String> importStrings = intMap.keySet();
+   // Iterator<String> importIterator = importStrings.iterator();
+   // while(importIterator.hasNext()){
+   // String currImport = importIterator.next();
+   // if(currImport.startsWith("package")){
+   // importsToUse.add(0, currImport);
+   // }else if(intMap.get(currImport) >= minUse){
+   // importsToUse.add(currImport);
+   // }
+   // }
+   //
+   // ArrayList<ArrayList<String>> output = new ArrayList<ArrayList<String>>();
+   // output.add(importsToUse);
+   // output.add(differ.compareByLine(LaterParse, EarlierParse));
+   // return output;
+   // }
+   // }
+}

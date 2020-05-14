@@ -1,0 +1,110 @@
+<project name='bubbles' default='all' >
+
+
+   <property file='../build.properties' />
+   <property name='PRO' value='/pro' />
+   <property name='BUBBLES' value='/pro/bubbles' />
+
+   <target name='all'>
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bedrock" target='plugin' />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bandaid" target='jar' />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/pybase" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/rebase" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/nobase" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/board" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bnote" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/buda" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bump" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bueno" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bowi" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/banal" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/buss" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/burp" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bale" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bass" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bdoc" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/beam" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bvcr" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bcon" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bgta" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bopp" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bddt" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bted" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/batt" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bedu" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bbook" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bdyn" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bwiz" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bucs" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bfix" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bpare" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/rebus" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bema" target='jar' />
+   </target>
+
+   <path id='bubbles.classpath'>
+      <pathelement location='${BUBBLES}/java' />
+      <pathelement location='${PRO}/ivy/java' />
+   </path>
+
+   <path id='test.classpath'>
+      <pathelement location='${BUBBLES}/java' />
+      <pathelement location='${PRO}/ivy/java' />
+   </path>
+
+   <path id='jdocsrc'>
+      <pathelement location='${BUBBLES}/javasrc' />
+      <pathelement location='${PRO}/ivy/javasrc' />
+   </path>
+
+
+   <target name='compile'>
+      <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'>
+	 <classpath refid='bubbles.classpath' />
+      </javac>
+   </target>
+
+
+   <target name='doc'>
+      <javadoc sourcepathref='jdocsrc' classpathref='bubbles.classpath' destdir='${BUBBLES}/doc'>
+	 <package name='edu.brown.cs.bubbles.bale' />
+	 <package name='edu.brown.cs.bubbles.banal' />
+	 <package name='edu.brown.cs.bubbles.bandaid' />
+	 <package name='edu.brown.cs.bubbles.bass' />
+	 <package name='edu.brown.cs.bubbles.batt' />
+	 <package name='edu.brown.cs.bubbles.bbook' />
+	 <package name='edu.brown.cs.bubbles.bcon' />
+	 <package name='edu.brown.cs.bubbles.bddt' />
+	 <package name='edu.brown.cs.bubbles.bdoc' />
+	 <package name='edu.brown.cs.bubbles.bdyn' />
+	 <package name='edu.brown.cs.bubbles.beam' />
+	 <package name='edu.brown.cs.bubbles.bedu' />
+	 <package name='edu.brown.cs.bubbles.bema' />
+	 <package name='edu.brown.cs.bubbles.bgta' />
+	 <package name='edu.brown.cs.bubbles.bhelp' />
+	 <package name='edu.brown.cs.bubbles.bnote' />
+	 <package name='edu.brown.cs.bubbles.board' />
+	 <package name='edu.brown.cs.bubbles.bopp' />
+	 <package name='edu.brown.cs.bubbles.bowi' />
+	 <package name='edu.brown.cs.bubbles.bted' />
+	 <package name='edu.brown.cs.bubbles.buda' />
+	 <package name='edu.brown.cs.bubbles.bueno' />
+	 <package name='edu.brown.cs.bubbles.bump' />
+	 <package name='edu.brown.cs.bubbles.burp' />
+	 <package name='edu.brown.cs.bubbles.bucs' />
+	 <package name='edu.brown.cs.bubbles.buss' />
+	 <package name='edu.brown.cs.bubbles.bvcr' />
+	 <package name='edu.brown.cs.bubbles.bwiz' />
+	 <package name='edu.brown.cs.bubbles.rebus' />
+	 <package name='edu.brown.cs.ivy.exec' />
+	 <package name='edu.brown.cs.ivy.exec' />
+	 <package name='edu.brown.cs.ivy.file' />
+	 <package name='edu.brown.cs.ivy.limbo' />
+	 <package name='edu.brown.cs.ivy.mint' />
+	 <package name='edu.brown.cs.ivy.swing' />
+	 <package name='edu.brown.cs.ivy.xml' />
+      </javadoc>
+   </target>
+
+
+</project>

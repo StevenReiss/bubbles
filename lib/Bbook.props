@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bbook.enable">true</entry>
+<entry key="Bbook.autoshow">false</entry>
+</properties>
+

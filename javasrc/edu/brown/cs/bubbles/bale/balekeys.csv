@@ -1,0 +1,85 @@
+"ctrl C",Copy
+"ctrl V",Smart Paste
+"ctrl X",Cut
+"COPY",Copy
+"PASTE",Paste
+"CUT",Cut
+"control INSERT",Copy
+"shift INSERT",Paste
+"shift DELETE",Cut
+"shift LEFT",Select Backward
+"shift KP_LEFT",Select Backward
+"shift RIGHT",Select Forward
+"shift KP_RIGHT",Select Forward
+"ctrl LEFT",Previous Word
+"ctrl KP_LEFT",Previous Word
+"ctrl RIGHT",Next Word
+"ctrl KP_RIGHT",Next Word
+"ctrl shift LEFT",Select Previous Word
+"ctrl shift KP_LEFT",Select Previous Word
+"ctrl shift RIGHT",Select Next Word
+"ctrl shift KP_RIGHT",Select Next Word
+"ctrl A",Select All
+"HOME",Begin Line
+"END",End Line
+"shift HOME",Select Begin Line
+"shift END",Select End Line
+"UP",Up
+"KP_UP",Up
+"DOWN",Down
+"KP_DOWN",Down
+"PAGE_UP",Page Up
+"PAGE_DOWN",Page Down
+"shift PAGE_UP",Select Page Up
+"shift PAGE_DOWN",Select Page Down
+"ctrl shift PAGE_UP",Select Page Left
+"ctrl shift PAGE_DOWN",Selet Page Right
+"shift UP",Select Up
+"shift KP_UP",Select Up
+"shift DOWN",Select Down
+"shift KP_DOWN",Select Down
+"ENTER",New line
+"BACK_SPACE",Delete Previous Character
+"shift BACK_SPACE",Delete Previous Character
+"ctrl H",Delete Previous Character
+"DELETE",Delete Next Character
+"ctrl DELETE",Delete Next Word
+"ctrl BACK_SPACE",Delete Previous Word
+"RIGHT",Forward
+"LEFT",Backward
+"KP_RIGHT",Forward
+"KP_LEFT",Backward
+"TAB",Insert Tab
+"ctrl BACK_SLASH",Unselect
+"ctrl HOME",Begin
+"ctrl END",End
+"ctrl shift HOME",Select Begin
+"ctrl shift END",Select End
+"ctrl T",Next Link
+"ctrl shift T",Previous Link
+"ctrl SPACE",Activate Link
+"control shift O",Toggle Orientation
+"ctrl Z",Undo
+"ctrl Y",Redo
+"shift TAB",Tab
+"INSERT",Toggle Insertion Mode
+"ctrl F",Find
+"ctrl K",Find Next
+"ctrl shift K",Find Previous
+"ctrl D",Delete Line
+"ctrl shift DELETE",Delete to end of line
+"ctrl shift ENTER",Insert line above
+"shift ENTER",Insert line below
+"ctrl I",Indent Line
+"ctrl alt J",Join Lines
+"ctrl S",Save
+"ctrl shift S",Save All
+"alt shift ctrl S",Revert
+"ctrl E",Explicit Elision
+"ctrl shift E",Redo Elision
+"ctrl shift V",Paste
+"alt DOWN",Move Lines Down
+"alt UP",Move Lines Up
+"F3",Go to Definition
+"F1",Toggle Insertion Mode
+

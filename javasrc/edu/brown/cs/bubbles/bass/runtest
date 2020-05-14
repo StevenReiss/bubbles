@@ -1,0 +1,3 @@
+#! /bin/csh -f
+
+ant test | tee tests.out

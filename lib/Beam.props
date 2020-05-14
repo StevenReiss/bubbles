@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Beam.note.width">200</entry>
+<entry key="Beam.note.height">200</entry>
+<entry key="Beam.web.width">480</entry>
+<entry key="Beam.web.height">300</entry>
+<entry key="Beam.problem.width">400</entry>
+<entry key="Beam.problem.height">150</entry>
+<entry key="Beam.web.url">http://www.google.com</entry>
+<entry key="Beam.note.top.color">fffefdd1</entry>
+<entry key="Beam.note.bottom.color">fff8ed5d</entry>
+<entry key="Beam.problem.top.color">ffffcccc</entry>
+<entry key="Beam.problem.bottom.color">ffffa0a0</entry>
+<entry key="Beam.problem.click.count">1</entry>
+<entry key="Beam.problem.fixed">true</entry>
+<entry key="Beam.problem.font">SansSerif/0/11</entry>
+<entry key="Beam.note.font.size">12</entry>
+<entry key="Beam.note.font">Serif/0/12</entry>
+<entry key="Beam.tracbug.url">http://codebubbles@conifer.cs.brown.edu:8000/bubbles/</entry>
+<entry key="Beam.tracbug.screenshot">false</entry>
+<entry key="Beam.help.video">http://www.eecs.ucf.edu/isuelab/codebubbles.mp4</entry>
+<entry key="Beam.help.home">http://www.cs.brown.edu/people/spr/codebubbles/</entry>
+<entry key="Beam.help.wiki">http://conifer.cs.brown.edu:8000/bubbles/wiki/OverView</entry>
+<entry key="Beam.help.tutorial">http://www.cs.brown.edu/people/spr/codebubbles/tutorial</entry>
+<entry key="Beam.help.mailto">spr@cs.brown.edu</entry>
+<entry key="Beam.show.save">true</entry>
+<entry key="Beam.show.build">true</entry>
+<entry key="Beam.show.refresh">true</entry>
+</properties>

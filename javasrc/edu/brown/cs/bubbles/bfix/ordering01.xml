@@ -1,0 +1,178 @@
+<FILE>
+   <COMMENT>
+/********************************************************************************/
+/*										*/
+/*		$(FILENAME)							*/
+/*										*/
+/*	Description of the file goes here					*/
+/*										*/
+/********************************************************************************/
+   </COMMENT>
+   <COMMENT>
+/*	Copyright 2015 Brown University -- Steven P. Reiss		      */
+/*********************************************************************************
+ *  Copyright 2015, Brown University, Providence, RI.				 *
+ *										 *
+ *			  All Rights Reserved					 *
+ *										 *
+ * This program and the accompanying materials are made available under the	 *
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
+ * and is available at								 *
+ *	http://www.eclipse.org/legal/epl-v10.html				 *
+ *										 *
+ ********************************************************************************/
+   </COMMENT>
+   <BLANK LINE='3'/>
+   <CODE />
+package $(PACKAGE);
+   </CODE>
+   <BLANK LINE='3'/>
+   <CLASS>
+      <CODE />
+      <SET>
+	 <SELECTOR TYPE='FIELD' />
+	 <ORDER>
+	    <PROTECT ORDER='PUBLIC,PACKAGE,PROTECTED,PRIVATE' />
+	    <NAME ORDER='ALPHABETICAL' />
+	 </ORDER>
+	 <PREFIX>
+	     <COMMENT>
+/********************************************************************************/
+/*										*/
+/*	Private Storage 							*/
+/*										*/
+/********************************************************************************/
+	     </COMMENT>
+	     <BLANK LINE='1' />
+	 </PREFIX>
+	 <SUFFIX>
+	    <BLANK LINE='3' />
+	 </SUFFIX>
+	 <ELEMENT />
+      </SET>
+      <SET>
+	 <SELECTOR TYPE='CONSTRUCTOR' />
+	 <ORDER>
+	    <PARAMETER ORDER='SIMPLE_FIRST' />
+	    <PROTECT ORDER='PUBLIC,PACKAGE,PROTECTED,PRIVATE' />
+	 </ORDER>
+	 <PREFIX>
+	    <COMMENT>
+/********************************************************************************/
+/*										*/
+/*	Constructors								*/
+/*										*/
+/********************************************************************************/
+	    </COMMENT>
+	    <BLANK LINE='1' />
+	 </PREFIX>
+	 <SUFFIX />
+	 <ELEMENT>
+	    <SUFFIX>
+	       <BLANK LINE='3' />
+	    </SUFFIX>
+	 </ELEMENT>
+      </SET>
+      <SET>
+	 <SELECTOR TYPE='METHOD' PATTERH='(get|set|is)[A-Z])' />
+	 <ORDER>
+	    <NAME SELECT='(get|set|is)(.*)' SELECTOR='2' ORDER='ALPHABETICAL' />
+	    <NAME ORDER='ALPHABETICAL' />
+	 </ORDER>
+	 <PREFIX>
+	    <COMMENT>
+/********************************************************************************/
+/*										*/
+/*	Access Methods								*/
+/*										*/
+/********************************************************************************/
+	    </COMMENT>
+	    <BLANK LINE='1' />
+	 </PREFIX>
+	 <ELEMENT>
+	    <SUFFIX>
+	       <BLANK LINE='3' />
+	    </SUFFIX>
+	 </ELEMENT>
+      </SET>
+      <SET>
+	 <SELECTOR TYPE="METHOD' ACCESS='PUBLIC' />
+	 <ORDER>
+	    <NAME ORDER='ALHPABETICAL' />
+	 </ORDER>
+	 <ELEMENT>
+	    <PREFIX>
+	       <COMMENT>
+/********************************************************************************/
+/*										*/
+/*	$(NAME) 								*/
+/*										*/
+/********************************************************************************/
+	       </COMMENT>
+	       <BLANK LINE='1' />
+	       <JAVADOC />
+	       <BLANK LINE='1' />
+	    </PREFIX>
+	    <SUFFIX>
+	       <BLANK LINE='3' />
+	    </SUFFIX>
+	 </ELEMENT>
+      </SET>
+      <SET>
+	 <SELECTOR TYPE='METHOD'/>
+	 <ORDER>
+	    <ACCESS ORDER='PACKAGE,PROTECTED,PRIVATE' />
+	    <NAME ORDER='ALHPABETICAL' />
+	 </ORDER>
+	 <ELEMENT>
+	    <PREFIX>
+	       <COMMENT>
+/********************************************************************************/
+/*										*/
+/*	$(NAME) 								*/
+/*										*/
+/********************************************************************************/
+	       </COMMENT>
+	       <BLANK LINE='1' />
+	    </PREFIX>
+	    <SUFFIX>
+	       <BLANK LINE='3' />
+	    </SUFFIX>
+	 </ELEMENT>
+      </SET>
+      <SET>
+	 <SELECTOR TYPE='CLASS,ENUM,INTERFACE'/>
+	 <ORDER>
+	    <ACCESS ORDER='PACKAGE,PROTECTED,PRIVATE' />
+	    <NAME ORDER='ALHPABETICAL' />
+	 </ORDER>
+	 <ELEMENT>
+	    <PREFIX>
+	       <COMMENT>
+/********************************************************************************/
+/*										*/
+/*	$(NAME) 								*/
+/*										*/
+/********************************************************************************/
+	       </COMMENT>
+	       <BLANK LINE='1' />
+	    </PREFIX>
+	    <SUFFIX>
+	       <COMMENT>// end of inner class $(NAME)</COMMENT>
+	       <BLANK LINE='3' />
+	    </SUFFIX>
+	    <SET>
+	       <SELECTOR TYPE='ANY' />
+	       <ORDER>
+		  <TYPE ORDER='FIELD,CONSTRUCTOR,METHOD' />
+		  <ACCESS ORDER='PUBLIC,PACKAGE,PROTECTED,PRIVATE' />
+		  <DEFINITION />
+	       </ORDER>
+	       <PREFIX>
+		  <BLANK LINE='1' />
+	       </PREFIX>
+	    </SET>
+	 </ELEMENT>
+      </SET>
+   </CLASS>
+</FILE>

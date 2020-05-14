@@ -1,0 +1,453 @@
+BPARE: Match result for {
+  Block s=e.getToBlock();
+  if (live.get(s))   liveDepth(s,live,visit);
+}
+ :
+BPARE: RESULT MAP:
+
+   4.0: {
+  Register ru=u.getRegister();
+  if (ru != null)   unavail.set(ru);
+}
+
+   5.0: {
+  addChild(a3);
+  if (a4 != null)   addChild(a4);
+}
+
+   4.0: {
+  DecafSymbol sym;
+  if (t.isCall())   sym=scp.findMethod(t.getName());
+ else   sym=scp.findInScope(t.getName());
+  if (sym == null) {
+    error(t,"qualified name " + t.getName() + " not defined");
+  }
+ else   if (!checkAccess(sym)) {
+    error(t,"cannot access " + t.getName());
+  }
+ else {
+    t.setSymbol(sym);
+    t.setType(getSymbolScopeType(sym));
+    if (sym.getModifiers().isStatic())     t.replaceLhs(null);
+ else     if (ltyp == DecafType.metaType()) {
+      Ast.Name rthis=new Ast.Name(t.getLocation(),THIS_NAME);
+      checkSimpleName(rthis);
+      rthis.accept(this);
+      t.replaceLhs(rthis);
+    }
+  }
+}
+
+   4.0: {
+  if (inBuf > 0) {
+    --inBuf;
+    if (++bufpos == bufsize)     bufpos=0;
+    return buffer[bufpos];
+  }
+  if (++bufpos >= maxNextCharInd)   FillBuff();
+  char c=buffer[bufpos];
+  UpdateLineColumn(c);
+  return c;
+}
+
+   6.0: {
+  Block c=e.getFromBlock();
+  if (c.getNumSuccessors() > 1)   crit.add(e);
+}
+
+   4.0: {
+  Temporary t=ins.getTarget();
+  if (t != null)   priority.incrValue(t);
+  for (int i=0; i < ins.getNumOperand(); ++i) {
+    t=ins.getTemporaryOperand(i);
+    if (t != null)     priority.incrValue(t);
+  }
+}
+
+   4.0: {
+  t=ins.getTemporaryOperand(i);
+  if (t != null)   priority.incrValue(t);
+}
+
+   4.0: {
+  if (cur_file == null || !cur_file.equals(loc.getFile())) {
+    cur_file=loc.getFile();
+    printField("FILE",loc.getFile());
+  }
+  if (loc.getLine() != 0)   printField("LINE",loc.getLine());
+}
+
+   3.0: {
+  if (jj_scan_token(LX_LBRACKET))   return true;
+  if (jj_scan_token(LX_RBRACKET))   return true;
+  return false;
+}
+
+   6.0: {
+  Temporary ntgt=flow_data.getNewTemporary(tgt);
+  if (tgt.hasOffset())   ntgt.setOffset(tgt.getOffset());
+  name_stack.add(tgt,ntgt);
+  def_map.put(ntgt,ins);
+}
+
+   4.0: {
+  AlgIdentity aid=pattern_table[i];
+  if (aid.check(for_routine,ins,li,cmap,numbering))   return true;
+}
+
+   4.0: {
+  t=ins.getTemporaryOperand(i);
+  if (t != null && spill_set.get(t))   insertload.set(t);
+}
+   4.0: {
+  Instruction nins=replace_with[j].getInstruction(r,args);
+  if (nins != null)   li.add(nins);
+}
+
+   7.0: {
+  Block x=e.getToBlock();
+  if (idom.get(x) != b)   domfnt.getSet(b).set(x);
+}
+
+   5.0: {
+  Block c=(Block)idom.get(b);
+  if (c != null)   children.getSet(c).set(b);
+}
+
+   3.0: {
+  Temporary ti=ins.getTemporaryOperand(i);
+  if (ti != tgt)   td.mergeData(temp_table.get(ti));
+}
+
+   5.0: {
+  Temporary t=ins.getTemporaryOperand(i);
+  if (t != null)   use_set.addUse(t,ins);
+}
+
+   6.0: {
+  Block p=e.getFromBlock();
+  if (!loop.get(p) && p != b)   loop.set(p);
+}
+
+   5.0: {
+  asm_file.op(opc,v0,vt);
+  if (fixopc != null)   asm_file.op(fixopc,vt);
+}
+
+   3.0: {
+  BlockSet ts=set_factory.createBlockSet();
+  if (nval)   ts.flip();
+  if (nval != val) {
+    for (    Block t : for_routine.getBlocks()) {
+      ts.set(t,val);
+    }
+  }
+  return ts;
+}
+
+   4.0: {
+  Temporary t=ins.getTemporaryOperand(i);
+  if (t != null)   used_temps.set(t);
+}
+
+   3.0: {
+  if (jj_3R_26())   return true;
+  if (jj_scan_token(LX_SEMICOLON))   return true;
+  return false;
+}
+
+   4.0: {
+  insertPsiNodes();
+  if (opt)   optRename();
+ else   rename();
+  fixupPsiNodes();
+}
+
+   5.0: {
+  if (idx > getNumChildren())   return;
+  if (idx == getNumChildren())   addChild(ast);
+ else   ast_children.set(idx,ast);
+}
+
+   6.0: {
+  nt=flow_data.getNewTemporary(t);
+  if (t.hasOffset())   nt.setOffset(t.getOffset());
+  newname.put(t,nt);
+}
+
+   6.0: {
+  Temporary t=stack.pop();
+  if (!temps_visited.get(t))   elimCreate(c,t);
+}
+
+   4.0: {
+  String vt=getAsmOperand(ins.getTarget());
+  if (!vt.equals("%eax"))   asm_file.op("movl","%eax",vt);
+}
+
+   4.0: {
+  Temporary t=ins.getTemporaryOperand(i);
+  if (t != null)   v.add(t);
+}
+
+   6.0: {
+  Temporary ntgt=flow_data.getNewTemporary(tgt);
+  if (tgt.hasOffset())   ntgt.setOffset(tgt.getOffset());
+  name_stack.add(tgt,ntgt);
+  def_map.put(ntgt,ins);
+}
+
+   4.0: {
+  Block s=e.getToBlock();
+  int j=s.getWhichPredecessor(b);
+  for (  Instruction ins : s.instructions()) {
+    if (ins.getOpCode() == OpCode.PSI) {
+      Temporary t=ins.getTemporaryOperand(j);
+      if (name_stack.isEmpty(t))       ins.setOperand(j,null);
+ else {
+        Temporary tnew=name_stack.getFront(t);
+        ins.setOperand(j,tnew);
+        use_set.addUse(tnew,ins);
+      }
+    }
+ else     break;
+  }
+}
+
+   5.0: {
+  li.set(nins);
+  if (nins.getOpCode() == OpCode.LDC)   peepholeConstant(nins);
+  return true;
+}
+
+   3.0: {
+  addChild(t);
+  if (act++ != 0)   nm.append(",");
+  nm.append(t.getName());
+}
+
+   4.0: {
+  Temporary t=ins.getTarget();
+  if (t != null)   evalloc.getSet(t).set(b);
+}
+
+   4.0: {
+  DecafSymbol sym=null;
+  if (t.getName().equals(CLASS_NAME))   sym=cur_class;
+ else   if (t.getName().equals(SUPER_NAME)) {
+    if (!cur_method.getModifiers().isStatic()) {
+      DecafType styp=cur_class.getSuperClass().getSuperType();
+      if (styp != null)       sym=styp.getAssociatedSymbol();
+    }
+ else {
+      error(t,"cannot use super in a static method");
+      return;
+    }
+  }
+ else   sym=cur_scope.find(t.getName());
+  if (sym == null)   error(t,"name " + t.getName() + " not defined");
+ else {
+    if (sym.getKind() == SymbolKind.FIELD) {
+      Ast.Name rthis=new Ast.Name(t.getLocation(),THIS_NAME);
+      checkSimpleName(rthis);
+      t.replaceLhs(rthis);
+    }
+ else {
+      t.setSymbol(sym);
+      t.setType(getSymbolScopeType(sym));
+    }
+  }
+}
+
+   3.0: {
+  if (i != 0)   buf.append(",");
+  if ((i == 0 && op_code == OpCode.LD) || (i == 1 && op_code == OpCode.ST))   buf.append("[");
+  if (code_args[i] == null)   buf.append("<NULL>");
+ else   buf.append(code_args[i].toString());
+  if ((i == 0 && op_code == OpCode.LD) || (i == 1 && op_code == OpCode.ST))   buf.append("]");
+}
+
+   4.0: {
+  Register r=t.getRegister();
+  if (r != null)   already_assigned.set(r);
+}
+
+   11.0: {
+  Block p=e.getFromBlock();
+  if (visit.get(p))   liveout.getSet(p).set(t);
+}
+
+   4.0: {
+  Register r=t.getRegister();
+  if (r != null)   globalregs.set(r);
+}
+
+   4.0: {
+  Instruction ins=li.previous();
+  if (ins.getTarget() == rslt)   ins.setTarget(t1);
+  for (int i=0; i < ins.getNumOperand(); ++i) {
+    if (ins.getTemporaryOperand(i) == rslt)     ins.setOperand(i,t1);
+  }
+}
+
+   4.0: {
+  Temporary t=ins.getTemporaryOperand(i);
+  if (t != null && nodes.get(t))   live.set(t);
+}
+
+   4.0: {
+  String s=source_list.get(0);
+  if (s.endsWith(".ast")) {
+    try {
+      ObjectInputStream ois=new ObjectInputStream(new FileInputStream(s));
+      ast_root=(DecafAst)ois.readObject();
+      ois.close();
+    }
+ catch (    Exception e) {
+      System.err.println("DECAF: Problem reading ast file: " + e);
+    }
+    return;
+  }
+}
+
+   8.0: {
+  Temporary t=ins.getTemporaryOperand(j);
+  if (name_stack.isEmpty(t))   ins.setOperand(j,null);
+ else {
+    Temporary tnew=name_stack.getFront(t);
+    ins.setOperand(j,tnew);
+    use_set.addUse(tnew,ins);
+  }
+}
+
+   4.0: {
+  Temporary top=ins.getTemporaryOperand(i);
+  if (top != null)   exposed.set(top);
+}
+
+   3.0: {
+  if (jj_scan_token(LX_NEW))   return true;
+  if (jj_scan_token(LX_ID))   return true;
+  return false;
+}
+
+   3.0: {
+  if (source_location != null) {
+    pw.print("\"" + source_location.getFile() + "\", "+ source_location.getLine()+ ": ");
+  }
+  if (error_level != ErrorLevel.NONE)   pw.print(error_level.toString());
+  pw.println(": " + error_message);
+}
+
+   3.0: {
+  Temporary cc=getTemporaryOperand(0);
+  if (cc != null)   buf.append("[" + cc.getCodeType().toString() + "]");
+}
+
+   4.0: {
+  int npd=b.getNumPredecessors();
+  if (npd == 0 && handleDummyBlock(b))   bad.add(b);
+}
+
+   4.0: {
+  Block s=e.getToBlock();
+  if (pre[s.getBlockNumber()] == 0) {
+    edgedfs.put(e,EdgeDfsType.TREE);
+    dfs(s,pre,rpost,prelist,postlist,edgedfs);
+  }
+ else   if (rpost[s.getBlockNumber()] == 0) {
+    edgedfs.put(e,EdgeDfsType.BACK);
+  }
+ else   if (pre[n.getBlockNumber()] < pre[s.getBlockNumber()]) {
+    edgedfs.put(e,EdgeDfsType.FORWARD);
+  }
+ else {
+    edgedfs.put(e,EdgeDfsType.CROSS);
+  }
+}
+
+   22.0: {
+  Block s=e.getToBlock();
+  if (live.get(s))   liveDepth(s,live,visit);
+}
+
+   4.0: {
+  Block s=e.getToBlock();
+  int j=s.getWhichPredecessor(b);
+  for (ListIterator<Instruction> ii=s.getInstructions(); ii.hasNext(); ) {
+    Instruction ins=ii.next();
+    if (ins.getOpCode() == OpCode.PSI) {
+      Temporary t=ins.getTemporaryOperand(j);
+      Temporary tnew=name_stack.getFront(t);
+      ins.setOperand(j,tnew);
+      use_set.addUse(tnew,ins);
+    }
+ else     break;
+  }
+}
+
+   5.0: {
+  char[] ret=new char[len];
+  if ((bufpos + 1) >= len)   System.arraycopy(buffer,bufpos - len + 1,ret,0,len);
+ else {
+    System.arraycopy(buffer,bufsize - (len - bufpos - 1),ret,0,len - bufpos - 1);
+    System.arraycopy(buffer,0,ret,len - bufpos - 1,bufpos + 1);
+  }
+  return ret;
+}
+
+   5.0: {
+  Temporary ti=uins.getTemporaryOperand(i);
+  if (ti == t0)   uins.setOperand(i,t1);
+}
+
+   3.0: {
+  out_writer.close();
+  if (out_writer.checkError()) {
+    throw new DecafException("Problem w/ asm output");
+  }
+}
+
+   4.0: {
+  Temporary t=ins.getTemporaryOperand(i);
+  if (t != null)   ins.setOperand(i,temp_partition.find(t));
+}
+
+   7.0: {
+  if (r.getName().equals("cc"))   reg_cc=r;
+ else   if (r.getName().equals("eax"))   reg_eax=r;
+ else   if (r.getName().equals("ecx"))   reg_ecx=r;
+ else   if (r.getName().equals("edx"))   reg_edx=r;
+  if (r.isReserved())   already_assigned.set(r);
+}
+
+   4.0: {
+  Register r=u.getRegister();
+  if (r != null)   unavail.set(r);
+}
+
+   5.0: {
+  String s=getAsmOperand(t);
+  if (!s.equals("%eax"))   asm_file.op("movl","%eax",s);
+}
+
+   4.0: {
+  Register r=t.getRegister();
+  if (r != null)   globalregs.set(r);
+}
+
+   3.0: {
+  if (jj_scan_token(LX_NEW))   return true;
+  if (jj_scan_token(LX_ID))   return true;
+  Token xsp;
+  if (jj_3R_28())   return true;
+  while (true) {
+    xsp=jj_scanpos;
+    if (jj_3R_28()) {
+      jj_scanpos=xsp;
+      break;
+    }
+  }
+  return false;
+}
+

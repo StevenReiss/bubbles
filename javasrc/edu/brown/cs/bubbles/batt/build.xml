@@ -1,0 +1,153 @@
+<project name='bubbles.batt' default='jars'>
+
+   <property file='../../../../../../build.properties' />
+   <property name='PRO' value='/pro' />
+   <property name='BUBBLES' value='/pro/bubbles' />
+   <available file="${PRO}/ivy" type="dir" property="ivy.present" />
+   <target name="init1" if="ivy.present" >
+      <property name='IVYBIN' value='${PRO}/ivy/java' />
+      <property name='IVYJAR1' value='${PRO}/ivy/java' />
+      <property name='IVYJAR2' value='**/*.class' />
+   </target>
+   <target name="init2" unless="ivy.present" >
+      <property name='IVYBIN' value='${BUBBLES}/lib/ivy.jar' />
+      <property name='IVYJAR1' value='${BUBBLES}/lib' />
+      <property name='IVYJAR2' value='ivy.jar' />
+   </target>
+   <target name='init' depends='init1,init2' >
+      <path id='bubbles.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <pathelement location='${BUBBLES}/lib/junit.jar' />
+	 <pathelement location='${BUBBLES}/lib/bubblesasm.jar' />
+      </path>
+      <path id='test.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <pathelement location='${BUBBLES}/lib/junit.jar' />
+	 <pathelement location='${BUBBLES}/lib/bubblesasm.jar' />
+      </path>
+   </target>
+
+   <available file='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' type='file' property='j8'
+       value='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' />
+   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar'
+	type='file' property = 'j8' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar' />
+
+
+   <target name='compile' depends='init'>
+      <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
+		target='1.8' source='1.8' bootclasspath='${j8}'
+		excludes='BattAgent.java BattInstrument.java'
+		includeantruntime='false' >
+	 <classpath refid='bubbles.classpath' />
+      </javac>
+      <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
+		target='1.8' source='1.8' bootclasspath='${j8}'
+		includes='BattAgent.java BattInstrument.java BattConstants.java'
+		includeantruntime='false' >
+	 <classpath refid='bubbles.classpath' />
+      </javac>
+   </target>
+
+   <target name='clean'>
+      <delete dir='${BUBBLES}/java/edu/brown/cs/bubbles/batt' />
+   </target>
+
+   <target name='test00' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.batt.BattMain' fork='true' dir='test'>
+	 <classpath refid='test.classpath' />
+	 <arg value="-L" />
+	 <arg value="-b" />
+	 <arg value="${BUBBLES}/lib" />
+	 <arg value="-m" />
+	 <arg value="BUBBLES_DEBUG_spr" />
+      </java>
+   </target>
+
+   <target name='test00v' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.batt.BattMain' fork='true' dir='test'>
+	 <classpath refid='test.classpath' />
+	 <arg value="-L" />
+	 <arg value="-b" />
+	 <arg value="${BUBBLES}/lib" />
+	 <arg value="-m" />
+	 <arg value="BUBBLES_DEBUG_spr_vhr" />
+      </java>
+   </target>
+
+   <target name='test01' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.batt.BattMain' fork='true' dir='test'>
+	 <classpath refid='test.classpath' />
+	 <arg value="-R" />
+	 <arg value="-b" />
+	 <arg value="${BUBBLES}/lib" />
+	 <arg value="-m" />
+	 <arg value="BUBBLES_DEBUG_spr" />
+      </java>
+   </target>
+
+   <target name='test02' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.batt.BattMain' fork='true' dir='test'>
+	 <classpath refid='test.classpath' />
+	 <arg value="-S" />
+	 <arg value="-b" />
+	 <arg value="${BUBBLES}/lib" />
+	 <arg value="-m" />
+	 <arg value="BUBBLES_DEBUG_spr" />
+      </java>
+   </target>
+
+   <target name='test03' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.batt.BattMain' fork='true' dir='test'>
+	 <classpath refid='test.classpath' />
+	 <arg value="-C" />
+	 <arg value="-b" />
+	 <arg value="${BUBBLES}/lib" />
+	 <arg value="-m" />
+	 <arg value="BUBBLES_DEBUG_spr" />
+      </java>
+   </target>
+
+   <target name='agent' depends='compile'>
+      <jar destfile='battagent.jar'>
+	 <manifest>
+	    <attribute name='Premain-Class' value='edu.brown.cs.bubbles.batt.BattAgent' />
+	    <attribute name='Agent-Class' value='edu.brown.cs.bubbles.batt.BattAgent' />
+	    <attribute name='Can-Redefine-Classes' value='true' />
+	    <attribute name='Can-Retransform-Classes' value='true' />
+	    <attribute name='Can-Set-Native-Method-Prefix' value='true' />
+	    <attribute name='Sealed' value='false' />
+	 </manifest>
+	 <fileset dir='${BUBBLES}/java' includes='**/batt/BattAgent*.class' />
+	 <fileset dir='${BUBBLES}/java' includes='**/batt/BattInstrument*.class' />
+	 <fileset dir='${BUBBLES}/java' includes='**/batt/BattConstants*.class' />
+	 <zipfileset src="${BUBBLES}/lib/bubblesasm.jar" excludes="META-INF/*" />
+      </jar>
+      <copy file='battagent.jar' tofile='${BUBBLES}/lib/battagent.jar' />
+   </target>
+
+   <target name='runjar' depends='compile'>
+      <jar destfile='battjunit.jar'>
+	 <manifest>
+	    <attribute name='Main-Class' value='edu.brown.cs.bubbles.batt.BattJUnit' />
+	 </manifest>
+	 <fileset dir='${BUBBLES}/java' includes='**/batt/BattJUnit*.class' />
+	 <fileset dir='${BUBBLES}/java' includes='**/batt/BattConstants*.class' />
+      </jar>
+      <copy file='battjunit.jar' tofile='${BUBBLES}/lib/battjunit.jar' />
+   </target>
+
+   <target name='jars' depends='agent,runjar' />
+
+
+</project>
+
+
+
+
+
+
+
+
+

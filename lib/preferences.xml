@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<OPTIONS>
+   <PACKAGE NAME="Beam">
+
+      <OPT NAME="Note Bubble Options" TYPE="DIVIDER">
+	 <TAB NAME="Popular Options"/>
+	 <TAB NAME="Bubble Config"/>
+      </OPT>
+      <OPT NAME="Beam.note.width" DESCRIPTION="Default note bubble width" TYPE="INTEGER">
+	 <TAB NAME="Popular Options"></TAB>
+	 <TAB NAME="Bubble Config"></TAB>
+	 <EXAMPLE TEXT="Width in pixels"></EXAMPLE>
+	 <KEYWORD TEXT="Size"/>
+      </OPT>
+      <OPT NAME="Beam.note.height" DESCRIPTION="Default note bubble height" TYPE="INTEGER">
+	 <TAB NAME="Popular Options"></TAB>
+	 <TAB NAME="Bubble Config"></TAB>
+	 <EXAMPLE TEXT="Height in pixels"></EXAMPLE>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Note"/>
+	 <KEYWORD TEXT="Size"/>
+	 <KEYWORD TEXT="Height"/>
+      </OPT>
+      <OPT NAME="Beam.note.top.color" DESCRIPTION="Top color of note bubble" TYPE="COLOR">
+	 <TAB NAME="Popular Options"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Note"/>
+	 <KEYWORD TEXT="Color"/>
+	 <KEYWORD TEXT="Top"/>
+      </OPT>
+      <OPT NAME="Beam.note.bottom.color" DESCRIPTION="Bottom color of note bubble" TYPE="COLOR">
+	 <TAB NAME="Popular Options"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Note"/>
+	 <KEYWORD TEXT="Color"/>
+	 <KEYWORD TEXT="Bottom"/>
+      </OPT>
+      <OPT NAME="Beam.note.font.size" DESCRIPTION="Default size of the font in notes" TYPE="INTEGER" MIN="4" MAX="64" SLIDER="TRUE" NEGATIVEALLOWED="FALSE">
+	 <TAB NAME="Font Options"/>
+	 <EXAMPLE TEXT="Minimum 4, max 64"/>
+      </OPT>
+
+      <OPT NAME="Problem/TODO Bubble Options" TYPE="DIVIDER">
+	 <TAB NAME="Popular Options"/>
+	 <TAB NAME="Bubble Config"/>
+      </OPT>
+      <OPT NAME="Beam.problem.width" DESCRIPTION="Default problem bubble width" TYPE="INTEGER">
+	 <TAB NAME="Popular Options"></TAB>
+	 <TAB NAME="Bubble Config"></TAB>
+	 <EXAMPLE TEXT="Width in pixels"></EXAMPLE>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Problem"/>
+	 <KEYWORD TEXT="Size"/>
+	 <KEYWORD TEXT="Width"/>
+      </OPT>
+      <OPT NAME="Beam.problem.height" DESCRIPTION="Default problem bubble height" TYPE="INTEGER">
+	 <TAB NAME="Popular Options"></TAB>
+	 <TAB NAME="Bubble Config"></TAB>
+	 <EXAMPLE TEXT="Height in pixels"></EXAMPLE>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Problem"/>
+	 <KEYWORD TEXT="Size"/>
+	 <KEYWORD TEXT="Height"/>
+      </OPT>
+      <OPT NAME="Beam.problem.top.color" DESCRIPTION="Top color of problem bubble" TYPE="COLOR">
+	 <TAB NAME="Popular Options"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Problem"/>
+	 <KEYWORD TEXT="Color"/>
+	 <KEYWORD TEXT="Top"/>
+      </OPT>
+      <OPT NAME="Beam.problem.bottom.color" DESCRIPTION="Bottom color of problem bubble" TYPE="COLOR">
+	 <TAB NAME="Popular Options"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Problem"/>
+	 <KEYWORD TEXT="Color"/>
+	 <KEYWORD TEXT="Bottom"/>
+      </OPT>
+
+   </PACKAGE>
+
+   <PACKAGE NAME="System">
+      <OPT NAME="Load Options" TYPE="DIVIDER">
+	 <TAB NAME="System Options"/>
+      </OPT>
+      <OPT NAME="edu.brown.cs.bubbles.ask_workspace" DESCRIPTION="Always request workspace on load" TYPE="BOOLEAN">
+	 <TAB NAME="System Options"/>
+	 <WARNING TEXT="Requires restart"/>
+      </OPT>
+      <OPT NAME="edu.brown.cs.bubbles.foreground" DESCRIPTION="Load eclipse in the foreground" TYPE="BOOLEAN">
+	 <TAB NAME="System Options"/>
+	 <WARNING TEXT="Requires restart"/>
+      </OPT>
+      <OPT NAME="edu.brown.cs.bubbles.vmsize" DESCRIPTION="Maximum memory size for the java VM to use" TYPE="INTEGER" MIN="256" MAX="4000" SLIDER="TRUE" NEGATIVEALLOWED="FALSE">
+	 <TAB NAME="System Options"/>
+	 <EXAMPLE TEXT="Size in MB"/>
+	 <WARNING TEXT="Requires restart"/>
+      </OPT>
+      <OPT NAME="edu.brown.cs.bubbles.ask_workspace" DESCRIPTION="Always ask what workspace to open on Startup" TYPE="BOOLEAN">
+	 <TAB NAME="System Options"/>
+	 <WARNING TEXT="If turned off, will use current workspace by default"/>
+      </OPT>
+      <OPT NAME="edu.brown.cs.bubbles.use_stderr" DESCRIPTION="Print errors/information to stderr" TYPE="BOOLEAN">
+	 <TAB NAME="System Options"/>
+      </OPT>
+      <OPT NAME="edu.brown.cs.bubbles.log_level" DESCRIPTION="Level of information to log" TYPE="COMBO">
+	 <TAB NAME="System Options"/>
+	 <COMBO TEXT="Errors only" VALUE="ERROR"/>
+	 <COMBO TEXT="Above and warnings" VALUE="WARNING"/>
+	 <COMBO TEXT="Above and information" VALUE="INFO"/>
+	 <COMBO TEXT="Above and debug information" VALUE="DEBUG"/>
+      </OPT>
+      <OPT NAME="Board.blur.screenshot" DESCRIPTION="Enable screenshot bluring" TYPE="BOOLEAN">
+	 <TAB NAME="System Options"/>
+      </OPT>
+   </PACKAGE>
+
+
+
+
+   <PACKAGE NAME="Bale">
+      <OPT NAME="Code Highlight Options" TYPE="DIVIDER">
+	 <TAB NAME="Bubble Config"/>
+      </OPT>
+      <OPT NAME="Bale.identifier.highlight.color" DESCRIPTION="Color for highlighting normal identifiers" TYPE="COLOR">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Code"/>
+	 <KEYWORD TEXT="color"/>
+	 <KEYWORD TEXT="identifier"/>
+	 <KEYWORD TEXT="variable"/>
+	 <KEYWORD TEXT="normal"/>
+	 <KEYWORD TEXT="highlight"/>
+      </OPT>
+      <OPT NAME="Bale.identifier.write.highlight.color" DESCRIPTION="Color for highlighting changing identifiers" TYPE="COLOR">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Code"/>
+	 <KEYWORD TEXT="color"/>
+	 <KEYWORD TEXT="identifier"/>
+	 <KEYWORD TEXT="variable"/>
+	 <KEYWORD TEXT="write"/>
+	 <KEYWORD TEXT="change"/>
+	 <KEYWORD TEXT="highlight"/>
+      </OPT>
+      <OPT NAME="Bale.identifier.define.highlight.color" DESCRIPTION="Color for highlighting the first definition of identifiers" TYPE="COLOR">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Code"/>
+	 <KEYWORD TEXT="color"/>
+	 <KEYWORD TEXT="identifier"/>
+	 <KEYWORD TEXT="variable"/>
+	 <KEYWORD TEXT="write"/>
+	 <KEYWORD TEXT="change"/>
+	 <KEYWORD TEXT="highlight"/>
+      </OPT>
+      <OPT NAME="Bale.bracket.highlight.color" DESCRIPTION="Bracket highlight color" TYPE="COLOR">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Code"/>
+	 <KEYWORD TEXT="bracket"/>
+	 <KEYWORD TEXT="color"/>
+	 <KEYWORD TEXT="highlight"/>
+      </OPT>
+      <OPT NAME="Bale.error.color" DESCRIPTION="Error underline color" TYPE="COLOR">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Code"/>
+	 <KEYWORD TEXT="error"/>
+	 <KEYWORD TEXT="underline"/>
+	 <KEYWORD TEXT="highlight"/>
+      </OPT>
+      <OPT NAME="Bale.warning.color" DESCRIPTION="Warning underline color" TYPE="COLOR">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Code"/>
+	 <KEYWORD TEXT="error"/>
+	 <KEYWORD TEXT="warning"/>
+	 <KEYWORD TEXT="underline"/>
+	 <KEYWORD TEXT="highlight"/>
+      </OPT>
+      <OPT NAME="Bale.error.background" DESCRIPTION="Code bubble error background" TYPE="COLOR">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Code"/>
+	 <KEYWORD TEXT="error"/>
+	 <KEYWORD TEXT="warning"/>
+	 <KEYWORD TEXT="background"/>
+	 <KEYWORD TEXT="Color"/>
+      </OPT>
+      <OPT NAME="Bale.editor.top.color" DESCRIPTION="Code bubble top color" TYPE="COLOR">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Code"/>
+	 <KEYWORD TEXT="Color"/>
+	 <KEYWORD TEXT="Top"/>
+      </OPT>
+      <OPT NAME="Bale.editor.bottom.color" DESCRIPTION="Code bubble bottom color" TYPE="COLOR">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="Bubble"/>
+	 <KEYWORD TEXT="Code"/>
+	 <KEYWORD TEXT="error"/>
+	 <KEYWORD TEXT="warning"/>
+	 <KEYWORD TEXT="underline"/>
+	 <KEYWORD TEXT="highlight"/>
+	 <KEYWORD TEXT="Color"/>
+	 <KEYWORD TEXT="bottom"/>
+      </OPT>
+
+      <OPT NAME="Visualization Icon Options" TYPE="DIVIDER">
+	 <TAB NAME="Visualization Options"/>
+      </OPT>
+      <OPT NAME="visualization.icon.enable" DESCRIPTION="Enable visualization Icons" TYPE="BOOLEAN">
+	 <TAB NAME="Visualization Options"/>
+	 <KEYWORD TEXT="visualization"/>
+	 <KEYWORD TEXT="icon"/>
+	 <KEYWORD TEXT="enable"/>
+      </OPT>
+      <OPT NAME="visualization.icon.indication" DESCRIPTION="You want icons indicate" TYPE="COMBO">
+	 <TAB NAME="Visualization Options"/>
+	 <COMBO TEXT="Class" VALUE="class"/>
+	 <COMBO TEXT="Package" VALUE="package"/>
+	 <EXAMPLE TEXT="class or package"></EXAMPLE>
+	 <KEYWORD TEXT="visualization"/>
+	 <KEYWORD TEXT="icon"/>
+	 <KEYWORD TEXT="indicate"/>
+      </OPT>
+      <OPT NAME="visualization.icon.transparent" DESCRIPTION="The transparency of icons" TYPE="INTEGER" MAX="100" MIN="0" SLIDER="true">
+	 <TAB NAME="Visualization Options"/>
+	 <EXAMPLE TEXT="0~100"></EXAMPLE>
+	 <KEYWORD TEXT="visualization"/>
+	 <KEYWORD TEXT="icon"/>
+	 <KEYWORD TEXT="transparent"/>
+      </OPT>
+      <OPT NAME="visualization.icon.size" DESCRIPTION="The size of icons" TYPE="COMBO">
+	 <TAB NAME="Visualization Options"/>
+	 <COMBO TEXT="Small" VALUE="small"/>
+	 <COMBO TEXT="Large" VALUE="large"/>
+	 <EXAMPLE TEXT="Switch between large and small icons"></EXAMPLE>
+	 <KEYWORD TEXT="visualization"/>
+	 <KEYWORD TEXT="icon"/>
+	 <KEYWORD TEXT="size"/>
+	 <KEYWORD TEXT="small"/>
+	 <KEYWORD TEXT="large"/>
+      </OPT>
+      <OPT NAME="visualization.icon.location" DESCRIPTION="The location of icons" TYPE="COMBO">
+	 <TAB NAME="Visualization Options"/>
+	 <COMBO TEXT="Center" VALUE="center"/>
+	 <COMBO TEXT="Top right" VALUE="topright"/>
+	 <COMBO TEXT="Top left" VALUE="topleft"/>
+	 <COMBO TEXT="Bottom right" VALUE="bottomright"/>
+	 <COMBO TEXT="Bottom left" VALUE="bottomleft"/>
+	 <KEYWORD TEXT="visualization"/>
+	 <KEYWORD TEXT="icon"/>
+	 <KEYWORD TEXT="location"/>
+      </OPT>
+      <OPT NAME="Visualization Gradient Options" TYPE="DIVIDER">
+	 <TAB NAME="Visualization Options"/>
+      </OPT>
+      <OPT NAME="visualization.gradient.enable" DESCRIPTION="Enable visualization gradient background" TYPE="BOOLEAN">
+	 <TAB NAME="Visualization Options"/>
+	 <KEYWORD TEXT="visualization"/>
+	 <KEYWORD TEXT="gradient"/>
+	 <KEYWORD TEXT="background"/>
+	 <KEYWORD TEXT="enable"/>
+      </OPT>
+      <OPT NAME="visualization.gradient.indication" DESCRIPTION="You want different gradient backgrounds indicate" TYPE="COMBO">
+	 <TAB NAME="Visualization Options"/>
+	 <COMBO TEXT="Class" VALUE="class"/>
+	 <COMBO TEXT="Package" VALUE="package"/>
+	 <EXAMPLE TEXT="class or package"></EXAMPLE>
+	 <KEYWORD TEXT="visualization"/>
+	 <KEYWORD TEXT="gradient"/>
+	 <KEYWORD TEXT="indicate"/>
+      </OPT>
+      <OPT NAME="visualization.gradient.direction" DESCRIPTION="The direction of gradient " TYPE="COMBO">
+	 <TAB NAME="Visualization Options"/>
+	 <COMBO TEXT="Horizontal" VALUE="horizontal"/>
+	 <COMBO TEXT="Vertical" VALUE="vertical"/>
+	 <COMBO TEXT="Skew" VALUE="skew"/>
+	 <EXAMPLE TEXT="vertical, horizontal or skew"></EXAMPLE>
+	 <KEYWORD TEXT="visualization"/>
+	 <KEYWORD TEXT="gradient"/>
+	 <KEYWORD TEXT="direction"/>
+      </OPT>
+      <OPT NAME="Code Bubble Options" TYPE="DIVIDER">
+	 <TAB NAME="Bubble Config"/>
+      </OPT>
+      <OPT NAME="Bale.comment.wrapping" DESCRIPTION="Comment Wrapping" TYPE="BOOLEAN">
+	 <TAB NAME="Bubble Config"/>
+	 <TAB NAME="Popular Options"/>
+	 <WARNING TEXT="Requires restart"/>
+      </OPT>
+      <OPT NAME="Bale.autocomplete.delay" DESCRIPTION="Autocomplete Delay" TYPE="INTEGER">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="autocomplete"/>
+	 <KEYWORD TEXT="delay"/>
+      </OPT>
+      <OPT NAME="Bale.crumb.showmethod" DESCRIPTION="Show method name in breadcrumb bar" TYPE="BOOLEAN">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="breadcrumb"/>
+	 <KEYWORD TEXT="method"/>
+      </OPT>
+      <OPT NAME="Bale.editor.no.elision" DESCRIPTION="Shouldn't do code ellisions" TYPE="BOOLEAN">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="elision"/>
+	 <KEYWORD TEXT="elide"/>
+	 <KEYWORD TEXT="code"/>
+      </OPT>
+      <OPT NAME="Bale.preview.enable" DESCRIPTION="Show Bubble when Hovering" TYPE="BOOLEAN">
+	 <TAB NAME="Bubble Config"/>
+	 <EXAMPLE TEXT="Show preview bubble when hovering on java element(method)"></EXAMPLE>
+	 <KEYWORD TEXT="preview"/>
+	 <KEYWORD TEXT="hover"/>
+      </OPT>
+      <OPT NAME="Bale.size" DESCRIPTION="Size of code font" TYPE="INTEGER" MIN="8" MAX="20" SLIDER="TRUE" NEGATIVEALLOWED="FALSE">
+	 <TAB NAME="Font Options"/>
+	 <KEYWORD TEXT="point"/>
+	 <KEYWORD TEXT="style"/>
+	 <EXAMPLE TEXT="Minimum size 8, maximum 20"/>
+	 <WARNING TEXT="Requires restart"/>
+      </OPT>
+   </PACKAGE>
+
+   <PACKAGE NAME="Buda">
+      <OPT NAME="Panning Bar Options" TYPE="DIVIDER">
+	 <TAB NAME="Visualization Options"/>
+      </OPT>
+      <OPT NAME="Buda.overview.stylized.viewport" DESCRIPTION="Show Stylized Viewport in Panning Bar" TYPE="BOOLEAN">
+	 <TAB NAME="Visualization Options"/>
+	 <KEYWORD TEXT="viewport"/>
+	 <KEYWORD TEXT="panning"/>
+      </OPT>
+      <OPT NAME="Buda.help.tooltips" TYPE="Boolean" DESCRIPTION="Show help tooltips">
+	 <TAB NAME="Bubble Config"/>
+	 <TAB NAME='Popular Options'/>
+	 <TAB NAME='System Options'/>
+	 <KEYWORD TEXT='help' />
+      </OPT>
+      <OPT NAME="Buda.mergeforreg" DESCRIPTION="Show merged search on right click" TYPE="BOOLEAN">
+	 <TAB NAME="Search Options"/>
+      </OPT>
+      <OPT NAME="Buda.show.potential.task" DESCRIPTION="Show potential Working Set on Panning Bar" TYPE="BOOLEAN">
+	 <TAB NAME="Visualization Options"/>
+	 <KEYWORD TEXT="panning"/>
+      </OPT>
+      <OPT NAME="Buda.shelf.by.date" DESCRIPTION="Sort Task Shelf:" TYPE="COMBO">
+	 <TAB NAME="Visualization Options"/>
+	 <COMBO TEXT="Alphabetically" VALUE="false"/>
+	 <COMBO TEXT="By Date" VALUE="true"/>
+	 <KEYWORD TEXT="task"/>
+	 <KEYWORD TEXT="shelf"/>
+      </OPT>
+
+   </PACKAGE>
+
+   <PACKAGE NAME="Bgta">
+      <OPT NAME="Chat Visualization Options" TYPE="DIVIDER">
+	 <TAB NAME="Visualization Options"/>
+      </OPT>
+      <OPT NAME="Bgta.altcolor" DESCRIPTION="When recieving new chats show chat bubble differently" TYPE="BOOLEAN">
+	 <TAB NAME="Visualization Options"/>
+      </OPT>
+   </PACKAGE>
+
+   <PACKAGE NAME="Bass">
+      <OPT NAME="Bass.pack.onstart" DESCRIPTION="Open Package Explorer on startup" TYPE="BOOLEAN">
+	 <TAB NAME="System Options"/>
+	 <TAB NAME="Search Options"/>
+	 <KEYWORD TEXT="package explorer"/>
+	 <KEYWORD TEXT="start"/>
+	 <KEYWORD TEXT="startup"/>
+      </OPT>
+      <OPT NAME="Bass.doeshover" DESCRIPTION="Show Bubble when Hovering" TYPE="BOOLEAN">
+	 <EXAMPLE TEXT="Show preview bubble when hovering on search result entry"/>
+	 <TAB NAME="Search Options"/>
+	 <KEYWORD TEXT="hover"/>
+      </OPT>
+      <OPT NAME="Bass.shown.in.overview" DESCRIPTION="Show package explorer in overview" TYPE="BOOLEAN">
+	 <TAB NAME="Search Options"/>
+      </OPT>
+   </PACKAGE>
+
+   <PACKAGE NAME="Bted">
+      <OPT NAME="Text Editor Options" TYPE="DIVIDER">
+	 <TAB NAME="Bubble Config"/>
+	 <TAB NAME="Popular Options"/>
+      </OPT>
+      <OPT NAME="Bted.width" DESCRIPTION="Default width of text editor bubble" TYPE="INTEGER">
+	 <TAB NAME="Text Editor Options"/>
+	 <TAB NAME="Bubble Config"/>
+	 <TAB NAME="Popular Options"/>
+	 <EXAMPLE TEXT="Width in pixels"/>
+	 <KEYWORD TEXT="default"/>
+	 <KEYWORD TEXT="width"/>
+	 <KEYWORD TEXT="text"/>
+	 <KEYWORD TEXT="editor"/>
+	 <KEYWORD TEXT="bubble"/>
+      </OPT>
+      <OPT NAME="Bted.height" DESCRIPTION="Default height of text editor bubble" TYPE="INTEGER">
+	 <TAB NAME="Text Editor Options"/>
+	 <TAB NAME="Bubble Config"/>
+	 <TAB NAME="Popular Options"/>
+	 <EXAMPLE TEXT="Height in pixels"/>
+	 <KEYWORD TEXT="default"/>
+	 <KEYWORD TEXT="height"/>
+	 <KEYWORD TEXT="text"/>
+	 <KEYWORD TEXT="editor"/>
+	 <KEYWORD TEXT="bubble"/>
+      </OPT>
+      <OPT NAME="Bted.line.wrapping" DESCRIPTION="Line Wrapping" TYPE="BOOLEAN">
+	 <TAB NAME="Text Editor Options"/>
+	 <TAB NAME="Popular Options"/>
+	 <WARNING TEXT="Must reopen text editor to take effect"/>
+      </OPT>
+      <OPT NAME="Bted.overview.color" DESCRIPTION="Color of the text editor bubble in the overview panel" TYPE="COLOR">
+	 <TAB NAME="Text Editor Options"/>
+	 <TAB NAME="Bubble Config"/>
+	 <TAB NAME="Popular Options"/>
+	 <KEYWORD TEXT="color"/>
+	 <KEYWORD TEXT="overview"/>
+	 <KEYWORD TEXT="panel"/>
+	 <KEYWORD TEXT="text"/>
+	 <KEYWORD TEXT="editor"/>
+	 <KEYWORD TEXT="bubble"/>
+      </OPT>
+      <OPT NAME="Bted.top.color" DESCRIPTION="Color of the top of the text editor bubble" TYPE="COLOR">
+	 <TAB NAME="Text Editor Options"/>
+	 <TAB NAME="Bubble Config"/>
+	 <TAB NAME="Popular Options"/>
+	 <KEYWORD TEXT="color"/>
+	 <KEYWORD TEXT="top"/>
+	 <KEYWORD TEXT="text"/>
+	 <KEYWORD TEXT="editor"/>
+	 <KEYWORD TEXT="bubble"/>
+      </OPT>
+      <OPT NAME="Bted.bottom.color" DESCRIPTION="Color of the bottom of the text editor bubble" TYPE="COLOR">
+	 <TAB NAME="Text Editor Options"/>
+	 <TAB NAME="Bubble Config"/>
+	 <TAB NAME="Popular Options"/>
+	 <KEYWORD TEXT="color"/>
+	 <KEYWORD TEXT="bottom"/>
+	 <KEYWORD TEXT="text"/>
+	 <KEYWORD TEXT="editor"/>
+	 <KEYWORD TEXT="bubble"/>
+      </OPT>
+      <OPT NAME="Bted.highlight.color" DESCRIPTION="Color that found text is highlighted" TYPE="COLOR">
+	 <TAB NAME="Text Editor Options"/>
+	 <TAB NAME="Bubble Config"/>
+	 <TAB NAME="Popular Options"/>
+      </OPT>
+
+      <OPT NAME="File Editor File Extensions" TYPE="DIVIDER">
+	 <TAB NAME="Text Editor Options"/>
+      </OPT>
+      <OPT NAME="Bted.extension.bash" DESCRIPTION="File extensions rendered as bash" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .bashrc"/>
+      </OPT>
+      <OPT NAME="Bted.extension.c" DESCRIPTION="File extensions rendered as C" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .c"/>
+      </OPT>
+      <OPT NAME="Bted.extension.clojure" DESCRIPTION="File extensions rendered as clojure" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .clj"/>
+      </OPT>
+      <OPT NAME="Bted.extension.cpp" DESCRIPTION="File extensions rendered as C++" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .cpp, .cxx"/>
+      </OPT>
+      <OPT NAME="Bted.extension.dosbatch" DESCRIPTION="File extensions rendered as batch" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .bat"/>
+      </OPT>
+      <OPT NAME="Bted.extension.groovy" DESCRIPTION="File extensions rendered as groovy" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .groovy"/>
+      </OPT>
+      <OPT NAME="Bted.extension.java" DESCRIPTION="File extensions rendered as java" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .java"/>
+      </OPT>
+      <OPT NAME="Bted.extension.javascript" DESCRIPTION="File extensions rendered as javascript" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .js"/>
+      </OPT>
+      <OPT NAME="Bted.extension.jflex" DESCRIPTION="File extensions rendered as jflex" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .jflex, .flex, .jlex, .lex"/>
+      </OPT>
+      <OPT NAME="Bted.extension.lua" DESCRIPTION="File extensions rendered as lua" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .lua"/>
+      </OPT>
+      <OPT NAME="Bted.extension.properties" DESCRIPTION="File extensions rendered as properties" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .prop, .props"/>
+      </OPT>
+      <OPT NAME="Bted.extension.python" DESCRIPTION="File extensions rendered as python" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .py"/>
+      </OPT>
+      <OPT NAME="Bted.extension.ruby" DESCRIPTION="File extensions rendered as ruby" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .ruby"/>
+      </OPT>
+      <OPT NAME="Bted.extension.scala" DESCRIPTION="File extensions rendered as scala" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .scl"/>
+      </OPT>
+      <OPT NAME="Bted.extension.tal" DESCRIPTION="File extensions rendered as tal" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .tal"/>
+      </OPT>
+      <OPT NAME="Bted.extension.xhtml" DESCRIPTION="File extensions rendered as xhtml" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .xhtml, .html"/>
+      </OPT>
+      <OPT NAME="Bted.extension.xml" DESCRIPTION="File extensions rendered as xml" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .xml"/>
+      </OPT>
+      <OPT NAME="Bted.extension.xpath" DESCRIPTION="File extensions rendered as xpath" TYPE="STRING">
+	 <TAB NAME="Text Editor Options"/>
+	 <EXAMPLE TEXT="Default: .xpath"/>
+      </OPT>
+   </PACKAGE>
+</OPTIONS>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

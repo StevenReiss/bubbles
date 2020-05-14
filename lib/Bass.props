@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bass.pack.onstart">true</entry>
+<entry key="Bass.doeshover">true</entry>
+<entry key="Bass.shown.in.overview">false</entry>
+<entry key="Bass.font.size">11</entry>
+<entry key="Bass.font">Monospaced/0/11</entry>
+<entry key="Bass.click.count">1</entry>
+<entry key="Bass.delete.package">false</entry>
+<entry key="Bass.max.leaf.for.expand.all">48</entry>
+<entry key="Bass.max.leaf.for.auto.expand">128</entry>
+<entry key="Bass.keystrokes.for.auto.expand">3</entry>
+<entry key="Bass.panel.top.color">96ffffff</entry>
+<entry key="Bass.panel.bottom.color">968080ff</entry>
+<entry key="Bass.panel.select.background">ffb8cfe5</entry>
+<entry key="Bass.delete.method">true</entry>
+<entry key="Bass.delete.project">false</entry>
+<entry key="Bass.delete.package">false</entry>
+<entry key="Bass.delete.class">true</entry>
+<entry key="Bass.delete.file">false</entry>
+<entry key="Bass.delete.confirm">true</entry>
+<entry key="Bass.delete.rebuild">true</entry>
+<entry key="Bass.move.class">true</entry>
+<entry key="Bass.fix.imports">true</entry>
+</properties>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

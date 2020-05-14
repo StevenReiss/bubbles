@@ -1,0 +1,181 @@
+/********************************************************************************/
+/*										*/
+/*		BedrockConsole.java						*/
+/*										*/
+/*	Class for handling console output					*/
+/*										*/
+/********************************************************************************/
+/*	Copyright 2006 Brown University -- Steven P. Reiss		      */
+/*********************************************************************************
+ *  Copyright 2006, Brown University, Providence, RI.				 *
+ *										 *
+ *			  All Rights Reserved					 *
+ *										 *
+ *  Permission to use, copy, modify, and distribute this software and its	 *
+ *  documentation for any purpose other than its incorporation into a		 *
+ *  commercial product is hereby granted without fee, provided that the 	 *
+ *  above copyright notice appear in all copies and that both that		 *
+ *  copyright notice and this permission notice appear in supporting		 *
+ *  documentation, and that the name of Brown University not be used in 	 *
+ *  advertising or publicity pertaining to distribution of the software 	 *
+ *  without specific, written prior permission. 				 *
+ *										 *
+ *  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
+ *  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
+ *  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
+ *  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
+ *  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
+ *  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
+ *  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
+ *  OF THIS SOFTWARE.								 *
+ *										 *
+ ********************************************************************************/
+
+/* RCS: $Header$ */
+
+
+/*********************************************************************************
+ *
+ * $Log$
+ *
+ ********************************************************************************/
+
+
+
+package edu.brown.cs.bubbles.bedrock;
+
+
+import edu.brown.cs.ivy.xml.*;
+
+import org.eclipse.debug.ui.console.*;
+import org.eclipse.jface.text.IRegion;
+
+
+
+
+public class BedrockConsole implements BedrockConstants, IConsoleLineTracker {
+
+// TODO: This only works if the UI is active.  What to do otherwise?
+
+
+
+/********************************************************************************/
+/*										*/
+/*	Private Storage 							*/
+/*										*/
+/********************************************************************************/
+
+private IConsole	for_console;
+private BedrockPlugin	our_plugin;
+
+
+
+
+/********************************************************************************/
+/*										*/
+/*	Constructors								*/
+/*										*/
+/********************************************************************************/
+
+public BedrockConsole()
+{
+   our_plugin = BedrockPlugin.getPlugin();
+
+   BedrockPlugin.logD("New BedrockConsole create");
+}
+
+
+
+/********************************************************************************/
+/*										*/
+/*	Line tracker interface							*/
+/*										*/
+/********************************************************************************/
+
+@Override public void dispose()
+{
+   BedrockPlugin.logD("BedrockConsole disposed");
+   for_console = null;
+}
+
+
+@Override public void init(IConsole c)
+{
+   BedrockPlugin.logD("BedrockConsole initialized");
+   for_console = c;
+}
+
+
+
+@Override public void lineAppended(IRegion line)
+{
+   String txt = null;
+   int ln = line.getLength();
+   int off = line.getOffset();
+
+   if (for_console == null) return;
+
+   try {
+      txt = for_console.getDocument().get(off,ln);
+    }
+   catch (Throwable e) { }
+
+   if (txt != null) {
+      IvyXmlWriter xw = our_plugin.beginMessage("CONSOLE");
+      xw.field("PID",for_console.getProcess().hashCode());
+      //TODO: fix this correctly
+      txt = txt.replace("]]>","] ]>");
+      xw.cdataElement("LINE",txt);
+      our_plugin.finishMessage(xw);
+    }
+}
+
+
+
+public void consoleClosed()
+{
+   for_console = null;
+}
+
+
+}	// end of class BedrockConsole
+
+
+
+
+/* end of BedrockConsole.java */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

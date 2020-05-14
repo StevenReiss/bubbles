@@ -1,0 +1,1048 @@
+<html><head>
+<title>The CodeBubbles Help Page</title>
+<script type='text/javascript'>
+function demo(x) {
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.open('GET', 'http://localhost:19888/' + x, false);
+xmlhttp.send(null); }
+</script>
+<link href='http://fonts.googleapis.com/css?family=Gudea' rel='stylesheet' type='text/css'>
+<link rel='stylesheet' type='text/css' href='style.css'>
+<style>
+.tbutton { 
+  background-color: lightgray;
+  border: black;
+  border-style: outset;
+  padding: 3px;
+}
+</style>
+</head>
+<body>
+<!-- Note that this page is generated automatically -->
+<div class='page'>
+<div class='title'>
+<h1>The <span id='codebubbles'>CodeBubbles</span> Help Page</h1>
+</div>
+<div class='whenblock'>
+<div class='whenitem'>
+<div class='whenitemtitle'>
+<a href='#overviewarea'>When in the overview bar</a>
+</div>
+<ul>
+<li> To <a href='#spec_moveviewport'>Move the viewport</a></li>
+<li> To <a href='#spec_changeviewport'>Change the viewport</a></li>
+<li> To <a href='#spec_movebubblegroup'>Move a group of bubbles</a></li>
+</ul></div>
+<div class='whenitem'>
+<div class='whenitemtitle'>
+<a href='#bubblelink'>When on a link between bubbles</a>
+</div>
+<ul>
+<li> To <a href='#spec_removelink'>Remove this link</a></li>
+<li> To <a href='#spec_changelink'>Change the link style</a></li>
+<li> To <a href='#spec_collapselink'>Collapse this link</a></li>
+</ul></div>
+<div class='whenitem'>
+<div class='whenitemtitle'>
+<a href='#topbarworkingset'>When in the top bar</a>
+</div>
+<ul>
+<li> To <a href='#spec_renameworkingset'>Change the name of a working set</a></li>
+<li> To <a href='#spec_resizeworkingset'>Change the size of a working set</a></li>
+<li> To <a href='#spec_removeworkingset'>Remove the working set</a></li>
+<li> To <a href='#spec_saveworkingset'>Save the working set</a></li>
+<li> To <a href='#spec_exportworkingset'>Export the working set</a></li>
+<li> To <a href='#spec_cleardisplay'>Clear the display</a></li>
+<li> To <a href='#spec_printdisplay'>Print the current display</a></li>
+</ul></div>
+<div class='whenitem'>
+<div class='whenitemtitle'>
+<a href='#topbar'>When in the top bar</a>
+</div>
+<ul>
+<li> To <a href='#spec_createworkingset'>Create a working set</a></li>
+<li> To <a href='#spec_cleardisplay'>Clear the display</a></li>
+<li> To <a href='#spec_loadworkingset'>Load a saved working set</a></li>
+<li> To <a href='#spec_printdisplay'>Print the current display</a></li>
+</ul></div>
+<div class='whenitem'>
+<div class='whenitemtitle'>
+<a href='#bubblehalo'>When on a singleton bubble group outline</a>
+</div>
+<ul>
+<li> To <a href='#spec_removebubble'>Remove this bubble</a></li>
+<li> To <a href='#spec_mergeintogroup'>Merge this bubble into a group</a></li>
+<li> To <a href='#spec_resizebubble'>Resize this bubble</a></li>
+</ul></div>
+<div class='whenitem'>
+<div class='whenitemtitle'>
+<a href='#bubblegroup'>When on a bubble group outline</a>
+</div>
+<ul>
+<li> To <a href='#spec_movebubblegroup'>Move this group</a></li>
+<li> To <a href='#spec_removebubblegroup'>Remove this group</a></li>
+<li> To <a href='#spec_titlegroup'>Title this group</a></li>
+<li> To <a href='#spec_mergebubble'>Merge a bubble into this group</a></li>
+<li> To <a href='#spec_mergetwogroups'>Merge two groups</a></li>
+<li> To <a href='#spec_resizebubble'>Resize a bubble</a></li>
+<li> To <a href='#spec_removebubble'>Remove a bubble</a></li>
+</ul></div>
+<div class='whenitem'>
+<div class='whenitemtitle'>
+<a href='#bubbleborder'>When on a bubble's border</a>
+</div>
+<ul>
+<li> To <a href='#spec_resizebubble'>Resize this bubble</a></li>
+<li> To <a href='#spec_movebubble'>Move this bubble</a></li>
+<li> To <a href='#spec_removebubble'>Remove this bubble</a></li>
+</ul></div>
+<div class='whenitem'>
+<div class='whenitemtitle'>
+<a href='#bubblearea'>When on the main bubble area</a>
+</div>
+<ul>
+<li> To <a href='#spec_dragarea'>Drag the bubble area</a></li>
+<li> To <a href='#spec_resizebubble'>Resize a bubble</a></li>
+<li> To <a href='#spec_movebubble'>Move a bubble</a></li>
+<li> To <a href='#spec_removebubble'>Remove a bubble</a></li>
+<li> To <a href='#spec_searchcode'>Search the project code</a></li>
+<li> To <a href='#spec_searchdocs'>Search the documentation</a></li>
+<li> To <a href='#spec_searchboth'>Search both code and docs</a></li>
+<li> To <a href='#spec_toolbar'>Put up the simple toolbar</a></li>
+<li> To <a href='#spec_currcontext'>Show the current area context</a></li>
+<li> To <a href='#spec_changefocus'>Change the focus bubble</a></li>
+<li> To <a href='#spec_proglog'>Augment the programmer's log</a></li>
+</ul></div>
+<div class='whenitem'>
+<div class='whenitemtitle'>
+<a href='#bubblecontent'>When inside a bubble</a>
+</div>
+<ul>
+<li> To <a href='#spec_resizebubble'>Resize this bubble</a></li>
+<li> To <a href='#spec_movebubble'>Move this bubble</a></li>
+<li> To <a href='#spec_removebubble'>Remove this bubble</a></li>
+<li> To <a href='#spec_changefocus'>Make this bubble the focus</a></li>
+<li> To <a href='#spec_contextmenu'>Get this bubble's context menu</a></li>
+<li> To <a href='#spec_fixbubble'>Fix this bubble's location</a></li>
+<li> To <a href='#spec_linkbubble'>Link this bubble to another</a></li>
+</ul></div>
+</div>
+<div class='demoblock'>
+<div class='whendemoblock'>
+<a id='overviewarea'></a>
+<div class='wdb-title'>
+<h2>When in the overview bar</h2>
+</div>
+<div class='demoitem'>
+<a id='spec_moveviewport'></a>
+<h3>&raquo; To Move the viewport</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>move the viewport</span>, press the <em>right</em> mouse button in the current viewport in the
+		overview bar and drag it to its new location.
+			
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("moveviewport");'>Tell me</span>
+<span class='tbutton' onclick='demo("moveviewport_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_changeviewport'></a>
+<h3>&raquo; To Change the viewport</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>change the viewport</span>, click with the <em>left</em> mouse button at the desired viewport
+		location.  You can also press down to move the location and then drag it to its target.
+			
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("changeviewport");'>Tell me</span>
+<span class='tbutton' onclick='demo("changeviewport_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_movebubblegroup'></a>
+<h3>&raquo; To Move a group of bubbles</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>move all bubbles in this group</span>, press down in the group border drag
+		with the <em>right</em> mouse button and drag to its desired location.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("movebubblegroup");'>Tell me</span>
+<span class='tbutton' onclick='demo("movebubblegroup_silent");'>Show me</span>
+</form>
+</p>
+</div>
+</div>
+<div class='whendemoblock'>
+<a id='bubblelink'></a>
+<div class='wdb-title'>
+<h2>When on a link between bubbles</h2>
+</div>
+<div class='demoitem'>
+<a id='spec_removelink'></a>
+<h3>&raquo; To Remove this link</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>remove this link</span>, either control-drag a line from the start bubble to the end bubble or
+		click with the <em>right</em> mouse button to get a context menu and choose <em?Remove</em>
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("removelink");'>Tell me</span>
+<span class='tbutton' onclick='demo("removelink_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_changelink'></a>
+<h3>&raquo; To Change the link style</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>changke the link style</span>, <em>right</em> click on the link and choose the <em>Style</em>
+		option you want.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("changelink");'>Tell me</span>
+<span class='tbutton' onclick='demo("changelink_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_collapselink'></a>
+<h3>&raquo; To Collapse this link</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>collapse a linke</span>, <em>right</em> click on the link and choose the <em>Collapse</em>
+		option.  This will bring the target bubble close to the source bubble.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("collapselink");'>Tell me</span>
+<span class='tbutton' onclick='demo("collapselink_silent");'>Show me</span>
+</form>
+</p>
+</div>
+</div>
+<div class='whendemoblock'>
+<a id='topbarworkingset'></a>
+<div class='wdb-title'>
+<h2>When in the top bar</h2>
+</div>
+<div class='demoitem'>
+<a id='spec_renameworkingset'></a>
+<h3>&raquo; To Change the name of a working set</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>change the name of a working set</span>, click on the current name with the <em>left</em> mouse button and then
+		use keyboard editing to enter a new name.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("renameworkingset");'>Tell me</span>
+<span class='tbutton' onclick='demo("renameworkingset_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_resizeworkingset'></a>
+<h3>&raquo; To Change the size of a working set</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>change the size of a working set</span>, press down with the <em>left</em> mouse button near the side to change
+		and drag the edge to the desired size.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("resizeworkingset");'>Tell me</span>
+<span class='tbutton' onclick='demo("resizeworkingset_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_removeworkingset'></a>
+<h3>&raquo; To Remove the working set</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>remove the working set</span>, use the <em>right</em> mouse button to get a context menu and then choose one of the
+		following:  "Remove Working Set" will remove the working set but leave all the bubbles in place; "Clear and Remove Working
+		Set" will do this and remove all bubbles in the set; "Close and Save to Task Shelf" will save the
+		working set to the task shelf, close the working set and clear its bubbles.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("removeworkingset");'>Tell me</span>
+<span class='tbutton' onclick='demo("removeworkingset_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_saveworkingset'></a>
+<h3>&raquo; To Save the working set</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>save the working set</span>, use the <em>right</em> mouse button to get a context menu and chen choose one of the
+		following: "Save Working Set" to save the working set to a file; "Save Working Set To Task Shelf" to save the Working
+		set to the task shelf where it can be quickly reloaed later; or "Close and Save to Task Shelf" which will save the
+		current working set to the task shelf and will clear its bubbles and remove it.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("saveworkingset");'>Tell me</span>
+<span class='tbutton' onclick='demo("saveworkingset_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_exportworkingset'></a>
+<h3>&raquo; To Export the working set</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>export the working set</span>, use the <em>right</em> mouse button to get a context menu and then choose one of the
+		following: "EMail Working Set" to send the working set in a loadable from in an e-mail message to a colleague;
+		"Export as PDF" to create a saved image of the working set; "EMail as PDF" to send an image of the working set; or
+		"Save Working Set" to save the current working set to a file.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("exportworkingset");'>Tell me</span>
+<span class='tbutton' onclick='demo("exportworkingset_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_cleardisplay'></a>
+<h3>&raquo; To Clear the display</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>clear the display</span>, use the <em>right</em> mouse button to get a context menu and then choose either
+		"Clear Bubbles" to remove all bubbles visible in the current viewport or "Clear All Bubbles" to remove all the
+		bubbles in the workspace.
+			
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("cleardisplay");'>Tell me</span>
+<span class='tbutton' onclick='demo("cleardisplay_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_printdisplay'></a>
+<h3>&raquo; To Print the current display</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>print the current display</span>, use the <em>right</em> mouse button to get a context menu and choose the "Print"
+		option.  Alternatively, you can choose "Export as PDF" to produce a image file for later use.
+			
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("printdisplay");'>Tell me</span>
+<span class='tbutton' onclick='demo("printdisplay_silent");'>Show me</span>
+</form>
+</p>
+</div>
+</div>
+<div class='whendemoblock'>
+<a id='topbar'></a>
+<div class='wdb-title'>
+<h2>When in the top bar</h2>
+</div>
+<div class='demoitem'>
+<a id='spec_createworkingset'></a>
+<h3>&raquo; To Create a working set</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>create a working set</span>, click with the <em>left</em> mouse button in the area above the current view,
+		where "Create Task..." is displayed.  Alternatively, use the <em>right</em> mouse button to bring up a context
+		menu by clicking where there is no working set and choose "Create Working Set".
+			
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("createworkingset");'>Tell me</span>
+<span class='tbutton' onclick='demo("createworkingset_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_cleardisplay'></a>
+<h3>&raquo; To Clear the display</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>clear the display</span>, use the <em>right</em> mouse button to get a context menu and then choose either
+		"Clear Bubbles" to remove all bubbles visible in the current viewport or "Clear All Bubbles" to remove all the
+		bubbles in the workspace.
+			
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("cleardisplay");'>Tell me</span>
+<span class='tbutton' onclick='demo("cleardisplay_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_loadworkingset'></a>
+<h3>&raquo; To Load a saved working set</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>load a saved working set</span>, use the <em>right</em> mouse button to get a context menu.	Then either choose
+		"Load Working Set" to load the working set from a file or choose a working set from the task shelf, which is the
+		selection to the right of the menu.
+			
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("loadworkingset");'>Tell me</span>
+<span class='tbutton' onclick='demo("loadworkingset_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_printdisplay'></a>
+<h3>&raquo; To Print the current display</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>print the current display</span>, use the <em>right</em> mouse button to get a context menu and choose the "Print"
+		option.  Alternatively, you can choose "Export as PDF" to produce a image file for later use.
+			
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("printdisplay");'>Tell me</span>
+<span class='tbutton' onclick='demo("printdisplay_silent");'>Show me</span>
+</form>
+</p>
+</div>
+</div>
+<div class='whendemoblock'>
+<a id='bubblehalo'></a>
+<div class='wdb-title'>
+<h2>When on a singleton bubble group outline</h2>
+</div>
+<div class='demoitem'>
+<a id='spec_removebubble'></a>
+<h3>&raquo; To Remove this bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>remove a bubble</span>, click with the <em>middle</em> mouse button on the bubble or its border.
+		Note that a remove bubble will replace this bubble and will slowly fade to nothingness. You can click
+		on this remove bubble to restore the original bubble. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("removebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("removebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+</div>
+<div class='demoitem'>
+<a id='spec_resizebubble'></a>
+<h3>&raquo; To Resize this bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>resize a bubble</span>, press the <em>left</em> mouse button on the proper border and then
+		drag to make the bubble the desired size. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("resizebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("resizebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+</div>
+<div class='whendemoblock'>
+<a id='bubblegroup'></a>
+<div class='wdb-title'>
+<h2>When on a bubble group outline</h2>
+</div>
+<div class='demoitem'>
+<a id='spec_movebubblegroup'></a>
+<h3>&raquo; To Move this group</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>move all bubbles in this group</span>, press down in the group border drag
+		with the <em>right</em> mouse button and drag to its desired location.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("movebubblegroup");'>Tell me</span>
+<span class='tbutton' onclick='demo("movebubblegroup_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_removebubblegroup'></a>
+<h3>&raquo; To Remove this group</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>remove all bubbles in this group</span>, <em>double</em> click with the <em>middle</em> mouse
+		button on the group area.  The remove bubble that remains will restore all bubbles in the group.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("removebubblegroup");'>Tell me</span>
+<span class='tbutton' onclick='demo("removebubblegroup_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_titlegroup'></a>
+<h3>&raquo; To Title this group</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>title this group</span>, <em>left</em> click on the title area at the top of the group
+		and type in (or edit) the group name.
+				
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("titlegroup");'>Tell me</span>
+<span class='tbutton' onclick='demo("titlegroup_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_mergebubble'></a>
+<h3>&raquo; To Merge a bubble into this group</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>merge a bubble into a group</span> just move that bubble (using right-drag) until it joins
+		the group.
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("mergebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("mergebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_mergetwogroups'></a>
+<h3>&raquo; To Merge two groups</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>merge two groups</span>, place the groups near each other and then move a single bubble so 
+		that it spans the groups and makes them one.
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("mergetwogroups");'>Tell me</span>
+<span class='tbutton' onclick='demo("mergetwogroups_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_resizebubble'></a>
+<h3>&raquo; To Resize a bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>resize a bubble</span>, press the <em>left</em> mouse button on the proper border and then
+		drag to make the bubble the desired size. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("resizebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("resizebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_removebubble'></a>
+<h3>&raquo; To Remove a bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>remove a bubble</span>, click with the <em>middle</em> mouse button on the bubble or its border.
+		Note that a remove bubble will replace this bubble and will slowly fade to nothingness. You can click
+		on this remove bubble to restore the original bubble. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("removebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("removebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+</div>
+<div class='whendemoblock'>
+<a id='bubbleborder'></a>
+<div class='wdb-title'>
+<h2>When on a bubble's border</h2>
+</div>
+<div class='demoitem'>
+<a id='spec_resizebubble'></a>
+<h3>&raquo; To Resize this bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>resize a bubble</span>, press the <em>left</em> mouse button on the proper border and then
+		drag to make the bubble the desired size. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("resizebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("resizebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_movebubble'></a>
+<h3>&raquo; To Move this bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>move a bubble</span>, press the <em>right</em> mouse button and move
+		the bubble to its desired location. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("movebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("movebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_removebubble'></a>
+<h3>&raquo; To Remove this bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>remove a bubble</span>, click with the <em>middle</em> mouse button on the bubble or its border.
+		Note that a remove bubble will replace this bubble and will slowly fade to nothingness. You can click
+		on this remove bubble to restore the original bubble. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("removebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("removebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+</div>
+<div class='whendemoblock'>
+<a id='bubblearea'></a>
+<div class='wdb-title'>
+<h2>When on the main bubble area</h2>
+</div>
+<div class='demoitem'>
+<a id='spec_dragarea'></a>
+<h3>&raquo; To Drag the bubble area</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>scroll the bubble area</span>, drag with the <em>right</em> mouse button.  Alternatively,
+		you can use the arrow keys while pressing the Control (Command on the Mac) key. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("dragarea");'>Tell me</span>
+<span class='tbutton' onclick='demo("dragarea_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_resizebubble'></a>
+<h3>&raquo; To Resize a bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>resize a bubble</span>, press the <em>left</em> mouse button on the proper border and then
+		drag to make the bubble the desired size. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("resizebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("resizebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_movebubble'></a>
+<h3>&raquo; To Move a bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>move a bubble</span>, press the <em>right</em> mouse button and move
+		the bubble to its desired location. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("movebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("movebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_removebubble'></a>
+<h3>&raquo; To Remove a bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>remove a bubble</span>, click with the <em>middle</em> mouse button on the bubble or its border.
+		Note that a remove bubble will replace this bubble and will slowly fade to nothingness. You can click
+		on this remove bubble to restore the original bubble. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("removebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("removebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_searchcode'></a>
+<h3>&raquo; To Search the project code</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>search over project code</span>, click with the <em>right</em> mouse button or
+		use the control-O (command-O on the mac) key or the F10 key.  Using the right click will bring up the
+		default menu; the others will not. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("searchcode");'>Tell me</span>
+<span class='tbutton' onclick='demo("searchcode_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_searchdocs'></a>
+<h3>&raquo; To Search the documentation</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>search over documentation</span>, <em>control</em> click with the <em>right</em>
+		mouse button or use the F12 key. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("searchdocs");'>Tell me</span>
+<span class='tbutton' onclick='demo("searchdocs_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_searchboth'></a>
+<h3>&raquo; To Search both code and docs</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>search over both code and documentation</span>, <em>shift</em> click with the <em>right</em>
+		mouse button or use the F11 key.  This also brings up the default menu.
+		this can be made the default by selecting the appropriate
+		option. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("searchboth");'>Tell me</span>
+<span class='tbutton' onclick='demo("searchboth_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_toolbar'></a>
+<h3>&raquo; To Put up the simple toolbar</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>put up the simple tool bar</span>, use F1.  The tool bar will appear in the upper left
+		or upper right of the display (depending on where the package explorer is located).	
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("toolbar");'>Tell me</span>
+<span class='tbutton' onclick='demo("toolbar_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_currcontext'></a>
+<h3>&raquo; To Show the current area context</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>show the current area in context</span> use F9.  Hitting F9 again will go back to a
+		normal display. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("currcontext");'>Tell me</span>
+<span class='tbutton' onclick='demo("currcontext_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_changefocus'></a>
+<h3>&raquo; To Change the focus bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>change the focus bubble</span>, either move the mouse to it or use the arrow keys while
+		pressing ALT to move to the nearest bubble in the specified direction.
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("changefocus");'>Tell me</span>
+<span class='tbutton' onclick='demo("changefocus_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_proglog'></a>
+<h3>&raquo; To Augment the programmer's log</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>augment the programmer's log</span> either by adding a note, image, or screen dump to the current task,
+		or to change the current task, hit F2.
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("proglog");'>Tell me</span>
+<span class='tbutton' onclick='demo("proglog_silent");'>Show me</span>
+</form>
+</p>
+</div>
+</div>
+<div class='whendemoblock'>
+<a id='bubblecontent'></a>
+<div class='wdb-title'>
+<h2>When inside a bubble</h2>
+</div>
+<div class='demoitem'>
+<a id='spec_resizebubble'></a>
+<h3>&raquo; To Resize this bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>resize a bubble</span>, press the <em>left</em> mouse button on the proper border and then
+		drag to make the bubble the desired size. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("resizebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("resizebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_movebubble'></a>
+<h3>&raquo; To Move this bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>move a bubble</span>, press the <em>right</em> mouse button and move
+		the bubble to its desired location. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("movebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("movebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_removebubble'></a>
+<h3>&raquo; To Remove this bubble</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>remove a bubble</span>, click with the <em>middle</em> mouse button on the bubble or its border.
+		Note that a remove bubble will replace this bubble and will slowly fade to nothingness. You can click
+		on this remove bubble to restore the original bubble. 
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("removebubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("removebubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_changefocus'></a>
+<h3>&raquo; To Make this bubble the focus</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>change the focus bubble</span>, either move the mouse to it or use the arrow keys while
+		pressing ALT to move to the nearest bubble in the specified direction.
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("changefocus");'>Tell me</span>
+<span class='tbutton' onclick='demo("changefocus_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_contextmenu'></a>
+<h3>&raquo; To Get this bubble's context menu</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>get a context menu for this bubble</span>, <em>right</em> click inside the bubble.  Note the actual context
+		menu might depend on where in the bubble you click since it can represent the local context.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("contextmenu");'>Tell me</span>
+<span class='tbutton' onclick='demo("contextmenu_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_fixbubble'></a>
+<h3>&raquo; To Fix this bubble's location</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>fix this bubble's location on the display</span>, right click and choose <em>Make Fixed</em> if
+		the option exists.Not all bubbles can be fixed in this way.  To undo this setting, right click and 
+		choose <em>Make Floating</em>
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("fixbubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("fixbubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+<div class='demoitem'>
+<a id='spec_linkbubble'></a>
+<h3>&raquo; To Link this bubble to another</h3>
+<p class='explanation'>
+
+	<p>
+		To <span class='di-emph'>link this bubble to another</span>, press the <em>control</em> key and then drag a line from the
+		starting bubble to the ending bubble using the <em>right</em> mouse button.  This will unlink the 
+		bubbles if they are already linked.
+		
+	
+</p>
+<p class='demolinks'>
+<form>
+<span class='tbutton' onclick='demo("linkbubble");'>Tell me</span>
+<span class='tbutton' onclick='demo("linkbubble_silent");'>Show me</span>
+</form>
+</p>
+</div>
+</div>
+</div>
+</div></body></html>

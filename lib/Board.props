@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Board.save.address">http://conifer.cs.brown.edu/bubbles/savefile.php</entry>
+<entry key="Board.upload.address">http://conifer.cs.brown.edu/bubbles/uploads/</entry>
+<entry key="Board.blur.screenshot">true</entry>
+<entry key="Board.prefix.csci0150">CS15</entry>
+<entry key="Board.prefix.csci0320">CS32</entry>
+<entry key="Board.library.url">http://www.cs.brown.edu/people/spr/bubbles/lib/</entry>
+</properties>
+

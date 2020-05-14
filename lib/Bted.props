@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bted.width">400</entry>
+<entry key="Bted.height">500</entry>
+<entry key="Bted.overview.color">ffa9cdf9</entry>
+<entry key="Bted.top.color">ffebf5ff</entry>
+<entry key="Bted.bottom.color">ffa9cdf9</entry>
+<entry key="Bted.highlight.color">ff999999</entry>
+<entry key="Bted.not.found.color">ffe27a7a</entry>
+<entry key="Bted.extension.bash">.bashrc</entry>
+<entry key="Bted.extension.c">.c</entry>
+<entry key="Bted.extension.clojure">.clj</entry>
+<entry key="Bted.extension.cpp">.cpp, .cxx</entry>
+<entry key="Bted.extension.dosbatch">.bat</entry>
+<entry key="Bted.extension.groovy">.groovy</entry>
+<entry key="Bted.extension.java">.java</entry>
+<entry key="Bted.extension.javascript">.js</entry>
+<entry key="Bted.extension.jflex">.jflex, .flex, .jlex, .lex</entry>
+<entry key="Bted.extension.lua">.lua</entry>
+<entry key="Bted.extension.properties">.prop, .props</entry>
+<entry key="Bted.extension.python">.py</entry>
+<entry key="Bted.extension.ruby">.ruby</entry>
+<entry key="Bted.extension.scala">.scl</entry>
+<entry key="Bted.extension.sql">.sql</entry>
+<entry key="Bted.extension.tal">.tal</entry>
+<entry key="Bted.extension.xhtml">.xhtml, .html, .htm</entry>
+<entry key="Bted.extension.xml">.xml</entry>
+<entry key="Bted.extension.xpath">.xpath</entry>
+<entry key="Bted.line.wrapping">true</entry>
+<entry key="Bted.tabsize">8</entry>
+
+
+</properties>

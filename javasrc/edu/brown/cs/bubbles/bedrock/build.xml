@@ -1,0 +1,95 @@
+<project name='bubbles.bedrock' default='compile'>
+
+   <property file='../../../../../../build.properties' />
+   <property name='PRO' value='/pro' />
+   <property name='BUBBLES' value='/pro/bubbles' />
+   <available file="${PRO}/ivy" type="dir" property="ivy.present" />
+   <target name="init1" if="ivy.present" >
+      <property name='IVYBIN' value='${PRO}/ivy/java' />
+      <property name='ECLBIN' value='${PRO}/ivy/lib/eclipsejar' />
+   </target>
+   <target name="init2" unless="ivy.present" >
+      <property name='IVYBIN' value='${BUBBLES}/lib/ivy.jar' />
+      <property name='ECLBIN' value='${BUBBLES}/eclipsejar' />
+   </target>
+   <target name='init' depends='init1,init2' >
+      <path id='bubbles.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <fileset dir='${ECLBIN}'>
+	    <include name='*.jar' />
+	 </fileset>
+      </path>
+      <path id='test.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+      </path>
+   </target>
+
+   <available file='/pro/java/linux/jdk1.6/jre/lib/rt.jar' type='file' property='j6'
+       value='/pro/java/linux/jdk1.6/jre/lib/rt.jar' />
+   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Classes/classes.jar'
+	type='file' property='j6' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Classes/classes.jar' />
+
+   <available file='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' type='file' property='j8'
+       value='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' />
+   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar'
+	type='file' property = 'j8' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar' />
+
+
+   <target name='compile' depends='init'>
+      <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
+		includeantruntime='false' >
+	 <classpath refid='bubbles.classpath' />
+      </javac>
+   </target>
+
+   <target name='test' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.bedrock.BedrockTest' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value="0" />
+	 <arg value="1" />
+      </java>
+   </target>
+
+   <target name='test0' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.bedrock.BedrockTest' fork='true'>
+	 <classpath refid='test.classpath' />
+      </java>
+   </target>
+
+   <target name='test1' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.bedrock.BedrockTest' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value="1" />
+      </java>
+   </target>
+
+   <target name='plugin' depends='compile' if='ivy.present'>
+      <jar destfile="bedrock.jar" manifest='manifest.mf'>
+	 <fileset dir='${PRO}/ivy/java' includes= '**/*.class' />
+	 <fileset dir='${BUBBLES}/java' includes= '**/bedrock/*.class' />
+	 <fileset dir='${BUBBLES}/bedrock/src' includes='plugin.xml' />
+	 <fileset dir='${BUBBLES}/images' includes='agt_web.png' />
+      </jar>
+      <copy file='bedrock.jar'
+		tofile='${BUBBLES}/lib/bedrock.jar' />
+   </target>
+
+   <target name='myplugin' depends='plugin' if='ivy.present'>
+      <copy file='bedrock.jar'
+		tofile='/home/spr/eclipse37x/eclipse/plugins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+      <copy file='bedrock.jar'
+		tofile='/home/spr/eclipse42x/eclipse/plugins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+      <copy file='bedrock.jar'
+		tofile='/home/spr/eclipse-neonx/eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+      <copy file='bedrock.jar'
+		tofile='/home/spr/eclipse-oxygenx/eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+   </target>
+
+   <target name='eduplugin' depends='plugin' if='ivy.present'>
+      <copy file='bedrock.jar'
+		tofile='/research/people/spr/suds/eclipse/plugins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+   </target>
+
+</project>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bnote.record">true</entry>
+
+<entry key="Bnote.database.prefix.derby">derby:</entry>
+<entry key="Bnote.database.jdbc.derby">org.apache.derby.jdbc.ClientDriver</entry>
+<entry key="Bnote.database.default.derby">?create=true</entry>
+<entry key="Bnote.database.text.derby">long varchar</entry>
+<entry key="Bnote.database.blob.derby">blob (16M)</entry>
+<entry key="Bnote.database.prefix.embed">derby:</entry>
+<entry key="Bnote.database.jdbc.embed">org.apache.derby.jdbc.EmbeddedDriver</entry>
+<entry key="Bnote.database.default.embed">?create=true</entry>
+<entry key="Bnote.database.text.embed">long varchar</entry>
+<entry key="Bnote.database.blob.embed">blob (16M)</entry>
+<entry key="Bnote.database.prefix.mysql">mysql:</entry>
+<entry key="Bnote.database.jdbc.mysql">com.mysql.jdbc.Driver</entry>
+<entry key="Bnote.database.default.mysql">mysql</entry>
+<entry key="Bnote.database.text.mysql">mediumtext</entry>
+<entry key="Bnote.database.prefix.postgresql">postgresql:</entry>
+<entry key="Bnote.database.jdbc.postgresql">org.postgresql.Driver</entry>
+<entry key="Bnote.database.default.postgresql">postgres</entry>
+<entry key="Bnote.database.text.postgresql">text</entry>
+<entry key="Bnote.database.blob.postgresql">bytea</entry>
+
+<entry key="Bnote.notebook.database.type">embed</entry>
+<entry key="Bnote.notebook.database.name">$(WORK)/ProgrammersLog</entry>
+
+
+
+</properties>
+

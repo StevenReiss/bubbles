@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bema.plugin.0">edu.brown.cs.bubbles.bdoc.BdocFactory</entry>
+<entry key="Bema.plugin.1">edu.brown.cs.bubbles.beam.BeamFactory</entry>
+<entry key="Bema.plugin.2">edu.brown.cs.bubbles.bcon.BconFactory</entry>
+<entry key="Bema.plugin.3"></entry>
+<entry key="Bema.plugin.4">edu.brown.cs.bubbles.bopp.BoppFactory</entry>
+<entry key="Bema.plugin.5"></entry>
+<entry key="Bema.plugin.6">edu.brown.cs.bubbles.bted.BtedFactory</entry>
+<entry key="Bema.plugin.7">edu.brown.cs.bubbles.bowi.BowiFactory</entry>
+<entry key="Bema.plugin.8"></entry>
+<entry key="Bema.plugin.9"></entry>
+<entry key="Bema.plugin.10"></entry>
+<entry key="Bema.plugin.11">edu.brown.cs.bubbles.bueno.BuenoFactory</entry>
+<entry key="Bema.plugin.20"></entry>
+<entry key="Bema.plugin.22"></entry>
+<entry key="Bema.plugin.30"></entry>
+<entry key="Bema.plugin.31"></entry>
+<entry key="Bema.plugin.32">edu.brown.cs.bubbles.bhelp.BhelpFactory</entry>
+<entry key="Bema.plugin.33">edu.brown.cs.bubbles.barr.BarrFactory</entry>
+<entry key="Bema.plugin.34">edu.brown.cs.bubbles.bucs.BucsFactory</entry>
+<entry key="Bema.plugin.35">edu.brown.cs.bubbles.rebus.RebusFactory</entry>
+<entry key="Bema.web.url">http://conifer.cs.brown.edu:8180/mint/mint</entry>
+</properties>

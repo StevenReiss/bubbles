@@ -1,0 +1,89 @@
+<project name='bubbles.bandaid' default='jar'>
+
+   <property file='../../../../../../build.properties' />
+   <property name='PRO' value='/pro' />
+   <property name='BUBBLES' value='/pro/bubbles' />
+   <available file="${PRO}/ivy" type="dir" property="ivy.present" />
+   <target name="init1" if="ivy.present" >
+      <property name='IVYBIN' value='${PRO}/ivy/java' />
+      <property name='IVYJAR1' value='${PRO}/ivy/java' />
+      <property name='IVYJAR2' value='**/*.class' />
+   </target>
+   <target name="init2" unless="ivy.present" >
+      <property name='IVYBIN' value='${BUBBLES}/lib/ivy.jar' />
+      <property name='IVYJAR1' value='${BUBBLES}/lib' />
+      <property name='IVYJAR2' value='ivy.jar' />
+   </target>
+   <target name='init' depends='init1,init2' >
+      <path id='bubbles.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <pathelement location='${BUBBLES}/lib/bandaidasm.jar' />
+      </path>
+      <path id='test.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <pathelement location='${BUBBLES}/lib/bandaidasm.jar' />
+      </path>
+   </target>
+
+   <available file='/pro/java/linux/jdk1.6/jre/lib/rt.jar' type='file' property='j6'
+       value='/pro/java/linux/jdk1.6/jre/lib/rt.jar' />
+   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Classes/classes.jar'
+	type='file' property = 'j6' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Classes/classes.jar' />
+
+   <available file='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' type='file' property='j8'
+       value='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' />
+   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar'
+	type='file' property = 'j8' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar' />
+
+   <target name='compile' depends='init'>
+      <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
+		includeantruntime='false' target='1.8' source='1.8' excludes='scan/**'
+		bootclasspath='${j8}'>
+	 <classpath refid='bubbles.classpath' />
+      </javac>
+   </target>
+
+   <target name='clean'>
+      <delete dir='${BUBBLES}/java/edu/brown/cs/bubbles/bandaid' />
+   </target>
+
+   <target name='test' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.bandaid.BandaidTest' fork='true'>
+	 <classpath refid='test.classpath' />
+      </java>
+   </target>
+
+   <target name='jar' depends='compile'>
+      <jar destfile='bandaid.jar'>
+	 <manifest>
+	    <attribute name='Premain-Class' value='edu.brown.cs.bubbles.bandaid.BandaidController' />
+	    <attribute name='Agent-Class' value='edu.brown.cs.bubbles.bandaid.BandaidController' />
+	    <attribute name='Can-Redefine-Classes' value='true' />
+	    <attribute name='Can-Retransform-Classes' value='true' />
+	    <attribute name='Can-Set-Native-Method-Prefix' value='false' />
+	    <attribute name='Sealed' value='false' />
+	    <attribute name="Boot-Class-Path" value='bandaid.jar' />
+	 </manifest>
+	 <fileset dir='${BUBBLES}/java' includes='**/bandaid/*.class' />
+	 <zipfileset src="${BUBBLES}/lib/bandaidasm.jar" excludes="META-INF/*" />
+      </jar>
+      <copy file='bandaid.jar' tofile='${BUBBLES}/lib/bandaid.jar' />
+   </target>
+
+   <target name='bandaidasm' >
+      <java jar='${BUBBLES}/lib/jarjar.jar' fork='true' >
+	 <arg value='process' />
+	 <arg value='bandaidasm.rules' />
+	 <arg value='${BUBBLES}/lib/asm6.jar' />
+	 <arg value='bandaidasm.jar' />
+      </java>
+      <copy file='bandaidasm.jar' tofile='${BUBBLES}/lib/bandaidasm.jar' />
+   </target>
+
+
+</project>
+
+
+

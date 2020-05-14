@@ -1,0 +1,47 @@
+<project name='bubbles' default='all'>
+
+   <available file="./build.properties" type='file' property='setup.done' />
+   <path id='setuppath'>
+      <pathelement location='..' />
+   </path>
+   <path id='bubblespath'>
+      <pathelement location='.' />
+   </path>
+   <property name='setupfile' refid='setuppath' />
+   <property name='bubblesfile' refid='bubblespath' />
+
+   <target name='setup' unless='setup.done'>
+      <echo file='./build.properties' message="PRO=${setupfile}${line.separator}" />
+      <echo file='./build.properties' message='BUBBLES=${bubblesfile}${line.separator}' append='true' />
+      <mkdir dir='./java/edu/brown/cs/bubbles' />
+   </target>
+
+   <target name='all' depends='setup'>
+      <ant antfile="build.xml" dir="javasrc" />
+   </target>
+
+   <path id='jdocsrc'>
+      <pathelement location='./javasrc' />
+      <pathelement location='${PRO}/ivy/javasrc' />
+    </path>
+
+   <target name='doc' depends='setup'>
+      <ant antfile='build.xml' dir='javasrc' target='doc' />
+      <zip zipfile='lib/apidoc.zip' basedir='doc' />
+   </target>
+
+</project>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

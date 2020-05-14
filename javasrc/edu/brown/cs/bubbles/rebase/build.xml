@@ -1,0 +1,95 @@
+<project name='bubbles.rebase' default='compile'>
+
+   <property file='../../../../../../build.properties' />
+   <property name='PRO' value='/pro' />
+   <property name='BUBBLES' value='/pro/bubbles' />
+   <available file="${PRO}/ivy" type="dir" property="ivy.present" />
+   <target name="init1" if="ivy.present" >
+      <property name='IVYBIN' value='${PRO}/ivy/java' />
+      <property name='IVYJAR1' value='${PRO}/ivy/java' />
+      <property name='IVYJAR2' value='**/*.class' />
+   </target>
+   <target name="init2" unless="ivy.present" >
+      <property name='IVYBIN' value='${BUBBLES}/lib/ivy.jar' />
+      <property name='IVYJAR1' value='${BUBBLES}/lib' />
+      <property name='IVYJAR2' value='ivy.jar' />
+   </target>
+   <target name='init' depends='init1,init2' >
+      <path id='bubbles.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <pathelement location='${BUBBLES}/lib/jsoup.jar' />
+	 <pathelement location='${BUBBLES}/lib/junit.jar' />
+	 <pathelement location='${BUBBLES}/lib/asm6.jar' />
+	 <pathelement location='${BUBBLES}/lib/commons-compress.jar' />
+	 <fileset dir='${PRO}/ivy/lib/eclipsejar'>
+	    <include name='*.jar' />
+	 </fileset>
+      </path>
+      <path id='bubbles.old.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <pathelement location='${BUBBLES}/lib/jsoup.jar' />
+	 <pathelement location='${BUBBLES}/lib/junit.jar' />
+	 <pathelement location='${BUBBLES}/lib/asm6.jar' />
+	 <pathelement location='${BUBBLES}/lib/commons-compress.jar' />
+	 <fileset dir='${BUBBLES}/eclipsejar'>
+	    <include name='*.jar' />
+	 </fileset>
+      </path>
+      <path id='test.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <pathelement location='${BUBBLES}/lib/jsoup.jar' />
+	 <pathelement location='${BUBBLES}/lib/junit.jar' />
+	 <pathelement location='${BUBBLES}/lib/asm6.jar' />
+	 <pathelement location='${BUBBLES}/lib/commons-compress.jar' />
+      </path>
+      <path id='test1.classpath'>
+	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${IVYBIN}' />
+	 <pathelement location='${BUBBLES}/lib/jsoup.jar' />
+	 <pathelement location='${BUBBLES}/lib/junit.jar' />
+	 <pathelement location='${BUBBLES}/lib/asm6.jar' />
+	 <pathelement location='${BUBBLES}/lib/commons-compress.jar' />
+	 <fileset dir='${BUBBLES}/eclipsejar'>
+	    <include name='*.jar' />
+	 </fileset>
+      </path>
+   </target>
+
+   <available file='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' type='file' property='j8'
+       value='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' />
+   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar'
+	type='file' property = 'j8' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar' />
+
+   <target name='compile' depends='init'>
+      <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
+		target='1.8' source='1.8' bootclasspath='${j8}'
+		includeantruntime='false'>
+	 <classpath refid='bubbles.classpath' />
+      </javac>
+   </target>
+
+   <target name='clean'>
+      <delete dir='${BUBBLES}/java/edu/brown/cs/bubbles/rebase' />
+   </target>
+
+   <target name='test' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.rebase.RebaseTest' fork='true'>
+	 <classpath refid='test.classpath' />
+      </java>
+   </target>
+
+   <target name='setup' depends='compile'>
+      <java classname='edu.brown.cs.bubbles.rebase.word.RebaseWordCacheSetup' fork='true'>
+	 <classpath refid='test.classpath' />
+	 <arg value='-tar' />
+	 <arg value='/vol/qx5/data/cvs_svn_sources.tar' />
+      </java>
+   </target>
+
+</project>
+
+
+
