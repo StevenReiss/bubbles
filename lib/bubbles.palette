@@ -1,3 +1,5 @@
+Board.base.color	:	white
+
 Buda.bubbleBorderColor	:	blue
 Buda.bubbleFocusColor	:	orange
 Buda.BubbleBaseColor	:	white
@@ -19,6 +21,10 @@ Buda.ErrorTextColor	:	red
 
 Buda.help.color 	:	0xfff5deb3
 Buda.help.border.color	:	0xffa52a2a
+Buda.help.text.color	:	black
+Buda.help.link.color	:	blue
+Buda.help.back.color	:	red
+
 
 Buda.HintBackground	:	lightgray
 
@@ -111,10 +117,7 @@ Bale.DefaultHighlightColor :	green
 Bale.error.color	:	0xffff0080
 Bale.warning.color	:	0xff4040ff
 
-Bale.FindReplaceBackground :	0,0,0,0
 Bale.FindReplaceBorder :	darkGray
-Bale.FindReplaceCaseBackground :	0,0,0,0
-Bale.FindReplaceNumberBackground :	0,0,0,0
 Bale.FindReplaceTopColor :	white
 Bale.FindReplaceBottomColor :	192,192,192
 
@@ -148,6 +151,25 @@ Bale.visualization.gradient.color.10 :	0xbbfeff
 Bale.visualization.gradient.color.11 :	0xf8fadd
 Bale.visualization.default.color :	white
 Bale.visualization.base.color : 	white
+
+Bale.attr.annotation.foreground : #646464
+Bale.attr.keyword.foreground : #7f0055
+Bale.attr.return.foreground : #7f0055
+Bale.attr.identifier.foreground : #6a3e3e
+Bale.attr.fieldid.foreground : #0000c0
+Bale.attr.staticfieldid.foreground : #0000c0
+Bale.attr.callid.foreground : #0000ff
+Bale.attr.builtinid.foreground : #00a0a0
+Bale.attr.annotationid.foreground : #a00000
+Bale.attr.typeid.foreground : #3a2eff
+Bale.attr.constid.foreground : #0000cc
+Bale.attr.literal.foreground : #004040
+Bale.attr.comment.foreground : #3f7f5f
+Bale.attr.javadoccomment.foreground : #3f7f5f
+Bale.attr.linecomment.foreground : #3f7f5f
+Bale.attr.bale.foreground : black
+
+Bale.compact.hilite : #ffff88
 
 
 
@@ -187,7 +209,7 @@ Bcon.class.comment.color :	0x3f7f5f
 Bcon.class.header.color :	black
 Bcon.class.import.color :	gray
 
-Bcon.noexists.color	:	0x80cccccc
+Bcon.notexists.color	 :	 0x80cccccc
 Bcon.code.color 	:	0,0,255,128
 Bcon.comment.color	:	0x803f7f5f
 Bcon.focus.color	:	red
@@ -195,6 +217,7 @@ Bcon.exists.color	:	yellow
 
 Bcon.LabelFocusColor	:	red
 Bcon.LabelColor 	:	black
+Bcon.file.overview.background : white
 
 Bcon.PackageBorderColor :	black
 Bcon.PackageClassNode	:	red
@@ -220,6 +243,9 @@ Bddt.LinkColor		:	red
 Bddt.ConfigTopColor	:	182,182,255
 Bddt.ConfigBottomColor	:	white
 
+Bddt.control.background :	#eeeeee
+
+
 Bddt.console.background :	#000000
 Bddt.console.input.background : #404040
 Bddt.console.input.foreground : #00ffff
@@ -244,6 +270,7 @@ Bddt.InteractionColor	:	245,222,179
 Bddt.InteractionOutline :	139,126,102
 
 Bddt.LaunchOverviewColor :	182,182,255
+Bddt.launch.background :	#eeeeee
 
 Bddt.execution.annotation.color :	#4000ff00
 Bddt.execution.annotation.exception.color : #40ff0000
@@ -267,10 +294,17 @@ Bddt.ThreadSelectionForeground :	black
 Bddt.ThreadTopColor	:	153,255,133
 Bddt.ThreadBottomColor	:	white
 Bddt.ThreadExceptionColor :	red
+Bddt.ActiveThreadColor	:	200,255,200
 
 Bddt.ExecutionAnnotation.color : #4000ff00
 Bddt.ExecutionAnnotation.exception.color : #40ff0000
 Bddt.FrameAnnotation.color :	#40ffff00
+
+Bddt.attr.stdout.foreground : #ffffff
+Bddt.attr.stderr.foreground : #ffff00
+Bddt.attr.stdin.foreground : #00ffff
+Bddt.attr.console.foreground : #ffffff
+
 
 
 
@@ -314,48 +348,10 @@ Beam.ProgressTodoColor	:	0xffc0c0c0
 
 Bgta.BubbleTopColor	:	white
 Bgta.BubbleBottomColor	:	128,206,250
-Bgta.AltButtleTopColor	:	white
+Bgta.AltBubbleTopColor	:	white
 Bgta.AltBubbleBottomColor :	46,139,87
 
 Bgta.LoginErrorColor	:	red
-
-
-
-Bicex.PanelTopColor	:	200,255,100
-Bicex.PanelBottomColor	:	white
-
-Bicex.CallGraphBackground :	255,255,64
-Bicex.CallGraphCurrent	:	160,160,255
-
-Bicex.DataViewBackground :	white
-Bicex.DataViewLine	:	black
-
-Bicex.VarHistoryNode	:	yellow
-Bicex.VarHistoryNodeBorder :	black
-
-
-Bicex.annot.color	:	0x400000ff
-
-Bicex.EvalTopColor	:	200,255,100
-Bicex.EvalBottomColor	:	255,255,150
-Bicex.EvalScrollColor	:	100,128,50
-Bicex.EvalScrollContextColor :	gray
-
-Bicex.StatusDefault	:	white
-Bicex.StatusError	:	255,196,196
-Bicex.StatusTimeout	:	255,255,196
-Bicex.StatusCompilerError :	255,255,196
-Bicex.StatusNormal	:	196,255,196
-Bicex.StatusPending	:	196,196,255
-
-Bicex.LineGraphDefault	:	255,255,64
-Bicex.LineGraphCurrent	:	160,160,255
-
-Bicex.StackDefault	:	black
-
-Bicex.StackViewBackground :	white
-Bicex.StackViewOutline	:	black
-
 
 
 
@@ -370,15 +366,6 @@ Buss.StackBottomColor	:	0xc0c0ff
 
 Buss.PackageLabelColor	:	gray
 Buss.ClassLabelColor	:	0xa020f0
-
-
-Brepair.AnnotColor	:	255,255,0,128
-
-Brepair.TopColor	:	255,255,225
-Brepair.BottomColor	:	white
-Brepair.RepairAnnotColor :	yellow
-Brepair.SelectionColor	:	255,255,127
-
 
 
 Bvcr.ControlFileAdded	:	150,150,240
@@ -446,5 +433,4 @@ Bqst.Background 	:	white
 
 
 
-
-
+Bueno.project.editor.background : lightgray
