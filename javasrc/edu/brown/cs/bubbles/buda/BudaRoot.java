@@ -383,6 +383,7 @@ private void initialize(Element e)
 
    if (BUDA_PROPERTIES.getBoolean("Buda.overview.shades")) {
       enableWindowShades();
+      forceShadeDown();
     }
 
    if (BoardSetup.getSetup().getRunMode() == RunMode.CLIENT) {
@@ -1646,32 +1647,32 @@ private class ShadeUpdater implements ActionListener {
       long now = System.currentTimeMillis();
       long delta = now-last_time;
       int move = (int)(move_delta * delta * shade_delta);
-
+   
       boolean done = false;
       int curht = bubble_overview.getHeight() + bubble_topbar.getHeight();
       int startht = curht;
       curht += move;
       if (curht < 1) {
-	 curht = 1;
-	 move = curht - startht;
-	 done = true;
+         curht = 1;
+         move = curht - startht;
+         done = true;
        }
       else if (curht > BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT) {
-	 curht = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
-	 move = curht - startht;
-	 done = true;
+         curht = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
+         move = curht - startht;
+         done = true;
        }
-
+   
       // System.err.println("CHANGE SIZE " + curht);
       for (Component c : button_panels) {
-	 Dimension csz = c.getSize();
-	 csz.height = curht;
-	 c.setSize(csz);
-	 c.setMinimumSize(csz);
-	 c.setMaximumSize(csz);
-	 c.setPreferredSize(csz);
+         Dimension csz = c.getSize();
+         csz.height = curht;
+         c.setSize(csz);
+         c.setMinimumSize(csz);
+         c.setMaximumSize(csz);
+         c.setPreferredSize(csz);
        }
-
+   
       Dimension topsz = bubble_topbar.getSize();
       if (curht < BUBBLE_TOP_BAR_HEIGHT) topsz.height = curht;
       else topsz.height = BUBBLE_TOP_BAR_HEIGHT;
@@ -1679,7 +1680,7 @@ private class ShadeUpdater implements ActionListener {
       bubble_topbar.setPreferredSize(topsz);
       bubble_topbar.setMaximumSize(topsz);
       bubble_topbar.setSize(topsz);
-
+   
       Dimension ovrsz = bubble_overview.getSize();
       if (curht <= BUBBLE_TOP_BAR_HEIGHT) ovrsz.height = 0;
       else ovrsz.height = curht - BUBBLE_TOP_BAR_HEIGHT;
@@ -1687,34 +1688,34 @@ private class ShadeUpdater implements ActionListener {
       bubble_overview.setPreferredSize(ovrsz);
       bubble_overview.setMaximumSize(ovrsz);
       bubble_overview.setSize(ovrsz);
-
+   
       Rectangle r = bubble_view.getBounds();
       Rectangle rtop = bubble_view.getParent().getBounds();
       r.height = rtop.height - curht;
       r.y = curht;
       bubble_view.setBounds(r);
-
+   
       Point rv = bubble_view.getViewPosition();
       rv.y += move;
       bubble_view.setViewPosition(rv);
-
+   
       for (BudaBubble bbl : bubble_area.getBubbles()) {
-	 if (bbl.isFloating()) {
-	    Rectangle rbbl = bbl.getBounds();
-	    rbbl.y -= move;
-	    bbl.setBounds(rbbl);
-	  }
+         if (bbl.isFloating()) {
+            Rectangle rbbl = bbl.getBounds();
+            rbbl.y -= move;
+            bbl.setBounds(rbbl);
+          }
        }
-
+   
       // revalidate();
-
+   
       synchronized (BudaRoot.this) {
-	 if (shade_delta == 0 || done) {
-	    shade_delta = 0;
-	    Timer nt = (Timer) e.getSource();
-	    nt.stop();
-	    return;
-	  }
+         if (shade_delta == 0 || done) {
+            shade_delta = 0;
+            Timer nt = (Timer) e.getSource();
+            nt.stop();
+            return;
+          }
        }
     }
 
@@ -2837,6 +2838,8 @@ private class ButtonPanel extends JPanel
       this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
       this.add(Box.createVerticalStrut(BUDA_BUTTON_SEPARATION));
       BoardColors.setColors(this,BUTTON_PANEL_TOP_COLOR_PROP);
+      Dimension d =  new Dimension(0,BUBBLE_OVERVIEW_HEIGHT+BUBBLE_TOP_BAR_HEIGHT);
+      setMinimumSize(d);
     }
 
    @Override protected void paintComponent(Graphics g0) {

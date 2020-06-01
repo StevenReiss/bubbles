@@ -273,6 +273,8 @@ boolean shouldAdd(BudaBubble b)
    **********/
 
    if (group_bounds == null) getShape();
+   
+   if (!b.isVisible()) return false;
 
    Rectangle bounds1 = getExpandedBounds(b);
    if (!bounds1.intersects(group_bounds)) return false;

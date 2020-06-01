@@ -70,6 +70,7 @@ private static BoardLog the_logger = new BoardLog();
 private BoardLog()
 {
    log_level = LogLevel.WARNING;
+   log_level = LogLevel.DEBUG;
    debug_log = null;
    debug_writer = null;
    bedrock_log = null;

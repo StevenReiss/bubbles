@@ -398,7 +398,7 @@ String [] BOARD_RESOURCE_PROPS =  new String [] {
    "Board.x86.props", "Bddt.props", "Bcon.props", "Bueno.props", "Bvcr.props",
    "Batt.props", "Bedu.props", "Bnote.props", "Bbook.props", "Buda.python.props",
    "Bandaid.props","Barr.props","Bass.props","Bdoc.java.props","Bdoc.python.props",
-   "Bhelp.props", "Bwiz.props", "Rebus.props", "Buss.props", "Bsean.props",
+   "Bhelp.props", "Bwiz.props", "Rebus.props", "Buss.props",
    "Bema.rebus.props","Buda.rebus.props", "Bass.rebus.props", "Bale.rebus.props",
    "Beam.rebus.props","Bcon.rebus.props","Bfix.props", "Brepair.props",
 };
@@ -495,8 +495,8 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
 
 // "seede.jar",
 // "poppy.jar",
-// "fait.jar",
-   "karma.jar",
+// "fait.jar", 
+// "karma.jar",
    "mail.jar",
 //   "activation.jar",
 

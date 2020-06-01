@@ -212,6 +212,9 @@ void removeChannel(BudaChannel bc)
       channel_panel.remove(bc);
       checkSizes();
     }
+   if (channel_items.size() == 0) {
+      for_root.setChannelSet(null);
+    }
 }
 
 

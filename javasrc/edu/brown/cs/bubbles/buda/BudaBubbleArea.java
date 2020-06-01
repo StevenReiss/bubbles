@@ -2294,7 +2294,11 @@ private boolean checkGroup(BudaBubbleGroup g)
    // Now make the biggest group that resulted be the original group
    BudaBubbleGroup lst = grps.last();
    grps.remove(lst);
-   for (BudaBubble bb : lst.getBubbles()) bb.setGroup(g);
+   for (BudaBubble bb : lst.getBubbles()) {
+      if (bb.isVisible()) {
+         bb.setGroup(g);
+       }
+    }
 
    // Finally, add the new groups
    for (BudaBubbleGroup g2 : grps) addBubbleGroup(g2);

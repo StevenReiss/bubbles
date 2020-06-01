@@ -469,66 +469,67 @@ private class PanelHandler extends AbstractAction implements ActionListener {
    @Override public void actionPerformed(ActionEvent e) {
       BudaRoot br = null;
       if (e.getSource() instanceof JButton) {
-	 JButton btn = (JButton) e.getSource();
-	 br = BudaRoot.findBudaRoot(btn);
+         JButton btn = (JButton) e.getSource();
+         br = BudaRoot.findBudaRoot(btn);
       }
       else if (e.getSource() instanceof Component) {
-	 Component c = (Component) e.getSource();
-	 br = BudaRoot.findBudaRoot(c);
+         Component c = (Component) e.getSource();
+         br = BudaRoot.findBudaRoot(c);
       }
       if (br == null) return;
       String cmd = e.getActionCommand();
-
+   
       // fix up command
       if (cmd == null) cmd = "DEBUG";
       boolean useworkingset = bddt_properties.getBoolean("Bddt.use.workingset");
       if (cmd.equals("DEBUG")) {
-	 if (useworkingset) {
-	    if (working_sets.isEmpty()) cmd = "NEW";
-	  }
-	 else {
-	    if (debug_channels.isChannelEmpty() ||
-	      (debug_channels.getNumChannels() == 0 && br.getChannelSet() != debug_channels)) {
-	       cmd = "NEW";
-	     }
-	  }
+         if (useworkingset) {
+            if (working_sets.isEmpty()) cmd = "NEW";
+          }
+         else {
+            if (debug_channels.isChannelEmpty() ||
+              (debug_channels.getNumChannels() == 0 && br.getChannelSet() != debug_channels)) {
+               cmd = "NEW";
+             }
+          }
        }
-
+   
       if (cmd.equals("DEBUG")) {
-	 if (current_configuration == null) {
-	    prior_viewport = br.getViewport();
-	    createConfiguration();
-	  }
-	 else {
-	    BoardMetrics.noteCommand("BDDT","GotoDebug");
-	    if (debug_channels != null && br.getChannelSet() == debug_channels) useworkingset = false;
-	    if (useworkingset) {
-	       if (active_working_set == null) {
-		  prior_viewport = br.getViewport();
-		  active_working_set = working_sets.get(0);
-		}
-	       else if (prior_viewport != null) {
-		  br.setViewport(prior_viewport.x,prior_viewport.y);
-		  prior_viewport = null;
-		}
-	     }
-	    else {
-	       if (br.getChannelSet() == debug_channels) br.setChannelSet(null);
-	       else br.setChannelSet(debug_channels);
-	     }
-	  }
+         if (current_configuration == null) {
+            prior_viewport = br.getViewport();
+            createConfiguration();
+          }
+         else {
+            BoardMetrics.noteCommand("BDDT","GotoDebug");
+            if (debug_channels != null && br.getChannelSet() == debug_channels) 
+               useworkingset = false;
+            if (useworkingset) {
+               if (active_working_set == null) {
+                  prior_viewport = br.getViewport();
+                  active_working_set = working_sets.get(0);
+                }
+               else if (prior_viewport != null) {
+                  br.setViewport(prior_viewport.x,prior_viewport.y);
+                  prior_viewport = null;
+                }
+             }
+            else {
+               if (br.getChannelSet() == debug_channels) br.setChannelSet(null);
+               else br.setChannelSet(debug_channels);
+             }
+          }
        }
       else if (cmd.equals("NEW")) {
-	 prior_viewport = br.getViewport();
-	 if (current_configuration == null) setCurrentLaunchConfig(null);
-
-	 if (current_configuration != null) {
-	    BoardMetrics.noteCommand("BDDT","NewDebug");
-	    newDebugger(current_configuration);
-	  }
-	 else {
-	    createConfiguration();
-	  }
+         prior_viewport = br.getViewport();
+         if (current_configuration == null) setCurrentLaunchConfig(null);
+   
+         if (current_configuration != null) {
+            BoardMetrics.noteCommand("BDDT","NewDebug");
+            newDebugger(current_configuration);
+          }
+         else {
+            createConfiguration();
+          }
        }
     }
 

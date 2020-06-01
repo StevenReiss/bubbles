@@ -104,7 +104,7 @@ public class BemaMain implements BemaConstants
 public static void main(String [] args)
 {
    BemaMain bm = new BemaMain(args);
-
+   
    if (System.getProperty("os.name").startsWith("Mac")) {
       try {
 	 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());

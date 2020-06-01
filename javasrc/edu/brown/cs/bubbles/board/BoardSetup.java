@@ -2557,7 +2557,8 @@ private void restartBubbles()
        }
       switch (run_mode) {
 	 case CLIENT :
-	    args.add(idx++,"-CLIENT");
+	    // args.add(idx++,"-CLIENT");
+            args.add(idx++,"-cloud");
 	    break;
 	 case SERVER :
 	    args.add(idx++,"-SERVER");
@@ -2791,63 +2792,63 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
 
    private void checkStatus() {
       if (eclipse_field != null) {
-	 String txt = eclipse_field.getText().trim();
-	 if (txt.length() > 0) {
-	    File ef = new File(txt);
-	    if (!ef.getAbsolutePath().equals(eclipse_directory)) {
-	       eclipse_directory = ef.getAbsolutePath();
-	       has_changed = true;
-	    }
-	 }
+         String txt = eclipse_field.getText().trim();
+         if (txt.length() > 0) {
+            File ef = new File(txt);
+            if (!ef.getAbsolutePath().equals(eclipse_directory)) {
+               eclipse_directory = ef.getAbsolutePath();
+               has_changed = true;
+            }
+         }
       }
       if (bubbles_field != null) {
-	 String txt = bubbles_field.getText().trim();
-	 if (txt.length() > 0) {
-	    File inf = new File(txt);
-	    if (!inf.getAbsolutePath().equals(install_path)) {
-	       install_path = inf.getAbsolutePath();
-	       has_changed = true;
-	    }
-	 }
+         String txt = bubbles_field.getText().trim();
+         if (txt.length() > 0) {
+            File inf = new File(txt);
+            if (!inf.getAbsolutePath().equals(install_path)) {
+               install_path = inf.getAbsolutePath();
+               has_changed = true;
+            }
+         }
       }
-
+   
       switch (board_language) {
-	 case JAVA :
-	    if (checkEclipse() && eclipse_button != null) {
-	       eclipse_button.setEnabled(false);
-	     }
-	    if (checkEclipse() && checkPlugin() && (install_jar || checkInstall())) {
-	       accept_button.setEnabled(true);
-	     }
-	    else {
-	       accept_button.setEnabled(false);
-	     }
-	    if (checkEclipse() && !checkPlugin() && (install_jar || checkInstall())) {
-	       install_button.setEnabled(true);
-	     }
-	    else {
-	       install_button.setEnabled(false);
-	     }
-	    if (checkEclipse()) {
-	       eclipse_warning.setVisible(false);
-	     }
-	    else {
-	       eclipse_warning.setVisible(true);
-	     }
-	    break;
-	 case PYTHON :
-	    break;
-	 case REBUS :
-	    break;
-	 case JS :
-	    break;
+         case JAVA :
+            if (checkEclipse() && eclipse_button != null) {
+               eclipse_button.setEnabled(false);
+             }
+            if (checkEclipse() && checkPlugin() && (install_jar || checkInstall())) {
+               accept_button.setEnabled(true);
+             }
+            else {
+               accept_button.setEnabled(false);
+             }
+            if (checkEclipse() && !checkPlugin() && (install_jar || checkInstall())) {
+               install_button.setEnabled(true);
+             }
+            else {
+               install_button.setEnabled(false);
+             }
+            if (checkEclipse()) {
+               eclipse_warning.setVisible(false);
+             }
+            else {
+               eclipse_warning.setVisible(true);
+             }
+            break;
+         case PYTHON :
+            break;
+         case REBUS :
+            break;
+         case JS :
+            break;
        }
-
+   
       if (install_jar || checkInstall()) {
-	 bubbles_warning.setVisible(false);
+         bubbles_warning.setVisible(false);
        }
       else {
-	 bubbles_warning.setVisible(true);
+         bubbles_warning.setVisible(true);
        }
    }
 

@@ -486,24 +486,24 @@ private static class PluginData implements Comparable<PluginData> {
       long dlm = plugin_file.lastModified();
       URLConnection uc = null;
       try {
-	 URL u = new URL(plugin_url);
-	 uc = u.openConnection();
-	 long urldlm = uc.getLastModified();
-	 if (urldlm < dlm) return;
+         URL u = new URL(plugin_url);
+         uc = u.openConnection();
+         long urldlm = uc.getLastModified();
+         if (urldlm < dlm) return;
        }
       catch (Exception e) {
-	 return;
+         return;
        }
-
+   
       File f1 = new File(plugin_file.getPath() + ".save");
       plugin_file.renameTo(f1);
       try {
-	 InputStream uins = uc.getInputStream();
-	 IvyFile.copyFile(uins,plugin_file);
-	 f1.delete();
+         InputStream uins = uc.getInputStream();
+         IvyFile.copyFile(uins,plugin_file);
+         f1.delete();
        }
       catch (IOException e) {
-	 f1.renameTo(plugin_file);
+         f1.renameTo(plugin_file);
        }
     }
 

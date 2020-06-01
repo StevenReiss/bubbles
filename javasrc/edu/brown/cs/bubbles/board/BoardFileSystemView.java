@@ -26,6 +26,7 @@ package edu.brown.cs.bubbles.board;
 
 import edu.brown.cs.ivy.exec.IvyExec;
 import edu.brown.cs.ivy.exec.IvyExecQuery;
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.mint.MintArguments;
 import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
@@ -662,6 +663,15 @@ public static void main(String [] args)
       System.exit(1);
     }
 
+   File f = new File(System.getProperty("user.home"));
+   File f1 = new File(f,".bubbles");
+   File f2 = new File(f1,"logs");
+   f2.mkdirs();
+   File f3 = new File(f2,"RemoteFileSystem.log");
+   IvyLog.setLogFile(f3);
+   IvyLog.setLogLevel(IvyLog.LogLevel.DEBUG);
+   IvyLog.setupLogging("BOARD",false);
+   
    default_view = FileSystemView.getFileSystemView();
    MintControl mc = MintControl.create(mnm,MintSyncMode.ONLY_REPLIES);
    FileServer fs = new FileServer();
