@@ -10,6 +10,8 @@ set INS = $PRO/bubbles
 set CP1 = $PRO/bubbles/java:$PRO/ivy/java
 
 set LIB = $PRO/bubbles/lib
+set IVYLIB = $PRO/ivy/lib
+set ECLLIB = $IVYLIB/eclipsejar
 set CP2 = $LIB/smack.jar:$LIB/smackx-debug.jar:$LIB/smackx-jingle.jar:$LIB/smackx.jar
 set CP3 = $LIB/jsyntaxpane.jar:$LIB/gnujpdf.jar
 set CP4 = $LIB/joscar-client.jar:$LIB/joscar-common.jar:$LIB/joscar-protocol.jar
@@ -17,7 +19,7 @@ set CP5 = $LIB/derby.jar:$LIB/derbyclient.jar:$LIB/derbynet.jar:$LIB/postgresql.
 set CP6 = $LIB/pydev.jar:$LIB/wikitextcore.jar:$LIB/wikitexttrac.jar
 
 set CP7 = ""
-foreach i ($LIB/org.eclipse.*.jar)
+foreach i ($ECLLIB/org.eclipse.*.jar)
    set CP7 = ${CP7}:$i
 end
 
