@@ -12,7 +12,9 @@ for all uses
 5)  Seede times out too soon
 
 6)  Breakpoints don't seem to be saved much of the time.  Perhaps Eclipse is
-exiting abnormally.  Is there a way of forcing breakpoints to be saved to disk?
+    exiting abnormally.  Is there a way of forcing breakpoints to be saved to disk?
+    You need to do either project or workspace save. (these could be expensive -- save for
+    end?, do in background?)
 
 XXX Goto Source for constructor call from stack view fails?
 
@@ -51,3 +53,4 @@ group left)
 
 ???  Removing all debug channels should go back to main view, not debug view.
 
+24)  Copy from debug console doesn't allow paste in other applications
