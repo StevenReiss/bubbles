@@ -19,17 +19,16 @@ XXX Goto Source for constructor call from stack view fails?
 8)  How to put back DDT control window (key that checks if present and
 recreates if not?; don't allow deletion?)
 
-9)  Select word inside string shouldn't select the whole string
+XXX Select word inside string shouldn't select the whole string
 
 10) Bad working directory in the command line for new project causes BDOC to
-abort (update default_workspace).
-        This generates a Bad board setup error.
+   abort (update default_workspace). This generates a Bad board setup error.
 
-11)  Debug panel is sometimes missing after startup
+???  Debug panel is sometimes missing after startup
 
-12)  -cloud not remembered after download of new version
+???  -cloud not remembered after download of new version
 
-13)  Text search limited to project
+???  Text search limited to project
 
 14)  Data display of large arrays
 
@@ -40,8 +39,15 @@ abort (update default_workspace).
 17) Sometimes the group doesn't go away when the bubble does (white shadow
 group left)
 
-18) Plugins not updated when bubbles is updated.
+??? Plugins not updated when bubbles is updated.
 
-19)  F3/F4 should use pointed to, not selection
+???  F3/F4 should use pointed to, not selection
 
-20)  No logging of file queries.  File queries can be missing. (or just message missing)
+???  No logging of file queries.  File queries can be missing. (or just message missing)
+
+21)  Changing launch configuration name doesn't update repository
+
+22)  Debug can't open Jfram on mac inside bubbles (SWT library and Eclipse hidden flag)
+
+???  Removing all debug channels should go back to main view, not debug view.
+
