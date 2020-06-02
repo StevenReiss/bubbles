@@ -80,7 +80,8 @@ class BassConfigurator implements BassConstants, BudaConstants.BubbleConfigurato
     }
    else if (typ.equals("TEXTSEARCH")) {
       BassFactory bf = BassFactory.getFactory();
-      bb = bf.createTextSearch();
+      String proj = IvyXml.getAttrString(cnt,"PROJECT");
+      bb = bf.createTextSearch(proj);
     }
 
    return bb;

@@ -552,7 +552,7 @@ private void createBubble(BassName bn,int ypos)
 
 private void createTextSearchBubble()
 {
-   BassTextBubble btb = new BassTextBubble(input_field.getText());
+   BassTextBubble btb = new BassTextBubble(input_field.getText(),null);
    addAndLocateBubble(btb,0,null);
    if (!is_static) setVisible(false);
 }

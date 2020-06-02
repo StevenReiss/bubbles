@@ -92,6 +92,7 @@ private JRadioButton	literal_button;
 private JRadioButton	regex_button;
 private JCheckBox	usecase_button;
 private boolean         first_time;
+private String          for_project;
 
 private static String	search_text = "";
 private static boolean	search_literal = false;
@@ -110,8 +111,10 @@ private static final long serialVersionUID = 1;
 /*										*/
 /********************************************************************************/
 
-BassTextSearch()
+BassTextSearch(String proj)
 {
+   for_project = proj;
+   
    setInsets(1);
    setOpaque(true);
    
@@ -221,6 +224,7 @@ private class Searcher implements Runnable {
 
    private boolean in_place;
    private String searcher_text;
+   private String search_project;
    private Collection<BumpLocation> search_result;
    Rectangle search_location;
 
@@ -228,6 +232,7 @@ private class Searcher implements Runnable {
       searcher_text = txt;
       in_place = inp;
       search_result = null;
+      search_project = null;
       search_location = BudaRoot.findBudaLocation(BassTextSearch.this);
     }
 
@@ -236,7 +241,7 @@ private class Searcher implements Runnable {
          BowiFactory.startTask();
          try {
             BumpClient bc = BumpClient.getBump();
-            Collection<BumpLocation> locs = bc.textSearch(null,searcher_text,
+            Collection<BumpLocation> locs = bc.textSearch(search_project,searcher_text,
         	     search_literal,
         	     !search_case,
         	     false);
@@ -318,6 +323,7 @@ private class SearchAction extends AbstractAction {
    xw.field("LITERAL",search_literal);
    xw.field("USECASE",search_case);
    xw.field("TEXT",search_text);
+   if (for_project != null) xw.field("PROJECT",for_project);
 }
 
 

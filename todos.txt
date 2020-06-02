@@ -12,10 +12,9 @@ for all uses
 5)  Seede times out too soon
 
 6)  Breakpoints don't seem to be saved much of the time.  Perhaps Eclipse is
-exiting abnormally.  Is there a
-        way of forcing breakpoints to be saved to disk?
+exiting abnormally.  Is there a way of forcing breakpoints to be saved to disk?
 
-7)  Goto Source for constructor call from stack view fails?
+XXX Goto Source for constructor call from stack view fails?
 
 8)  How to put back DDT control window (key that checks if present and
 recreates if not?; don't allow deletion?)

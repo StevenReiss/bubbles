@@ -149,9 +149,9 @@ public static synchronized void setup()
    package_explorers = new HashMap<>();
 
    BudaRoot.registerMenuButton("Package Explorer",new PackageExplorerButton(),"Add/Remove the package explorer panel for easier browsing");
-   BudaRoot.registerMenuButton("Text Search",new TextSearchButton(),"Search for a string or pattern in all files");
+   BudaRoot.registerMenuButton("Text Search",new TextSearchButton(null),"Search for a string or pattern in all files");
 
-   BudaRoot.addToolbarButton("DefaultMenu",new TextSearchButton(),"Text search",BoardImage.getImage("search"));
+   BudaRoot.addToolbarButton("DefaultMenu",new TextSearchButton(null),"Text search",BoardImage.getImage("search"));
 
    repository_map = new HashMap<>();
 
@@ -183,7 +183,7 @@ public static void initialize(BudaRoot br)
    BuenoFactory bueno = BuenoFactory.getFactory();
    bueno.setClassMethodFinder(new MethodFinder());
 
-   br.registerKeyAction(new TextSearchButton(),"TEXT SEARCH",
+   br.registerKeyAction(new TextSearchButton(null),"TEXT SEARCH",
 	 KeyStroke.getKeyStroke(KeyEvent.VK_F9,0));
 }
 
@@ -356,9 +356,9 @@ public BassBubble createPackageExplorer(BudaBubbleArea bba)
  *	Create a text search bubble.
  **/
 
-public BassTextBubble createTextSearch()
+public BassTextBubble createTextSearch(String project)
 {
-   return new BassTextBubble();
+   return new BassTextBubble("",project);
 }
 
 
@@ -508,22 +508,26 @@ private static class PackageExplorerButton implements BudaConstants.ButtonListen
 private static class TextSearchButton extends AbstractAction implements BudaConstants.ButtonListener,
 	ActionListener
 {
+   private String for_project;
    private final static long serialVersionUID = 1;
 
-   TextSearchButton()			{ }
+   TextSearchButton(String proj) {
+      super("Text Search" + (proj == null ? "" : " in " + proj));
+      for_project = proj;
+    }
 
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
       BowiFactory.startTask();
       try {
-	 BudaRoot br = BudaRoot.findBudaRoot(bba);
-	 if (br == null) return;
-	 BudaBubble bb = the_factory.createTextSearch();
-	 BudaConstraint bc = new BudaConstraint(BudaBubblePosition.STATIC,pt);
-	 br.add(bb,bc);
-	 bb.grabFocus();
+         BudaRoot br = BudaRoot.findBudaRoot(bba);
+         if (br == null) return;
+         BudaBubble bb = the_factory.createTextSearch(for_project);
+         BudaConstraint bc = new BudaConstraint(BudaBubblePosition.STATIC,pt);
+         br.add(bb,bc);
+         bb.grabFocus();
        }
       finally {
-	 BowiFactory.stopTask();
+         BowiFactory.stopTask();
        }
     }
 
@@ -531,7 +535,11 @@ private static class TextSearchButton extends AbstractAction implements BudaCons
       Component c = (Component) evt.getSource();
       if (c == null) return;
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(c);
-      BudaBubble bb = the_factory.createTextSearch();
+      if (bba == null) {
+         BudaRoot broot = BudaRoot.findBudaRoot(c);
+         bba = broot.getCurrentBubbleArea();
+       }
+      BudaBubble bb = the_factory.createTextSearch(for_project);
       bba.addBubble(bb,c,null,BudaConstants.PLACEMENT_LOGICAL);
     }
 
@@ -583,32 +591,34 @@ static BassTreeModelBase getModelBase(BassRepository br)
 private static class ProjectProps implements BassPopupHandler {
 
    @Override public void addButtons(BudaBubble bb,Point where,JPopupMenu menu,
-				       String fullname,BassName bn) {
+        			       String fullname,BassName bn) {
       if (bn != null) return;
       if (fullname.startsWith("@")) return;
-
+   
       int idx = fullname.indexOf(":");
       if (idx <= 0) return;
       String proj = fullname.substring(0,idx);
-
+   
       switch (BoardSetup.getSetup().getLanguage()) {
-	 case JAVA :
-	    // menu.add(new EclipseProjectAction(proj));
-	    menu.add(new ProjectAction(proj,bb,where));
-	    menu.add(new NewProjectAction(bb,where));
-	    menu.add(new BassImportProjectAction());
-	    break;
-	 case PYTHON :
-	    menu.add(new PythonProjectAction(proj,bb,where));
-	    menu.add(new NewPythonProjectAction(bb,where));
-	    break;
-	 case JS:
-	    menu.add(new JSProjectAction(proj,bb,where));
-	    menu.add(new NewJSProjectAction(bb,where));
-	    break;
-	 case REBUS :
-	    break;
+         case JAVA :
+            // menu.add(new EclipseProjectAction(proj));
+            menu.add(new ProjectAction(proj,bb,where));
+            menu.add(new NewProjectAction(bb,where));
+            menu.add(new BassImportProjectAction());
+            break;
+         case PYTHON :
+            menu.add(new PythonProjectAction(proj,bb,where));
+            menu.add(new NewPythonProjectAction(bb,where));
+            break;
+         case JS:
+            menu.add(new JSProjectAction(proj,bb,where));
+            menu.add(new NewJSProjectAction(bb,where));
+            break;
+         case REBUS :
+            break;
        }
+      
+      menu.add(new TextSearchButton(proj));
     }
 
 }	// end of inner class ProjectProps

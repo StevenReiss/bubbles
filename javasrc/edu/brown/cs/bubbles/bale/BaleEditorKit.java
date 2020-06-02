@@ -647,58 +647,58 @@ private static class DefaultKeyAction extends TextAction {
       BaleDocument bd = target.getBaleDocument();
       bd.baleWriteLock();
       try {
-	 Dimension d0 = target.getSize();
-	 if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
-	 else d0 = target.getPreferredSize();
-
-	 String content = e.getActionCommand();
-	 int mod = e.getModifiers();
-	 if ((content != null) && (content.length() > 0) &&
-	       ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
-	    char c = content.charAt(0);
-
-	    if ((c >= 0x20) && (c != 0x7F)) {
-	       int sel = target.getSelectionStart();
-	       if (target.getOverwriteMode()) {
-		  if (sel == target.getSelectionEnd()) {
-		     String prev = null;
-		     try {
-			prev = target.getText(sel,1);
-		      }
-		     catch (BadLocationException ex) { }
-		     if (prev == null || prev.equals("\n"));
-		     else if (prev.equals("\t")) {
-			int cpos = bd.getColumnPosition(sel);
-			int npos = bd.getNextTabPosition(cpos);
-			StringBuilder buf = new StringBuilder();
-			for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
-			target.setSelectionEnd(sel+1);
-			target.replaceSelection(buf.toString());
-			target.setSelectionStart(sel);
-			target.setSelectionEnd(sel+1);
-		      }
-		     else target.setSelectionEnd(sel+1);
-		   }
-		}
-
-	       target.replaceSelection(content);
-	       if (content != null && shouldAutoIndent(target,content,sel)) {
-		  // TODO: check that this is the only thing on the line
-		  indent_lines_action.actionPerformed(e);
-		}
-	       BaleCompletionContext ctx = target.getCompletionContext();
-	       if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
-		  new BaleCompletionContext(target,sel,c);
-		}
-
-	       if (d0 != null) {
-		  Dimension d1 = target.getPreferredSize();
-		  if (d1.height > d0.height) {
-		     target.increaseSize(1);
-		   }
-		}
-	     }
-	  }
+         Dimension d0 = target.getSize();
+         if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
+         else d0 = target.getPreferredSize();
+   
+         String content = e.getActionCommand();
+         int mod = e.getModifiers();
+         if ((content != null) && (content.length() > 0) &&
+               ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
+            char c = content.charAt(0);
+   
+            if ((c >= 0x20) && (c != 0x7F)) {
+               int sel = target.getSelectionStart();
+               if (target.getOverwriteMode()) {
+        	  if (sel == target.getSelectionEnd()) {
+        	     String prev = null;
+        	     try {
+        		prev = target.getText(sel,1);
+        	      }
+        	     catch (BadLocationException ex) { }
+        	     if (prev == null || prev.equals("\n"));
+        	     else if (prev.equals("\t")) {
+        		int cpos = bd.getColumnPosition(sel);
+        		int npos = bd.getNextTabPosition(cpos);
+        		StringBuilder buf = new StringBuilder();
+        		for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
+        		target.setSelectionEnd(sel+1);
+        		target.replaceSelection(buf.toString());
+        		target.setSelectionStart(sel);
+        		target.setSelectionEnd(sel+1);
+        	      }
+        	     else target.setSelectionEnd(sel+1);
+        	   }
+        	}
+   
+               target.replaceSelection(content);
+               if (content != null && shouldAutoIndent(target,content,sel)) {
+        	  // TODO: check that this is the only thing on the line
+        	  indent_lines_action.actionPerformed(e);
+        	}
+               BaleCompletionContext ctx = target.getCompletionContext();
+               if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
+        	  new BaleCompletionContext(target,sel,c);
+        	}
+   
+               if (d0 != null) {
+        	  Dimension d1 = target.getPreferredSize();
+        	  if (d1.height > d0.height) {
+        	     target.increaseSize(1);
+        	   }
+        	}
+             }
+          }
        }
       finally { bd.baleWriteUnlock(); }
    }
@@ -1655,6 +1655,8 @@ private static class SelectLineAction extends TextAction {
 private static class SelectWordAction extends TextAction {
 
    private static final long serialVersionUID = 1;
+   
+   private enum CharType { ALNUM, PUNCT, WHITE };
 
    SelectWordAction() {
       super(selectWordAction);
@@ -1668,13 +1670,49 @@ private static class SelectWordAction extends TextAction {
       int soff = target.getSelectionStart();
       BaleElement be = bd.getCharacterElement(soff);
       if (be == null) return;
-      int esoff = be.getStartOffset();
+      int esoff = be.getStartOffset(); 
       if (esoff < 0) return;
-      target.setCaretPosition(esoff);
       int eeoff = be.getEndOffset();
+      
+      if (be.isComment() || be.getTokenType() == BaleTokenType.STRING) {
+         if (eeoff >= esoff) {
+            try {
+               String toktxt = target.getText(esoff,eeoff-esoff);
+               int pos = soff - esoff;
+               int spos = pos;
+               int epos = pos;
+               char base = toktxt.charAt(pos);
+               CharType btype = getCharType(base);
+               for ( ; spos > 0; --spos) {
+                  char c = toktxt.charAt(spos-1);
+                  if (getCharType(c) != btype) break;
+                }
+               for ( ; epos < toktxt.length()-1; ++epos) {
+                  char c = toktxt.charAt(epos+1);
+                  if (getCharType(c) != btype) break;
+                }
+               eeoff = esoff + epos + 1;
+               esoff = esoff + spos;
+             }
+            catch (BadLocationException ex) { }
+          }
+       }
+     
+      target.setCaretPosition(esoff);
       if (eeoff < 0) return;
       target.moveCaretPosition(eeoff);
     }
+   
+   private CharType getCharType(char c) {
+      if (Character.isJavaIdentifierPart(c)) return CharType.ALNUM;
+      if (Character.isWhitespace(c)) return CharType.WHITE;
+      if (Character.isUnicodeIdentifierPart(c)) return CharType.ALNUM;
+      return CharType.PUNCT;
+    }
+   
+   
+   
+   
 
 }	// end of inner class SelectWordAction
 
@@ -2429,76 +2467,77 @@ private static class GotoDocAction extends TextAction {
       BaleDocument bd = target.getBaleDocument();
       int soff = target.getSelectionStart();
       int eoff = target.getSelectionEnd();
+      if (eoff != soff) eoff = soff;
       BumpClient bc = BumpClient.getBump();
-
+   
       String fullnm = null;
-
+   
       fullnm  = bc.getFullyQualifiedName(bd.getProjectName(),bd.getFile(),
-					    bd.mapOffsetToEclipse(soff),
-					    bd.mapOffsetToEclipse(eoff),60000);
-
+        				    bd.mapOffsetToEclipse(soff),
+        				    bd.mapOffsetToEclipse(eoff),60000);
+   
       BalePosition sp = null;
       try {
-	 sp = (BalePosition) bd.createPosition(soff);
+         sp = (BalePosition) bd.createPosition(soff);
        }
       catch (BadLocationException ex) { }
-
+   
       BaleElement be = bd.getCharacterElement(soff);
-
+   
       if (fullnm != null) {
-	 // BoardLog.logD("BALE","FIND DOCUMENTATION FOR " + fullnm);
-	 BudaBubble bb = BudaRoot.createDocumentationBubble(fullnm);
-	 if (bb != null) {
-	    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(target);
-	    BudaBubble obbl = BudaRoot.findBudaBubble(target);
-	    if (bba == null || obbl == null) return;
-
-	    Point lp = null;
-	    BudaConstants.LinkPort port0 = null;
-	    if (sp != null) {
-	       port0 = new BaleLinePort(target,sp,"Find Link");
-	       lp = port0.getLinkPoint(obbl,obbl.getLocation());
-	     }
-	    else port0 = new BudaDefaultPort(BudaPortPosition.BORDER_EW,true);
-
-	    bba.addBubble(bb,target,lp,PLACEMENT_PREFER|PLACEMENT_MOVETO|PLACEMENT_NEW);
-
-	    /****************
-	    BudaRoot root = BudaRoot.findBudaRoot(target);
-	    Rectangle loc = BudaRoot.findBudaLocation(target);
-	    if (lp != null) loc.y = lp.y;
-	    root.add(bb,new BudaConstraint(loc.x+loc.width+BUBBLE_CREATION_SPACE,loc.y));
-	    ****************/
-
-	    BudaConstants.LinkPort port1 = new BudaDefaultPort(BudaPortPosition.BORDER_EW_TOP,true);
-	    BudaBubbleLink lnk = new BudaBubbleLink(obbl,port0,bb,port1);
-	    bba.addLink(lnk);
-	    BoardMetrics.noteCommand("BALE","GoToDocumentation");
-	    return;
-	  }
-	 else {
-	    if (e.getActionCommand() == null) {
-	       BaleInfoBubble.createInfoBubble(target, be.getName(),BaleInfoBubbleType.DOC, sp);
-	     }
-	    else if (e.getActionCommand().equals("GotoImplementationAction")) {
-	       BaleInfoBubble.createInfoBubble(target, be.getName(),BaleInfoBubbleType.IMPLDOC, sp);
-	     }
-	    else if (e.getActionCommand().equals("GotoDefinitionAction")) {
-	       BaleInfoBubble.createInfoBubble(target, be.getName(),BaleInfoBubbleType.DEFDOC, sp);
-	     }
-	    else {
-	       BaleInfoBubble.createInfoBubble(target, be.getName(),BaleInfoBubbleType.DOC, sp);
-	     }
-	  }
+         // BoardLog.logD("BALE","FIND DOCUMENTATION FOR " + fullnm);
+         BudaBubble bb = BudaRoot.createDocumentationBubble(fullnm);
+         if (bb != null) {
+            BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(target);
+            BudaBubble obbl = BudaRoot.findBudaBubble(target);
+            if (bba == null || obbl == null) return;
+   
+            Point lp = null;
+            BudaConstants.LinkPort port0 = null;
+            if (sp != null) {
+               port0 = new BaleLinePort(target,sp,"Find Link");
+               lp = port0.getLinkPoint(obbl,obbl.getLocation());
+             }
+            else port0 = new BudaDefaultPort(BudaPortPosition.BORDER_EW,true);
+   
+            bba.addBubble(bb,target,lp,PLACEMENT_PREFER|PLACEMENT_MOVETO|PLACEMENT_NEW);
+   
+            /****************
+            BudaRoot root = BudaRoot.findBudaRoot(target);
+            Rectangle loc = BudaRoot.findBudaLocation(target);
+            if (lp != null) loc.y = lp.y;
+            root.add(bb,new BudaConstraint(loc.x+loc.width+BUBBLE_CREATION_SPACE,loc.y));
+            ****************/
+   
+            BudaConstants.LinkPort port1 = new BudaDefaultPort(BudaPortPosition.BORDER_EW_TOP,true);
+            BudaBubbleLink lnk = new BudaBubbleLink(obbl,port0,bb,port1);
+            bba.addLink(lnk);
+            BoardMetrics.noteCommand("BALE","GoToDocumentation");
+            return;
+          }
+         else {
+            if (e.getActionCommand() == null) {
+               BaleInfoBubble.createInfoBubble(target, be.getName(),BaleInfoBubbleType.DOC, sp);
+             }
+            else if (e.getActionCommand().equals("GotoImplementationAction")) {
+               BaleInfoBubble.createInfoBubble(target, be.getName(),BaleInfoBubbleType.IMPLDOC, sp);
+             }
+            else if (e.getActionCommand().equals("GotoDefinitionAction")) {
+               BaleInfoBubble.createInfoBubble(target, be.getName(),BaleInfoBubbleType.DEFDOC, sp);
+             }
+            else {
+               BaleInfoBubble.createInfoBubble(target, be.getName(),BaleInfoBubbleType.DOC, sp);
+             }
+          }
        }
       else {
-	 if (be.isIdentifier())
-	    BaleInfoBubble.createInfoBubble(target, be.getName(), BaleInfoBubbleType.UNDEFINED, sp);
-	 else
-	    BaleInfoBubble.createInfoBubble(target, be.getName(), BaleInfoBubbleType.NOIDENTIFIER, sp);
+         if (be.isIdentifier())
+            BaleInfoBubble.createInfoBubble(target, be.getName(), BaleInfoBubbleType.UNDEFINED, sp);
+         else
+            BaleInfoBubble.createInfoBubble(target, be.getName(), BaleInfoBubbleType.NOIDENTIFIER, sp);
        }
-
-
+   
+   
       Action act = findAction(beepAction);
       if (act != null) act.actionPerformed(e);
       BoardMetrics.noteCommand("BALE","GoToDocumentation");

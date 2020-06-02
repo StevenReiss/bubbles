@@ -34,6 +34,8 @@ import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.IBreakpointsListener;
@@ -285,6 +287,8 @@ void setLineBreakpoint(String proj,String bid,String filename,String cls,int lin
    catch (CoreException e) {
       throw new BedrockException("Problem setting line breakpoint: " + e);
     }
+   
+   saveBreakpoints();
 }
 
 
@@ -306,6 +310,8 @@ void setExceptionBreakpoint(String proj,String cls,boolean ct,boolean uct,boolea
    catch (CoreException e) {
       throw new BedrockException("Problem setting exception breakpoint: " + e);
     }
+   
+   saveBreakpoints();
 }
 
 
@@ -337,6 +343,8 @@ private void setAllExceptionBreakpoint()
    catch (CoreException e) {
       BedrockPlugin.logE("Problem setting exception breakpoint: " + e);
     }
+   
+   saveBreakpoints();
 }
 
 
@@ -364,22 +372,23 @@ void clearLineBreakpoints(String proj,String file,String cls,int line)
 	  }
 	 catch (JavaModelException e) { }
        }
-
-      return;
     }
-
-   for (IBreakpoint bp : bm.getBreakpoints()) {
-      if (bp instanceof IJavaLineBreakpoint) {
-	 try {
-	    IJavaLineBreakpoint jlbp = (IJavaLineBreakpoint) bp;
-	    if (jlbp == null || jlbp.getTypeName() == null) continue;
-	    if (cls != null && !jlbp.getTypeName().equals(cls)) continue;
-	    if (line > 0 && jlbp.getLineNumber() != line) continue;
-	    jlbp.delete();
-	  }
-	 catch (CoreException e) { }
+   else {
+      for (IBreakpoint bp : bm.getBreakpoints()) {
+         if (bp instanceof IJavaLineBreakpoint) {
+            try {
+               IJavaLineBreakpoint jlbp = (IJavaLineBreakpoint) bp;
+               if (jlbp == null || jlbp.getTypeName() == null) continue;
+               if (cls != null && !jlbp.getTypeName().equals(cls)) continue;
+               if (line > 0 && jlbp.getLineNumber() != line) continue;
+               jlbp.delete();
+             }
+            catch (CoreException e) { }
+          }
        }
     }
+   
+   saveBreakpoints(); 
 }
 
 
@@ -419,6 +428,8 @@ void editBreakpoint(int id,String p0,String v0,String p1,String v1,
    setBreakProperty(bp,p0,v0);
    setBreakProperty(bp,p1,v1);
    setBreakProperty(bp,p2,v2);
+   
+   saveBreakpoints();
 }
 
 
@@ -513,6 +524,27 @@ private void setBreakProperty(IBreakpoint bp,String p,String v) throws BedrockEx
 }
 
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      Ensure breakpoints are saved in project                                 */
+/*                                                                              */
+/********************************************************************************/
+
+private void saveBreakpoints()
+{
+   IEclipsePreferences node = InstanceScope.INSTANCE.getNode(JDIDebugModel.getPluginIdentifier());
+   IEclipsePreferences nod1 = InstanceScope.INSTANCE.getNode(DebugPlugin.getUniqueIdentifier());
+   BedrockPlugin.logD("SAVE breakpoints " + node + " " + nod1);
+   if (node != null) {
+      try {
+         node.flush();
+       }
+      catch (Throwable t) { 
+         BedrockPlugin.logE("Breakpoint flush failed",t);
+       }
+    }
+}
 
 /********************************************************************************/
 /*										*/

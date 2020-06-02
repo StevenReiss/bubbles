@@ -58,16 +58,9 @@ private static final long serialVersionUID = 1;
 /*										*/
 /********************************************************************************/
 
-BassTextBubble()
+BassTextBubble(String initialsearch,String project)
 {
-   this("");
-}
-
-
-
-BassTextBubble(String initialsearch)
-{
-   BassTextSearch sb = new BassTextSearch();
+   BassTextSearch sb = new BassTextSearch(project);
 
    Dimension d = sb.getPreferredSize();
    sb.setSize(d);
