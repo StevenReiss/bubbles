@@ -54,3 +54,11 @@ group left)
 ???  Removing all debug channels should go back to main view, not debug view.
 
 24)  Copy from debug console doesn't allow paste in other applications
+
+25)  Reduce timeouts on setupElision
+
+26)  Fix bubbles attached to sides.
+
+27)  Quick fix should time out
+
+28)  On cloud bubbles, some messages are getting lost

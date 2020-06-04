@@ -2396,7 +2396,7 @@ public Element computeQuickFix(BumpProblem bp,int off,int len)
    int id = bpi.getMessageId();
    int boff = bp.getStart();
    String p = "<PROBLEM MSGID='" + id + "' START='" + boff + "' />";
-   Element r = getXmlReply("QUICKFIX",bp.getProject(),q,p,0);
+   Element r = getXmlReply("QUICKFIX",bp.getProject(),q,p,120000);
    if (r == null || !IvyXml.isElement(r,"RESULT")) return null;
 
    return r;

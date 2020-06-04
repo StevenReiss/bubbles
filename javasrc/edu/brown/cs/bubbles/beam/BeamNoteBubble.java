@@ -328,7 +328,7 @@ static BudaBubble createSavedNoteBubble()
 /*										*/
 /*	Painting methods							*/
 /*										*/
-/**********************************************a**********************************/
+/*********************************************************************************/
 
 @Override protected void paintContentOverview(Graphics2D g,Shape s)
 {
@@ -636,16 +636,16 @@ private static List<String> getSavedNoteNames()
 	    File tmp = File.createTempFile("BUBBLES_NOTE_",".html");
 	    File f = bc.remoteFileAction("LIST",tmp,"NOTE",null);
 	    try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-               for ( ; ; ) {
-                  String s = br.readLine();
-                  if (s == null) break;
-                  if (!isUserName(s)) continue;
-                  if (!s.endsWith(".html")) continue;
-                  int idx = s.lastIndexOf(".html");
-                  s = s.substring(0,idx);
-                  rslt.add(s);
-                }
-             }
+	       for ( ; ; ) {
+		  String s = br.readLine();
+		  if (s == null) break;
+		  if (!isUserName(s)) continue;
+		  if (!s.endsWith(".html")) continue;
+		  int idx = s.lastIndexOf(".html");
+		  s = s.substring(0,idx);
+		  rslt.add(s);
+		}
+	     }
 	    tmp.delete();
 	  }
 	 catch (IOException e) {
