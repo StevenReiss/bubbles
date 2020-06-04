@@ -351,6 +351,17 @@ public void stopIDE()
 
 
 
+/**
+ *      Save workspace data
+ **/
+
+public void saveWorkspace()
+{
+   waitForIDE();
+   
+  getXmlReply("SAVEWORKSPACE",null,null,null,0);
+}
+
 
 /**
  *	Start the back end if necessary and wait for it to be ready.
@@ -695,7 +706,7 @@ public void removePrivateBuffer(String proj,String file,String bid)
 
 public void beginPrivateEdit(String file,String pid)
 {
-      problem_set.clearPrivateProblems(pid);
+   problem_set.clearPrivateProblems(pid);
 }
 
 
@@ -918,9 +929,10 @@ private static class FileGetClientHandler implements MintHandler {
 /*										*/
 /********************************************************************************/
 
-private static class ServerExitHandler implements MintHandler {
+private class ServerExitHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
+      stopIDE();
       System.exit(0);
     }
 

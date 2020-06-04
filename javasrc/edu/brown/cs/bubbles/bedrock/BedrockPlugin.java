@@ -880,7 +880,11 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 ++num_clients;
 	 xw.text(Integer.toString(num_clients));
 	 break;
+      case "SAVEWORKSPACE" :
+         saveEclipse();
+         break;
       case "EXIT" :
+         logD("EXIT Request received " + num_clients + " " + doing_exit);
 	 if (--num_clients <= 0) {
 	    xw.text("EXITING");
 	    forceExit();

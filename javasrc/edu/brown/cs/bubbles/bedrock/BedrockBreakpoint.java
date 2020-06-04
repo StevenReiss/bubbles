@@ -34,8 +34,6 @@ import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.IBreakpointsListener;
@@ -533,17 +531,7 @@ private void setBreakProperty(IBreakpoint bp,String p,String v) throws BedrockEx
 
 private void saveBreakpoints()
 {
-   IEclipsePreferences node = InstanceScope.INSTANCE.getNode(JDIDebugModel.getPluginIdentifier());
-   IEclipsePreferences nod1 = InstanceScope.INSTANCE.getNode(DebugPlugin.getUniqueIdentifier());
-   BedrockPlugin.logD("SAVE breakpoints " + node + " " + nod1);
-   if (node != null) {
-      try {
-         node.flush();
-       }
-      catch (Throwable t) { 
-         BedrockPlugin.logE("Breakpoint flush failed",t);
-       }
-    }
+   // find a way of doing this rather than saving the whole workspace 
 }
 
 /********************************************************************************/
