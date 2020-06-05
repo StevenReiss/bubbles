@@ -4,14 +4,14 @@ files
 2)  Text editor open remote file options
 
 3)  Copy test from editor (local) in client doesn't support paste to BALE
-editor (remote) on server.
+    editor (remote) on server.
 
 4)  Default workspace on the client still bad -- need to set default_workspace
 for all uses
 
 5)  Seede times out too soon
 
-6)  Breakpoints don't seem to be saved much of the time.  Perhaps Eclipse is
+??? Breakpoints don't seem to be saved much of the time.  Perhaps Eclipse is
     exiting abnormally.  Is there a way of forcing breakpoints to be saved to disk?
     You need to do either project or workspace save. (these could be expensive -- save for
     end?, do in background?)
@@ -34,7 +34,7 @@ XXX Select word inside string shouldn't select the whole string
 
 14)  Data display of large arrays
 
-15)  Cut and paste into evaluation window.  Also history features
+???  Cut and paste into evaluation window.
 
 16) Sometime it says getting cloud information, but never puts up dialog box
 
@@ -49,16 +49,26 @@ group left)
 
 21)  Changing launch configuration name doesn't update repository
 
-22)  Debug can't open Jfram on mac inside bubbles (SWT library and Eclipse hidden flag)
+22)  Debug can't open JFrame on mac inside bubbles (SWT library and Eclipse hidden flag)
 
 ???  Removing all debug channels should go back to main view, not debug view.
 
-24)  Copy from debug console doesn't allow paste in other applications
+???  Copy from debug console doesn't allow paste in other applications
 
-25)  Reduce timeouts on setupElision
+XXX  Reduce timeouts on setupElision
 
-26)  Fix bubbles attached to sides.
+???  Fix bubbles attached to sides.
 
-27)  Quick fix should time out
+???  Quick fix should time out
 
 28)  On cloud bubbles, some messages are getting lost
+
+XXX  Window comes up the wrong size
+
+XXX  Only one derby at once -- should use different files for different projects
+
+???  History features in ddt interaction window.
+
+???  Tool bar is in wrong place if window shade is up when F1 is hit
+
+33)

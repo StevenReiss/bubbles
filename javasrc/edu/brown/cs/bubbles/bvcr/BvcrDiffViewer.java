@@ -36,6 +36,7 @@ import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 import edu.brown.cs.ivy.swing.SwingText;
+import edu.brown.cs.ivy.swing.SwingTextArea;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
@@ -131,7 +132,7 @@ private static Stroke   base_stroke;
 private static int tab_size =	 BoardProperties.getProperties("Bvcr").getInt("Bvcr.tabsize",8);
 
 static {
-   JTextArea ar = new JTextArea();
+   JTextArea ar = new SwingTextArea();
    ar.setRows(10);
    ar.setColumns(32);
    panel_size = ar.getPreferredSize();
@@ -751,7 +752,7 @@ private class DiffFileView {
 }       // end of inner class DiffFileView
 
 
-private class DiffPanel extends JTextArea {
+private class DiffPanel extends SwingTextArea {
    
    DiffPanel() {
       super(new DefaultStyledDocument());

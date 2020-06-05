@@ -27,6 +27,7 @@ package edu.brown.cs.bubbles.board;
 
 import edu.brown.cs.ivy.exec.IvyExecQuery;
 import edu.brown.cs.ivy.file.IvyFile;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -461,7 +462,7 @@ private void setupUpdate()
 
    JPanel pnl = new JPanel(new BorderLayout());
    pnl.setBackground(new Color(211,232,248));
-   JTextField prog = new JTextField();
+   JTextField prog = new SwingTextField();
    prog.setEditable(false);
    pnl.add(prog,BorderLayout.SOUTH);
    JLabel lbl = new JLabel("<html><h1><c>Updating Code Bubbles</c></h1>" +

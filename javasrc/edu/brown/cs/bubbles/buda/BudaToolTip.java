@@ -26,6 +26,7 @@
 package edu.brown.cs.bubbles.buda;
 
 import edu.brown.cs.bubbles.board.BoardLog;
+import edu.brown.cs.ivy.swing.SwingTextPane;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -85,7 +86,7 @@ public BudaToolTip()
    if (allow_scrollable) {
       setLayout(new BorderLayout());
       text_label = new ScrollableLabel();
-      text_pane = new JTextPane();
+      text_pane = new SwingTextPane();
       text_pane.setEditable(false);
       text_pane.setContentType("text/html");
 

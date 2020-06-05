@@ -29,22 +29,27 @@ package edu.brown.cs.bubbles.bddt;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardImage;
 import edu.brown.cs.bubbles.board.BoardLog;
+import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.bump.BumpConstants;
-
+import edu.brown.cs.ivy.swing.SwingEditorPane;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 import edu.brown.cs.ivy.swing.SwingText;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
+import javax.swing.AbstractAction;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
+import javax.swing.text.Keymap;
 import javax.swing.text.html.HTMLDocument;
 
 import java.awt.Color;
@@ -58,6 +63,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -86,6 +93,9 @@ private String			last_frameid;
 
 private Color			background_color;
 private Color			outline_color;
+
+private List<String>            eval_history;
+private int                     history_position;
 
 
 private static final long serialVersionUID = 1;
@@ -123,10 +133,18 @@ BddtInteractionBubble(BddtLaunchControl ctrl)
    frame_element = null;
    frame_counter = 0;
    last_frameid = null;
+   eval_history = new ArrayList<>();
+   history_position = 0;
 
-   input_field = new JTextField();
-   input_field.addActionListener(new ExprTypein());
-
+   input_field = new SwingTextField();
+   ExprTypein typein = new ExprTypein();
+   input_field.addActionListener(typein);
+   Keymap kmp = JTextField.addKeymap("BDDTINTERACTION",input_field.getKeymap());
+   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("END"),new HistoryAction(0));
+   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("UP"),new HistoryAction(1));
+   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("DOWN"),new HistoryAction(-1));
+   input_field.setKeymap(kmp);
+   
    JScrollPane scrl = new JScrollPane(display_area);
    scrl.setPreferredSize(BDDT_INTERACTION_INITIAL_SIZE);
 
@@ -192,6 +210,9 @@ BddtInteractionBubble(BddtLaunchControl ctrl)
 
 private void evaluate(String expr)
 {
+   eval_history.add(expr);
+   history_position = 0;
+   
    if (active_frame == null) return;
    if (!active_frame.match(last_frame)) {
       String ftxt = getFrameHtml(active_frame.getDisplayString());
@@ -225,9 +246,6 @@ private void evaluate(String expr)
     }
 
    insertBeforeEnd(frame_element,buf.toString());
-
-   // String txt = display_area.getText();
-   // System.err.println("RESULT: " + txt);
 }
 
 
@@ -274,8 +292,6 @@ private void insertBeforeEnd(Element e,String txt)
       Rectangle r = r2.getBounds();
       
       display_area.scrollRectToVisible(r);
-      // String xtxt = hd.getText(0, hd.getLength());
-      // System.err.println("RESULT IS " + xtxt);
     }
    catch (IOException ex) {
       BoardLog.logE("BDDT","Problem inserting evaluation output",ex);
@@ -314,7 +330,7 @@ private class InteractPanel extends SwingGridPanel {
 
 
 
-private class InteractEditor extends JEditorPane implements CaretListener {
+private class InteractEditor extends SwingEditorPane implements CaretListener {
 
    InteractEditor(String typ,String cnts) {
       super(typ,cnts);
@@ -356,11 +372,40 @@ private class ExprTypein implements ActionListener {
 
       tfld.setText("");
     }
-
+   
 }	// end of inner class ExprTypein
 
 
+private class HistoryAction extends AbstractAction {
+ 
+   private int history_direction;
 
+   private static final long serialVersionUID = 1;
+   
+   HistoryAction(int dir) {
+      history_direction = dir;
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      BoardMetrics.noteCommand("BDDT","InteractonHistory" + history_direction);
+      int len = eval_history.size();
+      if (history_direction > 0) {
+         if (history_position < len) history_position += 1;
+       }
+      else if (history_direction < 0) {
+         if (history_position > 0) history_position -= 1;
+       }
+      else {
+         history_position = 0;
+       }
+      if (history_position == 0) input_field.setText(null);
+      else {
+         String v = eval_history.get(len - history_position);
+         input_field.setText(v);
+       }
+    }
+   
+}       // end of inner class HistoryAction
 
 
 }	// end of class BddtInteractionBubble

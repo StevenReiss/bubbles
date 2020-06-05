@@ -38,7 +38,8 @@ import java.util.ArrayList;
  *	Provide a repository that merges two other Bass repositories.
  **/
 
-public class BassRepositoryMerge implements BassConstants.BassRepository, BassConstants
+public class BassRepositoryMerge implements BassConstants.BassRepository, 
+        BassConstants.BassUpdatingRepository, BassConstants
 {
 
 
@@ -102,6 +103,40 @@ public BassRepositoryMerge(BassRepository p1,BassRepository p2)
 
    return false;
 }
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Updating methods                                                        */
+/*                                                                              */
+/********************************************************************************/
+
+@Override public void addUpdateRepository(BassUpdatableRepository br)
+{
+   if (first_repository instanceof BassUpdatingRepository) {
+      BassUpdatingRepository bur = (BassUpdatingRepository) first_repository;
+      bur.addUpdateRepository(br);
+    }
+   if (second_repository instanceof BassUpdatingRepository) {
+      BassUpdatingRepository bur = (BassUpdatingRepository) second_repository;
+      bur.addUpdateRepository(br);
+    }
+}
+
+
+@Override public void removeUpdateRepository(BassUpdatableRepository br)
+{
+   if (first_repository instanceof BassUpdatingRepository) {
+      BassUpdatingRepository bur = (BassUpdatingRepository) first_repository;
+      bur.removeUpdateRepository(br);
+    }
+   if (second_repository instanceof BassUpdatingRepository) {
+      BassUpdatingRepository bur = (BassUpdatingRepository) second_repository;
+      bur.removeUpdateRepository(br);
+    }
+}
+
 
 
 

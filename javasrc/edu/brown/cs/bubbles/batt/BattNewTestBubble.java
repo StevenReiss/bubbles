@@ -36,6 +36,7 @@ import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -482,7 +483,7 @@ private abstract class NewTestCase implements BattCallTest, CaretListener, Actio
    abstract String check(BattNewTestChecker btc);
 
    protected JTextField createTextField(int len) {
-      JTextField tf = new JTextField(len);
+      JTextField tf = new SwingTextField(len);
       tf.addCaretListener(this);
       tf.addFocusListener(this);
       return tf;
@@ -547,25 +548,25 @@ private class CallTestCase extends NewTestCase {
       bx.add(l1);
       test_args = createTextField(12);
       if (no_args) {
-	 test_args.setEditable(false);
-	 test_args.setText("void");
+         test_args.setEditable(false);
+         test_args.setText("void");
        }
       bx.add(test_args);
       l1 = new JLabel(")");
       l1.setOpaque(false);
       bx.add(l1);
       test_area.addTestCell(this,bx,0,1);
-
+   
       test_result = createTextField(12);
       test_area.addTestCell(this,test_result,2,1);
-
+   
       if (no_return) {
-	 test_op = createSelection(NewTestOp.IGNORE,VOID_CALL_OPS);
-	 test_result.setEditable(false);
-	 test_result.setText("void");
+         test_op = createSelection(NewTestOp.IGNORE,VOID_CALL_OPS);
+         test_result.setEditable(false);
+         test_result.setText("void");
        }
       else {
-	 test_op = createSelection(NewTestOp.EQL,CALL_OPS);
+         test_op = createSelection(NewTestOp.EQL,CALL_OPS);
        }
       test_area.addTestCell(this,test_op,1,1);
     }

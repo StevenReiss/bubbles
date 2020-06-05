@@ -26,6 +26,7 @@ import edu.brown.cs.bubbles.bass.BassName;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaConstants;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -138,7 +139,7 @@ private ConfigPane(BeduCourse c)
    add(new JLabel("Name: "), gbc);
 
    gbc = new GridBagConstraints();
-   name_field = new JTextField();
+   name_field = new SwingTextField();
    gbc = new GridBagConstraints();
    gbc.fill = GridBagConstraints.HORIZONTAL;
    gbc.gridx = 1;
@@ -163,7 +164,7 @@ private ConfigPane(BeduCourse c)
    gbc.weighty = 0.5;
    gbc.gridy = 1;
    gbc.gridx = 1;
-   jid_field = new JTextField();
+   jid_field = new SwingTextField();
    jid_field.setText(c.getTAJID());
    add(jid_field, gbc);
 
@@ -184,7 +185,7 @@ private ConfigPane(BeduCourse c)
       gbc.weighty = 0.5;
       gbc.gridy = 2;
       gbc.gridx = 1;
-      password_field = new JTextField();
+      password_field = new SwingTextField();
       password_field.setText(tc.getXMPPPassword());
       add(password_field, gbc);
 
@@ -203,7 +204,7 @@ private ConfigPane(BeduCourse c)
       gbc.weighty = 0.5;
       gbc.gridy = 3;
       gbc.gridx = 1;
-      server_field = new JTextField();
+      server_field = new SwingTextField();
       server_field.setText(tc.getXMPPServer());
       add(server_field, gbc);
 

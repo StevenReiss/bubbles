@@ -41,7 +41,7 @@ import edu.brown.cs.bubbles.buda.BudaCursorManager;
 import edu.brown.cs.bubbles.buda.BudaDefaultPort;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
-
+import edu.brown.cs.ivy.swing.SwingEditorPane;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 
 import javax.swing.JComponent;
@@ -434,10 +434,9 @@ private class PanelWidthManager extends ComponentAdapter {
 /*										*/
 /********************************************************************************/
 
-private class DescriptionView extends JEditorPane {
+private class DescriptionView extends SwingEditorPane {
 
    private static final long serialVersionUID = 1;
-
 
    DescriptionView(String d) {
       super("text/html",noPre(d));

@@ -43,6 +43,7 @@ import edu.brown.cs.bubbles.burp.BurpHistory;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 import edu.brown.cs.ivy.swing.SwingText;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -243,7 +244,7 @@ private JButton createButton(String txt,Icon icn,String cmd)
 
 private JTextField createTextField(int ln)
 {
-   JTextField tfld = new JTextField(ln);
+   JTextField tfld = new SwingTextField(ln);
    tfld.setFont(BALE_PROPERTIES.getFont(BALE_CRUMB_FONT));
    tfld.addCaretListener(this);
    tfld.addKeyListener(new CloseListener());

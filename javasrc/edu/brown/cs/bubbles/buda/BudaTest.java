@@ -32,6 +32,8 @@ package edu.brown.cs.bubbles.buda;
 
 import javax.swing.JEditorPane;
 
+import edu.brown.cs.ivy.swing.SwingEditorPane;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -207,7 +209,7 @@ private static final String test_text =
 
 
 
-public static class BubbleEditor extends JEditorPane {
+public static class BubbleEditor extends SwingEditorPane {
 
    private static final long serialVersionUID = 1L;
 

@@ -66,8 +66,6 @@ private static Map<BudaBubbleArea, Toolbar> menu_map = new HashMap<BudaBubbleAre
 
 private static final int TOOLBAR_Y_DELTA = 5;
 
-private static BudaToolbar the_bar = new BudaToolbar();
-
 
 
 /********************************************************************************/
@@ -109,7 +107,7 @@ private static Toolbar getToolbar(BudaBubbleArea bba)
    Toolbar b = menu_map.get(bba);
 
    if (b == null) {
-      b = the_bar.new Toolbar();
+      b = new Toolbar();
       menu_map.put(bba, b);
       b.setVisible(false);
     }
@@ -126,7 +124,7 @@ private static Toolbar getToolbar(BudaBubbleArea bba)
 /*										*/
 /********************************************************************************/
 
-private class Toolbar extends BudaBubble implements NoFreeze
+private static class Toolbar extends BudaBubble implements NoFreeze
 {
    private List<MenuPanel> menu_panels;
    private JPanel main_panel;
@@ -198,7 +196,6 @@ private class Toolbar extends BudaBubble implements NoFreeze
       super.paintComponent(g);
     }
 
-
 }	// end of inner class Toolbar
 
 
@@ -262,30 +259,32 @@ private static class MenuListener extends AbstractAction implements ActionListen
    @Override public void actionPerformed(ActionEvent arg0) {
       BudaBubbleArea bba = for_root.getCurrentBubbleArea();
       if (bba == null) return;
-
+   
       Toolbar pnl = getToolbar(bba);
       if (pnl.isVisible()) {
-	 pnl.setVisible(false);
-	 return;
+         pnl.setVisible(false);
+         return;
       }
-      Rectangle r = for_root.getViewport();
+      Rectangle r = for_root.getShadedViewport();
+      if (r == null) return;
+      
       BudaConstraint bc = new BudaConstraint(BudaConstants.BudaBubblePosition.STATIC,
-		  r.x, r.y + TOOLBAR_Y_DELTA);
-
+        	  r.x, r.y + TOOLBAR_Y_DELTA);
+   
       Rectangle pnlrect = new Rectangle(r.x, r.y, pnl.getPreferredSize().width, pnl.getPreferredSize().height);
       Collection<BudaBubble> bubbles = bba.getBubblesInRegion(pnlrect);
       if (bubbles.contains(for_root.getPackageExplorer(bba)))
-	 bc = new BudaConstraint(BudaConstants.BudaBubblePosition.STATIC,
-		  r.x + r.width - pnl.getPreferredSize().width, r.y + TOOLBAR_Y_DELTA);
-
-
+         bc = new BudaConstraint(BudaConstants.BudaBubblePosition.STATIC,
+        	  r.x + r.width - pnl.getPreferredSize().width, r.y + TOOLBAR_Y_DELTA);
+   
+   
       pnl.revalidate();
       bba.add(pnl,bc,0);
       bba.setLayer(pnl, JLayeredPane.DRAG_LAYER+2);
       pnl.setVisible(true);
       if (pnl.getContentPane() != null) {
-	 Dimension d = pnl.getContentPane().getPreferredSize();
-	 if (d != null) pnl.setSize(new Dimension(d.width+3,d.height+8));
+         Dimension d = pnl.getContentPane().getPreferredSize();
+         if (d != null) pnl.setSize(new Dimension(d.width+3,d.height+8));
        }
       pnl.revalidate();
       pnl.repaint();

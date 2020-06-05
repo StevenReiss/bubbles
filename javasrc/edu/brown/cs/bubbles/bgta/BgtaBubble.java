@@ -28,7 +28,7 @@ import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaCursorManager;
-
+import edu.brown.cs.ivy.swing.SwingTextPane;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
@@ -140,7 +140,7 @@ private BgtaBubble(String username)
    });
    bubble_label.setButton(showHistoryButton);
 
-   history_area = new JTextPane();
+   history_area = new SwingTextPane();
    history_area.setOpaque(false);
    history_pane = new JScrollPane(history_area,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
    history_pane.setOpaque(false);

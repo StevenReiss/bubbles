@@ -26,6 +26,8 @@ import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardFont;
 import edu.brown.cs.bubbles.bowi.BowiFactory;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.ivy.swing.SwingPasswordField;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import org.jivesoftware.smack.XMPPException;
 
@@ -133,8 +135,8 @@ BgtaLoginBubble(Vector<BgtaManager> mans,BgtaRepository repo,BgtaLoginName name)
    error_label.setFont(BoardFont.getFont(error_label.getFont().getFontName(),Font.PLAIN,10));
    error_label.setForeground(BoardColors.getColor("Bgta.LoginErrorColor")); 
 
-   user_field = new JTextField(15);
-   pass_field = new JPasswordField(15);
+   user_field = new SwingTextField(15);
+   pass_field = new SwingPasswordField(15);
    int servers = ChatServer.values().length;
    String[] serverStrings = new String[servers];
    servers = 0;

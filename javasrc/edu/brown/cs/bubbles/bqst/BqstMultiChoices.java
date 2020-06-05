@@ -25,6 +25,8 @@ package edu.brown.cs.bubbles.bqst;
 
 import javax.swing.*;
 
+import edu.brown.cs.ivy.swing.SwingTextField;
+
 import java.awt.Dimension;
 import java.util.ArrayList;
 
@@ -116,7 +118,7 @@ protected BqstMultiChoices(String qst,String help,String[] options,Icon[] icons,
       q_buttons.add(button);
       add(button, q_cons);
 
-      q_field = new JTextField();
+      q_field = new SwingTextField();
       q_cons.ipady = TEXTFIELD_HEIGHT;
       q_cons.gridy++;
       add(q_field, q_cons);

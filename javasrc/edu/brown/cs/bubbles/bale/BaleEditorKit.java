@@ -1856,13 +1856,13 @@ private static class SaveAllRun implements Runnable {
    @Override public void run() {
       BowiFactory.startTask();
       try {
-	 // BumpClient.getBump().saveAll();
-	 for_root.handleSaveAllRequest();
-	 BumpClient.getBump().compile(false,false,false);
-	 try {
-	    for_root.saveConfiguration(null);
-	  }
-	 catch (IOException ex) { }
+         // BumpClient.getBump().saveAll();
+         for_root.handleSaveAllRequest();
+         BumpClient.getBump().compile(false,false,false);
+         try {
+            for_root.saveConfiguration(null);
+          }
+         catch (IOException ex) { }
        }
       finally { BowiFactory.stopTask(); }
     }

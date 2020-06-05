@@ -413,8 +413,8 @@ void removeCurrentBubble(MouseEvent e)
 	 floating_bubbles.put(bb, floc);
 	 loc = setFloatingLocation(bb);
 	 bb.setFloating(true);
-	 BudaBubbleDock[] bbda= { BudaBubbleDock.SOUTH, BudaBubbleDock.EAST};
-	 docked_bubbles.put(bb, bbda);//getProperDock(bb));
+	 BudaBubbleDock[] bbda = { BudaBubbleDock.SOUTH, BudaBubbleDock.EAST};
+	 docked_bubbles.put(bb, bbda);  
 	 bb.setDocked(true);
 	 setLayer(bb,MODAL_LAYER);
       }
@@ -491,9 +491,13 @@ private void localAddBubble(BudaBubble bb,boolean spacer)
 
 private void localRemoveBubble(BudaBubble bb)
 {
-   BudaBubbleGroup grp = bb.getGroup();
-
-   bb.setGroup(null);
+   BudaBubbleGroup grp = null;
+   
+   synchronized (bubble_groups) {
+      grp = bb.getGroup();
+      bb.setGroup(null);
+    }
+   
    bb.removeComponentListener(bubble_manager);
    synchronized (active_bubbles) {
       active_bubbles.remove(bb);
@@ -511,7 +515,11 @@ private void localRemoveBubble(BudaBubble bb)
 
    // routes_valid = false;	// if we take bubbles into account when routing
 
-   if (grp != null) checkGroup(grp);
+   if (grp != null) {
+      synchronized(bubble_groups) {
+         checkGroup(grp);
+       }
+    }
 
    repaint();
 
@@ -1125,56 +1133,56 @@ private class BubbleScaler implements BudaBubbleScaler {
 
    @Override public Rectangle getScaledBounds(BudaBubble bb) {
       Rectangle bnds = bb.getBounds();
-
+   
       if (bb.isFixed() || bb.isFloating() || bb.isDocked()) {
-	 double x1a = bnds.getMinX();
-	 double x2a = bnds.getMaxX();
-	 double x1b = rescaleX(x1a,old_scale,new_scale);
-	 if (x1a >= cur_viewport.getMinX() && x1b < cur_viewport.getMinX()) x1b = cur_viewport.getMinX();
-	 double xda = x1a - cur_viewport.getMinX();
-	 double xdb = x1b - cur_viewport.getMinX();
-	 if (xda < 5 && xdb > 5) x1b = x1a;
-	 double x2b = x1b + bnds.getWidth() * new_scale/old_scale;
-	 double x2c = x2b;
-	 if (x2a <= cur_viewport.getMaxX() && x2b > cur_viewport.getMaxX()) x2b = cur_viewport.getMaxX();
-	 double xda1 = cur_viewport.getMaxX() - x2a;
-	 double xdb1 = cur_viewport.getMaxX() - x2b;
-	 if (xda1 < 5 && xdb1 > 5) x2b = x2a;
-	 if (x2b != x2c) {
-	    double x1c = x2b - bnds.getWidth() * new_scale/old_scale;
-	    if (x1c > cur_viewport.getMinX() && xda > 5) x1b = x1c;
-	    else x1b = cur_viewport.getMinX();
-	  }
-
-	 double y1a = bnds.getMinY();
-	 double y2a = bnds.getMaxY();
-	 double y1b = rescaleY(x1a,old_scale,new_scale);
-	 if (y1a >= cur_viewport.getMinY() && y1b < cur_viewport.getMinY()) y1b = cur_viewport.getMinX();
-	 double yda = y1a - cur_viewport.getMinY();
-	 double ydb = y1b - cur_viewport.getMinY();
-	 if (yda < 5 && ydb > 5) y1b = y1a;
-	 double y2b = y1b + bnds.getHeight() * new_scale/old_scale;
-	 double y2c = y2b;
-	 if (y2a <= cur_viewport.getMaxY() && y2b > cur_viewport.getMaxY()) y2b = cur_viewport.getMaxY();
-	 double yda1 = cur_viewport.getMaxY() - y2a;
-	 double ydb1 = cur_viewport.getMaxY() - y2b;
-	 if (yda1 < 5 && ydb1 > 5) y2b = y2a;
-	 if (y2b != y2c) {
-	    double y1c = y2b - bnds.getHeight() * new_scale/old_scale;
-	    if (y1c > cur_viewport.getMinY() && yda > 5) y1b = y1c;
-	    else y1b = cur_viewport.getMinY();
-	  }
-
-	 bnds.setFrameFromDiagonal(x1b,y1b,x2b,y2b);
+         double x1a = bnds.getMinX();
+         double x2a = bnds.getMaxX();
+         double x1b = rescaleX(x1a,old_scale,new_scale);
+         if (x1a >= cur_viewport.getMinX() && x1b < cur_viewport.getMinX()) x1b = cur_viewport.getMinX();
+         double xda = x1a - cur_viewport.getMinX();
+         double xdb = x1b - cur_viewport.getMinX();
+         if (xda < 5 && xdb > 5) x1b = x1a;
+         double x2b = x1b + bnds.getWidth() * new_scale/old_scale;
+         double x2c = x2b;
+         if (x2a <= cur_viewport.getMaxX() && x2b > cur_viewport.getMaxX()) x2b = cur_viewport.getMaxX();
+         double xda1 = cur_viewport.getMaxX() - x2a;
+         double xdb1 = cur_viewport.getMaxX() - x2b;
+         if (xda1 < 5 && xdb1 > 5) x2b = x2a;
+         if (x2b != x2c) {
+            double x1c = x2b - bnds.getWidth() * new_scale/old_scale;
+            if (x1c > cur_viewport.getMinX() && xda > 5) x1b = x1c;
+            else x1b = cur_viewport.getMinX();
+          }
+   
+         double y1a = bnds.getMinY();
+         double y2a = bnds.getMaxY();
+         double y1b = rescaleY(x1a,old_scale,new_scale);
+         if (y1a >= cur_viewport.getMinY() && y1b < cur_viewport.getMinY()) y1b = cur_viewport.getMinX();
+         double yda = y1a - cur_viewport.getMinY();
+         double ydb = y1b - cur_viewport.getMinY();
+         if (yda < 5 && ydb > 5) y1b = y1a;
+         double y2b = y1b + bnds.getHeight() * new_scale/old_scale;
+         double y2c = y2b;
+         if (y2a <= cur_viewport.getMaxY() && y2b > cur_viewport.getMaxY()) y2b = cur_viewport.getMaxY();
+         double yda1 = cur_viewport.getMaxY() - y2a;
+         double ydb1 = cur_viewport.getMaxY() - y2b;
+         if (yda1 < 5 && ydb1 > 5) y2b = y2a;
+         if (y2b != y2c) {
+            double y1c = y2b - bnds.getHeight() * new_scale/old_scale;
+            if (y1c > cur_viewport.getMinY() && yda > 5) y1b = y1c;
+            else y1b = cur_viewport.getMinY();
+          }
+   
+         bnds.setFrameFromDiagonal(x1b,y1b,x2b,y2b);
        }
       else {
-	 double x1 = rescaleX(bnds.getMinX(),old_scale,new_scale);
-	 double y1 = rescaleY(bnds.getMinY(),old_scale,new_scale);
-	 double x2 = rescaleX(bnds.getMaxX(),old_scale,new_scale);
-	 double y2 = rescaleY(bnds.getMaxY(),old_scale,new_scale);
-	 bnds.setFrameFromDiagonal(x1,y1,x2,y2);
+         double x1 = rescaleX(bnds.getMinX(),old_scale,new_scale);
+         double y1 = rescaleY(bnds.getMinY(),old_scale,new_scale);
+         double x2 = rescaleX(bnds.getMaxX(),old_scale,new_scale);
+         double y2 = rescaleY(bnds.getMaxY(),old_scale,new_scale);
+         bnds.setFrameFromDiagonal(x1,y1,x2,y2);
        }
-
+   
       return bnds;
     }
 
@@ -2025,13 +2033,16 @@ private Point setDockedLocation(BudaBubble bb)
 	 havehadvert = true;
        }
       else if (bbdi == BudaBubbleDock.SOUTH) {
-	 if (havehadvert) {
-	    bb.setSize(bb.getWidth(), cur_viewport.height);
-	    bb.setLocation(new Point(p.x,cur_viewport.y));
-	  }
-	 else bb.setLocation(new Point(p.x,cur_viewport.y + cur_viewport.height
-					  - bb.getHeight()));
-	 havehadvert = true;
+         Rectangle r1 = for_root.getShadedViewport();
+         if (r1 != null) {
+            if (havehadvert) {
+               bb.setSize(bb.getWidth(), r1.height);
+               bb.setLocation(new Point(p.x,r1.y));
+             }
+            else bb.setLocation(new Point(p.x,r1.y + r1.height
+                  - bb.getHeight()));
+            havehadvert = true;
+          }
        }
       p = bb.getLocation();
     }
@@ -2193,9 +2204,9 @@ boolean isMoving(BudaBubble bb)
 
 void fixupGroups(BudaBubble bb)
 {
-   if (bb == null || bb.isFixed() || bb.isFloating()) return;
-
    synchronized (bubble_groups) {
+      if (bb == null || bb.isFixed() || bb.isFloating() || !bb.isVisible()) return;
+      
       boolean changed = true;
       while (changed) {
 	 changed = false;
@@ -2672,15 +2683,15 @@ private class BubbleMoveContext extends MouseContext {
 
    @Override void next(MouseEvent e) {
       if (for_bubble == null) return;
-
+   
       for_bubble.forceFreeze();
       if (docked_bubbles.containsKey(for_bubble)) {
-	 docked_bubbles.remove(for_bubble);
-	 for_bubble.setDocked(false);
+         docked_bubbles.remove(for_bubble);
+         for_bubble.setDocked(false);
        }
-
+   
       BudaCursorManager.setGlobalCursorForComponent(for_bubble, palm_cursor);
-
+   
       ++move_count;
       setLayer(for_bubble,DRAG_LAYER,0);
       Point p0 = e.getPoint();
@@ -2688,26 +2699,26 @@ private class BubbleMoveContext extends MouseContext {
       // int y0 = initial_location.y + (int)(p0.y / scale_factor) - initial_mouse.y;
       int x0 = initial_location.x + p0.x - initial_mouse.x;
       int y0 = initial_location.y + p0.y - initial_mouse.y;
-
+   
       // if (scale_factor != 1.0) {
-	 // p0 = new Point((int)(p0.x / scale_factor), (int)(p0.y / scale_factor));
+         // p0 = new Point((int)(p0.x / scale_factor), (int)(p0.y / scale_factor));
        // }
-
+   
       checkMoveViewport(p0);
-
+   
       if (x0 + bubble_size.width < MIN_SHOW_SIZE) {
-	 x0 = MIN_SHOW_SIZE - bubble_size.width;
+         x0 = MIN_SHOW_SIZE - bubble_size.width;
        }
       else if (x0 > area_size.width - MIN_SHOW_SIZE) {
-	 x0 = area_size.width - MIN_SHOW_SIZE;
+         x0 = area_size.width - MIN_SHOW_SIZE;
        }
       if (y0 + bubble_size.height < MIN_SHOW_SIZE) {
-	 y0 = MIN_SHOW_SIZE - bubble_size.height;
+         y0 = MIN_SHOW_SIZE - bubble_size.height;
        }
       else if (y0 > area_size.height - MIN_SHOW_SIZE) {
-	 y0 = area_size.height - MIN_SHOW_SIZE;
+         y0 = area_size.height - MIN_SHOW_SIZE;
        }
-
+   
       for_bubble.setLocation(x0,y0);
       fixupGroups(for_bubble);
       if (for_bubble.isUserPos()) repaint();
@@ -3298,29 +3309,29 @@ private class BubbleManager implements ComponentListener, ContainerListener {
 
    @Override public void componentAdded(ContainerEvent e) {
       if (e.getChild() instanceof BudaBubble) {
-	 BudaBubble bb = (BudaBubble) e.getChild();
-	 if (bb.isShowing()) {
-	    localAddBubble(bb,true);
-	    updateOverview();
-	  }
-	 else {
-	    BoardLog.logD("BUDA", "Non-showing bubble added: " + bb);
-	  }
+         BudaBubble bb = (BudaBubble) e.getChild();
+         if (bb.isShowing()) {
+            localAddBubble(bb,true);
+            updateOverview();
+          }
+         else {
+            BoardLog.logD("BUDA", "Non-showing bubble added: " + bb);
+          }
        }
     }
 
    @Override public void componentRemoved(ContainerEvent e) {
       if (e.getChild() instanceof BudaBubble) {
-	 BudaBubble bb = (BudaBubble) e.getChild();
-	 localRemoveBubble(bb);
-	 updateOverview();
+         BudaBubble bb = (BudaBubble) e.getChild();
+         localRemoveBubble(bb);
+         updateOverview();
        }
     }
 
    private void updateOverview() {
       checkAreaDimensions();
       for (BubbleAreaCallback cb : area_callbacks) {
-	 cb.updateOverview();
+         cb.updateOverview();
        }
     }
 

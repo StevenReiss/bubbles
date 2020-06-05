@@ -381,11 +381,6 @@ private void initialize(Element e)
    BoardMetrics.setRootWindow(this);
    share_manager = new BudaShareManager();
 
-   if (BUDA_PROPERTIES.getBoolean("Buda.overview.shades")) {
-      enableWindowShades();
-      forceShadeDown();
-    }
-
    if (BoardSetup.getSetup().getRunMode() == RunMode.CLIENT) {
       BoardSetup.getSetup().getMintControl().register("<BUDA SOURCE='SERVER' CMD='_VAR_0' FILE='_VAR_1' />",
 							 new ClientHandler());
@@ -1271,6 +1266,20 @@ public Rectangle getCurrentViewport()
 public Rectangle getViewport()
 {
    return bubble_view.getViewRect();
+}
+
+
+synchronized Rectangle getShadedViewport()
+{
+   if (shade_delta != 0) return null;
+   if (shade_down) return getViewport();
+ 
+   Rectangle r = new Rectangle(bubble_view.getViewRect());
+   int d = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
+   r.height -= d;
+   r.y += d;
+   
+   return r;
 }
 
 
@@ -2352,10 +2361,16 @@ public synchronized void waitForSetup()
 private synchronized void doneSetup()
 {
    view_setup = true;
+   
    if (BUDA_PROPERTIES.getBoolean("Buda.show.tool.menu")) {
       Action act = BudaToolbar.getMenuBarAction(this);
       act.actionPerformed(null);
     }
+   
+   if (BUDA_PROPERTIES.getBoolean("Buda.overview.shades")) {
+      enableWindowShades();
+    }
+   
    notifyAll();
 }
 

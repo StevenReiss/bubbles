@@ -30,6 +30,7 @@ import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.buda.BudaCursorManager;
+import edu.brown.cs.ivy.swing.SwingTextArea;
 import edu.brown.cs.ivy.swing.SwingTreeTable;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
@@ -147,7 +148,7 @@ BicexViewerPanel(BicexEvaluationViewer ev)
    getDataModel().addTreeModelListener(expand_listener);
    value_table.getSelectionModel().addListSelectionListener(selection_listener);
    
-   tostring_area = new JTextArea(3,40);  
+   tostring_area = new SwingTextArea(3,40);  
 
    split_pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,true,value_table,
       (show_tostring ? tostring_area : null));

@@ -31,6 +31,7 @@ import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -240,7 +241,7 @@ void addButtons(SwingGridPanel pnl)
 /*										*/
 /********************************************************************************/
 
-protected class StringField extends JTextField implements ActionListener, CaretListener {
+protected class StringField extends SwingTextField implements ActionListener, CaretListener {
 
    private BuenoKey   field_key;
    private static final long serialVersionUID = 1;

@@ -43,6 +43,7 @@ import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -174,7 +175,7 @@ private void setupDisplay()
 {
    display_panel = new SwingGridPanel();
 
-   search_field = new JTextField();
+   search_field = new SwingTextField();
    search_field.addKeyListener(new SearchKeyListener());
    SwingGridPanel sbox = new SwingGridPanel();
    JLabel l1 = new JLabel("Search by keyword: ");

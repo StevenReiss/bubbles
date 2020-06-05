@@ -35,6 +35,7 @@ import edu.brown.cs.bubbles.buda.BudaCursorManager;
 import edu.brown.cs.bubbles.bump.BumpConstants;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -124,7 +125,7 @@ BddtEvaluationBubble(BddtLaunchControl ctrl)
    BudaCursorManager.setCursor(scroll,Cursor.getDefaultCursor());
 
    frame_label = new JLabel();
-   input_field = new JTextField();
+   input_field = new SwingTextField();
    input_field.addActionListener(new ExprAdder());
 
    SwingGridPanel mainpanel = new EvaluationPanel();

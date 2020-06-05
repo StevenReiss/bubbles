@@ -232,7 +232,7 @@ private static BassBubble addPackageExplorer(BudaBubbleArea bba)
    Dimension d = peb.getPreferredSize();
    d.height = rh;
    peb.setSize(d);
-   BudaConstraint bc = new BudaConstraint(BudaBubblePosition.FLOAT,
+   BudaConstraint bc = new BudaConstraint(BudaBubblePosition.DOCKED,
 					     r.x + r.width - d.width,
 					     r.y + r.height - rh);
    bba.add(peb,bc);
@@ -487,10 +487,10 @@ private static class PackageExplorerButton implements BudaConstants.ButtonListen
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
       BassBubble peb = package_explorers.get(bba);
       if (peb != null && peb.isVisible()) {		// isShowing() ?
-	 peb.setVisible(false);
-	 return;
+         peb.setVisible(false);
+         return;
        }
-
+   
       addPackageExplorer(bba);
     }
 

@@ -507,7 +507,7 @@ private void start()
       root.restoreConfiguration(load_config);
       root.setVisible(true);
     }
-
+  
    bs.removeSplash();
 
    if (save_session) {
@@ -908,12 +908,14 @@ private static class SaveSession extends Thread {
    @Override public void run() {
       File cf = BoardSetup.getConfigurationFile();
       try {
-	 // for_root.handleSaveAllRequest();
-	 for_root.handleCheckpointAllRequest();
-	 for_root.saveConfiguration(cf);
+         // for_root.handleSaveAllRequest();
+         for_root.handleCheckpointAllRequest();
+         for_root.saveConfiguration(cf);
+         BumpClient bc = BumpClient.getBump();
+         bc.saveWorkspace();
        }
       catch (IOException e) {
-	 BoardLog.logE("BEMA","Problem saving session: " + e);
+         BoardLog.logE("BEMA","Problem saving session: " + e);
        }
     }
 

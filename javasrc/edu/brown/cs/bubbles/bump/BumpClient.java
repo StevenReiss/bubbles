@@ -357,8 +357,6 @@ public void stopIDE()
 
 public void saveWorkspace()
 {
-   waitForIDE();
-   
   getXmlReply("SAVEWORKSPACE",null,null,null,0);
 }
 
@@ -510,7 +508,7 @@ public Element setupElision(String pname,File file,String rgns,boolean compute)
 
    String flds = "FILE='" + file.getPath() + "' COMPUTE='" + Boolean.toString(compute) + "'";
 
-   return getXmlReply("ELIDESET",pname,flds,rgns,0);
+   return getXmlReply("ELIDESET",pname,flds,rgns,15000);
 }
 
 

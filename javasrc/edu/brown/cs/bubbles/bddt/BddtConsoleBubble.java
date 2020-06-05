@@ -36,6 +36,8 @@ import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 import edu.brown.cs.ivy.swing.SwingText;
+import edu.brown.cs.ivy.swing.SwingTextField;
+import edu.brown.cs.ivy.swing.SwingTextPane;
 
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
@@ -105,7 +107,7 @@ BddtConsoleBubble(BddtConsoleController ctrl,StyledDocument doc)
    Color ifg = BoardColors.getColor("Bddt.console.input.foreground");
    Color icg = BoardColors.getColor("Bddt.console.input.caret");
 
-   text_pane = new JTextPane(doc);
+   text_pane = new SwingTextPane(doc);
    text_pane.setEditable(false);
    text_pane.setBackground(bg);
    String fam = BDDT_PROPERTIES.getString("Console.family",Font.MONOSPACED);
@@ -125,7 +127,7 @@ BddtConsoleBubble(BddtConsoleController ctrl,StyledDocument doc)
 
    text_pane.setPreferredSize(d);
 
-   input_pane = new JTextField();
+   input_pane = new SwingTextField();
    input_pane.setBackground(ibg);
    input_pane.setForeground(ifg);
    input_pane.setCaretColor(icg);

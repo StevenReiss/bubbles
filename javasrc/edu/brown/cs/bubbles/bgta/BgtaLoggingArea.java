@@ -23,16 +23,16 @@
 package edu.brown.cs.bubbles.bgta;
 
 import edu.brown.cs.bubbles.buda.BudaCursorManager;
+import edu.brown.cs.ivy.swing.SwingTextPane;
 
 import javax.swing.JEditorPane;
-import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
 
 
-class BgtaLoggingArea extends JTextPane implements BgtaConstants {
+class BgtaLoggingArea extends SwingTextPane implements BgtaConstants {
 
 
 

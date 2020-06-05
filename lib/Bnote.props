@@ -22,11 +22,8 @@
 <entry key="Bnote.database.default.postgresql">postgres</entry>
 <entry key="Bnote.database.text.postgresql">text</entry>
 <entry key="Bnote.database.blob.postgresql">bytea</entry>
-
 <entry key="Bnote.notebook.database.type">embed</entry>
-<entry key="Bnote.notebook.database.name">$(WORK)/ProgrammersLog</entry>
-
-
+<entry key="Bnote.notebook.database.name">$(WORK)/ProgrammersLog_$(WSNAME)</entry>
 
 </properties>
 

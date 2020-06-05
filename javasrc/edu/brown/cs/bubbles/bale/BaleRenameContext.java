@@ -42,6 +42,7 @@ import edu.brown.cs.bubbles.bueno.BuenoConstants;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.burp.BurpHistory;
 import edu.brown.cs.ivy.swing.SwingText;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import org.w3c.dom.Element;
 
@@ -281,7 +282,7 @@ private class RenamePanel extends JPanel {
    RenamePanel() {
       setFocusable(false);
       int len = start_name.length() + 4;
-      rename_field = new JTextField(start_name,len);
+      rename_field = new SwingTextField(start_name,len);
       RenameListener rl = new RenameListener();
       rename_field.addActionListener(rl);
       rename_field.addCaretListener(rl);

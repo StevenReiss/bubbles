@@ -150,7 +150,7 @@ private boolean setupAccess()
       default :
       case "embed" :
 	 if (database_name == null || !database_name.contains("/")) {
-	    database_name = "$(WORK)/ProgrammersLog";
+	    database_name = "$(WORK)/ProgrammersLog_$(WSNAME)";
 	  }
 	 break;
     }

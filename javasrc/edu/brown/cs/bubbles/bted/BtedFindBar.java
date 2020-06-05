@@ -27,6 +27,7 @@ package edu.brown.cs.bubbles.bted;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardImage;
 import edu.brown.cs.bubbles.board.BoardLog;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -91,7 +92,7 @@ BtedFindBar(JEditorPane editor)
    prev_button.addActionListener(this);
    next_button.addActionListener(this);
 
-   search_field = new JTextField(10);
+   search_field = new SwingTextField(10);
    search_field.setEditable(true);
    Dimension size = search_field.getPreferredSize();
    search_field.setSize(size);

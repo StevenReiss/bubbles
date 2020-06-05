@@ -27,8 +27,8 @@ package edu.brown.cs.bubbles.bale;
 
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.buda.BudaRoot;
+import edu.brown.cs.ivy.swing.SwingTextPane;
 
-import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.SimpleAttributeSet;
@@ -46,7 +46,7 @@ import java.awt.geom.RoundRectangle2D;
 
 
 
-class BaleCrumbBarComponent extends JTextPane implements BaleConstants
+class BaleCrumbBarComponent extends SwingTextPane implements BaleConstants
 {
 
 

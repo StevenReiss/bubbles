@@ -25,6 +25,7 @@ import edu.brown.cs.bubbles.bgta.BgtaUtil;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaRoot;
+import edu.brown.cs.ivy.swing.SwingTextArea;
 
 import org.jivesoftware.smack.packet.Presence;
 
@@ -128,7 +129,7 @@ private TicketPanel(Map<String, BgtaManager> some_chat_logins)
    add(ticket_area_label, c);
    c.insets = new Insets(0,0,0,0);
 
-   ticket_area = new JTextArea();
+   ticket_area = new SwingTextArea();
    ticket_area.setOpaque(false);
    ticket_area.setLineWrap(true);
    JScrollPane scroll = new JScrollPane(ticket_area);

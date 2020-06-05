@@ -317,8 +317,15 @@ private void reload()
    if (test_name != null) test_name.setText(launch_config.getTestName());
    if (host_name != null) host_name.setText(launch_config.getRemoteHost());
    if (port_number != null) port_number.setValue(launch_config.getRemotePort());
-
+   
    doing_load = false;
+}
+
+
+private void reloadRepository()
+{
+   BassRepository  brep = BassFactory.getRepository(BudaConstants.SearchType.SEARCH_LAUNCH_CONFIG);
+   BassFactory.reloadRepository(brep);
 }
 
 
@@ -400,6 +407,7 @@ private String getNewName()
 	    edit_config = null;
 	  }
 	 reload();
+         reloadRepository();
        }
       BddtFactory bf = BddtFactory.getFactory();
       bf.newDebugger(launch_config);
@@ -413,6 +421,7 @@ private String getNewName()
 	 edit_config = null;
        }
       reload();
+      reloadRepository();
     }
    else if (cmd.equals("REVERT")) {
       if (edit_config != null) {

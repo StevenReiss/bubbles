@@ -32,6 +32,7 @@ package edu.brown.cs.bubbles.beam;
 
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.ivy.swing.SwingEditorPane;
 
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
@@ -86,7 +87,7 @@ BeamMouseBubble()
     }
    catch (IOException e) { }
 
-   JEditorPane edit = new JEditorPane("text/html",buf.toString());
+   JEditorPane edit = new SwingEditorPane("text/html",buf.toString());
    edit.setEditable(false);
    edit.setPreferredSize(new Dimension(600,670));
    JScrollPane jsp = new JScrollPane(edit);

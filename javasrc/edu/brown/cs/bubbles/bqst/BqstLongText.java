@@ -28,6 +28,8 @@ package edu.brown.cs.bubbles.bqst;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import edu.brown.cs.ivy.swing.SwingTextArea;
+
 
 /**
  * This class is subclass of BqstQuestion, and it implements a long text question.
@@ -72,7 +74,7 @@ protected BqstLongText(String qst,String help,boolean required)
 @Override void setup()
 {
    super.setup();
-   longtext_area = new JTextArea();
+   longtext_area = new SwingTextArea();
    longtext_area.setLineWrap(true);
    longtext_area.setWrapStyleWord(true);
    JScrollPane sp = new JScrollPane(longtext_area);

@@ -61,6 +61,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.ivy.exec.IvyExecQuery;
 import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.swing.SwingComboBox;
+import edu.brown.cs.ivy.swing.SwingEditorPane;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 
 public class BoardEclipse implements BoardConstants
@@ -321,7 +322,7 @@ private class EclipsePanel implements ActionListener, UndoableEditListener {
       explstr += "Eclipse Foundation Software User Agreement</a>.";
       explstr += "<p><p>";
 
-      JEditorPane expl = new JEditorPane("text/html",explstr);
+      JEditorPane expl = new SwingEditorPane("text/html",explstr);
       expl.setEditable(false);
       expl.addHyperlinkListener(new HyperListener());
       expl.setBackground(BoardColors.getColor("Buda.Bubbles.Color"));

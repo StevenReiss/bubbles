@@ -34,6 +34,7 @@ import edu.brown.cs.bubbles.board.BoardPluginManager;
 import edu.brown.cs.bubbles.buda.BudaConstants.BudaHelpClient;
 
 import edu.brown.cs.ivy.swing.SwingText;
+import edu.brown.cs.ivy.swing.SwingTextField;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
@@ -838,7 +839,7 @@ private void startWorkingSetRename(int x)
 private void handleWorkingSetRename(BudaWorkingSetImpl ws,int x0,int x1)
 {
    String txt = ws.getLabel();
-   JTextField td = new JTextField(txt);
+   JTextField td = new SwingTextField(txt);
    Font ft = td.getFont();
    ft = ft.deriveFont(9f);
    td.setFont(ft);

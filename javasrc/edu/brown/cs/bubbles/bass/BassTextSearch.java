@@ -43,6 +43,7 @@ import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingTextField;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
@@ -124,12 +125,14 @@ BassTextSearch(String proj)
    Font ft = bass_properties.getFontOption(BASS_TEXT_FONT_PROP,BASS_TEXT_FONT);
 
    int y = 0;
-   JLabel lbl = new JLabel("Text Search",SwingConstants.CENTER);
+   String ttl = "Text Search";
+   if (proj != null && proj.length() > 0) ttl = "Text Search in " + proj;
+   JLabel lbl = new JLabel(ttl,SwingConstants.CENTER);
    BoardColors.setTransparent(lbl,this);
    addGBComponent(lbl,0,y++,0,1,0,0);
    addGBComponent(new JSeparator(),0,y++,0,1,0,0);
 
-   input_field = new JTextField(36);
+   input_field = new SwingTextField(36);
    input_field.setText(search_text);
    input_field.setFont(ft);
    BoardColors.setColors(input_field,bptc);

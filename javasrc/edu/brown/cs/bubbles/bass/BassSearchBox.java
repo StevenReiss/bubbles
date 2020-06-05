@@ -49,6 +49,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -175,7 +176,7 @@ BassSearchBox(BassTreeModel mdl,boolean common)
 
    loadImages();
 
-   input_field = new JTextField(36);
+   input_field = new SwingTextField(36);
    input_field.setFont(ft);
    input_field.setOpaque(true);
    Color bptc = BoardColors.getColor(BASS_PANEL_TOP_COLOR_PROP);
@@ -183,7 +184,9 @@ BassSearchBox(BassTreeModel mdl,boolean common)
    BoardColors.setColors(input_field,ifc);
    input_field.setBorder(null);
 
-   Keymap kmp = input_field.getKeymap();
+   Keymap kmp1 = input_field.getKeymap();
+   Keymap kmp = JTextField.addKeymap("BASS",kmp1);
+   input_field.setKeymap(kmp);
    kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("ESCAPE"),new AbortAction());
    kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("F4"),new ExpandAllAction());
    kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("shift F4"),new CompactAction());
@@ -805,11 +808,11 @@ private static class UpSelectionAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","UpSelection");
       for (Component c = (Component) e.getSource(); c != null; c = c.getParent()) {
-	 if (c instanceof BassSearchBox) {
-	    BassSearchBox bx = (BassSearchBox) c;
-	    bx.moveUpSelection();
-	    break;
-	  }
+         if (c instanceof BassSearchBox) {
+            BassSearchBox bx = (BassSearchBox) c;
+            bx.moveUpSelection();
+            break;
+          }
        }
     }
 

@@ -362,6 +362,7 @@ private void saveEclipse()
       BedrockProgressMonitor pm = new BedrockProgressMonitor(this,"Saving Workbench");
       ws.save(true,pm);
       pm.finish();
+      BedrockPlugin.logD("WORKSPACE SAVE SUCCEEDED");
     }
    catch (Throwable t) {
       BedrockPlugin.logE("Problem saving workbench: " + t,t);

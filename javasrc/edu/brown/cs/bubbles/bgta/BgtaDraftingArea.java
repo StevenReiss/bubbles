@@ -25,9 +25,7 @@
 package edu.brown.cs.bubbles.bgta;
 
 
-
-
-import javax.swing.JTextArea;
+import edu.brown.cs.ivy.swing.SwingTextArea;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -36,7 +34,7 @@ import java.awt.event.KeyEvent;
 
 
 
-class BgtaDraftingArea extends JTextArea {
+class BgtaDraftingArea extends SwingTextArea {
 
 
 

@@ -50,6 +50,7 @@ import edu.brown.cs.bubbles.burp.BurpHistory;
 
 import edu.brown.cs.ivy.swing.SwingEnumButton;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import org.w3c.dom.Element;
 
@@ -422,7 +423,7 @@ private void setupPanel()
 
    class_panel.addGBComponent(sp,0,2,0,1,10,10);
 
-   JTextField tfld = new JTextField();
+   JTextField tfld = new SwingTextField();
    class_panel.addGBComponent(tfld,0,3,0,1,10,0);
    tfld.addActionListener(new FilterAction());
 

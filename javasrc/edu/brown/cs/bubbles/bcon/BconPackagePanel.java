@@ -30,6 +30,7 @@ import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
@@ -98,7 +99,7 @@ BconPackagePanel(String proj,String pkg)
    pnl.addGBComponent(ttl,0,0,2,1,10,0);
 
    pnl.addGBComponent(graph_panel,0,1,1,1,10,10);
-   JTextField tfld = new JTextField();
+   JTextField tfld = new SwingTextField();
    tfld.addActionListener(new FilterAction());
 
    pnl.addGBComponent(tfld,0,2,1,1,10,0);

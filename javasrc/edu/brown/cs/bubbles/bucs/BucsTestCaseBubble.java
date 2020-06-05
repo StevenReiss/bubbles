@@ -45,6 +45,7 @@ import edu.brown.cs.bubbles.buss.BussFactory;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 import edu.brown.cs.ivy.swing.SwingListPanel;
 import edu.brown.cs.ivy.swing.SwingListSet;
+import edu.brown.cs.ivy.swing.SwingTextArea;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -363,7 +364,7 @@ private class UserCodePanel implements CaretListener {
    private JScrollPane	scroll_pane;
 
    UserCodePanel() {
-      code_area = new JTextArea(5,40);
+      code_area = new SwingTextArea(5,40);
       code_area.setWrapStyleWord(true);
       code_area.addCaretListener(this);
       scroll_pane = new JScrollPane(code_area);

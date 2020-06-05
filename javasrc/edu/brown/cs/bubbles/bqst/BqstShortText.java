@@ -25,6 +25,8 @@ package edu.brown.cs.bubbles.bqst;
 
 import javax.swing.JTextField;
 
+import edu.brown.cs.ivy.swing.SwingTextField;
+
 
 
 
@@ -73,7 +75,7 @@ protected BqstShortText(String qst,String help,boolean required)
 @Override void setup()
 {
    super.setup();
-   shorttext_field = new JTextField();
+   shorttext_field = new SwingTextField();
    q_cons.ipady = TEXTFIELD_HEIGHT;
    q_cons.gridy++;
    this.add(shorttext_field, q_cons);

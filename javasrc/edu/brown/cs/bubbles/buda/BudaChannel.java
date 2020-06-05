@@ -29,6 +29,7 @@ import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardImage;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingTextField;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
@@ -118,7 +119,7 @@ BudaChannel(BudaRoot br,Element e,BudaChannelSet cs,String label)
    addGBComponent(date_label,1,0,1,1,0,0);
 
    if (label == null) label = "<Name goes here>";
-   name_label = new JTextField(label);
+   name_label = new SwingTextField(label);
    BoardColors.setColors(name_label,"Bddt.ChannelTopColor");
    name_label.setFont(ft);
    name_label.setBorder(new EmptyBorder(2,5,2,5));

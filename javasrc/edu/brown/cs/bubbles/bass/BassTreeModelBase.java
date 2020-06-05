@@ -355,29 +355,29 @@ private class Rebuilder implements Runnable {
 
    @Override public void run() {
       for ( ; ; ) {
-	 synchronized (this) {
-	    for ( ; ; ) {
-	       long delta = start_time - System.currentTimeMillis();
-	       if (delta <= 0) break;
-	       try {
-		  wait(delta);
-		}
-	       catch (InterruptedException e) { }
-	     }
-	    begin_time = start_time;
-	  }
-	 BoardLog.logD("BASS","RUN REBUILD " + begin_time + " " + System.currentTimeMillis());
-
-	 rebuild();
-
-	 BoardLog.logD("BASS","DONE REBUILD " + begin_time + " " + System.currentTimeMillis());
-	 
-	 synchronized (this) {
-	    if (begin_time == start_time) {
-	       is_active = false;
-	       break;
-	     }
-	  }
+         synchronized (this) {
+            for ( ; ; ) {
+               long delta = start_time - System.currentTimeMillis();
+               if (delta <= 0) break;
+               try {
+        	  wait(delta);
+        	}
+               catch (InterruptedException e) { }
+             }
+            begin_time = start_time;
+          }
+         BoardLog.logD("BASS","RUN REBUILD " + begin_time + " " + System.currentTimeMillis());
+   
+         rebuild();
+   
+         BoardLog.logD("BASS","DONE REBUILD " + begin_time + " " + System.currentTimeMillis());
+         
+         synchronized (this) {
+            if (begin_time == start_time) {
+               is_active = false;
+               break;
+             }
+          }
        }
     }
 

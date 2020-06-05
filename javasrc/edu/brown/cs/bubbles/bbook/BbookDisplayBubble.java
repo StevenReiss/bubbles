@@ -39,6 +39,7 @@ package edu.brown.cs.bubbles.bbook;
 
 import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.ivy.swing.SwingEditorPane;
 
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
@@ -103,7 +104,7 @@ private JComponent setupDisplay()
    String html = "<html>Generating requested notebook display ...";
       // display_builder.generateHtml();
 
-   JEditorPane edp = new JEditorPane("text/html",html);
+   JEditorPane edp = new SwingEditorPane("text/html",html);
    edp.setEditable(false);
    edp.addHyperlinkListener(new Linker());
 

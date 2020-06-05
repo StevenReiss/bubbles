@@ -39,7 +39,7 @@ import edu.brown.cs.bubbles.buda.BudaToolTip;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
-
+import edu.brown.cs.ivy.swing.SwingTextArea;
 import edu.brown.cs.ivy.swing.SwingTreeTable;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -249,7 +249,7 @@ private void setupBubble()
    value_updater = null;
 
    if (value_model.showValueArea()) {
-      value_area = new JTextArea(new HTMLDocument());
+      value_area = new SwingTextArea(new HTMLDocument());
       value_area.setEditable(false);
       value_area.setLineWrap(true);
       value_updater = new ValueUpdater();

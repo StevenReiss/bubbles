@@ -32,12 +32,12 @@ package edu.brown.cs.bubbles.buda;
 
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardProperties;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import java.awt.Color;
@@ -754,7 +754,7 @@ private Point2D getTopPoint()
 /*										*/
 /********************************************************************************/
 
-private class GroupTitle extends JTextField implements ActionListener, FocusListener, NoBubble
+private class GroupTitle extends SwingTextField implements ActionListener, FocusListener, NoBubble
 {
 
    private Dimension orig_size;

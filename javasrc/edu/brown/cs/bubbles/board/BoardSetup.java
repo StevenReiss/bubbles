@@ -1259,6 +1259,18 @@ public boolean doSetup()
 	    saveProperties();
 	  }
        }
+      if (default_workspace == null) {
+         reportError("No workspace specified");
+         System.exit(1);
+       }
+      else {
+         File wf = new File(default_workspace);
+         if (!wf.exists() || !wf.isDirectory() || !wf.canWrite()) {
+            reportError("Invaid workspace directory");
+            System.exit(1);
+          }
+       }
+      
     }
 
    if (!checkPalette()) {
@@ -2135,7 +2147,10 @@ private static boolean checkWorkspaceDirectory(File wsd,boolean create)
    if (wsd == null) return false;
 
    if (create) {
-      if (wsd.getParentFile().exists()) return true;
+      if (!wsd.getParentFile().exists()) return false;
+      if (!wsd.getParentFile().canWrite()) return false;
+      if (wsd.exists() && !wsd.isDirectory()) return false; 
+      return true;
     }
 
    if (!wsd.exists() || !wsd.isDirectory()) return false;
@@ -3032,55 +3047,55 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
 
    private void checkStatus() {
       if (checkWorkspace()) {
-	 accept_button.setEnabled(true);
-	 workspace_warning.setVisible(false);
+         accept_button.setEnabled(true);
+         workspace_warning.setVisible(false);
        }
       else {
-	 accept_button.setEnabled(false);
-	 workspace_warning.setVisible(true);
+         accept_button.setEnabled(false);
+         workspace_warning.setVisible(true);
        }
     }
 
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if (cmd.equals("Eclipse Workspace") || cmd.equals("Python Workspace") ||
-	    cmd.equals("Rebus Workspace") || cmd.equals("Node/JS Workspace")) {
-	 JTextField tf = (JTextField) e.getSource();
-	 File ef = new File(tf.getText());
-	 String np = ef.getPath();
-	 if (!np.equals(default_workspace)) ws_changed = true;
-	 default_workspace = np;
+            cmd.equals("Rebus Workspace") || cmd.equals("Node/JS Workspace")) {
+         JTextField tf = (JTextField) e.getSource();
+         File ef = new File(tf.getText());
+         String np = ef.getPath();
+         if (!np.equals(default_workspace)) ws_changed = true;
+         default_workspace = np;
        }
       else if (cmd.equals("Always Ask for Workspace")) {
-	 JCheckBox cbx = (JCheckBox) e.getSource();
-	 if (ask_workspace != cbx.isSelected()) ws_changed = true;
-	 ask_workspace = cbx.isSelected();
+         JCheckBox cbx = (JCheckBox) e.getSource();
+         if (ask_workspace != cbx.isSelected()) ws_changed = true;
+         ask_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Create New Workspace")) {
-	 JCheckBox cbx = (JCheckBox) e.getSource();
-	 create_workspace = cbx.isSelected();
+         JCheckBox cbx = (JCheckBox) e.getSource();
+         create_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Recent Workspaces")) {
-	 JComboBox<?> cbx = (JComboBox<?>) e.getSource();
-	 String rslt = (String) cbx.getSelectedItem();
-	 if (rslt != null && !rslt.trim().equals("")) {
-	    if (!rslt.equals(default_workspace)) {
-	       ws_changed = true;
-	       default_workspace = rslt;
-	       workspace_field.setText(rslt);
-	     }
-	  }
+         JComboBox<?> cbx = (JComboBox<?>) e.getSource();
+         String rslt = (String) cbx.getSelectedItem();
+         if (rslt != null && !rslt.trim().equals("")) {
+            if (!rslt.equals(default_workspace)) {
+               ws_changed = true;
+               default_workspace = rslt;
+               workspace_field.setText(rslt);
+             }
+          }
        }
       else if (cmd.equals("OK")) {
-	 result_status = true;
-	 working_dialog.setVisible(false);
+         result_status = true;
+         working_dialog.setVisible(false);
        }
       else if (cmd.equals("CANCEL")) {
-	 result_status = false;
-	 working_dialog.setVisible(false);
+         result_status = false;
+         working_dialog.setVisible(false);
        }
       else {
-	 BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
+         BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
        }
       checkStatus();
     }

@@ -32,6 +32,7 @@ package edu.brown.cs.bubbles.bdoc;
 
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardImage;
+import edu.brown.cs.ivy.swing.SwingEditorPane;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -373,7 +374,7 @@ private class ItemNamePane extends JEditorPane {
 /*										*/
 /********************************************************************************/
 
-private class ItemDescPane extends JEditorPane {
+private class ItemDescPane extends SwingEditorPane {
 
    private static final long serialVersionUID = 1;
 

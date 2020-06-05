@@ -26,15 +26,14 @@
 package edu.brown.cs.bubbles.bwiz;
 
 import edu.brown.cs.bubbles.board.BoardColors;
-
-import javax.swing.JTextField;
+import edu.brown.cs.ivy.swing.SwingTextField;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 
 
-class BwizFocusTextField extends JTextField
+class BwizFocusTextField extends SwingTextField
 {
 
 

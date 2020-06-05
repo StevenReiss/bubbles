@@ -23,6 +23,7 @@ import edu.brown.cs.bubbles.bgta.BgtaChat;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaRoot;
+import edu.brown.cs.ivy.swing.SwingTextArea;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -65,14 +66,14 @@ private static class TicketViewPanel extends JPanel {
    private static final long serialVersionUID = 1L;
 
    private TicketViewPanel(BeduStudentTicket t,BeduTATicketViewBubble a_bubble,
-			      ChatStartListener listener) {
+        		      ChatStartListener listener) {
       setOpaque(false);
-
+   
       setPreferredSize(DEFAULT_DIMENSION);
       setLayout(new GridBagLayout());
-
+   
       GridBagConstraints c = new GridBagConstraints();
-
+   
       JLabel ticket_area_label = new JLabel("Problem description: ");
       c.gridx = 0;
       c.gridy = 0;
@@ -84,8 +85,8 @@ private static class TicketViewPanel extends JPanel {
       // c.fill = GridBagConstraints.HORIZONTAL;
       add(ticket_area_label, c);
       c.insets = new Insets(0,0,0,0);
-
-      JTextArea ticket_pane = new JTextArea();
+   
+      JTextArea ticket_pane = new SwingTextArea();
       ticket_pane.setOpaque(false);
       ticket_pane.setText(t.getText());
       ticket_pane.setLineWrap(true);
@@ -102,7 +103,7 @@ private static class TicketViewPanel extends JPanel {
       c.weightx = 1;
       c.weighty = 1;
       add(scroll, c);
-
+   
       JButton submit_button = new JButton("Chat with student");
       submit_button.addActionListener(listener);
       c.anchor = GridBagConstraints.PAGE_END;
