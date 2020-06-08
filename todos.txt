@@ -1,13 +1,13 @@
 1)  BubletRepository.java li=148: null pointer: need to handle user remote
 files
 
-2)  Text editor open remote file options
+??? Text editor open remote file options
 
 3)  Copy test from editor (local) in client doesn't support paste to BALE
     editor (remote) on server.
 
 4)  Default workspace on the client still bad -- need to set default_workspace
-for all uses
+    for all uses
 
 5)  Seede times out too soon
 
@@ -18,12 +18,12 @@ for all uses
 
 XXX Goto Source for constructor call from stack view fails?
 
-8)  How to put back DDT control window (key that checks if present and
-recreates if not?; don't allow deletion?)
+XXX How to put back DDT control window (key that checks if present and
+     recreates if not?; don't allow deletion?)
 
 XXX Select word inside string shouldn't select the whole string
 
-10) Bad working directory in the command line for new project causes BDOC to
+??? Bad working directory in the command line for new project causes BDOC to
    abort (update default_workspace). This generates a Bad board setup error.
 
 ???  Debug panel is sometimes missing after startup
@@ -38,8 +38,8 @@ XXX Select word inside string shouldn't select the whole string
 
 16) Sometime it says getting cloud information, but never puts up dialog box
 
-17) Sometimes the group doesn't go away when the bubble does (white shadow
-group left)
+??? Sometimes the group doesn't go away when the bubble does (white shadow
+      group left)
 
 ??? Plugins not updated when bubbles is updated.
 
@@ -47,11 +47,11 @@ group left)
 
 ???  No logging of file queries.  File queries can be missing. (or just message missing)
 
-21)  Changing launch configuration name doesn't update repository
+???  Changing launch configuration name doesn't update repository
 
 22)  Debug can't open JFrame on mac inside bubbles (SWT library and Eclipse hidden flag)
 
-???  Removing all debug channels should go back to main view, not debug view.
+XXX  Removing all debug channels should go back to main view, not debug view.
 
 ???  Copy from debug console doesn't allow paste in other applications
 
@@ -71,4 +71,10 @@ XXX  Only one derby at once -- should use different files for different projects
 
 ???  Tool bar is in wrong place if window shade is up when F1 is hit
 
-33)
+???  Plugins should use the manifest or the xml file, not both.
+
+34)  The launch config window start field goes away when changing project and never comes back.
+        Now it is not autocomplete and only the arrow goes away.  Might be a problem with
+        Swing combo box.
+
+35)
