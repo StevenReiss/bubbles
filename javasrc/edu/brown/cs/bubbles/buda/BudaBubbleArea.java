@@ -3067,6 +3067,8 @@ private static class DrawPanel extends JPanel implements NoBubble {
 public void userRemoveBubble(BudaBubble bb)
 {
    if (bb == null) return;
+   
+   if (!bb.isRemovable()) return;
 
    UndoRemove ur = new UndoRemove(bb);
 

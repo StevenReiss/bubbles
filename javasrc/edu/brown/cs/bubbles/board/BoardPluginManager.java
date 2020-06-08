@@ -436,7 +436,7 @@ private static class PluginData implements Comparable<PluginData> {
       InputStream uins = u.openConnection().getInputStream();
       IvyFile.copyFile(uins,p1);
       plugin_file = p1;
-      installResource();
+      installResource();                // should no longer be needed
       plugin_installed = true;
     }
 

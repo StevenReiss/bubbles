@@ -440,6 +440,7 @@ void noteFloatMoved()
 public boolean isFixed()			{ return is_fixed; }
 public boolean isDocked()			{ return is_docked; }
 public boolean isUserPos()			{ return is_userpos; }
+public boolean isRemovable()                    { return true; }
 
 /**
  *	Indicate that the bubble is fixed (i.e. should not be considered by the

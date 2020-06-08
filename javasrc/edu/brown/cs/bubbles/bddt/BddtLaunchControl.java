@@ -174,6 +174,8 @@ BumpProcess getProcess()			{ return cur_process; }
 String getProject()				{ return launch_config.getProject(); }
 BddtBubbleManager getBubbleManager()		{ return bubble_manager; }
 
+@Override public boolean isRemovable()          { return false; }
+
 boolean matchProcess(BumpProcess p)
 {
    if (cur_process == p) return true;
@@ -557,19 +559,19 @@ private class ClearAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtLaunchControl.this);
-
+   
       Collection<BudaBubble> bbls;
       BudaWorkingSet ws = BddtFactory.getFactory().getActiveWorkingSet();
       if (ws != null) {
-	 bbls = bba.getBubblesInRegion(ws.getRegion());
+         bbls = bba.getBubblesInRegion(ws.getRegion());
        }
       else {
-	 bbls = bba.getBubbles();
+         bbls = bba.getBubbles();
        }
-
+   
       for (BudaBubble bbl : bbls) {
-	 if (bbl.isFloating() || bbl.isFixed()) continue;
-	 bba.userRemoveBubble(bbl);
+         if (bbl.isFloating() || bbl.isFixed()) continue;
+         bba.userRemoveBubble(bbl);
        }
     }
 

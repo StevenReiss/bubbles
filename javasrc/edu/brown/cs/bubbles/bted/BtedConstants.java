@@ -150,6 +150,8 @@ String NEW_FILE_BUTTON	    = "Bubbles.Create New File";
  */
 String LOAD_FILE_BUTTON     = "Bubbles.Open File";
 
+String REMOTE_FILE_BUTTON   = "Bubbles.Open Remote File";
+
 /**
  * The default width of the text editor bubble
  */
@@ -207,6 +209,15 @@ enum SearchMode {
    PREVIOUS,
    FIRST
 }
+
+
+enum StartMode {
+   NEW,
+   NEW_REMOTE,
+   LOCAL,
+   REMOTE
+}
+
 
 
 }	// end of interface BtedConstants

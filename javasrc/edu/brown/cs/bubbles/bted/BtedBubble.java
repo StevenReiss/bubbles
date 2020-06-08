@@ -26,6 +26,7 @@
 package edu.brown.cs.bubbles.bted;
 
 import edu.brown.cs.bubbles.board.BoardColors;
+import edu.brown.cs.bubbles.board.BoardFileSystemView;
 import edu.brown.cs.bubbles.board.BoardImage;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.buda.BudaBubble;
@@ -56,6 +57,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.text.PlainDocument;
 
 import java.awt.BorderLayout;
@@ -103,6 +105,7 @@ private JScrollPane		 scroll_pane;
 private JPanel			 main_panel;
 private BurpHistory		 burp_history;
 private BtedUndoableEditListener edit_listener;
+private StartMode                start_mode;
 
 private static BoardProperties	 bted_props	  = BoardProperties.getProperties("Bted");
 
@@ -119,7 +122,7 @@ private static final long	serialVersionUID = 1;
 /*										*/
 /********************************************************************************/
 
-BtedBubble(String path,boolean newFile)
+BtedBubble(String path,StartMode mode)
 {
    boolean wrapfg = bted_props.getBoolean(WRAPPING);
    // current version of jsyntaxpane doesn't support line wrapping
@@ -131,6 +134,7 @@ BtedBubble(String path,boolean newFile)
    text_editor.setOpaque(false);
    edit_listener = new BtedUndoableEditListener();
    name_label = new JLabel();
+   start_mode = mode;
 
    scroll_pane = new JScrollPane(text_editor);
    scroll_pane.setOpaque(false);
@@ -154,12 +158,12 @@ BtedBubble(String path,boolean newFile)
 
    this.setupGui();
 
-   if (path == null && !newFile) {
-      if (!this.openFileFromStart()) {
+   if (path == null && mode != StartMode.NEW) {
+      if (!this.openFileFromStart(mode)) {
 	 this.newFile();
        }
     }
-   else if (path == null && newFile) {
+   else if (path == null && mode == StartMode.NEW) {
       this.newFile();
     }
    else {
@@ -194,13 +198,29 @@ private void setupGui()
 {
    JToolBar toolBar = new JToolBar();
    toolBar.setFloatable(false);
+   
+   StartMode newmode;
+   StartMode openmode;
+   switch (start_mode) {
+      default :
+      case NEW :
+      case LOCAL :
+         newmode = StartMode.NEW;
+         openmode = StartMode.LOCAL;
+         break;
+      case NEW_REMOTE :
+      case REMOTE :
+         newmode = StartMode.NEW_REMOTE;
+         openmode = StartMode.REMOTE;
+         break;
+    }
 
    AbstractAction newFileAction = new NewFileAction();
-   AbstractAction newFileBubbleAction = new NewFileBubbleAction();
+   AbstractAction newFileBubbleAction = new NewFileBubbleAction(newmode);
    AbstractAction openFileAction = new OpenFileAction();
-   AbstractAction openFileBubbleAction = new OpenFileBubbleAction();
+   AbstractAction openFileBubbleAction = new OpenFileBubbleAction(openmode);
    AbstractAction saveFileAction = new SaveFileAction();
-
+  
    JButton newButton = new JButton(newFileBubbleAction);
    newButton.setIcon(new ImageIcon(BoardImage.getImage("filenew.png")));
    newButton.setMargin(BUTTON_MARGIN);
@@ -291,6 +311,8 @@ private void setupGui()
    super.setBounds(r);
 }
 
+StartMode getMode()                     { return start_mode; }
+
 
 
 /********************************************************************************/
@@ -314,9 +336,9 @@ public File getFile()
  * @return true if successful
  */
 
-private boolean openFileFromStart()
+private boolean openFileFromStart(StartMode mode)
 {
-   JFileChooser chooser = new JFileChooser(last_directory);
+   JFileChooser chooser = new JFileChooser(last_directory,getFileSystemView());
    int returnVal = chooser.showOpenDialog(this);
    if (returnVal == JFileChooser.APPROVE_OPTION) {
       current_file = chooser.getSelectedFile();
@@ -330,6 +352,21 @@ private boolean openFileFromStart()
       return true;
     }
    return false;
+}
+
+
+
+private FileSystemView getFileSystemView()
+{
+   switch (start_mode) {
+      default :
+      case NEW :
+      case LOCAL :
+         return FileSystemView.getFileSystemView();
+      case REMOTE :
+      case NEW_REMOTE :
+         return BoardFileSystemView.getFileSystemView();
+    }
 }
 
 
@@ -351,13 +388,13 @@ private void openFileFromMenu()
 }
 
 
-private void openBubbleFromMenu()
+private void openBubbleFromMenu(StartMode mode)
 {
-   JFileChooser chooser = new JFileChooser(last_directory);
+   JFileChooser chooser = new JFileChooser(last_directory,getFileSystemView());
    int rv = chooser.showOpenDialog(this);
    if (rv == JFileChooser.APPROVE_OPTION) {
       File f = chooser.getSelectedFile();
-      BtedBubble bb = new BtedBubble(f.getPath(),false);
+      BtedBubble bb = new BtedBubble(f.getPath(),mode);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
       if (bba != null) {
 	 bba.addBubble(bb,this,null,BudaConstants.PLACEMENT_PREFER|BudaConstants.PLACEMENT_NEW);
@@ -402,7 +439,7 @@ private void saveFile()
  */
 private void saveAsFile()
 {
-   JFileChooser chooser = new JFileChooser(last_directory);
+   JFileChooser chooser = new JFileChooser(last_directory,getFileSystemView());
    int returnVal = chooser.showSaveDialog(this);
    if (returnVal == JFileChooser.APPROVE_OPTION
 	  && !the_factory.isFileOpen(chooser.getSelectedFile())) {
@@ -435,9 +472,9 @@ private void newFile()
 /**
  * Creates a new plain text document
  */
-private void newFileBubble()
+private void newFileBubble(StartMode mode)
 {
-   BtedBubble bb = new BtedBubble(null,true);
+   BtedBubble bb = new BtedBubble(null,mode);
    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
    if (bba != null) {
       bba.addBubble(bb,this,null,BudaConstants.PLACEMENT_PREFER|BudaConstants.PLACEMENT_NEW);
@@ -586,10 +623,16 @@ private class OpenFileAction extends AbstractAction {
 
 private class OpenFileBubbleAction extends AbstractAction {
 
+   private StartMode open_mode;
+   
    private static final long serialVersionUID = 1;
+   
+   OpenFileBubbleAction(StartMode mode) {
+      open_mode = mode;
+    }
 
    @Override public void actionPerformed(ActionEvent e) {
-      openBubbleFromMenu();
+      openBubbleFromMenu(open_mode);
     }
 
 } // end of class OpenFileBubbleAction
@@ -610,10 +653,16 @@ private class NewFileAction extends AbstractAction {
 
 private class NewFileBubbleAction extends AbstractAction {
 
+   private StartMode new_mode;
+   
    private static final long serialVersionUID = 1;
+   
+   NewFileBubbleAction(StartMode mode) {
+      new_mode = mode;
+    }
 
    @Override public void actionPerformed(ActionEvent e) {
-      newFileBubble();
+      newFileBubble(new_mode);
     }
 
 } // end of class NewFileAction

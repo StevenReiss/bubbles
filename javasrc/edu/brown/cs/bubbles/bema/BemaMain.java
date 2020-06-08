@@ -47,7 +47,7 @@ import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bump.BumpClient;
-
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
@@ -62,6 +62,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -80,6 +81,7 @@ import java.util.TreeMap;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
 
 
 
@@ -594,21 +596,27 @@ private void loadPlugins(File dir,BudaRoot root)
 	  }
 	 else if (jfn.getPath().endsWith(".jar")) {
 	    BoardLog.logD("BEMA","Load plugin " + jfn);
-	    try {
-	       JarFile jf = new JarFile(jfn);
+	    try (JarFile jf = new JarFile(jfn)) {
 	       Manifest mf = jf.getManifest();
-	       jf.close();
 	       if (mf != null) {
 		  Attributes at = mf.getMainAttributes();
 		  String starts = at.getValue("Bubbles-start");
 		  String dep = at.getValue("Bubbles-depends");
 		  String palette = at.getValue("Bubbles-palette");
+                  String res = at.getValue("Bubbles-resource");
 		  String load = jfn.getAbsolutePath();
 		  String basename = null;
 		  if (dep != null) {
 		     dep = dep.trim();
 		     if (dep.length() > 0) load += ":" + dep;
 		   }
+                  if (res != null) {
+                     StringTokenizer tok = new StringTokenizer(res);
+                     while (tok.hasMoreTokens()) {
+                        String nm = tok.nextToken();
+                        setupPluginResource(jf,nm);
+                      }
+                   }
 		  if (starts != null) {
 		     StringTokenizer tok = new StringTokenizer(starts);
 		     while (tok.hasMoreTokens()) {
@@ -630,6 +638,24 @@ private void loadPlugins(File dir,BudaRoot root)
 	     }
 	  }
        }
+    }
+}
+
+
+
+private void setupPluginResource(JarFile jf,String res)
+{
+   try {
+      ZipEntry ze = jf.getEntry(res);
+      if (ze == null) return;
+      File libdir = BoardSetup.getSetup().getLibraryDirectory();
+      File tgt = new File(libdir,res);
+      InputStream ins = jf.getInputStream(ze);
+      IvyFile.copyFile(ins,tgt);
+      BoardSetup.getSetup().checkResourceFile(res);
+    }
+   catch (IOException ex) {
+      BoardLog.logE("BEMA","Problem loading plugin resource file " + res);
     }
 }
 

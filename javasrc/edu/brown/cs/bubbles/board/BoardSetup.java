@@ -2062,7 +2062,7 @@ private void checkLibResources()
 }
 
 
-void checkResourceFile(String resfile) throws IOException
+public void checkResourceFile(String resfile) throws IOException
 {
    File ivv = BoardProperties.getPropertyDirectory();
    if (!ivv.exists()) ivv.mkdir();

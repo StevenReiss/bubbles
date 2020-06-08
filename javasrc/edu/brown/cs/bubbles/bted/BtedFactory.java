@@ -26,8 +26,10 @@
 package edu.brown.cs.bubbles.bted;
 
 import edu.brown.cs.bubbles.board.BoardColors;
+import edu.brown.cs.bubbles.board.BoardConstants;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
+import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -128,6 +130,9 @@ public static void setup()
    BudaRoot.addBubbleConfigurator("BTED", new BtedConfigurator());
    BudaRoot.registerMenuButton(NEW_FILE_BUTTON, the_factory);
    BudaRoot.registerMenuButton(LOAD_FILE_BUTTON, the_factory);
+   if (BoardSetup.getSetup().getRunMode() == BoardConstants.RunMode.CLIENT) {
+      BudaRoot.registerMenuButton(REMOTE_FILE_BUTTON,the_factory);
+    }
 }
 
 
@@ -311,7 +316,7 @@ void loadFileIntoEditor(File file,JEditorPane editor,UndoableEditListener listen
  */
 void reopenBubble(String path,BtedBubble oldBubble)
 {
-   BudaBubble bb = new BtedBubble(path,false);
+   BudaBubble bb = new BtedBubble(path,oldBubble.getMode());
    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(oldBubble);
    BudaRoot br = BudaRoot.findBudaRoot(bba);
    BudaConstraint bc = new BudaConstraint(BudaBubblePosition.MOVABLE,oldBubble.getX(),
@@ -391,10 +396,13 @@ boolean isFileOpen(File file)
 
    try {
       if (id.equals(NEW_FILE_BUTTON)) {
-	 bb = new BtedBubble(null,true);
+	 bb = new BtedBubble(null,StartMode.NEW);
        }
       else if (id.equals(LOAD_FILE_BUTTON)) {
-	 bb = new BtedBubble(null,false);
+	 bb = new BtedBubble(null,StartMode.LOCAL);
+       }
+      else if (id.equals(REMOTE_FILE_BUTTON)) {
+         bb = new BtedBubble(null,StartMode.REMOTE);
        }
     }
    catch (Throwable t) {

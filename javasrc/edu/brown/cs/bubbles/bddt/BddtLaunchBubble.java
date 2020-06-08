@@ -178,9 +178,9 @@ private void setupPanel()
 
    switch (launch_config.getConfigType()) {
       case JAVA_APP :
-	 start_class = pnl.addChoice("Start Class",starts,launch_config.getMainClass(),true,this);
-	 start_class.setEditable(true);
-	 start_class.setCaseSensitive(false);
+	 start_class = pnl.addChoice("Start Class",starts,launch_config.getMainClass(),false,this);
+	 // start_class.setEditable(true);
+         start_class.setCaseSensitive(false);
 	 if (launch_config.getMainClass() == null) {
 	    String s = (String) start_class.getSelectedItem();
 	    if (s != null) {
@@ -477,15 +477,21 @@ private String getNewName()
 	    String nm = edit_config.getMainClass();
 	    boolean fnd = false;
 	    start_class.removeAll();
+            String st0 = null;
 	    for (String s : sts) {
+               if (st0 == null) st0 = s;
 	       if (s.equals(nm)) {
 		  nm = s;
 		  fnd = true;
 		}
 	       start_class.addItem(s);
 	     }
-	    if (!fnd) start_class.addItem(nm);
-	    start_class.setSelectedItem(nm);
+	    if (!fnd) {
+               nm = st0;
+               // start_class.addItem(nm);
+             }	   
+            start_class.setSelectedItem(nm);
+            start_class.repaint();
 	  }
        }
     }

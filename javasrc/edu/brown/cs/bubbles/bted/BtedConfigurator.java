@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.bted;
 
+import edu.brown.cs.bubbles.bted.BtedConstants.StartMode;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -53,7 +54,8 @@ class BtedConfigurator implements BudaConstants.BubbleConfigurator {
 
    if (typ.equals("EDITORBUBBLE")) {
       String path = IvyXml.getAttrString(cnt,"PATH");
-      bb = new BtedBubble(path,false);
+      StartMode mode = IvyXml.getAttrEnum(cnt,"MODE",StartMode.LOCAL);
+      bb = new BtedBubble(path,mode);
    }
 
    return bb;
