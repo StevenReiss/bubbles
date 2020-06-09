@@ -1715,6 +1715,13 @@ private class ShadeUpdater implements ActionListener {
             bbl.setBounds(rbbl);
           }
        }
+      BudaBubble toolbar = BudaToolbar.getToolbar(bubble_area);
+      if (toolbar.isVisible()) {
+         Rectangle rbbl = toolbar.getBounds();
+         rbbl.y -= move;
+         // toolbar.setBounds(rbbl);
+         System.err.println("BOUNDS " + rbbl + " " + toolbar.getBounds());
+       }
    
       // revalidate();
    

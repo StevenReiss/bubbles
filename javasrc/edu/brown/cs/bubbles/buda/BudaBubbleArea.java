@@ -3295,11 +3295,11 @@ private class BubbleManager implements ComponentListener, ContainerListener {
 
    @Override public void componentResized(ComponentEvent e) {
       if (e.getSource() instanceof BudaBubble) {
-	 BudaBubble bb = (BudaBubble) e.getSource();
-	 fixupBubble(bb);
-	 fixupGroups(bb);
-	 routes_valid = false;
-	 updateOverview();
+         BudaBubble bb = (BudaBubble) e.getSource();
+         fixupBubble(bb);
+         fixupGroups(bb);
+         routes_valid = false;
+         updateOverview();
        }
     }
 

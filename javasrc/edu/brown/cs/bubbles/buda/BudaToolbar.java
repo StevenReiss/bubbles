@@ -31,7 +31,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import java.awt.Dimension;
@@ -102,7 +101,7 @@ private static void addButton(String name, ActionListener l, String tooltip, Ima
 }
 
 
-private static Toolbar getToolbar(BudaBubbleArea bba)
+static Toolbar getToolbar(BudaBubbleArea bba)
 {
    Toolbar b = menu_map.get(bba);
 
@@ -280,7 +279,7 @@ private static class MenuListener extends AbstractAction implements ActionListen
    
       pnl.revalidate();
       bba.add(pnl,bc,0);
-      bba.setLayer(pnl, JLayeredPane.DRAG_LAYER+2);
+       // bba.setLayer(pnl, JLayeredPane.DRAG_LAYER+2); // this causes it to not be placed correctly on shade down
       pnl.setVisible(true);
       if (pnl.getContentPane() != null) {
          Dimension d = pnl.getContentPane().getPreferredSize();

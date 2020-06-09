@@ -922,7 +922,7 @@ private class BubbleUpdater implements BubbleViewCallback {
       if (BudaRoot.findBudaBubbleArea(bb) != bubble_area) return;
       if (bb.isTransient()) return;
       if (bubble_map.get(bb) == null) {
-	 bubble_map.put(bb,new BubbleData(bb));
+         bubble_map.put(bb,new BubbleData(bb));
        }
     }
 
