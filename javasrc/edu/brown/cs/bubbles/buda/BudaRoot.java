@@ -31,6 +31,7 @@ import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
+import edu.brown.cs.bubbles.board.BoardThreadPool;
 
 import edu.brown.cs.ivy.mint.MintArguments;
 import edu.brown.cs.ivy.mint.MintHandler;
@@ -2801,9 +2802,35 @@ void handleCloseRequest()
    if (save) handleSaveAllRequest();
 
    if (handleQuitRequest()) {
-      System.exit(0);
+      JOptionPane opt = new JOptionPane("Saving Workspace -- Please be patient",JOptionPane.INFORMATION_MESSAGE);
+      JDialog dlg = opt.createDialog(this,"Saving Workspace");
+      dlg.setModal(false);
+      dlg.setVisible(true);
+      BoardThreadPool.start(new Stopper(200));
+      // System.exit(0);
     }
 }
+
+
+private class Stopper implements Runnable {
+
+   private long stop_delay;
+   
+   Stopper(long delay) {
+      stop_delay = delay;
+    }
+   
+   @Override public void run() {
+      if (stop_delay > 0) {
+         try {
+            Thread.sleep(stop_delay);
+          }
+         catch (InterruptedException e) {  }
+       }
+      System.exit(0);
+    }
+   
+}       // end of inner class Stopper
 
 
 
