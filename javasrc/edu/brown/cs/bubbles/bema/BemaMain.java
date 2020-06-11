@@ -52,6 +52,7 @@ import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
@@ -925,20 +926,29 @@ private void waitForServerExit(BudaRoot root)
 private static class SaveSession extends Thread {
 
    private BudaRoot for_root;
+   private JDialog save_dialog;
 
    SaveSession(BudaRoot br) {
       super("SaveSessionAtEnd");
       for_root = br;
+      JOptionPane opt = new JOptionPane("Saving Workspace -- Please be patient",JOptionPane.INFORMATION_MESSAGE);
+      save_dialog = opt.createDialog(for_root,"Saving Workspace");
+      save_dialog.setModal(false);
+      // save_dialog = new JDialog(for_root,"Saving Workspace",false);
+      // save_dialog.setContentPane(new JLabel("Saving Workspace -- Please be patient"));
+      // save_dialog.pack();
     }
 
    @Override public void run() {
       File cf = BoardSetup.getConfigurationFile();
       try {
          // for_root.handleSaveAllRequest();
+         save_dialog.setVisible(true);
          for_root.handleCheckpointAllRequest();
          for_root.saveConfiguration(cf);
          BumpClient bc = BumpClient.getBump();
          bc.saveWorkspace();
+         save_dialog.setVisible(false);
        }
       catch (IOException e) {
          BoardLog.logE("BEMA","Problem saving session: " + e);
