@@ -77,4 +77,6 @@ XXX  Only one derby at once -- should use different files for different projects
         Now it is not autocomplete and only the arrow goes away.  Might be a problem with
         Swing combo box.
 
-35)
+35)  Pop up dialog while saving session at end to tell user what is going on.
+
+36)
