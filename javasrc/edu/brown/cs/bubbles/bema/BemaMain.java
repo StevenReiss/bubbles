@@ -52,7 +52,6 @@ import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
 
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;

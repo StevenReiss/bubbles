@@ -142,40 +142,40 @@ private static class Toolbar extends BudaBubble implements NoFreeze
       setContentPane(main_panel);
       setOpaque(false);
       for (MenuButton b : the_buttons) {
-	 addButton(b.getName(),b.getListener(),b.getTooltip(),b.getImage());
+         addButton(b.getName(),b.getListener(),b.getTooltip(),b.getImage());
        }
     }
 
    void addButton(String name, ActionListener l, String tooltip, Image i) {
       JButton b = new JButton();
-
+   
       if (i != null) {
-	 BufferedImage bi = new BufferedImage(BUDA_MENU_BUTTON_ICON_WIDTH, BUDA_MENU_BUTTON_ICON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-	 Graphics2D g2 = bi.createGraphics();
-	 g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-	 g2.drawImage(i, 0, 0, bi.getWidth(), bi.getHeight(),null);
-	 g2.dispose();
-	 ImageIcon icon = new ImageIcon(bi);
-	 b.setIcon(icon);
+         BufferedImage bi = new BufferedImage(BUDA_MENU_BUTTON_ICON_WIDTH, BUDA_MENU_BUTTON_ICON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+         Graphics2D g2 = bi.createGraphics();
+         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+         g2.drawImage(i, 0, 0, bi.getWidth(), bi.getHeight(),null);
+         g2.dispose();
+         ImageIcon icon = new ImageIcon(bi);
+         b.setIcon(icon);
        }
-
+   
       if (tooltip != null) b.setToolTipText(tooltip);
-
+   
       b.addActionListener(l);
       b.setOpaque(false);
       b.setMargin(new Insets(0,0,0,0));
       b.setBackground(BoardColors.getColor("Buda.ToolbarBackground"));
       b.setBorder(null);
       b.setFocusPainted(false);
-
+   
       MenuPanel panel=null;
       for (MenuPanel p : menu_panels) {
-	 if (name.equals(p.getName())) panel = p;
+         if (name.equals(p.getName())) panel = p;
        }
       if (panel==null) {
-	 panel = new MenuPanel(name);
-	 main_panel.add(panel);
-	 menu_panels.add(panel);
+         panel = new MenuPanel(name);
+         main_panel.add(panel);
+         menu_panels.add(panel);
        }
       panel.addButton(b);
       panel.revalidate();
@@ -260,32 +260,32 @@ private static class MenuListener extends AbstractAction implements ActionListen
       if (bba == null) return;
    
       Toolbar pnl = getToolbar(bba);
-      if (pnl.isVisible()) {
+      if (pnl.isVisible() && pnl.isShowing()) {
          pnl.setVisible(false);
          return;
       }
       Rectangle r = for_root.getShadedViewport();
       if (r == null) return;
       
+      if (pnl.getContentPane() != null) {
+         Dimension d = pnl.getContentPane().getPreferredSize();
+         if (d != null) pnl.setSize(new Dimension(d.width+3,d.height+8));
+       }  
+      pnl.revalidate();
+      
       BudaConstraint bc = new BudaConstraint(BudaConstants.BudaBubblePosition.STATIC,
         	  r.x, r.y + TOOLBAR_Y_DELTA);
-   
+      
       Rectangle pnlrect = new Rectangle(r.x, r.y, pnl.getPreferredSize().width, pnl.getPreferredSize().height);
       Collection<BudaBubble> bubbles = bba.getBubblesInRegion(pnlrect);
       if (bubbles.contains(for_root.getPackageExplorer(bba)))
          bc = new BudaConstraint(BudaConstants.BudaBubblePosition.STATIC,
         	  r.x + r.width - pnl.getPreferredSize().width, r.y + TOOLBAR_Y_DELTA);
    
-   
-      pnl.revalidate();
+      pnl.setVisible(true);
+      
       bba.add(pnl,bc,0);
        // bba.setLayer(pnl, JLayeredPane.DRAG_LAYER+2); // this causes it to not be placed correctly on shade down
-      pnl.setVisible(true);
-      if (pnl.getContentPane() != null) {
-         Dimension d = pnl.getContentPane().getPreferredSize();
-         if (d != null) pnl.setSize(new Dimension(d.width+3,d.height+8));
-       }
-      pnl.revalidate();
       pnl.repaint();
    }
 

@@ -316,7 +316,7 @@ private void initialize(Element e)
    demo_text = null;
    demo_point = null;
    shade_delta = 0;
-   shade_down = false;
+   shade_down = true;
 
    int inputdelta = IvyXml.getAttrInt(e,"DELTA",0);
 
@@ -384,7 +384,7 @@ private void initialize(Element e)
 
    if (BoardSetup.getSetup().getRunMode() == RunMode.CLIENT) {
       BoardSetup.getSetup().getMintControl().register("<BUDA SOURCE='SERVER' CMD='_VAR_0' FILE='_VAR_1' />",
-							 new ClientHandler());
+            new ClientHandler());
     }
 }
 
@@ -951,10 +951,10 @@ private class SearchSingleton extends ComponentAdapter {
 
    @Override public void componentHidden(ComponentEvent e) {
       if (e.getSource() == search_bubble) {
-	 search_bubble = null;
+         search_bubble = null;
        }
       if (e.getSource() == docsearch_bubble) {
-	 docsearch_bubble = null;
+         docsearch_bubble = null;
        }
     }
 
@@ -1629,7 +1629,7 @@ private class OverviewListener extends MouseMotionAdapter {
 	    windowShadeDown();
 	  }
        }
-      else if (ypos > htgt + SHADE_PULL_DOWN_END && !shade_down) {
+      else if (ypos > htgt + SHADE_PULL_DOWN_END && shade_down) {
 	 windowShadeUp();
        }
       else if (ht != htgt) {
@@ -1709,19 +1709,19 @@ private class ShadeUpdater implements ActionListener {
       rv.y += move;
       bubble_view.setViewPosition(rv);
    
+      BudaBubble toolbar = BudaToolbar.getToolbar(bubble_area);
       for (BudaBubble bbl : bubble_area.getBubbles()) {
-         if (bbl.isFloating()) {
+         if (bbl.isFloating() && bbl != toolbar) {
             Rectangle rbbl = bbl.getBounds();
             rbbl.y -= move;
             bbl.setBounds(rbbl);
           }
        }
-      BudaBubble toolbar = BudaToolbar.getToolbar(bubble_area);
       if (toolbar.isVisible()) {
          Rectangle rbbl = toolbar.getBounds();
          rbbl.y -= move;
-         // toolbar.setBounds(rbbl);
-         System.err.println("BOUNDS " + rbbl + " " + toolbar.getBounds());
+         // System.err.println("TOOL BOUNDS " + rbbl + " " + move);
+         toolbar.setBounds(rbbl);
        }
    
       // revalidate();
@@ -2897,7 +2897,7 @@ private class ButtonPanel extends JPanel
       Color tc = BoardColors.getColor(BUTTON_PANEL_TOP_COLOR_PROP);
       Color bc = BoardColors.getColor(BUTTON_PANEL_BOTTOM_COLOR_PROP);
       Paint p = new GradientPaint(0f, 0f,tc, 0f, BUBBLE_OVERVIEW_HEIGHT, bc);
-
+   
       g.setPaint(p);
       g.fillRect(0, 0, this.getWidth() , this.getHeight());
     }

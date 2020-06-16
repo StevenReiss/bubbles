@@ -3266,6 +3266,8 @@ private class BubbleManager implements ComponentListener, ContainerListener {
 
    @Override public void componentHidden(ComponentEvent e) {
       BudaBubble bb = (BudaBubble) e.getSource();
+      if (bb.isShowing() && bb.isVisible())
+         return;
       localRemoveBubble(bb);
       updateOverview();
     }
