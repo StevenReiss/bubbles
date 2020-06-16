@@ -81,4 +81,6 @@ XXX  Pop up dialog while saving session at end to tell user what is going on.
 
 36)  Tool bar initial window doesn't adjust correctly with shade.  Remove and add makes it work.
 
-37)
+37)  Cut from ddt value window bottom pane doesn't use mac keys
+
+38)
