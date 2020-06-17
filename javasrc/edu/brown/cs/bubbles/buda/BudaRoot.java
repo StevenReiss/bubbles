@@ -3027,10 +3027,10 @@ private static class MouseEventQueue extends EventQueue {
 
    private void resend(AWTEvent e) {
       try {
-	 super.dispatchEvent(e);
+         super.dispatchEvent(e);
        }
       catch (Throwable t) {
-	 BoardLog.logE("BUDA","Problem processing user interface event: " + t,t);
+         BoardLog.logE("BUDA","Problem processing user interface event: " + t,t);
        }
     }
 

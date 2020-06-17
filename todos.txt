@@ -3,10 +3,10 @@ files
 
 ??? Text editor open remote file options
 
-3)  Copy test from editor (local) in client doesn't support paste to BALE
+??  Copy test from editor (local) in client doesn't support paste to BALE
     editor (remote) on server.
 
-4)  Default workspace on the client still bad -- need to set default_workspace
+??  Default workspace on the client still bad -- need to set default_workspace
     for all uses
 
 5)  Seede times out too soon
@@ -36,7 +36,7 @@ XXX Select word inside string shouldn't select the whole string
 
 ???  Cut and paste into evaluation window.
 
-16) Sometime it says getting cloud information, but never puts up dialog box
+??? Sometime it says getting cloud information, but never puts up dialog box
 
 ??? Sometimes the group doesn't go away when the bubble does (white shadow
       group left)
@@ -50,6 +50,7 @@ XXX Select word inside string shouldn't select the whole string
 ???  Changing launch configuration name doesn't update repository
 
 22)  Debug can't open JFrame on mac inside bubbles (SWT library and Eclipse hidden flag)
+        -XstartOnFirstThread
 
 XXX  Removing all debug channels should go back to main view, not debug view.
 
@@ -61,7 +62,7 @@ XXX  Reduce timeouts on setupElision
 
 ???  Quick fix should time out
 
-28)  On cloud bubbles, some messages are getting lost
+???  On cloud bubbles, some messages are getting lost
 
 XXX  Window comes up the wrong size
 
@@ -79,8 +80,9 @@ XXX  Only one derby at once -- should use different files for different projects
 
 XXX  Pop up dialog while saving session at end to tell user what is going on.
 
-36)  Tool bar initial window doesn't adjust correctly with shade.  Remove and add makes it work.
+???  Tool bar initial window doesn't adjust correctly with shade.  Remove and add makes it work.
 
 37)  Cut from ddt value window bottom pane doesn't use mac keys
 
-38)
+38)  Sometimes a bubble can't be deleted except as a group -- the bubble is there, but bubbles
+        doesn't think so.  Better than a blank group, but still not correct
