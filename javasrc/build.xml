@@ -28,6 +28,7 @@
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bcon" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bgta" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bopp" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bhelp" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bddt" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bted" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/batt" />

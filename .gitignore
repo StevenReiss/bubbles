@@ -23,7 +23,6 @@ core*
 *.old
 *.model
 public
-#*
 eclipsepath
 *.lcl
 *.orig
@@ -136,3 +135,6 @@ test?
 video
 .nfs*
 build.properties
+#bBUFS*
+#bRSTR*
+lib/marytts/log
