@@ -82,7 +82,7 @@ XXX  Pop up dialog while saving session at end to tell user what is going on.
 
 ???  Tool bar initial window doesn't adjust correctly with shade.  Remove and add makes it work.
 
-37)  Cut from ddt value window bottom pane doesn't use mac keys
+???  Cut from ddt value window bottom pane doesn't use mac keys
 
 38)  Sometimes a bubble can't be deleted except as a group -- the bubble is there, but bubbles
         doesn't think so.  Better than a blank group, but still not correct
