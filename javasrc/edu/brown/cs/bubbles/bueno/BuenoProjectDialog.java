@@ -133,7 +133,8 @@ private static final String ANNOT_OPTION = "org.eclipse.jdt.core.compiler.proces
 static {
    BoardProperties bp = BoardProperties.getProperties("Bueno");
    String ld = bp.getProperty("Bueno.library.directory");
-   if (ld != null) last_directory = new File(ld);
+   FileSystemView fsv = BoardFileSystemView.getFileSystemView();
+   if (ld != null) last_directory = fsv.createFileObject(ld);
    else last_directory = null;
 }
 
@@ -173,7 +174,8 @@ public BuenoProjectDialog(String proj)
    if (xml == null) return;
 
    String dir = IvyXml.getAttrString(xml,"PATH");
-   if (dir != null) project_dir = new File(dir);
+   FileSystemView fsv = BoardFileSystemView.getFileSystemView();
+   if (dir != null) project_dir = fsv.createFileObject(dir);
 
    for (Element e : IvyXml.children(xml,"REFERENCES")) {
       String ref = IvyXml.getText(e);
@@ -405,8 +407,6 @@ private class NewPathEntryBubble extends BudaBubble implements ActionListener {
    private JFileChooser file_chooser;
 
    NewPathEntryBubble(FileFilter ff,int mode) {
-      //TODO: If we are running as a client, we need to create a FileSystemView object
-      //  that reflects all requests to the server to get files
       FileSystemView fsv = BoardFileSystemView.getFileSystemView();
       file_chooser = new JFileChooser(last_directory,fsv);
       file_chooser.setMultiSelectionEnabled(true);
@@ -631,17 +631,18 @@ private static class PathEntry implements Comparable<PathEntry> {
     }
 
    @Override public String toString() {
+      FileSystemView fsv = BoardFileSystemView.getFileSystemView();
       switch (path_type) {
 	 case LIBRARY :
 	 case BINARY :
 	    if (binary_path != null) {
-	       File f = new File(binary_path);
+	       File f = fsv.createFileObject(binary_path);
 	       return f.getName();
 	     }
 	    break;
 	 case SOURCE :
 	    if (source_path != null) {
-	       File f = new File(source_path);
+	       File f = fsv.createFileObject(source_path);
 	       return f.getName() + " (SOURCE)";
 	     }
 	    break;
@@ -857,9 +858,10 @@ private class ProblemPanel extends SwingGridPanel implements ActionListener {
 
 private void setupContractsForJava()
 {
+   FileSystemView fsv = BoardFileSystemView.getFileSystemView();
    BoardSetup bs = BoardSetup.getSetup();
    String path = bs.getRemoteLibraryPath("cofoja.jar");
-   File p1 = new File(project_dir,".apt_generated");
+   File p1 = fsv.createFileObject(project_dir,".apt_generated");
    String anm = p1.getAbsolutePath();
 
    String snm = null;
@@ -871,7 +873,7 @@ private void setupContractsForJava()
       if (pe.getSourcePath() != null && pe.getSourcePath().equals(anm)) sfnd = true;
     }
    if (!fnd) {
-      PathEntry pe = new PathEntry(new File(path));
+      PathEntry pe = new PathEntry(fsv.createFileObject(path));
       library_paths.addElement(pe);
     }
    if (!sfnd) {
@@ -909,7 +911,8 @@ private void setupJunit()
       if (pe.getBinaryPath() != null && pe.getBinaryPath().contains("junit")) fnd = true;
     }
    if (!fnd) {
-      PathEntry pe = new PathEntry(new File(path));
+      FileSystemView fsv = BoardFileSystemView.getFileSystemView();
+      PathEntry pe = new PathEntry(fsv.createFileObject(path));
       library_paths.addElement(pe);
     }
 
@@ -928,7 +931,8 @@ private void setupAnnotations()
       if (pe.getBinaryPath() != null && pe.getBinaryPath().contains("annotations")) fnd = true;
     }
    if (!fnd) {
-      PathEntry pe = new PathEntry(new File(path));
+      FileSystemView fsv = BoardFileSystemView.getFileSystemView();
+      PathEntry pe = new PathEntry(fsv.createFileObject(path));
       library_paths.addElement(pe);
     }
 

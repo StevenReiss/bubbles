@@ -191,6 +191,7 @@ protected BumpClient()
       case SERVER :
 	 mint_control.register("<BUMP TYPE='FILEGET'/>",new FileGetServerHandler());
 	 mint_control.register("<BUMP TYPE='SERVEREXIT'/>",new ServerExitHandler());
+         mint_control.register("<BUMP TYPE='STARTDEBUG'/>",new StartDebugHandler());
 	 break;
       case CLIENT :
 	 Runtime.getRuntime().addShutdownHook(new ForceServerExit());
@@ -871,6 +872,20 @@ private class FileGetServerHandler implements MintHandler {
     }
 
 }	// end of inner class FileGetServerHandler
+
+
+
+private class StartDebugHandler implements MintHandler {
+
+   @Override public void receive(MintMessage msg,MintArguments args) {
+      Element xml = msg.getXml();
+      String id = IvyXml.getAttrString(xml,"ID");
+      String xtr = run_manager.startDebugArgs(id);
+      if (xtr == null) msg.replyTo("<OK/>");
+      else msg.replyTo("<OK>" + xtr + "</OK>");
+    }
+}
+
 
 
 
@@ -2723,7 +2738,7 @@ public BumpProcess startDebug(BumpLaunchConfig cfg,String id)
    switch (cfg.getConfigType()) {
       case JAVA_APP :
       case JUNIT_TEST :
-	 xtr = run_manager.startDebugArgs(id);
+         xtr = getDebugArgs(id);
 	 break;
       case REMOTE_JAVA :
 	 break;
@@ -2756,6 +2771,31 @@ public BumpProcess startDebug(BumpLaunchConfig cfg,String id)
    if (id != null) run_manager.setProcessName(bp,id);
 
    return bp;
+}
+
+
+
+private String getDebugArgs(String id)
+{
+   String xtr = null;
+   
+   switch (BoardSetup.getSetup().getRunMode()) {
+      case CLIENT :
+         MintDefaultReply mdr = new MintDefaultReply();
+         mint_control.send("<BUMP TYPE='STARTDEBUG' ID='" + id + "' />",mdr,MINT_MSG_FIRST_NON_NULL);
+         Element xml = mdr.waitForXml();
+         if (xml != null) {
+            xtr = IvyXml.getText(xml);
+            if (xtr != null && xtr.trim().length() == 0) xtr = null;
+          }
+         break;
+      case SERVER :
+      case NORMAL :
+         xtr = run_manager.startDebugArgs(id);
+         break;
+    }
+   
+   return xtr;
 }
 
 

@@ -126,7 +126,6 @@ BumpLocation(String proj,String file,int off,int len,String srctyp,Element itm)
 {
    if (file_system == null) file_system = BoardFileSystemView.getFileSystemView();
 
-
    project_name = proj;
    if (file == null) file_location = null;
    else file_location = file_system.createFileObject(file);
@@ -168,7 +167,7 @@ BumpLocation(String proj,String file,int off,int len,String srctyp,Element itm)
       symbol_return = IvyXml.getAttrString(itm,"RETURNTYPE");
       if (file_location == null) {
 	 String fnm = IvyXml.getAttrString(itm,"PATH");
-	 if (fnm != null) file_location = new File(fnm);
+	 if (fnm != null) file_location = file_system.createFileObject(fnm);
 	 if (file_offset == 0) file_offset = symbol_offset;
 	 if (file_length == 0) file_length = symbol_length;
        }

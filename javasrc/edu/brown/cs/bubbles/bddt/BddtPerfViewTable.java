@@ -30,6 +30,7 @@ import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.bass.BassFactory;
 import edu.brown.cs.bubbles.bass.BassName;
 import edu.brown.cs.bubbles.board.BoardColors;
+import edu.brown.cs.bubbles.board.BoardFileSystemView;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -51,6 +52,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -209,7 +211,8 @@ private class ClickHandler extends MouseAdapter {
 
 	 BaleFactory bf = BaleFactory.getFactory();
 	 if (lno > 0 && file != null) {
-	    File f = new File(file);
+            FileSystemView fsv = BoardFileSystemView.getFileSystemView();
+	    File f = fsv.createFileObject(file);
 	    if (launch_control.fileExists(f)) {
 	       BaleConstants.BaleFileOverview bfo = bf.getFileOverview(null,f);
 	       if (bfo != null) {

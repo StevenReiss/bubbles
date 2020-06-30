@@ -146,6 +146,7 @@ static {
    known_threads.put("(Code Generation Thread 4)",BumpThreadType.SYSTEM);
    known_threads.put("(Attach Listener)",BumpThreadType.SYSTEM);
    known_threads.put("VM JFR Buffer Thread",BumpThreadType.SYSTEM);
+   known_threads.put("HandshakeCompletedNotify-Thread",BumpThreadType.SYSTEM);
 }
 
 
@@ -178,7 +179,8 @@ BumpRunManager()
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :
       case SERVER :
-	 use_debug_server = false;
+         // this should work now
+	 // use_debug_server = false;
 	 break;
       default:
 	 break;
@@ -385,7 +387,6 @@ private void startDebugServer()
    if (!use_debug_server) return;
 
    synchronized (this) {
-      // if (server_host != null) return;
       server_host = null;
 
       List<String> args = new ArrayList<String>();
@@ -415,13 +416,6 @@ private void startDebugServer()
 	    catch (IOException e) {
 	       break;
 	     }
-//	    ProcessBuilder pb = new ProcessBuilder(args);
-//	    try {
-//	       pb.start();
-//	     }
-//	    catch (IOException e) {
-//	       break;
-//	     }
 	  }
 	 try {
 	    wait(1000);

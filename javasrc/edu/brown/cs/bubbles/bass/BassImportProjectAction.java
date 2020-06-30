@@ -21,6 +21,7 @@
 package edu.brown.cs.bubbles.bass;
 
 
+import edu.brown.cs.bubbles.board.BoardFileSystemView;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
@@ -41,6 +42,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileSystemView;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -89,9 +91,10 @@ BassImportProjectAction()
 
 @Override public void actionPerformed(ActionEvent e)
 {
+   FileSystemView fsv = BoardFileSystemView.getFileSystemView();
    BoardMetrics.noteCommand("BASS", "ImportProject");
    BudaRoot.hideSearchBubble(e);
-   JFileChooser chooser = new JFileChooser();
+   JFileChooser chooser = new JFileChooser(fsv);
 
    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
    chooser.setDialogTitle("Choose a project directory to import");
@@ -100,8 +103,8 @@ BassImportProjectAction()
    int returnVal = chooser.showOpenDialog(null);
    if (returnVal == JFileChooser.APPROVE_OPTION) {
       File f = chooser.getSelectedFile();
-
-      proj_dir = new File(BoardSetup.getSetup().getDefaultWorkspace(),f.getName());
+      File f1 = fsv.createFileObject(BoardSetup.getSetup().getDefaultWorkspace());
+      proj_dir = fsv.createFileObject(f1,f.getName());
 
       try {
 	 if (!Arrays.asList(f.list()).contains(".project"))
@@ -121,7 +124,7 @@ BassImportProjectAction()
       bc.importProject(f.getName());
 
       // import working sets
-      File wsdir = new File(proj_dir,"workingsets");
+      File wsdir = fsv.createFileObject(proj_dir,"workingsets");
       String[] wlist = wsdir.list();
       if (wlist != null && wlist.length > 0) {
 	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(the_source);
@@ -176,9 +179,10 @@ private class WorkingSetConfirmDialog extends BudaBubble implements ActionListen
 
 private void loadWorkingSets()
 {
-   File wsdir = new File(proj_dir,"workingsets");
+   FileSystemView fsv = BoardFileSystemView.getFileSystemView();
+   File wsdir = fsv.createFileObject(proj_dir,"workingsets");
    for (String filename : wsdir.list()) {
-      File wsf = new File(wsdir,filename);
+      File wsf = fsv.createFileObject(wsdir,filename);
       if (wsf.getName().contains(".")
 	     && wsf.getName().substring(wsf.getName().lastIndexOf('.')).equals(".xml")) {
 	 Element xml = IvyXml.loadXmlFromFile(wsf);
@@ -202,9 +206,10 @@ private void loadWorkingSets()
 private void copyR(File src,File dest) throws IOException
 {
    if (src.isDirectory()) {
+      FileSystemView fsv = BoardFileSystemView.getFileSystemView();
       if (!dest.exists()) dest.mkdir();
       for (String file : src.list()) {
-	 copyR(new File(src,file), new File(dest,file));
+	 copyR(fsv.createFileObject(src,file), fsv.createFileObject(dest,file));
        }
     }
    else {
