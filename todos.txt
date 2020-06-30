@@ -9,19 +9,19 @@ files
 ??  Default workspace on the client still bad -- need to set default_workspace
     for all uses
 
-5)  Seede times out too soon
+??  Seede times out too soon
 
-??? Breakpoints don't seem to be saved much of the time.  Perhaps Eclipse is
+??  Breakpoints don't seem to be saved much of the time.  Perhaps Eclipse is
     exiting abnormally.  Is there a way of forcing breakpoints to be saved to disk?
     You need to do either project or workspace save. (these could be expensive -- save for
     end?, do in background?)
 
-XXX Goto Source for constructor call from stack view fails?
+XX  Goto Source for constructor call from stack view fails?
 
-XXX How to put back DDT control window (key that checks if present and
+XX  How to put back DDT control window (key that checks if present and
      recreates if not?; don't allow deletion?)
 
-XXX Select word inside string shouldn't select the whole string
+XX  Select word inside string shouldn't select the whole string
 
 ??? Bad working directory in the command line for new project causes BDOC to
    abort (update default_workspace). This generates a Bad board setup error.
@@ -86,3 +86,7 @@ XXX  Pop up dialog while saving session at end to tell user what is going on.
 
 38)  Sometimes a bubble can't be deleted except as a group -- the bubble is there, but bubbles
         doesn't think so.  Better than a blank group, but still not correct
+
+
+
+
