@@ -417,13 +417,16 @@ private void addProblem(BumpProblem bp)
 
    int soff = for_document.mapOffsetToJava(bp.getStart());
    if (soff < 0) {
-      BoardLog.logD("BFIX","Problem has no offset: " + bp.getStart() + " " + bp.getEnd() + " " + bp.getLine());
+      BoardLog.logD("BFIX","Problem has no offset: " + bp.getStart() + " " + bp.getEnd() + 
+            " " + bp.getLine());
       return;
     }
 
-   BoardLog.logD("BFIX","PROBLEM "+ bp.getMessage() + " " + start_offset + " " + end_offset + " " + soff);
+   BoardLog.logD("BFIX","PROBLEM "+ bp.getMessage() + " " + start_offset + " " + 
+         end_offset + " " + soff);
+   
    if (start_offset >= 0 && soff >= start_offset && soff <= end_offset) {
-      BoardLog.logD("BFIX","SPELL: consider problem " + bp.getMessage());
+      BoardLog.logD("BFIX","Consider problem " + bp.getMessage());
       active_problems.add(bp);
     }
 }

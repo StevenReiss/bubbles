@@ -48,5 +48,5 @@ set path = ($JBIN $path)
 
 
 
-$JAVA -cp $CP -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain $* >&! ~/runlog.log
+$JAVA -cp $CP -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain $* >&! ~/runlog.log &
 
