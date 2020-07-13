@@ -109,8 +109,6 @@ private StartMode                start_mode;
 
 private static BoardProperties	 bted_props	  = BoardProperties.getProperties("Bted");
 
-private static File		last_directory = null;
-
 private static final long	serialVersionUID = 1;
 
 
@@ -315,6 +313,8 @@ StartMode getMode()                     { return start_mode; }
 
 
 
+
+
 /********************************************************************************/
 /*										*/
 /*	File handling methods							*/
@@ -338,7 +338,7 @@ public File getFile()
 
 private boolean openFileFromStart(StartMode mode)
 {
-   JFileChooser chooser = new JFileChooser(last_directory,getFileSystemView());
+   JFileChooser chooser = new JFileChooser(BtedFactory.getLastDirectory(),getFileSystemView());
    int returnVal = chooser.showOpenDialog(this);
    if (returnVal == JFileChooser.APPROVE_OPTION) {
       current_file = chooser.getSelectedFile();
@@ -346,7 +346,7 @@ private boolean openFileFromStart(StartMode mode)
 	 JOptionPane.showMessageDialog(null,"File " + current_file + " cannot be opened");
 	 return false;
        }
-      last_directory = current_file;
+      BtedFactory.setLastDirectory(current_file);
       the_factory.loadFileIntoEditor(current_file, text_editor, edit_listener);
       name_label.setText(current_file.getName());
       return true;
@@ -376,12 +376,12 @@ private FileSystemView getFileSystemView()
  */
 private void openFileFromMenu()
 {
-   JFileChooser chooser = new JFileChooser(last_directory);
+   JFileChooser chooser = new JFileChooser(BtedFactory.getLastDirectory());
    int returnVal = chooser.showOpenDialog(this);
    if (returnVal == JFileChooser.APPROVE_OPTION) {
       this.onClose();
       current_file = chooser.getSelectedFile();
-      last_directory = current_file;
+      BtedFactory.setLastDirectory(current_file);
       the_factory.reopenBubble(current_file.getPath(), this);
       name_label.setText(current_file.getName());
     }
@@ -390,10 +390,11 @@ private void openFileFromMenu()
 
 private void openBubbleFromMenu(StartMode mode)
 {
-   JFileChooser chooser = new JFileChooser(last_directory,getFileSystemView());
+   JFileChooser chooser = new JFileChooser(BtedFactory.getLastDirectory(),getFileSystemView());
    int rv = chooser.showOpenDialog(this);
    if (rv == JFileChooser.APPROVE_OPTION) {
       File f = chooser.getSelectedFile();
+      BtedFactory.setLastDirectory(f);
       BtedBubble bb = new BtedBubble(f.getPath(),mode);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
       if (bba != null) {
@@ -439,13 +440,13 @@ private void saveFile()
  */
 private void saveAsFile()
 {
-   JFileChooser chooser = new JFileChooser(last_directory,getFileSystemView());
+   JFileChooser chooser = new JFileChooser(BtedFactory.getLastDirectory(),getFileSystemView());
    int returnVal = chooser.showSaveDialog(this);
    if (returnVal == JFileChooser.APPROVE_OPTION
 	  && !the_factory.isFileOpen(chooser.getSelectedFile())) {
       this.onClose();
       current_file = chooser.getSelectedFile();
-      last_directory = current_file;
+      BtedFactory.setLastDirectory(current_file);
       this.saveFile();
       the_factory.reopenBubble(current_file.getPath(), this);
     }

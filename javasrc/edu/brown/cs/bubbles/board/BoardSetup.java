@@ -179,6 +179,8 @@ private static String [] ivy_env = new String [] {
    "IVY", "BROWN_IVY_IVY", "BROWN_IVY"
 };
 
+private static final String RECENT_HEADER = "<< Select Recent Workspace >>";
+
 
 
 /********************************************************************************/
@@ -2969,7 +2971,7 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
    WorkspaceDialog() {
       SwingGridPanel pnl = new SwingGridPanel();
    
-      // library might not be set up here -- can't use BoardColros
+      // library might not be set up here -- can't use BoardColors
       // pnl.setBackground(BoardColors.getColor("Buda.Bubbles.Color"));
       pnl.setBackground(WORKSPACE_DIALOG_COLOR);
       pnl.setOpaque(true);
@@ -3017,7 +3019,7 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
       pnl.addSeparator();
       if (recent_workspaces.size() > 0) {
          List<String> recents = new ArrayList<String>(recent_workspaces);
-         recents.add(0,"");
+         recents.add(0,RECENT_HEADER);
          pnl.addChoice("Recent Workspaces",recents,0,true,this);
        }
    
@@ -3078,7 +3080,7 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
       else if (cmd.equals("Recent Workspaces")) {
          JComboBox<?> cbx = (JComboBox<?>) e.getSource();
          String rslt = (String) cbx.getSelectedItem();
-         if (rslt != null && !rslt.trim().equals("")) {
+         if (rslt != null && !rslt.trim().equals("") && !rslt.trim().equals(RECENT_HEADER)) {
             if (!rslt.equals(default_workspace)) {
                ws_changed = true;
                default_workspace = rslt;

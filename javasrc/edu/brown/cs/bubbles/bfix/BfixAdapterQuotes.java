@@ -225,7 +225,7 @@ private class QuoteFixer extends BfixFixer {
       return potential_fixes.toString();
     }
    
-   @Override protected Runnable findFix() {
+   @Override protected RunnableFix findFix() {
       QuoteFix usefix = null;
       BaleWindow win = for_corrector.getEditor();
       BaleWindowDocument doc = win.getWindowDocument();
@@ -281,7 +281,7 @@ private class QuoteFixer extends BfixFixer {
 /*										*/
 /********************************************************************************/
 
-private class QuoteDoer implements Runnable {
+private class QuoteDoer implements RunnableFix {
 
    private BfixCorrector for_corrector;
    private BumpProblem for_problem;
@@ -310,6 +310,8 @@ private class QuoteDoer implements Runnable {
       BoardMetrics.noteCommand("BFIX","DoneQuoteCorrection");
     }
 
+   @Override public double getPriority()                { return 0; }
+   
 }	// end of inner class QuoteDoer
 
 

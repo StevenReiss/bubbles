@@ -2911,11 +2911,11 @@ private static class FixErrorsAction extends TextAction {
    FixErrorsAction() {
       super("FixErrorsInRegion");
       try {
-	 Class<?> c = Class.forName("edu.brown.cs.bubbles.bfix.BfixFactory");
-	 fix_method = c.getMethod("fixErrorsInRegion",BaleWindowDocument.class,int.class,int.class);
+         Class<?> c = Class.forName("edu.brown.cs.bubbles.bfix.BfixFactory");
+         fix_method = c.getMethod("fixErrorsInRegion",BaleWindowDocument.class,int.class,int.class);
       }
       catch (Exception e) { }
-
+   
     }
 
    @Override public void actionPerformed(ActionEvent e) {
@@ -2925,16 +2925,16 @@ private static class FixErrorsAction extends TextAction {
       int eoff = be.getSelectionEnd();
       BoardMetrics.noteCommand("BALE",String.valueOf(getValue(Action.NAME)));
       if (fix_method != null) {
-	 BowiFactory.startTask();
-	 try {
-	    fix_method.invoke(null,be.getBaleDocument(),soff,eoff);
-	  }
-	 catch (Throwable t) {
-	    BoardLog.logE("BALE","Problem invoking fix errors",t);
-	  }
-	 finally {
-	    BowiFactory.stopTask();
-	  }
+         BowiFactory.startTask();
+         try {
+            fix_method.invoke(null,be.getBaleDocument(),soff,eoff);
+          }
+         catch (Throwable t) {
+            BoardLog.logE("BALE","Problem invoking fix errors",t);
+          }
+         finally {
+            BowiFactory.stopTask();
+          }
       }
     }
 

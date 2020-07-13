@@ -211,7 +211,7 @@ private static class VisibilityFixer extends BfixFixer {
       initial_time = when;
     }
 
-   @Override protected Runnable findFix() {
+   @Override protected RunnableFix findFix() {
       if (for_corrector.getStartTime() != initial_time) return null;
       BumpClient bc = BumpClient.getBump();
       BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
@@ -253,7 +253,7 @@ private static class VisibilityFixer extends BfixFixer {
 /*										*/
 /********************************************************************************/
 
-private static class VisibilityDoer implements Runnable {
+private static class VisibilityDoer implements RunnableFix {
 
    private BfixCorrector for_corrector;
    private BumpProblem for_problem;
@@ -290,6 +290,8 @@ private static class VisibilityDoer implements Runnable {
       BoardMetrics.noteCommand("BFIX","DoneChangeVisibility_" + for_corrector.getBubbleId());
     }
 
+   @Override public double getPriority()                { return 0; }
+   
 }	// end of inner class VisibilityDoer
 
 

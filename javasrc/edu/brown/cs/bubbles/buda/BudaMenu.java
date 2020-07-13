@@ -499,11 +499,11 @@ private class MenuBtn extends JMenuItem implements MenuComponent, ActionListener
       Component c = (Component) evt.getSource();
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(c);
       ButtonListener bc = for_item.getCallback();
+      noteMenuUsed(this);          // was after callback
       if (bc != null && bba != null) {
          BoardMetrics.noteCommand("BUDA","menu_" + for_item.getName());
          bc.buttonActivated(bba,for_item.getId(),start_point);
        }
-      noteMenuUsed(this);
     }
 
    @Override public String getToolTipText() {

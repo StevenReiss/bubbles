@@ -134,8 +134,15 @@ interface FixAdapter {
    BumpProblem getProblem();
    void noteFixersAdded(int ct);
    void noteStatus(boolean fg);
-   void noteFix(Runnable fix);
+   void noteFix(RunnableFix fix);
    String getPrivateBufferId();
+}
+
+
+interface RunnableFix extends Runnable {
+
+   double getPriority();
+   
 }
 
 

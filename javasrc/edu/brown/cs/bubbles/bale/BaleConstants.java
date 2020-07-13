@@ -1298,6 +1298,8 @@ interface BaleContextConfig {
    String getMethodName();
    boolean inAnnotationArea();
    int getLineNumber();
+   int getSelectionStart();
+   int getSelectionEnd();
 
 }	// end of interface BaleContextConfig
 

@@ -459,7 +459,23 @@ private class AnnotationContext implements BaleContextConfig {
    @Override public String getMethodName()			{ return null; }
    @Override public int getLineNumber() 			{ return line_number; }
    @Override public boolean inAnnotationArea()			{ return true; }
+   
+   @Override public int getSelectionStart() {
+      if (for_editor instanceof BaleEditorPane) {
+         BaleEditorPane bep = (BaleEditorPane) for_editor;
+         return bep.getSelectionStart();
+       }
+      return getOffset();
+    }
 
+   @Override public int getSelectionEnd() {
+      if (for_editor instanceof BaleEditorPane) {
+         BaleEditorPane bep = (BaleEditorPane) for_editor;
+         return bep.getSelectionEnd();
+       }
+      return for_document.findLineOffset(line_number+1);
+    }
+   
 }
 
 

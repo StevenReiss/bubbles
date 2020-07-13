@@ -131,7 +131,7 @@ private static class ReturnFixer extends BfixFixer {
    
    @Override protected String getMemoId()               { return for_type; }
    
-   @Override protected Runnable findFix() {
+   @Override protected RunnableFix findFix() {
       int soff = for_document.mapOffsetToJava(for_problem.getStart());
       BaleWindowElement elt = for_document.getCharacterElement(soff);
       
@@ -223,7 +223,7 @@ private static class ReturnFixer extends BfixFixer {
 /*                                                                              */
 /********************************************************************************/
 
-private static class ReturnDoer implements Runnable {
+private static class ReturnDoer implements RunnableFix {
    
    private BfixCorrector for_corrector;
    private BaleWindowDocument for_document;
@@ -266,6 +266,8 @@ private static class ReturnDoer implements Runnable {
       for_document.replace(inspos,0,insert_stmt,true,true);
       BoardMetrics.noteCommand("BFIX", "DoneAddReturn_" + for_corrector.getBubbleId());     
     }
+   
+   @Override public double getPriority()                { return 0; }
    
 }       // end of inner class ReturnDoer
 

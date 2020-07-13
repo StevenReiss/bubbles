@@ -144,7 +144,7 @@ private class SyntaxFixer extends BfixFixer {
       initial_time = corr.getStartTime();
     }
 
-   @Override protected Runnable findFix() {
+   @Override protected RunnableFix findFix() {
       String msg = for_problem.getMessage();
       int soff = for_problem.getStart();
       int eoff = for_problem.getEnd()+1;
@@ -243,7 +243,7 @@ private class SyntaxFixer extends BfixFixer {
 /*										*/
 /********************************************************************************/
 
-private class SyntaxDoer implements Runnable {
+private class SyntaxDoer implements RunnableFix {
 
    private BfixCorrector for_corrector;
    private BumpProblem for_problem;
@@ -279,6 +279,8 @@ private class SyntaxDoer implements Runnable {
       BoardMetrics.noteCommand("BFIX","DoneSyntaxCorrection_" + for_corrector.getBubbleId());
     }
 
+   @Override public double getPriority()                { return 0; }
+   
 }	// end of inner class SyntaxDoer
 
 

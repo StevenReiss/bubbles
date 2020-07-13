@@ -1261,7 +1261,15 @@ private class ContextData implements BaleContextConfig {
     }
 
    @Override public boolean inAnnotationArea()		{ return false; }
+   
+   @Override public int getSelectionStart() {
+      return BaleEditorPane.this.getSelectionStart();
+    }
 
+   @Override public int getSelectionEnd() {
+      return BaleEditorPane.this.getSelectionEnd();
+    }
+   
 }	// end of inner class ContextData
 
 

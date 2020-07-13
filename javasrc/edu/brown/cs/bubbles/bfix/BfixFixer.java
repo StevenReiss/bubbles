@@ -101,7 +101,7 @@ protected String getMemoId()
 {
    for_corrector.removePending(getMemo());
    
-   Runnable r = findFix();
+   RunnableFix r = findFix();
    if (subfix_data == null) {
       if (r != null) SwingUtilities.invokeLater(r);
     }
@@ -112,7 +112,7 @@ protected String getMemoId()
 
 
 
-abstract protected Runnable findFix();
+abstract protected RunnableFix findFix();
 
 
 

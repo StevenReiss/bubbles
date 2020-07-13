@@ -149,25 +149,64 @@ void addPopupMenuItems(BaleContextConfig ctx,JPopupMenu menu)
 
    BaleWindowDocument bd = (BaleWindowDocument) ctx.getDocument();
    List<BumpProblem> probs = bd.getProblemsAtLocation(ctx.getOffset());
-   if (probs == null) return;
-
-   BfixFactory fixfactory = BfixFactory.getFactory();
-   String name = null;
-   for (BumpProblem bp : probs) {
-      name = null;
-      for (BfixAdapter fixadapt : fixfactory.getAdapters()) {
-	 String fixname = fixadapt.getMenuAction(this,bp);
-	 if (fixname != null) {
-	    if (name == null) name = fixname;
-	    else if (name.length() == 0 && fixname.length() > 0) name = fixname;
-	  }
+   if (probs != null) {
+      boolean add = false;
+      for (BumpProblem bp : probs) {
+         String name = getFixForProblem(bp);
+         if (name != null) {
+            FixAction act = new FixAction(name,ctx.getOffset(),ctx.getOffset()+1);
+            menu.add(act);
+            add = true;
+            break;
+          }
        }
-      if (name != null) {
-	 FixAction act = new FixAction(name,ctx.getOffset(),ctx.getOffset()+1);
-	 menu.add(act);
-	 break;
+      if (add) return;
+    }
+   
+   
+   BumpClient bc = BumpClient.getBump();
+   probs = bc.getProblems(for_document.getFile());
+   int haveprobs = 0;
+   int startoff = ctx.getSelectionStart();
+   int endoff = ctx.getSelectionEnd();
+   String fixname = null;
+   for (Iterator<BumpProblem> it = probs.iterator(); it.hasNext(); ) {
+      BumpProblem bp = it.next();
+      fixname = getFixForProblem(bp);
+      if (fixname != null) {
+         int soff = for_document.mapOffsetToJava(bp.getStart());
+         int eoff = for_document.mapOffsetToJava(bp.getEnd());
+         if (eoff >= startoff && soff <= endoff) {
+            ++haveprobs;
+          }
        }
     }
+   if (haveprobs == 1) {
+      FixAction act = new FixAction(fixname,startoff,endoff+1);
+      menu.add(act);
+      return;
+    }
+   else if (haveprobs > 0) {
+      FixAction act = new FixAction(null,startoff,endoff+1);
+      menu.add(act);
+      return;
+    }
+}
+
+
+
+private String getFixForProblem(BumpProblem bp)
+{
+   BfixFactory fixfactory = BfixFactory.getFactory();
+   String name = null;
+   for (BfixAdapter fixadapt : fixfactory.getAdapters()) {
+      String fixname = fixadapt.getMenuAction(this,bp);
+      if (fixname != null) {
+         if (name == null) name = fixname;
+         else if (name.length() == 0 && fixname.length() > 0) name = fixname;
+       }
+    }
+   return name;
 }
 
 
@@ -180,7 +219,7 @@ private class FixAction extends AbstractAction {
    private static final long serialVersionUID = 1;
 
    FixAction(String name,int soff,int eoff) {
-      super("Auto Fix" + ((name != null && name.length() > 0) ? " '" + name + "'" : ""));
+      super(getFixActionName(name));
       start_correct = soff;
       end_correct = eoff;
     }
@@ -190,6 +229,15 @@ private class FixAction extends AbstractAction {
     }
 
 }	// end of inner class FixAction
+
+
+private static String getFixActionName(String name) {
+   if (name == null) return "Auto Fix Problems in Selection";
+   else if (name.length() == 0) return "Auto Fix";
+   else return "Auto Fix '" + name + "'";
+}
+
+
 
 
 
@@ -282,7 +330,6 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
       }
       if (!fnd) return;
       // need to wait for errors to change here
-
     }
 }
 
@@ -717,7 +764,7 @@ void removePending(BfixMemo bm)
 private static class RegionFixer implements FixAdapter {
 
    private BumpProblem the_problem;
-   private Runnable fix_found;
+   private RunnableFix fix_found;
    private int num_fixers;
    private boolean is_done;
 
@@ -739,17 +786,22 @@ private static class RegionFixer implements FixAdapter {
     }
 
    @Override public String getPrivateBufferId() 		{ return null; }
-   @Override synchronized public void noteFix(Runnable fix) {
+   @Override synchronized public void noteFix(RunnableFix fix) {
       if (fix_found == null && fix != null) fix_found = fix;
+      else if (fix_found != null && fix != null) {
+         if (fix_found.getPriority() < fix.getPriority()) {
+            fix_found = fix;
+          }
+       }
       noteStatus(fix != null);
     }
 
    synchronized Runnable waitForDone() {
       while (!is_done && fix_found == null) {
-	 try {
-	    wait(5000);
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait(5000);
+          }
+         catch (InterruptedException e) { }
        }
       return fix_found;
     }

@@ -164,7 +164,7 @@ private static class CatchFixer extends BfixFixer {
       initial_time = corr.getStartTime();
     }
    
-   @Override protected Runnable findFix() {
+   @Override protected RunnableFix findFix() {
       int soff = for_document.mapOffsetToJava(for_problem.getStart());
       BaleWindowElement pelt = findTryStatement(for_document,soff);
       if (pelt == null) return null;
@@ -250,7 +250,7 @@ private static class CatchFixer extends BfixFixer {
 /*                                                                              */
 /********************************************************************************/
 
-private static class CatchDoer implements Runnable {
+private static class CatchDoer implements RunnableFix {
    
    private BfixCorrector for_corrector;
    private BaleWindowDocument for_document;
@@ -285,6 +285,8 @@ private static class CatchDoer implements Runnable {
       BoardMetrics.noteCommand("BFIX","DoneAddCatch_" + for_corrector.getBubbleId());
     }
 
+   @Override public double getPriority()                        { return 0; }
+   
 }       // end of inner class CatchDoer
 
 

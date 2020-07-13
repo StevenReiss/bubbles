@@ -27,6 +27,7 @@ package edu.brown.cs.bubbles.bted;
 
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardConstants;
+import edu.brown.cs.bubbles.board.BoardFileSystemView;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
@@ -44,6 +45,7 @@ import edu.brown.cs.ivy.swing.SwingColorSet;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
@@ -85,6 +87,8 @@ private static HashMap<String, String> file_extensions = new HashMap<String,Stri
 
 private static BtedFactory	     the_factory;
 private static BoardProperties	 bted_props = BoardProperties.getProperties("Bted");
+
+private static File             last_directory = null;
 
 
 
@@ -133,6 +137,24 @@ public static void setup()
    if (BoardSetup.getSetup().getRunMode() == BoardConstants.RunMode.CLIENT) {
       BudaRoot.registerMenuButton(REMOTE_FILE_BUTTON,the_factory);
     }
+}
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+static File getLastDirectory()
+{
+   return last_directory;
+}
+
+
+static void setLastDirectory(File d)
+{
+   last_directory = d;
 }
 
 
@@ -399,10 +421,25 @@ boolean isFileOpen(File file)
 	 bb = new BtedBubble(null,StartMode.NEW);
        }
       else if (id.equals(LOAD_FILE_BUTTON)) {
-	 bb = new BtedBubble(null,StartMode.LOCAL);
+         JFileChooser chooser = new JFileChooser(last_directory);
+         int returnval = chooser.showOpenDialog(bba);
+         if (returnval == JFileChooser.APPROVE_OPTION) {
+            File f = chooser.getSelectedFile();
+            if (f.exists() && f.canRead()) {
+               bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
+             }
+          }
        }
       else if (id.equals(REMOTE_FILE_BUTTON)) {
-         bb = new BtedBubble(null,StartMode.REMOTE);
+         JFileChooser chooser = new JFileChooser(last_directory,
+               BoardFileSystemView.getFileSystemView());
+         int returnval = chooser.showOpenDialog(bba);
+         if (returnval == JFileChooser.APPROVE_OPTION) {
+            File f = chooser.getSelectedFile();
+            if (f.exists() && f.canRead()) {
+               bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
+             }
+          }
        }
     }
    catch (Throwable t) {
