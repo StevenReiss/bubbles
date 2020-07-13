@@ -356,6 +356,12 @@ void setTestMode(TestMode md)
    BoardSetup bs = BoardSetup.getSetup();
    MintControl mc = bs.getMintControl();
    mc.send("<BATT DO='SETMODE' VALUE='" + md.toString() + "' />");
+   
+   batt_props.setProperty("Batt.server.continuous",md == TestMode.CONTINUOUS);
+   try {
+      batt_props.save();
+    }
+   catch (IOException e) { }
 }
 
 

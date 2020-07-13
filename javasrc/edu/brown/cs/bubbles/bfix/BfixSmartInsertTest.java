@@ -78,7 +78,6 @@ public void setupFiles()
    BaleWindow bw = bf.createFileEditor(proj,file,
 	 "edu.brown.cs.hump.HumpFile");
    file1_corrector = new BfixCorrector(bw,false);
-
 }
 
 

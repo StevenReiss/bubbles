@@ -165,7 +165,8 @@ BtedBubble(String path,StartMode mode)
       this.newFile();
     }
    else {
-      current_file = new File(path);
+      FileSystemView fsv = getFileSystemView();
+      current_file = fsv.createFileObject(path);
       the_factory.loadFileIntoEditor(current_file, text_editor, edit_listener);
       name_label.setText(current_file.getName());
     }
