@@ -178,9 +178,11 @@ BumpRunManager()
 
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :
+         use_debug_server = false;
+         break;
       case SERVER :
-         // this should work now
-	 // use_debug_server = false;
+         BoardProperties bp = BoardProperties.getProperties("Bddt");
+         use_debug_server = bp.getBoolean("Bddt.cloud.performance");
 	 break;
       default:
 	 break;
@@ -365,6 +367,12 @@ String startDebugArgs(String id)
    args += ";port=" + server_port;
    if (id != null) args += ";id=" + id;
    args += ";enable";
+   switch (BoardSetup.getSetup().getRunMode()) {
+      case CLIENT :
+      case SERVER :
+         args += ";remote";
+         break;
+    }
    File f = BoardSetup.getBubblesWorkingDirectory();
    args += ";base=" + f.getPath();
 
