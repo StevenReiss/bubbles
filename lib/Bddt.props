@@ -64,5 +64,5 @@
 <entry key="Bddt.launch.control.y">26</entry>
 <entry key="Bddt.show.console">true</entry>
 <entry key="Bddt.show.threads">true</entry>
-<entry key="Bddt.cloud.performance">true</entry>
+<entry key="Bddt.cloud.performance">false</entry>
 </properties>
