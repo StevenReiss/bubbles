@@ -135,11 +135,16 @@ private boolean checkWebRelay(String id)
    try {
       URL u = new URL(id);
       URLConnection c = u.openConnection();
+      c.setConnectTimeout(5000);
+      c.setReadTimeout(5000);
       InputStream ins = c.getInputStream();
       String cnts = IvyFile.loadFile(ins);
       if (cnts.contains("PONG")) return true;
     }
-   catch (Exception e) { return false; }
+   catch (Exception e) {
+      System.err.println("Problm connecting to web relay " + id + ": " + e);
+      return false;
+    }
 
    return false;
 }
@@ -244,7 +249,6 @@ private class CloudDialog implements ActionListener, CaretListener, UndoableEdit
       if (isokay) {
 	 if (!checkWebRelay(weburl)) isokay = false;
        }
-      else isokay = false;
 
       String ssh = host_field.getText().trim();
       String ahost = actual_host.getText().trim();
@@ -400,33 +404,33 @@ private class ServerMonitor extends Thread {
 
    @Override public void run() {
       try {
-         server_process = new IvyExec(server_command,IvyExec.READ_OUTPUT);
-         InputStream ins = server_process.getInputStream();
-         try (BufferedReader br = new BufferedReader(new InputStreamReader(ins))) {
-            for ( ; ; ) {
-               String ln = br.readLine();
-               if (ln == null) break;
-               synchronized (this) {
-                  if (server_ready == null) {
-                     if (ln.contains(SERVER_READY_STRING)) {
-                        server_ready = true;
-                        notifyAll();
-                        return;
-                      }
-                   }
-                }
-               if (!server_process.isRunning()) break;
-             }
-            server_process.destroy();
-          }
+	 server_process = new IvyExec(server_command,IvyExec.READ_OUTPUT);
+	 InputStream ins = server_process.getInputStream();
+	 try (BufferedReader br = new BufferedReader(new InputStreamReader(ins))) {
+	    for ( ; ; ) {
+	       String ln = br.readLine();
+	       if (ln == null) break;
+	       synchronized (this) {
+		  if (server_ready == null) {
+		     if (ln.contains(SERVER_READY_STRING)) {
+			server_ready = true;
+			notifyAll();
+			return;
+		      }
+		   }
+		}
+	       if (!server_process.isRunning()) break;
+	     }
+	    server_process.destroy();
+	  }
        }
       catch (IOException e) {
-         if (server_process != null) server_process.destroy();
+	 if (server_process != null) server_process.destroy();
        }
-   
+
       synchronized (this) {
-         server_ready = false;
-         notifyAll();
+	 server_ready = false;
+	 notifyAll();
        }
    }
 
