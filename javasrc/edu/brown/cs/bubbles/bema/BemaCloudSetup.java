@@ -136,7 +136,6 @@ private boolean checkWebRelay(String id)
       URL u = new URL(id);
       URLConnection c = u.openConnection();
       c.setConnectTimeout(5000);
-      c.setReadTimeout(5000);
       InputStream ins = c.getInputStream();
       String cnts = IvyFile.loadFile(ins);
       if (cnts.contains("PONG")) return true;
