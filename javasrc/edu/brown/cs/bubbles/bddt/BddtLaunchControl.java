@@ -1104,8 +1104,7 @@ private void handleThreadStateChange(BumpThread bt,BumpThreadState ost)
    // BoardLog.logD("BDDT","Thread state change " + bt.getThreadState() + " " + ost);
    if (bt.getThreadState().isStopped() && (ost != null && !ost.isStopped())) {
       addExecutionAnnot(bt);
-      BumpThreadStack stk = bt.getStack();
-      if (stk != null) {
+      if (autoCreateBubble(bt)) {
 	 CreateBubble cb = new CreateBubble(bt);
 	 SwingUtilities.invokeLater(cb);
        }
@@ -1113,6 +1112,40 @@ private void handleThreadStateChange(BumpThread bt,BumpThreadState ost)
    else if (!bt.getThreadState().isStopped()) {
       removeExecutionAnnot(bt);
     }
+}
+
+
+
+private boolean autoCreateBubble(BumpThread bt) 
+{
+   BumpThreadStack stk = bt.getStack();
+   if (stk == null) return false;
+   
+   switch (bt.getThreadType()) {
+      case USER :
+      case UI :
+         switch (bt.getThreadState()) {
+            case STOPPED_WAITING :
+            case STOPPED_TIMED :
+            case STOPPED_IO :
+            case STOPPED_IDLE : 
+               return false;
+          }
+         break;
+      default :
+         switch (bt.getThreadState()) {
+            case STOPPED_SYSTEM :
+               return false;
+            case STOPPED_WAITING :
+            case STOPPED_TIMED :
+            case STOPPED_IO :
+            case STOPPED_IDLE :
+               return false;
+          }
+         break;
+    }
+   
+   return true;
 }
 
 

@@ -230,31 +230,33 @@ private static class BicexDebug {
    void setThreadState(BumpThread bt) {
       BumpThreadState bst = bt.getThreadState();
       switch (bst) {
-	 case BLOCKED :
-	 case DEAD :
-	 case DEADLOCKED :
-	 case NEW :
-	 case NONE :
-	 case RUNNING :
-	 case RUNNING_IO :
-	 case RUNNING_SYNC :
-	 case RUNNING_SYSTEM :
-	 case UNKNOWN :
-	 case WAITING :
-	 case TIMED_WAITING :
-	    stopped_threads.remove(bt);
-	    break;
-	 case EXCEPTION :
-	 case STOPPED :
-	 case STOPPED_BLOCKED :
-	 case STOPPED_DEADLOCK :
-	 case STOPPED_IO :
-	 case STOPPED_SYNC :
-	 case STOPPED_SYSTEM :
-	 case STOPPED_TIMED :
-	 case STOPPED_WAITING :
-	    stopped_threads.add(bt);
-	    break;
+         case BLOCKED :
+         case DEAD :
+         case DEADLOCKED :
+         case NEW :
+         case NONE :
+         case RUNNING :
+         case RUNNING_IO :
+         case RUNNING_SYNC :
+         case RUNNING_SYSTEM :
+         case UNKNOWN :
+         case WAITING :
+         case IDLE :
+         case TIMED_WAITING :
+            stopped_threads.remove(bt);
+            break;
+         case EXCEPTION :
+         case STOPPED :
+         case STOPPED_BLOCKED :
+         case STOPPED_DEADLOCK :
+         case STOPPED_IO :
+         case STOPPED_SYNC :
+         case STOPPED_SYSTEM :
+         case STOPPED_TIMED :
+         case STOPPED_WAITING :
+         case STOPPED_IDLE :
+            stopped_threads.add(bt);
+            break;
        }
     }
 
