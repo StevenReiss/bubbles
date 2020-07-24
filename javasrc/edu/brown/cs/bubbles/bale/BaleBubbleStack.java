@@ -48,12 +48,15 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 class BaleBubbleStack implements BaleConstants, BudaConstants, BussConstants
@@ -77,9 +80,21 @@ static void createBubbles(Component src,Position p,Point pt,boolean near,boolean
 			     Collection<BumpLocation> locs,BudaLinkStyle link)
 {
    if (locs == null) return;
+   
+   Set<File> used = new HashSet<>();
+   for (BumpLocation bl : locs) {
+      if (bl.getSymbolType() != BumpSymbolType.UNKNOWN) {
+         File f = bl.getFile();
+         try {
+            f = f.getCanonicalFile();
+          }
+         catch (IOException e) { }
+         used.add(f);
+       }
+    }
 
    // remove duplicate locations
-   Map<String,List<BumpLocation>> keys = new HashMap<String,List<BumpLocation>>();
+   Map<String,List<BumpLocation>> keys = new HashMap<>();
    for (Iterator<BumpLocation> it = locs.iterator(); it.hasNext(); ) {
       BumpLocation bl = it.next();
       File f = bl.getFile();
@@ -125,6 +140,15 @@ static void createBubbles(Component src,Position p,Point pt,boolean near,boolean
 	    key = key + ".<PREFIX>";
 	    break;
 	 case UNKNOWN :
+            File f1 = f;
+            try {
+               f1 = f.getCanonicalFile();
+             }
+            catch (IOException e) { }
+            if (used.contains(f1)) {
+               it.remove();
+               continue;
+             }
 	    key = f.getPath() + ".<FILE>";
 	    break;
        }
@@ -180,9 +204,6 @@ static void createBubbles(Component src,Position p,Point pt,boolean near,boolean
 	BaleDocument bd = bep.getBaleDocument();
 	int bstart = bd.mapOffsetToJava(locstart);
 	if (bstart >= 0) bep.setCaretPosition(bstart);
-	// int locend = bl.getDefinitionEndOffset();
-	// int bend = bd.mapOffsetToJava(locend);
-	// bep.moveCaretPosition(bend);
       }
     }
 }

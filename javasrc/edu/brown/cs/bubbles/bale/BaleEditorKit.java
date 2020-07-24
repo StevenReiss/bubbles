@@ -2244,12 +2244,12 @@ private static class ExpandXYAction extends TextAction {
       BudaBubble bb = BudaRoot.findBudaBubble(target);
       if (bb == null) return;
       Dimension d1 = bb.getSize();
-      if (vx <= d1.width && vy < d1.height) return;
-
-      d1.width += Math.max(0,vx - d1.width + 10);
-      d1.height += Math.max(0, vy - d1.height + 30);
-
-      bb.setSize(d1);
+      
+      if (vx > d1.width || vy >= d1.height) {
+         d1.width += Math.max(0,vx - d1.width + 10);
+         d1.height += Math.max(0, vy - d1.height + 30);
+         bb.setSize(d1);
+       }
 
       remove_elision_action.actionPerformed(e);
    }
@@ -2302,15 +2302,16 @@ private static class GotoDefinitionAction extends TextAction {
             goto_search_action.actionPerformed(e);
             return;
           }
-   
+         
          if (locs == null || locs.size() == 0) {
             if (e.getActionCommand() == null) {
-               e = new ActionEvent(target,e.getID(),"GotoDefinitionAction",e.getWhen(),e.getModifiers());
+               e = new ActionEvent(target,e.getID(),
+                     "GotoDefinitionAction",e.getWhen(),e.getModifiers());
              }
             goto_doc_action.actionPerformed(e);
             return;
           }
-   
+         
          BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
        }
       finally { BowiFactory.stopTask(); }

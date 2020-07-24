@@ -13,7 +13,7 @@ package edu.brown.cs.bubbles.bhelp;
 import edu.brown.cs.bubbles.board.*;
 import edu.brown.cs.bubbles.buda.*;
 import edu.brown.cs.bubbles.buda.BudaConstants.BudaHelpRegion;
-
+import edu.brown.cs.ivy.swing.SwingText;
 import edu.brown.cs.ivy.xml.IvyXml;
 import marytts.LocalMaryInterface;
 import marytts.util.data.audio.AudioPlayer;
@@ -754,7 +754,7 @@ private static class KeyAction extends BhelpAction {
       do_meta = IvyXml.getAttrBool(xml,"META");
       boolean domenu = IvyXml.getAttrBool(xml,"MENU");
       if (domenu) {
-         int mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+         int mask = SwingText.getMenuShortcutKeyMaskEx();
          if (mask == InputEvent.META_DOWN_MASK) do_meta |= true;
          else do_control |= true;
        }
