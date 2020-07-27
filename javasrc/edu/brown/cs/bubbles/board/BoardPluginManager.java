@@ -406,7 +406,7 @@ private static class PluginData implements Comparable<PluginData> {
 	 plugin_resources.add(IvyXml.getText(e).trim());
        }
       String s1 = IvyXml.getAttrString(xml,"RESOURCE");
-      if (s1 != null) plugin_mains.add(s);
+      if (s1 != null) plugin_resources.add(s);
 
       plugin_file = null;
       checkInstalled();
@@ -436,7 +436,7 @@ private static class PluginData implements Comparable<PluginData> {
       InputStream uins = u.openConnection().getInputStream();
       IvyFile.copyFile(uins,p1);
       plugin_file = p1;
-      installResource();                // should no longer be needed
+      installResource();		// should no longer be needed
       plugin_installed = true;
     }
 
@@ -445,6 +445,10 @@ private static class PluginData implements Comparable<PluginData> {
 	 try {
 	    JarFile jf = new JarFile(plugin_file);
 	    ZipEntry ze = jf.getEntry(res);
+	    if (ze == null) {
+	       BoardLog.logE("BOARD","Missing plugin resource file " + res);
+	       continue;
+	     }
 	    File libdir = BoardSetup.getSetup().getLibraryDirectory();
 	    File tgt = new File(libdir,res);
 	    InputStream ins = jf.getInputStream(ze);
@@ -486,24 +490,24 @@ private static class PluginData implements Comparable<PluginData> {
       long dlm = plugin_file.lastModified();
       URLConnection uc = null;
       try {
-         URL u = new URL(plugin_url);
-         uc = u.openConnection();
-         long urldlm = uc.getLastModified();
-         if (urldlm < dlm) return;
+	 URL u = new URL(plugin_url);
+	 uc = u.openConnection();
+	 long urldlm = uc.getLastModified();
+	 if (urldlm < dlm) return;
        }
       catch (Exception e) {
-         return;
+	 return;
        }
-   
+
       File f1 = new File(plugin_file.getPath() + ".save");
       plugin_file.renameTo(f1);
       try {
-         InputStream uins = uc.getInputStream();
-         IvyFile.copyFile(uins,plugin_file);
-         f1.delete();
+	 InputStream uins = uc.getInputStream();
+	 IvyFile.copyFile(uins,plugin_file);
+	 f1.delete();
        }
       catch (IOException e) {
-         f1.renameTo(plugin_file);
+	 f1.renameTo(plugin_file);
        }
     }
 
