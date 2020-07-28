@@ -211,7 +211,7 @@ private class ThreadData {
 		  break;
 	     }
 	  }
-	
+
        }
 
       if (ti.isSuspended()) {
