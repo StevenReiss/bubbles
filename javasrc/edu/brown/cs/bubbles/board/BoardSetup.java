@@ -499,7 +499,18 @@ public String getCourseAssignment()
 
 public void setDefaultWorkspace(String ws)
 {
-   File fws = new File(ws);
+   File fws = new File(ws);  
+   if (!fws.exists() && !fws.isAbsolute()) {
+      String nm = fws.getPath();
+      for (String rct : recent_workspaces) {
+         if (rct.endsWith(nm)) {
+            File f4 = new File(rct);
+            ws = f4.getAbsolutePath();
+            fws = f4;
+            break;
+          }
+       }
+    } 
    if (!fws.exists() && !fws.isAbsolute()) {
       for (String rct : recent_workspaces) {
 	 File f1 = new File(rct);

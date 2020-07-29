@@ -30,6 +30,7 @@ import edu.brown.cs.bubbles.bass.BassConstants;
 import edu.brown.cs.bubbles.bass.BassFactory;
 import edu.brown.cs.bubbles.bass.BassName;
 import edu.brown.cs.bubbles.board.BoardColors;
+import edu.brown.cs.bubbles.board.BoardFileSystemView;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
@@ -223,7 +224,7 @@ private void setupPanel()
 	 break;
     }
 
-   FileSystemView fsv = FileSystemView.getFileSystemView();
+   FileSystemView fsv = BoardFileSystemView.getFileSystemView(); 
    log_file = pnl.addFileField("Record Output",launch_config.getLogFile(),
 				  JFileChooser.FILES_ONLY,null,fsv,null,null,this);
    working_directory = pnl.addFileField("Working Directory",launch_config.getWorkingDirectory(),

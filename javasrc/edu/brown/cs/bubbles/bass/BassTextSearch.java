@@ -218,7 +218,7 @@ private void performSearch(boolean inplace)
    if (search_text == null || search_text.trim().length() == 0) return;
    BoardMetrics.noteCommand("BASS","TextSearch");
 
-   BoardThreadPool.start(new Searcher(search_text,inplace));
+   BoardThreadPool.start(new Searcher(search_text,for_project,inplace));
 }
 
 
@@ -231,11 +231,11 @@ private class Searcher implements Runnable {
    private Collection<BumpLocation> search_result;
    Rectangle search_location;
 
-   Searcher(String txt,boolean inp) {
+   Searcher(String txt,String proj,boolean inp) {
       searcher_text = txt;
+      search_project = proj;
       in_place = inp;
       search_result = null;
-      search_project = null;
       search_location = BudaRoot.findBudaLocation(BassTextSearch.this);
     }
 
