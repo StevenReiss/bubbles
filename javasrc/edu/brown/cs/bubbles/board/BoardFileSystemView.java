@@ -218,7 +218,10 @@ private static void startServer()
 {
    Element xml = getSystemInfo();
 
-   return new RemoteFile(IvyXml.getAttrString(xml,"DEFAULT"));
+   String file = IvyXml.getAttrString(xml,"DEFAULT");
+   if (file == null) return null;
+
+   return new RemoteFile(file);
 }
 
 
@@ -242,7 +245,10 @@ private static class HideFilter implements java.io.FileFilter {
 {
    Element xml = getSystemInfo();
 
-   return new RemoteFile(IvyXml.getAttrString(xml,"HOME"));
+   String file = IvyXml.getAttrString(xml,"HOME");
+   if (file == null) return null;
+
+   return new RemoteFile(file);
 }
 
 
@@ -251,13 +257,17 @@ File getRemoteLibraryDirectory()
 {
    Element xml = getSystemInfo();
 
-   return new RemoteFile(IvyXml.getAttrString(xml,"BUBBLESLIB"));
+   String file = IvyXml.getAttrString(xml,"BUBBLESLIB");
+   if (file == null) return null;
+
+   return new RemoteFile(file);
 }
 
 
 @Override public File getParentDirectory(File f)
 {
    File f1 = f.getParentFile();
+   if (f1 == null) return null;
    if (f1 instanceof RemoteFile) return f1;
 
    return new RemoteFile(f1.getPath());
