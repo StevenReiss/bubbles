@@ -119,7 +119,7 @@ BumpClientJava()
 private void ensureRunning()
 {
    for ( ; ; ) {
-      String r = getStringReply("PING",null,null,null,5000);
+      String r = getStringReply("PING",null,null,null,60000);
       if (r != null && r.startsWith("<RESULT>")) {
 	 r = r.substring(8);
 	 int idx = r.indexOf("<");
