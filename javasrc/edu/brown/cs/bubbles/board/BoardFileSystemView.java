@@ -811,6 +811,8 @@ private static void handleSysInfo(IvyXmlWriter xw)
    xw.begin("RESULT");
    xw.field("HOME",default_view.getHomeDirectory().getPath());
    xw.field("DEFAULT",default_view.getDefaultDirectory().getPath());
+   File f1 = BoardSetup.getSetup().getLibraryDirectory();
+   xw.field("BUBBLESLIB",f1.getAbsolutePath());
    File [] rts = default_view.getRoots();
    xw.field("ROOTCT",rts.length);
    for (File f : rts) {
@@ -818,9 +820,6 @@ private static void handleSysInfo(IvyXmlWriter xw)
       xw.field("NAME",f.getAbsolutePath());
       xw.end("ROOT");
     }
-
-   File f1 = BoardSetup.getSetup().getLibraryDirectory();
-   xw.field("BUBBLESLIB",f1.getAbsolutePath());
 
    xw.end();
 }
