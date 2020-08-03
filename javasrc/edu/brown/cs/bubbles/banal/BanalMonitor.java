@@ -276,38 +276,38 @@ private class CommandHandler implements MintHandler {
       String cmd = args.getArgument(0);
       Element e = msg.getXml();
       String rply = null;
-
+   
       System.err.println("BANAL: RECEIVED COMMAND " + cmd + ": " + msg.getText());
-
+   
       try {
-	 if (cmd == null) return;
-	 else if (cmd.equals("PACKAGEGRAPH")) {
-	    String proj = IvyXml.getAttrString(e,"PROJECT");
-	    String pkg = IvyXml.getAttrString(e,"PACKAGE");
-	    boolean mthds = IvyXml.getAttrBool(e,"METHODS");
-	    boolean samec = IvyXml.getAttrBool(e,"SAMECLASS");
-	    rply = computePackageGraph(proj,pkg,mthds,samec);
-	  }
-	 else if (cmd.equals("PACKAGEHIERARCHY")) {
-	    String proj = IvyXml.getAttrString(e,"PROJECT");
-	    rply = computePackageHierarchy(proj);
-	  }
-	 else if (cmd.equals("PING")) {
-	    rply = "PONG";
-	  }
-	 else if (cmd.equals("EXIT")) {
-	    serverDone();
-	  }
+         if (cmd == null) return;
+         else if (cmd.equals("PACKAGEGRAPH")) {
+            String proj = IvyXml.getAttrString(e,"PROJECT");
+            String pkg = IvyXml.getAttrString(e,"PACKAGE");
+            boolean mthds = IvyXml.getAttrBool(e,"METHODS");
+            boolean samec = IvyXml.getAttrBool(e,"SAMECLASS");
+            rply = computePackageGraph(proj,pkg,mthds,samec);
+          }
+         else if (cmd.equals("PACKAGEHIERARCHY")) {
+            String proj = IvyXml.getAttrString(e,"PROJECT");
+            rply = computePackageHierarchy(proj);
+          }
+         else if (cmd.equals("PING")) {
+            rply = "PONG";
+          }
+         else if (cmd.equals("EXIT")) {
+            serverDone();
+          }
        }
       catch (Throwable t) {
-	 System.err.println("BANAL: Problem processing BANALcommand: " + t);
-	 t.printStackTrace();
+         System.err.println("BANAL: Problem processing BANALcommand: " + t);
+         t.printStackTrace();
        }
-
+   
       if (rply != null) {
-	 rply = "<RESULT>" + rply + "</RESULT>";
+         rply = "<RESULT>" + rply + "</RESULT>";
        }
-
+   
       msg.replyTo(rply);
     }
 

@@ -340,6 +340,8 @@ abstract void localStartIDE();
 
 public void stopIDE()
 {
+   BoardLog.logD("BUMP","STOPPING IDE");
+   
    run_manager.terminateAll();
 
    synchronized (this) {
@@ -347,7 +349,13 @@ public void stopIDE()
       doing_exit = true;
     }
 
+   saveWorkspace();
+   
    sendMessage("EXIT");
+   try {
+      Thread.sleep(100);
+    }
+   catch (InterruptedException e) { }
 }
 
 
@@ -945,6 +953,7 @@ private static class FileGetClientHandler implements MintHandler {
 private class ServerExitHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
+      BoardLog.logD("BUMP","SERVER EXIT RECEIVED");
       stopIDE();
       System.exit(0);
     }
@@ -956,8 +965,13 @@ private class ServerExitHandler implements MintHandler {
 private class ForceServerExit extends Thread {
 
    @Override public void run() {
+      BoardLog.logD("BUMP","Force server exit");
       String msg = "<BUMP TYPE='SERVEREXIT' />";
       mint_control.send(msg);
+      try {
+         Thread.sleep(100);
+       }
+      catch (InterruptedException e) { }
     }
 
 }	// end of inner class ForceServerExit

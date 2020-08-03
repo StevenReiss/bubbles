@@ -329,41 +329,41 @@ private class CommandHandler implements MintHandler {
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
       String rply = null;
-
+   
       System.err.println("BPARE: RECEIVED COMMAND " + cmd + ": " + msg.getText());
-
+   
       try {
-	 if (cmd == null) return;
-	 else if (cmd.equals("PING")) {
-	    rply = "PONG";
-	  }
-	 else if (cmd.equals("EXIT")) {
-	    serverDone();
-	  }
-	 else if (cmd.equals("SUGGEST")) {
-	    Element xml = msg.getXml();
-	    String proj = IvyXml.getTextElement(xml,"PROJECT");
-	    String stmts = IvyXml.getTextElement(xml,"TEXT");
-	    if (stmts == null) {
-	       byte [] bts = IvyXml.getBytesElement(xml,"FILE");
-	       String cnts = new String(bts);
-	       int offset = IvyXml.getAttrInt(xml,"OFFSET");
-	       rply = getSuggestion(proj,cnts,offset);
-	     }
-	    else {
-	       rply = getSuggestion(proj,stmts);
-	     }
-	  }
+         if (cmd == null) return;
+         else if (cmd.equals("PING")) {
+            rply = "PONG";
+          }
+         else if (cmd.equals("EXIT")) {
+            serverDone();
+          }
+         else if (cmd.equals("SUGGEST")) {
+            Element xml = msg.getXml();
+            String proj = IvyXml.getTextElement(xml,"PROJECT");
+            String stmts = IvyXml.getTextElement(xml,"TEXT");
+            if (stmts == null) {
+               byte [] bts = IvyXml.getBytesElement(xml,"FILE");
+               String cnts = new String(bts);
+               int offset = IvyXml.getAttrInt(xml,"OFFSET");
+               rply = getSuggestion(proj,cnts,offset);
+             }
+            else {
+               rply = getSuggestion(proj,stmts);
+             }
+          }
        }
       catch (Throwable t) {
-	 System.err.println("BPARE: Problem processing BPARE command: " + t);
-	 t.printStackTrace();
+         System.err.println("BPARE: Problem processing BPARE command: " + t);
+         t.printStackTrace();
        }
-
+   
       if (rply != null) {
-	 rply = "<RESULT>" + rply + "</RESULT>";
+         rply = "<RESULT>" + rply + "</RESULT>";
        }
-
+   
       msg.replyTo(rply);
     }
 

@@ -2821,6 +2821,7 @@ private class Stopper implements Runnable {
     }
    
    @Override public void run() {
+      BoardLog.logD("BUDA","Starting stopper " + stop_delay);
       if (stop_delay > 0) {
          try {
             Thread.sleep(stop_delay);

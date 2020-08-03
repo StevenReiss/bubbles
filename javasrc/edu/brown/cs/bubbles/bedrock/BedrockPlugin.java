@@ -461,6 +461,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 
    if (shutdown_mint && !cmd.equals("PING")) {
       xw.close();
+      if (cmd.equals("SAVEWORKSPACE")) return null;
       throw new BedrockException("Command during exit");
     }
 
