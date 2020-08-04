@@ -109,10 +109,10 @@ public static void main(String [] args)
    
    if (System.getProperty("os.name").startsWith("Mac")) {
       try {
-	 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+         UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
        }
       catch (Throwable t) {
-	 System.err.println("BEMA: Problem setting l&f: " + t);
+         System.err.println("BEMA: Problem setting l&f: " + t);
        }
     }
 
@@ -128,7 +128,6 @@ public static void main(String [] args)
 /********************************************************************************/
 
 private boolean 	restore_session;
-private boolean 	save_session;
 private boolean 	force_setup;
 private boolean 	force_metrics;
 private boolean 	skip_setup;
@@ -162,7 +161,6 @@ private Map<String,ClassLoader> class_loaders;
 private BemaMain(String [] args)
 {
    restore_session = true;
-   save_session = true;
    force_setup = false;
    force_metrics = false;
    skip_setup = false;
@@ -204,9 +202,6 @@ private void scanArgs(String [] args)
       if (args[i].startsWith("-")) {
 	 if (args[i].startsWith("-nosetup")) {                  // -nosetup
 	    skip_setup = true;
-	  }
-	 else if (args[i].startsWith("-nos")) {                 // -nosave
-	    save_session = false;
 	  }
 	 else if (args[i].startsWith("-nor")) {                 // -norestore
 	    restore_session = false;
@@ -286,12 +281,8 @@ private void scanArgs(String [] args)
 	    skip_splash = true;
 	    use_lila = false;
 	    restore_session = false;
-	    save_session = false;
 	  }
 	 else if (args[i].startsWith("-Dfile.encoding")) ;
-	 else if (args[i].startsWith("-s")) {                   // -save
-	    save_session = true;
-	  }
 	 else if (args[i].startsWith("-r")) {                   // -restore
 	    restore_session = true;
 	  }
@@ -512,16 +503,11 @@ private void start()
   
    bs.removeSplash();
 
-   if (save_session) {
-      Runtime.getRuntime().addShutdownHook(new SaveSession(root));
-    }
-
    if (bs.getRunMode() == RunMode.SERVER) {
        waitForServerExit(root);
     }
-
-   if (bs.getRunMode() == RunMode.CLIENT) {
-
+   else {
+      Runtime.getRuntime().addShutdownHook(new SaveConfiguration(root));
     }
 
    BumpClient nbc = BumpClient.getBump();
@@ -922,11 +908,11 @@ private void waitForServerExit(BudaRoot root)
 /*										*/
 /********************************************************************************/
 
-private static class SaveSession extends Thread {
+private static class SaveConfiguration extends Thread {
 
    private BudaRoot for_root;
 
-   SaveSession(BudaRoot br) {
+   SaveConfiguration(BudaRoot br) {
       super("SaveSessionAtEnd");
       for_root = br;
     }
@@ -937,15 +923,13 @@ private static class SaveSession extends Thread {
          // for_root.handleSaveAllRequest();
          for_root.handleCheckpointAllRequest();
          for_root.saveConfiguration(cf);
-         BumpClient bc = BumpClient.getBump();
-         bc.saveWorkspace();
        }
       catch (IOException e) {
          BoardLog.logE("BEMA","Problem saving session: " + e);
        }
     }
 
-}	// end of inner class SaveSession
+}	// end of inner class SaveConfiguration
 
 
 

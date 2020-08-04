@@ -884,6 +884,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 break;
       case "SAVEWORKSPACE" :
          saveEclipse();
+         xw.text("SAVED");
          break;
       case "EXIT" :
          logD("EXIT Request received " + num_clients + " " + doing_exit);

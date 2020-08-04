@@ -192,6 +192,7 @@ protected BumpClient()
 	 mint_control.register("<BUMP TYPE='FILEGET'/>",new FileGetServerHandler());
 	 mint_control.register("<BUMP TYPE='SERVEREXIT'/>",new ServerExitHandler());
          mint_control.register("<BUMP TYPE='STARTDEBUG'/>",new StartDebugHandler());
+         mint_control.register("<BUMP TYPE='SAVEWORKSPACE'/>",new SaveWorkspaceHandler());
 	 break;
       case CLIENT :
 	 Runtime.getRuntime().addShutdownHook(new ForceServerExit());
@@ -366,7 +367,7 @@ public void stopIDE()
 
 public void saveWorkspace()
 {
-  getXmlReply("SAVEWORKSPACE",null,null,null,0);
+   getXmlReply("SAVEWORKSPACE",null,null,null,0);
 }
 
 
@@ -946,7 +947,7 @@ private static class FileGetClientHandler implements MintHandler {
 
 /********************************************************************************/
 /*										*/
-/*	Remote exit message							    */
+/*	Remote exit message						  */
 /*										*/
 /********************************************************************************/
 
@@ -954,9 +955,29 @@ private class ServerExitHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       BoardLog.logD("BUMP","SERVER EXIT RECEIVED");
+      saveWorkspace();
+      msg.replyTo("<OK>");
       stopIDE();
       System.exit(0);
     }
+
+}	// en of inner class ServerExitHandler
+
+
+
+/********************************************************************************/
+/*										*/
+/*	Remote save workspace message                   		        */
+/*										*/
+/********************************************************************************/
+
+private class SaveWorkspaceHandler implements MintHandler {
+
+@Override public void receive(MintMessage msg,MintArguments args) {
+   BoardLog.logD("BUMP","SAVE WORKSPACE RECEIVED");
+   saveWorkspace();
+   msg.replyTo("<OK>");
+}
 
 }	// en of inner class ServerExitHandler
 
@@ -975,6 +996,10 @@ private class ForceServerExit extends Thread {
     }
 
 }	// end of inner class ForceServerExit
+
+
+
+
 
 /********************************************************************************/
 /*										*/

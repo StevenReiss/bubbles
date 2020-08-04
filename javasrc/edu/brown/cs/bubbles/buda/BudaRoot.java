@@ -27,6 +27,7 @@ package edu.brown.cs.bubbles.buda;
 
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardConstants.RunMode;
+import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardProperties;
@@ -2806,9 +2807,28 @@ void handleCloseRequest()
       JDialog dlg = opt.createDialog(this,"Saving Workspace");
       dlg.setModal(false);
       dlg.setVisible(true);
+      saveWorkspace();
       BoardThreadPool.start(new Stopper(200));
       // System.exit(0);
     }
+}
+
+
+
+private void saveWorkspace()
+{
+   // BoardSetup setup = BoardSetup.getSetup();
+   // if (setup.getRunMode() == RunMode.CLIENT) {
+      // MintControl ctrl = setup.getMintControl();
+      // MintDefaultReply hdlr = new MintDefaultReply();
+      // ctrl.send("<BUMP TYPE='SAVEWORKSPACE'>",hdlr,MintConstants.MINT_MSG_FIRST_NON_NULL);
+      // hdlr.waitForString(300000);
+    // }
+   // else {
+      // BumpClient.getBump().saveWorkspace();
+    // }
+   
+   BumpClient.getBump().saveWorkspace();
 }
 
 

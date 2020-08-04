@@ -1392,6 +1392,13 @@ private static class CommentLinesAction extends TextAction {
 	    elno = slno;
 	    slno = x;
 	  }
+         
+         int loff1 = bd.findLineOffset(slno);
+         BaleElement ce1 = bd.getCharacterElement(loff1);
+         while (ce1.isEmpty() && !ce1.isComment() && !ce1.isEndOfLine()) {
+            ce1 = ce1.getNextCharacterElement();
+          } 
+         boolean remcmmt = ce1.getName().equals("LineComment");
 
 	 LinkedList<Integer> fixups = new LinkedList<>();
 	 for (int i = elno; i >= slno; --i) {
@@ -1400,15 +1407,17 @@ private static class CommentLinesAction extends TextAction {
 	    while (ce.isEmpty() && !ce.isComment() && !ce.isEndOfLine()) {
 	       ce = ce.getNextCharacterElement();
 	     }
-	    int noff = ce.getStartOffset();
 
 	    try {
 	       if (ce.getName().equals("LineComment")) {
-		  bd.remove(noff,2);
-		  fixups.addFirst(i);
+		  if (remcmmt) {
+                     int noff = ce.getStartOffset();
+                     bd.remove(noff,2);
+                     fixups.addFirst(i);
+                   }
 		}
-	       else {
-		  bd.insertString(noff,"// ",null);
+	       else if (!remcmmt) {
+		  bd.insertString(loff,"// ",null);
 		}
 	     }
 	    catch (BadLocationException ex) {
