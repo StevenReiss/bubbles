@@ -1419,6 +1419,10 @@ private static class CommentLinesAction extends TextAction {
 	       else if (!remcmmt) {
 		  bd.insertString(loff,"// ",null);
 		}
+               else {
+                  // already commented -- comment again so its symmetric
+                  bd.insertString(loff,"// ",null);
+                }
 	     }
 	    catch (BadLocationException ex) {
 	       return;
