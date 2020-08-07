@@ -107,13 +107,14 @@ private Map<Integer,ConsoleData> console_map;
 private Set<ILaunchConfiguration> working_configs;
 private Map<IStackFrame,Map<String,IValue>> outside_variables;
 
-
+private static Set<IJavaThread> variable_threads;
 private static Map<String,CallFormatter> format_map;
 
 private static Map<String,String> prop_map;
 
 static {
    prop_map = new HashMap<String,String>();
+   variable_threads = new HashSet<>();
 
    prop_map.put("PROJECT_ATTR","org.eclipse.jdt.launching.PROJECT_ATTR");
    prop_map.put("MAIN_TYPE","org.eclipse.jdt.launching.MAIN_TYPE");
@@ -155,9 +156,9 @@ BedrockRuntime(BedrockPlugin bp)
    our_plugin = bp;
    debug_plugin = DebugPlugin.getDefault();
    console_thread = null;
-   console_map = new LinkedHashMap<Integer,ConsoleData>();
-   working_configs = new HashSet<ILaunchConfiguration>();
-   outside_variables = new WeakHashMap<IStackFrame,Map<String,IValue>>();
+   console_map = new LinkedHashMap<>();
+   working_configs = new HashSet<>();
+   outside_variables = new WeakHashMap<>();
 }
 
 
@@ -814,7 +815,7 @@ void getVariableValue(String tname,String frid,String vname,int lvls,int arrayma
 		  args[0] = (IJavaValue) val;
 		  String tsg = "(Ljava/lang/Object;)I";
 		  try {
-		     val = systemtype.sendMessage("identityHashCode",tsg,args,jthrd);
+                     val = varEval(systemtype,"identityHashCode",tsg,args,jthrd);
 		   }
 		  catch (Throwable t) {
 		     BedrockPlugin.logE("Problem getting system hash code",t);
@@ -872,11 +873,11 @@ void getVariableValue(String tname,String frid,String vname,int lvls,int arrayma
 	       IJavaValue [] args = new IJavaValue[1];
 	       args[0] = avl;
 	       try {
-		  val = arrays.sendMessage("toString",tsg,args,jthrd);
+                  val = varEval(arrays,"toString",tsg,args,jthrd);
 		}
 	       catch (Throwable t) {
 		  BedrockPlugin.logE("Problem getting array value: " + tsg,t);
-		  val = avl.sendMessage("toString","()Ljava/lang/String;",null,jthrd,false);
+                  val = varEval(avl,"toString","()Ljava/lang/String;",null,jthrd,false);
 		}
 	     }
 	    else {
@@ -919,7 +920,7 @@ private IValue handleSpecialCases(IValue val,IThread thrd)
 	     }
 	  }
 	 if (xvl == null) {
-	    val = ovl.sendMessage("toString","()Ljava/lang/String;",null,jthrd,false);
+	    val = varEval(ovl,"toString","()Ljava/lang/String;",null,jthrd,false);
 	  }
 	 else val = xvl;
        }
@@ -940,7 +941,8 @@ IJavaValue convertXml(IJavaThread thrd,IJavaValue xml)
       if (typs == null) return null;
       IJavaClassType ivyxml = (IJavaClassType) typs[0];
       IJavaValue [] args = new IJavaValue[] { xml };
-      IJavaValue rslt = ivyxml.sendMessage("convertXmlToString", "(Lorg/w3c/dom/Node;)Ljava/lang/String;", args, thrd);
+      IJavaValue rslt = varEval(ivyxml,"convertXmlToString","(Lorg/w3c/dom/Node;)Ljava/lang/String;", 
+            args,thrd);
       return rslt;
    }
    catch (Throwable t) {
@@ -986,14 +988,14 @@ private static class CallFormatter {
 	 if (static_class == null) {
 	    // method call on v
 	    IJavaValue [] args = setupArgs(tgt,null);
-	    rslt = v.sendMessage(method_name,method_signature,args,thrd,false);
+	    rslt = varEval(v,method_name,method_signature,args,thrd,false);
 	  }
 	 else {
 	    // static method call
 	    if (typs == null) return null;
 	    IJavaClassType clstyp = (IJavaClassType) typs[0];
 	    IJavaValue [] args = setupArgs(tgt,v);
-	    rslt = clstyp.sendMessage(method_name,method_signature,args,thrd);
+	    rslt = varEval(clstyp,method_name,method_signature,args,thrd);
 	  }
        }
       catch (DebugException e) {
@@ -1367,6 +1369,7 @@ static {
 	  }
 	 catch (DebugException e) { }
        }
+      if (handleInternalEvent(event)) continue;
 
       ++ct;
       xw.begin("RUNEVENT");
@@ -1400,6 +1403,83 @@ static {
    BedrockPlugin.logD("RUNEVENT: " + xw.toString());
 
    our_plugin.finishMessageWait(xw);
+}
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Handle events during variable evaluations                               */
+/*                                                                              */
+/********************************************************************************/
+
+private static IJavaValue varEval(IJavaObject ovl,String method,String sign,IJavaValue [] args,
+      IJavaThread th,boolean sup) throws DebugException
+{
+   startThreadEval(th);
+   try {
+      return ovl.sendMessage(method,sign,args,th,sup);
+    }
+   finally {
+      endThreadEval(th);
+    }
+}
+
+
+
+private static IJavaValue varEval(IJavaClassType cty,String method,String sign,IJavaValue [] args,
+      IJavaThread th) throws DebugException
+{
+   startThreadEval(th);
+   try {
+      return cty.sendMessage(method,sign,args,th);
+    }
+   finally {
+      endThreadEval(th);
+    }
+}
+
+
+
+private static void startThreadEval(IJavaThread th)
+{
+   if (th == null) return;
+   synchronized (variable_threads) {
+      variable_threads.add(th);
+    }
+}
+
+
+private static void endThreadEval(IJavaThread th)
+{
+   if (th == null) return;
+   synchronized (variable_threads) {
+      variable_threads.remove(th);
+    }
+}
+
+
+
+private boolean handleInternalEvent(DebugEvent event)
+{
+   if (event.getSource() instanceof IJavaThread) {
+      IJavaThread ijt = (IJavaThread) event.getSource();
+      synchronized (variable_threads) {
+         if (!variable_threads.contains(ijt)) return false;
+       }
+      if (event.getKind() == DebugEvent.SUSPEND &&
+            event.getDetail() == DebugEvent.BREAKPOINT) {
+         try {
+            ijt.resume();
+          }
+         catch (DebugException e) {
+            BedrockPlugin.logE("Problem resuming variable thread",e);
+          }
+         return true;
+       }
+    }
+   
+   return false;
 }
 
 
