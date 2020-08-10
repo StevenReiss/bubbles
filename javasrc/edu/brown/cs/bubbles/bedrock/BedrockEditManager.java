@@ -520,6 +520,7 @@ synchronized void updateSingleFile(String fnm)
 {
    FileData fd = file_map.get(fnm);
    if (fd != null) {
+      if (!fd.hasChanged()) return;
       commitFile(fd,false,false,false,null);
     }
 }
