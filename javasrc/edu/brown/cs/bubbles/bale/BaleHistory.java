@@ -202,8 +202,8 @@ static class BaleInsertUndo extends BaleGenericUndo {
       insert_offset = offset;
       insert_length = length;
        try {
-	 ins_string = the_content.getString(offset,length);
-	 // BoardLog.logD("BALE","INSERT " + offset + " " + length + " `" + ins_string + "'");
+         ins_string = the_content.getString(offset,length);
+         // BoardLog.logD("BALE","INSERT " + offset + " " + length + " `" + ins_string + "'");
        }
       catch (BadLocationException e) { }
     }
@@ -534,13 +534,13 @@ static abstract class BaleAbstractDocument extends BaleDocument {
       }
 
       @Override public void updatePosition(Object edit,int pos,int len) {
-	 for (UndoableEdit ued : getEdits()) {
-	    if (ued instanceof BurpPlayableEdit) {
-	       BurpPlayableEdit bpe = (BurpPlayableEdit) ued;
-	       bpe.updatePosition(edit,pos,len);
-	     }
-	    else BoardLog.logX("BALE","History event not playable: " + ued);
-	 }
+         for (UndoableEdit ued : getEdits()) {
+            if (ued instanceof BurpPlayableEdit) {
+               BurpPlayableEdit bpe = (BurpPlayableEdit) ued;
+               bpe.updatePosition(edit,pos,len);
+             }
+            else BoardLog.logD("BALE","History event not playable: " + ued);
+         }
        }
 
       @Override public List<BurpEditDelta> getDeltas() {

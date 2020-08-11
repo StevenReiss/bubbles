@@ -527,6 +527,9 @@ synchronized void handleNewEdit(BurpEditorData ed,UndoableEdit ue,boolean evt,bo
             applyDeltas(root,bdoc,delta);
           }
        }
+      else {
+         BoardLog.logD("BURP","Saving simple edit " + ue);
+       }
       removeForward(null);
       cd = new BurpChangeData(this,ue,current_change);
       if (current_change == null) first_change = cd;

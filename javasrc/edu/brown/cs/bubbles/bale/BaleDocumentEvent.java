@@ -30,6 +30,7 @@
 
 package edu.brown.cs.bubbles.bale;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.burp.BurpConstants.BurpEditDelta;
 import edu.brown.cs.bubbles.burp.BurpConstants.BurpPlayableEdit;
 import edu.brown.cs.bubbles.burp.BurpConstants.BurpRange;
@@ -86,27 +87,6 @@ BaleDocumentEvent(BaleDocument d,int off,int len,EventType et,UndoableEdit ed,Ba
    element_event = ee;
    savePosition();
 }
-
-
-
-BaleDocumentEvent(DocumentEvent e,BaleElementEvent ee)
-{
-   base_document = (BaleDocument) e.getDocument();
-   doc_offset = e.getOffset();
-   edit_length = e.getLength();
-   event_type = e.getType();
-
-   if (e instanceof BaleDocumentEvent) {
-      BaleDocumentEvent bde = (BaleDocumentEvent) e;
-      the_edit = bde.the_edit;
-    }
-   else the_edit = null;
-
-   element_event = ee;
-   savePosition();
-}
-
-
 
 
 
@@ -312,7 +292,12 @@ UndoableEdit getEdit()
       BurpPlayableEdit bpe = (BurpPlayableEdit) the_edit;
       bpe.updatePosition(edit, pos, len);
    }
+   else if (the_edit != null) {
+      BoardLog.logD("BALE","Update position on " + the_edit);
+    }
 }
+
+
 
 @Override public List<BurpEditDelta> getDeltas() 
 {
@@ -336,11 +321,14 @@ UndoableEdit getEdit()
 private void savePosition()
 {
    doc_position = null;
-   // try {
-      // doc_position = base_document.createPosition(doc_offset);
-    // }
-   // catch (BadLocationException e) { }
+   
+//    try {
+//       doc_position = base_document.createPosition(doc_offset);
+//     }
+//    catch (BadLocationException e) { }
 }
+
+
 
 private void restorePosition()
 {
