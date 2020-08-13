@@ -422,12 +422,19 @@ private boolean checkPackageParsing()
 
    String sgn = property_set.getStringProperty(BuenoKey.KEY_SIGNATURE);
    if (sgn != null) {
+      String onm = property_set.getStringProperty(BuenoKey.KEY_NAME);
+      property_set.remove(BuenoKey.KEY_NAME);
       try {
-	 parseClassSignature(sgn);
-         create_type = BuenoType.NEW_PACKAGE;
+         parseClassSignature(sgn);
        }
       catch (BuenoException e) {
 	 return false;
+       }
+      finally {
+         String cnm = property_set.getStringProperty(BuenoKey.KEY_NAME);
+         property_set.put(BuenoKey.KEY_CLASS_NAME,cnm);
+         property_set.put(BuenoKey.KEY_NAME,onm);
+         create_type = BuenoType.NEW_PACKAGE;
        }
     }
 
@@ -579,11 +586,14 @@ private void parseClassSignature(String txt) throws BuenoException
 
    if (checkNextToken(tok,"class")) {
       create_type = BuenoType.NEW_CLASS;
+      property_set.put(BuenoKey.KEY_TYPE,"class");
     }
    else if (checkNextToken(tok,"enum")) {
       create_type = BuenoType.NEW_ENUM;
+      property_set.put(BuenoKey.KEY_TYPE,"enum");
     }
    else if (checkNextToken(tok,"interface")) {
+      property_set.put(BuenoKey.KEY_TYPE,"interface");
       create_type = BuenoType.NEW_INTERFACE;
     }
    else throw new BuenoException("No class/enum/interface keyword");

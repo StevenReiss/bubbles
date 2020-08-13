@@ -154,22 +154,38 @@ private class PackageCreator extends Creator {
 
    @Override protected BudaBubble doCreate(BudaBubbleArea bba,Point p,String fullname,
          BuenoProperties bp) {
-      BudaBubble nbbl = null;
-      BuenoLocation bl = at_location;
       BuenoFactory bf = BuenoFactory.getFactory();
-      String proj = property_set.getProjectName();
-      String pkg = property_set.getPackageName();
-      if (bl == null) bl = bf.createLocation(proj,pkg,null,true);
-      if (bl != null) return null;
+    
+      BuenoType ctyp = BuenoType.NEW_TYPE;
+      switch (property_set.getStringProperty(BuenoKey.KEY_TYPE)) {
+         default :
+            break;
+         case "class" :
+            ctyp = BuenoType.NEW_CLASS;
+            break;
+         case "interface" :
+            ctyp = BuenoType.NEW_INTERFACE;
+            break;
+         case "enum" :
+            ctyp = BuenoType.NEW_ENUM;
+            break;
+       }
+      String cnm = property_set.getStringProperty(BuenoKey.KEY_CLASS_NAME);
+      property_set.put(BuenoKey.KEY_NAME,cnm);
       
-      bf.createNew(BuenoType.NEW_PACKAGE,bl,property_set);
+      // create the package directory
+      bf.createNew(BuenoType.NEW_PACKAGE,at_location,property_set);
       
-      proj = bl.getProject();
-      File f = bl.getInsertionFile();
+      // create the initial type
+      bf.createNew(ctyp,at_location,property_set);
+      
+      String proj = at_location.getProject();
+      String pkg = property_set.getStringProperty(BuenoKey.KEY_PACKAGE); 
+      File f = at_location.getInsertionFile();
       if (f == null) return null;
+      String cls = pkg + "." + property_set.getStringProperty(BuenoKey.KEY_CLASS_NAME);
       
-      String cls = pkg + "." + property_set.getStringProperty(BuenoKey.KEY_NAME);
-      
+      BudaBubble nbbl = null;
       if (bubble_creator != null) {
          bubble_creator.createBubble(proj,cls,bba,p);
        } 
