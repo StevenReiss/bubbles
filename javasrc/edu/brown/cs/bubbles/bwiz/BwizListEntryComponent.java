@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 
@@ -112,7 +113,31 @@ BwizListEntryComponent(IVerifier verifier, String title)
 /*										*/
 /********************************************************************************/
 
-List<String> getListElements()		{ return new ArrayList<String>(list_data); }
+List<String> getListElements()	
+{ 
+   String text = input_field.getText();
+   List<String> rslt = new ArrayList<>(list_data);
+   Set<String> done = new HashSet<>(set_data);
+   if (text != null && text.length() > 0) {
+      if (the_verifier != null) {
+         if (the_verifier.verify(text)) {
+            List<String> slist = the_verifier.results(text);
+            for (String s : slist) {
+               s = s.trim();
+               if (!done.contains(s)) {
+                  rslt.add(s);
+                  done.add(s);
+                }
+             }
+          }
+       }
+      else {
+         if (!done.contains(text)) rslt.add(text);
+       }
+    }
+   
+   return rslt;
+}
 
 void setHeight(int ht)
 {
@@ -131,6 +156,7 @@ boolean isActive()
 {
    String txt = input_field.getText();
    if (txt == null || txt.length() == 0) return false;
+   if (add_button.isEnabled()) return false;
    return true;
 }
 
@@ -173,7 +199,7 @@ private void setup()
    subpanel.add(Box.createRigidArea(new Dimension(7, 0)));
 
    //Creates a textfield with default styling for the input area
-   input_field=BwizVerifiedTextField.getStyledField("", "", the_verifier);
+   input_field = BwizVerifiedTextField.getStyledField("", "", the_verifier);
    input_field.setFont(BWIZ_FONT_SIZE_MAIN.deriveFont((float)24));
    input_field.setColumns(8);
    input_field.setAlignmentY(Component.BOTTOM_ALIGNMENT);
@@ -198,7 +224,7 @@ private void setup()
    add_button.addActionListener(new InputAction());
    add_button.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 
-   if (the_verifier != null) add_button.setEnabled(false);
+   add_button.setEnabled(false);
 
    //A button for removing values from the list
    remove_button=new BwizHoverButton();
@@ -238,7 +264,7 @@ private void setup()
 
 private void addItem(String text)
 {
-   //Add text to list
+   // Add text to list
    if (the_verifier != null) {
       //Use the verifier to check the text
       if (the_verifier.verify(text)) {
@@ -256,9 +282,6 @@ private void addItem(String text)
 	       disableRemoval();
 	     }
 	  }
-       }
-      else {
-	 //TODO: Possibly show some kind of error notification)
        }
     }
    else {
@@ -306,11 +329,10 @@ private void remove(List<String> objects)
 private void removeSelected()
 {
     List<String> indices = ui_list.getSelectedValuesList();
-    if (indices != null && indices.size() > 0)
-    {
-	remove(indices);
-	disableRemoval();
-    }
+    if (indices != null && indices.size() > 0) {
+       remove(indices);
+       disableRemoval();
+     }
 }
 
 void addItemChangeEventListener(ItemChangeListener listener)
@@ -323,6 +345,7 @@ void addItemChangeEventListener(ItemChangeListener listener)
 {
     if (success) {
        //Enable + button
+       fireItemAdded(null);
        enableAddition();
      }
 }

@@ -45,7 +45,6 @@ import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bueno.BuenoFieldDialog;
 import edu.brown.cs.bubbles.bueno.BuenoInnerClassDialog;
 import edu.brown.cs.bubbles.bueno.BuenoLocation;
-import edu.brown.cs.bubbles.bueno.BuenoPackageDialog;
 import edu.brown.cs.bubbles.bueno.BuenoProperties;
 import edu.brown.cs.bubbles.bueno.BuenoPythonModuleDialog;
 import edu.brown.cs.bubbles.bump.BumpClient;
@@ -358,9 +357,9 @@ private abstract class NewAction extends AbstractAction {
       for_location = loc;
       property_set = new BuenoProperties();
       if (loc.getProject() != null)
-	 property_set.put(BuenoKey.KEY_PROJECT,loc.getProject());
+         property_set.put(BuenoKey.KEY_PROJECT,loc.getProject());
       if (loc.getPackage() != null)
-	 property_set.put(BuenoKey.KEY_PACKAGE,loc.getPackage());
+         property_set.put(BuenoKey.KEY_PACKAGE,loc.getPackage());
     }
 
 }	// end of inner class NewAction
@@ -510,9 +509,8 @@ private class NewPackageAction extends NewAction implements BuenoConstants.Bueno
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","NewPackage");
       BudaRoot.hideSearchBubble(e);
-      BuenoPackageDialog bpd = new BuenoPackageDialog(search_bubble,access_point,
-							 property_set,for_location,this);
-      bpd.showDialog();
+      BuenoFactory.getFactory().createPackageDialog(search_bubble,access_point,create_type,
+							 property_set,for_location,null,this);
     }
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {

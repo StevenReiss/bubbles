@@ -105,14 +105,14 @@ private class InterfaceCreator extends Creator {
       BuenoFactory bf = BuenoFactory.getFactory();
       String proj = property_set.getProjectName();
       String pkg = property_set.getPackageName();
-
+   
       if (bl == null) bl = bf.createLocation(proj,pkg,null,true);
       bf.createNew(BuenoType.NEW_INTERFACE,bl,bp);
       if (bubble_creator == null)
-	 nbbl = BaleFactory.getFactory().createFileBubble(proj,null,fullname);
+         nbbl = BaleFactory.getFactory().createFileBubble(proj,null,fullname);
       else
-	 bubble_creator.createBubble(proj,fullname,bba,pt);
-
+         bubble_creator.createBubble(proj,fullname,bba,pt);
+   
       return nbbl;
     }
 

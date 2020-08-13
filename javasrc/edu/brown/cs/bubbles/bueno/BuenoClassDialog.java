@@ -37,7 +37,7 @@ import java.io.File;
 
 
 
-public class BuenoClassDialog extends BuenoAbstractDialog implements BuenoConstants
+class BuenoClassDialog extends BuenoAbstractDialog implements BuenoConstants
 {
 
 
@@ -48,7 +48,7 @@ public class BuenoClassDialog extends BuenoAbstractDialog implements BuenoConsta
 /*										*/
 /********************************************************************************/
 
-public BuenoClassDialog(BudaBubble source,Point locale,BuenoType typ,
+BuenoClassDialog(BudaBubble source,Point locale,BuenoType typ,
 			    BuenoProperties known,BuenoLocation insert,
 			    BuenoBubbleCreator newer)
 {

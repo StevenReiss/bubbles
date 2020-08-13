@@ -77,7 +77,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 
-public class BuenoProjectDialog implements BuenoConstants
+class BuenoProjectDialog implements BuenoConstants
 {
 
 
@@ -155,7 +155,7 @@ enum PathType {
 /*										*/
 /********************************************************************************/
 
-public BuenoProjectDialog(String proj)
+BuenoProjectDialog(String proj)
 {
    project_name = proj;
    ref_projects = new ArrayList<String>();

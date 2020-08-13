@@ -68,7 +68,7 @@ BwizNewMethodWizard(BuenoLocation loc)
 
 @Override protected int getAccessibilityInfo()
 {
-   return SHOW_PRIVATE|SHOW_PROTECTED|SHOW_ABSTRACT|SHOW_FINAL;
+   return SHOW_PRIVATE|SHOW_PROTECTED|SHOW_ABSTRACT|SHOW_FINAL|SHOW_OVERRIDES;
 }
 
 @Override protected IVerifier getVerifier()

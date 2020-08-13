@@ -79,6 +79,7 @@ private Map<BuenoMethod,BuenoCreator> creation_map;
 private BuenoCreator		cur_creator;
 private BuenoMethodCreatorInstance method_creator;
 private BuenoClassCreatorInstance class_creator;
+private BuenoPackageCreatorInstance package_creator;
 private BuenoClassMethodFinder	method_finder;
 
 private static BuenoFactory	the_factory = null;
@@ -115,6 +116,7 @@ private BuenoFactory()
 
    method_creator = null;
    class_creator = null;
+   package_creator = null;
    method_finder = null;
 
    BoardProperties bp = BoardProperties.getProperties("Bueno");
@@ -213,6 +215,11 @@ public void setClassDialog(BuenoClassCreatorInstance bcc)
    class_creator = bcc;
 }
 
+public void setPackageDialog(BuenoPackageCreatorInstance pcc)
+{
+   package_creator = pcc;
+}
+
 
 public void setClassMethodFinder(BuenoClassMethodFinder fdr)
 {
@@ -250,6 +257,31 @@ public void createClassDialog(BudaBubble src,Point loc,BuenoType type,
    BuenoClassDialog cd = new BuenoClassDialog(src,loc,type,known,insert,newer);
    if (lbl != null) cd.setLabel(lbl);
    cd.showDialog();
+}
+
+
+
+public void createPackageDialog(BudaBubble src,Point loc,BuenoType type,
+      BuenoProperties known,
+      BuenoLocation insert,String lbl,BuenoBubbleCreator newer)
+{
+   if (package_creator != null) {
+      if (package_creator.showPackageDialogBubble(src,loc,type,known,insert,lbl,newer))
+	 return;
+    }
+   
+   BuenoPackageDialog pd = new BuenoPackageDialog(src,loc,known,insert,newer);
+   if (lbl != null) pd.setLabel(lbl);
+   pd.showDialog();
+}
+
+
+
+public BudaBubble createProjectDialog(String proj)
+{
+   BuenoProjectDialog dlg = new BuenoProjectDialog(proj);
+   BudaBubble bb = dlg.createProjectEditor();
+   return bb;
 }
 
 

@@ -86,8 +86,6 @@ static BwizFocusTextField getStyledField(String text, String tooltip)
 
 BwizFocusTextField()
 {
-   super();
-
    showing_hint = false;
    hint_text = null;
 
@@ -171,22 +169,23 @@ private class Focuser extends FocusAdapter {
 
    @Override public void focusGained(FocusEvent e) {
       if (hint_text != null) {
-	 if (showing_hint) {
-	    BwizFocusTextField.super.setText("");
-	    showing_hint = false;
-	  }
-	 setForeground(BoardColors.getColor("Bwiz.FocusTextColor"));
+         if (showing_hint) {
+            BwizFocusTextField.super.setText("");
+            showing_hint = false;
+          }
+         setForeground(BoardColors.getColor("Bwiz.FocusTextColor"));
        }
       else {
-	 focusSelection();
+         setForeground(BoardColors.getColor("Bwiz.FocusTextColor"));
+         focusSelection();
        }
     }
 
    @Override public void focusLost(FocusEvent e) {
       if (BwizFocusTextField.super.getText().isEmpty()) {
-	 BwizFocusTextField.super.setText(hint_text);
-	 showing_hint = true;
-	 setForeground(BoardColors.getColor("Bwiz.NoFocusTextColor"));
+         BwizFocusTextField.super.setText(hint_text);
+         showing_hint = true;
+         setForeground(BoardColors.getColor("Bwiz.NoFocusTextColor"));
        }
       else showing_hint = false;
     }

@@ -44,7 +44,6 @@ import edu.brown.cs.bubbles.bueno.BuenoConstants;
 import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bueno.BuenoJsProject;
 import edu.brown.cs.bubbles.bueno.BuenoProjectCreator;
-import edu.brown.cs.bubbles.bueno.BuenoProjectDialog;
 import edu.brown.cs.bubbles.bueno.BuenoPythonProject;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
@@ -667,9 +666,7 @@ private static class ProjectAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","EditProjectProperties");
       BudaRoot.hideSearchBubble(e);
-      BudaBubble bb = null;
-      BuenoProjectDialog dlg = new BuenoProjectDialog(for_project);
-      bb = dlg.createProjectEditor();
+      BudaBubble bb = BuenoFactory.getFactory().createProjectDialog(for_project);
       if (bb == null) return;
       BassFactory.getFactory().addNewBubble(rel_bubble,rel_point,bb);
     }
@@ -723,10 +720,7 @@ private static class JSProjectAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","EditJSProjectProperties");
       BudaRoot.hideSearchBubble(e);
-      BudaBubble bb = null;
-      BuenoProjectDialog dlg = new BuenoProjectDialog(for_project);
-      bb = dlg.createProjectEditor();
-      // bb = BuenoJSProject.createEditJSProjectBubble(for_project);
+      BudaBubble bb = BuenoFactory.getFactory().createProjectDialog(for_project);
       if (bb == null) return;
       BassFactory.getFactory().addNewBubble(rel_bubble,rel_point,bb);
    }

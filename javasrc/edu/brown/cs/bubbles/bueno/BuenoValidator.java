@@ -149,7 +149,7 @@ public String getMethodName()
 public String getSignature()
 {
    StringBuffer buf = new StringBuffer();
-
+   
    buf.append(property_set.getModifierString());
 
    String nm = property_set.getStringProperty(BuenoKey.KEY_NAME);
@@ -192,6 +192,9 @@ public String getSignature()
 	 addList(buf,property_set.getParameters(),null);
 	 buf.append(")");
 	 break;
+      case NEW_PACKAGE :
+         String s = property_set.getStringProperty(BuenoKey.KEY_SIGNATURE);
+         return s;
       default :
 	 return null;
     }
@@ -421,6 +424,7 @@ private boolean checkPackageParsing()
    if (sgn != null) {
       try {
 	 parseClassSignature(sgn);
+         create_type = BuenoType.NEW_PACKAGE;
        }
       catch (BuenoException e) {
 	 return false;

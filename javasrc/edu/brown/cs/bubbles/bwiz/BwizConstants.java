@@ -135,12 +135,12 @@ enum Accessibility
 
    public static Accessibility fromString(String text) {
       if (text != null) {
-	 for (Accessibility b : Accessibility.values()) {
-	    if (text.equalsIgnoreCase(b.accessibility_label))
-	       return b;
-	  }
+         for (Accessibility b : Accessibility.values()) {
+            if (text.equalsIgnoreCase(b.accessibility_label))
+               return b;
+          }
        }
-
+   
       throw new IllegalArgumentException("No constant with text " + text + " found");
     }
 
@@ -245,6 +245,9 @@ int SHOW_PRIVATE = 0x1;
 int SHOW_PROTECTED = 0x2;
 int SHOW_ABSTRACT = 0x4;
 int SHOW_FINAL = 0x8;
+int SHOW_OVERRIDES = 0x10;
+int SHOW_CLASS = 0x20;
+int SHOW_INTERFACE = 0x40;
 
 
 

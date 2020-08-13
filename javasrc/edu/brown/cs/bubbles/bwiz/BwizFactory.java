@@ -33,12 +33,14 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bueno.BuenoConstants.BuenoBubbleCreator;
 import edu.brown.cs.bubbles.bueno.BuenoConstants.BuenoClassCreatorInstance;
 import edu.brown.cs.bubbles.bueno.BuenoConstants.BuenoMethodCreatorInstance;
+import edu.brown.cs.bubbles.bueno.BuenoConstants.BuenoPackageCreatorInstance;
 import edu.brown.cs.bubbles.bueno.BuenoConstants.BuenoType;
 import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bueno.BuenoLocation;
 import edu.brown.cs.bubbles.bueno.BuenoProperties;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Point;
 
 
@@ -116,9 +118,10 @@ private void setupWizards(BudaRoot br)
 
    br.addPanel(pnl,false);
 
-   MethodCreator mc = new MethodCreator();
+   CreatorWizard mc = new CreatorWizard();
    BuenoFactory.getFactory().setMethodDialog(mc);
    BuenoFactory.getFactory().setClassDialog(mc);
+   BuenoFactory.getFactory().setPackageDialog(mc);
 }
 
 
@@ -156,26 +159,26 @@ private class WizardBubble extends BudaBubble
 /*										*/
 /********************************************************************************/
 
-private class MethodCreator implements BuenoMethodCreatorInstance,
-	BuenoClassCreatorInstance {
+private class CreatorWizard implements BuenoMethodCreatorInstance,
+	BuenoClassCreatorInstance, BuenoPackageCreatorInstance {
 
 
    @Override public boolean showMethodDialogBubble(BudaBubble src,Point loc,
-						      BuenoProperties known,
-						      BuenoLocation insert,
-						      String lbl,
-						      BuenoBubbleCreator newer) {
+        					      BuenoProperties known,
+        					      BuenoLocation insert,
+        					      String lbl,
+        					      BuenoBubbleCreator newer) {
       BoardProperties bp = BoardProperties.getProperties("Bwiz");
       if (!bp.getBoolean("Bwiz.use.method.dialog")) return false;
-
+   
       BwizNewWizard bcwiz = new BwizNewMethodWizard(insert);
       bcwiz.setBubbleCreator(newer);
       WizardBubble bb = new WizardBubble(bcwiz,bcwiz.getFocus());
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(src);
       if (bba == null) bba = buda_root.getCurrentBubbleArea();
       bba.addBubble(bb,src,loc,PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_MOVETO|
-		       PLACEMENT_LOGICAL);
-
+        	       PLACEMENT_LOGICAL);
+   
       return true;
     }
 
@@ -213,7 +216,31 @@ private class MethodCreator implements BuenoMethodCreatorInstance,
       return true;
     }
 
-   @Override public boolean useSeparateTypeButtons() {
+  @Override public boolean showPackageDialogBubble(BudaBubble src,Point loc,
+	BuenoType typ,
+        BuenoProperties known,
+        BuenoLocation insert,
+        String lbl,
+        BuenoBubbleCreator newer) {
+     BoardProperties bp = BoardProperties.getProperties("Bwiz");
+     if (!bp.getBoolean("Bwiz.use.package.dialog")) return false;
+     
+     BwizNewWizard ccwiz = new BwizNewPackageWizard(insert);
+     Dimension d = ccwiz.getPreferredSize();
+     d.width = Math.max(d.width,500);
+     ccwiz.setPreferredSize(d);
+     
+     ccwiz.setBubbleCreator(newer);
+     WizardBubble bb = new WizardBubble(ccwiz,ccwiz.getFocus());
+     BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(src);
+     if (bba == null) bba = buda_root.getCurrentBubbleArea();
+     bba.addBubble(bb,src,loc,PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_MOVETO|
+           PLACEMENT_LOGICAL);
+     
+     return true;
+   }
+  
+  @Override public boolean useSeparateTypeButtons() {
       return true;
     }
 

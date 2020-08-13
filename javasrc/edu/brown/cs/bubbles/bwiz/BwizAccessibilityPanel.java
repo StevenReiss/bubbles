@@ -57,8 +57,12 @@ private JRadioButton protected_button;
 private JRadioButton private_button;
 private JCheckBox    abstract_checkbox;
 private JCheckBox    final_checkbox;
+private JCheckBox    override_checkbox;
+private JRadioButton class_button;
+private JRadioButton interface_button;
 
-private ButtonGroup radioGroup;
+private ButtonGroup radio_group;
+private ButtonGroup class_group;
 
 protected GridBagConstraints use_constraints;
 
@@ -93,7 +97,8 @@ protected void setup(int fgs)
    setAlignmentX(Component.LEFT_ALIGNMENT);
 
    //RadioButton group
-   radioGroup = new ButtonGroup();
+   radio_group = new ButtonGroup();
+   class_group = new ButtonGroup();
 
    Color bg = BoardColors.getColor("Bwiz.AccessButtonBackground");
    //Getting the string from an enum
@@ -102,14 +107,14 @@ protected void setup(int fgs)
    public_button.setAlignmentX(Component.LEFT_ALIGNMENT);
    public_button.setFont(BWIZ_FONT_OPTION);
    public_button.setBackground(bg);
-   radioGroup.add(public_button);
+   radio_group.add(public_button);
 
    default_button = new JRadioButton(Accessibility.DEFAULT.toString(),true);
    default_button.setActionCommand(Accessibility.DEFAULT.toString());
    default_button.setAlignmentX(Component.LEFT_ALIGNMENT);
    default_button.setFont(BWIZ_FONT_OPTION);
    default_button.setBackground(bg);
-   radioGroup.add(default_button);
+   radio_group.add(default_button);
 
    if ((fgs & SHOW_PRIVATE) != 0) {
       private_button = new JRadioButton(Accessibility.PRIVATE.toString(),true);
@@ -117,7 +122,7 @@ protected void setup(int fgs)
       private_button.setAlignmentX(Component.LEFT_ALIGNMENT);
       private_button.setFont(BWIZ_FONT_OPTION);
       private_button.setBackground(bg);
-      radioGroup.add(private_button);
+      radio_group.add(private_button);
     }
    else private_button = null;
 
@@ -127,10 +132,30 @@ protected void setup(int fgs)
       protected_button.setAlignmentX(Component.LEFT_ALIGNMENT);
       protected_button.setFont(BWIZ_FONT_OPTION);
       protected_button.setBackground(bg);
-      radioGroup.add(protected_button);
+      radio_group.add(protected_button);
     }
    else protected_button = null;
-
+   
+   if ((fgs & SHOW_CLASS) != 0) {
+      class_button = new JRadioButton("class",true);
+      class_button.setActionCommand("class");
+      class_button.setAlignmentX(Component.LEFT_ALIGNMENT);
+      class_button.setFont(BWIZ_FONT_OPTION);
+      class_button.setBackground(bg);
+      class_group.add(class_button);
+    }
+   else class_button = null;
+   
+   if ((fgs & SHOW_INTERFACE) != 0) {
+      interface_button = new JRadioButton("interface",true);
+      interface_button.setActionCommand("interface");
+      interface_button.setAlignmentX(Component.LEFT_ALIGNMENT);
+      interface_button.setFont(BWIZ_FONT_OPTION);
+      interface_button.setBackground(bg);
+      class_group.add(interface_button);
+    }
+   else interface_button = null;
+   
    if ((fgs & SHOW_ABSTRACT) != 0) {
       abstract_checkbox = new JCheckBox("abstract", false);
       abstract_checkbox.setBackground(bg);
@@ -146,7 +171,15 @@ protected void setup(int fgs)
       final_checkbox.setFont(BWIZ_FONT_OPTION);
     }
    else final_checkbox = null;
-
+   
+   if ((fgs & SHOW_OVERRIDES) != 0) {
+      override_checkbox = new JCheckBox("@Override", false);
+      override_checkbox.setBackground(bg);
+      override_checkbox.setAlignmentY(Component.TOP_ALIGNMENT);
+      override_checkbox.setFont(BWIZ_FONT_OPTION);
+    }
+   else override_checkbox = null;
+   
    //UI layout
    use_constraints.fill = GridBagConstraints.NONE;
    use_constraints.gridx = 0;
@@ -156,11 +189,26 @@ protected void setup(int fgs)
    use_constraints.weightx = 0.5;
    use_constraints.anchor = GridBagConstraints.LINE_START;
 
-   add(public_button, use_constraints);
-   use_constraints.gridy += 1;
+   if (class_button != null) {
+      add(class_button, use_constraints);
+      use_constraints.gridy += 1;
+      class_button.setSelected(true);
+    }
+   
+   if (interface_button != null) {
+      add(interface_button, use_constraints);
+      use_constraints.gridy += 1;
+    }
+   
+   if (public_button != null) {
+      add(public_button, use_constraints);
+      use_constraints.gridy += 1;
+    }
 
-   add(default_button, use_constraints);
-   use_constraints.gridy += 1;
+   if (default_button != null) {
+      add(default_button, use_constraints);
+      use_constraints.gridy += 1;
+    }
 
    if (private_button != null) {
       add(private_button, use_constraints);
@@ -183,7 +231,10 @@ protected void setup(int fgs)
       add(final_checkbox,use_constraints);
       use_constraints.gridy += 1;
     }
-
+   if (override_checkbox != null) {
+      add(override_checkbox,use_constraints);
+      use_constraints.gridy += 1;
+    }
 }
 
 
@@ -243,10 +294,18 @@ public void addAccessibilityActionListener(ActionListener listener)
 }
 
 
+public void addTypeActionListener(ActionListener listener)
+{
+   if (class_button != null) class_button.addActionListener(listener);
+   if (interface_button != null) interface_button.addActionListener(listener);
+}
+
+
 public void addModifierListener(ItemListener listener)
 {
    if (abstract_checkbox != null) abstract_checkbox.addItemListener(listener);
    if (final_checkbox != null) final_checkbox.addItemListener(listener);
+   if (override_checkbox != null) override_checkbox.addItemListener(listener);
 }
 
 

@@ -151,6 +151,10 @@ Component getFocus()				{ return main_name; }
 void setBubbleCreator(BuenoBubbleCreator bbc)	{ bubble_creator = bbc; }
 
 
+void setInitialName(String nm)
+{
+   main_name.setText(nm);
+}
 
 /********************************************************************************/
 /*										*/
@@ -223,10 +227,12 @@ private void setup()
     }
 
    //check if method or interface/class/enum
-   list_panel = new BwizListEntryComponent(getVerifier(),getListText());
-
-   list_panel.setTitleFont(getRelativeFont(-3));
-   list_panel.setTextFont(getRelativeFont(-3));
+   if (getListText() != null) {
+      list_panel = new BwizListEntryComponent(getVerifier(),getListText());
+      list_panel.setTitleFont(getRelativeFont(-3));
+      list_panel.setTextFont(getRelativeFont(-3));
+    }
+   else list_panel = null;
 
    //The panel that contains the accessibility radiobuttons and the abstract check box.
    JPanel boxespanel = new JPanel(new GridBagLayout());
@@ -237,9 +243,10 @@ private void setup()
    accessibility_panel.addAccessibilityActionListener(new AccessibilityChange());
    accessibility_panel.addModifierListener(new ModifierChange());
    accessibility_panel.addAccessibilityActionListener(new AccessibilityChange());
+   accessibility_panel.addTypeActionListener(new TypeChange());
 
    //A panel for the create button and class signature
-   JPanel buttonpanel=new JPanel();
+   JPanel buttonpanel = new JPanel();
    buttonpanel.setLayout(new BoxLayout(buttonpanel, BoxLayout.LINE_AXIS));
    buttonpanel.setOpaque(false);
    buttonpanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -259,7 +266,7 @@ private void setup()
    if (property_set.getProjectName() == null) {
       setupProject();
     }
-   if (property_set.getPackageName() == null) {
+   if (property_set.getPackageName() == null && create_type != BuenoType.NEW_PACKAGE) {
       setupPackage();
     }
 
@@ -268,7 +275,9 @@ private void setup()
       addRawComponent(getSecondText(),secondpanel);
     }
 
-   addLabellessRawComponent("",list_panel,true,true);
+   if (list_panel != null) {
+      addLabellessRawComponent("",list_panel,true,true);
+    }
    addLabellessRawComponent("",boxespanel,true,false);
    addLabellessRawComponent("",accessibility_panel,true,false);
    addLabellessRawComponent("",buttonpanel,true,false);
@@ -302,9 +311,11 @@ private void setup()
     }
 
    //Adds handlers and sets heights
-   list_panel.setHeight(main_name.getPreferredSize().height);
-   list_panel.setHoverText(getListHoverText());
-   list_panel.addItemChangeEventListener(new ClassItemListener());
+   if (list_panel != null) {
+      list_panel.setHeight(main_name.getPreferredSize().height);
+      list_panel.setHoverText(getListHoverText());
+      list_panel.addItemChangeEventListener(new ClassItemListener());
+    }
 
    //Creates a textfield that selects all text when it gets focus
    signature_area = new BwizFocusTextField("signature");
@@ -481,10 +492,10 @@ private class ChoosePackage implements ActionListener {
 
    void set() {
       if (package_dropdown != null && package_dropdown.getSelectedItem() != null) {
-	 String pkg = package_dropdown.getSelectedItem().toString();
-	 if (pkg.equals(DEFAULT_PACKAGE)) pkg = null;
-	 property_set.put(BuenoKey.KEY_PACKAGE,pkg);
-	 updateSignature();
+         String pkg = package_dropdown.getSelectedItem().toString();
+         if (pkg.equals(DEFAULT_PACKAGE)) pkg = null;
+         property_set.put(BuenoKey.KEY_PACKAGE,pkg);
+         updateSignature();
       }
    }
 
@@ -515,6 +526,9 @@ private void setupSecondName()
       case NEW_METHOD :
 	 k = BuenoKey.KEY_RETURNS;
 	 break;
+      case NEW_PACKAGE :
+         k = BuenoKey.KEY_CLASS_NAME;
+         break;
       default :
 	 break;
     }
@@ -589,10 +603,10 @@ private class ValidCallback implements BuenoValidatorCallback {
       if (create_button == null) return;
       if (list_panel != null && list_panel.isActive()) pass = false;
       if (pass) {
-	 create_button.setEnabled(true);
+         create_button.setEnabled(true);
        }
       else {
-	 create_button.setEnabled(false);
+         create_button.setEnabled(false);
        }
     }
 
@@ -614,35 +628,39 @@ private class ClassItemListener implements ItemChangeListener {
 
    ClassItemListener() {
       switch (create_type) {
-	 case NEW_CLASS :
-	 case NEW_INNER_CLASS :
-	 case NEW_ENUM :
-	 case NEW_INNER_ENUM :
-	    using_key = BuenoKey.KEY_IMPLEMENTS;
-	    break;
-	 case NEW_INTERFACE :
-	 case NEW_INNER_INTERFACE :
-	    using_key = BuenoKey.KEY_EXTENDS;
-	    break;
-	 case NEW_METHOD :
-	 case NEW_CONSTRUCTOR :
-	    using_key = BuenoKey.KEY_PARAMETERS;
-	    break;
-	 default :
-	    using_key = null;
+         case NEW_CLASS :
+         case NEW_INNER_CLASS :
+         case NEW_ENUM :
+         case NEW_INNER_ENUM :
+            using_key = BuenoKey.KEY_IMPLEMENTS;
+            break;
+         case NEW_INTERFACE :
+         case NEW_INNER_INTERFACE :
+            using_key = BuenoKey.KEY_EXTENDS;
+            break;
+         case NEW_METHOD :
+         case NEW_CONSTRUCTOR :
+            using_key = BuenoKey.KEY_PARAMETERS;
+            break;
+         case NEW_PACKAGE :
+            using_key = BuenoKey.KEY_CLASS_NAME;
+            break;
+         default :
+            using_key = null;
        }
     }
+   
    @Override public void itemAdded(String item) {
-      if (using_key != null) {
-	 property_set.put(using_key,list_panel.getListElements());
-	 updateSignature();
+      if (using_key != null && list_panel != null) {
+         property_set.put(using_key,list_panel.getListElements());
+         updateSignature();
        }
     }
 
    @Override public void itemRemoved(String item) {
-      if (using_key != null) {
-	 property_set.put(using_key,list_panel.getListElements());
-	 updateSignature();
+      if (using_key != null && list_panel != null) {
+         property_set.put(using_key,list_panel.getListElements());
+         updateSignature();
        }
     }
 
@@ -666,6 +684,16 @@ private class AccessibilityChange implements ActionListener {
 }	// end of inner class Accessibility Change
 
 
+private class TypeChange implements ActionListener {
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      String cmd = e.getActionCommand();
+      property_set.put(BuenoKey.KEY_TYPE,cmd.toLowerCase());
+      updateSignature();
+    }
+}
+
+
 
 /********************************************************************************/
 /*										*/
@@ -679,12 +707,15 @@ private class ModifierChange implements ItemListener {
       JCheckBox cbx = (JCheckBox) e.getItem();
       String cmd = cbx.getActionCommand();
       if (cmd.equals("abstract")) {
-	 setModifier(Modifier.ABSTRACT,e.getStateChange() == ItemEvent.SELECTED);
+         setModifier(Modifier.ABSTRACT,e.getStateChange() == ItemEvent.SELECTED);
        }
       else if (cmd.equals("final")) {
-	 setModifier(Modifier.FINAL,e.getStateChange() == ItemEvent.SELECTED);
+         setModifier(Modifier.FINAL,e.getStateChange() == ItemEvent.SELECTED);
        }
-
+      else if (cmd.equals("@Override")) {
+         setModifier(BuenoConstants.MODIFIER_OVERRIDES,e.getStateChange() == ItemEvent.SELECTED);
+       }
+   
       updateSignature();
     }
 
@@ -720,21 +751,21 @@ protected abstract class Creator implements ActionListener, Runnable {
 
    @Override public void actionPerformed(ActionEvent e) {
       if (list_panel != null && list_panel.isActive()) {
-	 list_panel.addCurrentItem();
+         list_panel.addCurrentItem();
        }
       if (!new_validator.checkParsing()) return;
-
+   
       BudaBubble bbl = BudaRoot.findBudaBubble(BwizNewWizard.this);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bbl);
       if (bbl == null || bba == null) return;
-
+   
       Rectangle r = BudaRoot.findBudaLocation(bbl);
       Point pt = r.getLocation();
       bba.removeBubble(bbl);
-
+   
       bubble_point = pt;
       bubble_area = bba;
-
+   
       BoardThreadPool.start(this);
    }
 
@@ -743,18 +774,18 @@ protected abstract class Creator implements ActionListener, Runnable {
    @Override public void run() {
       BowiFactory.startTask();
       try {
-	 String pkg = property_set.getPackageName();
-	 String cls = property_set.getStringProperty(BuenoKey.KEY_NAME);
-	 String fcls = (pkg == null ? cls : pkg + "." + cls);
-
-	 BudaBubble nbbl = doCreate(bubble_area,bubble_point,fcls,property_set);
-
-	 if (nbbl != null) {
-	    bubble_area.add(nbbl,new BudaConstraint(bubble_point));
-	  }
+         String pkg = property_set.getPackageName();
+         String cls = property_set.getStringProperty(BuenoKey.KEY_NAME);
+         String fcls = (pkg == null ? cls : pkg + "." + cls);
+   
+         BudaBubble nbbl = doCreate(bubble_area,bubble_point,fcls,property_set);
+   
+         if (nbbl != null) {
+            bubble_area.add(nbbl,new BudaConstraint(bubble_point));
+          }
        }
       finally {
-	 BowiFactory.stopTask();
+         BowiFactory.stopTask();
        }
    }
 }	// end of inner class Creator
