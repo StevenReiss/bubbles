@@ -3,5 +3,6 @@
 <properties>
 <entry key="Bwiz.use.method.dialog">true</entry>
 <entry key="Bwiz.use.class.dialog">true</entry>
+<entry key="Bwiz.use.package.dialog">true</entry>
 </properties>
 
