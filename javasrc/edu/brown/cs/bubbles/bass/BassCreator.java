@@ -785,26 +785,26 @@ private static class DeleteMethodAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BumpClient bc = BumpClient.getBump();
       List<BumpLocation> bl = bc.findMethod(method_location.getProject(),
-	    method_location.getFullName(),false);
+            method_location.getFullName(),false);
       if (bl.size() != 1) return;
       BumpLocation bloc = bl.get(0);
       BaleConstants.BaleFileOverview bfo = BaleFactory.getFactory().getFileOverview(bloc.getProject(),bloc.getFile());
       if (bfo == null) return;
-
+   
       if (bass_properties.getBoolean("Bass.delete.confirm",true)) {
-	 int sts = JOptionPane.showConfirmDialog(null,"Do you really want to delete the method " +
-	       method_location.getDisplayName(),
-	       "Confirm Delete Class",
-	       JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
-	 if (sts != JOptionPane.YES_OPTION) return;
+         int sts = JOptionPane.showConfirmDialog(null,"Do you really want to delete the method " +
+               method_location.getDisplayName(),
+               "Confirm Delete Class",
+               JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+         if (sts != JOptionPane.YES_OPTION) return;
        }
-
+   
       int off = bfo.mapOffsetToJava(bloc.getDefinitionOffset());
       int eoff = bfo.mapOffsetToJava(bloc.getDefinitionEndOffset());
       int len = eoff - off;
-
+   
       try {
-	 bfo.remove(off,len);
+         bfo.remove(off,len);
       }
       catch (Exception ex) { }
     }
@@ -872,8 +872,7 @@ private static class MoveClassAction extends AbstractAction implements Runnable 
       }
    }
 
-   private List<String> getPackages()
-{
+   private List<String> getPackages() {
       Set<String> rslt = new TreeSet<>();
 
       BassRepository br = BassFactory.getRepository(BudaConstants.SearchType.SEARCH_CODE);

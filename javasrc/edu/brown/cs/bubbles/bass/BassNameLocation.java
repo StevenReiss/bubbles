@@ -60,6 +60,7 @@ private List<BumpLocation>	location_set;
 private BumpLocation		base_location;
 private Icon			appropriate_icon;
 private String			method_params;
+private String                  file_prefix;
 
 
 
@@ -70,11 +71,12 @@ private String			method_params;
 /*										*/
 /********************************************************************************/
 
-BassNameLocation(BumpLocation bl)
+BassNameLocation(BumpLocation bl,String prefix)
 {
    location_set = new ArrayList<>();
    base_location = bl;
    location_set.add(bl);
+   file_prefix = prefix;
 
    switch (bl.getSymbolType()) {
       case PROJECT :
@@ -149,10 +151,11 @@ BassNameLocation(BumpLocation bl)
 
 
 
-BassNameLocation(BumpLocation bl,BassNameType typ)
+BassNameLocation(BumpLocation bl,BassNameType typ,String pfx)
 {
    location_set = new ArrayList<>();
    base_location = bl;
+   file_prefix = pfx;
    location_set.add(bl);
    name_type = typ;
 }
@@ -183,6 +186,11 @@ void addLocation(BumpLocation bl)
 /********************************************************************************/
 
 @Override public String getProject()			{ return base_location.getSymbolProject(); }
+
+@Override public String getSubProject()
+{
+   return file_prefix;
+}
 
 @Override public int getModifiers()			{ return base_location.getModifiers(); }
 

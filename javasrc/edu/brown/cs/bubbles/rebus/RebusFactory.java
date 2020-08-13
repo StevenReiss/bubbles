@@ -501,7 +501,7 @@ private static class AcceptanceFlagger implements BassFlagger {
    @Override synchronized public BassFlag getFlagForName(BassName bnm,String nm) {
       if (accepted_map == null) computeAcceptedMap();
       if (!nm.contains(":.") && bnm != null) {
-	 nm = bnm.getProject() + ":." + nm;
+         nm = bnm.getProject() + ":." + nm;
        }
       return accepted_map.get(nm);
     }
@@ -547,32 +547,32 @@ private static class AcceptanceFlagger implements BassFlagger {
       BumpLocation loc = null;
       String proj = null;
       if (bnm != null) {
-	 proj = bnm.getProject();
-	 loc = bnm.getLocation();
+         proj = bnm.getProject();
+         loc = bnm.getLocation();
        }
       else {
-	 int idx = nm.indexOf(":");
-	 if (idx > 0) {
-	    proj = nm.substring(0,idx);
-	    nm = nm.substring(idx+1);
-	    if (nm.startsWith(".")) nm = nm.substring(1);
-	    if (nm.length() > 0) {
-	       List<BumpLocation> locs = BumpClient.getBump().findClassDefinition(proj,nm);
-	       if (locs != null && locs.size() > 0) loc = locs.get(0);
-	     }
-	  }
+         int idx = nm.indexOf(":");
+         if (idx > 0) {
+            proj = nm.substring(0,idx);
+            nm = nm.substring(idx+1);
+            if (nm.startsWith(".")) nm = nm.substring(1);
+            if (nm.length() > 0) {
+               List<BumpLocation> locs = BumpClient.getBump().findClassDefinition(proj,nm);
+               if (locs != null && locs.size() > 0) loc = locs.get(0);
+             }
+          }
        }
-	
+        
       String cmd = "<BUBBLES DO='REBUSACCEPT'";
       cmd += " PROJECT='" + proj + "'";
       cmd += " FLAG='" + Boolean.toString(fg) + "'";
       if (loc != null) {
-	 cmd += " FILE='" + loc.getFile().getAbsolutePath() + "'";
-	 cmd += " SPOS='" + loc.getOffset() + "'";
-	 cmd += " EPOS='" + loc.getEndOffset() + "'";
+         cmd += " FILE='" + loc.getFile().getAbsolutePath() + "'";
+         cmd += " SPOS='" + loc.getOffset() + "'";
+         cmd += " EPOS='" + loc.getEndOffset() + "'";
        }
       cmd += " LANG='Rebase' />";
-
+   
       BoardSetup bs = BoardSetup.getSetup();
       MintControl mc = bs.getMintControl();
       mc.send(cmd);

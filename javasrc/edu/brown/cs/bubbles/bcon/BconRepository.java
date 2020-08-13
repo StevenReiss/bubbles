@@ -102,7 +102,7 @@ BconRepository()
 	       if (bl == null) continue;
 	       String ky = bl.getKey();
 	       if (active_names.containsKey(ky)) continue;
-	       BconName bcn = new BconName(bl);
+	       BconName bcn = new BconName(bl,bn.getSubProject());
 	       active_names.put(ky,bcn);
 	     }
 	  }
@@ -152,13 +152,16 @@ BconRepository()
 private static class BconName extends BassNameBase {
 
    private BumpLocation bump_location;
+   private String       sub_project;
 
-   BconName(BumpLocation bl) {
+   BconName(BumpLocation bl,String subpro) {
       bump_location = bl;
       name_type = BassNameType.OTHER_CLASS;
+      sub_project = subpro;
     }
 
    @Override public String getProject() 	{ return bump_location.getSymbolProject(); }
+   @Override public String getSubProject()      { return sub_project; }
    @Override public int getModifiers()		{ return bump_location.getModifiers(); }
    @Override protected String getKey()		{ return bump_location.getKey() + "<BCON>"; }
    @Override protected String getSymbolName()	{ return bump_location.getSymbolName(); }
@@ -291,7 +294,7 @@ private void reload()
 	 found.add(ky);
 	 BconName bcn = active_names.get(ky);
 	 if (bcn == null) {
-	    bcn = new BconName(bl);
+	    bcn = new BconName(bl,bn.getSubProject());
 	    active_names.put(ky,bcn);
 	    chng = true;
 	  }

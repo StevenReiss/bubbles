@@ -76,6 +76,17 @@ public String getProject();
 
 
 /**
+ *      Returns the project to display.  This is generally the project, but might differ
+ *      if the project includes mutltiple top-level source directories
+ **/
+
+public default String getSubProject()
+{
+   return null;
+}
+
+
+/**
  *	Return the package associated with this name.
  **/
 public String getPackageName();

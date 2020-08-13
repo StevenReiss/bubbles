@@ -65,6 +65,7 @@ private Set<BassName>	all_names;
 private boolean 	is_ready;
 private List<BassUpdatableRepository> update_repos;
 private Map<File,List<BassName>> file_names;
+private Map<String,Map<String,String>> base_map;
 
 private Pattern 	anonclass_pattern = Pattern.compile("\\$[0-9]");
 
@@ -83,6 +84,7 @@ BassRepositoryLocation()
    file_names = null;
    is_ready = false;
    update_repos = new ArrayList<>();
+   base_map = null;
 
    initialize();
 
@@ -100,13 +102,9 @@ BassRepositoryLocation()
 
 @Override public Iterable<BassName> getAllNames()
 {
+   waitForNames();
+   
    synchronized (this) {
-      while (!is_ready) {
-	 try {
-	    wait(2000);
-	  }
-	 catch (InterruptedException e) { }
-       }
       return new ArrayList<BassName>(all_names);
     }
 }
@@ -288,6 +286,9 @@ private synchronized void loadNames()
 
    BumpClient bc = BumpClient.getBump();
    Collection<BumpLocation> locs = bc.findAllNames(null);
+   
+   checkBaseMap(locs);
+   
    if (locs != null) {
       for (BumpLocation bl : locs) {
 	 addLocation(bl,usedmap);
@@ -300,11 +301,134 @@ private synchronized void loadNames()
 
 
 
+private void checkBaseMap(Collection<BumpLocation> locs)
+{
+   Map<String,Set<String>> projpaths = new HashMap<>();
+   for (BumpLocation bl : locs) {
+      switch (bl.getSymbolType()) {
+         case CLASS :
+         case ENUM :
+         case INTERFACE :
+         case ANNOTATION :
+            break;
+         default :
+            continue;
+       }
+      File f = bl.getFile();
+      if (f == null) continue;
+      String s = bl.getSymbolName();
+      if (s == null) continue;
+      int idx = s.lastIndexOf(".");
+      if (idx < 0) continue;
+      String jfnm = s.substring(idx+1) + ".java";
+      if (!f.getName().equals(jfnm)) continue;
+      f = f.getParentFile();
+      s = s.substring(0,idx);
+      for ( ; ; ) {
+         idx = s.lastIndexOf(".");
+         if (idx < 0) break;
+         s = s.substring(0,idx);
+         f = f.getParentFile();
+       }
+      f = f.getParentFile();
+      if (!f.exists()) continue;
+      String p = bl.getProject();
+      if (p == null) continue;
+      Set<String> paths = projpaths.get(p);
+      if (paths == null) {
+         paths = new HashSet<>();
+         projpaths.put(p,paths);
+       }
+      paths.add(f.getPath());
+    }
+   
+   if (projpaths.isEmpty()) return;
+   for (Map.Entry<String,Set<String>> ent : projpaths.entrySet()) {
+      Set<String> rslt = ent.getValue();
+      if (rslt.size() > 1) {
+         String pfx = null;
+         String sfx = null;
+         for (String s : rslt) {
+            if (pfx == null) pfx = s;
+            else pfx = commonPrefix(pfx,s);
+            if (sfx == null) sfx = s;
+            else sfx = commonSuffix(sfx,s);
+          }
+         if (base_map == null) base_map = new HashMap<>();
+         String proj = ent.getKey();
+         Map<String,String> projmap = base_map.get(proj);
+         if (projmap == null) {
+            projmap = new HashMap<>();
+            base_map.put(proj,projmap);
+          }
+         int ln = pfx.length();
+         int sln = sfx.length();
+         for (String s : rslt) {
+            String nm = s.substring(ln);
+            if (sln > 0) {
+               int epos = nm.length() - sln;
+               nm = nm.substring(0,epos);
+             }
+            projmap.put(s,nm);
+          }
+       }
+    }
+}
+
+
+
+private String commonPrefix(String s1,String s2) 
+{
+   int ln = Math.min(s1.length(),s2.length());
+   for (int i = 0; i < ln; ++i) {
+      if (s1.charAt(i) != s2.charAt(i)) {
+         return s1.substring(0,i);
+       }
+    }
+   if (s1.length() == ln) return s1;
+   return s2;
+}
+
+
+private String commonSuffix(String s1,String s2)
+{
+   int ln1 = s1.length();
+   int ln2 = s2.length();
+   int ln = Math.min(ln1,ln2);
+   for (int i = 0; i < ln; ++i) {
+      if (s1.charAt(ln1-i-1) != s2.charAt(ln2-i-1)) {
+         if (i == 0) return "";
+         return s1.substring(ln1-i);
+       }
+    }
+   if (s1.length() == ln) return s1;
+   return s2;
+}
+
+
+
 private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 {
    if (!isRelevant(bl)) return;
+   
+   String pfx = null;
+   if (base_map != null && bl.getFile() != null && bl.getProject() != null) {
+      Map<String,String> pmap = base_map.get(bl.getProject());
+      if (pmap != null) {
+         String path = bl.getFile().getPath();
+         String best = null;
+         for (String key : pmap.keySet()) {
+            if (path.startsWith(key)) {
+               if (best == null || best.length() < key.length()) {
+                  best = key;
+                }
+             }
+          }
+         if (best != null) pfx = pmap.get(best);
+       }
+    }
 
-   BassNameLocation bn = new BassNameLocation(bl);
+   BassNameLocation bn = new BassNameLocation(bl,pfx);
    String key = null;
 
    switch (bn.getNameType()) {
@@ -342,18 +466,18 @@ private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
       case ANNOTATION :
 	 all_names.add(bn);
 	 if (showClassFile(bn)) {
-	    BassNameLocation fnm = new BassNameLocation(bl,BassNameType.FILE);
+	    BassNameLocation fnm = new BassNameLocation(bl,BassNameType.FILE,pfx);
 	    all_names.add(fnm);
 	  }
-	 bn = new BassNameLocation(bl,BassNameType.HEADER);
+	 bn = new BassNameLocation(bl,BassNameType.HEADER,pfx);
 	 break;
       case PROJECT :
 	 // if (all_names.size() != 0) bn = null;
 	 break;
       case MODULE :
-	 BassNameLocation fnm = new BassNameLocation(bl,BassNameType.FILE);
+	 BassNameLocation fnm = new BassNameLocation(bl,BassNameType.FILE,pfx);
 	 all_names.add(fnm);
-	 BassNameLocation inm = new BassNameLocation(bl,BassNameType.HEADER);
+	 BassNameLocation inm = new BassNameLocation(bl,BassNameType.HEADER,pfx);
 	 all_names.add(inm);
 	 break;
       default:

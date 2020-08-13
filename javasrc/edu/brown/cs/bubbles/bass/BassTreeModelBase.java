@@ -190,9 +190,14 @@ private TreeLeaf insertNode(BassName nm,TreeLeaf last)
    if (idx >= 0 && last != null) {
       String plast = last.getBassName().getProject();
       String pthis = nm.getProject();
+      String slast = last.getBassName().getSubProject();
+      String sthis = nm.getSubProject();
       if (plast == null && pthis == null) ;
       else if (plast == null || pthis == null) idx = -1;
       else if (!plast.equals(pthis)) idx = -1;
+      else if (slast == null && sthis == null) ;
+      else if (slast == null || sthis == null) idx = -1;
+      else if (!slast.equals(sthis)) idx = -1;
     }
    if (idx >= 0 && last != null) {
       p = last.getBassParent();
@@ -287,23 +292,27 @@ private static class TreeSorter implements Comparator<BassName> {
 
    @Override public int compare(BassName b1,BassName b2) {
       String b1pfx = b1.getProject();
+      String b1spfx = b1.getSubProject();
+      if (b1pfx != null && b1spfx != null) b1pfx += "@"  + b1spfx;
       String b1sfx = b1.getNameHead();
       if (b1pfx != null && b1sfx != null) b1pfx += ":" + b1sfx;
       else if (b1sfx != null) b1pfx = b1sfx;
       String b2pfx = b2.getProject();
+      String b2spfx = b2.getSubProject();
+      if (b2pfx != null && b2spfx != null) b2pfx += "@" + b2spfx;
       String b2sfx = b2.getNameHead();
       if (b2pfx != null && b2sfx != null) b2pfx += ":" + b2sfx;
       else if (b2sfx != null) b2pfx = b2sfx;
       if (b1pfx == null && b2pfx != null) return -1;
       if (b1pfx != null && b2pfx == null) return 1;
       else if (b1pfx != null && b2pfx != null) {
-	 int pd = b1pfx.compareTo(b2pfx);
-	 if (pd != 0) return pd;
+         int pd = b1pfx.compareTo(b2pfx);
+         if (pd != 0) return pd;
       }
-
+   
       int d = b1.getSortPriority() - b2.getSortPriority();
       if (d != 0) return d;
-
+   
       return b1.getFullName().compareTo(b2.getFullName());
     }
 

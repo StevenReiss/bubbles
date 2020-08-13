@@ -261,14 +261,16 @@ protected String getLocalName()
 {
    StringBuilder buf = new StringBuilder();
    String p = getProject();
+   String sp = getSubProject();
    if (p != null) {
       buf.append(p);
+      if (sp == null) buf.append(":.");
+      else buf.append(":.");
+    }
+   if (sp != null) {
+      buf.append(sp);
       buf.append(":.");
     }
-   if (p != null && getLocation() != null && getLocation().getFile() != null) {
-      // want to get project-relative path for file at this point and insert any 
-      // needed prefix (e.g. /gen)
-   }
    String nh = getNameHead();
    if (nh != null) {
       buf.append(nh);
