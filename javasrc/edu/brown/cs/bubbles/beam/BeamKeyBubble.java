@@ -32,6 +32,7 @@ package edu.brown.cs.bubbles.beam;
 
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.ivy.swing.SwingText;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -39,6 +40,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import java.awt.Dimension;
+import java.awt.event.InputEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -94,6 +96,14 @@ private synchronized static void setupTableModel()
 
    String kfilnm = BoardSetup.getSetup().getLibraryPath("keybindings.csv");
    BufferedReader br = null;
+   
+   String menu = "control";
+   String xalt = "alt";
+   int mask = SwingText.getMenuShortcutKeyMaskEx();
+   if (mask == InputEvent.META_DOWN_MASK) {
+      menu = "command";
+      xalt = "control";   
+    }
 
    try {
       br = new BufferedReader(new FileReader(kfilnm));
@@ -103,6 +113,12 @@ private synchronized static void setupTableModel()
 	 String ln = br.readLine();
 	 if (ln == null || ln.length() == 0) break;
 	 Vector<String> strs = tokenize(ln);
+         if (strs.size() != 3) continue;
+         String s = strs.get(1);
+         s = s.replace("menu",menu);
+         s = s.replace("xalt",xalt);
+         strs.set(1,s);
+         
 	 if (mdl == null) {
 	    mdl = new DefaultTableModel(strs,0);
 	    continue;

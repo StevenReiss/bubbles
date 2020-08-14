@@ -874,35 +874,35 @@ private static class MoveClassAction extends AbstractAction implements Runnable 
 
    private List<String> getPackages() {
       Set<String> rslt = new TreeSet<>();
-
+   
       BassRepository br = BassFactory.getRepository(BudaConstants.SearchType.SEARCH_CODE);
       for (BassName bn : br.getAllNames()) {
-	 if (project_name != null && !project_name.equals(bn.getProject())) continue;
-	 switch (bn.getNameType()) {
-	    case CLASS :
-	    case INTERFACE :
-	    case ENUM :
-	    case THROWABLE :
-	    case ANNOTATION :
-	       break;
-	    default :
-	       continue;
-	  }
-	 String pkg = bn.getNameHead();
-	 if (pkg == null) continue;
-	 int idx = pkg.lastIndexOf(".");
-	 if (idx < 0) continue;
-	 else pkg = pkg.substring(0,idx);
-	 if (rslt.contains(pkg)) continue;
-	 BumpLocation bl = bn.getLocation();
-	 if (bl == null) continue;
-	 String key = bl.getKey();
-	 if (key.contains("$")) continue;
-	 if (pkg.equals(from_package)) continue;
-
-	 rslt.add(pkg);
+         if (project_name != null && !project_name.equals(bn.getProject())) continue;
+         switch (bn.getNameType()) {
+            case CLASS :
+            case INTERFACE :
+            case ENUM :
+            case THROWABLE :
+            case ANNOTATION :
+               break;
+            default :
+               continue;
+          }
+         String pkg = bn.getNameHead();
+         if (pkg == null) continue;
+         int idx = pkg.lastIndexOf(".");
+         if (idx < 0) continue;
+         else pkg = pkg.substring(0,idx);
+         if (rslt.contains(pkg)) continue;
+         BumpLocation bl = bn.getLocation();
+         if (bl == null) continue;
+         String key = bl.getKey();
+         if (key.contains("$")) continue;
+         if (pkg.equals(from_package)) continue;
+   
+         rslt.add(pkg);
        }
-
+   
       return new ArrayList<>(rslt);
     }
 

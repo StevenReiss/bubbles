@@ -30,7 +30,6 @@ import edu.brown.cs.bubbles.board.BoardConstants.RunMode;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
-import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
 
@@ -149,7 +148,6 @@ private Collection<BudaTask>	task_shelf;
 private BudaRelations		relation_data;
 private BudaChannelSet		cur_channels;
 private JPanel			channel_area;
-private BoardProperties 	buda_properties;
 private BudaShareManager	share_manager;
 private BudaDemonstration	demo_thread;
 private String			demo_text;
@@ -311,7 +309,6 @@ private void initialize(Element e)
    button_panel = null;
    button_panels = new ArrayList<Component>();
    cur_channels = null;
-   buda_properties = BoardProperties.getProperties("Buda");
    last_mouse = null;
    demo_thread = null;
    demo_text = null;
@@ -399,7 +396,7 @@ private void setupSwing()
    if (ttbg != null) dflts.put("ToolTip.background",ttbg);
    Color ttfg = BoardColors.getColor(BUBBLE_TOOLTIP_TEXT_PROP);
    if (ttfg != null) dflts.put("ToolTip.foreground",ttfg);
-   Font ttft = buda_properties.getFontOption("Buda.tooltip.font",BUBBLE_TOOLTIP_FONT);
+   Font ttft = BUDA_PROPERTIES.getFontOption("Buda.tooltip.font",BUBBLE_TOOLTIP_FONT);
    if (ttft != null) dflts.put("ToolTip.font",ttft);
 }
 
@@ -832,7 +829,7 @@ public void createSearchBubble(Point pt,String proj,String pfx,boolean showmenu)
    BudaBubble bb = search_creator.createSearch(SearchType.SEARCH_CODE,proj,pfx);
    bb.addComponentListener(new SearchSingleton());
 
-   if (!buda_properties.getBoolean(SEARCH_ALLOW_MULTIPLE)) search_bubble = bb;
+   if (!BUDA_PROPERTIES.getBoolean(SEARCH_ALLOW_MULTIPLE)) search_bubble = bb;
 
    if (showmenu) getBubbleMenu().createMenuAndSearch(this,pt,bb);
    else {
@@ -904,7 +901,7 @@ public void createMergedSearchBubble(Point pt,String proj,String pfx)
    BudaBubble bb = search_creator.createSearch(SearchType.SEARCH_ALL,proj,pfx);
    bb.addComponentListener(new SearchSingleton());
 
-   if (!buda_properties.getBoolean(SEARCH_ALLOW_MULTIPLE)) {
+   if (!BUDA_PROPERTIES.getBoolean(SEARCH_ALLOW_MULTIPLE)) {
       search_bubble = bb;
       docsearch_bubble = bb;
     }
@@ -926,7 +923,7 @@ public void createDocSearchBubble(Point pt,String proj,String pfx)
 
    BudaBubble bb = search_creator.createSearch(SearchType.SEARCH_DOC,proj,pfx);
    bb.addComponentListener(new SearchSingleton());
-   if (!buda_properties.getBoolean(SEARCH_ALLOW_MULTIPLE)) docsearch_bubble = bb;
+   if (!BUDA_PROPERTIES.getBoolean(SEARCH_ALLOW_MULTIPLE)) docsearch_bubble = bb;
 
    BudaConstraint cnst = new BudaConstraint(BudaBubblePosition.STATIC,pt);
    add(bb,cnst);
@@ -1650,8 +1647,10 @@ private class ShadeUpdater implements ActionListener {
 
    ShadeUpdater() {
       last_time = System.currentTimeMillis();
+      long updown = BUDA_PROPERTIES.getLong("Buda.shade.time",SHADE_UP_DOWN_TIME);
+      if (updown <= 0) updown = 1;
       move_delta = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
-      move_delta /= SHADE_UP_DOWN_TIME;
+      move_delta /= updown;
     }
 
    @Override public void actionPerformed(ActionEvent e) {
@@ -2774,14 +2773,14 @@ public void stopWaitCursor() {
 
 void handleCloseRequest()
 {
-   boolean save = buda_properties.getBoolean("Buda.close.save");
-   if (buda_properties.getBoolean("Buda.close.ask")) {
+   boolean save = BUDA_PROPERTIES.getBoolean("Buda.close.save");
+   if (BUDA_PROPERTIES.getBoolean("Buda.close.ask")) {
       SwingGridPanel pnl = new SwingGridPanel();
       pnl.beginLayout();
       pnl.addBannerLabel("Exit from Code Bubbles");
       pnl.addSeparator();
       JCheckBox savebox = null;
-      if (buda_properties.getBoolean("Buda.ask.save.on.close",true)) {
+      if (BUDA_PROPERTIES.getBoolean("Buda.ask.save.on.close",true)) {
 	 savebox = pnl.addBoolean("Save Any Changes",save,null);
        }
       JCheckBox askbox = pnl.addBoolean("Always exit without prompt",false,null);
@@ -2791,10 +2790,10 @@ void handleCloseRequest()
       if (sts == JOptionPane.CANCEL_OPTION) return;
       if ((savebox != null && savebox.isSelected() != save) || askbox.isSelected()) {
 	 if (savebox != null) save = savebox.isSelected();
-	 buda_properties.setProperty("Buda.close.save",Boolean.toString(save));
-	 buda_properties.setProperty("Buda.close.ask",Boolean.toString(!askbox.isSelected()));
+	 BUDA_PROPERTIES.setProperty("Buda.close.save",Boolean.toString(save));
+	 BUDA_PROPERTIES.setProperty("Buda.close.ask",Boolean.toString(!askbox.isSelected()));
 	 try {
-	    buda_properties.save();
+	    BUDA_PROPERTIES.save();
 	  }
 	 catch (IOException e) { }
        }

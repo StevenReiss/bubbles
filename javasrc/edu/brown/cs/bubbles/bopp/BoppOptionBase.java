@@ -766,6 +766,7 @@ private static class OptionInteger extends BoppOptionBase implements ChangeListe
 
    private int min_value;
    private int max_value;
+   private int scale_by;
    private boolean range_ok;
    private SwingRangeSlider range_btn;
    private SwingNumericField number_btn;
@@ -776,6 +777,7 @@ private static class OptionInteger extends BoppOptionBase implements ChangeListe
       number_btn = null;
       min_value = IvyXml.getAttrInt(ox,"MIN",0);
       max_value = IvyXml.getAttrInt(ox,"MAX",0);
+      scale_by = IvyXml.getAttrInt(ox,"SCALE",0);
       if (min_value >= max_value) range_ok = false;
       else if (IvyXml.getAttrBool(ox,"SLIDER")) range_ok = true;
       else if (max_value - min_value < 10 && max_value - min_value > 2) range_ok = true;
@@ -787,12 +789,10 @@ private static class OptionInteger extends BoppOptionBase implements ChangeListe
    @Override public void addButton(SwingGridPanel pnl) {
       doingAdd(true);
       if (range_ok) {
-	 int dec = (max_value - min_value)/100;
-	 if (dec < 0) dec = 1;
-	 range_btn = pnl.addRange(option_description,min_value,max_value,dec,getValue(),this);
+         range_btn = pnl.addRange(option_description,min_value,max_value,scale_by,getValue(),this);
        }
       else {
-	 number_btn = pnl.addNumericField(option_description,min_value,max_value,getValue(),this);
+         number_btn = pnl.addNumericField(option_description,min_value,max_value,getValue(),this);
        }
       doingAdd(false);
     }

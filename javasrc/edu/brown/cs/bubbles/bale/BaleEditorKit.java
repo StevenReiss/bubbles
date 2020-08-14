@@ -295,7 +295,7 @@ private static final KeyItem [] key_defs = new KeyItem[] {
    new KeyItem("menu CLOSE_BRACKET",next_brace_action),
    new KeyItem("menu S",save_all_action),
    new KeyItem("menu shift S",save_action),
-   new KeyItem("alt shift S",revert_action),            // temporary for now
+   new KeyItem("xalt shift S",revert_action),            // temporary for now
    new KeyItem("alt shift menu S",force_save_action),
    new KeyItem("menu E",explicit_elision_action),
    new KeyItem("menu shift E",redo_elision_action),

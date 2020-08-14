@@ -448,6 +448,17 @@
 	 <TAB NAME="Bubble Config"/>
 	 <KEYWORD TEXT="Font" />
       </OPT>
+      <OPT NAME="Buda.overview.shades" TYPE="BOOLEAN" DESCRIPTION="Hide overview area to provide more workspace">
+	 <TAB NAME="Bubble Config"/>
+	 <TAB NAME='Popular Options'/>
+	 <KEYWORD TEXT='overview' />
+	 <KEYWORD TEXT='shade' />
+      </OPT>
+      <OPT NAME="Buda.shade.time" DESCRIPTION="Time for shade to move up or down (ms)" TYPE="INTEGER" MAX="2000" MIN="1" SLIDER="true">
+	 <TAB NAME="Bubble Config"/>
+	 <KEYWORD TEXT="overview"/>
+	 <KEYWORD TEXT="shade"/>
+      </OPT>
    </PACKAGE>
 
    <PACKAGE NAME="Bgta">

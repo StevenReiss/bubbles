@@ -31,7 +31,6 @@
 package edu.brown.cs.bubbles.buda;
 
 import edu.brown.cs.bubbles.board.BoardColors;
-import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.AbstractAction;
@@ -90,7 +89,6 @@ private Color			single_left_color;
 private Color			single_right_color;
 private int			group_index;
 private GroupTitle		title_field;
-private BoardProperties 	buda_properties;
 private RoundRectangle2D.Double title_region;
 private double                  scale_factor;
 
@@ -109,8 +107,6 @@ private static int		group_counter = 0;
 
 BudaBubbleGroup()
 {
-   buda_properties = BoardProperties.getProperties("Buda");
-
    group_bubbles = new HashSet<BudaBubble>();
    group_shape = null;
    top_point = null;
@@ -369,7 +365,7 @@ void drawGroup(Graphics2D g,boolean overview)
    Point p1 = null;
    Shape s = null;
 
-   boolean grad = buda_properties.getBoolean(GROUP_DRAW_BACKGROUND_GRADIENT);
+   boolean grad = BUDA_PROPERTIES.getBoolean(GROUP_DRAW_BACKGROUND_GRADIENT);
    grad = false;
    if (overview) grad = false;
 

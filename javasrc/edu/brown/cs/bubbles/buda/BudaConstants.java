@@ -427,6 +427,9 @@ double	BUBBLE_ARC_SIZE = 8.0;		// size of arc for round rectangle
  *	Width of the line used for drawing the border when not focused.
  **/
 float	BUBBLE_EDGE_SIZE = 3.0f;	// border line width
+
+
+
 String	BUDA_EDGE_SIZE_PROP = "Buda.border.width";
 
 

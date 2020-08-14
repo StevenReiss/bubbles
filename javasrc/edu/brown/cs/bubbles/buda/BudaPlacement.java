@@ -430,9 +430,9 @@ private static class UserUpdater implements ActionListener, ComponentListener {
    @Override public void componentMoved(ComponentEvent e) {
       // System.err.println("UPDATE: MOVE");
       if (move_count++ >= 4) {
-	 int t1 = BUDA_PROPERTIES.getInt("Buda.placement.user.moved",USER_POSITION_RESTART_TIME);
-	 // System.err.println("UPDATE: RESTART " + t1);
-	 swing_timer.setInitialDelay(t1);
+         int t1 = BUDA_PROPERTIES.getInt("Buda.placement.user.moved",USER_POSITION_RESTART_TIME);
+         // System.err.println("UPDATE: RESTART " + t1);
+         swing_timer.setInitialDelay(t1);
        }
       swing_timer.restart();
     }
