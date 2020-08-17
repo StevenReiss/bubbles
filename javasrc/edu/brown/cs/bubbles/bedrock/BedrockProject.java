@@ -619,10 +619,10 @@ private static final class RunPropDialog implements Runnable {
    @Override public void run() {
       PropertyDialogAction act = new PropertyDialogAction(use_provider,use_provider);
       try {
-	 act.run();
+         act.run();
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("BEDROCK: Problem with project property: " + t,t);
+         BedrockPlugin.logE("BEDROCK: Problem with project property: " + t,t);
        }
     }
 
@@ -1147,6 +1147,14 @@ ICompilationUnit getCompilationUnit(String proj,String file) throws BedrockExcep
    ICompilationUnit icu = checkFilePrefix(ijp,null,file);
    if (icu != null) return icu;
    if (ijp == null) return null;
+   
+   String cfile = file;
+   try {
+      File f1 = new File(file);
+      cfile = f1.getCanonicalPath();
+    }
+   catch (IOException e) { }
+   if (cfile != null && cfile.equals(file)) cfile = null;
 
    try {
       IClasspathEntry[] ents = ijp.getResolvedClasspath(true);
@@ -1166,8 +1174,17 @@ ICompilationUnit getCompilationUnit(String proj,String file) throws BedrockExcep
 	       icu = checkFilePrefix(ijp,f1.getAbsolutePath(),file);
 	       if (icu != null) return icu;
 	     }
+            if (cfile != null) {
+               icu = checkFilePrefix(ijp,f.getAbsolutePath(),cfile);
+               if (icu != null) return icu;
+               if (f1 != null && !f.equals(f1)) {
+                  icu = checkFilePrefix(ijp,f1.getAbsolutePath(),cfile);
+                  if (icu != null) return icu;
+                }
+             }
 	  }
        }
+      
       BedrockPlugin.logD("Can't find resolved entry for " + file + " " + ijp.getPath());
     }
    catch (JavaModelException e) {
@@ -1873,9 +1890,7 @@ void setProjectOutputPath(String proj,String path)
 
 
 
-void setProjectOption(String proj,String name,String value)
-{
-}
+
 
 
 void setProjectDescription(String proj,Element desc)

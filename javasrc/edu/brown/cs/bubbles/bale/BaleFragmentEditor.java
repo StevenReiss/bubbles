@@ -575,15 +575,15 @@ private class EditorPane extends BaleEditorPane implements BaleEditor {
    void setScaleFactor(double sf) {
       BaleDocument bd = getBaleDocument();
       if (bd instanceof BaleDocumentFragment) {
-	  BaleDocumentFragment bf = (BaleDocumentFragment) bd;
-	  bf.setScaleFactor(sf);
+          BaleDocumentFragment bf = (BaleDocumentFragment) bd;
+          bf.setScaleFactor(sf);
        }
       bd.baleWriteLock();
       try {
-	 bd.reportEvent(bd, 0, bd.getLength(), DocumentEvent.EventType.CHANGE, null, null);
+         bd.reportEvent(bd, 0, bd.getLength(), DocumentEvent.EventType.CHANGE, null, null);
       }
       finally {
-	 bd.baleWriteUnlock();
+         bd.baleWriteUnlock();
       }
     }
 

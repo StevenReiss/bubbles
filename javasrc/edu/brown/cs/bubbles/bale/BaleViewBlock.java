@@ -898,7 +898,7 @@ private double getPriority()
    JTextComponent tc = (JTextComponent) getContainer();
    Caret c = tc.getCaret();
    int soff = c.getDot();
-   Map<BaleElement,Double> pmap = new HashMap<BaleElement,Double>();
+   Map<BaleElement,Double> pmap = new HashMap<>();
    if (soff != 0) {
       BaleDocument bd = (BaleDocument) getDocument();
       BaleElement ce = bd.getActualCharacterElement(soff);

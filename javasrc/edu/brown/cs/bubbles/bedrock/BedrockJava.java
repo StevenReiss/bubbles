@@ -75,6 +75,7 @@ import org.eclipse.search.core.text.TextSearchRequestor;
 import org.eclipse.search.core.text.TextSearchScope;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -815,7 +816,7 @@ private TextSearchScope getSearchScope(String proj,String filepat)
 
 
 
-private static class SearchHandler extends TextSearchRequestor {
+private class SearchHandler extends TextSearchRequestor {
 
    private IvyXmlWriter xml_writer;
    private ICompilationUnit [] base_units;

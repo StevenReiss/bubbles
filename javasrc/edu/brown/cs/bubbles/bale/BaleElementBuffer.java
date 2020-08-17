@@ -689,28 +689,6 @@ private void fixupElisions(List<BaleElement> lelts)
 	 eelt.fixParents();	// identifiers inside old elided region might have new parents -- restore
        }
     }
-
-   /******************
-   for (ListIterator<BaleElement> it = lelts.listIterator(); it.hasNext(); ) {
-      BaleElement lelt = it.next();
-      BaleElement eelt = shouldBeElided(lelt);
-      if (eelt != null && lelt.isEndOfLine()) {
-	 int epos = eelt.getEndOffset();
-	 int spos = eelt.getStartOffset();
-	 int slpos = lelt.getStartOffset();
-	 if (spos < slpos) continue;
-
-	 it.set(eelt);
-	 while (it.hasNext()) {
-	    lelt = it.next();
-	    if (lelt.getEndOffset() > epos) break;
-	    it.remove();
-	  }
-
-	 eelt.fixParents();	// identifiers inside old elided region might have new parents -- restore
-       }
-    }
-  ***************/
 }
 
 

@@ -1258,8 +1258,8 @@ private static class JoinLinesAction extends TextAction {
       int edel = bd.getFirstNonspace(lno+1);
       if (edel < 0) edel = soff;
       try {
-	 bd.remove(bdel,edel-bdel);
-	 bd.insertString(bdel," ",null);
+         bd.remove(bdel,edel-bdel);
+         bd.insertString(bdel," ",null);
        }
       catch (BadLocationException e) { }
     }
@@ -1971,26 +1971,26 @@ private static class ExplicitElisionAction extends AbstractAction {
       BaleDocument bd = target.getBaleDocument();
       BowiFactory.startTask();
       try {
-	 bd.baleWriteLock();
-	 try {
-	    int off = target.getCaretPosition();
-	    BaleElement.Branch br = bd.getParagraphElement(off);
-	    BaleElement ebr = null;
-	    if (br.isElided()) {
-	       br.setElided(false);
-	       ebr = br;
-	     }
-	    else {
-	       while (br != null && !br.canElide()) {
-		  br = br.getBaleParent();
-		}
-	       if (br == null) return;
-	       br.setElided(true);
-	     }
-	    bd.handleElisionChange();
-	    if (ebr != null) target.increaseSizeForElidedElement(ebr);
-	  }
-	 finally { bd.baleWriteUnlock(); }
+         bd.baleWriteLock();
+         try {
+            int off = target.getCaretPosition();
+            BaleElement.Branch br = bd.getParagraphElement(off);
+            BaleElement ebr = null;
+            if (br.isElided()) {
+               br.setElided(false);
+               ebr = br;
+             }
+            else {
+               while (br != null && !br.canElide()) {
+        	  br = br.getBaleParent();
+        	}
+               if (br == null) return;
+               br.setElided(true);
+             }
+            bd.handleElisionChange();
+            if (ebr != null) target.increaseSizeForElidedElement(ebr);
+          }
+         finally { bd.baleWriteUnlock(); }
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","ExplicitElision");

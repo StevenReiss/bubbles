@@ -1018,7 +1018,7 @@ private class ReferencesPanel extends SwingGridPanel implements ActionListener {
       beginLayout();
       use_refs = new HashSet<String>(ref_projects);
       for (String s : other_projects) {
-	 addBoolean(s,use_refs.contains(s),this);
+         addBoolean(s,use_refs.contains(s),this);
        }
     }
 
@@ -1062,70 +1062,70 @@ private class ProjectEditor implements ActionListener {
       Set<PathEntry> dels = new HashSet<PathEntry>(initial_paths);
       dels.removeAll(source_paths);
       boolean chng = false;
-
+   
       if (contract_panel.setupCofoja()) {
-	 setupContractsForJava();
+         setupContractsForJava();
        }
       if (contract_panel.setupJunit()) {
-	 setupJunit();
+         setupJunit();
        }
       if (contract_panel.setupAnnoations()) {
-	 setupAnnotations();
+         setupAnnotations();
        }
       option_elements.put(ASSERT_OPTION,Boolean.toString(contract_panel.enableAssertions()));
-
+   
       IvyXmlWriter xw = new IvyXmlWriter();
       xw.begin("PROJECT");
       xw.field("NAME",project_name);
       for (PathEntry pe : library_paths) {
-	 pe.outputXml(xw,false);
-	 dels.remove(pe);
+         pe.outputXml(xw,false);
+         dels.remove(pe);
        }
       for (PathEntry pe : dels) {
-	 pe.outputXml(xw,true);
+         pe.outputXml(xw,true);
        }
-
+   
       for (Map.Entry<String,String> ent : option_elements.entrySet()) {
-	 String k = ent.getKey();
-	 String v = ent.getValue();
-	 if (k == null || v == null) continue;
-	 if (start_options != null) {
-	    String ov = start_options.get(k);
-	    if (v.equals(ov)) continue;
-	  }
-	 chng = true;
-	 xw.begin("OPTION");
-	 xw.field("NAME",k);
-	 xw.field("VALUE",v);
-	 xw.end("OPTION");
+         String k = ent.getKey();
+         String v = ent.getValue();
+         if (k == null || v == null) continue;
+         if (start_options != null) {
+            String ov = start_options.get(k);
+            if (v.equals(ov)) continue;
+          }
+         chng = true;
+         xw.begin("OPTION");
+         xw.field("NAME",k);
+         xw.field("VALUE",v);
+         xw.end("OPTION");
        }
-
+   
       for (PrefEntry pe : pref_entries) {
-	  pe.outputXml(xw);
-	  chng = true;
+          pe.outputXml(xw);
+          chng = true;
        }
-
+   
       if (references_panel != null) {
-	 int ct = ref_projects.size();
-	 xw.begin("REFERENCES");
-	 for (String s : references_panel.getUsedReferences()) {
-	    xw.textElement("PROJECT",s);
-	    if (!ref_projects.contains(s)) chng = true;
-	    --ct;
-	  }
-	 if (ct != 0) chng = true;
-	 xw.end("REFERENCES");
+         int ct = ref_projects.size();
+         xw.begin("REFERENCES");
+         for (String s : references_panel.getUsedReferences()) {
+            xw.textElement("PROJECT",s);
+            if (!ref_projects.contains(s)) chng = true;
+            --ct;
+          }
+         if (ct != 0) chng = true;
+         xw.end("REFERENCES");
        }
-
+   
       xw.end("PROJECT");
-
+   
       closeWindow(problem_panel);
-
+   
       BumpClient bc = BumpClient.getBump();
-
+   
       if (chng || anythingChanged())
-	 bc.editProject(project_name,xw.toString());
-
+         bc.editProject(project_name,xw.toString());
+   
       force_update = false;
     }
 

@@ -125,7 +125,7 @@ BaleAnnotationArea(BaleEditor be)
    JComponent jbe = (JComponent) be;
    jbe.addComponentListener(new CheckUpdater());
 
-   annot_set = new HashSet<BaleAnnotation>();
+   annot_set = new HashSet<>();
    start_line = 0;
    line_data = null;
    annot_map = null;
@@ -357,7 +357,7 @@ private Map<Integer,Collection<BaleAnnotation>> setupAnnotationMap()
 
    synchronized (annot_set) {
       if (annot_map == null && line_data != null) {
-	 annot_map = new HashMap<Integer,Collection<BaleAnnotation>>();
+	 annot_map = new HashMap<>();
 
 	 for (BaleAnnotation an : annot_set) {
 	    int off = for_document.getFragmentOffset(an.getDocumentOffset());
@@ -371,7 +371,7 @@ private Map<Integer,Collection<BaleAnnotation>> setupAnnotationMap()
 	    lan.add(an);
 	 }
        }
-      else if (annot_map == null) return new HashMap<Integer,Collection<BaleAnnotation>>();
+      else if (annot_map == null) return new HashMap<>();
       return annot_map;
    }
 }

@@ -496,7 +496,7 @@ private synchronized void setupElementAttributes()
 void addToCache(Object k,Object v)
 {
    if (attr_cache == null) {
-      attr_cache = new HashMap<Object,Object>();
+      attr_cache = new HashMap<>();
     }
    attr_cache.put(k,v);
 }

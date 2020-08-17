@@ -684,7 +684,7 @@ int	BALE_DELTA_INITIAL_HEIGHT = 15;
 /**
  *	Maximum initial width for a code bubble.
  **/
-int	BALE_MAX_INITIAL_WIDTH = 350;		// max initial size for a bubble
+int	BALE_MAX_INITIAL_WIDTH = 500;		// max initial size for a bubble
 
 
 /**
