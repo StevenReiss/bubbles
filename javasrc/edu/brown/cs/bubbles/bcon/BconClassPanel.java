@@ -199,7 +199,7 @@ BconClassPanel(String proj,File f,String cls,boolean inner)
    list_model = new ClassListModel();
    inner_class = inner;
 
-   region_set = new ConcurrentSkipListSet<BconRegion>(new RegionComparator());
+   region_set = new ConcurrentSkipListSet<>(new RegionComparator());
 
    setupElements();
 

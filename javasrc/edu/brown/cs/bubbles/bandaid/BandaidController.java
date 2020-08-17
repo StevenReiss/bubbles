@@ -319,8 +319,8 @@ private void defineAgent(BandaidAgent agt)
 
 private void setupClassTypes()
 {
-   package_map = new HashMap<String,ClassType>();
-   class_map = new HashMap<String,ClassType>();
+   package_map = new HashMap<>();
+   class_map = new HashMap<>();
 
    package_map.put("java.",ClassType.SYSTEM);
    package_map.put("javax.",ClassType.SYSTEM);

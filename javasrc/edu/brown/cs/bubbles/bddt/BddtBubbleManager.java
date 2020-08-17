@@ -81,7 +81,7 @@ BddtBubbleManager(BddtLaunchControl blc)
 {
    launch_control = blc;
    bubble_area = null;
-   bubble_map = new ConcurrentHashMap<BudaBubble,BubbleData>();
+   bubble_map = new ConcurrentHashMap<>();
 }
 
 

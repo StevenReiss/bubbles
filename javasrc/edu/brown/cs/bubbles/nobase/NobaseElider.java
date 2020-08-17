@@ -469,10 +469,10 @@ private class ElidePass2 extends ASTVisitor {
    ElidePass2(ElidePass1 pass1,IvyXmlWriter xw) {
       up_values = pass1;
       xml_writer = xw;
-      result_value = new HashMap<ASTNode,Double>();
+      result_value = new HashMap<>();
       active_node = null;
       last_case = false;
-      switch_stack = new Stack<ASTNode>();
+      switch_stack = new Stack<>();
       tree_root = null;
     }
 

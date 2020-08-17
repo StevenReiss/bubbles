@@ -203,7 +203,7 @@ private void updateTestState()
       if (changed_classes.isEmpty()) return;
 
       chng = changed_classes;
-      changed_classes = new HashMap<String,FileState>();
+      changed_classes = new HashMap<>();
     }
 
    for_batt.updateTestsForClasses(chng);

@@ -161,20 +161,20 @@ static {
 BumpRunManager()
 {
    bump_client = null;
-   known_configs = new ConcurrentHashMap<String,LaunchConfig>();
-   active_launches = new ConcurrentHashMap<String,LaunchData>();
-   active_processes = new ConcurrentHashMap<String,ProcessData>();
-   console_processes = new ConcurrentHashMap<String,ProcessData>();
-   named_processes = new ConcurrentHashMap<String,ProcessData>();
-   active_threads = new ConcurrentHashMap<String,ThreadData>();
-   event_handlers = new SwingEventListenerList<BumpRunEventHandler>(BumpRunEventHandler.class);
+   known_configs = new ConcurrentHashMap<>();
+   active_launches = new ConcurrentHashMap<>();
+   active_processes = new ConcurrentHashMap<>();
+   console_processes = new ConcurrentHashMap<>();
+   named_processes = new ConcurrentHashMap<>();
+   active_threads = new ConcurrentHashMap<>();
+   event_handlers = new SwingEventListenerList<>(BumpRunEventHandler.class);
    server_host = null;
    server_port = null;
-   source_map = new HashMap<String,File>();
+   source_map = new HashMap<>();
    use_debug_server = true;
    trie_processor = null;
 
-   thread_filters = new HashMap<BumpThread,SwingEventListenerList<BumpThreadFilter>>();
+   thread_filters = new HashMap<>();
 
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :
@@ -263,7 +263,7 @@ void addThreadFilter(BumpThread bt,BumpThreadFilter btf)
    synchronized (thread_filters) {
       ls = thread_filters.get(bt);
       if (ls == null) {
-	 ls = new SwingEventListenerList<BumpThreadFilter>(BumpThreadFilter.class);
+	 ls = new SwingEventListenerList<>(BumpThreadFilter.class);
 	 thread_filters.put(bt,ls);
        }
     }

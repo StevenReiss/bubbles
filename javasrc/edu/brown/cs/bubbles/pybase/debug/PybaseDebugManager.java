@@ -92,11 +92,11 @@ private PybaseDebugManager()
 {
    pybase_main = PybaseMain.getPybaseMain();
 
-   config_map = new ConcurrentHashMap<String,PybaseLaunchConfig>();
+   config_map = new ConcurrentHashMap<>();
    config_file = new File(pybase_main.getWorkSpaceDirectory(),CONFIG_FILE);
-   break_map = new ConcurrentHashMap<String,PybaseDebugBreakpoint>();
+   break_map = new ConcurrentHashMap<>();
    break_file = new File(pybase_main.getWorkSpaceDirectory(),BREAKPOINT_FILE);
-   debug_map = new ConcurrentHashMap<String,PybaseDebugger>();
+   debug_map = new ConcurrentHashMap<>();
 
    loadConfigurations();
    loadBreakpoints();

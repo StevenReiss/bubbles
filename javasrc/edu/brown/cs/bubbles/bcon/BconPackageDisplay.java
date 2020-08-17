@@ -349,7 +349,7 @@ private void setupGraphModel()
    Collection<BconGraphNode> nodes = package_graph.getNodes();
    boolean chng = false;
 
-   Set<BconGraphNode> nodeset = new HashSet<BconGraphNode>(nodes);
+   Set<BconGraphNode> nodeset = new HashSet<>(nodes);
    for (Iterator<Map.Entry<BconGraphNode,BconPetalNode>> it = node_map.entrySet().iterator(); it.hasNext(); ) {
       Map.Entry<BconGraphNode,BconPetalNode> ent = it.next();
       if (!nodeset.contains(ent.getKey())) {

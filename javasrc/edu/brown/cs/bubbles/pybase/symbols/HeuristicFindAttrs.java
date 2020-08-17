@@ -77,7 +77,7 @@ private boolean 		discover_self_attrs = true;
 
 private final Map<String, SourceToken> rep_to_token_with_args;
 
-public Stack<SimpleNode> node_stack	  = new Stack<SimpleNode>();
+public Stack<SimpleNode> node_stack	  = new Stack<>();
 
 public static final int  WHITIN_METHOD_CALL  = 0;
 public static final int  WHITIN_INIT	 = 1;

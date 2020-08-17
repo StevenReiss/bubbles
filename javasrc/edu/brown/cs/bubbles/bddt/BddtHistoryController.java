@@ -234,8 +234,8 @@ private static class HistoryData implements BddtHistoryData {
    private SwingEventListenerList<BddtHistoryListener> listener_list;
 
    HistoryData() {
-      thread_map = new ConcurrentHashMap<BumpThread,HistoryThread>();
-      listener_list = new SwingEventListenerList<BddtHistoryListener>(BddtHistoryListener.class);
+      thread_map = new ConcurrentHashMap<>();
+      listener_list = new SwingEventListenerList<>(BddtHistoryListener.class);
     }
 
    HistoryThread startThread(BumpThread th,long when) {
@@ -305,7 +305,7 @@ private static class HistoryThread {
    private Queue<BddtHistoryItem> thread_items;
 
    HistoryThread(BumpThread th,long when) {
-      thread_items = new ConcurrentLinkedQueue<BddtHistoryItem>();
+      thread_items = new ConcurrentLinkedQueue<>();
     }
 
    void endAt(long when)			{ }

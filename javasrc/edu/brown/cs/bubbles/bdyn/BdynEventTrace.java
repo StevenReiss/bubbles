@@ -97,22 +97,22 @@ BdynEventTrace(BumpProcess bp)
 {
    for_process = bp;
    current_thread = null;
-   pending_entries = new PriorityQueue<TraceEntry>(100,new EntryComparator());
+   pending_entries = new PriorityQueue<>(100,new EntryComparator());
    thread_entries = null;
-   thread_map = new HashMap<Integer,ThreadData>();
+   thread_map = new HashMap<>();
    next_time = 0;
    end_time = 0;
    cpu_time = null;
    thread_counter = 0;
    task_counter = 0;
    bdyn_factory = BdynFactory.getFactory();
-   object_tasks = new HashMap<Integer,OutputTask>();
+   object_tasks = new HashMap<>();
    dummy_task = new OutputTask(0,null);
-   output_set = new ConcurrentSkipListSet<OutputEntry>();
-   active_threads = new TreeSet<ThreadData>();
-   time_marks = new ConcurrentSkipListSet<Long>();
+   output_set = new ConcurrentSkipListSet<>();
+   active_threads = new TreeSet<>();
+   time_marks = new ConcurrentSkipListSet<>();
    max_delta = 1;
-   update_listeners = new SwingEventListenerList<BdynEventUpdater>(BdynEventUpdater.class);
+   update_listeners = new SwingEventListenerList<>(BdynEventUpdater.class);
 }
 
 
@@ -376,7 +376,7 @@ private BdynRangeSet addToRange(long start,long t0,long t1,BdynRangeSet rslt)
 	 if (rslt == null) rslt = new BdynRangeSet();
 	 Set<BdynEntry> r1 = rslt.get(td);
 	 if (r1 == null) {
-	    r1 = new HashSet<BdynEntry>();
+	    r1 = new HashSet<>();
 	    rslt.put(td,r1);
 	  }
 	 r1.add(e1);
@@ -409,7 +409,7 @@ private class ThreadData implements Comparable<ThreadData>, BdynEntryThread {
       thread_name = tnm;
       current_transaction = null;
       nest_level = 0;
-      output_stack = new Stack<OutputEntry>();
+      output_stack = new Stack<>();
       last_entry = null;
     }
 

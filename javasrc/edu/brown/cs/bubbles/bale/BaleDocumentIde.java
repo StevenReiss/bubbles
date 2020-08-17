@@ -145,18 +145,18 @@ BaleDocumentIde()
 
    project_name = null;
    file_name = null;
-   fragment_map = new HashMap<BaleFragment,FragmentData>();
+   fragment_map = new HashMap<>();
    doing_load = false;
    doing_remote = false;
    doing_eload = false;
    ast_nodes = null;
-   problem_set = new HashSet<BumpProblem>();
+   problem_set = new HashSet<>();
    is_dirty = false;
    checkpoint_counter = -1;
    num_import = -1;
    // This should not be needed as any change should trigger a remote edit
    BumpClient.getBump().addChangeHandler(this);
-   remote_edits = new LinkedList<RemoteEdit>();
+   remote_edits = new LinkedList<>();
 
    newline_string = null;
    newline_adjust = 0;

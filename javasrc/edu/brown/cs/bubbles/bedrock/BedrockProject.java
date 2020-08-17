@@ -151,7 +151,7 @@ BedrockProject(BedrockPlugin bp)
    projects_inited = false;
    projects_registered = false;
    projects_setup = false;
-   open_projects = new HashSet<IProject>();
+   open_projects = new HashSet<>();
 }
 
 
@@ -555,7 +555,7 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 	  }
 
 	 IClasspathAttribute [] xatts = null;
-	 List<IClasspathAttribute> els = new ArrayList<IClasspathAttribute>();
+	 List<IClasspathAttribute> els = new ArrayList<>();
 	 if (optfg) els.add(JavaCore.newClasspathAttribute(IClasspathAttribute.OPTIONAL,"true"));
 	 if (docu != null) {
 	    els.add(JavaCore.newClasspathAttribute(
@@ -852,7 +852,7 @@ Collection<IFile> getAllSourceFiles(String p) throws BedrockException
 
 Collection<IProject> getOpenProjects()
 {
-   Collection<IProject> rslt = new ArrayList<IProject>(open_projects);
+   Collection<IProject> rslt = new ArrayList<>(open_projects);
 
    return rslt;
 }
@@ -1290,9 +1290,7 @@ private IFile findProjectFile(IResource ir,String name,String fname)
 	    f1 = f.getCanonicalFile();
 	  }
 	 catch (IOException e) { }
-	 // if (f.getPath().contains("cashew") && f.getPath().endsWith(".java") && name.contains("cashew"))
-	    // BedrockPlugin.logD("CHECK " + f.getAbsolutePath() + " " + f.getPath() + " " + name);
-	 if (f1.getAbsolutePath().equals(name) || f1.getAbsolutePath().equals(name)) return ifl;
+	 if (f.getAbsolutePath().equals(name) || f1.getAbsolutePath().equals(name)) return ifl;
        }
       else if (ir instanceof IContainer) {
 	 IContainer ic = (IContainer) ir;
@@ -1880,7 +1878,7 @@ private void checkForProjectOpen(IResourceDelta rd)
 
 void setProjectClassPath(String proj,Element desc)
 {
-   // List<IClasspathEntry> class_paths = new ArrayList<IClasspathEntry>();
+   // List<IClasspathEntry> class_paths = new ArrayList<>();
 }
 
 

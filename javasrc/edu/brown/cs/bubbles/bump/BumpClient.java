@@ -175,11 +175,11 @@ protected BumpClient()
    mint_control = BoardSetup.getSetup().getMintControl();
    mint_name = BoardSetup.getSetup().getMintName();
 
-   file_handlers = new ConcurrentHashMap<BumpFileHandler,File>();
-   option_map = new HashMap<String,String>();
-   name_collects = new HashMap<String,NameCollector>();
-   eval_handlers = new HashMap<String,EvalData>();
-   change_handlers = new ConcurrentHashMap<BumpChangeHandler,Boolean>();
+   file_handlers = new ConcurrentHashMap<>();
+   option_map = new HashMap<>();
+   name_collects = new HashMap<>();
+   eval_handlers = new HashMap<>();
+   change_handlers = new ConcurrentHashMap<>();
    open_editor_bubble_handlers = new SwingEventListenerList<>(BumpOpenEditorBubbleHandler.class);
    progress_handlers = new SwingEventListenerList<>(BumpProgressHandler.class);
 
@@ -2303,7 +2303,7 @@ public List<BumpLocation> getCallPath(String proj,String from,String to)
    if (!IvyXml.isElement(xml,"RESULT")) return null;
 
    Element root = IvyXml.getChild(xml,"PATH");
-   LinkedList<Element> workqueue = new LinkedList<Element>();
+   LinkedList<Element> workqueue = new LinkedList<>();
    workqueue.add(root);
 
    Element rslt = null;
@@ -2324,7 +2324,7 @@ public List<BumpLocation> getCallPath(String proj,String from,String to)
       workqueue.addFirst(c);
     }
 
-   List<BumpLocation> locs = new ArrayList<BumpLocation>();
+   List<BumpLocation> locs = new ArrayList<>();
    for (Element c : workqueue) {
       Element mtch = IvyXml.getChild(c,"MATCH");
       String file = IvyXml.getAttrString(mtch,"FILE");

@@ -65,8 +65,8 @@ private static final int MAX_CHORES = 20;
 
 BfixChoreManager()
 {
-   chore_set = new LinkedList<BfixChore>();
-   list_listeners = new SwingEventListenerList<ListDataListener>(ListDataListener.class);
+   chore_set = new LinkedList<>();
+   list_listeners = new SwingEventListenerList<>(ListDataListener.class);
    
    BumpClient.getBump().addProblemHandler(null,new ProblemHandler());
    BumpClient.getBump().addChangeHandler(new ChangeHandler());

@@ -103,7 +103,7 @@ BwizVerifiedTextField(String text, BwizConstants.IVerifier v)
    super(text);
    previous_failure = false;
    verifier=v;
-   verification_listeners=new SwingEventListenerList<BwizConstants.VerificationListener>(BwizConstants.VerificationListener.class);
+   verification_listeners=new SwingEventListenerList<>(BwizConstants.VerificationListener.class);
 
    setupVerification();
 }

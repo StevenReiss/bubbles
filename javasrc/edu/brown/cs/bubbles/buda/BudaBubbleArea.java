@@ -159,21 +159,21 @@ BudaBubbleArea(BudaRoot br,Element cfg,BudaChannelSet cs)
    setOpaque(true);
    first_time = true;
 
-   active_bubbles = new HashSet<BudaBubble>();
-   bubble_groups = new HashSet<BudaBubbleGroup>();
-   bubble_links = new ArrayList<BudaBubbleLink>();
-   working_sets = new ArrayList<BudaWorkingSetImpl>();
-   moving_bubbles = new HashSet<BudaBubble>();
+   active_bubbles = new HashSet<>();
+   bubble_groups = new HashSet<>();
+   bubble_links = new ArrayList<>();
+   working_sets = new ArrayList<>();
+   moving_bubbles = new HashSet<>();
    channel_set = cs;
 
-   floating_bubbles = new ConcurrentHashMap<BudaBubble,Point>();
-   docked_bubbles = new HashMap<BudaBubble,BudaBubbleDock[]>();
-   working_set_bubbles = new ConcurrentHashMap<BudaBubble,BudaWorkingSet>();
+   floating_bubbles = new ConcurrentHashMap<>();
+   docked_bubbles = new HashMap<>();
+   working_set_bubbles = new ConcurrentHashMap<>();
    cur_viewport = null;
    routes_valid = false;
    focus_bubble = null;
 
-   property_map = new HashMap<String,Object>();
+   property_map = new HashMap<>();
 
    bubble_manager = new BubbleManager();
    addContainerListener(bubble_manager);
@@ -181,7 +181,7 @@ BudaBubbleArea(BudaRoot br,Element cfg,BudaChannelSet cs)
    move_animator = new BudaMoveAnimator();
    bubble_placer = new BudaPlacement(this);
 
-   area_callbacks = new SwingEventListenerList<BubbleAreaCallback>(BubbleAreaCallback.class);
+   area_callbacks = new SwingEventListenerList<>(BubbleAreaCallback.class);
 
    mouse_context = null;
    Mouser mm = new Mouser();

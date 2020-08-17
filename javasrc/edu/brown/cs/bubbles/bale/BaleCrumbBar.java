@@ -245,7 +245,7 @@ private synchronized void setFragmentName(String name,boolean dirty)
 	 if (mobidx < 0) break;
        }
       removeAll();
-      component_list = new LinkedList<BaleCrumbBarComponent>();
+      component_list = new LinkedList<>();
       mobidx = -1;
       int lastidx;
       for (int i = 0; i < numcomps; i++) {

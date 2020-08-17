@@ -249,7 +249,7 @@ private List<String> getStartClasses()
    String lp = launch_config.getProject();
    if (edit_config != null) lp = edit_config.getProject();
 
-   List<String> starts = new ArrayList<String>();
+   List<String> starts = new ArrayList<>();
    BassRepository br = BassFactory.getRepository(BassConstants.SearchType.SEARCH_CODE);
    for (BassName bn : br.getAllNames()) {
       if (lp == null || bn.getProject().equals(lp)) {

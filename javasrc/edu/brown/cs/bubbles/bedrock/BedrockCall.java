@@ -144,8 +144,8 @@ void getCallPath(String proj,String src,String tgt,boolean shortest,int lvls,Ivy
       throw new BedrockException("Problem doing call search 2: " + e,e);
     }
 
-   Map<IMethod,CallNode> nodes = new HashMap<IMethod,CallNode>();
-   Queue<IMethod> workqueue = new LinkedList<IMethod>();
+   Map<IMethod,CallNode> nodes = new HashMap<>();
+   Queue<IMethod> workqueue = new LinkedList<>();
    for (IMethod je : th.getElements()) {
       CallNode cn = new CallNode(je,0);
       cn.setTarget();
@@ -208,7 +208,7 @@ void getCallPath(String proj,String src,String tgt,boolean shortest,int lvls,Ivy
    for (IMethod je : sh.getElements()) {
       CallNode cn = nodes.get(je);
       if (cn == null) continue;
-      Set<IMethod> done = new HashSet<IMethod>();
+      Set<IMethod> done = new HashSet<>();
       cn.output(xw,done,nodes);
     }
    xw.end("PATH");
@@ -255,7 +255,7 @@ private static class SetHandler extends SearchRequestor {
    private Set<IMethod> found_elements;
 
    SetHandler() {
-      found_elements = new HashSet<IMethod>();
+      found_elements = new HashSet<>();
     }
 
    @Override public void acceptSearchMatch(SearchMatch mat) {

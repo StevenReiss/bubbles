@@ -138,7 +138,7 @@ String getName()			{ return project_name; }
 
 List<String> getClassPath()
 {
-   return new ArrayList<String>(class_paths);
+   return new ArrayList<>(class_paths);
 }
 
 List<String> getClassNames()

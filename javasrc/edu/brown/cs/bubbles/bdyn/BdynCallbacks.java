@@ -76,7 +76,7 @@ private static Set<String> primitive_types;
 
 
 static {
-   primitive_types = new HashSet<String>();
+   primitive_types = new HashSet<>();
    primitive_types.add("int");
    primitive_types.add("short");
    primitive_types.add("byte");

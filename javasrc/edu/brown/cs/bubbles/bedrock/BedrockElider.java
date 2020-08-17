@@ -125,8 +125,8 @@ static {
 
 BedrockElider()
 {
-   elide_pdata = new ArrayList<ElidePriority>();
-   elide_rdata = new ArrayList<ElideRegion>();
+   elide_pdata = new ArrayList<>();
+   elide_rdata = new ArrayList<>();
 }
 
 
@@ -567,11 +567,11 @@ private class ElidePass2 extends ASTVisitor {
    ElidePass2(ElidePass1 pass1,IvyXmlWriter xw) {
       up_values = pass1;
       xml_writer = xw;
-      result_value = new HashMap<ASTNode,Double>();
+      result_value = new HashMap<>();
       tree_root = null;
       active_node = null;
       last_case = false;
-      switch_stack = new Stack<ASTNode>();
+      switch_stack = new Stack<>();
     }
 
    @Override public void preVisit(ASTNode n) {

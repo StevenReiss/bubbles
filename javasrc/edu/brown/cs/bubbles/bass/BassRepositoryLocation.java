@@ -627,7 +627,7 @@ private void addNamesForFile(String proj,String file,boolean rem)
    Map<String,BassNameLocation> usedmap = new HashMap<>();
    List<String> fls = null;
    if (file != null) {
-      fls = new ArrayList<String>();
+      fls = new ArrayList<>();
       fls.add(file);
     }
 

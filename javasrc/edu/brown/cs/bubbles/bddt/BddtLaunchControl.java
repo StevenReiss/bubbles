@@ -132,11 +132,11 @@ BddtLaunchControl(BumpLaunchConfig blc)
 
    cur_process = null;
    launch_state = LaunchState.READY;
-   exec_annots = new ConcurrentHashMap<BumpThread,ExecutionAnnot>();
+   exec_annots = new ConcurrentHashMap<>();
    active_frame = null;
    frame_annot = null;
    freeze_count = 0;
-   frame_listeners = new SwingEventListenerList<BddtFrameListener>(BddtFrameListener.class);
+   frame_listeners = new SwingEventListenerList<>(BddtFrameListener.class);
 
    file_system = BoardFileSystemView.getFileSystemView();
 

@@ -71,17 +71,17 @@ private String		 token_to_find;
 /**
  * List of definitions.
  */
-public List<Definition> definition_set	    = new ArrayList<Definition>();
+public List<Definition> definition_set	    = new ArrayList<>();
 
 /**
  * Stack of classes / methods to get to a definition.
  */
-private FastStack<SimpleNode>  defs_stack		= new FastStack<SimpleNode>();
+private FastStack<SimpleNode>  defs_stack		= new FastStack<>();
 
 /**
  * This is a stack that will keep the globals for each stack
  */
-private FastStack<Set<String>> global_declarations_stack = new FastStack<Set<String>>();
+private FastStack<Set<String>> global_declarations_stack = new FastStack<>();
 
 /**
  * This is the module we are visiting: just a weak reference so that we don't create a cycle (let's
@@ -106,7 +106,7 @@ private Definition	     definition_found;
 /**
  * Call is stored for the context for a keyword parameter
  */
-private Stack<Call>	    call_stack		= new Stack<Call>();
+private Stack<Call>	    call_stack		= new Stack<>();
 
 /**
  * Constructor

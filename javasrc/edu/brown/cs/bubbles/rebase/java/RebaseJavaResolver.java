@@ -358,7 +358,7 @@ private class RefPass extends ASTVisitor {
    RefPass() {
       cur_scope = null;
       cur_type = null;
-      outer_types = new Stack<RebaseJavaType>();
+      outer_types = new Stack<>();
     }
 
    public @Override boolean visit(AnnotationTypeMemberDeclaration n)	{ return false; }

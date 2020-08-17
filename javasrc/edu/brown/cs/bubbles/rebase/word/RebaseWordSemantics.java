@@ -171,11 +171,11 @@ private static class SignatureVisitor extends ASTVisitor {
    private Stack<StringBuilder> structure_stack;
 
    SignatureVisitor() {
-      found_methods = new ArrayList<String>();
+      found_methods = new ArrayList<>();
       class_name = null;
-      outer_classes = new Stack<String>();
+      outer_classes = new Stack<>();
       structure_buf = null;
-      structure_stack = new Stack<StringBuilder>();
+      structure_stack = new Stack<>();
     }
 
    List<String> getResult()		{ return found_methods; }

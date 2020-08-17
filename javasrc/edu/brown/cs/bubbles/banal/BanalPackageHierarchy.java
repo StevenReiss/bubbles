@@ -280,9 +280,9 @@ private void reference(String pkg)
 
 private void doAnalysis()
 {
-   Set<DependNode> todo = new HashSet<DependNode>(node_map.values());
-   List<DependNode> done = new ArrayList<DependNode>();
-   Queue<DependNode> work = new LinkedList<DependNode>();
+   Set<DependNode> todo = new HashSet<>(node_map.values());
+   List<DependNode> done = new ArrayList<>();
+   Queue<DependNode> work = new LinkedList<>();
    cycle_counter = 0;
 
    for (DependNode dn : node_map.values()) {

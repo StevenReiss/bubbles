@@ -66,11 +66,11 @@ private NobaseDebugBreakpoint	exception_breakpoint;
 NobaseDebugManager(NobaseMain nm)
 {
    nobase_main = nm;
-   config_map = new HashMap<String,NobaseLaunchConfig>();
+   config_map = new HashMap<>();
    config_file = new File(nobase_main.getWorkSpaceDirectory(),CONFIG_FILE);
-   break_map = new ConcurrentHashMap<String,NobaseDebugBreakpoint>();
+   break_map = new ConcurrentHashMap<>();
    break_file = new File(nobase_main.getWorkSpaceDirectory(),BREAKPOINT_FILE);
-   target_map = new ConcurrentHashMap<String,NobaseDebugTarget>();
+   target_map = new ConcurrentHashMap<>();
    exception_breakpoint = null;
 
    loadConfigurations();

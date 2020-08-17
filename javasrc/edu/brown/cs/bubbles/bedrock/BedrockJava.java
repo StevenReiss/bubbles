@@ -75,7 +75,6 @@ import org.eclipse.search.core.text.TextSearchRequestor;
 import org.eclipse.search.core.text.TextSearchScope;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -529,15 +528,15 @@ private static class ClassFilter implements FindFilter {
    private Set<String> base_types;
 
    ClassFilter(IJavaElement [] elts) {
-      base_types = new HashSet<String>();
+      base_types = new HashSet<>();
       for (IJavaElement je : elts) {
-	 if (je instanceof IMember) {
-	    IMember im = (IMember) je;
-	    IType ty = im.getDeclaringType();
-	    String nm = ty.getFullyQualifiedName().replace('$','.');
-	    // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
-	    base_types.add(nm);
-	  }
+         if (je instanceof IMember) {
+            IMember im = (IMember) je;
+            IType ty = im.getDeclaringType();
+            String nm = ty.getFullyQualifiedName().replace('$','.');
+            // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
+            base_types.add(nm);
+          }
        }
     }
 
@@ -836,7 +835,7 @@ private class SearchHandler extends TextSearchRequestor {
       xml_writer.field("STARTOFFSET",acc.getMatchOffset());
       xml_writer.field("LENGTH",acc.getMatchLength());
       File f = acc.getFile().getLocation().toFile();
-      xml_writer.textElement("FILE",f.toString());
+     xml_writer.textElement("FILE",f.toString());
       IJavaElement elt = getElement(acc.getFile(),acc.getMatchOffset(),acc.getMatchLength());
       if (elt != null) BedrockUtil.outputJavaElement(elt,false,xml_writer);
       xml_writer.end("MATCH");
@@ -845,11 +844,11 @@ private class SearchHandler extends TextSearchRequestor {
 
    private IJavaElement getElement(IFile r,int off,int len) {
       for (ICompilationUnit icu : base_units) {
-	 IResource ir = icu.getResource();
-	 if (ir == null) return null;
-	 if (ir.equals(r)) {
-	    return findInnerElement(icu,off,len);
-	  }
+         IResource ir = icu.getResource();
+         if (ir == null) return null;
+         if (ir.equals(r)) {
+            return findInnerElement(icu,off,len);
+          }
        }
       return null;
     }
@@ -858,27 +857,27 @@ private class SearchHandler extends TextSearchRequestor {
       if (!(elt instanceof ISourceReference)) return null;
       ISourceReference sref = (ISourceReference) elt;
       try {
-	 ISourceRange rng = sref.getSourceRange();
-	 if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
+         ISourceRange rng = sref.getSourceRange();
+         if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
        }
       catch (JavaModelException ex) {
-	 BedrockPlugin.logE("Problem getting range: " + ex);
-	 return null;
+         BedrockPlugin.logE("Problem getting range: " + ex);
+         return null;
        }
-
+   
       if (!(elt instanceof IParent)) return elt;
-
+   
       IParent par = (IParent) elt;
       try {
-	 for (IJavaElement je : par.getChildren()) {
-	    IJavaElement fe = findInnerElement(je,off,len);
-	    if (fe != null) return fe;
-	  }
+         for (IJavaElement je : par.getChildren()) {
+            IJavaElement fe = findInnerElement(je,off,len);
+            if (fe != null) return fe;
+          }
        }
       catch (JavaModelException ex) {
-	 BedrockPlugin.logE("Problem getting children: " + ex);
+         BedrockPlugin.logE("Problem getting children: " + ex);
        }
-
+   
       return elt;
     }
 
@@ -1236,8 +1235,8 @@ private ICompilationUnit getCompilationElement(ICompilationUnit icu)
 
 private IJavaElement [] getSearchElements(IJavaElement [] pelt)
 {
-   List<IJavaElement> active = new ArrayList<IJavaElement>();
-   Set<IJavaProject> done = new HashSet<IJavaProject>();
+   List<IJavaElement> active = new ArrayList<>();
+   Set<IJavaProject> done = new HashSet<>();
 
    for (IJavaElement je : pelt) {
       if (je.getElementType() == IJavaElement.JAVA_PROJECT) {

@@ -430,7 +430,7 @@ private void handleWorkingSetRemoved(BudaWorkingSet ws)
 
 private void noteFileChanged(File f)
 {
-   List<TaskRegion> upds = new ArrayList<TaskRegion>();
+   List<TaskRegion> upds = new ArrayList<>();
 
    synchronized (task_regions) {
       for (TaskRegion tr : task_regions) {

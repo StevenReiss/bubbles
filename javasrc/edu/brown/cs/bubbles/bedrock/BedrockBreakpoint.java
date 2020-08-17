@@ -1018,7 +1018,7 @@ private static class BreakpointLocator extends ASTVisitor {
      }
 
     private void nestLabel(String label) {
-       if (label_stack == null) label_stack = new Stack<String>();
+       if (label_stack == null) label_stack = new Stack<>();
        label_stack.push(label);
      }
 

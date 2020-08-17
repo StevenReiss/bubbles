@@ -907,7 +907,7 @@ private static class IdentifierMap {
    private Map<Integer,BaleElement> id_map;
 
    IdentifierMap(BaleElement be) {
-      id_map = new HashMap<Integer,BaleElement>();
+      id_map = new HashMap<>();
       setupMap(be);
     }
 

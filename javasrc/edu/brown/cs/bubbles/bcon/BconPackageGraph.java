@@ -785,7 +785,7 @@ private abstract class GraphNode implements BconGraphNode {
 
    void addChild(GraphNode gn) {
       gn.parent_node = this;
-      if (child_nodes == null) child_nodes = new HashSet<GraphNode>();
+      if (child_nodes == null) child_nodes = new HashSet<>();
       child_nodes.add(gn);
     }
 
@@ -818,7 +818,7 @@ private abstract class GraphNode implements BconGraphNode {
    }
 
    void addNode(BanalPackageNode cls) {
-      if (node_set == null) node_set = new HashSet<BanalPackageNode>();
+      if (node_set == null) node_set = new HashSet<>();
       node_set.add(cls);
     }
 
@@ -1200,7 +1200,7 @@ synchronized void computeIncludes()
       return;
     }
 
-   include_set = new HashSet<String>();
+   include_set = new HashSet<>();
    for (String st : start_nodes) {
       BanalPackageNode nd = findNodeByName(st);
       if (nd != null) addToIncludes(nd,true,true);

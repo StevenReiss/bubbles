@@ -544,7 +544,7 @@ private class TraceSet {
    private long last_cputime;
 
    TraceSet() {
-      thread_map = new HashMap<Thread,ThreadSet>();
+      thread_map = new HashMap<>();
       last_cputime = 0;
     }
 

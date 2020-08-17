@@ -74,8 +74,8 @@ private File                    dummy_file = new File("");
 
 BumpBreakSet(BumpClient bc)
 {
-   current_breakpoints = new HashMap<String,BumpBreakImpl>();
-   break_handlers = new ConcurrentHashMap<BumpBreakpointHandler,File>();
+   current_breakpoints = new HashMap<>();
+   break_handlers = new ConcurrentHashMap<>();
    break_mode = BumpBreakMode.SUSPEND_THREAD;
    exception_mode = BumpExceptionMode.ALL;
    bump_client = bc;

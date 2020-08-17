@@ -413,7 +413,7 @@ private class ParentSetter extends Visitor {
    private SimpleNode last_node;
 
    ParentSetter() {
-      parent_stack = new Stack<SimpleNode>();
+      parent_stack = new Stack<>();
       last_node = null;
     }
 
@@ -497,7 +497,7 @@ private class EndSetter extends Visitor {
    private Stack<SimpleNode> set_stack;
 
    EndSetter() {
-      set_stack = new Stack<SimpleNode>();
+      set_stack = new Stack<>();
     }
 
    void finish() {

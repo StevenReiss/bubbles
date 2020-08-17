@@ -143,7 +143,7 @@ private static PyFileListing getPyFilesBelow(PyFileListing result,File file,
 
 	 boolean hasinit = false;
 
-	 List<File> folderslater = new LinkedList<File>();
+	 List<File> folderslater = new LinkedList<>();
 
 	 for (File file2 : files) {
 	    if (file2.isFile()) {

@@ -111,7 +111,7 @@ private BattFactory()
    batt_model = new BattModeler();
    server_running = false;
    error_status = null;
-   popup_handlers = new SwingEventListenerList<BattPopupHandler>(BattPopupHandler.class);
+   popup_handlers = new SwingEventListenerList<>(BattPopupHandler.class);
    
    if (batt_props.getBoolean("Batt.record.test.status")) {
       new BattRecorder(this);
@@ -756,10 +756,10 @@ private class ErrorStatus implements BumpConstants.BumpProblemHandler {
    private Set<File> check_files;
 
    ErrorStatus() {
-      error_files = new ConcurrentSkipListSet<File>();
-      check_files = new ConcurrentSkipListSet<File>();
+      error_files = new ConcurrentSkipListSet<>();
+      check_files = new ConcurrentSkipListSet<>();
       for (BumpProblem bp : BumpClient.getBump().getAllProblems()) {
-	 addProblem(bp);
+         addProblem(bp);
        }
     }
 

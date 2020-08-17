@@ -2067,7 +2067,7 @@ static File getFileForPath(IPath p,IProject proj)
 static File getFileForPath(File f,IProject proj)
 {
    if (!f.exists() && proj == null) {
-      Stack<File> pars = new Stack<File>();
+      Stack<File> pars = new Stack<>();
       for (File f1 = f; f1 != null; f1 = f1.getParentFile()) pars.push(f1);
       pars.pop();		// /
       String pnm = pars.pop().getName();
@@ -2080,7 +2080,7 @@ static File getFileForPath(File f,IProject proj)
     }
 
    if (!f.exists() && proj != null && proj.getLocation() != null) {
-      Stack<File> pars = new Stack<File>();
+      Stack<File> pars = new Stack<>();
       for (File f1 = f; f1 != null; f1 = f1.getParentFile()) pars.push(f1);
       if (pars.size() >= 3) {
 	 pars.pop();		   // /
@@ -2094,7 +2094,7 @@ static File getFileForPath(File f,IProject proj)
     }
 
    if (!f.exists() && proj != null) {
-      Stack<File> pars = new Stack<File>();
+      Stack<File> pars = new Stack<>();
       for (File f1 = f; f1 != null; f1 = f1.getParentFile()) pars.push(f1);
       if (pars.size() >= 3) {
 	 pars.pop();		   // /
@@ -2119,7 +2119,7 @@ static File getFileForPath(File f,IProject proj)
       IWorkspace ws = ResourcesPlugin.getWorkspace();
       IWorkspaceRoot wr = ws.getRoot();
       File f0 = new File(wr.getLocation().toOSString());
-      Stack<File> pars = new Stack<File>();
+      Stack<File> pars = new Stack<>();
       for (File f1 = f; f1 != null; f1 = f1.getParentFile()) pars.push(f1);
       pars.pop();		// /
       while (!pars.empty()) {

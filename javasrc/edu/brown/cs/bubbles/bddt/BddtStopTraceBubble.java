@@ -223,7 +223,7 @@ private class StopTracePanel extends JTree implements TreeExpansionListener {
 
    StopTracePanel() {
       tree_model = new DefaultTreeModel(tree_root);
-      expanded_threads = new HashSet<String>();
+      expanded_threads = new HashSet<>();
       setModel(tree_model);
       setEditable(false);
       setRootVisible(false);
@@ -314,7 +314,7 @@ private static class ThreadNode implements TreeNode {
 
    ThreadNode(RootNode rn,Element xml) {
       parent_node = rn;
-      stack_nodes = new ArrayList<StackNode>();
+      stack_nodes = new ArrayList<>();
       thread_data = xml;
     }
 

@@ -288,7 +288,7 @@ void editRunConfiguration(String lnch,String prop,String val,IvyXmlWriter xw)
       if ((prop.endsWith("_MAP") || prop.endsWith("launchers")) &&
 	     val != null) {
 	 StringTokenizer tok = new StringTokenizer(val," {},");
-	 HashMap<String,String> map = new HashMap<String,String>();
+	 HashMap<String,String> map = new HashMap<>();
 	 while (tok.hasMoreTokens()) {
 	    String s = tok.nextToken();
 	    int idx = s.indexOf("=");

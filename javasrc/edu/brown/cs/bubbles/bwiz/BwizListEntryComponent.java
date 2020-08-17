@@ -96,10 +96,10 @@ BwizListEntryComponent(IVerifier verifier, String title)
 {
    the_verifier = null;
    ui_title=title;
-   list_data= new Vector<String>();
-   set_data = new HashSet<String>();
+   list_data= new Vector<>();
+   set_data = new HashSet<>();
    the_verifier=verifier;
-   item_listeners = new SwingEventListenerList<ItemChangeListener>(ItemChangeListener.class);
+   item_listeners = new SwingEventListenerList<>(ItemChangeListener.class);
 
    setup();
 }

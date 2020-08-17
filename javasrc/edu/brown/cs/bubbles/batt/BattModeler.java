@@ -83,7 +83,7 @@ BattModeler()
    table_model = new DefaultTableModel(column_names,0);
    display_mode = EnumSet.of(DisplayMode.ALL);
    table_cases = new ArrayList<>();
-   model_listeners = new SwingEventListenerList<BattModelListener>(BattModelListener.class);
+   model_listeners = new SwingEventListenerList<>(BattModelListener.class);
 }
 
 

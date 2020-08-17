@@ -416,8 +416,8 @@ private static class ProblemContext implements IProblemLocation {
 private void loadFixers()
 {
    if (quick_fixes == null) {
-      quick_fixes = new ArrayList<IQuickFixProcessor>();
-      quick_assists = new ArrayList<IQuickAssistProcessor>();
+      quick_fixes = new ArrayList<>();
+      quick_assists = new ArrayList<>();
     }
 
    if (quick_fixes.size() == 0) {

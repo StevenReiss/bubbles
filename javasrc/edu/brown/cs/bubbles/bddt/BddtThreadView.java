@@ -145,13 +145,13 @@ BddtThreadView(BddtLaunchControl ctrl)
 
    bump_process = ctrl.getProcess();
 
-   thread_set = new ConcurrentSkipListSet<BumpThread>(new ThreadComparator());
+   thread_set = new ConcurrentSkipListSet<>(new ThreadComparator());
    if (bump_process != null) {
       for (BumpThread bt : bump_process.getThreads()) {
 	 thread_set.add(bt);
       }
    }
-   bump_threads = new ArrayList<BumpThread>(thread_set);
+   bump_threads = new ArrayList<>(thread_set);
 
    threads_model = new ThreadsModel();
    threads_table = new ThreadsTable();

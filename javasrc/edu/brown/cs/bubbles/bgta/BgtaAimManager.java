@@ -281,11 +281,11 @@ class BgtaAIMRoster implements BgtaRoster {
    private Map<String, BgtaAIMRosterEntry>  aim_buddies;
 
    BgtaAIMRoster(MutableBuddyList buddy_list) {
-      aim_buddies = new ConcurrentHashMap<String, BgtaAIMRosterEntry>();
+      aim_buddies = new ConcurrentHashMap<>();
       for (Group group: buddy_list.getGroups()) {
-	 for (Buddy buddy : group.getBuddiesCopy()) {
-	    aim_buddies.put(buddy.getScreenname().getNormal(), new BgtaAIMRosterEntry(buddy));
-	  }
+         for (Buddy buddy : group.getBuddiesCopy()) {
+            aim_buddies.put(buddy.getScreenname().getNormal(), new BgtaAIMRosterEntry(buddy));
+          }
        }
     }
 

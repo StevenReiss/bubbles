@@ -106,7 +106,7 @@ BfixCorrector(BaleWindow ed,boolean auto)
    end_offset = -1;
    start_time = 0;
    caret_position = -1;
-   active_problems = new ConcurrentSkipListSet<BumpProblem>(new ProblemComparator());
+   active_problems = new ConcurrentSkipListSet<>(new ProblemComparator());
    pending_fixes = new ConcurrentSkipListSet<>();
 
    smart_inserter = new BfixSmartInsert(this);

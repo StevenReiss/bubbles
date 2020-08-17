@@ -198,7 +198,7 @@ private static class BicexDebug {
    private BumpProcess	    bump_process;
 
    BicexDebug(BumpProcess bp) {
-      stopped_threads = new ConcurrentSkipListSet<BumpThread>(new ThreadComparator());
+      stopped_threads = new ConcurrentSkipListSet<>(new ThreadComparator());
       bump_process = bp;
     }
 

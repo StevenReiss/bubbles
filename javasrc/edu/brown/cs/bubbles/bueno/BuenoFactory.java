@@ -107,8 +107,8 @@ public static synchronized BuenoFactory getFactory()
 
 private BuenoFactory()
 {
-   insertion_handlers = new SwingEventListenerList<BuenoInserter>(BuenoInserter.class);
-   creation_map = new HashMap<BuenoMethod,BuenoCreator>();
+   insertion_handlers = new SwingEventListenerList<>(BuenoInserter.class);
+   creation_map = new HashMap<>();
    creation_map.put(BuenoMethod.METHOD_SIMPLE,new BuenoCreatorSimple());
    creation_map.put(BuenoMethod.METHOD_ECLIPSE,new BuenoCreatorEclipse());
    creation_map.put(BuenoMethod.METHOD_TEMPLATE,new BuenoCreatorTemplate());

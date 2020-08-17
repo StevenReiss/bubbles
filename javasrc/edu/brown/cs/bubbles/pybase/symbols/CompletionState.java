@@ -68,17 +68,17 @@ private int		 for_col			      = -1;
 private PybaseNature	  the_nature;
 private String	      for_qualifier;
 
-private Memo<String>	state_memory			 = new Memo<String>();
-private Memo<Definition>    definition_memory		    = new Memo<Definition>();
-private Memo<AbstractModule>	  wild_import_memory		  = new Memo<AbstractModule>();
-private Memo<String>	imported_mods_called		 = new Memo<String>();
-private Memo<String>	find_memory			  = new Memo<String>();
-private Memo<String>	resolve_import_memory		= new Memo<String>();
-private Memo<String>	find_definition_memory	       = new Memo<String>();
+private Memo<String>	state_memory			 = new Memo<>();
+private Memo<Definition>    definition_memory		    = new Memo<>();
+private Memo<AbstractModule>	  wild_import_memory		  = new Memo<>();
+private Memo<String>	imported_mods_called		 = new Memo<>();
+private Memo<String>	find_memory			  = new Memo<>();
+private Memo<String>	resolve_import_memory		= new Memo<>();
+private Memo<String>	find_definition_memory	       = new Memo<>();
 private Memo<String>	find_local_defined_definition_memory = new Memo<String>();
-private Stack<Memo<AbstractToken>> find_resolve_import_memory	   = new Stack<Memo<AbstractToken>>();
-private Memo<String>	find_module_completions_memory	     = new Memo<String>();
-private Memo<String>	find_source_from_compiled_memory     = new Memo<String>(1);	   // max_value is 1 for this one!
+private Stack<Memo<AbstractToken>> find_resolve_import_memory	   = new Stack<>();
+private Memo<String>	find_module_completions_memory	     = new Memo<>();
+private Memo<String>	find_source_from_compiled_memory     = new Memo<>(1);	   // max_value is 1 for this one!
 
 private boolean      builtins_gotten		      = false;
 private boolean      local_imports_gotten		 = false;
@@ -321,7 +321,7 @@ public void checkMemory(AbstractModule module,String base) throws CompletionRecu
 }
 
 
-private Set<Tuple3<Integer, Integer, AbstractModule>> found_same_definition_memory = new HashSet<Tuple3<Integer, Integer, AbstractModule>>();
+private Set<Tuple3<Integer,Integer,AbstractModule>> found_same_definition_memory = new HashSet<>();
 
 public boolean checkFoudSameDefinition(int line,int col,AbstractModule mod)
 {

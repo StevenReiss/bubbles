@@ -62,8 +62,8 @@ BandaidAgentHistory(BandaidController bc)
 {
    super(bc,"History");
 
-   thread_data = new HashMap<String,ThreadData>();
-   stop_data = new HashMap<String,StopData>();
+   thread_data = new HashMap<>();
+   stop_data = new HashMap<>();
    last_sample = 0;
    sample_time = new long [BUFFER_SIZE];
    sample_count = 0;

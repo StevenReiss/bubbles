@@ -567,7 +567,7 @@ private void processRun(boolean listonly,Set<String> testclss)
    for (BattProject bp : batt_monitor.getProjects()) {
       boolean err = false;
       boolean use = false;
-      Set<String> run = new HashSet<String>();
+      Set<String> run = new HashSet<>();
       for (String s : bp.getClassNames()) {
 	 if (error_classes.contains(s)) err = true;
 	 if (testclss == null || testclss.contains(s)) use = true;

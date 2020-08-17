@@ -128,9 +128,9 @@ private BaleFactory()
    file_documents = new HashMap<File,BaleDocumentIde>();
    style_context = new StyleContext();
    bale_attributes = new BoardAttributes("Bale");
-   annot_listeners = new SwingEventListenerList<BaleAnnotationListener>(BaleAnnotationListener.class);
+   annot_listeners = new SwingEventListenerList<>(BaleAnnotationListener.class);
    active_annotations = new HashSet<BaleAnnotation>();
-   context_listeners = new SwingEventListenerList<BaleContextListener>(BaleContextListener.class);
+   context_listeners = new SwingEventListenerList<>(BaleContextListener.class);
    BudaRoot.addFileHandler(this);
 
    bump_client.addChangeHandler(this);
@@ -1064,7 +1064,7 @@ BudaBubble getContextHoverBubble(BaleContextConfig cfg)
 
 void addContextMenuItems(BaleContextConfig cfg,JPopupMenu menu)
 {
-   LinkedList<BaleContextListener> lstn = new LinkedList<BaleContextListener>();
+   LinkedList<BaleContextListener> lstn = new LinkedList<>();
    for (BaleContextListener bcl : context_listeners) {
       lstn.addFirst(bcl);
     }

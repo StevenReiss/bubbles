@@ -1378,20 +1378,20 @@ private static class CommentLinesAction extends TextAction {
       if (!checkEditor(be)) return;
       BaleDocument bd = be.getBaleDocument();
       BoardMetrics.noteCommand("BALE","CommentLines");
-
+   
       bd.baleWriteLock();
       try {
-	 int soff = be.getSelectionStart();
-	 int eoff = be.getSelectionEnd();
-
-	 int slno = bd.findLineNumber(soff);
-	 int elno = slno;
-	 if (eoff != soff) elno = bd.findLineNumber(eoff);
-	 if (elno < slno) {
-	    int x = elno;
-	    elno = slno;
-	    slno = x;
-	  }
+         int soff = be.getSelectionStart();
+         int eoff = be.getSelectionEnd();
+   
+         int slno = bd.findLineNumber(soff);
+         int elno = slno;
+         if (eoff != soff) elno = bd.findLineNumber(eoff);
+         if (elno < slno) {
+            int x = elno;
+            elno = slno;
+            slno = x;
+          }
          
          int loff1 = bd.findLineOffset(slno);
          BaleElement ce1 = bd.getCharacterElement(loff1);
@@ -1399,38 +1399,38 @@ private static class CommentLinesAction extends TextAction {
             ce1 = ce1.getNextCharacterElement();
           } 
          boolean remcmmt = ce1.getName().equals("LineComment");
-
-	 LinkedList<Integer> fixups = new LinkedList<>();
-	 for (int i = elno; i >= slno; --i) {
-	    int loff = bd.findLineOffset(i);
-	    BaleElement ce = bd.getCharacterElement(loff);
-	    while (ce.isEmpty() && !ce.isComment() && !ce.isEndOfLine()) {
-	       ce = ce.getNextCharacterElement();
-	     }
-
-	    try {
-	       if (ce.getName().equals("LineComment")) {
-		  if (remcmmt) {
+   
+         LinkedList<Integer> fixups = new LinkedList<>();
+         for (int i = elno; i >= slno; --i) {
+            int loff = bd.findLineOffset(i);
+            BaleElement ce = bd.getCharacterElement(loff);
+            while (ce.isEmpty() && !ce.isComment() && !ce.isEndOfLine()) {
+               ce = ce.getNextCharacterElement();
+             }
+   
+            try {
+               if (ce.getName().equals("LineComment")) {
+        	  if (remcmmt) {
                      int noff = ce.getStartOffset();
                      bd.remove(noff,2);
                      fixups.addFirst(i);
                    }
-		}
-	       else if (!remcmmt) {
-		  bd.insertString(loff,"// ",null);
-		}
+        	}
+               else if (!remcmmt) {
+        	  bd.insertString(loff,"// ",null);
+        	}
                else {
                   // already commented -- comment again so its symmetric
                   bd.insertString(loff,"// ",null);
                 }
-	     }
-	    catch (BadLocationException ex) {
-	       return;
-	     }
-	  }
-	 for (Integer iv : fixups) {
-	    bd.fixLineIndent(iv);
-	 }
+             }
+            catch (BadLocationException ex) {
+               return;
+             }
+          }
+         for (Integer iv : fixups) {
+            bd.fixLineIndent(iv);
+         }
        }
       finally { bd.baleWriteUnlock(); }
     }

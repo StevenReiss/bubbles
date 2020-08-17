@@ -190,12 +190,12 @@ private static final int SHADE_PULL_DOWN_END = 30;
 
 
 static {
-   view_callbacks = new SwingEventListenerList<BubbleViewCallback>(BubbleViewCallback.class);
-   file_handlers = new SwingEventListenerList<BudaFileHandler>(BudaFileHandler.class);
-   bubble_config = new LinkedHashMap<String,BubbleConfigurator>();
-   port_config = new HashMap<String,PortConfigurator>();
+   view_callbacks = new SwingEventListenerList<>(BubbleViewCallback.class);
+   file_handlers = new SwingEventListenerList<>(BudaFileHandler.class);
+   bubble_config = new LinkedHashMap<>();
+   port_config = new HashMap<>();
    bubble_flavor = new DataFlavor(BudaDragBubble.class,"Bubble");
-   hyperlink_config = new HashMap<String,HyperlinkListener>();
+   hyperlink_config = new HashMap<>();
 
    port_config.put("BUDA",new DefaultPortConfigurator());
    List<Color> cols = new ArrayList<>();
@@ -494,7 +494,7 @@ public void removeLink(BudaBubbleLink lnk)
 private static Map<Component,BudaHelp> help_map;
 
 static {
-   help_map = new WeakHashMap<Component,BudaHelp>();
+   help_map = new WeakHashMap<>();
 }
 
 

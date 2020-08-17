@@ -433,9 +433,9 @@ private class ElidePass1 extends Visitor {
 
    ElidePass1(ISemanticData isd) {
       file_data = isd.getFileData();
-      result_value = new HashMap<SimpleNode,Double>();
+      result_value = new HashMap<>();
       inside_count = 0;
-      p_stack = new Stack<Double>();
+      p_stack = new Stack<>();
     }
 
    @Override public void traverse(SimpleNode n) throws Exception {

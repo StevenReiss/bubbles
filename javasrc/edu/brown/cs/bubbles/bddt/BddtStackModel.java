@@ -148,7 +148,7 @@ private void initialize()
    parent_model = null;
    sub_models = new ArrayList<BddtStackModel>();
    model_lock = new ReentrantLock();
-   model_listeners = new SwingEventListenerList<TreeModelListener>(TreeModelListener.class);
+   model_listeners = new SwingEventListenerList<>(TreeModelListener.class);
 }
 
 
@@ -753,19 +753,19 @@ private class RootNode extends AbstractNode {
 
    boolean updateInterimNodes() {
       int ln = interim_nodes.size();
-      LinkedList<AbstractNode> nl = new LinkedList<AbstractNode>();
+      LinkedList<AbstractNode> nl = new LinkedList<>();
       AbstractNode pn = null;
       for (int i = ln-1; i >= 0; --i) {
-	 AbstractNode an = interim_nodes.get(i);
-	 if (pn == null) {
-	    pn = an.getBddtParent();
-	    if (pn == null) return true;
-	  }
-	 AbstractNode nn = replaceNode(pn,an,i);
-	 if (nn == null)
-	    return false;
-	 nl.addFirst(nn);
-	 pn = nn;
+         AbstractNode an = interim_nodes.get(i);
+         if (pn == null) {
+            pn = an.getBddtParent();
+            if (pn == null) return true;
+          }
+         AbstractNode nn = replaceNode(pn,an,i);
+         if (nn == null)
+            return false;
+         nl.addFirst(nn);
+         pn = nn;
       }
       interim_nodes.clear();
       interim_nodes.addAll(nl);

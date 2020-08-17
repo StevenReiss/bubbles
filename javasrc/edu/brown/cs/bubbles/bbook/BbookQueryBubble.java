@@ -388,7 +388,7 @@ private void resetNames()
 
 private List<String> createMethods(Collection<String> nms)
 {
-   Set<String> rslt = new TreeSet<String>();
+   Set<String> rslt = new TreeSet<>();
    for (String nm : nms) {
       int idx1 = nm.indexOf("(");
       int idx2;
@@ -399,7 +399,7 @@ private List<String> createMethods(Collection<String> nms)
       rslt.add(mnm);
     }
 
-   List<String> rtn = new ArrayList<String>();
+   List<String> rtn = new ArrayList<>();
    rtn.add("< Any Method >");
    rtn.addAll(rslt);
 
@@ -409,7 +409,7 @@ private List<String> createMethods(Collection<String> nms)
 
 private List<String> createClasses(Collection<String> nms)
 {
-   Set<String> fulls = new HashSet<String>();
+   Set<String> fulls = new HashSet<>();
    for (String nm : nms) {
       int idx1 = nm.indexOf("(");
       int idx2;

@@ -43,7 +43,7 @@ private SimpleDateFormat	 date_format;
 
 BeduTATicketList()
 {
-   listeners_list = new SwingEventListenerList<TableModelListener>(TableModelListener.class);
+   listeners_list = new SwingEventListenerList<>(TableModelListener.class);
    date_format = new SimpleDateFormat(DATE_FORMAT_STR);
 }
 

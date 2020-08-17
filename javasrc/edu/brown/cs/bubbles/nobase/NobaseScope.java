@@ -60,13 +60,13 @@ private int				temp_counter;
 
 NobaseScope(ScopeType typ,NobaseScope par)
 {
-   defined_names = new ConcurrentHashMap<String,NobaseSymbol>();
+   defined_names = new ConcurrentHashMap<>();
    scope_type = typ;
    parent_scope = par;
    object_value = null;
    temp_counter = 0;
    all_names = null;
-   if (typ == ScopeType.FILE) all_names = new HashMap<String,Set<NobaseSymbol>>();
+   if (typ == ScopeType.FILE) all_names = new HashMap<>();
 }
 
 

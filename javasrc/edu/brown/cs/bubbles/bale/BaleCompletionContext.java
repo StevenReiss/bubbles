@@ -140,7 +140,7 @@ private static final Pattern	ID_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z_0-9]
 static {
    completion_delay = BALE_PROPERTIES.getLong(BALE_AUTOCOMPLETE_DELAY,0);
    case_insensitive = BALE_PROPERTIES.getBoolean("Bale.autocomplete.nocase");
-   package_names = new ConcurrentHashMap<String,Boolean>();
+   package_names = new ConcurrentHashMap<>();
    use_relevance = BALE_PROPERTIES.getBoolean("Bale.autocomplete.relevance");
 }
 

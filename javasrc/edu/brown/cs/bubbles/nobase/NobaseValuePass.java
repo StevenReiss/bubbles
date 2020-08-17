@@ -82,8 +82,8 @@ NobaseValuePass(NobaseProject proj,NobaseScope glbl,NobaseFile module,
    force_define = false;
    enclosing_file = module;
    enclosing_function = null;
-   name_stack = new Stack<String>();
-   function_stack = new Stack<NobaseValue>();
+   name_stack = new Stack<>();
+   function_stack = new Stack<>();
 }
 
 
