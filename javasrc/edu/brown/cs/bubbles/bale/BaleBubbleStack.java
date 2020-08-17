@@ -81,7 +81,7 @@ static void createBubbles(Component src,Position p,Point pt,boolean near,boolean
 {
    if (locs == null) return;
    
-   Set<File> used = new HashSet<>();
+   Map<File,Set<Integer>> used = new HashMap<>();
    for (BumpLocation bl : locs) {
       if (bl.getSymbolType() != BumpSymbolType.UNKNOWN) {
          File f = bl.getFile();
@@ -89,7 +89,12 @@ static void createBubbles(Component src,Position p,Point pt,boolean near,boolean
             f = f.getCanonicalFile();
           }
          catch (IOException e) { }
-         used.add(f);
+         Set<Integer> offs = used.get(f);
+         if (offs == null) {
+            offs = new HashSet<>();
+            used.put(f,offs);
+          }
+         offs.add(bl.getOffset());
        }
     }
 
@@ -145,9 +150,13 @@ static void createBubbles(Component src,Position p,Point pt,boolean near,boolean
                f1 = f.getCanonicalFile();
              }
             catch (IOException e) { }
-            if (used.contains(f1)) {
-               it.remove();
-               continue;
+            Set<Integer> offs = used.get(f1);
+            if (offs != null) {
+               int off = bl.getOffset();
+               if (offs.contains(off)) {
+                  it.remove();
+                  continue;
+                }
              }
 	    key = f.getPath() + ".<FILE>";
 	    break;
