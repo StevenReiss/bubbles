@@ -30,7 +30,7 @@
 <entry key="Return.bold">true</entry>
 <entry key="Keyword.bold">true</entry>
 <entry key="Identifier.parent">Bale</entry>
-<entry key='Identifier.foreground'>#6a3e3e</entry>
+<entry key='Identifier.foreground'>#533131</entry>
 <entry key="FieldId.parent">Bale</entry>
 <entry key="FieldId.foreground">#0000c0</entry>
 <entry key="StaticFieldId.parent">Bale</entry>

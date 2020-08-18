@@ -116,12 +116,12 @@ int BUBBLE_DISPLAY_START_X= 1024;
 /**
  *	Width of the initial window view.
  **/
-int BUBBLE_DISPLAY_VIEW_WIDTH = 1024;
+int BUBBLE_DISPLAY_VIEW_WIDTH = 1536;
 
 /**
  *	Height of the initial window view
  **/
-int BUBBLE_DISPLAY_VIEW_HEIGHT = 600;
+int BUBBLE_DISPLAY_VIEW_HEIGHT = 1024;
 
 /**
  *	Y location of the initial viewport

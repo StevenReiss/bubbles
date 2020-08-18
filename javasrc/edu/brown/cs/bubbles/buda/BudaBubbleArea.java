@@ -410,11 +410,44 @@ void removeCurrentBubble(MouseEvent e)
 	 setLayer(bb,MODAL_LAYER);
        }
       else if (bc.getPositionType() == BudaBubblePosition.DOCKED) {
-	 floating_bubbles.put(bb, floc);
+	 floating_bubbles.put(bb,floc);
 	 loc = setFloatingLocation(bb);
 	 bb.setFloating(true);
-	 BudaBubbleDock[] bbda = { BudaBubbleDock.SOUTH, BudaBubbleDock.EAST};
-	 docked_bubbles.put(bb, bbda);  
+         List<BudaBubbleDock> docks = new ArrayList<>();
+         Dimension bbsz = bb.getSize();
+         int x0 = loc.x;
+         int x1 = loc.x + bbsz.width;
+         int y0 = loc.y;
+         int y1 = loc.y + bbsz.height;
+         Rectangle r1 = getViewport();
+         Rectangle r2 = for_root.getShadedViewport();
+         if (Math.abs(x0 - r2.x) < 4) {
+            loc.x = r2.x;
+            docks.add(BudaBubbleDock.WEST);
+          }
+         if (Math.abs(x1 - (r2.x + r2.width)) < 4) {
+            if (loc.x == r2.x) bbsz.width = r2.width;
+            else loc.x = r2.x + r2.width - bbsz.width;
+            docks.add(BudaBubbleDock.EAST);
+          }
+         if (Math.abs(y0 - r1.y) < 4 || Math.abs(y0 - r2.y) < 20) {
+            loc.y = r2.y;
+            docks.add(BudaBubbleDock.NORTH);
+          }
+         if (Math.abs(y1 - (r2.y + r2.height)) < 4) {
+            if (loc.y == r2.y) bbsz.height = r2.height;
+            else loc.y = r2.y + r2.height - bbsz.height;
+            docks.add(BudaBubbleDock.SOUTH);
+          }
+         bb.setSize(bbsz);
+// 	 BudaBubbleDock[] bbda = { BudaBubbleDock.SOUTH, BudaBubbleDock.EAST };
+//       docked_bubbles.put(bb, bbda);  
+         if (!docks.isEmpty()) {
+            BudaBubbleDock [] bbda1 = new BudaBubbleDock[docks.size()];
+            bbda1 = docks.toArray(bbda1);
+            docked_bubbles.put(bb,bbda1);
+          }
+         
 	 bb.setDocked(true);
 	 setLayer(bb,MODAL_LAYER);
       }
@@ -2011,6 +2044,16 @@ private Point setDockedLocation(BudaBubble bb)
    boolean havehadvert = false;
    Point p = bb.getLocation();
    if (p == null) return null;
+   Rectangle r1 = null;
+   while (r1 == null) {
+      r1 = for_root.getShadedViewport();
+      if (r1 != null) break;
+      try {
+         Thread.sleep(10);
+       }
+      catch (InterruptedException e) { }
+    }
+   
    for (int i = 0; i < bbd.length; i++) {
       BudaBubbleDock bbdi = bbd[i];
       if (bbdi == BudaBubbleDock.EAST) {
@@ -2028,19 +2071,18 @@ private Point setDockedLocation(BudaBubble bb)
 	 havehadhoriz = true;
        }
       else if (bbdi == BudaBubbleDock.NORTH) {
-	 if (havehadvert) bb.setSize(bb.getWidth(), cur_viewport.height);
-	 bb.setLocation(new Point(p.x,cur_viewport.y));
+         // need to handle window shade here
+	 if (havehadvert) bb.setSize(bb.getWidth(), r1.height);
+	 bb.setLocation(new Point(p.x,r1.y));
 	 havehadvert = true;
        }
       else if (bbdi == BudaBubbleDock.SOUTH) {
-         Rectangle r1 = for_root.getShadedViewport();
          if (r1 != null) {
             if (havehadvert) {
                bb.setSize(bb.getWidth(), r1.height);
                bb.setLocation(new Point(p.x,r1.y));
              }
-            else bb.setLocation(new Point(p.x,r1.y + r1.height
-                  - bb.getHeight()));
+            else bb.setLocation(new Point(p.x,r1.y + r1.height - bb.getHeight()));
             havehadvert = true;
           }
        }

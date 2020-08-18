@@ -155,7 +155,7 @@ Bale.visualization.base.color : 	white
 Bale.attr.annotation.foreground : #646464
 Bale.attr.keyword.foreground : #7f0055
 Bale.attr.return.foreground : #7f0055
-Bale.attr.identifier.foreground : #6a3e3e
+Bale.attr.identifier.foreground : #533131
 Bale.attr.fieldid.foreground : #0000c0
 Bale.attr.staticfieldid.foreground : #0000c0
 Bale.attr.callid.foreground : #0000ff

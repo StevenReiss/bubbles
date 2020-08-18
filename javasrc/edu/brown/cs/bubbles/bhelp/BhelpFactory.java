@@ -233,18 +233,18 @@ private class Hyperlinker implements HyperlinkListener {
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       String description = e.getDescription();
       switch (link_type) {
-	 case "showme" :
-	    int index = description.indexOf(":");
-	    if (index < 0) return;
-	    String what = description.substring(index+1);
-	    startDemonstration((Component) e.getSource(),what);
-	    break;
-	 case "gotodemo" :
-	    description = description.substring(9);	// warning hardcoded
-	    String [] broken = description.split(";backto:");
-	    if (broken.length != 2) return;
-	    displayDemoScreen((Component) e.getSource(),broken[0],broken[1]);
-	    break;
+         case "showme" :
+            int index = description.indexOf(":");
+            if (index < 0) return;
+            String what = description.substring(index+1);
+            startDemonstration((Component) e.getSource(),what);
+            break;
+         case "gotodemo" :
+            description = description.substring(9);	// warning hardcoded
+            String [] broken = description.split(";backto:");
+            if (broken.length != 2) return;
+            displayDemoScreen((Component) e.getSource(),broken[0],broken[1]);
+            break;
        }
    }
 

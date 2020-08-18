@@ -1271,7 +1271,7 @@ public Rectangle getViewport()
 synchronized Rectangle getShadedViewport()
 {
    if (shade_delta != 0) return null;
-   if (shade_down) return getViewport();
+   if (isShadeDown()) return getViewport();
  
    Rectangle r = new Rectangle(bubble_view.getViewRect());
    int d = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
@@ -1568,6 +1568,14 @@ void forceShadeDown()
 {
    windowShadeDown();
    shade_down = !shade_down;
+}
+
+private boolean isShadeDown()
+{
+   if (shade_delta != 0) return false;
+   int curht = bubble_overview.getHeight() + bubble_topbar.getHeight();
+   if (curht >= BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT - 5) return true;
+   return false;
 }
 
 
