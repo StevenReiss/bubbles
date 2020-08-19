@@ -520,7 +520,7 @@ private void createInversePalette()
    String nm = palette_file.getName();
    if (nm.startsWith("inverse_")) return;
    File f = new File(palette_file.getParentFile(),"inverse_" + nm);
-   if (f.exists()) return;
+   if (f.exists() && f.lastModified() >= palette_file.lastModified()) return;
    try {
       PrintWriter pw = new PrintWriter(new FileWriter(f));
       for (Map.Entry<String,Color> ent : color_map.entrySet()) {

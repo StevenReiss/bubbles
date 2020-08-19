@@ -155,6 +155,7 @@ private Point			demo_point;
 private boolean 		view_setup;
 private int			shade_delta;
 private boolean 		shade_down;
+private boolean                 shade_safe;
 
 private static MouseEvent	last_mouse;
 
@@ -315,6 +316,7 @@ private void initialize(Element e)
    demo_point = null;
    shade_delta = 0;
    shade_down = true;
+   shade_safe = true;
 
    int inputdelta = IvyXml.getAttrInt(e,"DELTA",0);
 
@@ -1270,7 +1272,17 @@ public Rectangle getViewport()
 
 synchronized Rectangle getShadedViewport()
 {
-   if (shade_delta != 0) return null;
+   if (shade_delta != 0) {
+      if (!SwingUtilities.isEventDispatchThread()) return null;
+      if (!shade_safe) return null;
+      Rectangle r1 = new Rectangle(bubble_view.getViewRect());
+      int curht = bubble_overview.getHeight() + bubble_topbar.getHeight();
+      int d = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
+      int delta = d-curht;
+      r1.y += delta;
+      r1.height -= delta;
+      return r1;
+    }  
    if (isShadeDown()) return getViewport();
  
    Rectangle r = new Rectangle(bubble_view.getViewRect());
@@ -1681,7 +1693,6 @@ private class ShadeUpdater implements ActionListener {
          done = true;
        }
    
-      // System.err.println("CHANGE SIZE " + curht);
       for (Component c : button_panels) {
          Dimension csz = c.getSize();
          csz.height = curht;
@@ -1707,15 +1718,17 @@ private class ShadeUpdater implements ActionListener {
       bubble_overview.setMaximumSize(ovrsz);
       bubble_overview.setSize(ovrsz);
    
+      shade_safe = false;
+      Point rv = bubble_view.getViewPosition();
+      rv.y += move;
+      bubble_view.setViewPosition(rv);
+      
       Rectangle r = bubble_view.getBounds();
       Rectangle rtop = bubble_view.getParent().getBounds();
       r.height = rtop.height - curht;
       r.y = curht;
       bubble_view.setBounds(r);
-   
-      Point rv = bubble_view.getViewPosition();
-      rv.y += move;
-      bubble_view.setViewPosition(rv);
+      shade_safe = done;
    
       BudaBubble toolbar = BudaToolbar.getToolbar(bubble_area);
       for (BudaBubble bbl : bubble_area.getBubbles()) {
