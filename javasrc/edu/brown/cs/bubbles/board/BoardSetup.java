@@ -1686,6 +1686,10 @@ private boolean checkInstall()
 	  }
 	 else ins.close();
        }
+      if (ok) {
+         URL url = BoardImage.class.getClassLoader().getResource(BOARD_RESOURCE_CHECK);
+         if (url == null || !url.toString().startsWith("jar")) ok = false;
+       }
       // System.err.println("BOARD: CHECK INSTALL: " + ok + " " + install_jar);
       install_jar = ok;
       if (install_jar) {

@@ -179,7 +179,8 @@ private static synchronized ImageIcon findIcon(String id)
 
    if (use_jar == null) {
       URL url = BoardImage.class.getClassLoader().getResource(BOARD_RESOURCE_CHECK);
-      use_jar = (url != null);
+      if (url != null && url.toString().startsWith("jar")) use_jar = true;
+      else use_jar = false;
     }
 
    // BoardLog.logI("BOARD","Find image " + id + " " + use_jar);
