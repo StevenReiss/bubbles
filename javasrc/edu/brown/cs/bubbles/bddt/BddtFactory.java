@@ -53,6 +53,7 @@ import javax.swing.SwingConstants;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -94,7 +95,7 @@ private JLabel			launch_label;
 private BudaRoot		buda_root;
 private List<BudaWorkingSet>	working_sets;
 private BudaWorkingSet		active_working_set;
-private Boolean 		debugging_setup;
+private Boolean 		debugging_use_workingset;
 
 private static BddtConsoleController console_controller;
 private static BddtHistoryController history_controller;
@@ -170,7 +171,7 @@ private BddtFactory()
    debug_channels = null;
    working_sets = null;
    active_working_set = null;
-   debugging_setup = null;
+   debugging_use_workingset = null;
 }
 
 
@@ -206,17 +207,20 @@ public void newDebugger(BumpLaunchConfig blc)
    BudaBubbleArea bba = null;
 
    String label = blc.getProject() + " : " + blc.getConfigName();
-   boolean useworkingset = bddt_properties.getBoolean("Bddt.use.workingset");
 
-   if (useworkingset) {
+   if (debugging_use_workingset) {
+      bba = buda_root.getCurrentBubbleArea();
       if (active_working_set == null && working_sets.size() > 0) {
 	 active_working_set = working_sets.get(0);
 	 active_working_set.setLabel(label);
+         for (BudaBubble bbl : bba.getBubblesInRegion(active_working_set.getRegion())) {
+            bba.removeBubble(bbl);
+          }
+         // might need to remove some floating bubbles as well
        }
       else {
 	 createDebuggerWorkingSet(label);
        }
-      bba = buda_root.getCurrentBubbleArea();
     }
    else {
       if (debug_channels.getNumChannels() == 1 && debug_channels.isChannelEmpty()) {
@@ -226,7 +230,7 @@ public void newDebugger(BumpLaunchConfig blc)
       else bba = debug_channels.addChannel(label);
     }
 
-   if (useworkingset) {
+   if (debugging_use_workingset) {
       active_working_set.setProperty("Bddt.debug",Boolean.TRUE);
     }
    else {
@@ -238,7 +242,7 @@ public void newDebugger(BumpLaunchConfig blc)
    BddtLaunchControl ctrl = new BddtLaunchControl(blc);
    console_controller.setupConsole(ctrl);
 
-   if (useworkingset) {
+   if (debugging_use_workingset) {
       Rectangle r = active_working_set.getRegion();
       // save space for tool bar
       int y0 = Math.max(BDDT_LAUNCH_CONTROL_Y,36);
@@ -255,11 +259,10 @@ public void newDebugger(BumpLaunchConfig blc)
 	    PLACEMENT_EXPLICIT,bbp);
     }
 
-
    BudaRoot br = BudaRoot.findBudaRoot(bba);
    if (br == null) return;
 
-   if (useworkingset) {
+   if (debugging_use_workingset) {
       Rectangle r = active_working_set.getRegion();
       Rectangle r1 = bba.getVisibleRect();
       r.width = r1.width;
@@ -338,8 +341,8 @@ void setCurrentLaunchConfig(BumpLaunchConfig blc)
 
 private void setupDebugging(BudaRoot br)
 {
-   if (debugging_setup != null) return;
-   debugging_setup = bddt_properties.getBoolean("Bddt.use.workingset");
+   if (debugging_use_workingset != null) return;
+   debugging_use_workingset = bddt_properties.getBoolean("Bddt.use.workingset");
 
    buda_root = br;
 
@@ -363,13 +366,17 @@ private void setupDebuggingWorkingSet()
 private void setupDebuggingChannels()
 {
    String dflt = null;
-   if (bddt_properties.getBoolean("Bddt.grow.down")) {
-      // set up default bubble area to be larger vertically
-    }
    debug_channels = new BudaChannelSet(buda_root,BDDT_CHANNEL_TOP_COLOR_PROP,
 	 BDDT_CHANNEL_BOTTOM_COLOR_PROP,dflt);
    BudaBubbleArea bba = debug_channels.getBubbleArea();
-   if (bba != null) bba.setProperty("Bddt.debug",Boolean.TRUE);
+   if (bba != null) {
+      bba.setProperty("Bddt.debug",Boolean.TRUE);
+      if (bddt_properties.getBoolean("Bddt.grow.down")) {
+         Dimension d = bba.getSize();
+         d.height *= 2;
+         bba.setSize(d);
+       }
+    }
 }
 
 
@@ -481,7 +488,7 @@ private class PanelHandler extends AbstractAction implements ActionListener {
    
       // fix up command
       if (cmd == null) cmd = "DEBUG";
-      boolean useworkingset = bddt_properties.getBoolean("Bddt.use.workingset");
+      boolean useworkingset = debugging_use_workingset;
       if (cmd.equals("DEBUG")) {
          if (useworkingset) {
             if (working_sets.isEmpty()) cmd = "NEW";
@@ -496,7 +503,6 @@ private class PanelHandler extends AbstractAction implements ActionListener {
    
       if (cmd.equals("DEBUG")) {
          if (current_configuration == null) {
-            prior_viewport = br.getViewport();
             createConfiguration();
           }
          else {
@@ -505,12 +511,11 @@ private class PanelHandler extends AbstractAction implements ActionListener {
                useworkingset = false;
             if (useworkingset) {
                if (active_working_set == null) {
-                  prior_viewport = br.getViewport();
+                  setPriorViewport(br);
                   active_working_set = working_sets.get(0);
                 }
                else if (prior_viewport != null) {
                   br.setViewport(prior_viewport.x,prior_viewport.y);
-                  prior_viewport = null;
                 }
              }
             else {
@@ -520,7 +525,7 @@ private class PanelHandler extends AbstractAction implements ActionListener {
           }
        }
       else if (cmd.equals("NEW")) {
-         prior_viewport = br.getViewport();
+         setPriorViewport(br);
          if (current_configuration == null) setCurrentLaunchConfig(null);
    
          if (current_configuration != null) {
@@ -533,6 +538,14 @@ private class PanelHandler extends AbstractAction implements ActionListener {
        }
     }
 
+   private void setPriorViewport(BudaRoot br) {
+      Rectangle r = br.getViewport();
+      boolean overlap = false;
+      for (BudaWorkingSet bws : working_sets) {
+         if (bws.getRegion().intersects(r)) overlap = true;
+       }
+      if (!overlap) prior_viewport = br.getViewport();
+    }
 
    private void createConfiguration() {
       CreateConfigAction cca = new CreateConfigAction(BumpLaunchConfigType.JAVA_APP);
@@ -820,11 +833,12 @@ private class DebugBubbleChecker implements BubbleViewCallback {
 
    @Override public void workingSetRemoved(BudaWorkingSet ws) {
       if (working_sets.contains(ws)) {
-	 working_sets.remove(ws);
-	 if (active_working_set == ws) active_working_set = ws;
+         working_sets.remove(ws);
+         if (active_working_set == ws) active_working_set = ws;
        }
     }
-}
+   
+}       // end of inner class DebugBubbleChecker
 
 
 

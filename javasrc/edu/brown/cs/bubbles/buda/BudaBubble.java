@@ -440,7 +440,7 @@ void noteFloatMoved()
 public boolean isFixed()			{ return is_fixed; }
 public boolean isDocked()			{ return is_docked; }
 public boolean isUserPos()			{ return is_userpos; }
-public boolean isRemovable()                    { return true; }
+public boolean isRemovable()			{ return true; }
 
 /**
  *	Indicate that the bubble is fixed (i.e. should not be considered by the
@@ -1031,6 +1031,7 @@ void checkWorkingSet()
    if (fixed_set == null) return;
 
    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
+   if (bba == null) return;
    if (fixed_stop && fixed_position != null) {
       Rectangle vpt = bba.getViewport();
       Rectangle wsr = fixed_set.getRegion();

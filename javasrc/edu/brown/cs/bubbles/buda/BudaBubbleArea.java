@@ -2786,20 +2786,20 @@ private class BubbleMoveContext extends MouseContext {
    @Override void finish() {
       super.finish();
       if (for_bubble == null) return;
-
+   
       for_bubble.unfreeze();
       for_bubble.grabFocus();
       setLayer(for_bubble,start_layer,0);
-
+   
       if (for_root.noteBubbleActionDone(for_bubble)) return;
-
+   
       fixupBubble(for_bubble);
       fixupGroups(for_bubble);
       if (for_bubble.isUserPos()) repaint();
-
+   
       BudaCursorManager.resetDefaults(for_bubble);
       //for_bubble.setCursor(for_bubble.getBubbleCursor());
-
+   
       if (move_count > 0) BoardMetrics.noteCommand("BUDA","bubbleMoved");
       removeMovingBubble(for_bubble);
     }
@@ -3293,14 +3293,14 @@ private class AutoScroller extends javax.swing.Timer implements ActionListener
       delta_x = dx;
       delta_y = dy;
       if (dx == 0 && dy == 0) {
-	 if (isRunning()) {
-	    BoardMetrics.noteCommand("BUDA","autoScrollStop");
-	    stop();
-	  }
+         if (isRunning()) {
+            BoardMetrics.noteCommand("BUDA","autoScrollStop");
+            stop();
+          }
        }
       else if (!isRunning()) {
-	 start();
-	 BoardMetrics.noteCommand("BUDA","autoScrollStart");
+         start();
+         BoardMetrics.noteCommand("BUDA","autoScrollStart");
       }
     }
 
