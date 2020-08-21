@@ -391,17 +391,18 @@ private void setupDebuggingChannels()
 private void setupDebuggingPanel()
 {
    SwingGridPanel pnl = new DebuggingPanel();
+   PanelHandler hdlr = new PanelHandler();
 
    JLabel top = new JLabel("Debug",SwingConstants.CENTER);
    BoardColors.setTransparent(top,pnl);
    pnl.addGBComponent(top,0,0,0,1,1,0);
 
-   JButton btn = defineButton("debug","Switch to the debugging perspective");
+   JButton btn = defineButton("debug","Switch to the debugging perspective",hdlr);
    BoardColors.setTransparent(btn,pnl);
    pnl.addGBComponent(btn,1,1,1,1,0,0);
 
    btn = defineButton("new","<html>Create a new debugging channel for current configuration" +
-	 " or switch configurations (right click)");
+	 " or switch configurations (right click)",hdlr);
    BoardColors.setTransparent(btn,pnl);
    pnl.addGBComponent(btn,2,1,1,1,0,0);
    btn.addMouseListener(new ConfigSelector());
@@ -416,7 +417,7 @@ private void setupDebuggingPanel()
 
    buda_root.addPanel(pnl,true);
 
-   buda_root.registerKeyAction(new PanelHandler(),"DEBUG",
+   buda_root.registerKeyAction(hdlr,"DEBUG",
 	 KeyStroke.getKeyStroke(KeyEvent.VK_F2,0));
 }
 
@@ -437,11 +438,11 @@ private static class DebuggingPanel extends SwingGridPanel
       Color tc = BoardColors.getColor(BDDT_PANEL_TOP_COLOR_PROP);
       Color bc = BoardColors.getColor(BDDT_PANEL_BOTTOM_COLOR_PROP);
       if (tc.equals(bc)) {
-	 g.setColor(tc);
+         g.setColor(tc);
        }
       else {
-	 Paint p = new GradientPaint(0f, 0f, tc, 0f, this.getHeight(), bc);
-	 g.setPaint(p);
+         Paint p = new GradientPaint(0f, 0f, tc, 0f, this.getHeight(), bc);
+         g.setPaint(p);
        }
       g.fillRect(0, 0, this.getWidth() , this.getHeight());
     }
@@ -450,7 +451,7 @@ private static class DebuggingPanel extends SwingGridPanel
 
 
 
-private JButton defineButton(String name,String info)
+private JButton defineButton(String name,String info,PanelHandler hdlr)
 {
    JButton btn = new JButton(BoardImage.getIcon("debug/" + name + ".png"));
    btn.setToolTipText(info);
@@ -458,7 +459,7 @@ private JButton defineButton(String name,String info)
    btn.setMargin(new Insets(0,1,0,1));
    btn.setOpaque(false);
    btn.setBackground(BoardColors.transparent());
-   btn.addActionListener(new PanelHandler());
+   btn.addActionListener(hdlr);
 
    return btn;
 }

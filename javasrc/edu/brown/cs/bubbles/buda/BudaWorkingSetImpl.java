@@ -76,7 +76,7 @@ private WorkingSetGrowth grow_type;
 private GrowCallback grow_callback;
 private Map<String,Object> property_map;
 
-private static int MIN_GROW_SPACE = 100;
+private static int MIN_GROW_SPACE = 500;
 private static int GROW_EXTRA = 20;
 
 

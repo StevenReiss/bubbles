@@ -792,7 +792,8 @@ private BubbleData findClosestBubble(BumpThread bt,BumpThreadStack stk,BumpStack
 	 Collection<BubbleData> bbls = new ArrayList<BubbleData>(bubble_map.values());
 	 for (BubbleData bd : bbls) {
 	    if (!isBubbleRelevant(bd)) continue;
-	    if (bd != best && bd.isBelow(best) && bd.canRemove() && bd.getBubbleType() == BubbleType.EXEC) {
+	    if (bd != best && bd.isBelow(best) && bd.canRemove() && 
+                  bd.getBubbleType() == BubbleType.EXEC) {
 	       bubble_area.userRemoveBubble(bd.getBubble());
 	       BudaBubble sb = bd.getAssocBubble();
 	       if (sb != null) {
@@ -919,8 +920,12 @@ private class BubbleUpdater implements BubbleViewCallback {
    @Override public void focusChanged(BudaBubble bb,boolean set)	{ }
 
    @Override public void bubbleAdded(BudaBubble bb) {
-      if (BudaRoot.findBudaBubbleArea(bb) != bubble_area) return;
       if (bb.isTransient()) return;
+      if (BudaRoot.findBudaBubbleArea(bb) != bubble_area) return;
+      BudaWorkingSet ws = BddtFactory.getFactory().getActiveWorkingSet();
+      if (ws != null) {
+         if (!ws.getRegion().intersects(bb.getBounds())) return;
+       }
       if (bubble_map.get(bb) == null) {
          bubble_map.put(bb,new BubbleData(bb));
        }

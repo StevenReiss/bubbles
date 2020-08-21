@@ -1034,10 +1034,10 @@ void expandArea(int base,int width,int left,int right)
        }
       r = c.getBounds(r);
       int delta = 0;
-      if (r.x >= base-left) {
+      if (r.x + r.width >= base-left) {
 	 delta += left;
        }
-      if (r.x + r.width >= base + width) {
+      if (r.x >= base + width) {
 	 delta += right;
        }
       r.x += delta;
