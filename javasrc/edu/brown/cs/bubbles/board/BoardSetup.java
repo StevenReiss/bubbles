@@ -499,28 +499,28 @@ public String getCourseAssignment()
 
 public void setDefaultWorkspace(String ws)
 {
-   File fws = new File(ws); 
+   File fws = new File(ws);
    if (fws.exists() && checkWorkspaceDirectory(fws,false)) ws = fws.getAbsolutePath();
    else if (!fws.isAbsolute()) {
       String nm = fws.getPath();
       for (String rct : recent_workspaces) {
-         if (rct.endsWith(nm)) {
-            File f4 = new File(rct);
-            ws = f4.getAbsolutePath();
-            fws = null;
-            break;
-          }
+	 if (rct.endsWith(nm)) {
+	    File f4 = new File(rct);
+	    ws = f4.getAbsolutePath();
+	    fws = null;
+	    break;
+	  }
        }
       if (fws != null) {
-         for (String rct : recent_workspaces) {
-            File f1 = new File(rct);
-            File f2 = f1.getParentFile();
-            File f3 = new File(f2,ws);
-            if (f3.exists() && f3.isDirectory()) {
-               ws = f3.getAbsolutePath();
-               break;
-             }
-          }
+	 for (String rct : recent_workspaces) {
+	    File f1 = new File(rct);
+	    File f2 = f1.getParentFile();
+	    File f3 = new File(f2,ws);
+	    if (f3.exists() && f3.isDirectory()) {
+	       ws = f3.getAbsolutePath();
+	       break;
+	     }
+	  }
        }
     }
 
@@ -847,6 +847,62 @@ public String getBinaryPath(String item)
    File f3 = new File(f2,item);
    return f3.getPath();
 }
+
+
+
+public String getEclipsePath()
+{
+   StringBuffer buf = new StringBuffer();
+   int fnd = 0;
+   String ejp = getLibraryPath("eclipsejar");
+   File ejr = new File(ejp);
+   if (ejr.exists() && ejr.isDirectory()) {
+      for (File nfil : ejr.listFiles()) {
+	 if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {
+	    if (fnd > 0) buf.append(File.pathSeparator);
+	    buf.append(nfil.getPath());
+	    ++fnd;
+	  }
+       }
+    }
+   if (fnd == 0) {
+      File f1 = ejr.getParentFile().getParentFile();	// /pro/bubbles/lib --> /pro
+      File f2 = new File(f1,"ivy");                      // /pro/ivy
+      File f3 = new File(f2,"lib");                      // /pro/ivy/lib
+      File f4 = new File(f3,"eclipsejar");
+      if (f4.exists() && f4.isDirectory()) {
+	 for (File nfil : f4.listFiles()) {
+	    if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {
+	       if (fnd > 0) buf.append(File.pathSeparator);
+	       buf.append(nfil.getPath());
+	       ++fnd;
+	     }
+	  }
+       }
+    }
+   if (fnd == 0) {
+      String xcp = System.getProperty("java.class.path");
+      StringTokenizer ptok = new StringTokenizer(xcp,File.pathSeparator);
+      while (ptok.hasMoreTokens()) {
+	 String pelt = ptok.nextToken().trim();
+	 if (pelt.contains("org.eclipse.")) {
+	    if (fnd > 0) buf.append(File.pathSeparator);
+	    buf.append(pelt);
+	    ++fnd;
+	  }
+       }
+    }
+
+   if (fnd == 0) return null;
+
+   return buf.toString();
+}
+
+
+
+
+
+
 
 
 /**
@@ -1274,17 +1330,17 @@ public boolean doSetup()
 	  }
        }
       if (default_workspace == null) {
-         reportError("No workspace specified");
-         System.exit(1);
+	 reportError("No workspace specified");
+	 System.exit(1);
        }
       else {
-         File wf = new File(default_workspace);
-         if (!wf.exists() || !wf.isDirectory() || !wf.canWrite()) {
-            reportError("Invaid workspace directory");
-            System.exit(1);
-          }
+	 File wf = new File(default_workspace);
+	 if (!wf.exists() || !wf.isDirectory() || !wf.canWrite()) {
+	    reportError("Invaid workspace directory");
+	    System.exit(1);
+	  }
        }
-      
+
     }
 
    if (!checkPalette()) {
@@ -1687,8 +1743,8 @@ private boolean checkInstall()
 	 else ins.close();
        }
       if (ok) {
-         URL url = BoardImage.class.getClassLoader().getResource(BOARD_RESOURCE_CHECK);
-         if (url == null || !url.toString().startsWith("jar")) ok = false;
+	 URL url = BoardImage.class.getClassLoader().getResource(BOARD_RESOURCE_CHECK);
+	 if (url == null || !url.toString().startsWith("jar")) ok = false;
        }
       // System.err.println("BOARD: CHECK INSTALL: " + ok + " " + install_jar);
       install_jar = ok;
@@ -1955,7 +2011,7 @@ private void extractPybles(File pyd,File libd,boolean force)
    String pfx2 = null;
    String pyblesfiles = null;
    String libfiles = null;
-   
+
    try (InputStream ins = BoardSetup.class.getClassLoader().getResourceAsStream("pyblesfiles.txt")) {
       if (ins == null) return;
       BufferedReader br = new BufferedReader(new InputStreamReader(ins));
@@ -2033,26 +2089,26 @@ private void extractNobbles(File libd,boolean force)
       InputStream ins = BoardSetup.class.getClassLoader().getResourceAsStream("jsfiles.txt");
       if (ins == null) return;
       try (BufferedReader br = new BufferedReader(new InputStreamReader(ins))) {
-         for ( ; ; ) {
-            String s = br.readLine();
-            if (s == null) break;
-            s = s.trim();
-            if (s.length() == 0) continue;
-            if (s.startsWith("#")) continue;
-            
-            File f1 = new File(jslib,s);
-            if (!force && f1.exists()) continue;
-            try {
-               InputStream sins = BoardSetup.class.getClassLoader().getResourceAsStream(s);
-               if (sins != null) {
-                  FileOutputStream ots = new FileOutputStream(f1);
-                  copyFile(sins,ots);
-                }
-             }
-            catch (IOException e) {
-               BoardLog.logE("BOARD","Problem setting up nobbles files: " + e);
-             }
-          }
+	 for ( ; ; ) {
+	    String s = br.readLine();
+	    if (s == null) break;
+	    s = s.trim();
+	    if (s.length() == 0) continue;
+	    if (s.startsWith("#")) continue;
+	
+	    File f1 = new File(jslib,s);
+	    if (!force && f1.exists()) continue;
+	    try {
+	       InputStream sins = BoardSetup.class.getClassLoader().getResourceAsStream(s);
+	       if (sins != null) {
+		  FileOutputStream ots = new FileOutputStream(f1);
+		  copyFile(sins,ots);
+		}
+	     }
+	    catch (IOException e) {
+	       BoardLog.logE("BOARD","Problem setting up nobbles files: " + e);
+	     }
+	  }
        }
     }
    catch (IOException e) {
@@ -2167,7 +2223,7 @@ private static boolean checkWorkspaceDirectory(File wsd,boolean create)
    if (create) {
       if (!wsd.getParentFile().exists()) return false;
       if (!wsd.getParentFile().canWrite()) return false;
-      if (wsd.exists() && !wsd.isDirectory()) return false; 
+      if (wsd.exists() && !wsd.isDirectory()) return false;
       return true;
     }
 
@@ -2591,7 +2647,7 @@ private void restartBubbles()
       switch (run_mode) {
 	 case CLIENT :
 	    // args.add(idx++,"-CLIENT");
-            args.add(idx++,"-cloud");
+	    args.add(idx++,"-cloud");
 	    break;
 	 case SERVER :
 	    args.add(idx++,"-SERVER");
@@ -2825,63 +2881,63 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
 
    private void checkStatus() {
       if (eclipse_field != null) {
-         String txt = eclipse_field.getText().trim();
-         if (txt.length() > 0) {
-            File ef = new File(txt);
-            if (!ef.getAbsolutePath().equals(eclipse_directory)) {
-               eclipse_directory = ef.getAbsolutePath();
-               has_changed = true;
-            }
-         }
+	 String txt = eclipse_field.getText().trim();
+	 if (txt.length() > 0) {
+	    File ef = new File(txt);
+	    if (!ef.getAbsolutePath().equals(eclipse_directory)) {
+	       eclipse_directory = ef.getAbsolutePath();
+	       has_changed = true;
+	    }
+	 }
       }
       if (bubbles_field != null) {
-         String txt = bubbles_field.getText().trim();
-         if (txt.length() > 0) {
-            File inf = new File(txt);
-            if (!inf.getAbsolutePath().equals(install_path)) {
-               install_path = inf.getAbsolutePath();
-               has_changed = true;
-            }
-         }
+	 String txt = bubbles_field.getText().trim();
+	 if (txt.length() > 0) {
+	    File inf = new File(txt);
+	    if (!inf.getAbsolutePath().equals(install_path)) {
+	       install_path = inf.getAbsolutePath();
+	       has_changed = true;
+	    }
+	 }
       }
-   
+
       switch (board_language) {
-         case JAVA :
-            if (checkEclipse() && eclipse_button != null) {
-               eclipse_button.setEnabled(false);
-             }
-            if (checkEclipse() && checkPlugin() && (install_jar || checkInstall())) {
-               accept_button.setEnabled(true);
-             }
-            else {
-               accept_button.setEnabled(false);
-             }
-            if (checkEclipse() && !checkPlugin() && (install_jar || checkInstall())) {
-               install_button.setEnabled(true);
-             }
-            else {
-               install_button.setEnabled(false);
-             }
-            if (checkEclipse()) {
-               eclipse_warning.setVisible(false);
-             }
-            else {
-               eclipse_warning.setVisible(true);
-             }
-            break;
-         case PYTHON :
-            break;
-         case REBUS :
-            break;
-         case JS :
-            break;
+	 case JAVA :
+	    if (checkEclipse() && eclipse_button != null) {
+	       eclipse_button.setEnabled(false);
+	     }
+	    if (checkEclipse() && checkPlugin() && (install_jar || checkInstall())) {
+	       accept_button.setEnabled(true);
+	     }
+	    else {
+	       accept_button.setEnabled(false);
+	     }
+	    if (checkEclipse() && !checkPlugin() && (install_jar || checkInstall())) {
+	       install_button.setEnabled(true);
+	     }
+	    else {
+	       install_button.setEnabled(false);
+	     }
+	    if (checkEclipse()) {
+	       eclipse_warning.setVisible(false);
+	     }
+	    else {
+	       eclipse_warning.setVisible(true);
+	     }
+	    break;
+	 case PYTHON :
+	    break;
+	 case REBUS :
+	    break;
+	 case JS :
+	    break;
        }
-   
+
       if (install_jar || checkInstall()) {
-         bubbles_warning.setVisible(false);
+	 bubbles_warning.setVisible(false);
        }
       else {
-         bubbles_warning.setVisible(true);
+	 bubbles_warning.setVisible(true);
        }
    }
 
@@ -2986,67 +3042,67 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
 
    WorkspaceDialog() {
       SwingGridPanel pnl = new SwingGridPanel();
-   
+
       // library might not be set up here -- can't use BoardColors
       // pnl.setBackground(BoardColors.getColor("Buda.Bubbles.Color"));
       pnl.setBackground(WORKSPACE_DIALOG_COLOR);
       pnl.setOpaque(true);
-   
+
       pnl.beginLayout();
       pnl.addBannerLabel("Bubbles Workspace Setup");
-   
+
       pnl.addSeparator();
-   
+
       workspace_field = null;
       workspace_warning = new JLabel("Warning");//added by amc6
-   
+
       switch (board_language) {
-         default:
-         case JAVA :
-            workspace_field = pnl.addFileField("Eclipse Workspace",default_workspace,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new WorkspaceDirectoryFilter(),this,null);
-            workspace_warning.setToolTipText("Not a vaid Eclipse Workspace");
-            break;
-         case PYTHON :
-            workspace_field = pnl.addFileField("Python Workspace",default_workspace,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new WorkspaceDirectoryFilter(),this,null);
-            workspace_warning.setToolTipText("Not a vaid Python Workspace");
-            break;
-         case JS :
-            workspace_field = pnl.addFileField("Node/JS Workspace",default_workspace,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new WorkspaceDirectoryFilter(),this,null);
-            workspace_warning.setToolTipText("Not a vaid Node/JS Workspace");
-            break;
-         case REBUS :
-            workspace_field = pnl.addFileField("Rebus Workspace",default_workspace,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new WorkspaceDirectoryFilter(),this,null);
-            workspace_warning.setToolTipText("Not a vaid Rebus Workspace");
-            break;
+	 default:
+	 case JAVA :
+	    workspace_field = pnl.addFileField("Eclipse Workspace",default_workspace,
+		  JFileChooser.DIRECTORIES_ONLY,
+		  new WorkspaceDirectoryFilter(),this,null);
+	    workspace_warning.setToolTipText("Not a vaid Eclipse Workspace");
+	    break;
+	 case PYTHON :
+	    workspace_field = pnl.addFileField("Python Workspace",default_workspace,
+		  JFileChooser.DIRECTORIES_ONLY,
+		  new WorkspaceDirectoryFilter(),this,null);
+	    workspace_warning.setToolTipText("Not a vaid Python Workspace");
+	    break;
+	 case JS :
+	    workspace_field = pnl.addFileField("Node/JS Workspace",default_workspace,
+		  JFileChooser.DIRECTORIES_ONLY,
+		  new WorkspaceDirectoryFilter(),this,null);
+	    workspace_warning.setToolTipText("Not a vaid Node/JS Workspace");
+	    break;
+	 case REBUS :
+	    workspace_field = pnl.addFileField("Rebus Workspace",default_workspace,
+		  JFileChooser.DIRECTORIES_ONLY,
+		  new WorkspaceDirectoryFilter(),this,null);
+	    workspace_warning.setToolTipText("Not a vaid Rebus Workspace");
+	    break;
        }
       if (workspace_field != null) workspace_field.addKeyListener(this);
-   
+
       workspace_warning.setForeground(WARNING_COLOR);
       pnl.add(workspace_warning);
-   
+
       pnl.addSeparator();
       if (recent_workspaces.size() > 0) {
-         List<String> recents = new ArrayList<String>(recent_workspaces);
-         recents.add(0,RECENT_HEADER);
-         pnl.addChoice("Recent Workspaces",recents,0,true,this);
+	 List<String> recents = new ArrayList<String>(recent_workspaces);
+	 recents.add(0,RECENT_HEADER);
+	 pnl.addChoice("Recent Workspaces",recents,0,true,this);
        }
-   
+
       pnl.addBoolean("Create New Workspace",create_workspace,this);
       pnl.addBoolean("Always Ask for Workspace",ask_workspace,this);
-   
+
       pnl.addSeparator();
       accept_button = pnl.addBottomButton("OK","OK",this);
       pnl.addBottomButton("CANCEL","CANCEL",this);
       pnl.addBottomButtons();
-   
+
       working_dialog = new JDialog((JFrame) null,"Bubbles Workspace Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();
@@ -3065,55 +3121,55 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
 
    private void checkStatus() {
       if (checkWorkspace()) {
-         accept_button.setEnabled(true);
-         workspace_warning.setVisible(false);
+	 accept_button.setEnabled(true);
+	 workspace_warning.setVisible(false);
        }
       else {
-         accept_button.setEnabled(false);
-         workspace_warning.setVisible(true);
+	 accept_button.setEnabled(false);
+	 workspace_warning.setVisible(true);
        }
     }
 
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if (cmd.equals("Eclipse Workspace") || cmd.equals("Python Workspace") ||
-            cmd.equals("Rebus Workspace") || cmd.equals("Node/JS Workspace")) {
-         JTextField tf = (JTextField) e.getSource();
-         File ef = new File(tf.getText());
-         String np = ef.getPath();
-         if (!np.equals(default_workspace)) ws_changed = true;
-         default_workspace = np;
+	    cmd.equals("Rebus Workspace") || cmd.equals("Node/JS Workspace")) {
+	 JTextField tf = (JTextField) e.getSource();
+	 File ef = new File(tf.getText());
+	 String np = ef.getPath();
+	 if (!np.equals(default_workspace)) ws_changed = true;
+	 default_workspace = np;
        }
       else if (cmd.equals("Always Ask for Workspace")) {
-         JCheckBox cbx = (JCheckBox) e.getSource();
-         if (ask_workspace != cbx.isSelected()) ws_changed = true;
-         ask_workspace = cbx.isSelected();
+	 JCheckBox cbx = (JCheckBox) e.getSource();
+	 if (ask_workspace != cbx.isSelected()) ws_changed = true;
+	 ask_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Create New Workspace")) {
-         JCheckBox cbx = (JCheckBox) e.getSource();
-         create_workspace = cbx.isSelected();
+	 JCheckBox cbx = (JCheckBox) e.getSource();
+	 create_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Recent Workspaces")) {
-         JComboBox<?> cbx = (JComboBox<?>) e.getSource();
-         String rslt = (String) cbx.getSelectedItem();
-         if (rslt != null && !rslt.trim().equals("") && !rslt.trim().equals(RECENT_HEADER)) {
-            if (!rslt.equals(default_workspace)) {
-               ws_changed = true;
-               default_workspace = rslt;
-               workspace_field.setText(rslt);
-             }
-          }
+	 JComboBox<?> cbx = (JComboBox<?>) e.getSource();
+	 String rslt = (String) cbx.getSelectedItem();
+	 if (rslt != null && !rslt.trim().equals("") && !rslt.trim().equals(RECENT_HEADER)) {
+	    if (!rslt.equals(default_workspace)) {
+	       ws_changed = true;
+	       default_workspace = rslt;
+	       workspace_field.setText(rslt);
+	     }
+	  }
        }
       else if (cmd.equals("OK")) {
-         result_status = true;
-         working_dialog.setVisible(false);
+	 result_status = true;
+	 working_dialog.setVisible(false);
        }
       else if (cmd.equals("CANCEL")) {
-         result_status = false;
-         working_dialog.setVisible(false);
+	 result_status = false;
+	 working_dialog.setVisible(false);
        }
       else {
-         BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
+	 BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
        }
       checkStatus();
     }
