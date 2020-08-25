@@ -275,6 +275,7 @@ Bwiz.NewBackground	:	0xff000000
 Bass.DefaultLabelColor	:	0xc00f0f07
 Bddt.BreakpointSelectionColor	:	0xffeb4c4c
 Bvcr.DiffBubbleBackground	:	0xff402d40
+Buda.help.error.color	:	0xff000000
 Bucs.SolutionBottomColor	:	0xff000000
 Buda.MenuColor	:	0xffffffff
 Bcon.class.field.color	:	0xffff0aff

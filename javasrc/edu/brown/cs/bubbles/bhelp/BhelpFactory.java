@@ -174,14 +174,14 @@ void displayDemoScreen(Component comp,String name,String backto)
    if(comp == null) {
       comp = buda_root.getCurrentBubbleArea();
     }
-
+   
    if(comp instanceof JEditorPane) {
       String text = "";
-
+      
       //Bring stuff back to being visible
       JEditorPane jcomp = (JEditorPane) comp;
       jcomp.getParent().getParent().setVisible(true);
-
+      
       //Retrieve the proper demo
       InputStream ins = BoardProperties.getLibraryFile(HELP_DOCUMENT);
       if (ins != null) {
@@ -192,11 +192,12 @@ void displayDemoScreen(Component comp,String name,String backto)
 	  }
 	 text += getTextOfHelp(xml, name);
 	 if(!backto.equals("NULL")) {
-	    text += "[<a class='tbutton' id='back' href='gotodemo:" + backto + ";backto:NULL'> BACK </a>]</p>";
+	    text += "[<a class='tbutton' id='back' href='gotodemo:" +
+               backto + ";backto:NULL'> BACK </a>]</p>";
 	  }
 	 text += "</html>";
        }
-
+      
       jcomp.setText(text);
     }
 }
@@ -206,9 +207,9 @@ void displayDemoScreen(Component comp,String name,String backto)
 String getTextOfHelp(Element xml, String name)
 {
    for(Element ex : IvyXml.children(xml, "HELP")) {
-      String key = IvyXml.getAttrString(ex, "KEY");
+      String key = IvyXml.getAttrString(ex,"KEY");
       if(name.equals(key)) {
-	 return IvyXml.getTextElement(ex, "TEXT");
+	 return IvyXml.getTextElement(ex,"TEXT");
        }
     }
    return "<p><span class='error'>No available demo for this topic</span></p>";

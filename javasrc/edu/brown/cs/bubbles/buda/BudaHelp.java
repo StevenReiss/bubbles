@@ -109,6 +109,7 @@ static {
    HTML_COLOR_MAP.put("TEXT","Buda.help.text.color");
    HTML_COLOR_MAP.put("LINK","Buda.help.link.color");
    HTML_COLOR_MAP.put("BACK","Buda.help.back.color");
+   HTML_COLOR_MAP.put("ERROR","Buda.help.error.color");
 }
 
 
@@ -191,9 +192,7 @@ BudaHelp(Component c,BudaHelpClient helper)
    BudaRoot root = BudaRoot.findBudaRoot(for_component);
    if (root == null) return;
    Container rootpanel = root.getLayeredPane();
-   // Point pt = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),rootpanel);
    Point pt = root.convertPoint((Component) e.getSource(),e.getPoint(),rootpanel);
-   // System.err.println("COMPARE " + pt + " " + pt1);
 
    pt.x -= dx;
    pt.y -= dy;
@@ -202,7 +201,6 @@ BudaHelp(Component c,BudaHelpClient helper)
    rootpanel.add(scroll_area);
    int w = BUDA_PROPERTIES.getInt(HELP_WIDTH,300);
    int h = BUDA_PROPERTIES.getInt(HELP_HEIGHT,200);
-   // Dimension d1 = help_area.getPreferredSize();
    Dimension d = new Dimension(w,h);
    scroll_area.setPreferredSize(d);
    scroll_area.setSize(d);

@@ -172,7 +172,7 @@ private AttributeSet setupSet(String id)
    SimpleAttributeSet sas = new SimpleAttributeSet();
    if (pas != null) sas.setResolveParent(pas);
    attr_sets.put(lid,sas);
-
+   
    for (String pnm : property_set.stringPropertyNames()) {
       if (pnm.toLowerCase().startsWith(lid + ".")) {
 	 int idx = pnm.indexOf(".");

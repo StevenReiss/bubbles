@@ -540,9 +540,13 @@ public static Color invertColor(Color base)
    int r = base.getRed();
    int g = base.getGreen();
    int b = base.getBlue();
-
+    
    int lum = (r * 299 + g * 587 + b * 114)/1000;
    int invlum = 255-lum;
+   if (invlum >= 192) {
+      invlum += (255-invlum)/5;
+      if (invlum > 255) invlum = 255;
+    }
 
    int rinv = 0;
    int ginv = 0;
@@ -569,7 +573,7 @@ public static Color invertColor(Color base)
 
    if (binv > 255) {
       int w = (binv-255)*114/(299+587);
-      if (w > 160) w = 160;
+      if (w > 200) w = 200;
       binv = 255;
       ginv += w;
       rinv += w;

@@ -24,7 +24,7 @@ Buda.help.border.color	:	0xffa52a2a
 Buda.help.text.color	:	black
 Buda.help.link.color	:	blue
 Buda.help.back.color	:	red
-
+Buda.help.error.color	:	white
 
 Buda.HintBackground	:	lightgray
 

@@ -15,16 +15,20 @@
 		<style type='text/css'>
 		a {
 			text-decoration: none;
+			color: $(LINK);
+		}
+		html {
+			color: $(TEXT);
 		}
 
 		#back {
-			color: red;
+			color: $(BACK);
 			font-weight: bold;
 		}
 
 		.error {
-			color: white;
-			background-color: red;
+			color: $(ERROR);
+			background-color: $(BACK);
 			font-weight: bold;
 		}
 
