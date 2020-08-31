@@ -1287,10 +1287,10 @@ private class ExecutionAnnot implements BaleAnnotation {
    @Override public Color getLineColor(BudaBubble bbl) {
       BumpStackFrame frm = bubble_manager.getFrameForBubble(bbl);
       if (frm != null && frm != for_frame) return null;
-
       if (for_thread.getExceptionType() != null) return except_color;
       return annot_color;
     }
+   
    @Override public Color getBackgroundColor()			{ return null; }
 
    @Override public boolean getForceVisible(BudaBubble bb) {

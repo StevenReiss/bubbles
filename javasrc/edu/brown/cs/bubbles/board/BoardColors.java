@@ -573,7 +573,7 @@ public static Color invertColor(Color base)
 
    if (binv > 255) {
       int w = (binv-255)*114/(299+587);
-      if (w > 200) w = 200;
+      if (w > 180) w = 180;
       binv = 255;
       ginv += w;
       rinv += w;

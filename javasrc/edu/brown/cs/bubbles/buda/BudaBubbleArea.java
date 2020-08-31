@@ -167,7 +167,7 @@ BudaBubbleArea(BudaRoot br,Element cfg,BudaChannelSet cs)
    channel_set = cs;
 
    floating_bubbles = new ConcurrentHashMap<>();
-   docked_bubbles = new HashMap<>();
+   docked_bubbles = new ConcurrentHashMap<>();
    working_set_bubbles = new ConcurrentHashMap<>();
    cur_viewport = null;
    routes_valid = false;
@@ -469,7 +469,8 @@ void removeCurrentBubble(MouseEvent e)
 
 private void setupDockedBubble(BudaBubble bb)
 {
-   if (bb == null || !bb.isFixed() && !bb.isFloating()) return;
+   if (bb == null) return;
+   if (!bb.isFixed() && !bb.isFloating()) return;
    
    List<BudaBubbleDock> docks = new ArrayList<>();
    Point loc = bb.getLocation();
@@ -480,6 +481,12 @@ private void setupDockedBubble(BudaBubble bb)
    int y1 = loc.y + bbsz.height;
    Rectangle r1 = getViewport();
    Rectangle r2 = for_root.getShadedViewport();
+   if (r2 == null) {
+      docked_bubbles.remove(bb);
+      bb.setDocked(false);
+      return;
+    }
+   
    if (Math.abs(x0 - r2.x) < 4) {
       loc.x = r2.x;
       docks.add(BudaBubbleDock.WEST);
@@ -1951,6 +1958,7 @@ private Point setFloatingLocation(BudaBubble bb)
       Rectangle r2 = getViewport();
       if (!r1.intersects(r2)) {
 	 floating_bubbles.remove(bb);
+         docked_bubbles.remove(bb);
 	 Point p2 = bb.getFixedWorkingSetPosition();
 	 if (p2 == null) return null;
 	 Point p3 = SwingUtilities.convertPoint(for_root,p2,this);
@@ -2137,6 +2145,7 @@ public boolean setBubbleFloating(BudaBubble bb, boolean fg)
       bb.getGroup().addBubble(bb);
       addBubbleGroup(bb.getGroup());
       floating_bubbles.remove(bb);
+      docked_bubbles.remove(bb);
       bb.setFloating(false);
       bb.setUserPos(false);
       bb.setFixed(false);
@@ -2152,6 +2161,7 @@ public boolean setBubbleFloating(BudaBubble bb, boolean fg)
       loc.y -= cur_viewport.y;
       floating_bubbles.put(bb, loc);
       bb.setFloating(true);
+      setupDockedBubble(bb);
       setLayer(bb,MODAL_LAYER);
       if (bbg != null) {
 	 bbg.removeBubble(bb);
@@ -3334,33 +3344,33 @@ private class BubbleManager implements ComponentListener, ContainerListener {
    @Override public void componentMoved(ComponentEvent e) {
       if (cur_viewport == null) return;
       if (e.getSource() instanceof BudaBubble) {
-	 BudaBubble bbl = (BudaBubble) e.getSource();
-	 if (bbl.isFloating()) {
-	    Point floc = new Point(bbl.getLocation());
-	    floc.x -= cur_viewport.x;
-	    floc.y -= cur_viewport.y;
-	    floating_bubbles.put(bbl,floc);
-	    bbl.noteFloatMoved();
-	  }
-	 else if (bbl.getFixedWorkingSet() != null) {
-	    bbl.noteFloatMoved();
-	  }
-	 else {
-	    if (moving_bubbles.contains(bbl)) fixupGroups(bbl);
-	    else repaint();
-	    routes_valid = false;
-	  }
-	 updateOverview();
+         BudaBubble bbl = (BudaBubble) e.getSource();
+         if (bbl.isFloating()) {
+            Point floc = new Point(bbl.getLocation());
+            floc.x -= cur_viewport.x;
+            floc.y -= cur_viewport.y;
+            floating_bubbles.put(bbl,floc);
+            bbl.noteFloatMoved();
+          }
+         else if (bbl.getFixedWorkingSet() != null) {
+            bbl.noteFloatMoved();
+          }
+         else {
+            if (moving_bubbles.contains(bbl)) fixupGroups(bbl);
+            else repaint();
+            routes_valid = false;
+          }
+         updateOverview();
       }
    }
 
    @Override public void componentResized(ComponentEvent e) {
       if (e.getSource() instanceof BudaBubble) {
-	 BudaBubble bb = (BudaBubble) e.getSource();
-	 fixupBubble(bb);
-	 fixupGroups(bb);
-	 routes_valid = false;
-	 updateOverview();
+         BudaBubble bb = (BudaBubble) e.getSource();
+         fixupBubble(bb);
+         fixupGroups(bb);
+         routes_valid = false;
+         updateOverview();
        }
     }
 
@@ -3372,14 +3382,14 @@ private class BubbleManager implements ComponentListener, ContainerListener {
 
    @Override public void componentAdded(ContainerEvent e) {
       if (e.getChild() instanceof BudaBubble) {
-	 BudaBubble bb = (BudaBubble) e.getChild();
-	 if (bb.isShowing()) {
-	    localAddBubble(bb,true);
-	    updateOverview();
-	  }
-	 else {
-	    BoardLog.logD("BUDA", "Non-showing bubble added: " + bb);
-	  }
+         BudaBubble bb = (BudaBubble) e.getChild();
+         if (bb.isShowing()) {
+            localAddBubble(bb,true);
+            updateOverview();
+          }
+         else {
+            BoardLog.logD("BUDA", "Non-showing bubble added: " + bb);
+          }
        }
     }
 
@@ -3394,7 +3404,7 @@ private class BubbleManager implements ComponentListener, ContainerListener {
    private void updateOverview() {
       checkAreaDimensions();
       for (BubbleAreaCallback cb : area_callbacks) {
-	 cb.updateOverview();
+         cb.updateOverview();
        }
     }
 
