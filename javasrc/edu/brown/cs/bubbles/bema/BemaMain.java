@@ -251,6 +251,7 @@ private void scanArgs(String [] args)
 	  }
 	 else if (args[i].startsWith("-n")) {                   // -new
 	    new_workspace = true;
+            ask_workspace = true;
 	  }
 	 else if (args[i].startsWith("-a")) {                   // -askworkspace
 	    ask_workspace = true;

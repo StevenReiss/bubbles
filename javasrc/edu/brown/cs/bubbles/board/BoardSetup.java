@@ -1365,18 +1365,6 @@ public boolean doSetup()
 	 break;
     }
 
-   setSplashTask("Checking messaging configuration");
-   setupIvy();
-
-   if (default_workspace != null) {
-      system_properties.setProperty(BOARD_PROP_ECLIPSE_WS,default_workspace);
-      recent_workspaces.remove(default_workspace);
-      recent_workspaces.add(0,default_workspace);
-      saveProperties();
-    }
-
-   if (!must_restart) BoardLog.setup();
-
    if (install_jar) {
       URL url = getClass().getClassLoader().getResource(BOARD_RESOURCE_PLUGIN);
       if (url != null) {
@@ -1389,10 +1377,22 @@ public boolean doSetup()
 	 }
        }
     }
-
+   
+   if (default_workspace != null) {
+      system_properties.setProperty(BOARD_PROP_ECLIPSE_WS,default_workspace);
+      recent_workspaces.remove(default_workspace);
+      recent_workspaces.add(0,default_workspace);
+      saveProperties();
+    }
+   
    if (must_restart) {
       restartBubbles();
     }
+   
+   BoardLog.setup();
+   
+   setSplashTask("Checking messaging configuration");
+   setupIvy();
 
    setupProxy();
 
@@ -2551,9 +2551,9 @@ private void restartBubbles()
 {
    if (jar_file == null) return;
 
-   saveProperties();
-
    setSplashTask("Restarting with new configuration");
+  
+   saveProperties();
 
    File dir1 = new File(jar_directory);
    File dir = getLibraryDirectory();
@@ -2573,7 +2573,6 @@ private void restartBubbles()
       cp.append(File.pathSeparator);
       cp.append(f.getPath());
     }
-
 
    List<String> args = new ArrayList<String>();
    if (java_args != null) args.addAll(java_args);
@@ -2602,7 +2601,7 @@ private void restartBubbles()
 	     }
 	    String lc = "-javaagent:" + lf.getPath() + "=/useLiLaConfigurationFile";
 	    args.add(idx++,lc);
-	    BoardLog.logD("BOARD","Use lila: " + lc);
+// 	    BoardLog.logD("BOARD","Use lila: " + lc);
 	  }
        }
 
@@ -2663,14 +2662,13 @@ private void restartBubbles()
       pb.start();
     }
    catch (IOException e) {
+      BoardLog.setup();
       BoardLog.logE("BOARD","Problem restarting bubbles: " + e);
       reportError("Problem restarting bubbles: " + e);
       System.exit(1);
     }
 
    System.exit(0);
-
-   BoardLog.logE("BOARD","RESTART FAILED");
 }
 
 

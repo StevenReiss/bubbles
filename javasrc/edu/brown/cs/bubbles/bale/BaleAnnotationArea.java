@@ -310,7 +310,8 @@ void removeAll(BalePosition start,BalePosition end)
 	       ic.paintIcon(this,g,x,y);
 	     }
 	    catch (Throwable t) {
-	       BoardLog.logE("BALE","Problem drawing annotation " + an.getToolTip() + " " + ic + " " + an.getClass(),t);
+	       BoardLog.logE("BALE","Problem drawing annotation " + an.getToolTip() + " " + 
+                     ic + " " + an.getClass(),t);
 	     }
 	  }
        }
