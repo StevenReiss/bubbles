@@ -245,7 +245,8 @@ private BoardSetup()
    ask_workspace = system_properties.getBoolean(BOARD_PROP_ECLIPSE_ASK_WS,true);
    workspace_given = false;
    run_foreground = system_properties.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND,false);
-
+   run_foreground = false;              // force it to be false for now
+   
    recent_workspaces = new ArrayList<String>();
    String oldws = system_properties.getProperty(BOARD_PROP_RECENT_WS);
    if (oldws != null) {
@@ -1044,6 +1045,7 @@ public void setLanguage(BoardLanguage bl)
    default_workspace = system_properties.getProperty(BOARD_PROP_ECLIPSE_WS,default_workspace);
    ask_workspace = system_properties.getBoolean(BOARD_PROP_ECLIPSE_ASK_WS,true);
    run_foreground = system_properties.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND,false);
+   run_foreground = false;              // force it to be false for now
 }
 
 
