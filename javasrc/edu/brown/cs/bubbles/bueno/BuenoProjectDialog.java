@@ -109,14 +109,14 @@ private Set<String>		other_projects;
 
 private static File		last_directory;
 
-
+private static final int PATH_LENGTH = 40;
 
 private static int	dialog_placement = BudaConstants.PLACEMENT_PREFER |
 						BudaConstants.PLACEMENT_LOGICAL|
 						BudaConstants.PLACEMENT_GROUPED;
 
 private static String [] compiler_levels = new String[] {
-   "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "9", "10"
+   "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "9", "10", "11", "12"
 };
 
 private static final String SOURCE_OPTION = "org.eclipse.jdt.core.compiler.source";
@@ -421,24 +421,24 @@ private class NewPathEntryBubble extends BudaBubble implements ActionListener {
       String cmd = evt.getActionCommand();
       File dir = file_chooser.getCurrentDirectory();
       if (dir != null && !dir.equals(last_directory)) {
-	 last_directory = dir;
-	 BoardProperties bp = BoardProperties.getProperties("Bueno");
-	 bp.setProperty("Bueno.library.directory",dir.getAbsolutePath());
-	 try {
-	    bp.save();
-	  }
-	 catch (IOException e) { }
+         last_directory = dir;
+         BoardProperties bp = BoardProperties.getProperties("Bueno");
+         bp.setProperty("Bueno.library.directory",dir.getAbsolutePath());
+         try {
+            bp.save();
+          }
+         catch (IOException e) { }
        }
-
+   
       if (cmd.equals(JFileChooser.APPROVE_SELECTION)) {
-	 closeWindow(this);
-	 for (File f : file_chooser.getSelectedFiles()) {
-	    PathEntry pe = new PathEntry(f);
-	    library_paths.addElement(pe);
-	  }
+         closeWindow(this);
+         for (File f : file_chooser.getSelectedFiles()) {
+            PathEntry pe = new PathEntry(f);
+            library_paths.addElement(pe);
+          }
        }
       else if (cmd.equals(JFileChooser.CANCEL_SELECTION)) {
-	 closeWindow(this);
+         closeWindow(this);
        }
     }
 }	// end of inner class NewPathEntryBubble
@@ -633,27 +633,46 @@ private static class PathEntry implements Comparable<PathEntry> {
    @Override public String toString() {
       FileSystemView fsv = BoardFileSystemView.getFileSystemView();
       switch (path_type) {
-	 case LIBRARY :
-	 case BINARY :
-	    if (binary_path != null) {
-	       File f = fsv.createFileObject(binary_path);
-	       return f.getName();
-	     }
-	    break;
-	 case SOURCE :
-	    if (source_path != null) {
-	       File f = fsv.createFileObject(source_path);
-	       return f.getName() + " (SOURCE)";
-	     }
-	    break;
-	 default:
-	    break;
+         case LIBRARY :
+         case BINARY :
+            if (binary_path == null) break;
+            if (binary_path.length() <= PATH_LENGTH) return binary_path;
+            File f = fsv.createFileObject(binary_path);
+            String rslt = f.getName();
+            for ( ; ; ) {
+               File f1 = f.getParentFile();
+               if (f1 == null) {
+                  rslt = File.separator + rslt;
+                  break;
+                }
+               String pname = f1.getName();
+               String rslt1 = pname + File.separator + rslt;
+               if (rslt1.length() >= PATH_LENGTH) {
+                  rslt = "..." + File.separator + rslt;
+                  break;
+                }
+               rslt = rslt1;
+               f = f1;
+             }
+            return rslt;
+         case SOURCE :
+            if (source_path != null) {
+               File f2 = fsv.createFileObject(source_path);
+               return f2.getName() + " (SOURCE)";
+             }
+            break;
+         default:
+            break;
        }
       return path_type.toString() + " " + source_path + " " + output_path + " " + binary_path;
     }
 
    @Override public int compareTo(PathEntry pe) {
-      return toString().compareTo(pe.toString());
+      int cmp = toString().compareTo(pe.toString());
+      if (cmp == 0) {
+         cmp = binary_path.compareTo(pe.binary_path);
+       }
+      return cmp;
     }
 
 }	// end of inner class PathEntry
