@@ -265,8 +265,10 @@ private void startIDE(BoardSetup bs)
 
    same_host = isIdeOnSameHost();
 
+   if (bs != null) bs.setSplashTask("Loading Preferences");
    grabPreferences();
 
+   if (bs != null) bs.setSplashTask("Loading Projects");
    Element pxml = getXmlReply("PROJECTS",null,null,null,180000);
    if (!IvyXml.isElement(pxml,"RESULT")) {
       if (BoardSetup.getSetup().getRunMode() != RunMode.SERVER) {

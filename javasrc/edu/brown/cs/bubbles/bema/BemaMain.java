@@ -442,7 +442,6 @@ private void start()
     }
 
    // next start Eclipse
-   // bs.setSplashTask("Starting IDE (" + bc.getName() + ") and Updating Projects");
    bc.waitForIDE(bs);
 
    // clear temporary information

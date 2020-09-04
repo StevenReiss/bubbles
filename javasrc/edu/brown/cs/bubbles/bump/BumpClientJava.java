@@ -169,15 +169,17 @@ private void ensureRunning()
    if (efp.endsWith(".app") || efp.endsWith(".exe")) efp = efp.substring(0,efp.length()-4);
    String cmd = "'" + efp + "'";
 
-   if (!board_properties.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND,false)) {
-      cmd += " -application edu.brown.cs.bubbles.bedrock.application";
-    }
+   cmd += " -application edu.brown.cs.bubbles.bedrock.application";
+   
    cmd += " -nosplash";
    if (ws != null) cmd += " -data '" + ws + "'";
 
    String eopt = board_properties.getProperty(BOARD_PROP_ECLIPSE_OPTIONS);
    if (eopt != null) cmd += " " + eopt;
-
+   if (board_properties.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND,false)) {
+      cmd += " -bdisplay";
+    }
+   
    boolean clean = board_properties.getBoolean(BOARD_PROP_ECLIPSE_CLEAN);
    if (ws != null) {
       File wf = new File(ws);
