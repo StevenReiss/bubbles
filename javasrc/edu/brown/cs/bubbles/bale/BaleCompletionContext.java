@@ -797,12 +797,12 @@ private static class CompletionListCellRenderer extends DefaultListCellRenderer 
 
    @Override public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
      {
-	 Component renderedcomp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-	 CompletionItem ci = (CompletionItem) value;
-	 Icon icn = ci.getIcon();
-	 if (icn != null) ((JLabel) renderedcomp).setIcon(icn);
-
-	 return renderedcomp;
+         Component renderedcomp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+         CompletionItem ci = (CompletionItem) value;
+         Icon icn = ci.getIcon();
+         if (icn != null) ((JLabel) renderedcomp).setIcon(icn);
+   
+         return renderedcomp;
      }
 
 }	// end of inner class CompletionListCellRenderer
@@ -833,17 +833,17 @@ private static abstract class CompletionItem {
    protected void getSignatureObjects(String sgn) {
       param_types = "";
       return_type = "";
-
+   
       if (sgn == null) return;
       String s = IvyFormat.formatTypeName(sgn);
       if (s == null) return;
-
+   
       int parenindex = s.indexOf('(');
       if (parenindex >= 0) {
-	 return_type = s.substring(0,parenindex);
-	 return_type = shortenType(return_type);
-	 String temp = s.substring(parenindex+1,s.length()-1);
-	 param_types = shortenType(temp);
+         return_type = s.substring(0,parenindex);
+         return_type = shortenType(return_type);
+         String temp = s.substring(parenindex+1,s.length()-1);
+         param_types = shortenType(temp);
        }
     }
 
@@ -951,9 +951,9 @@ private static class CompletionItemBump extends CompletionItem {
    @Override public String toString() {
       String comp = bump_completion.getCompletion();
       if (comp.indexOf(')') >= 0) {
-	 comp = comp.substring(0,comp.length()-1);
-	 comp += param_types + ") : " + return_type;
-	 return comp;
+         comp = comp.substring(0,comp.length()-1);
+         comp += param_types + ") : " + return_type;
+         return comp;
        }
       return comp;
     }
@@ -986,8 +986,8 @@ private static class CompletionItemBump extends CompletionItem {
       if (toreturn == null) return null;
       int ln = toreturn.length();
       if (ln > 1 && toreturn.charAt(ln-1) == ')' &&
-	     (param_types != null && param_types.length() > 0)){
-	 toreturn = toreturn.substring(0, toreturn.length()-1);
+             (param_types != null && param_types.length() > 0)){
+         toreturn = toreturn.substring(0, toreturn.length()-1);
        }
       return toreturn;
    }
