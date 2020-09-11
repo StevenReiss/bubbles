@@ -29,6 +29,8 @@
 <entry key="Bted.extension.xpath">.xpath</entry>
 <entry key="Bted.line.wrapping">true</entry>
 <entry key="Bted.tabsize">8</entry>
-
-
+<entry key="Bted.font">Monospaced/0/12</entry>
 </properties>
+
+
+

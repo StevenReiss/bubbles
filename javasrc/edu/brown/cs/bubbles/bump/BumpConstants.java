@@ -86,7 +86,7 @@ enum BumpSymbolType {
    ENUM,
    THROWABLE,
    ANNOTATION,
-   FIELD,                
+   FIELD,		
    ENUM_CONSTANT,
    FUNCTION,
    CONSTRUCTOR,
@@ -95,11 +95,11 @@ enum BumpSymbolType {
    MODULE,
    PACKAGE,
    PROJECT,
-   LOCAL,               // function local variable
-   GLOBAL,              // global variable
-   EXPORT,              // js: exports.x = y
-   IMPORT,              // js: var x = require('x')
-   PROGRAM              // js: executable
+   LOCAL,		// function local variable
+   GLOBAL,		// global variable
+   EXPORT,		// js: exports.x = y
+   IMPORT,		// js: var x = require('x')
+   PROGRAM		// js: executable
 }
 
 
@@ -450,113 +450,113 @@ enum BumpThreadState {
 
    public BumpThreadState getStopState() {
       switch (this) {
-         case DEAD :
-         default :
-            return this;
-         case NONE :
-         case NEW :
-         case RUNNING :
-            return STOPPED;
-         case RUNNING_SYNC :
-            return STOPPED_SYNC;
-         case RUNNING_IO :
-            return STOPPED_IO;
-         case RUNNING_SYSTEM :
-            return STOPPED_SYSTEM;
-         case BLOCKED :
-            return STOPPED_BLOCKED;
-         case DEADLOCKED :
-            return STOPPED_DEADLOCK;
-         case WAITING :
-            return STOPPED_WAITING;
-         case TIMED_WAITING :
-            return STOPPED_TIMED;
-         case IDLE :
-            return STOPPED_IDLE;
+	 case DEAD :
+	 default :
+	    return this;
+	 case NONE :
+	 case NEW :
+	 case RUNNING :
+	    return STOPPED;
+	 case RUNNING_SYNC :
+	    return STOPPED_SYNC;
+	 case RUNNING_IO :
+	    return STOPPED_IO;
+	 case RUNNING_SYSTEM :
+	    return STOPPED_SYSTEM;
+	 case BLOCKED :
+	    return STOPPED_BLOCKED;
+	 case DEADLOCKED :
+	    return STOPPED_DEADLOCK;
+	 case WAITING :
+	    return STOPPED_WAITING;
+	 case TIMED_WAITING :
+	    return STOPPED_TIMED;
+	 case IDLE :
+	    return STOPPED_IDLE;
        }
     }
 
    public BumpThreadState getExceptionState() {
       switch (this) {
-         case DEAD :
-            return this;
-         default :
-            return EXCEPTION;
+	 case DEAD :
+	    return this;
+	 default :
+	    return EXCEPTION;
        }
     }
 
    public BumpThreadState getRunState() {
       switch (this) {
-         case DEAD :
-         default :
-            return this;
-         case NONE :
-         case NEW :
-         case STOPPED :
-         case EXCEPTION :
-            return RUNNING;
-         case STOPPED_SYNC :
-            return RUNNING_SYNC;
-         case STOPPED_IO :
-            return RUNNING_IO;
-         case STOPPED_SYSTEM :
-            return RUNNING_SYSTEM;
-         case STOPPED_BLOCKED :
-            return BLOCKED;
-         case STOPPED_WAITING :
-            return WAITING;
-         case STOPPED_TIMED :
-            return TIMED_WAITING;
-         case STOPPED_DEADLOCK :
-            return DEADLOCKED;
-         case STOPPED_IDLE :
-            return IDLE;
+	 case DEAD :
+	 default :
+	    return this;
+	 case NONE :
+	 case NEW :
+	 case STOPPED :
+	 case EXCEPTION :
+	    return RUNNING;
+	 case STOPPED_SYNC :
+	    return RUNNING_SYNC;
+	 case STOPPED_IO :
+	    return RUNNING_IO;
+	 case STOPPED_SYSTEM :
+	    return RUNNING_SYSTEM;
+	 case STOPPED_BLOCKED :
+	    return BLOCKED;
+	 case STOPPED_WAITING :
+	    return WAITING;
+	 case STOPPED_TIMED :
+	    return TIMED_WAITING;
+	 case STOPPED_DEADLOCK :
+	    return DEADLOCKED;
+	 case STOPPED_IDLE :
+	    return IDLE;
        }
     }
 
    public boolean isRunning() {
       switch (this) {
-         case NEW :
-         case RUNNING :
-         case RUNNING_SYNC :
-         case RUNNING_IO :
-         case RUNNING_SYSTEM :
-         case WAITING :
-         case TIMED_WAITING :
-         case IDLE :
-         case BLOCKED :
-         case DEADLOCKED :
-            return true;
-         default :
-            break;
+	 case NEW :
+	 case RUNNING :
+	 case RUNNING_SYNC :
+	 case RUNNING_IO :
+	 case RUNNING_SYSTEM :
+	 case WAITING :
+	 case TIMED_WAITING :
+	 case IDLE :
+	 case BLOCKED :
+	 case DEADLOCKED :
+	    return true;
+	 default :
+	    break;
        }
       return false;
     }
 
    public boolean isStopped() {
       switch (this) {
-         case STOPPED :
-         case STOPPED_SYNC :
-         case STOPPED_IO :
-         case STOPPED_WAITING :
-         case STOPPED_SYSTEM :
-         case STOPPED_BLOCKED :
-         case STOPPED_TIMED :
-         case STOPPED_IDLE :
-         case EXCEPTION :
-            return true;
-         default :
-            break;
+	 case STOPPED :
+	 case STOPPED_SYNC :
+	 case STOPPED_IO :
+	 case STOPPED_WAITING :
+	 case STOPPED_SYSTEM :
+	 case STOPPED_BLOCKED :
+	 case STOPPED_TIMED :
+	 case STOPPED_IDLE :
+	 case EXCEPTION :
+	    return true;
+	 default :
+	    break;
        }
       return false;
     }
 
    public boolean isException() {
       switch (this) {
-         case EXCEPTION :
-            return true;
-         default:
-            break;
+	 case EXCEPTION :
+	    return true;
+	 default:
+	    break;
        }
       return false;
     }
@@ -812,6 +812,7 @@ interface BumpStackFrame {
    int getLevel();
    boolean isStatic();
    boolean isSystem();
+   boolean isSynthetic();
 
    Collection<String> getVariables();
    BumpRunValue getValue(String var);
@@ -934,7 +935,7 @@ interface BumpCompletion {
 
    int getReplaceStart();
    int getReplaceEnd();
-   
+
    int getRelevance();
 
    // int getRelevance();
@@ -1000,15 +1001,15 @@ interface BumpProgressHandler extends EventListener {
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Trie Performance Data                                                   */
-/*                                                                              */
+/*										*/
+/*	Trie Performance Data							*/
+/*										*/
 /********************************************************************************/
 
 // index into TrieNode performance arrays
-int BUMP_TRIE_OP_RUN = 0;                       // count while running
-int BUMP_TRIE_OP_IO = 1;                        // count doing I/O
-int BUMP_TRIE_OP_WAIT = 2;                      // count doing wait
+int BUMP_TRIE_OP_RUN = 0;			// count while running
+int BUMP_TRIE_OP_IO = 1;			// count doing I/O
+int BUMP_TRIE_OP_WAIT = 2;			// count doing wait
 
 int BUMP_TRIE_OP_COUNT = 3;
 
@@ -1022,21 +1023,21 @@ interface BumpTrieData {
 
 
 interface BumpTrieNode {
-   
+
    BumpTrieNode getParent();
    Collection<BumpTrieNode> getChildren();
    int [] getCounts();
    Collection<BumpThread> getThreads();
    int [] getThreadCounts(BumpThread th);
-   
+
    String getClassName();
    String getMethodName();
    int getLineNumber();
    String getFileName();
-   
+
    int [] getTotals();
    void computeTotals();
-   
+
 }
 
 

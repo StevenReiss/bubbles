@@ -178,11 +178,11 @@ BumpRunManager()
 
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :
-         use_debug_server = false;
-         break;
+	 use_debug_server = false;
+	 break;
       case SERVER :
-         BoardProperties bp = BoardProperties.getProperties("Bddt");
-         use_debug_server = bp.getBoolean("Bddt.cloud.performance");
+	 BoardProperties bp = BoardProperties.getProperties("Bddt");
+	 use_debug_server = bp.getBoolean("Bddt.cloud.performance");
 	 break;
       default:
 	 break;
@@ -370,8 +370,8 @@ String startDebugArgs(String id)
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :
       case SERVER :
-         args += ";remote";
-         break;
+	 args += ";remote";
+	 break;
     }
    File f = BoardSetup.getBubblesWorkingDirectory();
    args += ";base=" + f.getPath();
@@ -1810,6 +1810,7 @@ private class StackFrame implements BumpStackFrame {
    private int frame_level;
    private boolean is_static;
    private boolean is_classfile;
+   private boolean is_synthetic;
    private Map<String,ValueData> variable_map;
 
    StackFrame(ThreadData thrd,Element xml,int lvl) {
@@ -1855,6 +1856,7 @@ private class StackFrame implements BumpStackFrame {
 
       line_number = IvyXml.getAttrInt(xml,"LINENO");
       is_static = IvyXml.getAttrBool(xml,"STATIC");
+      is_synthetic = IvyXml.getAttrBool(xml,"SYNTHETIC");
       String sgn = IvyXml.getAttrString(xml,"SIGNATURE");
       if (sgn != null) {
 	 int sidx = sgn.lastIndexOf(")");
@@ -1880,6 +1882,7 @@ private class StackFrame implements BumpStackFrame {
    @Override public int getLevel()			{ return frame_level; }
    @Override public boolean isStatic()			{ return is_static; }
    @Override public boolean isSystem()			{ return is_classfile; }
+   @Override public boolean isSynthetic()		{ return is_synthetic; }
 
    @Override public Collection<String> getVariables() {
       return new ArrayList<String>(variable_map.keySet());

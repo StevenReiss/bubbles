@@ -763,8 +763,9 @@ private static class BtedEditorPane extends SwingEditorPane {
       super("text/plain",null);
       int tvl = bted_props.getIntOption("Bted.tabsize");
       if (tvl > 0) {
-	 getDocument().putProperty(PlainDocument.tabSizeAttribute,tvl);
+         getDocument().putProperty(PlainDocument.tabSizeAttribute,tvl);
        }
+      setFont(bted_props.getFont(EDITOR_FONT_PROP,EDITOR_FONT));
     }
 
    @Override protected void paintComponent(Graphics g) {

@@ -25,7 +25,10 @@
 
 package edu.brown.cs.bubbles.bted;
 
+import java.awt.Font;
 import java.awt.Insets;
+
+import edu.brown.cs.bubbles.board.BoardFont;
 
 
 public interface BtedConstants {
@@ -196,6 +199,9 @@ Insets BUTTON_MARGIN	= new Insets(0,0,0,0);
  * Line wrapping in the text editor
  */
 String WRAPPING      = "Bted.line.wrapping";
+
+Font EDITOR_FONT = BoardFont.getFont(Font.MONOSPACED,Font.PLAIN,12);
+String EDITOR_FONT_PROP = "Bted.font";
 
 
 /********************************************************************************/

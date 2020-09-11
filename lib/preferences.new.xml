@@ -511,6 +511,13 @@
 	 <KEYWORD TEXT="editor"/>
 	 <KEYWORD TEXT="bubble"/>
       </OPT>
+      <OPT NAME="Bted.font" DESCRIPTION="Default font in text editor" TYPE="FONT">
+	 <TAB NAME="Font Options"/>
+	 <TAB NAME='Text Editor Options'/>
+	 <KEYWORD TEXT='Text' />
+	 <KEYWORD TEXT='Editor' />
+	 <KEYWORD TEXT="Font" />
+      </OPT>
       <OPT NAME="Bted.height" DESCRIPTION="Default height of text editor bubble" TYPE="INTEGER">
 	 <TAB NAME="Text Editor Options"/>
 	 <TAB NAME="Bubble Config"/>

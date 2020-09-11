@@ -342,7 +342,7 @@ private void setLocalFile(String proj,File file)
       setupLineOffsets(in,linesep);
     }
    catch (Exception e) {
-      BoardLog.logE("BALE","Problem loading file " + file,e);
+      BoardLog.logE("BALE","Problem loading local file " + file,e);
     }
    finally {
       doing_load = false;
