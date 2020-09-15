@@ -72,10 +72,12 @@ private static Boolean use_jar = null;
 
 public static Icon getIcon(String id)
 {
-   ImageIcon ii = findIcon(id);
+   ImageIcon ii = findIcon(id,null);
 
    return ii;
 }
+
+
 
 
 public static Icon getIcon(String id,int w,int h)
@@ -89,6 +91,17 @@ public static Icon getIcon(String id,int w,int h)
 
 
 
+public static Icon getIcon(String id,Class<?> base)
+{
+   ImageIcon i1 = findIcon(id,base);
+   
+   return i1;
+}
+
+
+
+
+
 /**
  *	Return the bubbles image with the given name.  Names correspond to filenames
  *	in the bubbles images directory.  Note that images can be returned either as
@@ -97,7 +110,7 @@ public static Icon getIcon(String id,int w,int h)
 
 public static Image getImage(String id)
 {
-   ImageIcon ii = findIcon(id);
+   ImageIcon ii = findIcon(id,null);
 
    if (ii == null) return null;
 
@@ -155,7 +168,7 @@ public static Icon resizeIcon(Image input, int newWidth, int newHeight)
 /*										*/
 /********************************************************************************/
 
-private static synchronized ImageIcon findIcon(String id)
+private static synchronized ImageIcon findIcon(String id,Class<?> base)
 {
    int idx = id.lastIndexOf(".png");                    // remove .png if it is present
    if (idx > 0) id = id.substring(0,idx);
@@ -187,7 +200,12 @@ private static synchronized ImageIcon findIcon(String id)
 
    if (use_jar.booleanValue()) {
       String nm = "images/" + id + ".png";
-      URL url = BoardImage.class.getClassLoader().getResource(nm);
+      URL url = null;
+      if (base == null) 
+         url = BoardImage.class.getClassLoader().getResource(nm);
+      else 
+         url = base.getClassLoader().getResource(nm);
+      
       if (url == null) {
 	 BoardLog.logE("BOARD","Can't find image " + nm + " as resource");
        }

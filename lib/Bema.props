@@ -26,4 +26,5 @@
 <!-- <entry key="Bema.plugin.37">edu.brown.cs.bubbles.bicex.BicexFactory</entry> -->
 <!-- <entry key="Bema.plugin.38">edu.brown.cs.bubbles.brepair.BrepairFactory</entry> -->
 <entry key="Bema.web.url">http://conifer.cs.brown.edu:8180/mint/mint</entry>
+<entry key="Bema.pluginfolder">dropins plugins</entry>
 </properties>

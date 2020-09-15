@@ -109,20 +109,20 @@ private void setupLogger()
    switch (BoardSetup.getSetup().getLanguage()) {
       default :
       case JAVA :
-         logname = "bubbles";
-         lgnm = "bedrock";
+	 logname = "bubbles";
+	 lgnm = "bedrock";
 	 break;
       case PYTHON :
 	 logname = "pybles";
-         lgnm = "pybase";
+	 lgnm = "pybase";
 	 break;
       case JS :
 	 logname = "nobbles";
-         lgnm = "nobase";
+	 lgnm = "nobase";
 	 break;
       case REBUS :
 	 logname = "rebus";
-         lgnm = "rebase";
+	 lgnm = "rebase";
 	 break;
     }
 
@@ -159,8 +159,8 @@ private void setupLogger()
 	 if (debug_log.exists()) debug_log.renameTo(t2);
        }
       else {
-         String lognm = logname + "_log.log";
-         debug_log = new File(wsd,lognm);
+	 String lognm = logname + "_log.log";
+	 debug_log = new File(wsd,lognm);
        }
     }
 
@@ -168,7 +168,7 @@ private void setupLogger()
    if (debug_log != null) {
       try {
 	 FileWriter fw = new FileWriter(debug_log);
-	 if (!use_stderr) debug_log.deleteOnExit();
+	 // if (!use_stderr) debug_log.deleteOnExit();
 	 debug_writer = new PrintWriter(fw,true);
        }
       catch (IOException e) {
