@@ -553,52 +553,52 @@ private class CompletionGetter implements Runnable {
       if (start_position == null || for_document == null) return;
       int spos = for_document.mapOffsetToEclipse(start_position.getOffset())+1;
       Collection<BumpCompletion> completions = null;
-
+      
       int ctr = for_document.getEditCounter();
       BumpClient bcc = BumpClient.getBump();
       completions = bcc.getCompletions(for_document.getProjectName(),
-					  for_document.getFile(),
-					  ctr,spos);
+            for_document.getFile(),
+            ctr,spos);
       if (completions == null) {
-	 removeContext();
-	 return;
+         removeContext();
+         return;
        }
-
+      
       List<BumpCompletion> callcomps = null;
-
+      
       for (Iterator<BumpCompletion> it = completions.iterator(); it.hasNext(); ) {
-	 BumpCompletion bc = it.next();
-	 switch (bc.getType()) {
-	    case METHOD_REF :
-	       if (bc.getCompletion() == null || bc.getCompletion().length() == 0) {
-		  it.remove();
-		  if (bc.getSignature() != null && bc.getCompletion() != null) {
-		     if (callcomps == null) callcomps = new ArrayList<BumpCompletion>();
-		     callcomps.add(bc);
-		   }
-		}
-	       break;
-	    case TYPE_REF :
-	    case FIELD_REF :
-	       if (bc.getCompletion() == null || bc.getCompletion().length() == 0) it.remove();
-	       break;
-	    default :
-	       if (bc.getCompletion() == null || bc.getCompletion().length() == 0) it.remove();
-	       // else it.remove();
-	       break;
-	  }
+         BumpCompletion bc = it.next();
+         switch (bc.getType()) {
+            case METHOD_REF :
+               if (bc.getCompletion() == null || bc.getCompletion().length() == 0) {
+                  it.remove();
+                  if (bc.getSignature() != null && bc.getCompletion() != null) {
+                     if (callcomps == null) callcomps = new ArrayList<BumpCompletion>();
+                     callcomps.add(bc);
+                   }
+                }
+               break;
+            case TYPE_REF :
+            case FIELD_REF :
+               if (bc.getCompletion() == null || bc.getCompletion().length() == 0) it.remove();
+               break;
+            default :
+               if (bc.getCompletion() == null || bc.getCompletion().length() == 0) it.remove();
+               // else it.remove();
+               break;
+          }
        }
-
+      
       if (completions.size() == 0 && callcomps != null) {
-	 handleFound(callcomps,true);
+         handleFound(callcomps,true);
        }
       else  if (completions.size() == 0) {
-	 removeContext();
-      }
-      else {
-	 handleFound(completions,false);
+         removeContext();
        }
-    }
+      else {
+         handleFound(completions,false);
+       }
+   }
 
    @Override public String toString() {
       String s = "BALE_CompletionGetter";

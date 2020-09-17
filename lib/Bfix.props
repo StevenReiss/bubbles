@@ -27,6 +27,7 @@
 <entry key="Bfix.correct.spelling.problem.13">Point,int</entry>
 <entry key="Bfix.correct.spelling.problem.14">List,int</entry>
 <entry key="Bfix.correct.spelling.problem.15">nt,int</entry>
+<entry key="Bfix.correct.spelling.problem.16">File</entry>
 <entry key="Bfix.enable.BfixAdapterSpelling">true</entry>
 <entry key="Bfix.enable.BfixAdapterImports">true</entry>
 <entry key="Bfix.enable.BfixAdapterSyntax">true</entry>

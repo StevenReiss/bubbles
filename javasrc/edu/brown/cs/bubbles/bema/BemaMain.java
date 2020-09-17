@@ -106,17 +106,17 @@ public class BemaMain implements BemaConstants
 public static void main(String [] args)
 {
    BemaMain bm = new BemaMain(args);
-   
+
    if (System.getProperty("os.name").startsWith("Mac")) {
       try {
-         UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+	 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
        }
       catch (Throwable t) {
-         System.err.println("BEMA: Problem setting l&f: " + t);
+	 System.err.println("BEMA: Problem setting l&f: " + t);
        }
     }
 
-   bm.start(); 
+   bm.start();
 }
 
 
@@ -251,7 +251,7 @@ private void scanArgs(String [] args)
 	  }
 	 else if (args[i].startsWith("-n")) {                   // -new
 	    new_workspace = true;
-            ask_workspace = true;
+	    ask_workspace = true;
 	  }
 	 else if (args[i].startsWith("-a")) {                   // -askworkspace
 	    ask_workspace = true;
@@ -500,7 +500,7 @@ private void start()
       root.restoreConfiguration(load_config);
       root.setVisible(true);
     }
-  
+
    bs.removeSplash();
 
    if (bs.getRunMode() == RunMode.SERVER) {
@@ -552,7 +552,7 @@ private void start()
 private void loadPlugins(BudaRoot buda)
 {
    BoardProperties bp = BoardProperties.getProperties("Bema");
-   String pinf = bp.getProperty("Bema.pluginfolder");
+   String pinf = bp.getProperty("Bema.pluginfolder","dropins plugins");
    if (pinf != null) {
       StringTokenizer tok = new StringTokenizer(pinf);
       while (tok.hasMoreTokens()) {
@@ -589,20 +589,20 @@ private void loadPlugins(File dir,BudaRoot root)
 		  String starts = at.getValue("Bubbles-start");
 		  String dep = at.getValue("Bubbles-depends");
 		  String palette = at.getValue("Bubbles-palette");
-                  String res = at.getValue("Bubbles-resource");
+		  String res = at.getValue("Bubbles-resource");
 		  String load = jfn.getAbsolutePath();
 		  String basename = null;
 		  if (dep != null) {
 		     dep = dep.trim();
 		     if (dep.length() > 0) load += ":" + dep;
 		   }
-                  if (res != null) {
-                     StringTokenizer tok = new StringTokenizer(res);
-                     while (tok.hasMoreTokens()) {
-                        String nm = tok.nextToken();
-                        setupPluginResource(jf,nm);
-                      }
-                   }
+		  if (res != null) {
+		     StringTokenizer tok = new StringTokenizer(res);
+		     while (tok.hasMoreTokens()) {
+			String nm = tok.nextToken();
+			setupPluginResource(jf,nm);
+		      }
+		   }
 		  if (starts != null) {
 		     StringTokenizer tok = new StringTokenizer(starts);
 		     while (tok.hasMoreTokens()) {
@@ -920,12 +920,12 @@ private static class SaveConfiguration extends Thread {
    @Override public void run() {
       File cf = BoardSetup.getConfigurationFile();
       try {
-         // for_root.handleSaveAllRequest();
-         for_root.handleCheckpointAllRequest();
-         for_root.saveConfiguration(cf);
+	 // for_root.handleSaveAllRequest();
+	 for_root.handleCheckpointAllRequest();
+	 for_root.saveConfiguration(cf);
        }
       catch (IOException e) {
-         BoardLog.logE("BEMA","Problem saving session: " + e);
+	 BoardLog.logE("BEMA","Problem saving session: " + e);
        }
     }
 

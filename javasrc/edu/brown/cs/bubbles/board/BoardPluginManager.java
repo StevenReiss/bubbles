@@ -348,9 +348,12 @@ public static File installResources(Class<?> c,String dir,BoardPluginFilter fltr
    return dirf;
 }
 
+
+
+
 /********************************************************************************/
 /*										*/
-/*	Find available plugins							       */
+/*	Find available plugins							*/
 /*										*/
 /********************************************************************************/
 

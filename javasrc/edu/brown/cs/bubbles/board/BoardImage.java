@@ -94,7 +94,7 @@ public static Icon getIcon(String id,int w,int h)
 public static Icon getIcon(String id,Class<?> base)
 {
    ImageIcon i1 = findIcon(id,base);
-   
+
    return i1;
 }
 
@@ -199,19 +199,7 @@ private static synchronized ImageIcon findIcon(String id,Class<?> base)
    // BoardLog.logI("BOARD","Find image " + id + " " + use_jar);
 
    if (use_jar.booleanValue()) {
-      String nm = "images/" + id + ".png";
-      URL url = null;
-      if (base == null) 
-         url = BoardImage.class.getClassLoader().getResource(nm);
-      else 
-         url = base.getClassLoader().getResource(nm);
-      
-      if (url == null) {
-	 BoardLog.logE("BOARD","Can't find image " + nm + " as resource");
-       }
-      else {
-	 ii = new ImageIcon(url);
-       }
+      ii = getJarIcon(id,base);
     }
    else {
       BoardProperties props = BoardProperties.getProperties("System");
@@ -220,13 +208,39 @@ private static synchronized ImageIcon findIcon(String id,Class<?> base)
       File f1 = new File(root);
       File f2 = new File(f1,"images");
       File f3 = new File(f2,id + ".png");
-      ii = new ImageIcon(f3.getAbsolutePath());
+      if (f3.exists()) {
+	 ii = new ImageIcon(f3.getAbsolutePath());
+       }
+      else {
+	 ii = getJarIcon(id,base);
+       }
     }
 
    icon_map.put(id,ii);
 
    return ii;
 }
+
+
+
+private static ImageIcon getJarIcon(String id,Class<?> base)
+{
+   ImageIcon ii = null;
+
+   if (base == null) base = BoardImage.class;
+
+   String nm = "images/" + id + ".png";
+   URL url = base.getClassLoader().getResource(nm);
+   if (url == null) {
+      BoardLog.logE("BOARD","Can't find image " + nm + " as resource");
+    }
+   else {
+      ii = new ImageIcon(url);
+    }
+
+   return ii;
+}
+
 
 
 
