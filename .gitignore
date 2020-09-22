@@ -139,3 +139,6 @@ build.properties
 #bRSTR*
 lib/marytts/log
 javadep1
+lvylib.jar
+ivysrc.jar
+lib/ivy.jar
