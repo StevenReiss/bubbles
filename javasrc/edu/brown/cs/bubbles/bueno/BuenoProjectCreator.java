@@ -240,21 +240,21 @@ private class CreationActions implements ActionListener, UndoableEditListener {
       String cmd = evt.getActionCommand();
       if (cmd == null) ;
       else if (cmd.equals("CREATE") || cmd.equals("CREATE PROJECT")) {
-         if (createProject()) {
-            JComponent c = (JComponent) evt.getSource();
-            BudaBubble bb = BudaRoot.findBudaBubble(c);
-            if (bb != null) bb.setVisible(false);
-            // possibly bring up project editor dialog here
-          }
-         return;
+	 if (createProject()) {
+	    JComponent c = (JComponent) evt.getSource();
+	    BudaBubble bb = BudaRoot.findBudaBubble(c);
+	    if (bb != null) bb.setVisible(false);
+	    // possibly bring up project editor dialog here
+	  }
+	 return;
        }
       else if (cmd.equals("Project Name")) {
-         setProjectDirectory();
+	 setProjectDirectory();
        }
       else if (cmd.equals("Project Type")) {
-         setVisibilities();
+	 setVisibilities();
        }
-   
+
       checkStatus();
     }
 
@@ -271,10 +271,10 @@ private class CreationActions implements ActionListener, UndoableEditListener {
       String pnm = project_props.getString(PROJ_PROP_NAME);
       File pdir = null;
       if (pnm != null && pnm.length() > 0 && pnm.matches(NAME_PAT)) {
-         BoardSetup bs = BoardSetup.getSetup();
-         File f1 = new File(bs.getDefaultWorkspace());
-         File f2 = new File(f1,pnm);
-         if (!f2.exists()) pdir = f2;
+	 BoardSetup bs = BoardSetup.getSetup();
+	 File f1 = new File(bs.getDefaultWorkspace());
+	 File f2 = new File(f1,pnm);
+	 if (!f2.exists()) pdir = f2;
        }
       project_props.put(PROJ_PROP_DIRECTORY,pdir);
     }
@@ -338,7 +338,7 @@ private boolean checkFileProperties(File f)
       if (subs != null) {
 	 for (File f1 : subs) {
 	    fg |= checkFileProperties(f1);
-            fg1 = fg;
+	    fg1 = fg;
 	    if (fg) break;
 	  }
        }
@@ -352,17 +352,17 @@ private boolean checkFileProperties(File f)
 	       if (pkg != null) project_props.put(PROJ_PROP_ANDROID_PKG,pkg);
 	     }
 	    fg = true;
-            project_props.put(PROJ_PROP_ANDROID,true);
+	    project_props.put(PROJ_PROP_ANDROID,true);
 	  }
-         if (cnts.contains("import org.junit.") || cnts.contains("import junit.framework.")) {
-            project_props.put(PROJ_PROP_JUNIT,true);
-            fg1 = true;
-            if (!BumpClient.getBump().getOptionBool("bedrock.useAndroid")) fg = true;
-          }
+	 if (cnts.contains("import org.junit.") || cnts.contains("import junit.framework.")) {
+	    project_props.put(PROJ_PROP_JUNIT,true);
+	    fg1 = true;
+	    if (!BumpClient.getBump().getOptionBool("bedrock.useAndroid")) fg = true;
+	  }
        }
       catch (IOException e) { }
     }
-   
+
    return fg && fg1;
 }
 
@@ -406,7 +406,7 @@ private boolean checkFileProperties(File f)
 	 xw.begin("classpathentry");
 	 xw.field("kind","lib");
 	 xw.field("path",getFilePath(project_props,f));
-         if (f.getName().contains("junit")) havejunit = true;
+	 if (f.getName().contains("junit")) havejunit = true;
 	 xw.end("classpathentry");
        }
 
@@ -425,15 +425,15 @@ private boolean checkFileProperties(File f)
 	 xw.field("path","com.android.ide.eclipse.adt.DEPENDENCIES");
 	 xw.end("classpathentry");
        }
-      
+
       if (project_props.get(PROJ_PROP_JUNIT) == Boolean.TRUE && !havejunit) {
-         String path = BoardSetup.getSetup().getLibraryPath("junit.jar");
-         if (path != null) {
-            xw.begin("classpathentry");
-            xw.field("kind","lib");
-            xw.field("path",path);
-            xw.end("classpathentry");
-          }
+	 String path = BoardSetup.getSetup().getLibraryPath("junit.jar");
+	 if (path != null) {
+	    xw.begin("classpathentry");
+	    xw.field("kind","lib");
+	    xw.field("path",path);
+	    xw.end("classpathentry");
+	  }
        }
 
       xw.end("classpath");
@@ -529,14 +529,14 @@ private boolean checkFileProperties(File f)
    try (PrintWriter pw = new PrintWriter(new FileWriter(opts))) {
       if (copts != null) pw.println(copts);
       String v = System.getProperty("java.specification.version");
-      pw.println("org.eclipse.jdt.core.compiler.complicance=" + v);
+      pw.println("org.eclipse.jdt.core.compiler.compliance=" + v);
       pw.println("org.eclipse.jdt.core.compiler.source=" + v);
       pw.println("org.eclipse.jdt.core.codegen.targetPlatform=" + v);
     }
    catch (IOException e) {
       return false;
     }
-   
+
    return true;
 }
 
@@ -830,8 +830,8 @@ private static class ProjProps extends HashMap<String,Object> implements BuenoPr
    @Override public Map<String,File> getLinks() {
       Map<String,File> lnks = (Map<String,File>) get(PROJ_PROP_LINKS);
       if (lnks == null) {
-         lnks = new HashMap<>();
-         super.put(PROJ_PROP_LINKS,lnks);
+	 lnks = new HashMap<>();
+	 super.put(PROJ_PROP_LINKS,lnks);
        }
       return lnks;
     }
