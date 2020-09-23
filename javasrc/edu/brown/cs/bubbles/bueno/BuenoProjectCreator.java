@@ -531,7 +531,7 @@ private boolean checkFileProperties(File f)
       String v = System.getProperty("java.specification.version");
       pw.println("org.eclipse.jdt.core.compiler.compliance=" + v);
       pw.println("org.eclipse.jdt.core.compiler.source=" + v);
-      pw.println("org.eclipse.jdt.core.codegen.targetPlatform=" + v);
+      pw.println("org.eclipse.jdt.core.compiler.codegen.targetPlatform=" + v);
     }
    catch (IOException e) {
       return false;

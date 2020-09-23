@@ -902,7 +902,7 @@ private int skipToStatementStart(boolean danglingelse,boolean isinblock)
 	 case EOF:
 	 case NONE :
 	    if (isinblock) cur_indent = getBlockIndent(maybemethodbody == READ_IDENT, istypebody, innerclass);
-	    else if (cur_indent == 0 && cur_token == BaleTokenType.LPAREN) cur_indent = 1;		// handle for
+	    else if (cur_indent == 0 && cur_token == BaleTokenType.LPAREN) cur_indent = 1;	// handle for
 	    // else: cur_indent set by previous calls
 	    return previous_offset;
 	 case COLON:
@@ -965,7 +965,7 @@ private int skipToStatementStart(boolean danglingelse,boolean isinblock)
 	 case RAISE :
          case IMPORT :
          case PACKAGE :
-	    if (maybemethodbody == READ_PARENS) maybemethodbody= READ_IDENT;
+	    if (maybemethodbody == READ_PARENS) maybemethodbody = READ_IDENT;
 	    if (cur_element != null && cur_element.getName().equals("ClassDeclMemberId"))
 	       innerclass = true;
 	    break;
@@ -1023,9 +1023,15 @@ private static boolean isGenericStarter(CharSequence identifier)
 
 private boolean looksLikeArrayInitializerIntro()
 {
-   previousToken();
-   if (cur_token == BaleTokenType.EQUAL || skipBrackets()) return true;
-   return false;
+   BaleElement celt = cur_element;
+   try {
+      previousToken();
+      if (cur_token == BaleTokenType.EQUAL || skipBrackets()) return true;
+      return false;
+    }
+   finally {
+      setCurrent(celt);
+    }
 }
 
 
