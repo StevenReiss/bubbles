@@ -245,8 +245,8 @@ private BoardSetup()
    ask_workspace = system_properties.getBoolean(BOARD_PROP_ECLIPSE_ASK_WS,true);
    workspace_given = false;
    run_foreground = system_properties.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND,false);
-   run_foreground = false;              // force it to be false for now
-   
+   run_foreground = false;		// force it to be false for now
+
    recent_workspaces = new ArrayList<String>();
    String oldws = system_properties.getProperty(BOARD_PROP_RECENT_WS);
    if (oldws != null) {
@@ -1045,7 +1045,7 @@ public void setLanguage(BoardLanguage bl)
    default_workspace = system_properties.getProperty(BOARD_PROP_ECLIPSE_WS,default_workspace);
    ask_workspace = system_properties.getBoolean(BOARD_PROP_ECLIPSE_ASK_WS,true);
    run_foreground = system_properties.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND,false);
-   run_foreground = false;              // force it to be false for now
+   run_foreground = false;		// force it to be false for now
 }
 
 
@@ -1379,20 +1379,20 @@ public boolean doSetup()
 	 }
        }
     }
-   
+
    if (default_workspace != null) {
       system_properties.setProperty(BOARD_PROP_ECLIPSE_WS,default_workspace);
       recent_workspaces.remove(default_workspace);
       recent_workspaces.add(0,default_workspace);
       saveProperties();
     }
-   
+
    if (must_restart) {
       restartBubbles();
     }
-   
+
    BoardLog.setup();
-   
+
    setSplashTask("Checking messaging configuration");
    setupIvy();
 
@@ -2097,7 +2097,7 @@ private void extractNobbles(File libd,boolean force)
 	    s = s.trim();
 	    if (s.length() == 0) continue;
 	    if (s.startsWith("#")) continue;
-	
+
 	    File f1 = new File(jslib,s);
 	    if (!force && f1.exists()) continue;
 	    try {
@@ -2465,7 +2465,7 @@ private void updatePlugin()
       system_properties.setProperty(BOARD_PROP_ECLIPSE_CLEAN,true);
     }
    catch (IOException e) {
-      BoardLog.logE("BOARD","Problem updating bubble eclipse plugin: " + e);
+      BoardLog.logE("BOARD","Problem updating bubble eclipse plugin: " + e,e);
       File pdf = getPluginDirectory();
       File bdf = new File(pdf,BOARD_BUBBLES_PLUGIN);
       if (pdf != null && pdf.exists() && (!pdf.canWrite() || !bdf.canWrite())) {     // user lacks permissions
@@ -2554,7 +2554,7 @@ private void restartBubbles()
    if (jar_file == null) return;
 
    setSplashTask("Restarting with new configuration");
-  
+
    saveProperties();
 
    File dir1 = new File(jar_directory);
@@ -2603,7 +2603,7 @@ private void restartBubbles()
 	     }
 	    String lc = "-javaagent:" + lf.getPath() + "=/useLiLaConfigurationFile";
 	    args.add(idx++,lc);
-// 	    BoardLog.logD("BOARD","Use lila: " + lc);
+//	    BoardLog.logD("BOARD","Use lila: " + lc);
 	  }
        }
 
@@ -2782,90 +2782,90 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
       bubbles_field = null;
       eclipse_button = null;
       SwingGridPanel pnl = new SwingGridPanel();
-   
+
       BoardColors.setColors(pnl,"Buda.Bubbles.Color");
       pnl.setOpaque(true);
-   
+
       pnl.beginLayout();
       pnl.addBannerLabel("Bubbles Environment Setup");
-   
+
       pnl.addSeparator();
-   
+
       switch (board_language) {
-         case JAVA :
-            eclipse_field = pnl.addFileField("Eclipse Installation Directory",eclipse_directory,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new EclipseDirectoryFilter(),this,this,null);
-   
-            eclipse_warning = new JLabel("Warning!");  //edited by amc6
-            eclipse_warning.setToolTipText("<html>Not a valid <b>Eclipse for Java Developers</b> installation " +
-        	  "directory.<br>(This should be the directory containing the eclipse binary " +
-        	  "and the plugins directory.)");
-            eclipse_warning.setForeground(WARNING_COLOR);
-            pnl.add(eclipse_warning);
-            if (eclipse_directory == null && install_jar) {
-               eclipse_button = pnl.addBottomButton("INSTALL ECLIPSE","ECLIPSE",this);
-             }
-            break;
-         case PYTHON :
-            break;
-         case REBUS :
-            break;
-         case JS :
-            break;
+	 case JAVA :
+	    eclipse_field = pnl.addFileField("Eclipse Installation Directory",eclipse_directory,
+		  JFileChooser.DIRECTORIES_ONLY,
+		  new EclipseDirectoryFilter(),this,this,null);
+
+	    eclipse_warning = new JLabel("Warning!");  //edited by amc6
+	    eclipse_warning.setToolTipText("<html>Not a valid <b>Eclipse for Java Developers</b> installation " +
+		  "directory.<br>(This should be the directory containing the eclipse binary " +
+		  "and the plugins directory.)");
+	    eclipse_warning.setForeground(WARNING_COLOR);
+	    pnl.add(eclipse_warning);
+	    if (eclipse_directory == null && install_jar) {
+	       eclipse_button = pnl.addBottomButton("INSTALL ECLIPSE","ECLIPSE",this);
+	     }
+	    break;
+	 case PYTHON :
+	    break;
+	 case REBUS :
+	    break;
+	 case JS :
+	    break;
        }
-   
+
       bubbles_warning = new JLabel("Warning!");
       bubbles_warning.setToolTipText("Not a valid Code Bubbles installation directory");
       bubbles_warning.setForeground(WARNING_COLOR);
-   
+
       pnl.addSeparator();
-   
+
       if (!install_jar) {
-         bubbles_field = pnl.addFileField("Bubbles Installation Directory",install_path,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new InstallDirectoryFilter(),this,null);
-         pnl.add(bubbles_warning);
-         pnl.addSeparator();
+	 bubbles_field = pnl.addFileField("Bubbles Installation Directory",install_path,
+		  JFileChooser.DIRECTORIES_ONLY,
+		  new InstallDirectoryFilter(),this,null);
+	 pnl.add(bubbles_warning);
+	 pnl.addSeparator();
        }
-   
+
       if (getCourseName() == null) {
-         pnl.addBoolean("Automatically Update Bubbles",auto_update,this);
+	 pnl.addBoolean("Automatically Update Bubbles",auto_update,this);
        }
       else {
-         auto_update = false;
+	 auto_update = false;
        }
-   
+
       switch (board_language) {
-         case JAVA :
-   //       pnl.addBoolean("Run Eclipse in Foreground",run_foreground,this);
-            break;
-         case PYTHON :
-            break;
-         case REBUS :
-            break;
-         case JS :
-            break;
+	 case JAVA :
+   //	    pnl.addBoolean("Run Eclipse in Foreground",run_foreground,this);
+	    break;
+	 case PYTHON :
+	    break;
+	 case REBUS :
+	    break;
+	 case JS :
+	    break;
        }
-   
+
       pnl.addSeparator();
-   
+
       switch (board_language) {
-         case JAVA :
-            install_button = pnl.addBottomButton("INSTALL BUBBLES","INSTALL",this);
-            break;
-         case PYTHON :
-            break;
-         case REBUS :
-            break;
-         case JS :
-            break;
+	 case JAVA :
+	    install_button = pnl.addBottomButton("INSTALL BUBBLES","INSTALL",this);
+	    break;
+	 case PYTHON :
+	    break;
+	 case REBUS :
+	    break;
+	 case JS :
+	    break;
        }
-   
+
       accept_button = pnl.addBottomButton("OK","OK",this);
       pnl.addBottomButton("CANCEL","CANCEL",this);
       pnl.addBottomButtons();
-   
+
       working_dialog = new JDialog((JFrame) null,"Bubbles Environment Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();
@@ -2944,42 +2944,42 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if (cmd.equals("Eclipse Installation Directory")) {
-         // will update in checkStatus()
+	 // will update in checkStatus()
        }
       else if (cmd.equals("Bubbles Installation Directory")) {
-         // will update in checkStatus()
+	 // will update in checkStatus()
        }
       else if (cmd.equals("Automatically Update Bubbles")) {
-         JCheckBox cbx = (JCheckBox) e.getSource();
-         auto_update = cbx.isSelected();
-         has_changed = true;
+	 JCheckBox cbx = (JCheckBox) e.getSource();
+	 auto_update = cbx.isSelected();
+	 has_changed = true;
        }
       else if (cmd.equals("Run Eclipse in Foreground")) {
-         JCheckBox cbx = (JCheckBox) e.getSource();
-         run_foreground = cbx.isSelected();
-         has_changed = true;
+	 JCheckBox cbx = (JCheckBox) e.getSource();
+	 run_foreground = cbx.isSelected();
+	 has_changed = true;
        }
       else if (cmd.equals("INSTALL")) {
-         updatePlugin();
-         force_setup = false;
+	 updatePlugin();
+	 force_setup = false;
        }
       else if (cmd.equals("ECLIPSE")) {
-         BoardEclipse eclip = new BoardEclipse(new File(jar_directory));
-         String dir = eclip.installEclipse();
-         if (dir != null) {
-            eclipse_field.setText(dir);
-          }
+	 BoardEclipse eclip = new BoardEclipse(new File(jar_directory));
+	 String dir = eclip.installEclipse();
+	 if (dir != null) {
+	    eclipse_field.setText(dir);
+	  }
        }
       else if (cmd.equals("OK")) {
-         result_status = true;
-         working_dialog.setVisible(false);
+	 result_status = true;
+	 working_dialog.setVisible(false);
        }
       else if (cmd.equals("CANCEL")) {
-         result_status = false;
-         working_dialog.setVisible(false);
+	 result_status = false;
+	 working_dialog.setVisible(false);
        }
       else {
-         BoardLog.logE("BOARD","Unknown SETUP DIALOG command: " + cmd);
+	 BoardLog.logE("BOARD","Unknown SETUP DIALOG command: " + cmd);
        }
       checkStatus();
     }
