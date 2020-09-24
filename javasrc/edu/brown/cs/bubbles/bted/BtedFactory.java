@@ -425,6 +425,7 @@ boolean isFileOpen(File file)
          int returnval = chooser.showOpenDialog(bba);
          if (returnval == JFileChooser.APPROVE_OPTION) {
             File f = chooser.getSelectedFile();
+            setLastDirectory(f);
             if (f.exists() && f.canRead()) {
                bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
              }
@@ -436,6 +437,7 @@ boolean isFileOpen(File file)
          int returnval = chooser.showOpenDialog(bba);
          if (returnval == JFileChooser.APPROVE_OPTION) {
             File f = chooser.getSelectedFile();
+            setLastDirectory(f);
             if (f.exists() && f.canRead()) {
                bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
              }

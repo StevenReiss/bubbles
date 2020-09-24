@@ -343,11 +343,11 @@ private boolean openFileFromStart(StartMode mode)
    int returnVal = chooser.showOpenDialog(this);
    if (returnVal == JFileChooser.APPROVE_OPTION) {
       current_file = chooser.getSelectedFile();
+      BtedFactory.setLastDirectory(current_file);
       if (!current_file.exists() || !current_file.canRead()) {
 	 JOptionPane.showMessageDialog(null,"File " + current_file + " cannot be opened");
 	 return false;
        }
-      BtedFactory.setLastDirectory(current_file);
       the_factory.loadFileIntoEditor(current_file, text_editor, edit_listener);
       name_label.setText(current_file.getName());
       return true;
