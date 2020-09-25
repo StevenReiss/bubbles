@@ -435,7 +435,7 @@ private void start()
     }
 
    if (bc == null) {
-      JOptionPane.showMessageDialog(null,"Can't setup messaging environment",
+      JOptionPane.showMessageDialog(null,"Can't setup messaging environment ",
 	    "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
       System.exit(1);
       return;
