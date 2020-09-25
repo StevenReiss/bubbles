@@ -263,7 +263,7 @@ private void scanArgs(String args)
 	 base_directory = val;
        }
       else if (arg.equals("remote")) {
-         report_time *= 10;             // send fewer reports to remote process
+	 report_time *= 10;		// send fewer reports to remote process
        }
       else if (arg.equalsIgnoreCase("All")) {
 	 addAllAgents();
@@ -334,7 +334,7 @@ private void setupClassTypes()
    package_map.put("org.postgresql.",ClassType.SYSTEM);
    package_map.put("jrockit.",ClassType.SYSTEM);
    package_map.put("com.jogamp.",ClassType.SYSTEM);
-
+																
    package_map.put("edu.brown.cs.dyvise.dyper.",ClassType.SYSTEM);
    package_map.put("edu.brown.cs.bubbles.bandaid.",ClassType.SYSTEM);
    package_map.put("org.eclipse.",ClassType.SYSTEM);
@@ -761,36 +761,36 @@ private class SocketClient {
       if (output_stream == null) return;
       int slen = 0;
       int xlen = 0;
-      
+
       if (msg != null) {
-         slen = msg.length();
-         if (msg.charAt(slen-1) != '\n') xlen = 1;
-         // if (char_buf.length < slen+1) char_buf = new char[slen*2+1];
-         // msg.getChars(0,slen,char_buf,0);
-         // if (!msg.endsWith("\n")) char_buf[slen++] = '\n';
+	 slen = msg.length();
+	 if (msg.charAt(slen-1) != '\n') xlen = 1;
+	 // if (char_buf.length < slen+1) char_buf = new char[slen*2+1];
+	 // msg.getChars(0,slen,char_buf,0);
+	 // if (!msg.endsWith("\n")) char_buf[slen++] = '\n';
        }
       if (slen + xlen + char_trailer.length > byte_buffer.length) {
-         byte_buffer = new byte[slen*2 + char_trailer.length];
+	 byte_buffer = new byte[slen*2 + char_trailer.length];
        }
       if (msg != null) {
-         for (int i = 0; i < slen; ++i) {
-            // byte_buffer[i] = (byte) char_buf[i];
-            byte_buffer[i] = (byte) msg.charAt(i);
-          }
-         if (xlen > 0) {
-            byte_buffer[slen++] = '\n';
-          }
+	 for (int i = 0; i < slen; ++i) {
+	    // byte_buffer[i] = (byte) char_buf[i];
+	    byte_buffer[i] = (byte) msg.charAt(i);
+	  }
+	 if (xlen > 0) {
+	    byte_buffer[slen++] = '\n';
+	  }
        }
       for (int i = 0; i < char_trailer.length; ++i) {
-         byte_buffer[i+slen] = (byte) char_trailer[i];
+	 byte_buffer[i+slen] = (byte) char_trailer[i];
        }
       try {
-         output_stream.write(byte_buffer,0,slen+char_trailer.length);
-         output_stream.flush();
+	 output_stream.write(byte_buffer,0,slen+char_trailer.length);
+	 output_stream.flush();
        }
       catch (IOException e) {
-         System.err.println("BANDAID: problem writing output: " + e);
-         output_stream = null;
+	 System.err.println("BANDAID: problem writing output: " + e);
+	 output_stream = null;
        }
     }
 
@@ -815,72 +815,72 @@ private class ClassMonitor extends Thread {
 
    @Override public void run() {
       long nextcheck = 0;
-   
+
       for ( ; ; ) {
-         long delay = getNextDelayTime();
-         while (delay < 0) {
-            handleRequests(true);
-            delay = getNextDelayTime();
-          }
-   
-         if (delay > BANDAID_MAX_DELAY) {
-            if (monitor_enabled && nextcheck == 0) nextcheck = delay;
-            delay = BANDAID_MAX_DELAY;
-          }
-   
-         if (delay != 0) {
-            synchronized (this) {
-               try {
-        	  wait(delay);
-        	}
-               catch (InterruptedException e) { }
-             }
-          }
-   
-         long now = System.currentTimeMillis();
-         long nnow = System.nanoTime();
-         long tnow = nnow;
-   
-         if (monitor_enabled) {
-            if (nextcheck == 0 || now - last_monitor >= nextcheck) {
-               last_monitor = now;
-               last_nano = nnow;
-               try {
-        	  monitorThreads();
-        	}
-               catch (Throwable t) {
-        	  System.err.println("BANDAID: Problem monitoring threads: " + t);
-        	  t.printStackTrace();
-        	}
-               tnow = System.nanoTime();
-               last_check = (tnow - nnow) / 1000000.0;
-               check_total += last_check;
-               delay_total += delay;
-               num_checks++;
-               nextcheck = 0;
-               need_report = true;
-             }
-          }
-   
-         if (report_time > 0 && (monitor_enabled || reports_enabled || need_report)) {
-            try {
-               if (now - last_report >= report_time) {
-                  tnow = System.nanoTime();
-                  long rnow = tnow;
-                  if (last_report != 0) rnow = sendReport(now);
-                  last_report = now;
-                  report_total += (rnow - tnow) / 1000000.0;
-                  num_reports++;
-                  need_report = false;
-                }
-             }
-            catch (Throwable t) {
-               System.err.println("BANDAID: Problem generating report: " + t);
-               t.printStackTrace();
-             }
-          }
-   
-         handleRequests(false);
+	 long delay = getNextDelayTime();
+	 while (delay < 0) {
+	    handleRequests(true);
+	    delay = getNextDelayTime();
+	  }
+
+	 if (delay > BANDAID_MAX_DELAY) {
+	    if (monitor_enabled && nextcheck == 0) nextcheck = delay;
+	    delay = BANDAID_MAX_DELAY;
+	  }
+
+	 if (delay != 0) {
+	    synchronized (this) {
+	       try {
+		  wait(delay);
+		}
+	       catch (InterruptedException e) { }
+	     }
+	  }
+
+	 long now = System.currentTimeMillis();
+	 long nnow = System.nanoTime();
+	 long tnow = nnow;
+
+	 if (monitor_enabled) {
+	    if (nextcheck == 0 || now - last_monitor >= nextcheck) {
+	       last_monitor = now;
+	       last_nano = nnow;
+	       try {
+		  monitorThreads();
+		}
+	       catch (Throwable t) {
+		  System.err.println("BANDAID: Problem monitoring threads: " + t);
+		  t.printStackTrace();
+		}
+	       tnow = System.nanoTime();
+	       last_check = (tnow - nnow) / 1000000.0;
+	       check_total += last_check;
+	       delay_total += delay;
+	       num_checks++;
+	       nextcheck = 0;
+	       need_report = true;
+	     }
+	  }
+
+	 if (report_time > 0 && (monitor_enabled || reports_enabled || need_report)) {
+	    try {
+	       if (now - last_report >= report_time) {
+		  tnow = System.nanoTime();
+		  long rnow = tnow;
+		  if (last_report != 0) rnow = sendReport(now);
+		  last_report = now;
+		  report_total += (rnow - tnow) / 1000000.0;
+		  num_reports++;
+		  need_report = false;
+		}
+	     }
+	    catch (Throwable t) {
+	       System.err.println("BANDAID: Problem generating report: " + t);
+	       t.printStackTrace();
+	     }
+	  }
+
+	 handleRequests(false);
        }
     }
 
@@ -888,13 +888,13 @@ private class ClassMonitor extends Thread {
       long [] tids = thread_bean.getAllThreadIds();
       ThreadInfo [] tinfo = thread_bean.getThreadInfo(tids,max_depth);
       try {
-         if (monitor_enabled) {
-            monitorStacks(last_monitor,tinfo);
-          }
+	 if (monitor_enabled) {
+	    monitorStacks(last_monitor,tinfo);
+	  }
        }
       catch (Throwable t) {
-         System.err.println("BANDAID: Problem during monitoring: " + t);
-         t.printStackTrace();
+	 System.err.println("BANDAID: Problem during monitoring: " + t);
+	 t.printStackTrace();
        }
     }
 

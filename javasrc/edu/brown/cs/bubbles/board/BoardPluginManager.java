@@ -314,6 +314,7 @@ public void updatePlugins()
 public static File installResources(Class<?> c,String dir,BoardPluginFilter fltr)
 {
    File jarf = IvyFile.getJarFile(c);
+   if (jarf == null) return null;
    File fp = jarf.getParentFile();
    File dirf = fp;
    if (dir != null) dirf = new File(fp,dir);
