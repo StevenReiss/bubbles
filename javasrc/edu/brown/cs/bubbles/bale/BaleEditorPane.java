@@ -138,7 +138,7 @@ protected BaleEditorPane()
       if (!bd.isEditable()) setEditable(false);
     }
    finally { bd.baleWriteUnlock(); }
-   
+
    BoardColors.setColors(this,BALE_EDITOR_TOP_COLOR_PROP);
    setOpaque(false);
 
@@ -162,7 +162,7 @@ protected BaleEditorPane()
    active_regions = new ArrayList<>();
 
    BoardColors.setColors(this,"Bale.EditorPaneBackground");
-   
+
    addMouseMotionListener(new ActiveMouser());
 
    setToolTipText("");
@@ -399,7 +399,7 @@ void handleContextMenu(MouseEvent evt)
    BaleContextConfig bcc = new ContextData(loc,be);
    BaleFactory.getFactory().addContextMenuItems(bcc,menu);
 
-   addButton(menu,"Open Eclipse Editor",true,hdlr,null);
+   // addButton(menu,"Open Eclipse Editor",true,hdlr,null);
    addButton(menu,"Remove Bubble",true,new RemoveBubbleHandler(),null);
 
    menu.add(new FixSizeButton());
@@ -453,7 +453,7 @@ private class RemoveBubbleHandler implements ActionListener {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BaleEditorPane.this);
       BudaBubble bbl = BudaRoot.findBudaBubble(BaleEditorPane.this);
       if (bbl != null && bba != null) {
-         bba.userRemoveBubble(bbl);
+	 bba.userRemoveBubble(bbl);
        }
     }
 
@@ -653,11 +653,11 @@ private static class BaleTextUI extends TextUI {
     }
 
    @Override public int getNextVisualPositionFrom(JTextComponent t,int pos,Position.Bias b,
-        					     int dir,Position.Bias [] bret)
-        	throws BadLocationException {
+						     int dir,Position.Bias [] bret)
+		throws BadLocationException {
       readLock(t);
       try {
-         return base_ui.getNextVisualPositionFrom(t,pos,b,dir,bret);
+	 return base_ui.getNextVisualPositionFrom(t,pos,b,dir,bret);
        }
       finally { readUnlock(t); }
     }
@@ -669,7 +669,7 @@ private static class BaleTextUI extends TextUI {
    @Deprecated public String getToolTipText(JTextComponent t,Point pt) {
       readLock(t);
       try {
-         return SwingText.getToolTipText2D(base_ui,t,pt);
+	 return SwingText.getToolTipText2D(base_ui,t,pt);
        }
       finally { readUnlock(t); }
     }
@@ -679,19 +679,19 @@ private static class BaleTextUI extends TextUI {
     }
 
    @Deprecated public Rectangle modelToView(JTextComponent t,int pos,Position.Bias bias)
-        	throws BadLocationException {
+		throws BadLocationException {
       readLock(t);
       try {
-         return SwingText.modelToView2D(base_ui,t,pos,bias);
+	 return SwingText.modelToView2D(base_ui,t,pos,bias);
        }
       finally { readUnlock(t); }
     }
-   
+
    public Rectangle2D modelToView2D(JTextComponent t,int pos,Position.Bias bias)
-            throws BadLocationException {
+	    throws BadLocationException {
       readLock(t);
       try {
-         return SwingText.modelToView2D(base_ui,t,pos,bias);
+	 return SwingText.modelToView2D(base_ui,t,pos,bias);
       }
       finally { readUnlock(t); }
    }
@@ -703,11 +703,11 @@ private static class BaleTextUI extends TextUI {
    @Deprecated public int viewToModel(JTextComponent t,Point pt,Position.Bias [] bret) {
       return viewToModel2D(t,pt,bret);
     }
-   
+
    public int viewToModel2D(JTextComponent t,Point2D pt,Position.Bias [] bret) {
       readLock(t);
       try {
-         return SwingText.viewToModel2D(base_ui,t,pt,bret);
+	 return SwingText.viewToModel2D(base_ui,t,pt,bret);
        }
       finally { readUnlock(t); }
     }
@@ -727,7 +727,7 @@ private static class BaleTextUI extends TextUI {
    @Override public void paint(Graphics g,JComponent c) {
       readLock(c);
       try {
-         base_ui.paint(g,c);
+	 base_ui.paint(g,c);
        }
       finally { readUnlock(c); }
     }
@@ -739,7 +739,7 @@ private static class BaleTextUI extends TextUI {
    @Override public Dimension getPreferredSize(JComponent c) {
       readLock(c);
       try {
-         return base_ui.getPreferredSize(c);
+	 return base_ui.getPreferredSize(c);
        }
       finally { readUnlock(c); }
     }
@@ -1162,18 +1162,18 @@ private class ActiveMouser extends MouseAdapter {
    @Override public void mouseMoved(MouseEvent e) {
       boolean set = false;
       for (ActiveRegion r : active_regions) {
-         if (r.contains(e.getX(),e.getY())) {
-            set = true;
-            break;
-          }
+	 if (r.contains(e.getX(),e.getY())) {
+	    set = true;
+	    break;
+	  }
        }
       if (set == over_region) return;
       if (base_cursor == null) base_cursor = getCursor();
       over_region = set;
       if (set)
-         BudaCursorManager.setTemporaryCursor(BaleEditorPane.this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+	 BudaCursorManager.setTemporaryCursor(BaleEditorPane.this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
       else
-         BudaCursorManager.setTemporaryCursor(BaleEditorPane.this,Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+	 BudaCursorManager.setTemporaryCursor(BaleEditorPane.this,Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
     }
 
 }	// end of inner class ActiveMouser
@@ -1261,7 +1261,7 @@ private class ContextData implements BaleContextConfig {
     }
 
    @Override public boolean inAnnotationArea()		{ return false; }
-   
+
    @Override public int getSelectionStart() {
       return BaleEditorPane.this.getSelectionStart();
     }
@@ -1269,7 +1269,7 @@ private class ContextData implements BaleContextConfig {
    @Override public int getSelectionEnd() {
       return BaleEditorPane.this.getSelectionEnd();
     }
-   
+
 }	// end of inner class ContextData
 
 
