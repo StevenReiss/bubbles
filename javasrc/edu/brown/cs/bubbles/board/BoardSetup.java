@@ -1308,8 +1308,14 @@ public boolean doSetup()
    if (install_jar && !update_setup) {
       setSplashTask("Checking for newer version");
       if (update_proxy != null) BoardUpdate.setupProxy(update_proxy);
-      if (auto_update) BoardUpdate.checkUpdate(jar_file,java_args);
-      else BoardUpdate.setVersion();
+      try {
+         if (auto_update) BoardUpdate.checkUpdate(jar_file,java_args);
+         else BoardUpdate.setVersion();
+       }
+      catch (UnsupportedClassVersionError e) {
+         reportError("Java version for Bubbles and Eclipse must be 10 or greater");
+         System.exit(1);
+       }
     }
    else if (install_jar || jar_directory != null) {
       BoardUpdate.setVersion();
