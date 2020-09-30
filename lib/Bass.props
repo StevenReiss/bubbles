@@ -22,6 +22,7 @@
 <entry key="Bass.delete.rebuild">true</entry>
 <entry key="Bass.move.class">true</entry>
 <entry key="Bass.fix.imports">true</entry>
+<entry key="Bass.text.search.max">512</entry>
 </properties>
 
 

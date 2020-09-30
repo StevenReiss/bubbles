@@ -191,8 +191,8 @@ protected BumpClient()
       case SERVER :
 	 mint_control.register("<BUMP TYPE='FILEGET'/>",new FileGetServerHandler());
 	 mint_control.register("<BUMP TYPE='SERVEREXIT'/>",new ServerExitHandler());
-         mint_control.register("<BUMP TYPE='STARTDEBUG'/>",new StartDebugHandler());
-         mint_control.register("<BUMP TYPE='SAVEWORKSPACE'/>",new SaveWorkspaceHandler());
+	 mint_control.register("<BUMP TYPE='STARTDEBUG'/>",new StartDebugHandler());
+	 mint_control.register("<BUMP TYPE='SAVEWORKSPACE'/>",new SaveWorkspaceHandler());
 	 break;
       case CLIENT :
 	 Runtime.getRuntime().addShutdownHook(new ForceServerExit());
@@ -344,7 +344,7 @@ abstract void localStartIDE();
 public void stopIDE()
 {
    BoardLog.logD("BUMP","STOPPING IDE");
-   
+
    run_manager.terminateAll();
 
    synchronized (this) {
@@ -353,7 +353,7 @@ public void stopIDE()
     }
 
    saveWorkspace();
-   
+
    sendMessage("EXIT");
    try {
       Thread.sleep(100);
@@ -364,7 +364,7 @@ public void stopIDE()
 
 
 /**
- *      Save workspace data
+ *	Save workspace data
  **/
 
 public void saveWorkspace()
@@ -969,7 +969,7 @@ private class ServerExitHandler implements MintHandler {
 
 /********************************************************************************/
 /*										*/
-/*	Remote save workspace message                   		        */
+/*	Remote save workspace message						*/
 /*										*/
 /********************************************************************************/
 
@@ -992,7 +992,7 @@ private class ForceServerExit extends Thread {
       String msg = "<BUMP TYPE='SERVEREXIT' />";
       mint_control.send(msg);
       try {
-         Thread.sleep(100);
+	 Thread.sleep(100);
        }
       catch (InterruptedException e) { }
     }
@@ -1793,7 +1793,7 @@ private static List<BumpLocation> getSearchResults(String proj,Element xml,boole
 
 
 public Collection<BumpLocation> textSearch(String proj,String text,boolean literal,
-					      boolean nocase,boolean multiline)
+					      boolean nocase,boolean multiline,int max)
 {
    waitForIDE();
 
@@ -1803,8 +1803,10 @@ public Collection<BumpLocation> textSearch(String proj,String text,boolean liter
    if (multiline) fgs |= Pattern.MULTILINE;
 
    text = IvyXml.xmlSanitize(text);
+   
+   if (max <= 0) max = 512;
 
-   String q = "PATTERN='" + text + "' FLAGS='" + fgs + "' MAX='256'";
+   String q = "PATTERN='" + text + "' FLAGS='" + fgs + "' MAX='" + max + "'";
    Element xml = getXmlReply("SEARCH",proj,q,null,0);
    BoardLog.logD("BUMP","Text search result = " + IvyXml.convertXmlToString(xml));
 
@@ -2779,7 +2781,7 @@ public BumpProcess startDebug(BumpLaunchConfig cfg,String id)
    switch (cfg.getConfigType()) {
       case JAVA_APP :
       case JUNIT_TEST :
-         xtr = getDebugArgs(id);
+	 xtr = getDebugArgs(id);
 	 break;
       case REMOTE_JAVA :
 	 break;
@@ -2819,23 +2821,23 @@ public BumpProcess startDebug(BumpLaunchConfig cfg,String id)
 private String getDebugArgs(String id)
 {
    String xtr = null;
-   
+
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :
-         MintDefaultReply mdr = new MintDefaultReply();
-         mint_control.send("<BUMP TYPE='STARTDEBUG' ID='" + id + "' />",mdr,MINT_MSG_FIRST_NON_NULL);
-         Element xml = mdr.waitForXml();
-         if (xml != null) {
-            xtr = IvyXml.getText(xml);
-            if (xtr != null && xtr.trim().length() == 0) xtr = null;
-          }
-         break;
+	 MintDefaultReply mdr = new MintDefaultReply();
+	 mint_control.send("<BUMP TYPE='STARTDEBUG' ID='" + id + "' />",mdr,MINT_MSG_FIRST_NON_NULL);
+	 Element xml = mdr.waitForXml();
+	 if (xml != null) {
+	    xtr = IvyXml.getText(xml);
+	    if (xtr != null && xtr.trim().length() == 0) xtr = null;
+	  }
+	 break;
       case SERVER :
       case NORMAL :
-         xtr = run_manager.startDebugArgs(id);
-         break;
+	 xtr = run_manager.startDebugArgs(id);
+	 break;
     }
-   
+
    return xtr;
 }
 

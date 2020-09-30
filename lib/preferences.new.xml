@@ -493,6 +493,10 @@
 	 <TAB NAME="Search Options"/>
 	 <TAB NAME="Font Options"/>
       </OPT>
+      <OPT NAME='Bass.text.search.max' DESCRIPTION='Maximum number of text search results' TYPE='INTEGER'
+			MIN='32' MAX='2048'>
+	 <TAB NAME='Search Options' />
+      </OPT>
    </PACKAGE>
 
    <PACKAGE NAME="Bted">

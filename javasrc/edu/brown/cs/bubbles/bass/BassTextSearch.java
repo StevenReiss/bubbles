@@ -244,10 +244,11 @@ private class Searcher implements Runnable {
          BowiFactory.startTask();
          try {
             BumpClient bc = BumpClient.getBump();
+            int max = bass_properties.getInt("Bass.text.search.max",512);
             Collection<BumpLocation> locs = bc.textSearch(search_project,searcher_text,
         	     search_literal,
         	     !search_case,
-        	     false);
+        	     false,max);
             if (locs == null || locs.size() == 0) return;
             search_result = locs;
           }
