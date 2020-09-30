@@ -290,7 +290,8 @@ String [] BOARD_ECLIPSE_START = new String [] {
    "eclipse", "eclipse.exe", "Eclipse.app",
    "STS.exe", "STS", "STS.app",
    "sts.exe", "stS", "sts.app",
-   "myeclipse", "myeclipse.exe", "myeclipse.app"
+   "myeclipse", "myeclipse.exe", "myeclipse.app",
+   "Eclipse JEE.app", "eclipse JEE.app",
 };
 
 
@@ -495,7 +496,7 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
 
 // "seede.jar",
 // "poppy.jar",
-// "fait.jar", 
+// "fait.jar",
 // "karma.jar",
    "mail.jar",
 //   "activation.jar",
