@@ -325,7 +325,7 @@ private static class SpellFixer extends BfixFixer {
             BoardLog.logE("BFIX","SPELL: Problem getting errors for " + pid);
             return null;
           }
-         int probct = getErrorCount(oprobs);
+         int probct = getErrorCount(oprobs,for_problem);
          if (!checkProblemPresent(for_problem,oprobs)) {
             BoardLog.logD("BFIX","SPELL: Spelling problem went away");
             return null;
@@ -344,6 +344,7 @@ private static class SpellFixer extends BfixFixer {
             
             int edelta = sf.getText().length() - for_identifier.length();
             if (checkAnyProblemPresent(for_problem,probs,0,edelta)) continue;
+            if (checkAnyProblemPresent(probs,for_problem.getFile(),soff,eoff+edelta)) continue;
             if (probs == null || getErrorCount(probs) >= probct) continue;
             else if (getErrorCount(probs) == probct) {
                double score = sf.getEditCount();
@@ -526,13 +527,13 @@ private static class SpellProblem {
       if (original_identifier != null) buf.append(original_identifier);
       else buf.append("*");
       if (target_identifier != null) {
-	 buf.append(",");
-	 buf.append(target_identifier);
+         buf.append(",");
+         buf.append(target_identifier);
        }
       else if (using_suffix != null) buf.append(",*");
       if (using_suffix != null) {
-	 buf.append(",");
-	 buf.append(using_suffix);
+         buf.append(",");
+         buf.append(using_suffix);
        }
       return buf.toString();
     }

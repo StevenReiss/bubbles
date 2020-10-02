@@ -27,6 +27,7 @@ package edu.brown.cs.bubbles.bfix;
 import edu.brown.cs.bubbles.bale.BaleConstants;
 import edu.brown.cs.bubbles.board.BoardLog;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
@@ -115,6 +116,30 @@ static int getErrorCount(Collection<BumpProblem> bpl)
 }
 
 
+static int getErrorCount(Collection<BumpProblem> bpl,BumpProblem base)
+{
+   int ct = 0;
+   if (bpl == null) return -1;
+   int pct = 0;
+   
+   for (BumpProblem bp : bpl) {
+      if (bp.getErrorType() == BumpErrorType.ERROR) {
+         if (base != null)  {
+            if (base.getStart() == bp.getStart() &&
+                  base.getEnd() == bp.getEnd()) {
+               ++pct;
+             }
+          }
+         ++ct;
+       }
+    }
+   
+   if (pct > 1) ct -= 1;
+   
+   return ct;
+}
+
+
 
 
 static boolean checkAnyProblemPresent(BumpProblem prob,Collection<BumpProblem> bpl,int sdelta,int edelta)
@@ -126,6 +151,20 @@ static boolean checkAnyProblemPresent(BumpProblem prob,Collection<BumpProblem> b
       if (bp.getStart() < prob.getEnd()+edelta && bp.getEnd() > prob.getStart()+sdelta) return true;
     }
 
+   return false;
+}
+
+
+
+static boolean checkAnyProblemPresent(Collection<BumpProblem> bpl,File file,int start,int end)
+{
+   if (bpl == null) return false;
+   for (BumpProblem bp : bpl) {
+      if (!bp.getFile().equals(file)) continue;
+      if (bp.getErrorType() != BumpErrorType.ERROR) continue;
+      if (bp.getStart() < end && bp.getEnd() > start) return true;
+    }
+   
    return false;
 }
 
