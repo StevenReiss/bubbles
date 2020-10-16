@@ -115,6 +115,23 @@ static {
 /*										*/
 /********************************************************************************/
 
+public static BumpLocation getLocationFromXml(Element xml) 
+{
+   String fnm = IvyXml.getTextElement(xml,"FILE");
+   int offset = IvyXml.getAttrInt(xml,"OFFSET");
+   int length = IvyXml.getAttrInt(xml,"LENGTH");
+   Element mi = IvyXml.getChild(xml,"ITEM");
+   String pnm = IvyXml.getAttrString(xml,"PROJECT");
+   if (pnm == null) pnm = IvyXml.getAttrString(mi,"PROJECT");
+   String srctyp = IvyXml.getAttrString(xml,"TYPE");
+   
+   BumpLocation bl = new BumpLocation(pnm,fnm,offset,length,srctyp,mi);
+   
+   return bl;
+}
+
+
+
 BumpLocation(String proj,String file,int off,int len,Element itm)
 {
    this(proj,file,off,len,null,itm);

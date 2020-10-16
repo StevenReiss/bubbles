@@ -33,9 +33,12 @@ package edu.brown.cs.bubbles.buss;
 
 import edu.brown.cs.bubbles.board.BoardFont;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.util.Collection;
+import java.util.EventListener;
 
 
 
@@ -151,6 +154,11 @@ interface BussEntry {
    BudaBubble getBubble();
 
 /**
+ *      Return the base set of locations (can be null)
+ **/
+   Collection<BumpLocation> getLocations();
+   
+/**
  *	Dispose of the bubble if necessary & clean up in general
  **/
    void dispose();
@@ -176,6 +184,20 @@ interface BussTreeNode {
 }	// end of inner interface BussTreeNode
 
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      Callbacks for BUSS events                                               */
+/*                                                                              */
+/********************************************************************************/
+
+interface BussListener extends EventListener {
+   
+   void entrySelected(BussEntry e);
+   void entryExpanded(BussEntry e);
+   void entryHovered(BussEntry e);
+   
+}
 
 }	 // end in interface BussConstants
 

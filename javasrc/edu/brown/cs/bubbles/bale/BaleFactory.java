@@ -47,7 +47,7 @@ import edu.brown.cs.bubbles.bueno.BuenoProperties;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.bubbles.bump.BumpLocation;
-
+import edu.brown.cs.bubbles.buss.BussBubble;
 import edu.brown.cs.ivy.swing.SwingEventListenerList;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
@@ -498,8 +498,16 @@ BudaBubble createLocationEditorBubble(Component src,Position p,Point at,
 public void createBubbleStack(Component src,Position p,Point pt,boolean near,
 			     Collection<BumpLocation> locs,BudaLinkStyle link)
 {
-   BaleBubbleStack.createBubbles(src,p,pt,near,locs,link);
+   BaleBubbleStack.createBubbles(src,p,pt,near,BaleStackType.NORMAL,locs,link);
 }
+
+
+public BussBubble createBubbleStackForced(Component src,Position p,Point pt,boolean near,
+      Collection<BumpLocation> locs,BudaLinkStyle link)
+{
+   return BaleBubbleStack.createBubbles(src,p,pt,near,BaleStackType.FORCE,locs,link);
+}
+
 
 
 

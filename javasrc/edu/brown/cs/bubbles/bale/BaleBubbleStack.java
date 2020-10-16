@@ -72,14 +72,14 @@ class BaleBubbleStack implements BaleConstants, BudaConstants, BussConstants
 static void createBubbles(Component src,Position p,Point pt,boolean near,
       Collection<BumpLocation> locs,BudaLinkStyle link)
 {
-   createBubbles(src,p,pt,near,false,locs,link);
+   createBubbles(src,p,pt,near,BaleStackType.NORMAL,locs,link);
 }
 
 
-static void createBubbles(Component src,Position p,Point pt,boolean near,boolean dropsrc,
+static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,BaleStackType stktyp,
 			     Collection<BumpLocation> locs,BudaLinkStyle link)
 {
-   if (locs == null) return;
+   if (locs == null) return null;
    
    Map<File,Set<Integer>> used = new HashMap<>();
    for (BumpLocation bl : locs) {
@@ -172,7 +172,7 @@ static void createBubbles(Component src,Position p,Point pt,boolean near,boolean
        }
     }
 
-   if (locs.size() == 2 && dropsrc && src != null) {
+   if (locs.size() == 2 && stktyp == BaleStackType.DROP_SOURCE && src != null) {
       BudaBubble bbl = BudaRoot.findBudaBubble(src);
       if (bbl != null) {
 	 File bfl = bbl.getContentFile();
@@ -196,10 +196,10 @@ static void createBubbles(Component src,Position p,Point pt,boolean near,boolean
        }
     }
 
-   if (locs.size() > 1) {
+   if (locs.size() > 1 || stktyp == BaleStackType.FORCE) {
       BaleBubbleStack bs = new BaleBubbleStack(src,p,pt,near,link,keys);
-      bs.setupStack(link);
-      return;
+      BussBubble buss = bs.setupStack(link);
+      return buss;
     }
 
    for (BumpLocation bl : locs) {
@@ -215,6 +215,8 @@ static void createBubbles(Component src,Position p,Point pt,boolean near,boolean
 	if (bstart >= 0) bep.setCaretPosition(bstart);
       }
     }
+   
+   return null;
 }
 
 
@@ -268,7 +270,7 @@ private BaleBubbleStack(Component src,Position p,Point pt,boolean near,BudaLinkS
 /*										*/
 /********************************************************************************/
 
-private void setupStack(BudaLinkStyle link)
+private BussBubble setupStack(BudaLinkStyle link)
 {
    List<BussEntry> entries = new ArrayList<>();
 
@@ -324,13 +326,13 @@ private void setupStack(BudaLinkStyle link)
       component.init(contentwidth);
     }
 
-   if (entries.size() == 0) return;
+   if (entries.size() == 0) return null;
    BussFactory bussf = BussFactory.getFactory();
    BussBubble bb = bussf.createBubbleStack(entries, contentwidth + title_width);
    bb.setLinkStyle(link_style);
 
    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(source_bubble);
-   if (bba == null) return;
+   if (bba == null) return null;
    int place = PLACEMENT_PREFER|PLACEMENT_MOVETO|PLACEMENT_NEW;
    if (place_near) place |= PLACEMENT_GROUPED;
    bba.addBubble(bb,source_bubble,source_point,place);
@@ -347,6 +349,8 @@ private void setupStack(BudaLinkStyle link)
     }
 
    // BudaRoot.addBubbleViewCallback(new EditorBubbleCallback(bb));
+   
+   return bb;
 }
 
 
@@ -400,6 +404,10 @@ private abstract class GenericStackEntry implements BussEntry {
       return full_fragment;
     }
    @Override public String getExpandText()		{ return null; }
+   
+   @Override public Collection<BumpLocation> getLocations() {
+      return new ArrayList<>(entry_locations);
+    }
 
    @Override public BudaBubble getBubble() {
       if (item_bubble == null) {

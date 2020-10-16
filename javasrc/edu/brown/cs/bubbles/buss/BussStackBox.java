@@ -232,6 +232,11 @@ private class Transferer extends TransferHandler {
             if (be.getBubble() != null && be.getBubble().getParent() != buss_bubble.getLayeredPane()) {
                be.getBubble().setFixed(false);
                tree_model.removeEntry(be);
+               BudaBubble bbl = BudaRoot.findBudaBubble(c);
+               if (bbl instanceof BussBubble) {
+                  BussBubble bussbbl = (BussBubble) bbl;
+                  bussbbl.noteEntrySelected(be);
+                }
              }
           }
        }
@@ -275,11 +280,11 @@ private static class TransferBubble implements Transferable, BudaConstants.BudaD
       BudaBubble [] rslt = new BudaBubble[tree_entries.size()];
       int i = 0;
       for (BussEntry ent : tree_entries) {
-	 BudaBubble bb = ent.getBubble();
-	 if (bb != null) {
-	    bb.setFixed(false);
-	    rslt[i++] = bb;
-	 }
+         BudaBubble bb = ent.getBubble();
+         if (bb != null) {
+            bb.setFixed(false);
+            rslt[i++] = bb;
+         }
        }
       return rslt;
     }
@@ -304,6 +309,10 @@ private class Selector implements TreeSelectionListener
        }
       BussTreeNode tn = (BussTreeNode) tp.getLastPathComponent();
       tree_model.setSelection(tn);
+      BussEntry be = tn.getEntry();
+      if (be != null) {
+         buss_bubble.noteEntrySelected(be);
+       }
     }
 
 }	// end of inner class Selector
@@ -417,6 +426,7 @@ private void createEntryBubble(BussEntry be,BudaRoot root,Rectangle loc)
       loc.y += d.height + 25;
       bbl.addLinks(bb);
       bb.markBubbleAsNew();
+      bbl.noteEntrySelected(be);
     }
 }
 

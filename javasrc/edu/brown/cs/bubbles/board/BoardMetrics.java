@@ -261,7 +261,7 @@ public static void getLastCommands(String pfx,Appendable buf)
 	    if (pfx != null) buf.append(pfx);
 	    buf.append(the_metrics.command_data.get(i));
 	    buf.append("\n");
-	  }
+	  }								       
 	 catch (IOException e) { }
        }
     }
@@ -526,14 +526,14 @@ private class MetricsDialog extends JDialog implements ActionListener, CaretList
 
    MetricsDialog(BoardProperties bp) {
       super(root_window,"User Metrics Options",true);
-   
+
       board_properties = bp;
       SwingGridPanel pnl = new SwingGridPanel();
       BoardColors.setColors(pnl,"Buda.Bubbles.Color");
       pnl.beginLayout();
       pnl.addBannerLabel("User Metrics Opt-In Options");
       pnl.addSeparator();
-   
+
       String comment = "<html>Code Bubbles can periodically collect information about ";
       comment += "the use of the system.  This data will provide a basis for improving ";
       comment += "the system and might be used for research purposes.\n";
@@ -550,7 +550,7 @@ private class MetricsDialog extends JDialog implements ActionListener, CaretList
       ep.setSize(sz);
       ep.setPreferredSize(sz);
       pnl.addLabellessRawComponent("COMMENT",ep);
-   
+
       exprn_checkbox = pnl.addBoolean("Periodically ask for User Experiences",collect_experience,null);
       activ_checkbox = pnl.addBoolean("Determine % time environment is used",collect_active,null);
       cmmds_checkbox = pnl.addBoolean("Collect command execution data",collect_commands,null);
@@ -559,7 +559,7 @@ private class MetricsDialog extends JDialog implements ActionListener, CaretList
       scrns_checkbox = pnl.addBoolean("Collect Periodic Blurred Screen Shots",collect_screens,null);
       // pnl.addSeparator();
       // dumps_checkbox = pnl.addBoolean("Send Automatic bug reports",collect_dumps,null);
-   
+
       pnl.addSeparator();
       // pnl.addSectionLabel("<html>Name is required if you are participating in the user study<br></font></html>");
       // userid_textfield = pnl.addTextField("First name and your last name's initial: ", user_id, null, null);
@@ -571,7 +571,7 @@ private class MetricsDialog extends JDialog implements ActionListener, CaretList
       // ok_button = pnl.addBottomButton("OK","OK", this);
       // if (user_id == null || user_id.equals("")) ok_button.setEnabled(false);
       pnl.addBottomButtons();
-   
+
       this.setContentPane(pnl);
     }
 
@@ -639,14 +639,14 @@ private class BugReportDialog extends JDialog implements ActionListener
 
    BugReportDialog(BoardProperties bp) {
       super(root_window,"Bug Reporting Options",true);
-   
+
       board_properties = bp;
       SwingGridPanel pnl = new SwingGridPanel();
       pnl.setBackground(BoardColors.getColor("Buda.Bubbles.Color"));
       pnl.beginLayout();
       pnl.addBannerLabel("User Bug Report Opt-In Options");
       pnl.addSeparator();
-   
+
       String comment = "<html>In order to improve the Code Bubbles environment, ";
       comment += "we request that you allow Code Bubbles to send automatic bug ";
       comment += "reports when the system detects an internally inconsistent state.";
@@ -658,16 +658,16 @@ private class BugReportDialog extends JDialog implements ActionListener
       comment += "Note that Code Bubbles will generally continue working normally even ";
       comment += "in the face of such errors.";
       comment += "<p>For more information, contact Steven Reiss (spr@cs.brown.edu).";
-   
+
       JEditorPane ep = new SwingEditorPane("text/html",comment);
       ep.setEditable(false);
       Dimension sz = new Dimension(350,300);
       ep.setSize(sz);
       ep.setPreferredSize(sz);
       pnl.addLabellessRawComponent("COMMENT",ep);
-   
+
       dumps_checkbox = pnl.addBoolean("Send Automatic bug reports",collect_dumps,null);
-   
+
       pnl.addSeparator();
       // pnl.addSectionLabel("<html>Name is required if you are participating in the user study<br></font></html>");
       // userid_textfield = pnl.addTextField("First name and your last name's initial: ", user_id, null, null);
@@ -679,7 +679,7 @@ private class BugReportDialog extends JDialog implements ActionListener
       // ok_button = pnl.addBottomButton("OK","OK", this);
       // if (user_id == null || user_id.equals("")) ok_button.setEnabled(false);
       pnl.addBottomButtons();
-   
+
       this.setContentPane(pnl);
     }
 

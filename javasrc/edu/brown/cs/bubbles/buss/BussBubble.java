@@ -39,6 +39,7 @@ import edu.brown.cs.bubbles.buda.BudaDefaultPort;
 import edu.brown.cs.bubbles.buda.BudaHover;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
+import edu.brown.cs.ivy.swing.SwingEventListenerList;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JScrollBar;
@@ -86,7 +87,7 @@ private BudaBubble editor_bubble;
 private JViewport view_port;
 private JLayeredPane layered_pane;
 private BudaConstants.BudaLinkStyle link_style;
-
+private SwingEventListenerList<BussListener> buss_listeners;
 private Hoverer buss_hover;
 
 private Dimension default_dim;
@@ -135,6 +136,7 @@ BussBubble(Collection<BussEntry> ents, int contentWidth)
 
    self = this;
    buss_hover = new Hoverer();
+   buss_listeners = new SwingEventListenerList<>(BussListener.class);
 }
 
 
@@ -451,6 +453,47 @@ void addLinks(BudaBubble bb)
 }
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Listener methods                                                        */
+/*                                                                              */
+/********************************************************************************/
+
+public void addBussListener(BussListener bl) 
+{
+   buss_listeners.add(bl);
+}
+
+public void removeBussListener(BussListener bl)
+{
+   buss_listeners.remove(bl);
+}
+
+
+void noteEntryExpanded(BussEntry be)
+{
+   for (BussListener bl : buss_listeners) {
+      bl.entryExpanded(be);
+    }
+}
+
+
+void noteEntrySelected(BussEntry be)
+{
+   for (BussListener bl : buss_listeners) {
+      bl.entrySelected(be);
+    }
+}
+
+
+void noteEntryHovered(BussEntry be)
+{
+   for (BussListener bl : buss_listeners) {
+      bl.entryHovered(be);
+    }
+}
+
+
 
 private class BussResizeListener extends ComponentAdapter {
 
@@ -524,6 +567,7 @@ private class Hoverer extends BudaHover implements ComponentListener {
 	 if (entry != null) {
 	    preview_bubble = createHoverBubble(entry, e.getX() - view_port.getViewPosition().x,
 						  e.getY() - view_port.getViewPosition().y);
+            noteEntryHovered(entry);
 	  }
        }
     }

@@ -61,6 +61,8 @@ import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -136,6 +138,10 @@ BucsSearchSolution(BucsSearchResult r,BumpLocation base,BudaBubble src)
    return for_result.getCode();
 }
 
+@Override public Collection<BumpLocation> getLocations()
+{
+   return Collections.singletonList(base_location);
+}
 
 @Override public BudaBubble getBubble()
 {

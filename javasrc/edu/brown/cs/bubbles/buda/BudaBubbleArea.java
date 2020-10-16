@@ -3478,21 +3478,21 @@ private class BubbleDropper extends TransferHandler {
       DataFlavor df = BudaRoot.getBubbleTransferFlavor();
       // TODO: need to handle text transfers
       try {
-	 BudaDragBubble bdb = (BudaDragBubble) t.getTransferData(df);
-	 TransferHandler.DropLocation loc = sup.getDropLocation();
-	 Point pt = loc.getDropPoint();
-	 BudaBubble [] bba = bdb.createBubbles();
-	 int y = pt.y;
-	 for (BudaBubble bb : bba) {
-	    if (bb != null) {
-	       addBubble(bb,pt.x,y);
-	       bb.markBubbleAsNew();
-	       y += 10;
-	     }
-	  }
-	 sup.setDropAction(COPY);
-	 BoardMetrics.noteCommand("BUDA","bubbleDrop");
-	 return true;
+         BudaDragBubble bdb = (BudaDragBubble) t.getTransferData(df);
+         TransferHandler.DropLocation loc = sup.getDropLocation();
+         Point pt = loc.getDropPoint();
+         BudaBubble [] bba = bdb.createBubbles();
+         int y = pt.y;
+         for (BudaBubble bb : bba) {
+            if (bb != null) {
+               addBubble(bb,pt.x,y);
+               bb.markBubbleAsNew();
+               y += 10;
+             }
+          }
+         sup.setDropAction(COPY);
+         BoardMetrics.noteCommand("BUDA","bubbleDrop");
+         return true;
        }
       catch (Exception e) { }
       return false;

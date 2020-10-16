@@ -399,6 +399,14 @@ enum BaleHighlightType {
 }
 
 
+enum BaleStackType {
+   NORMAL,                      // all bubbles, one bubble -> no stack             
+   DROP_SOURCE,                 // ignore an instance from the source
+   FORCE,                       // force a stack even with one bubble
+}
+
+
+
 /**
  *	The color for normal identifier highlighing.
  **/

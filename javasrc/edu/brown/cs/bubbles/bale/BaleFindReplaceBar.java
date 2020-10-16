@@ -651,7 +651,10 @@ private class CloseListener extends KeyAdapter {
 
    @Override public void keyReleased(KeyEvent e) {
       if (e.getSource() == text_field) {
-	 if (!KeyEvent.getKeyText(e.getKeyCode()).equals("Enter")) find(0, true);
+         if (KeyEvent.getKeyText(e.getKeyCode()).equals("Tab") && replace_field.isVisible()) {
+            replace_field.grabFocus();
+          }
+	 else if (!KeyEvent.getKeyText(e.getKeyCode()).equals("Enter")) find(0, true);
       }
     }
 
