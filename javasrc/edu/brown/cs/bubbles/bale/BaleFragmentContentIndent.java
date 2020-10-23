@@ -441,7 +441,7 @@ private LineData computeLineData(int offset,Segment s)
 	 break;
        }
       else {
-	 BoardLog.logE("BALE","Minimum space compute incorrectly");
+	 BoardLog.logE("BALE","Minimum space compute incorrectly " + ln + " " + offset + " " + i + " " + s.toString());
 	 break;
        }
     }

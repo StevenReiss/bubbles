@@ -342,6 +342,10 @@ void removeCurrentBubble(MouseEvent e)
    boolean fixed = false;
    BudaBubble bb = null;
 
+   if (!SwingUtilities.isEventDispatchThread()) {
+      BoardLog.logX("BUDA","Adding bubble from non-awt thread " + c.getClass());
+    }
+   
    if (c instanceof BudaBubble) {
       bb = (BudaBubble) c;
     }

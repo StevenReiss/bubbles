@@ -782,13 +782,13 @@ private class GroupTitle extends SwingTextField implements ActionListener, Focus
       getParent().repaint();
       orig_size = null;
       if (ottl == null && t != null && t.length() > 0 && group_bubbles.size() > 1) {
-	 for (BudaBubble bb : group_bubbles) {
-	    BudaRoot br = BudaRoot.findBudaRoot(bb);
-	    if (br != null) {
-	       br.noteNamedBubbleGroup(BudaBubbleGroup.this);
-	       break;
-	     }
-	  }
+         for (BudaBubble bb : group_bubbles) {
+            BudaRoot br = BudaRoot.findBudaRoot(bb);
+            if (br != null) {
+               br.noteNamedBubbleGroup(BudaBubbleGroup.this);
+               break;
+             }
+          }
        }
     }
 
@@ -811,9 +811,9 @@ private class GroupTitle extends SwingTextField implements ActionListener, Focus
       setOpaque(false);
       String t = getText();
       if (!t.equals(group_title)) {
-	  setTitle(t);
-	  orig_size = null;
-	  getParent().repaint();
+          setTitle(t);
+          orig_size = null;
+          getParent().repaint();
        }
       else if (orig_size != null) setSize(orig_size);
     }

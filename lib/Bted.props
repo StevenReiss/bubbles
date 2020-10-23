@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<entry key="Bted.width">400</entry>
+<entry key="Bted.width">600</entry>
 <entry key="Bted.height">500</entry>
 <entry key="Bted.overview.color">ffa9cdf9</entry>
 <entry key="Bted.top.color">ffebf5ff</entry>
