@@ -155,7 +155,7 @@ private Point			demo_point;
 private boolean 		view_setup;
 private int			shade_delta;
 private boolean 		shade_down;
-private boolean                 shade_safe;
+private boolean 		shade_safe;
 
 private static MouseEvent	last_mouse;
 
@@ -384,7 +384,7 @@ private void initialize(Element e)
 
    if (BoardSetup.getSetup().getRunMode() == RunMode.CLIENT) {
       BoardSetup.getSetup().getMintControl().register("<BUDA SOURCE='SERVER' CMD='_VAR_0' FILE='_VAR_1' />",
-            new ClientHandler());
+	    new ClientHandler());
     }
 }
 
@@ -413,11 +413,6 @@ private void setupSwing()
 
 public void restoreConfiguration(Element xml)
 {
-   if (xml == null) {
-      doneSetup();
-      return;
-    }
-
    SwingUtilities.invokeLater(new RestoreSession(xml));
 }
 
@@ -951,10 +946,10 @@ private class SearchSingleton extends ComponentAdapter {
 
    @Override public void componentHidden(ComponentEvent e) {
       if (e.getSource() == search_bubble) {
-         search_bubble = null;
+	 search_bubble = null;
        }
       if (e.getSource() == docsearch_bubble) {
-         docsearch_bubble = null;
+	 docsearch_bubble = null;
        }
     }
 
@@ -1282,14 +1277,14 @@ synchronized Rectangle getShadedViewport()
       r1.y += delta;
       r1.height -= delta;
       return r1;
-    }  
+    }
    if (isShadeDown()) return getViewport();
- 
+
    Rectangle r = new Rectangle(bubble_view.getViewRect());
    int d = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
    r.height -= d;
    r.y += d;
-   
+
    return r;
 }
 
@@ -1302,12 +1297,12 @@ private class ViewportHandler implements ChangeListener {
 
    @Override public void stateChanged(ChangeEvent e) {
       Rectangle vr = bubble_view.getViewRect();
-   
+
       // if (scale_factor != 1) {
-         // vr.x /= scale_factor;
-         // vr.y /= scale_factor;
-         // vr.width /= scale_factor;
-         // vr.height /= scale_factor;
+	 // vr.x /= scale_factor;
+	 // vr.y /= scale_factor;
+	 // vr.width /= scale_factor;
+	 // vr.height /= scale_factor;
        // }
       bubble_area.setViewPosition(vr);
       bubble_overview.setViewPosition(vr);
@@ -1677,31 +1672,31 @@ private class ShadeUpdater implements ActionListener {
       long now = System.currentTimeMillis();
       long delta = now-last_time;
       int move = (int)(move_delta * delta * shade_delta);
-   
+
       boolean done = false;
       int curht = bubble_overview.getHeight() + bubble_topbar.getHeight();
       int startht = curht;
       curht += move;
       if (curht < 1) {
-         curht = 1;
-         move = curht - startht;
-         done = true;
+	 curht = 1;
+	 move = curht - startht;
+	 done = true;
        }
       else if (curht > BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT) {
-         curht = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
-         move = curht - startht;
-         done = true;
+	 curht = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
+	 move = curht - startht;
+	 done = true;
        }
-   
+
       for (Component c : button_panels) {
-         Dimension csz = c.getSize();
-         csz.height = curht;
-         c.setSize(csz);
-         c.setMinimumSize(csz);
-         c.setMaximumSize(csz);
-         c.setPreferredSize(csz);
+	 Dimension csz = c.getSize();
+	 csz.height = curht;
+	 c.setSize(csz);
+	 c.setMinimumSize(csz);
+	 c.setMaximumSize(csz);
+	 c.setPreferredSize(csz);
        }
-   
+
       Dimension topsz = bubble_topbar.getSize();
       if (curht < BUBBLE_TOP_BAR_HEIGHT) topsz.height = curht;
       else topsz.height = BUBBLE_TOP_BAR_HEIGHT;
@@ -1709,7 +1704,7 @@ private class ShadeUpdater implements ActionListener {
       bubble_topbar.setPreferredSize(topsz);
       bubble_topbar.setMaximumSize(topsz);
       bubble_topbar.setSize(topsz);
-   
+
       Dimension ovrsz = bubble_overview.getSize();
       if (curht <= BUBBLE_TOP_BAR_HEIGHT) ovrsz.height = 0;
       else ovrsz.height = curht - BUBBLE_TOP_BAR_HEIGHT;
@@ -1717,43 +1712,43 @@ private class ShadeUpdater implements ActionListener {
       bubble_overview.setPreferredSize(ovrsz);
       bubble_overview.setMaximumSize(ovrsz);
       bubble_overview.setSize(ovrsz);
-   
+
       shade_safe = false;
       Point rv = bubble_view.getViewPosition();
       rv.y += move;
       bubble_view.setViewPosition(rv);
-      
+
       Rectangle r = bubble_view.getBounds();
       Rectangle rtop = bubble_view.getParent().getBounds();
       r.height = rtop.height - curht;
       r.y = curht;
       bubble_view.setBounds(r);
       shade_safe = done;
-   
+
       BudaBubble toolbar = BudaToolbar.getToolbar(bubble_area);
       for (BudaBubble bbl : bubble_area.getBubbles()) {
-         if (bbl.isFloating() && bbl != toolbar) {
-            Rectangle rbbl = bbl.getBounds();
-            rbbl.y -= move;
-            bbl.setBounds(rbbl);
-          }
+	 if (bbl.isFloating() && bbl != toolbar) {
+	    Rectangle rbbl = bbl.getBounds();
+	    rbbl.y -= move;
+	    bbl.setBounds(rbbl);
+	  }
        }
       if (toolbar.isVisible()) {
-         Rectangle rbbl = toolbar.getBounds();
-         rbbl.y -= move;
-         // System.err.println("TOOL BOUNDS " + rbbl + " " + move);
-         toolbar.setBounds(rbbl);
+	 Rectangle rbbl = toolbar.getBounds();
+	 rbbl.y -= move;
+	 // System.err.println("TOOL BOUNDS " + rbbl + " " + move);
+	 toolbar.setBounds(rbbl);
        }
-   
+
       // revalidate();
-   
+
       synchronized (BudaRoot.this) {
-         if (shade_delta == 0 || done) {
-            shade_delta = 0;
-            Timer nt = (Timer) e.getSource();
-            nt.stop();
-            return;
-          }
+	 if (shade_delta == 0 || done) {
+	    shade_delta = 0;
+	    Timer nt = (Timer) e.getSource();
+	    nt.stop();
+	    return;
+	  }
        }
     }
 
@@ -2390,16 +2385,16 @@ public synchronized void waitForSetup()
 private synchronized void doneSetup()
 {
    view_setup = true;
-   
+
    if (BUDA_PROPERTIES.getBoolean("Buda.show.tool.menu")) {
       Action act = BudaToolbar.getMenuBarAction(this);
       act.actionPerformed(null);
     }
-   
+
    if (BUDA_PROPERTIES.getBoolean("Buda.overview.shades")) {
       enableWindowShades();
     }
-   
+
    notifyAll();
 }
 
@@ -2413,8 +2408,10 @@ private class RestoreSession implements Runnable {
     }
 
    @Override public void run() {
-      setupSession(session_config);
-      setupView(session_config);
+      if (session_config != null) {
+	 setupSession(session_config);
+	 setupView(session_config);
+       }
       doneSetup();
     }
 
@@ -2847,7 +2844,7 @@ private void saveWorkspace()
    // else {
       // BumpClient.getBump().saveWorkspace();
     // }
-   
+
    BumpClient.getBump().saveWorkspace();
 }
 
@@ -2855,23 +2852,23 @@ private void saveWorkspace()
 private class Stopper implements Runnable {
 
    private long stop_delay;
-   
+
    Stopper(long delay) {
       stop_delay = delay;
     }
-   
+
    @Override public void run() {
       BoardLog.logD("BUDA","Starting stopper " + stop_delay);
       if (stop_delay > 0) {
-         try {
-            Thread.sleep(stop_delay);
-          }
-         catch (InterruptedException e) {  }
+	 try {
+	    Thread.sleep(stop_delay);
+	  }
+	 catch (InterruptedException e) {  }
        }
       System.exit(0);
     }
-   
-}       // end of inner class Stopper
+
+}	// end of inner class Stopper
 
 
 
@@ -2938,7 +2935,7 @@ private class ButtonPanel extends JPanel
       Color tc = BoardColors.getColor(BUTTON_PANEL_TOP_COLOR_PROP);
       Color bc = BoardColors.getColor(BUTTON_PANEL_BOTTOM_COLOR_PROP);
       Paint p = new GradientPaint(0f, 0f,tc, 0f, BUBBLE_OVERVIEW_HEIGHT, bc);
-   
+
       g.setPaint(p);
       g.fillRect(0, 0, this.getWidth() , this.getHeight());
     }
@@ -3068,10 +3065,10 @@ private static class MouseEventQueue extends EventQueue {
 
    private void resend(AWTEvent e) {
       try {
-         super.dispatchEvent(e);
+	 super.dispatchEvent(e);
        }
       catch (Throwable t) {
-         BoardLog.logE("BUDA","Problem processing user interface event: " + t,t);
+	 BoardLog.logE("BUDA","Problem processing user interface event: " + t,t);
        }
     }
 

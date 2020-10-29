@@ -53,6 +53,7 @@ import edu.brown.cs.ivy.swing.SwingEventListenerList;
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -234,7 +235,14 @@ private static BassBubble addPackageExplorer(BudaBubbleArea bba)
    BudaConstraint bc = new BudaConstraint(BudaBubblePosition.DOCKED,
 					     r.x + r.width - d.width,
 					     r.y + r.height - rh);
-   bba.add(peb,bc);
+   
+   if (SwingUtilities.isEventDispatchThread()) {
+      bba.add(peb,bc);
+    }
+   else {
+      BubbleAdder ba = new BubbleAdder(bba,peb,bc);
+      SwingUtilities.invokeLater(ba);
+    }
 
    return peb;
 }
@@ -809,6 +817,32 @@ private static class NewJSProjectAction extends AbstractAction {
 
 }	// end of inner class ProjectAction
 
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Add package explorer correctly                                          */
+/*                                                                              */
+/********************************************************************************/
+
+private static class BubbleAdder implements Runnable {
+   
+   private BudaBubbleArea bubble_area;
+   private BudaBubble buda_bubble;
+   private BudaConstraint buda_constraint;
+   
+   BubbleAdder(BudaBubbleArea bba,BudaBubble bb,BudaConstraint bc) {
+      bubble_area = bba;
+      buda_bubble = bb;
+      buda_constraint = bc;
+    }
+   
+   
+   @Override public void run() {
+      bubble_area.add(buda_bubble,buda_constraint);
+    }
+   
+}       // end of inner class AddPackageExplorer
 
 
 }	// end of class BassFactory

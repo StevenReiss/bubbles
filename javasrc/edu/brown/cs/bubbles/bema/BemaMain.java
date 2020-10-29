@@ -53,6 +53,7 @@ import edu.brown.cs.ivy.xml.IvyXml;
 import org.w3c.dom.Element;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 
@@ -513,6 +514,21 @@ private void start()
    BumpClient nbc = BumpClient.getBump();
    Element xe = nbc.getAllProjects(300000);
    if (IvyXml.getChild(xe,"PROJECT") == null) {
+      ProjectBubbleAdder pba = new ProjectBubbleAdder(root);
+      SwingUtilities.invokeLater(pba);
+    }
+}
+
+
+private static class ProjectBubbleAdder implements Runnable {
+
+   private BudaRoot buda_root;
+
+   ProjectBubbleAdder(BudaRoot root) {
+      buda_root = root;
+    }
+
+   @Override public void run() {
       BudaBubble bb = null;
       switch (BoardSetup.getSetup().getLanguage()) {
 	 default :
@@ -530,8 +546,8 @@ private void start()
 	    break;
        }
       if (bb != null) {
-	 root.waitForSetup();
-	 BudaBubbleArea bba = root.getCurrentBubbleArea();
+	 buda_root.waitForSetup();
+	 BudaBubbleArea bba = buda_root.getCurrentBubbleArea();
 	 Dimension d = bb.getSize();
 	 Rectangle r = bba.getViewport();
 	 int x0 = r.x + r.width/2 - d.width/2;
@@ -539,7 +555,9 @@ private void start()
 	 bba.addBubble(bb, x0, y0);
        }
     }
-}
+
+}	// end of inner class ProjectBubbleAdder
+
 
 
 

@@ -32,6 +32,7 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -284,12 +285,40 @@ private static class MenuListener extends AbstractAction implements ActionListen
    
       pnl.setVisible(true);
       
-      bba.add(pnl,bc,0);
-       // bba.setLayer(pnl, JLayeredPane.DRAG_LAYER+2); // this causes it to not be placed correctly on shade down
+      if (SwingUtilities.isEventDispatchThread()) {
+         bba.add(pnl,bc,0);
+       }
+      else {
+         BubbleAdder ba = new BubbleAdder(bba,pnl,bc,0);
+         SwingUtilities.invokeLater(ba);
+       }
+      
       pnl.repaint();
    }
 
 }	// end of inner class MenuListener
+
+
+
+private static class BubbleAdder implements Runnable {
+
+   private BudaBubbleArea bubble_area;
+   private BudaBubble buda_bubble;
+   private BudaConstraint buda_constraint;
+   private int          bubble_position;
+   
+   BubbleAdder(BudaBubbleArea bba,BudaBubble bb,BudaConstraint bc,int pos) {
+      bubble_area = bba;
+      buda_bubble = bb;
+      buda_constraint = bc;
+      bubble_position = pos;
+    }
+   
+   @Override public void run() {
+      bubble_area.add(buda_bubble,buda_constraint,bubble_position);
+    }
+
+}       // end of inner class AddPackageExplorer
 
 
 
