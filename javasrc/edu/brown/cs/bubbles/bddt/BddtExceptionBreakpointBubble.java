@@ -91,8 +91,7 @@ private void setupPanel()
    pnl.beginLayout();
    pnl.addBannerLabel("Exception Breakpoint Creator");
    pnl.addSeparator();
-   exception_box = pnl.addChoice("EXCEPTION",(new String [] { "Computing List of Exceptions ..." }),null,true,null);
-   exception_box.setEditable(true);
+   exception_box = pnl.addChoice("EXCEPTION",(new String [] { "Computing List of Exceptions ..." }),null,false,null);
    caught_button = pnl.addBoolean("CAUGHT",true,null);
    uncaught_button = pnl.addBoolean("UNCAUGHT",true,null);
    suspendvm_button = pnl.addBoolean("SUSPEND VM",false,null);
@@ -124,7 +123,7 @@ private void setupPanel()
    else if (cmd.equals("APPLY")) {
       createBreakpoint();
     }
-   else if (cmd.equals("ACCEPT")) {
+   else if (cmd.equals("DEFINE")) {
       createBreakpoint();
       setVisible(false);
     }

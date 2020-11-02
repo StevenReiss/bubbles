@@ -740,10 +740,10 @@ private static class CreateConfigAction extends AbstractAction {
       BumpRunModel brm = bc.getRunModel();
       BumpLaunchConfig blc = brm.createLaunchConfiguration(null,config_type);
       if (blc != null) {
-	 blc = blc.save();
-	 BddtLaunchBubble bb = new BddtLaunchBubble(blc);
-	 BudaBubbleArea bba = the_factory.buda_root.getCurrentBubbleArea();
-	 bba.addBubble(bb,null,null,PLACEMENT_NEW|PLACEMENT_USER);
+         blc = blc.save();
+         BddtLaunchBubble bb = new BddtLaunchBubble(blc);
+         BudaBubbleArea bba = the_factory.buda_root.getCurrentBubbleArea();
+         bba.addBubble(bb,null,null,PLACEMENT_NEW|PLACEMENT_USER);
        }
     }
 

@@ -105,8 +105,8 @@ private class ImportFinder extends ASTVisitor {
 
    Set<ITypeBinding> getImports() {
       if (defined_types != null) {
-	 import_types.removeAll(defined_types);
-	 defined_types = null;
+         import_types.removeAll(defined_types);
+         defined_types = null;
        }
       return import_types;
     }
@@ -176,12 +176,12 @@ private class ImportFinder extends ASTVisitor {
       if (t == null) return;
       BedrockPlugin.logD("Check import type: " + t.getQualifiedName());
       if (t.isArray()) {
-	 t = t.getElementType();
+         t = t.getElementType();
        }
       if (t.getErasure() != null) t = t.getErasure();
-
+   
       BedrockPlugin.logD("Check erasure type: " + t.getQualifiedName());
-
+   
       if (t.isTypeVariable()) return;
       else if (t.isLocal()) return;
       else if (t.isNullType()) return;
@@ -191,8 +191,8 @@ private class ImportFinder extends ASTVisitor {
       else if (t.getPackage().equals(package_name)) return;
       else if (t.getPackage().getName().equals("java.lang")) return;
       else {
-	 BedrockPlugin.logD("Add import type: " + t.getQualifiedName());
-	 import_types.add(t);
+         BedrockPlugin.logD("Add import type: " + t.getQualifiedName());
+         import_types.add(t);
        }
     }
 

@@ -230,36 +230,37 @@ private class NameThread extends Thread {
 
    @Override public void run() {
       BedrockPlugin.logD("START NAMES FOR " + name_id);
-
+   
       IvyXmlWriter xw = null;
-
+   
       try {
-	 for (Map.Entry<IJavaElement,Boolean> ent : separate_elements.entrySet()) {
-	    if (xw == null) {
-	       xw = our_plugin.beginMessage("NAMES",bump_id);
-	       xw.field("NID",name_id);
-	     }
-	    boolean cfg = ent.getValue();
-	    BedrockUtil.outputJavaElement(ent.getKey(),file_set,cfg,xw);
-	    if (xw.getLength() <= 0 || xw.getLength() > 1000000) {
-	       our_plugin.finishMessageWait(xw,15000);
-	       // BedrockPlugin.logD("OUTPUT NAMES: " + xw.toString());
-	       xw = null;
-	     }
-	  }
-
-	 if (xw != null) {
-	    our_plugin.finishMessageWait(xw);
-	  }
+         for (Map.Entry<IJavaElement,Boolean> ent : separate_elements.entrySet()) {
+            if (xw == null) {
+               xw = our_plugin.beginMessage("NAMES",bump_id);
+               xw.field("NID",name_id);
+             }
+            boolean cfg = ent.getValue();
+            BedrockUtil.outputJavaElement(ent.getKey(),file_set,cfg,xw);
+            if (xw.getLength() <= 0 || xw.getLength() > 1000000) {
+               our_plugin.finishMessageWait(xw,15000);
+               // BedrockPlugin.logD("OUTPUT NAMES: " + xw.toString());
+               xw = null;
+             }
+          }
+   
+         if (xw != null) {
+            BedrockPlugin.logD("OUTPUT NAMES: " + xw.toString());
+            our_plugin.finishMessageWait(xw);
+          }
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Problem getting names",t);
+         BedrockPlugin.logE("Problem getting names",t);
        }
       finally {
-	 BedrockPlugin.logD("FINISH NAMES FOR " + name_id);
-	 xw = our_plugin.beginMessage("ENDNAMES",bump_id);
-	 xw.field("NID",name_id);
-	 our_plugin.finishMessage(xw);
+         BedrockPlugin.logD("FINISH NAMES FOR " + name_id);
+         xw = our_plugin.beginMessage("ENDNAMES",bump_id);
+         xw.field("NID",name_id);
+         our_plugin.finishMessage(xw);
        }
     }
 

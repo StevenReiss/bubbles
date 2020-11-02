@@ -240,21 +240,21 @@ private class CreationActions implements ActionListener, UndoableEditListener {
       String cmd = evt.getActionCommand();
       if (cmd == null) ;
       else if (cmd.equals("CREATE") || cmd.equals("CREATE PROJECT")) {
-	 if (createProject()) {
-	    JComponent c = (JComponent) evt.getSource();
-	    BudaBubble bb = BudaRoot.findBudaBubble(c);
-	    if (bb != null) bb.setVisible(false);
-	    // possibly bring up project editor dialog here
-	  }
-	 return;
+         if (createProject()) {
+            JComponent c = (JComponent) evt.getSource();
+            BudaBubble bb = BudaRoot.findBudaBubble(c);
+            if (bb != null) bb.setVisible(false);
+            // possibly bring up project editor dialog here
+          }
+         return;
        }
       else if (cmd.equals("Project Name")) {
-	 setProjectDirectory();
+         setProjectDirectory();
        }
       else if (cmd.equals("Project Type")) {
-	 setVisibilities();
+         setVisibilities();
        }
-
+   
       checkStatus();
     }
 
@@ -271,10 +271,10 @@ private class CreationActions implements ActionListener, UndoableEditListener {
       String pnm = project_props.getString(PROJ_PROP_NAME);
       File pdir = null;
       if (pnm != null && pnm.length() > 0 && pnm.matches(NAME_PAT)) {
-	 BoardSetup bs = BoardSetup.getSetup();
-	 File f1 = new File(bs.getDefaultWorkspace());
-	 File f2 = new File(f1,pnm);
-	 if (!f2.exists()) pdir = f2;
+         BoardSetup bs = BoardSetup.getSetup();
+         File f1 = new File(bs.getDefaultWorkspace());
+         File f2 = new File(f1,pnm);
+         if (!f2.exists()) pdir = f2;
        }
       project_props.put(PROJ_PROP_DIRECTORY,pdir);
     }
@@ -525,13 +525,14 @@ private boolean checkFileProperties(File f)
    sdir.mkdirs();
    File opts = new File(sdir,"org.eclipse.jdt.core.prefs");
    BoardProperties props = BoardProperties.getProperties("Bueno");
-   String copts = props.getProperty("Bueno.prop.set.data.1");
+   String copts = props.getProperty("Bueno.problem.set.data.1");
    try (PrintWriter pw = new PrintWriter(new FileWriter(opts))) {
-      if (copts != null) pw.println(copts);
+      pw.println("eclipse.preferences.version=1");
       String v = System.getProperty("java.specification.version");
       pw.println("org.eclipse.jdt.core.compiler.compliance=" + v);
       pw.println("org.eclipse.jdt.core.compiler.source=" + v);
       pw.println("org.eclipse.jdt.core.compiler.codegen.targetPlatform=" + v);
+      if (copts != null) pw.println(copts);
     }
    catch (IOException e) {
       return false;

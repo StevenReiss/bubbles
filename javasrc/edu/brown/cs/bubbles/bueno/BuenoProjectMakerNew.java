@@ -186,7 +186,9 @@ private class NewActions implements ActionListener, UndoableEditListener {
    BuenoProperties bp = new BuenoProperties();
    String projnm = props.getString(PROJ_PROP_NAME);
    bp.put(BuenoKey.KEY_PROJECT,projnm);
-
+   bp.put(BuenoKey.KEY_AUTHOR,System.getProperty("user.name"));
+   
+   String cnm = "Main";
    String pnm = props.getString(PKG_NAME);
    if (pnm != null && pnm.length() > 0) {
       bp.put(BuenoKey.KEY_PACKAGE,pnm);
@@ -199,14 +201,20 @@ private class NewActions implements ActionListener, UndoableEditListener {
 	 BoardLog.logX("BUENO","Problem creating project directory");
 	 return false;
        }
+      String plast = sdir.getName();
+      plast = plast.toLowerCase();
+      plast = plast.substring(0,1).toUpperCase() + plast.substring(1);
+      cnm = plast + "Main";
     }
-
+   
+   bp.put(BuenoKey.KEY_CLASS_NAME,cnm);
+   
    Reader rd = BuenoCreator.findTemplate("scratch",bp);
    if (rd != null) {
       StringBuffer buf = new StringBuffer();
       try {
 	 BuenoCreator.expand(rd,bp,buf);
-	 File f1 = new File(sdir,"Main.java");
+	 File f1 = new File(sdir,cnm + ".java");
 	 FileWriter fw = new FileWriter(f1);
 	 fw.write(buf.toString());
 	 fw.close();

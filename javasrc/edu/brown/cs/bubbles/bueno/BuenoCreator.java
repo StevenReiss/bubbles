@@ -820,6 +820,10 @@ static Reader findTemplate(String id,BuenoProperties props)
    rslt = checkTemplateForProject(ws,id);
    if (rslt != null) return rslt;
    
+   // try user default template next
+   rslt = checkTemplateForProject("DEFAULT",id);
+   if (rslt != null) return rslt;
+   
    // else use default template
    String pnm = "templates/" + id + ".template";
    InputStream ins = BoardProperties.getLibraryFile(pnm);

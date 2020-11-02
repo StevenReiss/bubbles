@@ -134,7 +134,7 @@ static int getErrorCount(Collection<BumpProblem> bpl,BumpProblem base)
        }
     }
    
-   if (pct > 1) ct -= 1;
+   if (pct > 1) ct -= (pct-1);
    
    return ct;
 }

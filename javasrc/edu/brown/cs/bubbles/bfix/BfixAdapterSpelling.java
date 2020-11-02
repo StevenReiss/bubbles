@@ -445,18 +445,18 @@ private static class SpellDoer implements RunnableFix {
       List<BumpProblem> probs = bc.getProblems(for_document.getFile());
       if (!checkProblemPresent(for_problem,probs)) return;
       if (for_corrector.getStartTime() != initial_time) return;
-
+   
       int soff = for_document.mapOffsetToJava(for_problem.getStart());
       int eoff0 = for_document.mapOffsetToJava(for_problem.getEnd());
       if (!checkSafePosition(for_corrector,soff,eoff0)) return;
-
+   
       BoardMetrics.noteCommand("BFIX","SpellingCorrection_" + for_corrector.getBubbleId());
       BoardLog.logD("BFIX","SPELL Making correction " + for_fix.getText() + " for " + for_fix.getOriginalText());
-
+   
       int len = for_fix.getOriginalText().length();
       int eoff = soff+len-1;
       String txt = for_fix.getText();
-
+   
       for_document.replace(soff,eoff-soff+1,txt,false,false);
       BoardMetrics.noteCommand("BFIX", "DoneSpellingCorrection_" + for_corrector.getBubbleId());
     }

@@ -1,6 +1,6 @@
 /********************************************************************************/
 /*										*/
-/*		Main.java							*/
+/*		$(CLASS_NAME).java						*/
 /*										*/
 /*	Default implementation of main						*/
 /*										*/
@@ -10,7 +10,7 @@
 
 $(PACKAGE)
 
-public class Main
+public class $(CLASS_NAME)
 {
 
 
@@ -27,9 +27,9 @@ public static void main(String [] args)
 
 
 
-}	// end of class Main
+}	// end of class $(CLASS_NAME)
 
 
 
 
-/* end of Main.java */
+/* end of $(CLASS_NAME).java */

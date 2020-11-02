@@ -591,18 +591,18 @@ private static class TemplatePanel extends SwingGridPanel implements ActionListe
          target_project = (String) forproject_field.getSelectedItem();
        }
       if (source_field == null || source_field.getSelectedIndex() <= 0) {
-	 String f = file_field.getText();
-	 if (f == null) return;
-	 if (f.length() == 0) return;
-	 File f1 = new File(f);
-	 if (!f1.exists()) f1 = new File(f.trim());
-	 loadTemplates(f1);
+         String f = file_field.getText();
+         if (f == null) return;
+         if (f.length() == 0) return;
+         File f1 = new File(f);
+         if (!f1.exists()) f1 = new File(f.trim());
+         loadTemplates(f1);
        }
       else {
-	 File f1 = BoardSetup.getPropertyBase();
-	 File f2 = new File(f1,"templates");
-	 File f3 = new File(f2,source_field.getSelectedItem().toString());
-	 loadTemplates(f3);
+         File f1 = BoardSetup.getPropertyBase();
+         File f2 = new File(f1,"templates");
+         File f3 = new File(f2,source_field.getSelectedItem().toString());
+         loadTemplates(f3);
        }
     }
 
@@ -620,33 +620,33 @@ private static class TemplatePanel extends SwingGridPanel implements ActionListe
       File t2 = new File(t1,target_project);
       t2.mkdirs();
       if (f.isDirectory()) {
-	 for (File f1 : f.listFiles()) {
-	    if (f1.getName().endsWith(".template")) {
-	       File t3 = new File(t2,f1.getName());
-	       try {
-		  IvyFile.copyFile(f1,t3);
-		}
-	       catch (IOException e) { }
-	     }
-	  }
+         for (File f1 : f.listFiles()) {
+            if (f1.getName().endsWith(".template")) {
+               File t3 = new File(t2,f1.getName());
+               try {
+                  IvyFile.copyFile(f1,t3);
+                }
+               catch (IOException e) { }
+             }
+          }
        }
       else if (f.getName().endsWith(".zip") || f.getName().endsWith(".jar")) {
-	 try {
-	    ZipFile zf = new ZipFile(f);
-	    for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); ) {
-	       ZipEntry ze = e.nextElement();
-	       String nm = ze.getName();
-	       if (nm.endsWith(".template")) {
-		  File t3 = new File(t2,nm);
-		  InputStream ins = zf.getInputStream(ze);
-		  IvyFile.copyFile(ins,t3);
-		}
-	     }
-	    zf.close();
-	  }
-	 catch (IOException e) { }
+         try {
+            ZipFile zf = new ZipFile(f);
+            for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); ) {
+               ZipEntry ze = e.nextElement();
+               String nm = ze.getName();
+               if (nm.endsWith(".template")) {
+                  File t3 = new File(t2,nm);
+                  InputStream ins = zf.getInputStream(ze);
+                  IvyFile.copyFile(ins,t3);
+                }
+             }
+            zf.close();
+          }
+         catch (IOException e) { }
        }
-
+   
     }
 
 }	// end of inner class TemplatePanel

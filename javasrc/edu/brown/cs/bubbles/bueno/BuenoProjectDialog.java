@@ -819,46 +819,46 @@ private class ProblemPanel extends SwingGridPanel implements ActionListener {
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
       if (cmd.equals("Option Set")) {
-	 JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
-	 String nopt = (String) cbx.getSelectedItem();
-	 if (nopt == null || nopt.equals(current_optionset)) return;
-	 current_optionset = nopt;
-	 Map<String,String> oval = option_sets.get(nopt);
-	 for (Map.Entry<String,String> ent : oval.entrySet()) {
-	    option_elements.put(ent.getKey(),ent.getValue());
-	  }
-	 needs_update = true;
+         JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
+         String nopt = (String) cbx.getSelectedItem();
+         if (nopt == null || nopt.equals(current_optionset)) return;
+         current_optionset = nopt;
+         Map<String,String> oval = option_sets.get(nopt);
+         for (Map.Entry<String,String> ent : oval.entrySet()) {
+            option_elements.put(ent.getKey(),ent.getValue());
+          }
+         needs_update = true;
        }
       else if (cmd.equals("Warnings as Errors")) {
-	 JCheckBox cbx = (JCheckBox) evt.getSource();
-	 boolean fg = cbx.isSelected();
-	 if (fg == optional_error) return;
-	 optional_error = fg;
-	 needs_update = true;
+         JCheckBox cbx = (JCheckBox) evt.getSource();
+         boolean fg = cbx.isSelected();
+         if (fg == optional_error) return;
+         optional_error = fg;
+         needs_update = true;
        }
       else if (cmd.equals("Java Source Version")) {
-	 JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
-	 String nval = (String) cbx.getSelectedItem();
-	 String oval = option_elements.get(SOURCE_OPTION);
-	 if (nval == null || nval.equals(oval)) return;
-	 option_elements.put(SOURCE_OPTION,nval);
-	 needs_update = true;
+         JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
+         String nval = (String) cbx.getSelectedItem();
+         String oval = option_elements.get(SOURCE_OPTION);
+         if (nval == null || nval.equals(oval)) return;
+         option_elements.put(SOURCE_OPTION,nval);
+         needs_update = true;
        }
       else if (cmd.equals("Java Target Version")) {
-	 JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
-	 String nval = (String) cbx.getSelectedItem();
-	 String oval = option_elements.get(TARGET_OPTION);
-	 if (nval == null || nval.equals(oval)) return;
-	 option_elements.put(TARGET_OPTION,nval);
-	 needs_update = true;
+         JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
+         String nval = (String) cbx.getSelectedItem();
+         String oval = option_elements.get(TARGET_OPTION);
+         if (nval == null || nval.equals(oval)) return;
+         option_elements.put(TARGET_OPTION,nval);
+         needs_update = true;
        }
       else if (cmd.equals("Java Compliance Version")) {
-	 JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
-	 String nval = (String) cbx.getSelectedItem();
-	 String oval = option_elements.get(COMPLIANCE_OPTION);
-	 if (nval == null || nval.equals(oval)) return;
-	 option_elements.put(COMPLIANCE_OPTION,nval);
-	 needs_update = true;
+         JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
+         String nval = (String) cbx.getSelectedItem();
+         String oval = option_elements.get(COMPLIANCE_OPTION);
+         if (nval == null || nval.equals(oval)) return;
+         option_elements.put(COMPLIANCE_OPTION,nval);
+         needs_update = true;
        }
       else BoardLog.logE("BUENO","Unknown problem panel command " + cmd);
     }
@@ -983,17 +983,17 @@ private class ContractPanel extends SwingGridPanel implements ActionListener {
       cofoja_button.setEnabled(!option_elements.containsKey(COFOJA_OPTION));
       cofoja_button.addActionListener(this);
       addLabellessRawComponent("COFOJA",cofoja_button,true,false);
-
+   
       junit_button = new JButton("Enable JUNIT Testing");
       junit_button.setEnabled(!option_elements.containsKey(JUNIT_OPTION));
       junit_button.addActionListener(this);
       addLabellessRawComponent("JUNIT",junit_button,true,false);
-
+   
       annot_button = new JButton("Enable Type Annotations");
       annot_button.setEnabled(!option_elements.containsKey(TYPE_ANNOT_OPTION));
       annot_button.addActionListener(this);
       addLabellessRawComponent("ANNOT",annot_button,true,false);
-
+   
       assert_button = new JCheckBox("Enable Assertions");
       assert_button.setSelected(option_elements.containsKey(ASSERT_OPTION));
       assert_button.addActionListener(this);

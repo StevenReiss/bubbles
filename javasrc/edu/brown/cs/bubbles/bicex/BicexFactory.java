@@ -1010,17 +1010,17 @@ private static class TestPopupHandler implements BattPopupHandler {
 
    @Override public void handlePopupMenu(BattTest test,BudaBubble bbl,JPopupMenu menu) {
       if (test == null) return;
-
+   
       // don't offer to show the test if there are compiler errors
       BumpClient bc = BumpClient.getBump();
       switch (bc.getErrorType()) {
-	 case FATAL :
-	 case ERROR :
-	    return;
-	 default :
-	    break;
+         case FATAL :
+         case ERROR :
+            return;
+         default :
+            break;
        }
-
+   
       menu.add(new TestRunnerAction(bbl,test));
     }
 

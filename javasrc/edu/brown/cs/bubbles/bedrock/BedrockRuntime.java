@@ -266,6 +266,7 @@ void getNewRunConfiguration(String proj,String name,String clone,String typ,IvyX
       config.removeAttribute(BEDROCK_LAUNCH_ORIGID_PROP);
       if (cln == null) {
 	 config.setAttribute("org.eclipse.jdt.launching.STOP_IN_MAIN",true);
+         config.setAttribute("org.eclipse.jdt.launching.VM_ARGUMENTS","-ea");
        }
       working_configs.add(config);
       BedrockUtil.outputLaunch(config,xw);
