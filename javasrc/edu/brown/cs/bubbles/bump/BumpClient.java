@@ -2384,7 +2384,7 @@ boolean addLineBreakpoint(String proj,File file,String cls,int line,
  **/
 
 boolean addExceptionBreakpoint(String proj,String cls,boolean caught,
-					 boolean uncaught,boolean suspendvm)
+					 boolean uncaught,boolean suspendvm,boolean subclass)
 {
    waitForIDE();
 
@@ -2394,6 +2394,7 @@ boolean addExceptionBreakpoint(String proj,String cls,boolean caught,
    q += " CAUGHT='" + Boolean.toString(caught) + "'";
    q += " UNCAUGHT='" + Boolean.toString(uncaught) + "'";
    if (suspendvm) q += " SUSPENDVM='T'";
+   q += " SUBCLASS='" + Boolean.toString(subclass) + "'";
 
    return getStatusReply("ADDEXCEPTIONBREAKPOINT",proj,q,null,0);
 }

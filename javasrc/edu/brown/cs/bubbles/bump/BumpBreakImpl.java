@@ -121,6 +121,7 @@ private void setProperties(Element d)
    else if (typ.equals("EXCEPTION")) {
       break_props.put("CAUGHT",Boolean.valueOf(IvyXml.getAttrBool(d,"ISCAUGHT")));
       break_props.put("UNCAUGHT",Boolean.valueOf(IvyXml.getAttrBool(d,"ISUNCAUGHT")));
+      break_props.put("SUBCLASSES",IvyXml.getAttrBool(d,"ISSUBCLASSES",true));
       break_props.put("EXCEPTION",IvyXml.getAttrString(d,"EXCEPTION"));
       StringBuffer buf = new StringBuffer();
       int ct = 0;

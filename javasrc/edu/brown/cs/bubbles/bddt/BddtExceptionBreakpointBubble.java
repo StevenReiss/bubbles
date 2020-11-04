@@ -61,6 +61,7 @@ private JComboBox<String>	exception_box;
 private JCheckBox		caught_button;
 private JCheckBox		uncaught_button;
 private JCheckBox		suspendvm_button;
+private JCheckBox               subclass_button;
 
 
 
@@ -95,6 +96,7 @@ private void setupPanel()
    caught_button = pnl.addBoolean("CAUGHT",true,null);
    uncaught_button = pnl.addBoolean("UNCAUGHT",true,null);
    suspendvm_button = pnl.addBoolean("SUSPEND VM",false,null);
+   subclass_button = pnl.addBoolean("INCLUDE SUBCLASSES",true,null);
 
    pnl.addBottomButton("CANCEL","CANCEL",this);
    pnl.addBottomButton("APPLY","APPLY",this);
@@ -145,10 +147,10 @@ private void createBreakpoint()
    boolean suspendvm = suspendvm_button.isSelected();
    BumpBreakMode bmd = BumpBreakMode.DEFAULT;
    if (suspendvm) bmd = BumpBreakMode.SUSPEND_VM;
-
+   boolean subclass = subclass_button.isSelected();
 
    BumpClient bc = BumpClient.getBump();
-   bc.getBreakModel().addExceptionBreakpoint(null,cls,md,bmd);
+   bc.getBreakModel().addExceptionBreakpoint(null,cls,md,bmd,subclass);
 }
 
 

@@ -172,7 +172,7 @@ private void scanArgs(String [] args)
    boolean havecls = false;
    boolean useall = false;
    ExecutorService service = Executors.newFixedThreadPool(8);
-   
+
    for (int i = 0; i < args.length; ++i) {
       if (!havecls && args[i].startsWith("-")) {
 	 if (args[i].startsWith("-l")) {                                // -list
@@ -218,31 +218,31 @@ private void scanArgs(String [] args)
     }
    catch (ClassNotFoundException e) { }
    catch (Throwable t) {
-      System.err.println("BATT: Problem with agent: " + t);
+      System.err.println("BATTJ: Problem with agent: " + t);
       t.printStackTrace();
     }
 
    for (String cnm : tststr) {
-      System.err.println("BATT: Work on " + cnm);
+      System.err.println("BATTJ: Work on " + cnm);
       System.err.flush();
       try {
 	 // TODO: if this can be done without actually calling the static initializer
 	 // it would be better
-         // An infinite loop or problem in the static initializer creates problems here
-         Class<?> c = null;
+	 // An infinite loop or problem in the static initializer creates problems here
+	 Class<?> c = null;
 	 // c = Class.forName(cnm);
-         Future<Class<?>> future = service.submit(new FindClass(cnm));
-         try {
-            c = future.get(2000,TimeUnit.MILLISECONDS);
-          }
-         catch (ExecutionException e) {
-            throw e.getCause();
-          }
-         catch (TimeoutException e) {
-            // System.err.println("Initialization problem with " + cnm);
-           future.cancel(true);
-          }
-         if (c == null) continue;
+	 Future<Class<?>> future = service.submit(new FindClass(cnm));
+	 try {
+	    c = future.get(2000,TimeUnit.MILLISECONDS);
+	  }
+	 catch (ExecutionException e) {
+	    throw e.getCause();
+	  }
+	 catch (TimeoutException e) {
+	    // System.err.println("Initialization problem with " + cnm);
+	   future.cancel(true);
+	  }
+	 if (c == null) continue;
 	 TestClass tcls = new TestClass(c);
 	 tcls.getOnlyConstructor();
 	 boolean valid = tcls.isPublic();
@@ -252,7 +252,7 @@ private void scanArgs(String [] args)
 	  }
        }
       catch (AssertionError e) {
-	 // System.err.println("Assertion error: " + e);
+	 System.err.println("Assertion error: " + e);
        }
       catch (IllegalArgumentException e) {
 	 // System.err.println("Arg exception: " + e);
@@ -260,21 +260,22 @@ private void scanArgs(String [] args)
        }
       catch (ExceptionInInitializerError e) {
 	 // System.err.println("Init exception: " + e);
+	 // e.printStackTrace();
        }
       // catch (NoSuchMethodException e) {
 	 // System.err.println("No construtor: " + e);
        // }
       catch (NoClassDefFoundError e) {
-	 System.err.println("BATT: Class " + cnm + " not found");
+	 System.err.println("BATTJ: Class " + cnm + " not found");
        }
       catch (ClassNotFoundException e) {
-	 System.err.println("BATT: Class " + cnm + " not found");
+	 System.err.println("BATTJ: Class " + cnm + " not found");
        }
       catch (Throwable t) {
-	 System.err.println("BATT: Class " + cnm + " can't be loaded: " + t);
+	 System.err.println("BATTJ: Class " + cnm + " can't be loaded: " + t);
        }
 
-      System.err.println("DONE: " + cnm);
+      System.err.println("BATTJ: DONE: " + cnm);
     }
 
    class_set = new Class<?>[clss.size()];
@@ -285,7 +286,7 @@ private void scanArgs(String [] args)
 	 result_stream = new FileOutputStream(result_file);
        }
       catch (IOException e) {
-	 System.err.println("BATT: Couldn't open output file: " + e);
+	 System.err.println("BATTJ: Couldn't open output file: " + e);
 	 System.exit(1);
        }
     }
@@ -293,22 +294,22 @@ private void scanArgs(String [] args)
 
 
 private static class FindClass implements Callable<Class<?>> {
-   
+
    private String class_name;
-   
+
    FindClass(String nm) {
       class_name = nm;
     }
-   
+
    @Override public Class<?> call() {
       try {
-         return Class.forName(class_name);
+	 return Class.forName(class_name);
        }
       catch (Throwable t) {
-         throw new Error(t);
+	 throw new Error(t);
        }
     }
-   
+
 }
 
 
@@ -334,7 +335,7 @@ private void setupSocket(String ph)
       result_stream = s.getOutputStream();
     }
    catch (IOException e) {
-      System.err.println("BATT: Problem connecting to socket " + port + " @" + host + ": " + e);
+      System.err.println("BATTJ: Problem connecting to socket " + port + " @" + host + ": " + e);
       System.exit(1);
     }
 }
@@ -364,7 +365,7 @@ private static String fixHost(String h)
 
 private void badArgs()
 {
-   System.err.println("BATT: battjunit [-list] [-o output] class...");
+   System.err.println("BATTJ: battjunit [-list] [-o output] class...");
 }
 
 
@@ -439,7 +440,7 @@ synchronized JunitTest addTestCase(Description d,JunitTestStatus sts)
    JunitTest btc = test_cases.get(d);
    if (btc == null) {
       btc = new JunitTest(d);
-      System.err.println("BATT: Create new test case for " + d + " " + test_cases.size());
+      System.err.println("BATTJ: Create new test case for " + d + " " + test_cases.size());
       test_cases.put(d,btc);
     }
    btc.setStatus(sts);
@@ -455,7 +456,7 @@ synchronized JunitTest addTestCase(Description d,JunitTestStatus sts)
 
 synchronized void removeTestCase(Description d)
 {
-   System.err.println("BATT: Remove test case " + d);
+   System.err.println("BATTJ: Remove test case " + d);
 
    test_cases.remove(d);
 }
@@ -487,7 +488,7 @@ void noteStart(Description d)
     }
    catch (ClassNotFoundException e) { }
    catch (Throwable t) {
-      System.err.println("BATT: Problem with agent: " + t);
+      System.err.println("BATTJ: Problem with agent: " + t);
       t.printStackTrace();
     }
 }
@@ -503,7 +504,7 @@ void noteFinish(Description d)
     }
    catch (ClassNotFoundException e) { }
    catch (Throwable t) {
-      System.err.println("BATT: Problem with agent: " + t);
+      System.err.println("BATTJ: Problem with agent: " + t);
       t.printStackTrace();
     }
 }
@@ -519,7 +520,7 @@ void noteDone()
     }
    catch (ClassNotFoundException e) { }
    catch (Throwable t) {
-      System.err.println("BATT: Problem with agent: " + t);
+      System.err.println("BATTJ: Problem with agent: " + t);
       t.printStackTrace();
     }
 }
@@ -541,10 +542,10 @@ private void outputSingleTest(JunitTest jt)
       xw = xof.createXMLStreamWriter(result_stream);
       outputTestCase(jt,xw);
       xw.flush();
-      System.err.println("BATT: Finish writing test case " + jt.getDescription() + " " + jt.getStatus());
+      System.err.println("BATTJ: Finish writing test case " + jt.getDescription() + " " + jt.getStatus());
     }
    catch (XMLStreamException e) {
-      System.err.println("BATT: Problem writing output file " + result_file + ": " + e);
+      System.err.println("BATTJ: Problem writing output file " + result_file + ": " + e);
       System.exit(1);
     }
 }
@@ -634,24 +635,24 @@ private class ListFilter extends Filter {
    @Override public String describe()			{ return "List test cases"; }
 
    @Override public boolean shouldRun(Description d) {
-      System.err.println("BATT: Consider test: " + d.isTest() + " " + d.isEmpty() + " " + d.isSuite() + " " +
-        		    d.getClassName() + " " + d.getMethodName() + " " +
-        		    d.getChildren().size() + " " + d.getDisplayName() + " " + d);
+      System.err.println("BATTJ: Consider test: " + d.isTest() + " " + d.isEmpty() + " " + d.isSuite() + " " +
+			    d.getClassName() + " " + d.getMethodName() + " " +
+			    d.getChildren().size() + " " + d.getDisplayName() + " " + d);
       // if (d.isSuite() && d.getClassName().contains("$")) return false;
-   
+
       if (d.isSuite()) return true;
       if (!d.isTest()) return false;
       if (d.getMethodName() != null) {
-         if (d.getClassName().startsWith("junit.") || d.getClassName().startsWith("org.junit."))
-            return false;
-         if (Modifier.isAbstract(d.getTestClass().getModifiers())) return false;
-         JunitTest jt = addTestCase(d,STATUS_LISTING);
-         outputSingleTest(jt);
-         return false;
+	 if (d.getClassName().startsWith("junit.") || d.getClassName().startsWith("org.junit."))
+	    return false;
+	 if (Modifier.isAbstract(d.getTestClass().getModifiers())) return false;
+	 JunitTest jt = addTestCase(d,STATUS_LISTING);
+	 outputSingleTest(jt);
+	 return false;
        }
-   
-      System.err.println("BATT: Unknown test: " + d.isTest() + " " + d.isEmpty() + " " +
-        		    d.getClassName() + " " + d.isSuite() + " " + d.getChildren().size() + " " + d);
+
+      System.err.println("BATTJ: Unknown test: " + d.isTest() + " " + d.isEmpty() + " " +
+			    d.getClassName() + " " + d.isSuite() + " " + d.getChildren().size() + " " + d);
       setTestStatus(d,STATUS_UNKNOWN);
       // might want to check classes to see if they are relevant here as well
       return false;
@@ -673,7 +674,7 @@ private class TestListener extends RunListener {
    TestListener() { }
 
    @Override public void testStarted(Description d) {
-      System.err.println("BATT: START " + d);
+      System.err.println("BATTJ: START " + d);
       JunitTestStatus bts = getTestStatus(d);
       JunitTest jt = addTestCase(d,STATUS_RUNNING);
       noteStart(d);
@@ -693,11 +694,11 @@ private class TestListener extends RunListener {
     }
 
    @Override public void testFinished(Description d) {
-      System.err.println("BATT: FINISH " + d + " " + test_cases.containsKey(d));
+      System.err.println("BATTJ: FINISH " + d + " " + test_cases.containsKey(d));
 
       JunitTest jt = test_cases.get(d);
       if (jt == null) {
-	 System.err.println("BATT: No test case found");
+	 System.err.println("BATTJ: No test case found");
 	 return;
        }
       noteFinish(d);
@@ -726,6 +727,10 @@ private class TestListener extends RunListener {
     }
 
    @Override public void testFailure(Failure f) {
+      System.err.println("BATTJ: Test failure: " + f);
+      // Throwable t = f.getException();
+      // if (t != null) t.printStackTrace();
+
       if (f.getMessage() != null && bad_messages.contains(f.getMessage())) {
 	 removeTestCase(f.getDescription());
        }
@@ -736,7 +741,7 @@ private class TestListener extends RunListener {
 	 removeTestCase(f.getDescription());
        }
       else {
-	 System.err.println("BATT: FAIL " + f.getTestHeader() + " " + f.getDescription() + " " + f.getException() + " " + f.getMessage() + "\nTRACE: " + f.getTrace());
+	 System.err.println("BATTJ: FAIL " + f.getTestHeader() + " " + f.getDescription() + " " + f.getException() + " " + f.getMessage() + "\nTRACE: " + f.getTrace());
 	 addTestCase(f.getDescription(),new JunitTestStatus(f));
        }
 

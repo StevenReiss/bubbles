@@ -617,10 +617,12 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrBool(xml,"TRACE",false));
 	 break;
       case "ADDEXCEPTIONBREAKPOINT" :
-	 bedrock_breakpoint.setExceptionBreakpoint(proj,IvyXml.getAttrString(xml,"CLASS"), IvyXml.getAttrBool(xml,"CAUGHT",false),
+	 bedrock_breakpoint.setExceptionBreakpoint(proj,IvyXml.getAttrString(xml,"CLASS"), 
+               IvyXml.getAttrBool(xml,"CAUGHT",false),
 	       IvyXml.getAttrBool(xml,"UNCAUGHT",true),
 	       IvyXml.getAttrBool(xml,"CHECKED",false),
-	       IvyXml.getAttrBool(xml,"SUSPENDVM",false));
+	       IvyXml.getAttrBool(xml,"SUSPENDVM",false),
+               IvyXml.getAttrBool(xml,"SUBCLASS",true));
 	 break;
       case "EDITBREAKPOINT" :
 	 bedrock_breakpoint.editBreakpoint(IvyXml.getAttrInt(xml,"ID"),

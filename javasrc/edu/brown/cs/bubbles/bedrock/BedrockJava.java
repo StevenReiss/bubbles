@@ -230,37 +230,39 @@ private class NameThread extends Thread {
 
    @Override public void run() {
       BedrockPlugin.logD("START NAMES FOR " + name_id);
-   
+
       IvyXmlWriter xw = null;
-   
+
       try {
-         for (Map.Entry<IJavaElement,Boolean> ent : separate_elements.entrySet()) {
-            if (xw == null) {
-               xw = our_plugin.beginMessage("NAMES",bump_id);
-               xw.field("NID",name_id);
-             }
-            boolean cfg = ent.getValue();
-            BedrockUtil.outputJavaElement(ent.getKey(),file_set,cfg,xw);
-            if (xw.getLength() <= 0 || xw.getLength() > 1000000) {
-               our_plugin.finishMessageWait(xw,15000);
-               // BedrockPlugin.logD("OUTPUT NAMES: " + xw.toString());
-               xw = null;
-             }
-          }
-   
-         if (xw != null) {
-            BedrockPlugin.logD("OUTPUT NAMES: " + xw.toString());
-            our_plugin.finishMessageWait(xw);
-          }
+	 for (Map.Entry<IJavaElement,Boolean> ent : separate_elements.entrySet()) {
+	    if (xw == null) {
+	       xw = our_plugin.beginMessage("NAMES",bump_id);
+	       xw.field("NID",name_id);
+	     }
+	    boolean cfg = ent.getValue();
+	    BedrockUtil.outputJavaElement(ent.getKey(),file_set,cfg,xw);
+	    if (xw.getLength() <= 0 || xw.getLength() > 1000000) {
+	       BedrockPlugin.logD("SEND NAMES " + xw.getLength());
+	       String sts = our_plugin.finishMessageWait(xw,60000);
+	       BedrockPlugin.logD("NAME STATUS: " + sts);
+	       xw = null;
+	     }
+	  }
+
+	 if (xw != null) {
+	    BedrockPlugin.logD("SEND NAMES " + xw.getLength());
+	    String sts = our_plugin.finishMessageWait(xw);
+	    BedrockPlugin.logD("NAME STATUS: " + sts);
+	  }
        }
       catch (Throwable t) {
-         BedrockPlugin.logE("Problem getting names",t);
+	 BedrockPlugin.logE("Problem getting names",t);
        }
       finally {
-         BedrockPlugin.logD("FINISH NAMES FOR " + name_id);
-         xw = our_plugin.beginMessage("ENDNAMES",bump_id);
-         xw.field("NID",name_id);
-         our_plugin.finishMessage(xw);
+	 BedrockPlugin.logD("FINISH NAMES FOR " + name_id);
+	 xw = our_plugin.beginMessage("ENDNAMES",bump_id);
+	 xw.field("NID",name_id);
+	 our_plugin.finishMessage(xw);
        }
     }
 
@@ -531,13 +533,13 @@ private static class ClassFilter implements FindFilter {
    ClassFilter(IJavaElement [] elts) {
       base_types = new HashSet<>();
       for (IJavaElement je : elts) {
-         if (je instanceof IMember) {
-            IMember im = (IMember) je;
-            IType ty = im.getDeclaringType();
-            String nm = ty.getFullyQualifiedName().replace('$','.');
-            // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
-            base_types.add(nm);
-          }
+	 if (je instanceof IMember) {
+	    IMember im = (IMember) je;
+	    IType ty = im.getDeclaringType();
+	    String nm = ty.getFullyQualifiedName().replace('$','.');
+	    // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
+	    base_types.add(nm);
+	  }
        }
     }
 
@@ -845,11 +847,11 @@ private class SearchHandler extends TextSearchRequestor {
 
    private IJavaElement getElement(IFile r,int off,int len) {
       for (ICompilationUnit icu : base_units) {
-         IResource ir = icu.getResource();
-         if (ir == null) return null;
-         if (ir.equals(r)) {
-            return findInnerElement(icu,off,len);
-          }
+	 IResource ir = icu.getResource();
+	 if (ir == null) return null;
+	 if (ir.equals(r)) {
+	    return findInnerElement(icu,off,len);
+	  }
        }
       return null;
     }
@@ -858,27 +860,27 @@ private class SearchHandler extends TextSearchRequestor {
       if (!(elt instanceof ISourceReference)) return null;
       ISourceReference sref = (ISourceReference) elt;
       try {
-         ISourceRange rng = sref.getSourceRange();
-         if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
+	 ISourceRange rng = sref.getSourceRange();
+	 if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
        }
       catch (JavaModelException ex) {
-         BedrockPlugin.logE("Problem getting range: " + ex);
-         return null;
+	 BedrockPlugin.logE("Problem getting range: " + ex);
+	 return null;
        }
-   
+
       if (!(elt instanceof IParent)) return elt;
-   
+
       IParent par = (IParent) elt;
       try {
-         for (IJavaElement je : par.getChildren()) {
-            IJavaElement fe = findInnerElement(je,off,len);
-            if (fe != null) return fe;
-          }
+	 for (IJavaElement je : par.getChildren()) {
+	    IJavaElement fe = findInnerElement(je,off,len);
+	    if (fe != null) return fe;
+	  }
        }
       catch (JavaModelException ex) {
-         BedrockPlugin.logE("Problem getting children: " + ex);
+	 BedrockPlugin.logE("Problem getting children: " + ex);
        }
-   
+
       return elt;
     }
 

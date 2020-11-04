@@ -292,7 +292,7 @@ void setLineBreakpoint(String proj,String bid,String filename,String cls,int lin
 
 
 void setExceptionBreakpoint(String proj,String cls,boolean ct,boolean uct,boolean chk,
-			       boolean suspvm) throws BedrockException
+			       boolean suspvm,boolean subcls) throws BedrockException
 {
    if (cls == null) throw new BedrockException("Bad exception breakpoint parameters");
 
@@ -303,6 +303,7 @@ void setExceptionBreakpoint(String proj,String cls,boolean ct,boolean uct,boolea
       IJavaBreakpoint bp = JDIDebugModel.createExceptionBreakpoint(root,cls,ct,uct,chk,true,null);
       if (suspvm) bp.setSuspendPolicy(IJavaBreakpoint.SUSPEND_VM);
       else bp.setSuspendPolicy(IJavaBreakpoint.SUSPEND_THREAD);
+      bp.getMarker().setAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",subcls);
       bm.addBreakpoint(bp);
     }
    catch (CoreException e) {
@@ -466,6 +467,15 @@ private void setBreakProperty(IBreakpoint bp,String p,String v) throws BedrockEx
 	    String [] inf = v.split(",");
 	    eb.setExclusionFilters(inf);
 	  }
+       }
+      else if (p.equals("SUBCLASSES")) {
+         if (bp instanceof IJavaExceptionBreakpoint) {
+            IJavaExceptionBreakpoint eb = (IJavaExceptionBreakpoint) bp;
+            boolean v0 = true;
+            if (v != null) v0 = Boolean.parseBoolean(v);
+            // eb.setSuspendOnSubclasses(v0);
+            eb.getMarker().setAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",v0);
+          }
        }
       // TODO: handle other properties
     }

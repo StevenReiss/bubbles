@@ -456,7 +456,6 @@ static void outputBreakpoint(IBreakpoint xbp,IvyXmlWriter xw)
       xw.field("REGISTERED",bp.isRegistered());
 
       if (mk != null && mk.exists()) {
-	
 	 if (bp.getHitCount() >= 0) xw.field("HITCOUNT",bp.getHitCount());
 	 if (bp.getSuspendPolicy() == IJavaBreakpoint.SUSPEND_THREAD) xw.field("SUSPEND","THREAD");
 	 else xw.field("SUSPEND","VM");
@@ -495,7 +494,13 @@ static void outputBreakpoint(IBreakpoint xbp,IvyXmlWriter xw)
 	    xw.field("ISCHECKED",eb.isChecked());
 	    xw.field("ISUNCAUGHT",eb.isUncaught());
 	    xw.field("EXCEPTION",eb.getExceptionTypeName());
-	    for (String ef : eb.getExclusionFilters()) {
+            Object val = eb.getMarker().getAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses");
+            if (val != null) xw.field("ISSUBCLASSES",val);
+            else {
+               eb.getMarker().getAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",true);
+               xw.field("ISSUBCLASSES",true);
+             }
+            for (String ef : eb.getExclusionFilters()) {
 	       xw.textElement("EXCLUDE",ef);
 	     }
 	    for (String ef : eb.getInclusionFilters()) {

@@ -2068,49 +2068,57 @@ private class StepUserFilter implements BumpThreadFilter {
       if (!bt.getThreadState().isStopped()) return evt;
       BumpThreadStack stk = bt.getStack();
       if (stk == null || stk.getNumFrames() == 0 || initial_stack == null || stk.getNumFrames() < initial_stack.getNumFrames()) {
-	 removeThreadFilter(bt,this);
-	 return evt;
+         removeThreadFilter(bt,this);
+         return evt;
        }
       BumpStackFrame frm = stk.getFrame(0);
       BumpStackFrame frm0 = initial_stack.getFrame(0);
-
+   
       BoardLog.logD("BUMP","STEP FILTER " + frm.getMethod());
-
+   
       if (stk.getNumFrames() == initial_stack.getNumFrames()) {
-	 if (frm.getMethod().equals(frm0.getMethod()) &&
-		(frm.getLineNumber() == frm0.getLineNumber() || frm.getLineNumber() == 1) &&
-		frm.getClass().equals(frm0.getClass())) {
-	    bump_client.stepInto(bt);
-	    return null;
-	  }
-	 removeThreadFilter(bt,this);
-	 return evt;
+         if (frm.getMethod().equals(frm0.getMethod()) &&
+        	(frm.getLineNumber() == frm0.getLineNumber() || frm.getLineNumber() == 1) &&
+        	frm.getClass().equals(frm0.getClass())) {
+            bump_client.stepInto(bt);
+            return null;
+          }
+         removeThreadFilter(bt,this);
+         return evt;
        }
-
+   
       File f = frm.getFile();
       if (f != null) {
-	 boolean ex = f.exists();
-	 if (BoardSetup.getSetup().getRunMode() == BoardSetup.RunMode.CLIENT) ex = true;
-	 if (ex && frm.getLineNumber() > 1 && !isTempFile(f) && !isIgnore(frm)) {
-	    String mnm = frm.getMethod();
-	    int idx = mnm.lastIndexOf(".");
-	    if (idx >= 0) mnm = mnm.substring(idx+1);
-	    if (!mnm.contains("$") || mnm.startsWith("lambda$")) {
-	       removeThreadFilter(bt,this);
-	       return evt;
-	     }
-	  }
+         boolean ex = f.exists();
+         if (BoardSetup.getSetup().getRunMode() == BoardSetup.RunMode.CLIENT) ex = true;
+         if (ex && frm.getLineNumber() > 1 && !isTempFile(f) && !isIgnore(frm)) {
+            String mnm = frm.getMethod();
+            int idx = mnm.lastIndexOf(".");
+            if (idx >= 0) mnm = mnm.substring(idx+1);
+            if (!mnm.contains("$") || mnm.startsWith("lambda$")) {
+               removeThreadFilter(bt,this);
+               return evt;
+             }
+          }
        }
       if (bt.getThreadDetails() == BumpThreadStateDetail.BREAKPOINT) {
-	 removeThreadFilter(bt,this);
-	 return evt;
+         removeThreadFilter(bt,this);
+         return evt;
        }
-
-      BoardLog.logD("BUMP","USER_STEP " + frm.getMethod() + " " + stk.getNumFrames() + " " +
-		       initial_stack.getNumFrames() + " " + frm0.getMethod() + " " +
-		       frm.getLineNumber() + " " + frm0.getLineNumber() + " " +
-		       frm.getFrameClass() + " " + frm0.getFrameClass());
-
+   
+      if (frm0 != null) {
+         BoardLog.logD("BUMP","USER_STEP " + frm.getMethod() + " " + stk.getNumFrames() + " " +
+               initial_stack.getNumFrames() + " " + frm0.getMethod() + " " +
+               frm.getLineNumber() + " " + frm0.getLineNumber() + " " +
+               frm.getFrameClass() + " " + frm0.getFrameClass());
+       }
+      else {
+         BoardLog.logD("BUMP","USER_STEP_NOPREV " + frm.getMethod() + " " + stk.getNumFrames() + " " +
+               initial_stack.getNumFrames() + " " + 
+               frm.getLineNumber() + " " + 
+               frm.getFrameClass());
+       }
+      
       if (frm.getFrameClass().startsWith("java.lang.invoke")) bump_client.stepInto(bt);
       else if (frm.getMethod().contains("access$")) bump_client.stepInto(bt);
       else bump_client.stepReturn(bt);

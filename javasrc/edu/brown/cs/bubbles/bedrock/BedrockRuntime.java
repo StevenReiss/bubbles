@@ -266,7 +266,7 @@ void getNewRunConfiguration(String proj,String name,String clone,String typ,IvyX
       config.removeAttribute(BEDROCK_LAUNCH_ORIGID_PROP);
       if (cln == null) {
 	 config.setAttribute("org.eclipse.jdt.launching.STOP_IN_MAIN",true);
-         config.setAttribute("org.eclipse.jdt.launching.VM_ARGUMENTS","-ea");
+	 config.setAttribute("org.eclipse.jdt.launching.VM_ARGUMENTS","-ea");
        }
       working_configs.add(config);
       BedrockUtil.outputLaunch(config,xw);
@@ -816,7 +816,7 @@ void getVariableValue(String tname,String frid,String vname,int lvls,int arrayma
 		  args[0] = (IJavaValue) val;
 		  String tsg = "(Ljava/lang/Object;)I";
 		  try {
-                     val = varEval(systemtype,"identityHashCode",tsg,args,jthrd);
+		     val = varEval(systemtype,"identityHashCode",tsg,args,jthrd);
 		   }
 		  catch (Throwable t) {
 		     BedrockPlugin.logE("Problem getting system hash code",t);
@@ -874,11 +874,11 @@ void getVariableValue(String tname,String frid,String vname,int lvls,int arrayma
 	       IJavaValue [] args = new IJavaValue[1];
 	       args[0] = avl;
 	       try {
-                  val = varEval(arrays,"toString",tsg,args,jthrd);
+		  val = varEval(arrays,"toString",tsg,args,jthrd);
 		}
 	       catch (Throwable t) {
 		  BedrockPlugin.logE("Problem getting array value: " + tsg,t);
-                  val = varEval(avl,"toString","()Ljava/lang/String;",null,jthrd,false);
+		  val = varEval(avl,"toString","()Ljava/lang/String;",null,jthrd,false);
 		}
 	     }
 	    else {
@@ -942,8 +942,8 @@ IJavaValue convertXml(IJavaThread thrd,IJavaValue xml)
       if (typs == null) return null;
       IJavaClassType ivyxml = (IJavaClassType) typs[0];
       IJavaValue [] args = new IJavaValue[] { xml };
-      IJavaValue rslt = varEval(ivyxml,"convertXmlToString","(Lorg/w3c/dom/Node;)Ljava/lang/String;", 
-            args,thrd);
+      IJavaValue rslt = varEval(ivyxml,"convertXmlToString","(Lorg/w3c/dom/Node;)Ljava/lang/String;",
+	    args,thrd);
       return rslt;
    }
    catch (Throwable t) {
@@ -1087,6 +1087,7 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 	    throw new BedrockException("Stack frame " + frid + " not java frame");
 	 IJavaStackFrame jsf = (IJavaStackFrame) sfrm;
 
+	 BedrockPlugin.logD("COMPILE EXPRESSION " + expr + " " + jproj + " " + tgt);
 	 IAstEvaluationEngine eeng = EvaluationManager.newAstEvaluationEngine(jproj,tgt);
 	 ICompiledExpression eexp = eeng.getCompiledExpression(expr,jsf);
 	 eeng.evaluateExpression(eexp,jsf,new EvalListener(jsf,bid,eid,saveid,lvl,arraysz),detail,bkpt);
@@ -1095,8 +1096,8 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 	 evaldone = true;
        }
       catch (DebugException e) {
-	 BedrockPlugin.logE("Problem getting variable: " + e,e);
-	 throw new BedrockException("Problem accessing variable: " + e,e);
+	 BedrockPlugin.logE("Problem evaluating expression: " + expr + ": " + e,e);
+	 throw new BedrockException("Problem evaluating expression: " + e,e);
        }
     }
 
@@ -1409,9 +1410,9 @@ static {
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Handle events during variable evaluations                               */
-/*                                                                              */
+/*										*/
+/*	Handle events during variable evaluations				*/
+/*										*/
 /********************************************************************************/
 
 private static IJavaValue varEval(IJavaObject ovl,String method,String sign,IJavaValue [] args,
@@ -1466,20 +1467,20 @@ private boolean handleInternalEvent(DebugEvent event)
    if (event.getSource() instanceof IJavaThread) {
       IJavaThread ijt = (IJavaThread) event.getSource();
       synchronized (variable_threads) {
-         if (!variable_threads.contains(ijt)) return false;
+	 if (!variable_threads.contains(ijt)) return false;
        }
       if (event.getKind() == DebugEvent.SUSPEND &&
-            event.getDetail() == DebugEvent.BREAKPOINT) {
-         try {
-            ijt.resume();
-          }
-         catch (DebugException e) {
-            BedrockPlugin.logE("Problem resuming variable thread",e);
-          }
-         return true;
+	    event.getDetail() == DebugEvent.BREAKPOINT) {
+	 try {
+	    ijt.resume();
+	  }
+	 catch (DebugException e) {
+	    BedrockPlugin.logE("Problem resuming variable thread",e);
+	  }
+	 return true;
        }
     }
-   
+
    return false;
 }
 

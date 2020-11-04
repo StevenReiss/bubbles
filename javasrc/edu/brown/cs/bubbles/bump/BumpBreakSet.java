@@ -110,13 +110,13 @@ BumpBreakSet(BumpClient bc)
  **/
 
 @Override public void addExceptionBreakpoint(String proj,String cls,BumpExceptionMode emode,
-						BumpBreakMode mode)
+						BumpBreakMode mode,boolean subclass)
 {
    if (mode == BumpBreakMode.DEFAULT) mode = break_mode;
    if (emode == BumpExceptionMode.DEFAULT) emode = exception_mode;
 
    bump_client.addExceptionBreakpoint(proj,cls,emode.isCaught(),emode.isUncaught(),
-					 mode.isSuspendVm());
+					 mode.isSuspendVm(),subclass);
 }
 
 

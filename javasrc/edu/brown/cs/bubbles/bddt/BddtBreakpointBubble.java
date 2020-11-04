@@ -185,6 +185,7 @@ private String getToolTip(BumpBreakpoint bp)
       if (bp.getBoolProperty("CAUGHT") && bp.getBoolProperty("UNCAUGHT")) ;
       else if (bp.getBoolProperty("CAUGHT")) buf.append(" if caught");
       else if (bp.getBoolProperty("UNCAUGHT")) buf.append(" if uncaught");
+      else if (bp.getBoolProperty("SUBCLASS")) buf.append(" w/ subclasses");
     }
    else if (typ.equals("LINE")) {
       buf.append(" at ");
@@ -265,6 +266,7 @@ private String getToolTip(BumpBreakpoint bp)
       else if (typ.equals("EXCEPTION")) {
 	 popup.add(new ExceptionAction(bp,bp.getBoolProperty("CAUGHT"),true));
 	 popup.add(new ExceptionAction(bp,bp.getBoolProperty("UNCAUGHT"),false));
+         popup.add(new ExceptionSubclassAction(bp,bp.getBoolProperty("SUBCLASSES")));
        }
       popup.add(new EnableAction(bp,bp.getBoolProperty("ENABLED")));
       popup.add(new RemoveAction(bp));
@@ -662,6 +664,26 @@ private class ExceptionAction extends AbstractAction {
     }
 
 }	// end of inner class ExceptionAction
+
+
+private class ExceptionSubclassAction extends AbstractAction {
+
+   private BumpBreakpoint for_breakpoint;
+   private boolean is_set;
+   
+   ExceptionSubclassAction(BumpBreakpoint bp,boolean set) {
+      super((set ? "Only this exception" : "Include subclasses of exception"));
+      for_breakpoint = bp;
+      is_set = set;
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      BoardMetrics.noteCommand("BDDT","EditExceptionBreakpoint");
+      bump_client.editBreakpoint(for_breakpoint.getBreakId(),
+           "SUBCLASSES",Boolean.toString(!is_set));
+    }
+
+}	// end of inner class ExceptionSubclassAction
 
 
 

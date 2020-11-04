@@ -392,13 +392,17 @@ enum BumpExceptionMode {
 
 
 
+
+
+
 interface BumpBreakModel {
 
    boolean addLineBreakpoint(String proj,File file,String cls,int line,BumpBreakMode mode);
    void clearLineBreakpoint(String proj,File file,String cls,int line);
    void toggleBreakpoint(String proj,File file,int line,BumpBreakMode mode);
 
-   void addExceptionBreakpoint(String proj,String cls,BumpExceptionMode enmod,BumpBreakMode mode);
+   void addExceptionBreakpoint(String proj,String cls,BumpExceptionMode enmod,BumpBreakMode mode,
+        boolean subclasses);
 
    void enableBreakpoint(File file,int line);
    void disableBreakpoint(File file,int line);
