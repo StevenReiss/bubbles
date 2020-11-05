@@ -243,7 +243,7 @@ private class NameThread extends Thread {
 	    BedrockUtil.outputJavaElement(ent.getKey(),file_set,cfg,xw);
 	    if (xw.getLength() <= 0 || xw.getLength() > 1000000) {
 	       BedrockPlugin.logD("SEND NAMES " + xw.getLength());
-	       String sts = our_plugin.finishMessageWait(xw,60000);
+	       String sts = our_plugin.finishMessageWait(xw,300000);
 	       BedrockPlugin.logD("NAME STATUS: " + sts);
 	       xw = null;
 	     }

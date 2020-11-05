@@ -311,7 +311,7 @@ public Collection<BudaBubble> getBubblesInRegion(Rectangle r)
 
 
 
-void removeCurrentBubble(MouseEvent e)
+public void removeCurrentBubble(MouseEvent e)
 {
    MouseRegion mr = last_mouse;
 
@@ -322,7 +322,11 @@ void removeCurrentBubble(MouseEvent e)
    BudaBubble bb = mr.getBubble();
    BudaBubbleGroup grp = mr.getGroup();
 
-   if (bb == null && focus_bubble != null) bb = focus_bubble;
+   if (bb == null && focus_bubble != null) {
+      Point pt = mr.getLocation();
+      Rectangle r = focus_bubble.getBounds();
+      if (r.contains(pt)) bb = focus_bubble;
+    }
 
    if (bb != null) userRemoveBubble(bb);
    else if (grp != null) userRemoveGroup(grp);
@@ -2633,56 +2637,56 @@ private class MouseRegion implements BudaHelpRegion {
 
    MouseRegion(int x,int y) {
       // if (scale_factor != 1.0) {
-	 // x = (int)(x / scale_factor);
-	 // y = (int)(y / scale_factor);
+         // x = (int)(x / scale_factor);
+         // y = (int)(y / scale_factor);
        // }
-
+   
       region_type = BudaRegion.NONE;
       in_bubble = null;
       in_group = null;
       in_link = null;
       mouse_loc = new Point(x,y);
-
+   
       int maxlayer = Integer.MIN_VALUE;
       // First see if the mouse is inside a bubble
-
+   
       synchronized (active_bubbles) {
-	 for (BudaBubble bb : active_bubbles) {
-	    BudaRegion br = bb.correlate(x,y);
-	    if (br != BudaRegion.NONE && JLayeredPane.getLayer(bb) > maxlayer) {
-	       maxlayer = JLayeredPane.getLayer(bb);
-	       region_type = br;
-	       in_bubble = bb;
-	     }
-	  }
+         for (BudaBubble bb : active_bubbles) {
+            BudaRegion br = bb.correlate(x,y);
+            if (br != BudaRegion.NONE && JLayeredPane.getLayer(bb) > maxlayer) {
+               maxlayer = JLayeredPane.getLayer(bb);
+               region_type = br;
+               in_bubble = bb;
+             }
+          }
        }
-
+   
       // Next see if the mouse is on a link
       if (region_type == BudaRegion.NONE) {
-	 synchronized (bubble_links) {
-	    for (BudaBubbleLink bl : bubble_links) {
-	       BudaRegion br = bl.correlate(x,y);
-	       if (br != BudaRegion.NONE) {
-		  region_type = br;
-		  in_link = bl;
-		  break;
-		}
-	     }
-	  }
+         synchronized (bubble_links) {
+            for (BudaBubbleLink bl : bubble_links) {
+               BudaRegion br = bl.correlate(x,y);
+               if (br != BudaRegion.NONE) {
+        	  region_type = br;
+        	  in_link = bl;
+        	  break;
+        	}
+             }
+          }
        }
-
+   
       // If not, check if it is inside a bubble group
       if (region_type == BudaRegion.NONE) {
-	 synchronized (bubble_groups) {
-	    for (BudaBubbleGroup bg : bubble_groups) {
-	       BudaRegion br = bg.correlate(x,y);
-	       if (br != BudaRegion.NONE) {
-		  region_type = br;
-		  in_group = bg;
-		  break;
-		}
-	     }
-	  }
+         synchronized (bubble_groups) {
+            for (BudaBubbleGroup bg : bubble_groups) {
+               BudaRegion br = bg.correlate(x,y);
+               if (br != BudaRegion.NONE) {
+        	  region_type = br;
+        	  in_group = bg;
+        	  break;
+        	}
+             }
+          }
        }
     }
 

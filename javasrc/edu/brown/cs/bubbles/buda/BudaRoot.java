@@ -482,6 +482,28 @@ public void removeLink(BudaBubbleLink lnk)
 }
 
 
+public void removeCurrentBubble() 
+{
+   BudaBubbleArea bba = getCurrentBubbleArea();
+   MouseEvent me = last_mouse;
+   if (me == null) return;
+   
+   Component c = (Component) me.getSource();
+   if (c != null && c instanceof JDialog) {
+      JDialog jd = (JDialog) c;
+      jd.setVisible(false);
+      return;
+    }
+   
+   Point pt = SwingUtilities.convertPoint(c,me.getPoint(),bba);
+   me = new MouseEvent(bba,me.getID(),me.getWhen(),me.getModifiersEx(),
+         pt.x,pt.y,me.getClickCount(),me.isPopupTrigger(),
+         me.getButton());
+   bba.removeCurrentBubble(me);
+}
+
+
+
 /********************************************************************************/
 /*										*/
 /*	Help methods								*/
@@ -1769,29 +1791,14 @@ private class EscapeHandler extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent e) {
       if (demo_thread != null) {
-	 demo_thread.stopDemonstration();
-	 return;
+         demo_thread.stopDemonstration();
+         return;
        }
-
-      BudaBubbleArea bba = getCurrentBubbleArea();
-      MouseEvent me = last_mouse;
-      if (me != null) {
-	 Component c = (Component) me.getSource();
-	 if (c != null && c instanceof JDialog) {
-	    JDialog jd = (JDialog) c;
-	    jd.setVisible(false);
-	    return;
-	 }
-	 Point pt = SwingUtilities.convertPoint(c,me.getPoint(),bba);
-	 me = new MouseEvent(bba,me.getID(),me.getWhen(),me.getModifiersEx(),
-				pt.x,pt.y,me.getClickCount(),me.isPopupTrigger(),
-				me.getButton());
-       }
-      bba.removeCurrentBubble(me);
+   
+      removeCurrentBubble();
     }
 
 }	// end of inner class EscapeHandler
-
 
 
 
@@ -1800,16 +1807,7 @@ private class RemoveHandler extends AbstractAction {
    private static final long serialVersionUID = 1;
 
    @Override public void actionPerformed(ActionEvent e) {
-      BudaBubbleArea bba = getCurrentBubbleArea();
-      MouseEvent me = last_mouse;
-      if (me != null) {
-	 Component c = (Component) e.getSource();
-	 Point pt = SwingUtilities.convertPoint(c,me.getPoint(),bba);
-	 me = new MouseEvent(bba,me.getID(),me.getWhen(),me.getModifiersEx(),
-				pt.x,pt.y,me.getClickCount(),me.isPopupTrigger(),
-				me.getButton());
-       }
-      bba.removeCurrentBubble(me);
+      removeCurrentBubble();
     }
 
 }	// end of inner class RemoveHandler

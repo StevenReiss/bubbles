@@ -786,9 +786,11 @@ private static class AbortAction extends AbstractAction {
       BoardMetrics.noteCommand("BASS","AbortSearch");
       BudaBubble bb = BudaRoot.findBudaBubble((Component) e.getSource());
       if (bb != null) {
-         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb);
-         bba.userRemoveBubble(bb);
-         // bb.setVisible(false);
+         BudaRoot br = BudaRoot.findBudaRoot(bb);
+         br.removeCurrentBubble();
+   //       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb);
+   //       bba.removeCurrentBubble(null);
+   //       bb.setVisible(false);
       }
     }
 
