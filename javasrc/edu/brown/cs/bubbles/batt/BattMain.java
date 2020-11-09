@@ -555,15 +555,21 @@ private void processRun(boolean listonly,Set<String> testclss,Set<BattTestCase> 
       for (BattTestCase btc : cases) {
 	 runOneTest(btc);
        }
-
     }
-   processRun(listonly,testclss);
+   else {
+      processRun(listonly,testclss);
+    }
 }
 
 
 
 private void processRun(boolean listonly,Set<String> testclss)
 {
+   if (testclss !=  null) 
+      System.err.println("BATT: Run all tests in " + testclss.size() + " classes");
+   else
+      System.err.println("BATT: Run all tests in all classes");
+   
    for (BattProject bp : batt_monitor.getProjects()) {
       boolean err = false;
       boolean use = false;

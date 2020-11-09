@@ -310,10 +310,10 @@ private static class BlockCountData {
       xw.field("END",end_line);
       xw.field("COUNT",enter_count);
       for (Map.Entry<Integer,Integer> ent : branch_counts.entrySet()) {
-	 xw.begin("BRANCH");
-	 xw.field("TOBLOCK",ent.getKey());
-	 xw.field("COUNT",ent.getValue());
-	 xw.end("BRANCH");
+         xw.begin("BRANCH");
+         xw.field("TOBLOCK",ent.getKey());
+         xw.field("COUNT",ent.getValue());
+         xw.end("BRANCH");
        }
       xw.end("BLOCK");
     }

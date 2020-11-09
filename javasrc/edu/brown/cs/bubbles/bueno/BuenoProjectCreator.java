@@ -32,6 +32,7 @@ import edu.brown.cs.bubbles.bump.BumpClient;
 
 import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import javax.swing.JButton;
@@ -41,6 +42,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+
+import org.w3c.dom.Element;
 
 import java.awt.Container;
 import java.awt.Dimension;
@@ -524,8 +527,27 @@ private boolean checkFileProperties(File f)
    File sdir = new File(pdir,".settings");
    sdir.mkdirs();
    File opts = new File(sdir,"org.eclipse.jdt.core.prefs");
+   
    BoardProperties props = BoardProperties.getProperties("Bueno");
    String copts = props.getProperty("Bueno.problem.set.data.1");
+   
+   String fopts = null;
+   File f1 = BoardSetup.getPropertyBase();
+   File f2 = new File(f1,"formats.xml");
+   if (f2.exists()) {
+      StringBuffer fbuf = new StringBuffer();
+      Element optxml = IvyXml.loadXmlFromFile(f2);
+      for (Element setxml : IvyXml.elementsByTag(optxml,"setting")) {
+         String id = IvyXml.getAttrString(setxml,"id");
+         String val = IvyXml.getAttrString(setxml,"value");
+         fbuf.append(id);
+         fbuf.append("=");
+         fbuf.append(val);
+         fbuf.append("\n");
+       }
+      fopts = fbuf.toString();
+    }
+   
    try (PrintWriter pw = new PrintWriter(new FileWriter(opts))) {
       pw.println("eclipse.preferences.version=1");
       String v = System.getProperty("java.specification.version");
@@ -533,6 +555,7 @@ private boolean checkFileProperties(File f)
       pw.println("org.eclipse.jdt.core.compiler.source=" + v);
       pw.println("org.eclipse.jdt.core.compiler.codegen.targetPlatform=" + v);
       if (copts != null) pw.println(copts);
+      if (fopts != null) pw.println(fopts);
     }
    catch (IOException e) {
       return false;

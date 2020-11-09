@@ -1087,7 +1087,7 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 	    throw new BedrockException("Stack frame " + frid + " not java frame");
 	 IJavaStackFrame jsf = (IJavaStackFrame) sfrm;
 
-	 BedrockPlugin.logD("COMPILE EXPRESSION " + expr + " " + jproj + " " + tgt);
+	 BedrockPlugin.logD("COMPILE EXPRESSION " + expr);
 	 IAstEvaluationEngine eeng = EvaluationManager.newAstEvaluationEngine(jproj,tgt);
 	 ICompiledExpression eexp = eeng.getCompiledExpression(expr,jsf);
 	 eeng.evaluateExpression(eexp,jsf,new EvalListener(jsf,bid,eid,saveid,lvl,arraysz),detail,bkpt);

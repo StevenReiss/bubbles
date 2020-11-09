@@ -506,14 +506,25 @@ private class CommandHandler implements MintHandler {
             for_batt.doTests();
           }
          else if (cmd.equals("RUNTEST")) {
+            Collection<BattTestCase> lst = new ArrayList<>();
             String t = IvyXml.getAttrString(e,"TEST");
             BattTestCase btc = for_batt.findTestCase(t);
             if (btc != null) {
-               Collection<BattTestCase> lst = new ArrayList<>();
                lst.add(btc);
-               for_batt.runSelectedTests(lst);
              }
-            for_batt.doTests();
+            else {
+               for (Element telt : IvyXml.children(e,"TEST")) {
+                  String t1 = IvyXml.getAttrString(telt,"NAME");
+                  if (t1 != null) { 
+                     BattTestCase btc1 = for_batt.findTestCase(t1);
+                     if (btc1 != null) lst.add(btc1);
+                   }
+                }
+             }
+            if (!lst.isEmpty()) {
+               for_batt.runSelectedTests(lst);
+               for_batt.doTests();
+             }
           }
          else if (cmd.equals("STOPTEST")) {
             for_batt.stopTests();

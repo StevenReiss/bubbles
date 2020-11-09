@@ -103,7 +103,7 @@ BassRepositoryLocation()
 @Override public Iterable<BassName> getAllNames()
 {
    waitForNames();
-   
+
    synchronized (this) {
       return new ArrayList<BassName>(all_names);
     }
@@ -286,9 +286,9 @@ private synchronized void loadNames()
 
    BumpClient bc = BumpClient.getBump();
    Collection<BumpLocation> locs = bc.findAllNames(null);
-   
-   checkBaseMap(locs);
-   
+
+   if (locs != null) checkBaseMap(locs);
+
    if (locs != null) {
       for (BumpLocation bl : locs) {
 	 addLocation(bl,usedmap);
@@ -303,16 +303,18 @@ private synchronized void loadNames()
 
 private void checkBaseMap(Collection<BumpLocation> locs)
 {
+   if (locs == null) return;
+
    Map<String,Set<String>> projpaths = new HashMap<>();
    for (BumpLocation bl : locs) {
       switch (bl.getSymbolType()) {
-         case CLASS :
-         case ENUM :
-         case INTERFACE :
-         case ANNOTATION :
-            break;
-         default :
-            continue;
+	 case CLASS :
+	 case ENUM :
+	 case INTERFACE :
+	 case ANNOTATION :
+	    break;
+	 default :
+	    continue;
        }
       File f = bl.getFile();
       if (f == null) continue;
@@ -325,10 +327,10 @@ private void checkBaseMap(Collection<BumpLocation> locs)
       f = f.getParentFile();
       s = s.substring(0,idx);
       for ( ; ; ) {
-         idx = s.lastIndexOf(".");
-         if (idx < 0) break;
-         s = s.substring(0,idx);
-         f = f.getParentFile();
+	 idx = s.lastIndexOf(".");
+	 if (idx < 0) break;
+	 s = s.substring(0,idx);
+	 f = f.getParentFile();
        }
       f = f.getParentFile();
       if (!f.exists()) continue;
@@ -336,53 +338,53 @@ private void checkBaseMap(Collection<BumpLocation> locs)
       if (p == null) continue;
       Set<String> paths = projpaths.get(p);
       if (paths == null) {
-         paths = new HashSet<>();
-         projpaths.put(p,paths);
+	 paths = new HashSet<>();
+	 projpaths.put(p,paths);
        }
       paths.add(f.getPath());
     }
-   
+
    if (projpaths.isEmpty()) return;
    for (Map.Entry<String,Set<String>> ent : projpaths.entrySet()) {
       Set<String> rslt = ent.getValue();
       if (rslt.size() > 1) {
-         String pfx = null;
-         String sfx = null;
-         for (String s : rslt) {
-            if (pfx == null) pfx = s;
-            else pfx = commonPrefix(pfx,s);
-            if (sfx == null) sfx = s;
-            else sfx = commonSuffix(sfx,s);
-          }
-         if (base_map == null) base_map = new HashMap<>();
-         String proj = ent.getKey();
-         Map<String,String> projmap = base_map.get(proj);
-         if (projmap == null) {
-            projmap = new HashMap<>();
-            base_map.put(proj,projmap);
-          }
-         int ln = pfx.length();
-         int sln = sfx.length();
-         for (String s : rslt) {
-            String nm = s.substring(ln);
-            if (sln > 0) {
-               int epos = nm.length() - sln;
-               nm = nm.substring(0,epos);
-             }
-            projmap.put(s,nm);
-          }
+	 String pfx = null;
+	 String sfx = null;
+	 for (String s : rslt) {
+	    if (pfx == null) pfx = s;
+	    else pfx = commonPrefix(pfx,s);
+	    if (sfx == null) sfx = s;
+	    else sfx = commonSuffix(sfx,s);
+	  }
+	 if (base_map == null) base_map = new HashMap<>();
+	 String proj = ent.getKey();
+	 Map<String,String> projmap = base_map.get(proj);
+	 if (projmap == null) {
+	    projmap = new HashMap<>();
+	    base_map.put(proj,projmap);
+	  }
+	 int ln = pfx.length();
+	 int sln = sfx.length();
+	 for (String s : rslt) {
+	    String nm = s.substring(ln);
+	    if (sln > 0) {
+	       int epos = nm.length() - sln;
+	       nm = nm.substring(0,epos);
+	     }
+	    projmap.put(s,nm);
+	  }
        }
     }
 }
 
 
 
-private String commonPrefix(String s1,String s2) 
+private String commonPrefix(String s1,String s2)
 {
    int ln = Math.min(s1.length(),s2.length());
    for (int i = 0; i < ln; ++i) {
       if (s1.charAt(i) != s2.charAt(i)) {
-         return s1.substring(0,i);
+	 return s1.substring(0,i);
        }
     }
    if (s1.length() == ln) return s1;
@@ -397,8 +399,8 @@ private String commonSuffix(String s1,String s2)
    int ln = Math.min(ln1,ln2);
    for (int i = 0; i < ln; ++i) {
       if (s1.charAt(ln1-i-1) != s2.charAt(ln2-i-1)) {
-         if (i == 0) return "";
-         return s1.substring(ln1-i);
+	 if (i == 0) return "";
+	 return s1.substring(ln1-i);
        }
     }
    if (s1.length() == ln) return s1;
@@ -410,21 +412,21 @@ private String commonSuffix(String s1,String s2)
 private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 {
    if (!isRelevant(bl)) return;
-   
+
    String pfx = null;
    if (base_map != null && bl.getFile() != null && bl.getProject() != null) {
       Map<String,String> pmap = base_map.get(bl.getProject());
       if (pmap != null) {
-         String path = bl.getFile().getPath();
-         String best = null;
-         for (String key : pmap.keySet()) {
-            if (path.startsWith(key)) {
-               if (best == null || best.length() < key.length()) {
-                  best = key;
-                }
-             }
-          }
-         if (best != null) pfx = pmap.get(best);
+	 String path = bl.getFile().getPath();
+	 String best = null;
+	 for (String key : pmap.keySet()) {
+	    if (path.startsWith(key)) {
+	       if (best == null || best.length() < key.length()) {
+		  best = key;
+		}
+	     }
+	  }
+	 if (best != null) pfx = pmap.get(best);
        }
     }
 

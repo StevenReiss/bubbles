@@ -68,12 +68,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -212,11 +215,29 @@ private void setupPanel()
 @Override public void handlePopupMenu(MouseEvent e)
 {
    JPopupMenu menu = new JPopupMenu();
-
+   
    Point pt = new Point(e.getXOnScreen(),e.getYOnScreen());
    SwingUtilities.convertPointFromScreen(pt,display_table);
-
    BattTestCase btc = display_table.findTestCase(pt);
+   
+   int [] sel = display_table.getSelectedRows();
+   if (sel.length == 1) {
+      BattTestCase btc1 = display_table.getActualTestCase(sel[0]);
+      if (btc1 != btc) {
+         menu.add(new RunTestAction(btc1));
+       }
+    }
+   else if (sel.length > 1) {
+      Set<BattTestCase> cases = new TreeSet<>();
+      for (int i : sel) {
+         BattTestCase btc2 = display_table.getActualTestCase(i);
+         if (btc2 != null) cases.add(btc2);
+       }
+      menu.add(new RunSelectedAction(cases));
+    }
+   
+   display_table.getSelectedRows();
+
 
    if (btc != null) {
       menu.add(new SourceAction(btc));
@@ -565,6 +586,25 @@ private class RunTestAction extends AbstractAction {
     }
 
 }	// end of inner class RunTestAction
+
+
+
+private class RunSelectedAction extends AbstractAction {
+   
+   private List<BattTestCase> test_cases;
+   
+   RunSelectedAction(Collection<BattTestCase> cases) {
+      super("Run Selected Tests");
+      test_cases = new ArrayList<>(cases);
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      for (BattTestCase btc : test_cases) {
+         BattFactory.getFactory().runTest(btc);
+       }
+    }
+   
+}       // end of inner class RunSelectedAction
 
 
 

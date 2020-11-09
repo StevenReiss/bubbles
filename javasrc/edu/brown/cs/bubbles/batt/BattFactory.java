@@ -331,6 +331,27 @@ void runTest(BattTestCase test)
 }
 
 
+void runTests(Collection<BattTestCase> tests) 
+{
+   if (tests == null || tests.size() == 0) return;
+   
+   IvyXmlWriter xw = new IvyXmlWriter();
+   xw.begin("BATT");
+   xw.field("DO","RUNTEST");
+   for (BattTestCase test : tests) {
+      xw.begin("TEST");
+      xw.field("NAME",test.getName());
+      xw.end("TEST");
+    }
+   xw.end("BATT");
+
+   BoardSetup bs = BoardSetup.getSetup();
+   MintControl mc = bs.getMintControl();
+   mc.send(xw.toString());
+   xw.close();
+}
+
+
 TestMode getTestMode()
 {
    BoardSetup bs = BoardSetup.getSetup();

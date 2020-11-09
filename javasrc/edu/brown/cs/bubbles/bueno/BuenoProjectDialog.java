@@ -190,6 +190,7 @@ BuenoProjectDialog(String proj)
       String k = IvyXml.getAttrString(e,"NAME");
       String v = IvyXml.getAttrString(e,"VALUE");
       if (k != null && v != null) option_elements.put(k,v);
+      BoardLog.logD("BUENO","Set option " + k + " = " + v);
     }
    for (Element e : IvyXml.children(xml,"PROPERTY")) {
       String q = IvyXml.getAttrString(e,"QUAL");
