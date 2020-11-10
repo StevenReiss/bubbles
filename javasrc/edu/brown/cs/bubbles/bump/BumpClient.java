@@ -3616,7 +3616,7 @@ protected class IDEHandler implements MintHandler {
 	       break;
 	    case "NAMES" :
 	       if (name_collects != null) {
-//		  BoardLog.logD("BUMP","NAMES: " + IvyXml.convertXmlToString(e));
+                  BoardLog.logD("BUMP","NAMES RECEIVED");
 		  String nid = IvyXml.getAttrString(e,"NID");
 		  NameCollector nc = name_collects.get(nid);
 		  if (nc != null) {
@@ -3728,23 +3728,23 @@ protected static class NameCollector {
    synchronized void addNames(Element xml) {
       int ctr = 0;
       for (Element fe : IvyXml.children(xml,"FILE")) {
-	 String path = IvyXml.getTextElement(fe,"PATH");
-	 for (Element itm : IvyXml.children(fe,"ITEM")) {
-	    int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
-	    int length = IvyXml.getAttrInt(itm,"LENGTH");
-	    String pnm = IvyXml.getAttrString(itm,"PROJECT");
-	    BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
-	    result_names.add(bl);
-	    ++ctr;
-	  }
+         String path = IvyXml.getTextElement(fe,"PATH");
+         for (Element itm : IvyXml.children(fe,"ITEM")) {
+            int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
+            int length = IvyXml.getAttrInt(itm,"LENGTH");
+            String pnm = IvyXml.getAttrString(itm,"PROJECT");
+            BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
+            result_names.add(bl);
+            ++ctr;
+          }
        }
       BoardLog.logD("BUMP","Received " + ctr + " Names");
       for (Element itm : IvyXml.children(xml,"ITEM")) {
-	 String pnm = IvyXml.getAttrString(itm,"PROJECT");
-	 String pth = IvyXml.getAttrString(itm,"PATH");
-	 BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
-	 result_names.add(bl);
-	 // BoardLog.logD("BUMP","Added project name " + bl);
+         String pnm = IvyXml.getAttrString(itm,"PROJECT");
+         String pth = IvyXml.getAttrString(itm,"PATH");
+         BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
+         result_names.add(bl);
+         // BoardLog.logD("BUMP","Added project name " + bl);
        }
     }
 

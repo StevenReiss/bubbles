@@ -45,6 +45,7 @@ import edu.brown.cs.bubbles.bump.BumpLocation;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 
 import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -54,6 +55,8 @@ import javax.swing.JTable;
 import javax.swing.JToolTip;
 import javax.swing.RowSorter;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
 import java.awt.Color;
@@ -99,6 +102,7 @@ private DisplayTable	display_table;
 private JPanel		display_bar;
 private TestMode	current_mode;
 private RunType 	current_runtype;
+private JButton         run_selected;
 
 private Set<DisplayMode> ALL_MODE = EnumSet.of(DisplayMode.ALL);
 private Set<DisplayMode> FAIL_MODE = EnumSet.of(DisplayMode.FAIL);
@@ -152,11 +156,14 @@ private void setupPanel()
    display_panel.addLabellessRawComponent("TABLE",jsp,true,true);
    display_panel.addSeparator();
 
-   display_panel.addBottomButton("ALL","ALL",this);
-   display_panel.addBottomButton("PENDING","PENDING",this);
-   display_panel.addBottomButton("FAIL","FAIL",this);
-   display_panel.addBottomButton("RUN","RUN",this);
+   display_panel.addBottomButton("SHOW ALL","ALL",this);
+   display_panel.addBottomButton("SHOW PENDING","PENDING",this);
+   display_panel.addBottomButton("SHOW FAIL","FAIL",this);
+   run_selected = display_panel.addBottomButton("RUN SELECTED","RUN",this);
+   run_selected.setEnabled(false);
+   display_panel.addBottomButton("RUN ALL","RUNALL",this);
    display_panel.addBottomButtons();
+   display_table.getSelectionModel().addListSelectionListener(new Selector());
 }
 
 
@@ -181,6 +188,22 @@ private void setupPanel()
       batt_model.setDisplayMode(FAIL_MODE);
     }
    else if (cmd.equals("RUN")) {
+      BumpClient bc = BumpClient.getBump();
+      bc.saveAll();
+      int [] sel = display_table.getSelectedRows();
+      if (sel.length >= 1) {
+         Set<BattTestCase> cases = new TreeSet<>();
+         for (int i : sel) {
+            BattTestCase btc2 = display_table.getActualTestCase(i);
+            if (btc2 != null) cases.add(btc2);
+          }
+         BattFactory.getFactory().runTests(cases);
+       }
+      else {
+         BattFactory.getFactory().runTests(current_runtype);
+       }
+    }
+   else if (cmd.equals("RUNALL")) {
       BumpClient bc = BumpClient.getBump();
       bc.saveAll();
       BattFactory.getFactory().runTests(current_runtype);
@@ -278,7 +301,20 @@ private void setupPanel()
 
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Actions and listeners                                                   */
+/*                                                                              */
+/********************************************************************************/
 
+private class Selector implements ListSelectionListener {
+   
+   @Override public void valueChanged(ListSelectionEvent e) {
+      int ct = display_table.getSelectedRowCount();
+      run_selected.setEnabled(ct > 0);
+    }
+   
+}       // end of inner class Selector
 
 
 
@@ -599,9 +635,7 @@ private class RunSelectedAction extends AbstractAction {
     }
    
    @Override public void actionPerformed(ActionEvent e) {
-      for (BattTestCase btc : test_cases) {
-         BattFactory.getFactory().runTest(btc);
-       }
+      BattFactory.getFactory().runTests(test_cases);
     }
    
 }       // end of inner class RunSelectedAction

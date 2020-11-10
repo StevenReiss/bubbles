@@ -508,7 +508,8 @@ private class CommandHandler implements MintHandler {
          else if (cmd.equals("RUNTEST")) {
             Collection<BattTestCase> lst = new ArrayList<>();
             String t = IvyXml.getAttrString(e,"TEST");
-            BattTestCase btc = for_batt.findTestCase(t);
+            BattTestCase btc = null;
+            if (t != null) btc = for_batt.findTestCase(t);
             if (btc != null) {
                lst.add(btc);
              }

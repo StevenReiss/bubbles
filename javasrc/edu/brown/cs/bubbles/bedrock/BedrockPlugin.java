@@ -397,6 +397,10 @@ private String sendMessageWait(String msg,long delay)
       else return null;
     }
 
+   String s = msg;
+   if (s.length() > 50) s = s.substring(0,50);
+   BedrockPlugin.logD("Send message: " + s);
+   
    return rply.waitForString(delay);
 }
 
@@ -438,7 +442,7 @@ String finishMessageWait(IvyXmlWriter xw)
 String finishMessageWait(IvyXmlWriter xw,long delay)
 {
    xw.end("BEDROCK");
-
+   
    return sendMessageWait(xw.toString(),delay);
 }
 
