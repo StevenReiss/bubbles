@@ -174,7 +174,7 @@ BumpProcess getProcess()			{ return cur_process; }
 String getProject()				{ return launch_config.getProject(); }
 BddtBubbleManager getBubbleManager()		{ return bubble_manager; }
 
-@Override public boolean isRemovable()          { return false; }
+@Override public boolean isRemovable()		{ return false; }
 
 boolean matchProcess(BumpProcess p)
 {
@@ -559,19 +559,19 @@ private class ClearAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtLaunchControl.this);
-   
+
       Collection<BudaBubble> bbls;
       BudaWorkingSet ws = BddtFactory.getFactory().getActiveWorkingSet();
       if (ws != null) {
-         bbls = bba.getBubblesInRegion(ws.getRegion());
+	 bbls = bba.getBubblesInRegion(ws.getRegion());
        }
       else {
-         bbls = bba.getBubbles();
+	 bbls = bba.getBubbles();
        }
-   
+
       for (BudaBubble bbl : bbls) {
-         if (bbl.isFloating() || bbl.isFixed()) continue;
-         bba.userRemoveBubble(bbl);
+	 if (bbl.isFloating() || bbl.isFixed()) continue;
+	 bba.userRemoveBubble(bbl);
        }
     }
 
@@ -1049,37 +1049,37 @@ private class RunEventHandler implements BumpRunEventHandler {
       BumpThread bt = evt.getThread();
       BumpThreadState ost = thread_states.get(bt);
       BumpThreadState nst = bt.getThreadState();
-   
+
       switch (evt.getEventType()) {
-         case THREAD_ADD :
-            nst = BumpThreadState.RUNNING;
-            //$FALL-THROUGH$
-         case THREAD_CHANGE :
-            thread_states.put(bt,nst);
-            if (bt.getThreadState() != ost) {
-               handleThreadStateChange(bt,ost);
-               if (bt.getThreadState().isStopped()) last_stopped = bt;
-               else if (last_stopped == bt) last_stopped = null;
-             }
-            break;
-         case THREAD_REMOVE :
-            removeExecutionAnnot(bt);
-            if (bt == last_stopped) last_stopped = null;
-            thread_states.remove(bt);
-            break;
-         case THREAD_TRACE :
-         case THREAD_HISTORY :
-            return;
-         default:
-            break;
+	 case THREAD_ADD :
+	    nst = BumpThreadState.RUNNING;
+	    //$FALL-THROUGH$
+	 case THREAD_CHANGE :
+	    thread_states.put(bt,nst);
+	    if (bt.getThreadState() != ost) {
+	       handleThreadStateChange(bt,ost);
+	       if (bt.getThreadState().isStopped()) last_stopped = bt;
+	       else if (last_stopped == bt) last_stopped = null;
+	     }
+	    break;
+	 case THREAD_REMOVE :
+	    removeExecutionAnnot(bt);
+	    if (bt == last_stopped) last_stopped = null;
+	    thread_states.remove(bt);
+	    break;
+	 case THREAD_TRACE :
+	 case THREAD_HISTORY :
+	    return;
+	 default:
+	    break;
        }
-   
+
       int tct = thread_states.size();
       int rct = 0;
       for (Map.Entry<BumpThread,BumpThreadState> ent : thread_states.entrySet()) {
-         BumpThreadState bts = ent.getValue();
-         if (bts.isStopped() && last_stopped == null) last_stopped = ent.getKey();
-         else if (bts.isRunning()) ++rct;
+	 BumpThreadState bts = ent.getValue();
+	 if (bts.isStopped() && last_stopped == null) last_stopped = ent.getKey();
+	 else if (bts.isRunning()) ++rct;
        }
       if (tct == 0) setLaunchState(LaunchState.TERMINATED);
       else if (rct == 0) setLaunchState(LaunchState.PAUSED);
@@ -1116,35 +1116,35 @@ private void handleThreadStateChange(BumpThread bt,BumpThreadState ost)
 
 
 
-private boolean autoCreateBubble(BumpThread bt) 
+private boolean autoCreateBubble(BumpThread bt)
 {
    BumpThreadStack stk = bt.getStack();
    if (stk == null) return false;
-   
+
    switch (bt.getThreadType()) {
       case USER :
       case UI :
-         switch (bt.getThreadState()) {
-            case STOPPED_WAITING :
-            case STOPPED_TIMED :
-            case STOPPED_IO :
-            case STOPPED_IDLE : 
-               return false;
-          }
-         break;
+	 switch (bt.getThreadState()) {
+	    case STOPPED_WAITING :
+	    case STOPPED_TIMED :
+	    case STOPPED_IO :
+	    case STOPPED_IDLE :
+	       return false;
+	  }
+	 break;
       default :
-         switch (bt.getThreadState()) {
-            case STOPPED_SYSTEM :
-               return false;
-            case STOPPED_WAITING :
-            case STOPPED_TIMED :
-            case STOPPED_IO :
-            case STOPPED_IDLE :
-               return false;
-          }
-         break;
+	 switch (bt.getThreadState()) {
+	    case STOPPED_SYSTEM :
+	       return false;
+	    case STOPPED_WAITING :
+	    case STOPPED_TIMED :
+	    case STOPPED_IO :
+	    case STOPPED_IDLE :
+	       return false;
+	  }
+	 break;
     }
-   
+
    return true;
 }
 
@@ -1290,7 +1290,7 @@ private class ExecutionAnnot implements BaleAnnotation {
       if (for_thread.getExceptionType() != null) return except_color;
       return annot_color;
     }
-   
+
    @Override public Color getBackgroundColor()			{ return null; }
 
    @Override public boolean getForceVisible(BudaBubble bb) {
@@ -1407,6 +1407,7 @@ private String getEvaluationStringJava(BumpStackFrame frm,BumpRunValue rv,String
     }
 
    String expr = "(" + id.replace('?','.') + ").toString()";
+   String expr1 = "java.lang.String.valueOf(" + id.replace('?','.') + ")";
    if (rv != null && rv.getKind() == BumpValueKind.ARRAY) {
       if (rv.getLength() <= 100) {
 	 expr = "java.util.Arrays.toString(" + id + ")";
@@ -1415,6 +1416,7 @@ private String getEvaluationStringJava(BumpStackFrame frm,BumpRunValue rv,String
    else if (rv != null && rv.getKind() == BumpValueKind.OBJECT && rv.getValue().equals("null")) {
       return "null";
     }
+   else expr = expr1;
 
    BumpThreadState ts = frm.getThread().getThreadState();
    if (!ts.isStopped()) return null;
