@@ -1086,7 +1086,24 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 	 if (!(sfrm instanceof IJavaStackFrame))
 	    throw new BedrockException("Stack frame " + frid + " not java frame");
 	 IJavaStackFrame jsf = (IJavaStackFrame) sfrm;
-
+         
+         if (jproj == null) {
+            BedrockProject bp = BedrockPlugin.getPlugin().getProjectManager();
+            String pnm = launch.getAttribute("org.eclipse.jdt.launching.PROJECT_ATTR");
+            if (pnm != null) {
+               IProject ip1 = bp.findProject(pnm);
+               if (ip1 != null) jproj = JavaCore.create(ip1);
+             }
+            if (jproj == null) {
+               IProject ip1 = bp.findProjectForFile(null,jsf.getSourcePath());
+               if (ip1 != null) jproj = JavaCore.create(ip1);
+             }
+            if (jproj == null) {
+               BedrockPlugin.logD("Can't find project for frame " + jsf.getSourcePath() + " " +
+                     jsf.getSourceName());
+             }
+          }
+       
 	 BedrockPlugin.logD("COMPILE EXPRESSION " + expr);
 	 IAstEvaluationEngine eeng = EvaluationManager.newAstEvaluationEngine(jproj,tgt);
 	 ICompiledExpression eexp = eeng.getCompiledExpression(expr,jsf);
@@ -1095,7 +1112,7 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 	       jsf.hashCode() + " " + thrd.hashCode());
 	 evaldone = true;
        }
-      catch (DebugException e) {
+      catch (Throwable e) {
 	 BedrockPlugin.logE("Problem evaluating expression: " + expr + ": " + e,e);
 	 throw new BedrockException("Problem evaluating expression: " + e,e);
        }

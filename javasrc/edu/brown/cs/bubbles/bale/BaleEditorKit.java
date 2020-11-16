@@ -25,6 +25,7 @@
 package edu.brown.cs.bubbles.bale;
 
 
+import edu.brown.cs.bubbles.bale.BaleElement.Indent;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardSetup;
@@ -1380,59 +1381,65 @@ private static class CommentLinesAction extends TextAction {
       if (!checkEditor(be)) return;
       BaleDocument bd = be.getBaleDocument();
       BoardMetrics.noteCommand("BALE","CommentLines");
-
+   
       bd.baleWriteLock();
       try {
-	 int soff = be.getSelectionStart();
-	 int eoff = be.getSelectionEnd();
-
-	 int slno = bd.findLineNumber(soff);
-	 int elno = slno;
-	 if (eoff != soff) elno = bd.findLineNumber(eoff);
-	 if (elno < slno) {
-	    int x = elno;
-	    elno = slno;
-	    slno = x;
-	  }
-	
-	 int loff1 = bd.findLineOffset(slno);
-	 BaleElement ce1 = bd.getCharacterElement(loff1);
-	 while (ce1.isEmpty() && !ce1.isComment() && !ce1.isEndOfLine()) {
-	    ce1 = ce1.getNextCharacterElement();
-	  }
-	 boolean remcmmt = ce1.getName().equals("LineComment");
-
-	 LinkedList<Integer> fixups = new LinkedList<>();
-	 for (int i = elno; i >= slno; --i) {
-	    int loff = bd.findLineOffset(i);
-	    BaleElement ce = bd.getCharacterElement(loff);
-	    while (ce.isEmpty() && !ce.isComment() && !ce.isEndOfLine()) {
-	       ce = ce.getNextCharacterElement();
-	     }
-
-	    try {
-	       if (ce.getName().equals("LineComment")) {
-		  if (remcmmt) {
-		     int noff = ce.getStartOffset();
-		     bd.remove(noff,2);
-		     fixups.addFirst(i);
-		   }
-		}
-	       else if (!remcmmt) {
-		  bd.insertString(loff,"// ",null);
-		}
-	       else {
-		  // already commented -- comment again so its symmetric
-		  bd.insertString(loff,"// ",null);
-		}
-	     }
-	    catch (BadLocationException ex) {
-	       return;
-	     }
-	  }
-	 for (Integer iv : fixups) {
-	    bd.fixLineIndent(iv);
-	 }
+         int soff = be.getSelectionStart();
+         int eoff = be.getSelectionEnd();
+   
+         int slno = bd.findLineNumber(soff);
+         int elno = slno;
+         if (eoff != soff) elno = bd.findLineNumber(eoff);
+         if (elno < slno) {
+            int x = elno;
+            elno = slno;
+            slno = x;
+          }
+        
+         int loff1 = bd.findLineOffset(slno);
+         BaleElement ce1 = bd.getCharacterElement(loff1);
+         while (ce1.isEmpty() && !ce1.isComment() && !ce1.isEndOfLine()) {
+            ce1 = ce1.getNextCharacterElement();
+          }
+         boolean remcmmt = ce1.getName().equals("LineComment");
+   
+         LinkedList<Integer> fixups = new LinkedList<>();
+         for (int i = elno; i >= slno; --i) {
+            int loff = bd.findLineOffset(i);
+            BaleElement ce = bd.getCharacterElement(loff);
+            Indent ind = ce.getIndent();
+            while (ce.isEmpty() && !ce.isComment() && !ce.isEndOfLine()) {
+               ce = ce.getNextCharacterElement();
+             }
+            
+            try {
+               if (ce.getName().equals("LineComment")) {
+                  if (remcmmt) {
+                     int noff = ce.getStartOffset();
+                     bd.remove(noff,2);
+                     fixups.addFirst(i);
+                   }
+                }
+               else if (!remcmmt) {
+                  if (ind != null && ind.getFirstColumn() >= 3) {
+                     bd.replace(loff,2,"//",null);
+                   }
+                  else {
+                     bd.insertString(loff,"// ",null);
+                   }
+                }
+               else {
+                  // already commented -- comment again so its symmetric
+                  bd.insertString(loff,"// ",null);
+                }
+             }
+            catch (BadLocationException ex) {
+               return;
+             }
+          }
+         for (Integer iv : fixups) {
+            bd.fixLineIndent(iv);
+         }
        }
       finally { bd.baleWriteUnlock(); }
     }
@@ -2878,7 +2885,7 @@ private static class CommentAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
-
+   
       BuenoFactory bf = BuenoFactory.getFactory();
       BuenoLocation bl = new CommentLocation(be,be.getSelectionStart());
       bf.createNew(new_type,bl,null);

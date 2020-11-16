@@ -57,6 +57,7 @@ public class BanalFactory implements BanalConstants, MintConstants
 /********************************************************************************/
 
 private boolean 		server_running;
+private boolean                 server_starting;
 
 private static BanalFactory	the_factory;
 
@@ -100,7 +101,8 @@ public static void initialize(BudaRoot br)
    switch (BoardSetup.getSetup().getRunMode()) {
       case NORMAL :
       case SERVER :
-         the_factory.startBanalServer();
+         BanalStarter bs = new BanalStarter();
+         bs.start();
          break;
       case CLIENT :
          break;
@@ -121,6 +123,7 @@ public Collection<BanalPackageNode> computePackageGraph(String proj,String pkg,
 {
    BanalPackageGraph pg = null;
 
+   waitForServer();
    if (server_running) {
       BoardSetup bs = BoardSetup.getSetup();
       MintControl mc = bs.getMintControl();
@@ -152,6 +155,7 @@ public Map<String,BanalHierarchyNode> computePackageHierarchy(String proj)
    BanalPackageHierarchy ph = null;
    Map<String,BanalHierarchyNode> rslt = null;
    
+   waitForServer();     
    if (server_running) {
       BoardSetup bs = BoardSetup.getSetup();
       MintControl mc = bs.getMintControl();
@@ -239,8 +243,41 @@ void startBanalServer()
 	 BoardLog.logE("BANAL","Unable to start banal server");
 	 server_running = true; 	// don't try again
        }
+      synchronized (this) {
+         server_starting = false;
+         notifyAll();
+       }
     }
 }
+
+
+
+private synchronized void waitForServer()
+{
+   while (server_starting) {
+      try {
+         wait(2000);
+       }
+      catch (InterruptedException e) { }
+    }
+}
+
+
+
+private static class BanalStarter extends Thread {
+
+   BanalStarter() {
+      super("BanalStarter");
+      the_factory.server_starting = true;
+    }
+   
+   @Override public void run() {
+      the_factory.startBanalServer();
+      the_factory.server_starting = false;
+    }
+   
+}       // start banal server in background
+
 
 
 }	// end of class BanalFactory

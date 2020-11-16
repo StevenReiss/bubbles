@@ -30,6 +30,7 @@
 
 package edu.brown.cs.bubbles.bale;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaBubbleLink;
@@ -154,6 +155,7 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
             if (offs != null) {
                int off = bl.getOffset();
                if (offs.contains(off)) {
+                  BoardLog.logD("BALE","Remove unknown location " + f1 + " " + offs + " " + off);
                   it.remove();
                   continue;
                 }
@@ -163,7 +165,10 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
        }
       if (key != null) {
 	 List<BumpLocation> lbl = keys.get(key);
-	 if (lbl != null) it.remove();
+	 if (lbl != null) {
+            BoardLog.logD("BALE","Remove duplicate " + lbl);
+            it.remove();
+          }
 	 else {
 	    lbl = new ArrayList<BumpLocation>();
 	    keys.put(key,lbl);
@@ -171,6 +176,8 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
 	 lbl.add(bl);
        }
     }
+   
+   BoardLog.logD("BALE","Bubble stack creation " + locs.size() + " " + stktyp + " " + src);
 
    if (locs.size() == 2 && stktyp == BaleStackType.DROP_SOURCE && src != null) {
       BudaBubble bbl = BudaRoot.findBudaBubble(src);
@@ -315,6 +322,7 @@ private BussBubble setupStack(BudaLinkStyle link)
 	    entries.add(fileent);
 	    break;
 	 default :
+            BoardLog.logD("BALE","Unknown symbol type " + loc0.getSymbolType() + " " + loc0);
 	    createBubble(source_bubble,source_position,source_point,false,loc0,true,link);
 	    break;
        }
@@ -326,13 +334,20 @@ private BussBubble setupStack(BudaLinkStyle link)
       component.init(contentwidth);
     }
 
-   if (entries.size() == 0) return null;
+   if (entries.size() == 0) {
+      BoardLog.logD("BALE","NO ENTRIES FOUND for Bubble Stack");
+      return null;
+    }
+   
    BussFactory bussf = BussFactory.getFactory();
    BussBubble bb = bussf.createBubbleStack(entries, contentwidth + title_width);
    bb.setLinkStyle(link_style);
 
    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(source_bubble);
-   if (bba == null) return null;
+   if (bba == null) {
+      BoardLog.logE("BALE","Can't find bubble area for " + source_bubble);
+      return null;
+    }
    int place = PLACEMENT_PREFER|PLACEMENT_MOVETO|PLACEMENT_NEW;
    if (place_near) place |= PLACEMENT_GROUPED;
    bba.addBubble(bb,source_bubble,source_point,place);

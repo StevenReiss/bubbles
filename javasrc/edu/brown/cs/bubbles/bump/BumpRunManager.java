@@ -1102,12 +1102,12 @@ private class LaunchConfig implements BumpLaunchConfig {
    void update(Element xml) {
       Element type = IvyXml.getChild(xml,"TYPE");
       if (type != null) {
-	 String ctyp = IvyXml.getAttrString(type,"NAME");
-	 config_type = BumpLaunchConfigType.UNKNOWN;
-	 for (BumpLaunchConfigType bclt : BumpLaunchConfigType.values()) {
-	    if (ctyp.equals(bclt.getEclipseName())) config_type = bclt;
-	    else if (ctyp.equals(bclt.toString())) config_type = bclt;
-	  }
+         String ctyp = IvyXml.getAttrString(type,"NAME");
+         config_type = BumpLaunchConfigType.UNKNOWN;
+         for (BumpLaunchConfigType bclt : BumpLaunchConfigType.values()) {
+            if (ctyp.equals(bclt.getEclipseName())) config_type = bclt;
+            else if (ctyp.equals(bclt.toString())) config_type = bclt;
+          }
        }
       config_name = IvyXml.getAttrString(xml,"NAME");
       is_working = IvyXml.getAttrBool(xml,"WORKING");
@@ -1124,12 +1124,12 @@ private class LaunchConfig implements BumpLaunchConfig {
       remote_port = 8000;
       String hmap = getAttribute(xml,"CONNECT_MAP");
       if (hmap != null) {
-	 Matcher m1 = HOST_PATTERN.matcher(hmap);
-	 Matcher m2 = PORT_PATTERN.matcher(hmap);
-	 if (m1.find() && m2.find()) {
-	    remote_host = m1.group(1);
-	    remote_port = Integer.parseInt(m2.group(1));
-	  }
+         Matcher m1 = HOST_PATTERN.matcher(hmap);
+         Matcher m2 = PORT_PATTERN.matcher(hmap);
+         if (m1.find() && m2.find()) {
+            remote_host = m1.group(1);
+            remote_port = Integer.parseInt(m2.group(1));
+          }
        }
       String sim = getAttribute(xml,"STOP_IN_MAIN");
       if (sim == null || sim.length() == 0) stop_in_main = false;

@@ -212,6 +212,7 @@ private static class SpellFixer extends BfixFixer {
       int minsize = Math.min(fix_size, for_identifier.length()-1);
       minsize = Math.min(minsize,(for_identifier.length()+2)/3);
       
+      
       BumpClient bc = BumpClient.getBump();
       Collection<BumpCompletion> cmps = bc.getCompletions(proj,file,-1,for_problem.getStart());
       if (cmps == null) return null;
