@@ -42,6 +42,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeEvent;
@@ -400,9 +401,27 @@ private class DialogBubble extends BudaBubble {
    else {				// accept from text box as well
       if (!the_validator.checkParsing()) return;
       bb.setVisible(false);
-      doCreate(bba,where);
+      BubbleCreator bc = new BubbleCreator(bba,where);
+      SwingUtilities.invokeLater(bc);
     }
 }
+
+
+private class BubbleCreator implements Runnable {
+   
+   private BudaBubbleArea bubble_area;
+   private Point show_where;
+   
+   BubbleCreator(BudaBubbleArea bba,Point where) {
+      bubble_area = bba;
+      show_where = where;
+    }
+   
+   @Override public void run() {
+      doCreate(bubble_area,show_where);
+    }
+   
+}       // end of inner class BubbleCreator
 
 
 

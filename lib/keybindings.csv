@@ -62,6 +62,7 @@
 "Code Editor","TAB","Tab"
 "Code Editor","shift TAB","Tab"
 "Code Editor","INSERT","Toggle Insertion Mode"
+"Code Editor","xalt I","Toggle Insertion Mode"
 "Code Editor","F14","Toggle Insertion Mode"
 "Code Editor","menu F","Find"
 "Code Editor","menu R","Find/Replace"

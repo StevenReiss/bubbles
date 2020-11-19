@@ -277,6 +277,7 @@ private static final KeyItem [] key_defs = new KeyItem[] {
    new KeyItem("shift TAB",tab_action),      // should be separate action
    new KeyItem("ENTER",newline_action),
    new KeyItem("INSERT",toggle_insert_action),
+   new KeyItem("xalt I",toggle_insert_action),
    new KeyItem("F14",toggle_insert_action),          // for the mac keyboard
    new KeyItem("menu F",find_action),
    new KeyItem("menu R",replace_action),
