@@ -361,6 +361,8 @@ public boolean replace(int off,int len,String text,boolean fmt,boolean ind)
 {
    Position sp = null;
    Position ep = null;
+   
+   setupDummyEditor();
 
    baleWriteLock();
    try {
@@ -402,6 +404,9 @@ public boolean replace(int off,int len,String text,boolean fmt,boolean ind)
 
 
 BaleDocument getBaseEditDocument()			{ return this; }
+
+
+void setupDummyEditor()                                 { }
 
 
 

@@ -721,12 +721,12 @@ private static class NoteArea extends JEditorPane
       setKeymap(note_keymap);
       Dimension d = new Dimension(beam_properties.getInt(NOTE_WIDTH),beam_properties.getInt(NOTE_HEIGHT));
       if (cnts != null) {
-	 JLabel lbl = new JLabel(cnts);
-	 Dimension d1 = lbl.getPreferredSize();
-	 d1.width = Math.min(d1.width,900);
-	 d1.height = Math.min(d1.height,400);
-	 d.width = Math.max(d.width, d1.width);
-	 d.height = Math.max(d1.height, d1.height);
+         JLabel lbl = new JLabel(cnts);
+         Dimension d1 = lbl.getPreferredSize();
+         d1.width = Math.min(d1.width,900);
+         d1.height = Math.min(d1.height,400);
+         d.width = Math.max(d.width, d1.width);
+         d.height = Math.max(d1.height, d1.height);
       }
       setPreferredSize(d);
       setSize(d);
@@ -735,14 +735,14 @@ private static class NoteArea extends JEditorPane
       addMouseListener(new BudaConstants.FocusOnEntry());
       addMouseListener(new LinkListener());
       addHyperlinkListener(new HyperListener());
-
+   
       Color tc = BoardColors.getColor(NOTE_TOP_COLOR_PROP);
       Color bc = BoardColors.getColor(NOTE_BOTTOM_COLOR_PROP);
       if (tc.getRGB() == bc.getRGB()) {
-	 setBackground(tc);
+         setBackground(tc);
        }
       else setBackground(BoardColors.transparent());
-
+   
       BurpHistory.getHistory().addEditor(this);
     }
 

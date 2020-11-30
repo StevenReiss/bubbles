@@ -761,7 +761,7 @@ private class DocMonitor implements DocumentListener {
    @Override public void changedUpdate(DocumentEvent e) 	{ }
 
    // these might be smarter and only invalidate if needed
-
+   
    @Override public void insertUpdate(DocumentEvent e) {
       if (region_map != null) regions_valid = false;
     }

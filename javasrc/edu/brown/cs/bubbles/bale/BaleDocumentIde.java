@@ -45,7 +45,6 @@ import edu.brown.cs.bubbles.bowi.BowiFactory;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.bubbles.bump.BumpException;
-
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -106,6 +105,7 @@ private int		checkpoint_counter;
 private boolean 	is_readonly;
 private Element 	elision_data;	// for readonly files
 private int		num_import;
+private BaleFragmentEditor dummy_editor;
 
 private Map<BaleFragment,FragmentData> fragment_map;
 
@@ -154,6 +154,7 @@ BaleDocumentIde()
    is_dirty = false;
    checkpoint_counter = -1;
    num_import = -1;
+   dummy_editor = null;
    // This should not be needed as any change should trigger a remote edit
    BumpClient.getBump().addChangeHandler(this);
    remote_edits = new LinkedList<>();
@@ -192,6 +193,12 @@ BaleDocumentIde(String proj,File file,boolean local)
 @Override void dispose()
 {
    BumpClient.getBump().removeChangeHandler(this);
+   
+   if (dummy_editor != null) {
+      dummy_editor.dispose();
+      dummy_editor = null;
+    }
+   
    super.dispose();
 }
 
@@ -1179,11 +1186,11 @@ private class LineOffsetListener implements DocumentListener {
       int off = e.getOffset();
       int len = e.getLength();
       try {
-	 String txt = getText(off,len);
-	 fixNewLines(off,off,txt);
+         String txt = getText(off,len);
+         fixNewLines(off,off,txt);
        }
       catch (BadLocationException ex) {
-	 BoardLog.logE("BALE","Problem getting insertion text",ex);
+         BoardLog.logE("BALE","Problem getting insertion text",ex);
        }
     }
 
@@ -1267,14 +1274,14 @@ private class EclipseUpdater implements DocumentListener {
 
    @Override public void insertUpdate(DocumentEvent e) {
       if (!doing_load && !doing_remote && !doing_eload) {
-	 int off = e.getOffset();
-	 int len = e.getLength();
-	 try {
-	    String txt = getText(off,len);
-	    int eoff = mapOffsetToEclipse(off);
-	    bump_client.editFile(project_name,file_name,nextEditCounter(),eoff,eoff,txt);
-	  }
-	 catch (BadLocationException ex) { }
+         int off = e.getOffset();
+         int len = e.getLength();
+         try {
+            String txt = getText(off,len);
+            int eoff = mapOffsetToEclipse(off);
+            bump_client.editFile(project_name,file_name,nextEditCounter(),eoff,eoff,txt);
+          }
+         catch (BadLocationException ex) { }
        }
     }
 
@@ -1328,6 +1335,34 @@ private class EclipseUpdater implements DocumentListener {
 @Override public void handleFileStarted(String proj,String file)	{ }
 @Override public void handleProjectOpened(String proj)			{ }
 
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Handle history if there is no editor                                    */
+/*                                                                              */
+/********************************************************************************/
+
+@Override synchronized void setupDummyEditor()
+{
+   if (dummy_editor != null) return;
+   
+   List<BaleRegion> rgns = new ArrayList<>();
+   
+   try {
+      Position spos = BaleStartPosition.createStartPosition(this,0);
+      Position epos = createPosition(getLength());
+      BaleRegion brgn = new BaleRegion(spos,epos);
+      rgns.add(brgn);
+    }
+   catch (BadLocationException e) {
+      BoardLog.logE("BALE","Bad location for dummy fragment",e);
+    }
+   
+   BaleFragmentEditor bde = new BaleFragmentEditor(getProjectName(),getFile(),"<DUMMY FILE>",
+         this,BaleFragmentType.FILE,rgns);
+   dummy_editor = bde;
+}
 
 
 

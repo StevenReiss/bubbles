@@ -432,29 +432,29 @@ static abstract class BaleAbstractDocument extends BaleDocument {
 
    @Override public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
       if ((str == null) || (str.length() == 0)) {
-	 return;
+         return;
        }
       writeLock();
       try {
-	 baleHandleInsertString(offs, str, a);
+         baleHandleInsertString(offs, str, a);
        }
       finally {
-	 writeUnlock();
+         writeUnlock();
        }
     }
 
    private void baleHandleInsertString(int offs, String str, AttributeSet a)
       throws BadLocationException {
       if ((str == null) || (str.length() == 0)) {
-	 return;
+         return;
        }
       UndoableEdit u = getContent().insertString(offs, str);
       DefaultDocumentEvent e =
-	 createDocumentEvent(offs, str.length(), DocumentEvent.EventType.INSERT);
+         createDocumentEvent(offs, str.length(), DocumentEvent.EventType.INSERT);
       if (u != null) {
-	 e.addEdit(u);
+         e.addEdit(u);
        }
-
+   
       insertUpdate(e, a);
       // Mark the edit as done.
       e.end();
@@ -462,8 +462,8 @@ static abstract class BaleAbstractDocument extends BaleDocument {
       // only fire undo if Content implementation supports it
       // undo for the composed text is not supported for now
       if (u != null &&
-	     (a == null || !a.isDefined(StyleConstants.ComposedTextAttribute))) {
-	 fireUndoableEditUpdate(new UndoableEditEvent(this, e));
+             (a == null || !a.isDefined(StyleConstants.ComposedTextAttribute))) {
+         fireUndoableEditUpdate(new UndoableEditEvent(this, e));
        }
     }
 
@@ -473,66 +473,66 @@ static abstract class BaleAbstractDocument extends BaleDocument {
 
    class BaleDefaultDocumentEvent extends DefaultDocumentEvent
       implements BurpPlayableEdit {
-
+   
       private int evt_offset;
       private int evt_length;
-
+   
       private final static long serialVersionUID = 1;
-
+   
       BaleDefaultDocumentEvent(int offs, int len, DocumentEvent.EventType type) {
-	 super(offs,len,type);
-	 evt_offset = offs;
-	 evt_length = len;
+         super(offs,len,type);
+         evt_offset = offs;
+         evt_length = len;
        }
-
+   
       @Override public int getOffset() {
-	 return evt_offset;
+         return evt_offset;
        }
-
+   
       @Override public int getLength() {
-	 return evt_length;
+         return evt_length;
        }
-
+   
       public Vector<UndoableEdit> getEdits() {
-	 return edits;
+         return edits;
        }
-
+   
       @Override public void playUndo(Document doc) throws CannotUndoException {
-	 writeLock();
-	 try {
-	    // change the state
-	    for (UndoableEdit ued : getEdits()) {
-	       if (!(ued instanceof BurpPlayableEdit)) throw new CannotUndoException();
-	     }
-	    for (UndoableEdit ued : getEdits()) {
-	       BurpPlayableEdit bpe = (BurpPlayableEdit) ued;
-	       bpe.playUndo(doc);
-	     }
-	  }
-	 finally {
-	    writeUnlock();
-	  }
+         writeLock();
+         try {
+            // change the state
+            for (UndoableEdit ued : getEdits()) {
+               if (!(ued instanceof BurpPlayableEdit)) throw new CannotUndoException();
+             }
+            for (UndoableEdit ued : getEdits()) {
+               BurpPlayableEdit bpe = (BurpPlayableEdit) ued;
+               bpe.playUndo(doc);
+             }
+          }
+         finally {
+            writeUnlock();
+          }
        }
-
+   
       @Override public boolean playUndo(Document doc,BurpRange rng) throws CannotUndoException {
-	 boolean chng = false;
-	 writeLock();
-	 try {
-	    // change the state
-	    for (UndoableEdit ued : getEdits()) {
-	       if (!(ued instanceof BurpPlayableEdit)) throw new CannotUndoException();
-	     }
-	    for (UndoableEdit ued : getEdits()) {
-	       BurpPlayableEdit bpe = (BurpPlayableEdit) ued;
-	       chng |= bpe.playUndo(doc,rng);
-	     }
-	  }
-	 finally {
-	    writeUnlock();
-	  }
-	 return chng;
+         boolean chng = false;
+         writeLock();
+         try {
+            // change the state
+            for (UndoableEdit ued : getEdits()) {
+               if (!(ued instanceof BurpPlayableEdit)) throw new CannotUndoException();
+             }
+            for (UndoableEdit ued : getEdits()) {
+               BurpPlayableEdit bpe = (BurpPlayableEdit) ued;
+               chng |= bpe.playUndo(doc,rng);
+             }
+          }
+         finally {
+            writeUnlock();
+          }
+         return chng;
       }
-
+   
       @Override public void updatePosition(Object edit,int pos,int len) {
          for (UndoableEdit ued : getEdits()) {
             if (ued instanceof BurpPlayableEdit) {
@@ -542,23 +542,23 @@ static abstract class BaleAbstractDocument extends BaleDocument {
             else BoardLog.logD("BALE","History event not playable: " + ued);
          }
        }
-
+   
       @Override public List<BurpEditDelta> getDeltas() {
-	 List<BurpEditDelta> rslt = null;
-	 for (UndoableEdit ued : getEdits()) {
-	    if (ued instanceof BurpPlayableEdit) {
-	       BurpPlayableEdit bpe = (BurpPlayableEdit) ued;
-	       List<BurpEditDelta> deltas = bpe.getDeltas();
-	       if (deltas != null) {
-		  if (rslt == null) rslt = deltas;
-		  else rslt.addAll(deltas);
-	       }
-	    }
-	    else BoardLog.logX("BALE","History event not playable: " + ued);
-	 }
-	 return rslt;
+         List<BurpEditDelta> rslt = null;
+         for (UndoableEdit ued : getEdits()) {
+            if (ued instanceof BurpPlayableEdit) {
+               BurpPlayableEdit bpe = (BurpPlayableEdit) ued;
+               List<BurpEditDelta> deltas = bpe.getDeltas();
+               if (deltas != null) {
+        	  if (rslt == null) rslt = deltas;
+        	  else rslt.addAll(deltas);
+               }
+            }
+            else BoardLog.logX("BALE","History event not playable: " + ued);
+         }
+         return rslt;
        }
-
+   
     }	    // end of inner class BaleDefaultDocumentEvent
 
 }	// end of inner class BaleAbstractDocument

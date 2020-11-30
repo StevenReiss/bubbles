@@ -718,18 +718,18 @@ private static class FixImportsAction extends AbstractAction implements Runnable
 
    @Override public void run() {
       if (edit_result == null) {
-	 String order = bass_properties.getString("Bass.import.order");
-	 int demand = bass_properties.getInt("Bass.import.ondemand.threshold");
-	 int sdemand = bass_properties.getInt("Bass.import.static.ondemand.threshold");
-	 BumpClient bc = BumpClient.getBump();
-	 Element edits = bc.fixImports(project_name,file_name,order,demand,sdemand,null);
-	 if (edits != null) {
-	    edit_result = edits;
-	    SwingUtilities.invokeLater(this);
-	  }
+         String order = bass_properties.getString("Bass.import.order");
+         int demand = bass_properties.getInt("Bass.import.ondemand.threshold");
+         int sdemand = bass_properties.getInt("Bass.import.static.ondemand.threshold");
+         BumpClient bc = BumpClient.getBump();
+         Element edits = bc.fixImports(project_name,file_name,order,demand,sdemand,null);
+         if (edits != null) {
+            edit_result = edits;
+            SwingUtilities.invokeLater(this);
+          }
        }
       else {
-	 BaleFactory.getFactory().applyEdits(file_name,edit_result);
+         BaleFactory.getFactory().applyEdits(file_name,edit_result);
        }
     }
 }	// end of inner class DeletePackageAction

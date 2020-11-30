@@ -80,9 +80,11 @@ BurpEditorData(BurpHistory bh,JTextComponent be) {
    for_editor = be;
    for_document = be.getDocument();
    for_document.addUndoableEditListener(this);
-   for_editor.addCaretListener(this);
-   for_editor.addKeyListener(this);
-   for_editor.addMouseListener(this);
+   if (for_editor != null) {
+      for_editor.addCaretListener(this);
+      for_editor.addKeyListener(this);
+      for_editor.addMouseListener(this);
+    }
    next_sig = true;
    last_key = false;
    in_event = false;
@@ -109,9 +111,11 @@ void addChange(BurpChangeData cd)
 void remove()
 {
    for_document.removeUndoableEditListener(this);
-   for_editor.removeCaretListener(this);
-   for_editor.removeKeyListener(this);
-   for_editor.removeMouseListener(this);
+   if (for_editor != null) {
+      for_editor.removeCaretListener(this);
+      for_editor.removeKeyListener(this);
+      for_editor.removeMouseListener(this);
+    }
 }
 
 

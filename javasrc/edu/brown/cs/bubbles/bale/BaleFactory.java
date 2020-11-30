@@ -1145,6 +1145,9 @@ public void applyEdits(File file,Element edits)
 
    BaleDocument bd = getDocument(null,file);
    if (bd == null) return;
+   
+   bd.setupDummyEditor();
+   
    BaleApplyEdits bae = new BaleApplyEdits(bd);
    bae.applyEdits(edits);
 }

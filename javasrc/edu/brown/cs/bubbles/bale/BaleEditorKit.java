@@ -2099,7 +2099,7 @@ private static class ExtractMethodAction extends TextAction implements BuenoCons
       BaleEditorPane target = getBaleEditor(e);
       BaleDocument bd = target.getBaleDocument();
       if (!checkEditor(target)) return;
-
+   
       int spos = target.getSelectionStart();
       int epos = target.getSelectionEnd();
       int slno = bd.findLineNumber(spos);
@@ -2108,52 +2108,52 @@ private static class ExtractMethodAction extends TextAction implements BuenoCons
       epos = bd.findLineOffset(elno+1)-1;
       String cnts;
       try {
-	 cnts = bd.getText(spos,epos-spos);
+         cnts = bd.getText(spos,epos-spos);
        }
       catch (BadLocationException ex) {
-	 BoardLog.logE("BALE","Problem getting extract text",ex);
-	 return;
+         BoardLog.logE("BALE","Problem getting extract text",ex);
+         return;
        }
-
+   
       BudaBubble bbl = BudaRoot.findBudaBubble(target);
       if (bbl == null) return;
       BoardMetrics.noteCommand("BALE",String.valueOf(getValue(Action.NAME)));
-
+   
       String fnm = bd.getFragmentName();
       String aft = null;
       String cls = null;
       switch (bd.getFragmentType()) {
-	 case FILE :
-	 case NONE :
-	    return;
-	 case METHOD :
-	    aft = fnm;
-	    cls = fnm;
-	    int idx1 = cls.indexOf("(");
-	    if (idx1 >= 0) cls = cls.substring(0,idx1);
-	    idx1 = cls.lastIndexOf(".");
-	    if (idx1 >= 0) cls = cls.substring(0,idx1);
-	    break;
-	 case FIELDS :
-	 case STATICS :
-	 case MAIN :
-	 case HEADER :
-	    cls = fnm;
-	    int idx2 = cls.lastIndexOf(".");
-	    cls = cls.substring(0,idx2);
-	    break;
-	 default:
-	    break;
+         case FILE :
+         case NONE :
+            return;
+         case METHOD :
+            aft = fnm;
+            cls = fnm;
+            int idx1 = cls.indexOf("(");
+            if (idx1 >= 0) cls = cls.substring(0,idx1);
+            idx1 = cls.lastIndexOf(".");
+            if (idx1 >= 0) cls = cls.substring(0,idx1);
+            break;
+         case FIELDS :
+         case STATICS :
+         case MAIN :
+         case HEADER :
+            cls = fnm;
+            int idx2 = cls.lastIndexOf(".");
+            cls = cls.substring(0,idx2);
+            break;
+         default:
+            break;
        }
-
+   
       if (cls == null) return;
-
+   
       BuenoProperties props = new BuenoProperties();
       props.put(BuenoConstants.BuenoKey.KEY_CONTENTS,cnts);
       BuenoLocation loc = BuenoFactory.getFactory().createLocation(bd.getProjectName(),cls,aft,true);
-
+   
       BuenoFactory.getFactory().createMethodDialog(bbl,null,props,loc,
-						      "Enter Signature of Extracted Method",this);
+        					      "Enter Signature of Extracted Method",this);
     }
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
@@ -2186,26 +2186,26 @@ private static class FormatAction extends TextAction {
       if (!checkEditor(target)) return;
       BaleDocument bd = target.getBaleDocument();
       BoardMetrics.noteCommand("BALE",String.valueOf(getValue(Action.NAME)));
-
+   
       bd.baleWriteLock();
       try {
-	 int soff = target.getSelectionStart();
-	 int eoff = target.getSelectionEnd();
-	 if (soff == eoff) {
-	    soff = 0;
-	    eoff = bd.getLength();
-	  }
-	 if (soff == eoff) return;
-	 int dsoff = bd.mapOffsetToEclipse(soff);
-	 int deoff = bd.mapOffsetToEclipse(eoff);
-
-	 BumpClient bc = BumpClient.getBump();
-	 org.w3c.dom.Element edits = bc.format(bd.getProjectName(),bd.getFile(),dsoff,deoff);
-
-	 if (edits != null) {
-	    BaleApplyEdits bae = new BaleApplyEdits(bd);
-	    bae.applyEdits(edits);
-	  }
+         int soff = target.getSelectionStart();
+         int eoff = target.getSelectionEnd();
+         if (soff == eoff) {
+            soff = 0;
+            eoff = bd.getLength();
+          }
+         if (soff == eoff) return;
+         int dsoff = bd.mapOffsetToEclipse(soff);
+         int deoff = bd.mapOffsetToEclipse(eoff);
+   
+         BumpClient bc = BumpClient.getBump();
+         org.w3c.dom.Element edits = bc.format(bd.getProjectName(),bd.getFile(),dsoff,deoff);
+   
+         if (edits != null) {
+            BaleApplyEdits bae = new BaleApplyEdits(bd);
+            bae.applyEdits(edits);
+          }
        }
       finally { bd.baleWriteUnlock(); }
     }

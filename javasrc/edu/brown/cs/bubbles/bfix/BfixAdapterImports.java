@@ -432,19 +432,19 @@ private static class ImportDoer implements RunnableFix {
       if (!checkProblemPresent(for_problem,probs)) return;
       if (for_corrector.getStartTime() != initial_time) return;
       synchronized (imports_added) {
-	 Set<String> impset = imports_added.get(for_corrector);
-	 if (impset == null) {
-	    impset = new HashSet<String>();
-	    imports_added.put(for_corrector,impset);
-	  }
-	 if (!impset.add(import_type)) return;
+         Set<String> impset = imports_added.get(for_corrector);
+         if (impset == null) {
+            impset = new HashSet<String>();
+            imports_added.put(for_corrector,impset);
+          }
+         if (!impset.add(import_type)) return;
        }
-
+   
       BoardMetrics.noteCommand("BFIX","AddImport");
       Element edits = bc.fixImports(for_problem.getProject(),
-	    for_document.getFile(),null,0,0,import_type);
+            for_document.getFile(),null,0,0,import_type);
       if (edits != null) {
-	 BaleFactory.getFactory().applyEdits(for_document.getFile(),edits);
+         BaleFactory.getFactory().applyEdits(for_document.getFile(),edits);
        }
       BoardMetrics.noteCommand("BFIX","DoneAddImport");
     }

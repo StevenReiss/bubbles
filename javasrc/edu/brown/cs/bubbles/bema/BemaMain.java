@@ -137,7 +137,7 @@ private boolean 	allow_debug;
 private boolean 	use_lila;
 private boolean 	use_web;
 private boolean 	use_cloud;
-private boolean 	auto_update;
+private Boolean 	auto_update;
 private String		use_workspace;
 private boolean 	new_workspace;
 private Boolean 	ask_workspace;
@@ -178,7 +178,7 @@ private BemaMain(String [] args)
    course_name = null;
    for_language = null;
    install_only = false;
-   auto_update = true;
+   auto_update = null;
    palette_name = null;
    class_loaders = new HashMap<>();
 
@@ -207,6 +207,9 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-nor")) {                 // -norestore
 	    restore_session = false;
 	  }
+         else if (args[i].startsWith("-u")) {                   // -update
+            auto_update = true;
+          }
 	 else if (args[i].startsWith("-nou")) {                 // -noupdate
 	    auto_update = false;
 	  }
@@ -355,7 +358,7 @@ private void start()
    if (ask_workspace != null) bs.setAskWorkspace(ask_workspace);
    if (run_mode != null) bs.setRunMode(run_mode);
    bs.setJavaArgs(java_args);
-   if (!auto_update) bs.setAutoUpdate(false);
+   if (auto_update != null) bs.setAutoUpdate(auto_update);
 
    if (bs.getCourseName() != null) {
       BeduFactory.getFactory();

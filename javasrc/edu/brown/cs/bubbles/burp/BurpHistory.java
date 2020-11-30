@@ -193,6 +193,8 @@ public void addEditor(JTextComponent be)
 
 public void removeEditor(JTextComponent be)
 {
+   if (be == null) return;
+   
    synchronized (editor_map) {
       BurpEditorData ed = editor_map.remove(be);
       if (ed != null) ed.remove();
@@ -678,9 +680,9 @@ private static class UndoRedoAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BurpHistory hist = BurpHistory.getHistory();
       if (e.getSource() instanceof JTextComponent) {
-	 JTextComponent bed = (JTextComponent) e.getSource();
-	 if (history_direction < 0) hist.playUndo(bed,use_selection);
-	 else hist.playRedo(bed,use_selection);
+         JTextComponent bed = (JTextComponent) e.getSource();
+         if (history_direction < 0) hist.playUndo(bed,use_selection);
+         else hist.playRedo(bed,use_selection);
        }
     }
 

@@ -855,6 +855,11 @@ private static class BreakpointAnnot implements BaleAnnotation {
 
 
 
+
+
+
+
+
 }	// end of class BaleFragmentEditor
 
 

@@ -66,6 +66,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 
@@ -567,10 +568,13 @@ private void setupUpdate()
       Process p = pb.start();
       for ( ; ; ) {
 	 try {
-	    p.waitFor();
+	    p.waitFor(2,TimeUnit.SECONDS);
 	    break;
 	  }
 	 catch (InterruptedException e) { }
+         if (p.isAlive()) {
+            splash.setVisible(false);
+          }
        }
     }
    catch (IOException e) {

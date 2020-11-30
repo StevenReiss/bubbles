@@ -298,21 +298,21 @@ private static class EditBasedFixup implements Fixup {
       File file = for_fix.getFile();
       BaleFileOverview bfo = BaleFactory.getFactory().getFileOverview(proj,file);
       BaleDocumentIde bd = (BaleDocumentIde) bfo;
-
+   
       BurpHistory bh = null;
       BaleEditorPane htxt = null;
       if (evt.getSource() instanceof BaleEditorPane) {
-	 bh = BurpHistory.getHistory();
-	 htxt = (BaleEditorPane) evt.getSource();
-	 bh.beginEditAction(htxt);
+         bh = BurpHistory.getHistory();
+         htxt = (BaleEditorPane) evt.getSource();
+         bh.beginEditAction(htxt);
        }
-
+   
       try {
-	 BaleApplyEdits app = new BaleApplyEdits(bd);
-	 app.applyEdits(edit_fix.getEdits());
+         BaleApplyEdits app = new BaleApplyEdits(bd);
+         app.applyEdits(edit_fix.getEdits());
        }
       finally {
-	 if (bh != null) bh.endEditAction(htxt);
+         if (bh != null) bh.endEditAction(htxt);
        }
     }
 
