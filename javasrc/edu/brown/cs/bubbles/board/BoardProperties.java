@@ -265,7 +265,7 @@ public static void setPropertyDirectory(String dir)
 }
 
 
-static File getPropertyDirectory()
+public static File getPropertyDirectory()
 {
    return base_directory;
 }

@@ -32,7 +32,6 @@ import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
-
 import edu.brown.cs.ivy.mint.MintArguments;
 import edu.brown.cs.ivy.mint.MintHandler;
 import edu.brown.cs.ivy.mint.MintMessage;
@@ -2787,7 +2786,7 @@ public void stopWaitCursor() {
 /*										*/
 /********************************************************************************/
 
-void handleCloseRequest()
+void handleCloseRequest(boolean halt)
 {
    boolean save = BUDA_PROPERTIES.getBoolean("Buda.close.save");
    if (BUDA_PROPERTIES.getBoolean("Buda.close.ask")) {
@@ -2823,10 +2822,18 @@ void handleCloseRequest()
       dlg.setModal(false);
       dlg.setVisible(true);
       saveWorkspace();
-      BoardThreadPool.start(new Stopper(200));
-      // System.exit(0);
+      if (halt) BoardThreadPool.start(new Stopper(200));
     }
 }
+
+
+
+void handleChangeWorkspaceRequest()
+{
+   handleCloseRequest(false);
+   BoardSetup.getSetup().restartForNewWorkspace();
+}
+
 
 
 
@@ -2858,10 +2865,10 @@ private class Stopper implements Runnable {
    @Override public void run() {
       BoardLog.logD("BUDA","Starting stopper " + stop_delay);
       if (stop_delay > 0) {
-	 try {
-	    Thread.sleep(stop_delay);
-	  }
-	 catch (InterruptedException e) {  }
+         try {
+            Thread.sleep(stop_delay);
+          }
+         catch (InterruptedException e) {  }
        }
       System.exit(0);
     }
@@ -2873,7 +2880,7 @@ private class Stopper implements Runnable {
 private class WindowCloser extends WindowAdapter {
 
    @Override public void windowClosing(WindowEvent e) {
-      handleCloseRequest();
+      handleCloseRequest(true);
     }
 
 }	// end of inner class WindowCloser

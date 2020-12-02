@@ -147,12 +147,12 @@ private static class Linker implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-	 URL u = e.getURL();
-	 try {
-	    Desktop.getDesktop().browse(u.toURI());
-	  }
-	 catch (IOException ex) { }
-	 catch (URISyntaxException ex) { }
+         URL u = e.getURL();
+         try {
+            Desktop.getDesktop().browse(u.toURI());
+          }
+         catch (IOException ex) { }
+         catch (URISyntaxException ex) { }
        }
     }
 

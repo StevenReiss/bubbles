@@ -171,6 +171,7 @@ BudaTopBar(BudaRoot br,Element cfg,BudaBubbleArea bba,BudaOverviewBar bob)
    bubble_menu.add(new JSeparator());
    addButton(bubble_menu,"Manage Plugins","Install or remove plugins");
    addButton(bubble_menu,"Save All","Save all open files");
+   addButton(bubble_menu,"Change Workspace","Close Bubbles and reopen on a different workspace");
    addButton(bubble_menu,"Quit","Exit from Bubbles");
    bubble_menu.addPopupMenuListener(new ShelfListener());
 
@@ -299,7 +300,10 @@ private JMenuItem addButton(JComponent menu,String id,String tt)
        }
     }
    else if (cmd.equals("Quit")) {
-      buda_root.handleCloseRequest();
+      buda_root.handleCloseRequest(true);
+    }
+   else if (cmd.equals("Change Workspace")) {
+      buda_root.handleChangeWorkspaceRequest();
     }
    else if (cmd.equals("Load Working Set")) {
       buda_root.setChannelSet(null);

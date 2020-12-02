@@ -142,7 +142,7 @@ private JPanel createFeedbackPanel()
    pnl.addTextArea("Feedback",null,10,60,chk);
    
    pnl.addBoolean("Include Screenshot",false,null);
-   pnl.addTextField("Reply To","Reply To",40,null,null);
+   pnl.addTextField("Reply To",null,40,null,null);
    
    pnl.addBottomButton("CANCEL","CANCEL",chk);
    pnl.addBottomButton("SEND FEEDBACK","SEND",false,chk);

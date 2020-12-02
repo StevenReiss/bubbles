@@ -28,6 +28,7 @@ import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardImage;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
+import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 
@@ -68,6 +69,17 @@ class BeamEmailBugReport implements BeamConstants, BudaConstants
 /********************************************************************************/
 
 private BudaRoot		for_root;
+private static boolean          use_github = false;
+
+private static final String     DESC_PROMPT = "Description";
+private static final String     SEVERITY_PROMPT = "Severity";
+private static final String     DETAILS_PROMPT = "Include internal details";
+private static final String     SCREEN_PROMPT = "Include blurred screenshot";
+private static final String     REPLY_PROMPT = "Reply to e-mail";
+
+private static final String EMAIL_PATTERN = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+         
+
 
 private enum SEVERITY { SEVERE, BAD, ANNOYING, QUIRK, TRIVIAL, SUGGESTION, WOW }
 
@@ -106,7 +118,7 @@ void addPanel()
    btn.setOpaque(false);
 
    btn.addActionListener(new BugReportListener());
-   btn.setToolTipText("Report a bubbles bug");
+   btn.setToolTipText("Report a bubbles bug, ask for a feature, or provide feedback");
    for_root.addButtonPanelButton(btn);
 }
 
@@ -125,11 +137,12 @@ private JPanel emailReportPanel()
    EmailChecker chk = new EmailChecker(pnl);
    pnl.beginLayout();
    pnl.addBannerLabel("Code Bubbles Bug Report");
-   pnl.addTextArea("Description",null,10,60,chk);
-   pnl.addChoice("Severity",SEVERITY.BAD,null);
-   pnl.addBoolean("Include internal details",true,null);
-   pnl.addBoolean("Include Screenshot",false,null);
-   pnl.addTextField("Reply To","Reply To",40,null,null);
+   pnl.addTextArea(DESC_PROMPT,null,10,60,chk);
+   pnl.addChoice(SEVERITY_PROMPT,SEVERITY.BAD,null);
+   pnl.addBoolean(DETAILS_PROMPT,true,null);
+   pnl.addBoolean(SCREEN_PROMPT,false,null);
+   JTextField tf = pnl.addTextField(REPLY_PROMPT,null,40,chk,chk);
+   tf.setToolTipText("Provide your email for further information");
    pnl.addBottomButton("CANCEL","CANCEL",chk);
    pnl.addBottomButton("SEND REPORT","SEND",false,chk);
    pnl.addBottomButtons();
@@ -150,15 +163,16 @@ private class EmailChecker implements ActionListener, UndoableEditListener {
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand().toLowerCase();
       switch (cmd) {
-	 case "cancel" :
-	    removePanel();
-	    break;
-	 case "send" :
-	    JButton btn = (JButton) evt.getSource();
-	    btn.setEnabled(false);
-	    removePanel();
-	    sendEmail(for_panel);
-	    return;
+         case "cancel" :
+            removePanel();
+            break;
+         case "send" :
+            JButton btn = (JButton) evt.getSource();
+            btn.setEnabled(false);
+            removePanel();
+            if (use_github) sendReport(for_panel);
+            else sendEmail(for_panel);
+            return;
        }
       updateStatus();
     }
@@ -169,21 +183,23 @@ private class EmailChecker implements ActionListener, UndoableEditListener {
 
    private void removePanel() {
       for (Component cmp = for_panel; cmp != null && cmp != for_root; cmp = cmp.getParent()) {
-	 cmp.setVisible(false);
-	 if (cmp instanceof JDialog) break;
+         cmp.setVisible(false);
+         if (cmp instanceof JDialog) break;
        }
     }
 
    private void updateStatus() {
-      JTextArea d = (JTextArea) for_panel.getComponentForLabel("Description");
+      boolean valid = true;
+      JTextArea d = (JTextArea) for_panel.getComponentForLabel(DESC_PROMPT);
       JButton ok = (JButton) for_panel.getComponentForLabel("SEND");
       String dtxt = d.getText();
-      if (dtxt == null || dtxt.trim().length() < 5) {
-	 ok.setEnabled(false);
-       }
-      else {
-	 ok.setEnabled(true);
-       }
+      if (dtxt == null || dtxt.trim().length() < 5) valid = false;
+      JTextField r = (JTextField) for_panel.getComponentForLabel(REPLY_PROMPT);
+      String raddr = r.getText();
+      if (raddr == null) valid = false;
+      else if (!raddr.trim().matches(EMAIL_PATTERN)) valid = false;
+      
+      ok.setEnabled(valid);
     }
 
 }	// end of inner class EmailChecker
@@ -202,28 +218,10 @@ private void sendEmail(SwingGridPanel panel)
    String addr = "spr+bubblesbug@cs.brown.edu";
    String subj = "Bubbles bug report";
 
-   StringBuffer body = new StringBuffer();
-
-   JComboBox<?> cbx = (JComboBox<?>) panel.getComponentForLabel("Severity");
-   body.append("Severity of the problem: " + cbx.getSelectedItem() + "\n\n");
-
-   body.append("Description of the problem:\n");
-   JTextArea d = (JTextArea) panel.getComponentForLabel("Description");
-   body.append(d.getText());
-   body.append("\n");
-
-   JCheckBox cb = (JCheckBox) panel.getComponentForLabel("Include internal details");
-   if (cb.isSelected()) {
-      body.append("\n\nLog data:\n");
-      File lf1 = BoardLog.getBubblesLogFile();
-      addToOutput("  ",body,lf1);
-      File lf2 = BoardLog.getBedrockLogFile();
-      addToOutput("  ",body,lf2);
-      BoardMetrics.getLastCommands("  ",body);
-    }
-
+   String body = setupReportText(panel);
+ 
    List<File> added = null;
-   cb = (JCheckBox) panel.getComponentForLabel("Include Screenshot");
+   JCheckBox cb = (JCheckBox) panel.getComponentForLabel(SCREEN_PROMPT );
    if (cb.isSelected()) {
       File f = BoardMetrics.createScreenDump("png");
       if (f != null) {
@@ -233,19 +231,55 @@ private void sendEmail(SwingGridPanel panel)
        }
     }
 
-   JTextField tfld = (JTextField) panel.getComponentForLabel("Reply To");
+   JTextField tfld = (JTextField) panel.getComponentForLabel(REPLY_PROMPT);
    String rply = tfld.getText().trim();
    if (rply == null || rply.length() <= 4) rply = null;
-   BeamFactory.sendMailDirect(addr,subj,body.toString(),added,rply);
+   BeamFactory.sendMailDirect(addr,subj,body,added,rply);
 }
 
 
 
+private String setupReportText(SwingGridPanel panel)
+{
+   StringBuffer body = new StringBuffer();
 
-private void addToOutput(String pfx,Appendable buf,File f)
+   JTextField tfld = (JTextField) panel.getComponentForLabel(REPLY_PROMPT);
+   String rply = tfld.getText().trim();
+   body.append("Sender ID: " + rply + " :: " + System.getProperty("user.name") + "\n");
+   body.append("Java Version: " + System.getProperty("java.version") + " " + 
+         System.getProperty("java.vm.name") + "\n");
+   body.append("OS Version: " + System.getProperty("os.name") + "," + System.getProperty("os.arch") + 
+         "," + System.getProperty("os.version") + "\n");
+   body.append("BUBBLES Version: " + BoardSetup.getVersionData() + "\n\n");
+   
+   JComboBox<?> cbx = (JComboBox<?>) panel.getComponentForLabel(SEVERITY_PROMPT);
+   body.append("Severity of the problem: " + cbx.getSelectedItem() + "\n\n");
+   
+   body.append("Description of the problem:\n");
+   JTextArea d = (JTextArea) panel.getComponentForLabel(DESC_PROMPT);
+   body.append(d.getText());
+   body.append("\n");
+   
+   JCheckBox cb = (JCheckBox) panel.getComponentForLabel(DETAILS_PROMPT);
+   if (cb.isSelected()) {
+      body.append("\n\nBubbles Log data:\n");
+      File lf1 = BoardLog.getBubblesLogFile();
+      addToOutput("  ",body,lf1,1000);
+      body.append("\n\nBedrock Log data:\n");
+      File lf2 = BoardLog.getBedrockLogFile();
+      addToOutput("  ",body,lf2,1000);
+      BoardMetrics.getLastCommands("  ",body,50);
+    }
+   
+   return body.toString();
+}
+
+
+
+private void addToOutput(String pfx,Appendable buf,File f,int len)
 {
    if (f == null) return;
-   String [] lns = new String[50];
+   String [] lns = new String[len];
    int ct = 0;
    try (BufferedReader br = new BufferedReader(new FileReader(f))) {
       for ( ; ; ) {
@@ -270,8 +304,31 @@ private void addToOutput(String pfx,Appendable buf,File f)
 
 
 /********************************************************************************/
+/*                                                                              */
+/*      Add an issue to GitHub repo for bubbles                                 */
+/*                                                                              */
+/********************************************************************************/
+
+private void sendReport(SwingGridPanel panel)
+{
+   String cnts = setupReportText(panel);
+ 
+   JCheckBox cb = (JCheckBox) panel.getComponentForLabel(SCREEN_PROMPT);
+   if (cb.isSelected()) {
+      String s = BoardMetrics.saveScreenDump();
+      if (s != null) cnts += "\nScreen Image: " + s + "\n";
+    }
+   
+   BoardLog.logD("BEAM","Sending bug report as new github issue: " + cnts);
+   
+   // need to send to github here
+}
+
+
+
+/********************************************************************************/
 /*										*/
-/*	Callback to set up email message					*/
+/*	Callback to set up bug report dialog   				*/
 /*										*/
 /********************************************************************************/
 
@@ -283,21 +340,6 @@ private class BugReportListener implements ActionListener {
       dlg.setContentPane(pnl);
       dlg.pack();
       dlg.setVisible(true);
-
-      // String addr = "spr+bubblesbug@cs.brown.edu";
-      // String subj = "Bubbles bug report";
-      //
-      // StringBuffer body = new StringBuffer();
-      // body.append("Description of the problem:\n\n\n\n");
-      // body.append("Severity of the problem: \n\n\n");
-      // body.append("Log data:\n");
-      // File lf1 = BoardLog.getBubblesLogFile();
-      // addToOutput("  ",body,lf1);
-      // File lf2 = BoardLog.getBedrockLogFile();
-      // addToOutput("  ",body,lf2);
-      // BoardMetrics.getLastCommands("  ",body);
-      //
-      // BeamFactory.sendMail(addr,subj,body.toString());
     }
 
 }	// end of inner class BugReportListener

@@ -981,11 +981,11 @@ private static class HyperListener implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-	 URL u = e.getURL();
-	 try {
-	    BeamFactory.showBrowser(u.toURI());
-	  }
-	 catch (URISyntaxException ex) { }
+         URL u = e.getURL();
+         try {
+            BeamFactory.showBrowser(u.toURI());
+          }
+         catch (URISyntaxException ex) { }
        }
     }
 

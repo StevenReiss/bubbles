@@ -204,12 +204,16 @@ public static void initialize(BudaRoot br)
 
    // BeamTracBugReport btr = new BeamTracBugReport(br);
    // btr.addPanel();
+   
+   BeamGithubIssues bissues = new BeamGithubIssues(br);
+   bissues.addPanel();
+   
    BeamEmailBugReport ber = new BeamEmailBugReport(br);
    ber.addPanel();
-
-   BeamFeedbackReport bfr = new BeamFeedbackReport(br);
-   bfr.addPanel();
-
+   
+// BeamFeedbackReport bfr = new BeamFeedbackReport(br);
+// bfr.addPanel();
+   
    help_panel = new BeamHelpPanel(br);
    help_panel.addPanel();
 

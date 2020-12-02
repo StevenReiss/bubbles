@@ -2680,6 +2680,52 @@ private void restartBubbles()
 }
 
 
+public boolean restartForNewWorkspace()
+{
+   List<String> args = new ArrayList<>();
+   args.add(IvyExecQuery.getJavaPath());
+   File pf = BoardProperties.getPropertyDirectory();
+   if (pf != null) {
+      args.add("-Dedu.brown.cs.bubbles.BASE=" + pf.getAbsolutePath());
+    }
+   args.add("-Xmx" + run_size);
+   String ip = System.getProperty("edu.brown.cs.bubbles.INSTALLDIR");
+   if (ip != null) {
+      args.add("-Dedu.brown.cs.bubbles.INSTALLDIR=" + ip);
+    }
+   args.add("-cp");
+   args.add(System.getProperty("java.class.path"));
+   args.add(BOARD_RESTART_CLASS);
+   if (force_metrics) args.add("-collect");
+   switch (board_language) {
+      case PYTHON :
+         args.add("-python");
+         break;
+      case REBUS :
+         args.add("-rebus");
+         break;
+      case JS :
+         args.add("-js");
+         break;
+      case JAVA :
+         break;
+    }
+   args.add("-ask");
+   
+   ProcessBuilder pb = new ProcessBuilder(args);
+   try {
+      pb.inheritIO();	
+     pb.start();
+    }
+   catch (IOException e) {
+      BoardLog.logE("BOARD","Problem restarting bubbles: " + e);
+      return false;
+    }
+   
+   return true;
+}
+
+
 
 
 /********************************************************************************/
