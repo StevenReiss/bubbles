@@ -324,6 +324,7 @@ private void setupClassTypes()
 
    package_map.put("java.",ClassType.SYSTEM);
    package_map.put("javax.",ClassType.SYSTEM);
+   package_map.put("jdk.",ClassType.SYSTEM);
    package_map.put("sun.",ClassType.SYSTEM);
    package_map.put("org.w3c.",ClassType.SYSTEM);
    package_map.put("org.omg.",ClassType.SYSTEM);
@@ -334,7 +335,7 @@ private void setupClassTypes()
    package_map.put("org.postgresql.",ClassType.SYSTEM);
    package_map.put("jrockit.",ClassType.SYSTEM);
    package_map.put("com.jogamp.",ClassType.SYSTEM);
-																
+															
    package_map.put("edu.brown.cs.dyvise.dyper.",ClassType.SYSTEM);
    package_map.put("edu.brown.cs.bubbles.bandaid.",ClassType.SYSTEM);
    package_map.put("org.eclipse.",ClassType.SYSTEM);

@@ -810,6 +810,7 @@ interface BumpStackFrame {
    String getFrameClass();
    String getMethod();
    String getSignature();
+   String getRawSignature();
    File getFile();
    int getLineNumber();
    String getId();

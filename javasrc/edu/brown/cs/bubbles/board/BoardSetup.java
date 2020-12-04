@@ -3094,67 +3094,67 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
 
    WorkspaceDialog() {
       SwingGridPanel pnl = new SwingGridPanel();
-
+   
       // library might not be set up here -- can't use BoardColors
       // pnl.setBackground(BoardColors.getColor("Buda.Bubbles.Color"));
       pnl.setBackground(WORKSPACE_DIALOG_COLOR);
       pnl.setOpaque(true);
-
+   
       pnl.beginLayout();
       pnl.addBannerLabel("Bubbles Workspace Setup");
-
+   
       pnl.addSeparator();
-
+   
       workspace_field = null;
       workspace_warning = new JLabel("Warning");//added by amc6
-
+   
       switch (board_language) {
-	 default:
-	 case JAVA :
-	    workspace_field = pnl.addFileField("Eclipse Workspace",default_workspace,
-		  JFileChooser.DIRECTORIES_ONLY,
-		  new WorkspaceDirectoryFilter(),this,null);
-	    workspace_warning.setToolTipText("Not a vaid Eclipse Workspace");
-	    break;
-	 case PYTHON :
-	    workspace_field = pnl.addFileField("Python Workspace",default_workspace,
-		  JFileChooser.DIRECTORIES_ONLY,
-		  new WorkspaceDirectoryFilter(),this,null);
-	    workspace_warning.setToolTipText("Not a vaid Python Workspace");
-	    break;
-	 case JS :
-	    workspace_field = pnl.addFileField("Node/JS Workspace",default_workspace,
-		  JFileChooser.DIRECTORIES_ONLY,
-		  new WorkspaceDirectoryFilter(),this,null);
-	    workspace_warning.setToolTipText("Not a vaid Node/JS Workspace");
-	    break;
-	 case REBUS :
-	    workspace_field = pnl.addFileField("Rebus Workspace",default_workspace,
-		  JFileChooser.DIRECTORIES_ONLY,
-		  new WorkspaceDirectoryFilter(),this,null);
-	    workspace_warning.setToolTipText("Not a vaid Rebus Workspace");
-	    break;
+         default:
+         case JAVA :
+            workspace_field = pnl.addFileField("Eclipse Workspace",default_workspace,
+        	  JFileChooser.DIRECTORIES_ONLY,
+        	  new WorkspaceDirectoryFilter(),this,null);
+            workspace_warning.setToolTipText("Not a vaid Eclipse Workspace");
+            break;
+         case PYTHON :
+            workspace_field = pnl.addFileField("Python Workspace",default_workspace,
+        	  JFileChooser.DIRECTORIES_ONLY,
+        	  new WorkspaceDirectoryFilter(),this,null);
+            workspace_warning.setToolTipText("Not a vaid Python Workspace");
+            break;
+         case JS :
+            workspace_field = pnl.addFileField("Node/JS Workspace",default_workspace,
+        	  JFileChooser.DIRECTORIES_ONLY,
+        	  new WorkspaceDirectoryFilter(),this,null);
+            workspace_warning.setToolTipText("Not a vaid Node/JS Workspace");
+            break;
+         case REBUS :
+            workspace_field = pnl.addFileField("Rebus Workspace",default_workspace,
+        	  JFileChooser.DIRECTORIES_ONLY,
+        	  new WorkspaceDirectoryFilter(),this,null);
+            workspace_warning.setToolTipText("Not a vaid Rebus Workspace");
+            break;
        }
       if (workspace_field != null) workspace_field.addKeyListener(this);
-
+   
       workspace_warning.setForeground(WARNING_COLOR);
       pnl.add(workspace_warning);
-
+   
       pnl.addSeparator();
       if (recent_workspaces.size() > 0) {
-	 List<String> recents = new ArrayList<String>(recent_workspaces);
-	 recents.add(0,RECENT_HEADER);
-	 pnl.addChoice("Recent Workspaces",recents,0,true,this);
+         List<String> recents = new ArrayList<String>(recent_workspaces);
+         recents.add(0,RECENT_HEADER);
+         pnl.addChoice("Recent Workspaces",recents,0,true,this);
        }
-
+   
       pnl.addBoolean("Create New Workspace",create_workspace,this);
       pnl.addBoolean("Always Ask for Workspace",ask_workspace,this);
-
+   
       pnl.addSeparator();
       accept_button = pnl.addBottomButton("OK","OK",this);
       pnl.addBottomButton("CANCEL","CANCEL",this);
       pnl.addBottomButtons();
-
+   
       working_dialog = new JDialog((JFrame) null,"Bubbles Workspace Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();

@@ -1804,6 +1804,7 @@ private class StackFrame implements BumpStackFrame {
    private String frame_id;
    private String method_name;
    private String class_name;
+   private String raw_signature;
    private String method_signature;
    private File for_file;
    private int line_number;
@@ -1859,7 +1860,8 @@ private class StackFrame implements BumpStackFrame {
       is_synthetic = IvyXml.getAttrBool(xml,"SYNTHETIC");
       String sgn = IvyXml.getAttrString(xml,"SIGNATURE");
       if (sgn != null) {
-	 int sidx = sgn.lastIndexOf(")");
+         raw_signature = sgn;
+         int sidx = sgn.lastIndexOf(")");
 	 if (sidx > 0) sgn = sgn.substring(0,sidx+1);
 	 method_signature = IvyFormat.formatTypeName(sgn);
       }
@@ -1875,7 +1877,9 @@ private class StackFrame implements BumpStackFrame {
    @Override public BumpThread getThread()		{ return for_thread; }
    @Override public String getFrameClass()		{ return class_name; }
    @Override public String getMethod()			{ return method_name; }
+   
    @Override public String getSignature()		{ return method_signature; }
+   @Override public String getRawSignature()            { return raw_signature; }
    @Override public File getFile()			{ return for_file; }
    @Override public int getLineNumber() 		{ return line_number; }
    @Override public String getId()			{ return frame_id; }

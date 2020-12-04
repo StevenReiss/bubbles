@@ -30,6 +30,7 @@ import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.bass.BassFactory;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardImage;
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
@@ -213,10 +214,10 @@ public void newDebugger(BumpLaunchConfig blc)
       if (active_working_set == null && working_sets.size() > 0) {
 	 active_working_set = working_sets.get(0);
 	 active_working_set.setLabel(label);
-         for (BudaBubble bbl : bba.getBubblesInRegion(active_working_set.getRegion())) {
-            bba.removeBubble(bbl);
-          }
-         // might need to remove some floating bubbles as well
+	 for (BudaBubble bbl : bba.getBubblesInRegion(active_working_set.getRegion())) {
+	    bba.removeBubble(bbl);
+	  }
+	 // might need to remove some floating bubbles as well
        }
       else {
 	 createDebuggerWorkingSet(label);
@@ -372,9 +373,9 @@ private void setupDebuggingChannels()
    if (bba != null) {
       bba.setProperty("Bddt.debug",Boolean.TRUE);
       if (bddt_properties.getBoolean("Bddt.grow.down")) {
-         Dimension d = bba.getSize();
-         d.height *= 2;
-         bba.setSize(d);
+	 Dimension d = bba.getSize();
+	 d.height *= 2;
+	 bba.setSize(d);
        }
     }
 }
@@ -438,11 +439,11 @@ private static class DebuggingPanel extends SwingGridPanel
       Color tc = BoardColors.getColor(BDDT_PANEL_TOP_COLOR_PROP);
       Color bc = BoardColors.getColor(BDDT_PANEL_BOTTOM_COLOR_PROP);
       if (tc.equals(bc)) {
-         g.setColor(tc);
+	 g.setColor(tc);
        }
       else {
-         Paint p = new GradientPaint(0f, 0f, tc, 0f, this.getHeight(), bc);
-         g.setPaint(p);
+	 Paint p = new GradientPaint(0f, 0f, tc, 0f, this.getHeight(), bc);
+	 g.setPaint(p);
        }
       g.fillRect(0, 0, this.getWidth() , this.getHeight());
     }
@@ -477,65 +478,65 @@ private class PanelHandler extends AbstractAction implements ActionListener {
    @Override public void actionPerformed(ActionEvent e) {
       BudaRoot br = null;
       if (e.getSource() instanceof JButton) {
-         JButton btn = (JButton) e.getSource();
-         br = BudaRoot.findBudaRoot(btn);
+	 JButton btn = (JButton) e.getSource();
+	 br = BudaRoot.findBudaRoot(btn);
       }
       else if (e.getSource() instanceof Component) {
-         Component c = (Component) e.getSource();
-         br = BudaRoot.findBudaRoot(c);
+	 Component c = (Component) e.getSource();
+	 br = BudaRoot.findBudaRoot(c);
       }
       if (br == null) return;
       String cmd = e.getActionCommand();
-   
+
       // fix up command
       if (cmd == null) cmd = "DEBUG";
       boolean useworkingset = debugging_use_workingset;
       if (cmd.equals("DEBUG")) {
-         if (useworkingset) {
-            if (working_sets.isEmpty()) cmd = "NEW";
-          }
-         else {
-            if (debug_channels.isChannelEmpty() ||
-              (debug_channels.getNumChannels() == 0 && br.getChannelSet() != debug_channels)) {
-               cmd = "NEW";
-             }
-          }
+	 if (useworkingset) {
+	    if (working_sets.isEmpty()) cmd = "NEW";
+	  }
+	 else {
+	    if (debug_channels.isChannelEmpty() ||
+	      (debug_channels.getNumChannels() == 0 && br.getChannelSet() != debug_channels)) {
+	       cmd = "NEW";
+	     }
+	  }
        }
-   
+      BoardLog.logD("BDDT","Panel command " + cmd);
       if (cmd.equals("DEBUG")) {
-         if (current_configuration == null) {
-            createConfiguration();
-          }
-         else {
-            BoardMetrics.noteCommand("BDDT","GotoDebug");
-            if (debug_channels != null && br.getChannelSet() == debug_channels) 
-               useworkingset = false;
-            if (useworkingset) {
-               if (active_working_set == null) {
-                  setPriorViewport(br);
-                  active_working_set = working_sets.get(0);
-                }
-               else if (prior_viewport != null) {
-                  br.setViewport(prior_viewport.x,prior_viewport.y);
-                }
-             }
-            else {
-               if (br.getChannelSet() == debug_channels) br.setChannelSet(null);
-               else br.setChannelSet(debug_channels);
-             }
-          }
+	 if (current_configuration == null) {
+	    createConfiguration();
+	  }
+	 else {
+	    BoardMetrics.noteCommand("BDDT","GotoDebug");
+	    if (debug_channels != null && br.getChannelSet() == debug_channels)
+	       useworkingset = false;
+	    if (useworkingset) {
+	       if (active_working_set == null) {
+		  setPriorViewport(br);
+		  active_working_set = working_sets.get(0);
+		}
+	       else if (prior_viewport != null) {
+		  br.setViewport(prior_viewport.x,prior_viewport.y);
+		}
+	     }
+	    else {
+	       if (br.getChannelSet() == debug_channels) br.setChannelSet(null);
+	       else br.setChannelSet(debug_channels);
+	     }
+	  }
        }
       else if (cmd.equals("NEW")) {
-         setPriorViewport(br);
-         if (current_configuration == null) setCurrentLaunchConfig(null);
-   
-         if (current_configuration != null) {
-            BoardMetrics.noteCommand("BDDT","NewDebug");
-            newDebugger(current_configuration);
-          }
-         else {
-            createConfiguration();
-          }
+	 setPriorViewport(br);
+	 if (current_configuration == null) setCurrentLaunchConfig(null);
+
+	 if (current_configuration != null) {
+	    BoardMetrics.noteCommand("BDDT","NewDebug");
+	    newDebugger(current_configuration);
+	  }
+	 else {
+	    createConfiguration();
+	  }
        }
     }
 
@@ -543,7 +544,7 @@ private class PanelHandler extends AbstractAction implements ActionListener {
       Rectangle r = br.getViewport();
       boolean overlap = false;
       for (BudaWorkingSet bws : working_sets) {
-         if (bws.getRegion().intersects(r)) overlap = true;
+	 if (bws.getRegion().intersects(r)) overlap = true;
        }
       if (!overlap) prior_viewport = br.getViewport();
     }
@@ -740,10 +741,10 @@ private static class CreateConfigAction extends AbstractAction {
       BumpRunModel brm = bc.getRunModel();
       BumpLaunchConfig blc = brm.createLaunchConfiguration(null,config_type);
       if (blc != null) {
-         blc = blc.save();
-         BddtLaunchBubble bb = new BddtLaunchBubble(blc);
-         BudaBubbleArea bba = the_factory.buda_root.getCurrentBubbleArea();
-         bba.addBubble(bb,null,null,PLACEMENT_NEW|PLACEMENT_USER);
+	 blc = blc.save();
+	 BddtLaunchBubble bb = new BddtLaunchBubble(blc);
+	 BudaBubbleArea bba = the_factory.buda_root.getCurrentBubbleArea();
+	 bba.addBubble(bb,null,null,PLACEMENT_NEW|PLACEMENT_USER);
        }
     }
 
@@ -834,12 +835,12 @@ private class DebugBubbleChecker implements BubbleViewCallback {
 
    @Override public void workingSetRemoved(BudaWorkingSet ws) {
       if (working_sets.contains(ws)) {
-         working_sets.remove(ws);
-         if (active_working_set == ws) active_working_set = ws;
+	 working_sets.remove(ws);
+	 if (active_working_set == ws) active_working_set = ws;
        }
     }
-   
-}       // end of inner class DebugBubbleChecker
+
+}	// end of inner class DebugBubbleChecker
 
 
 

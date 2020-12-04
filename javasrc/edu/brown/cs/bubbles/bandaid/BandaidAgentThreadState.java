@@ -199,7 +199,7 @@ private class ThreadData {
 	     }
 	  }
        }
-      if (st == State.WAITING) {
+      if (st == State.WAITING || st == State.RUNNING) {
 	 StackTraceElement te = trc[0];
 	 String cnm = te.getClassName();
 	 String mnm = te.getMethodName();
