@@ -808,7 +808,7 @@ String	DEFAULT_PALETTE = "bubbles.palette";
  *	URL prefix indicating where bubbles information is web-accessible.
  **/
 
-String BUBBLES_DIR = "http://www.cs.brown.edu/people/spr/bubbles/";
+String BUBBLES_DIR = "https://www.cs.brown.edu/people/spr/bubbles/";
 
 
 

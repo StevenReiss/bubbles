@@ -3,7 +3,7 @@
 <properties>
 <entry key="Buda.group.draw.background.gradient">false</entry>
 <entry key="Buda.overview.stylized.viewport">true</entry>
-<entry key="Buda.overview.shades">true</entry>
+<entry key="Buda.overview.shades">false</entry>
 <entry key="Buda.shade.time">1000</entry>
 <entry key="Buda.mergeforreg">false</entry>
 <entry key="Buda.show.potential.task">true</entry>
