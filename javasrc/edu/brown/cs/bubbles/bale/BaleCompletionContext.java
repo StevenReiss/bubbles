@@ -919,19 +919,19 @@ private static class CompletionItemNewMethod extends CompletionItem implements
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
       BudaBubble bb = BaleFactory.getFactory().createMethodBubble(proj,name);
       if (bb == null) return;
-
+   
       bba.addBubble(bb,null,p,PLACEMENT_MOVETO);
       // bba.add(bb,new BudaConstraint(p));
-
+   
       if (link_editor != null) {
-	 BudaBubble bbo = BudaRoot.findBudaBubble(link_editor);
-	 BudaRoot root = BudaRoot.findBudaRoot(bbo);
-	 if (bbo != null && root != null && bbo.isShowing() && link_point != null) {
-	    BudaConstants.LinkPort p0 = new BaleLinePort(link_editor,link_point,null);
-	    BudaConstants.LinkPort p1 = new BudaDefaultPort(BudaPortPosition.BORDER_EW_TOP,true);
-	    BudaBubbleLink lnk = new BudaBubbleLink(bbo,p0,bb,p1);
-	    root.addLink(lnk);
-	  }
+         BudaBubble bbo = BudaRoot.findBudaBubble(link_editor);
+         BudaRoot root = BudaRoot.findBudaRoot(bbo);
+         if (bbo != null && root != null && bbo.isShowing() && link_point != null) {
+            BudaConstants.LinkPort p0 = new BaleLinePort(link_editor,link_point,null);
+            BudaConstants.LinkPort p1 = new BudaDefaultPort(BudaPortPosition.BORDER_EW_TOP,true);
+            BudaBubbleLink lnk = new BudaBubbleLink(bbo,p0,bb,p1);
+            root.addLink(lnk);
+          }
        }
     }
 

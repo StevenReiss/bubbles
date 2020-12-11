@@ -743,10 +743,12 @@ protected abstract class Creator implements ActionListener, Runnable {
 
    private Point bubble_point;
    private BudaBubbleArea bubble_area;
+   private BudaBubble new_bubble;
 
    Creator() {
       bubble_point = null;
       bubble_area = null;
+      new_bubble = null;
    }
 
    @Override public void actionPerformed(ActionEvent e) {
@@ -772,22 +774,28 @@ protected abstract class Creator implements ActionListener, Runnable {
    abstract protected BudaBubble doCreate(BudaBubbleArea bba,Point pt,String nm,BuenoProperties bp);
 
    @Override public void run() {
-      BowiFactory.startTask();
-      try {
-         String pkg = property_set.getPackageName();
-         String cls = property_set.getStringProperty(BuenoKey.KEY_NAME);
-         String fcls = (pkg == null ? cls : pkg + "." + cls);
-   
-         BudaBubble nbbl = doCreate(bubble_area,bubble_point,fcls,property_set);
-   
-         if (nbbl != null) {
-            bubble_area.add(nbbl,new BudaConstraint(bubble_point));
+      if (new_bubble != null) {
+         bubble_area.add(new_bubble,new BudaConstraint(bubble_point));
+       }
+      else {
+         BowiFactory.startTask();
+         try {
+            String pkg = property_set.getPackageName();
+            String cls = property_set.getStringProperty(BuenoKey.KEY_NAME);
+            String fcls = (pkg == null ? cls : pkg + "." + cls);
+            
+            new_bubble = doCreate(bubble_area,bubble_point,fcls,property_set);
+            
+            if (new_bubble != null) {
+               SwingUtilities.invokeLater(this);
+             }
+          }
+         finally {
+            BowiFactory.stopTask();
           }
        }
-      finally {
-         BowiFactory.stopTask();
-       }
    }
+   
 }	// end of inner class Creator
 
 

@@ -430,9 +430,9 @@ private static class UserUpdater implements ActionListener, ComponentListener {
    @Override public void componentMoved(ComponentEvent e) {
       // System.err.println("UPDATE: MOVE");
       if (move_count++ >= 4) {
-         int t1 = BUDA_PROPERTIES.getInt("Buda.placement.user.moved",USER_POSITION_RESTART_TIME);
-         // System.err.println("UPDATE: RESTART " + t1);
-         swing_timer.setInitialDelay(t1);
+	 int t1 = BUDA_PROPERTIES.getInt("Buda.placement.user.moved",USER_POSITION_RESTART_TIME);
+	 // System.err.println("UPDATE: RESTART " + t1);
+	 swing_timer.setInitialDelay(t1);
        }
       swing_timer.restart();
     }
@@ -458,12 +458,16 @@ private static class UserUpdater implements ActionListener, ComponentListener {
 
 int computeLogicalPlacement(BudaBubble bbl,Rectangle r,int place,int delta)
 {
-   List<Rectangle> empty = findEmptySpaces();
-   Rectangle r2 = bubble_area.getViewport();
-   place &= ~(PLACEMENT_LEFT|PLACEMENT_RIGHT|PLACEMENT_ABOVE|PLACEMENT_BELOW);
-
    String pnm1 = BUDA_PROPERTIES.getProperty("Buda.placement.direction","RIGHT");
    String pnm = BUDA_PROPERTIES.getProperty("Buda.placement.direction.prefer",pnm1);
+
+   if ((place & PLACEMENT_BELOW) != 0) pnm = "BELOW";
+   else if ((place & PLACEMENT_RIGHT) != 0) pnm = "RIGHT";
+   place &= ~(PLACEMENT_LEFT|PLACEMENT_RIGHT|PLACEMENT_ABOVE|PLACEMENT_BELOW);
+
+   List<Rectangle> empty = findEmptySpaces();
+   Rectangle r2 = bubble_area.getViewport();
+
    pnm = pnm.toUpperCase();
    if (pnm.contains("BELOW")) {
       if (roomFor(bbl,r.x,r.y + r.height + delta,empty)) {

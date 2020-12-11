@@ -343,11 +343,14 @@ private void addPythonButtons(BudaBubble bb,Point where,JPopupMenu menu,String f
 /*										*/
 /********************************************************************************/
 
-private abstract class NewAction extends AbstractAction {
+private abstract class NewAction extends AbstractAction implements Runnable {
 
    protected BuenoLocation for_location;
    protected BuenoProperties property_set;
    protected BuenoType create_type;
+   private BudaBubble result_bubble;
+   private BudaBubbleArea result_area;
+   private Point result_point;
 
    private final static long serialVersionUID = 1;
 
@@ -356,10 +359,27 @@ private abstract class NewAction extends AbstractAction {
       create_type = typ;
       for_location = loc;
       property_set = new BuenoProperties();
+      result_bubble = null;
+      result_area = null;
+      result_point = null;
       if (loc.getProject() != null)
          property_set.put(BuenoKey.KEY_PROJECT,loc.getProject());
       if (loc.getPackage() != null)
          property_set.put(BuenoKey.KEY_PACKAGE,loc.getPackage());
+    }
+   
+   protected void addNewBubble(BudaBubble bb,BudaBubbleArea bba,Point pt) {
+      if (bb == null) return;
+      result_bubble = bb;
+      result_area = bba;
+      result_point = pt;
+      SwingUtilities.invokeLater(this);
+    }
+   
+   @Override public void run() {
+      if (result_bubble != null) {
+         result_area.add(result_bubble,new BudaConstraint(result_point));
+       }
     }
 
 }	// end of inner class NewAction
@@ -384,11 +404,11 @@ private class NewMethodAction extends NewAction implements BuenoConstants.BuenoB
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
       BudaBubble bb = BaleFactory.getFactory().createMethodBubble(proj,name);
       if (bb != null) {
-	 bba.add(bb,new BudaConstraint(p));
-	 File f1 = bb.getContentFile();
-	 if (f1 != null) BumpClient.getBump().saveFile(proj,f1);
-	 BudaRoot br = BudaRoot.findBudaRoot(bb);
-	 if (br != null) br.handleSaveAllRequest();
+         addNewBubble(bb,bba,p);
+         File f1 = bb.getContentFile();
+         if (f1 != null) BumpClient.getBump().saveFile(proj,f1);
+         BudaRoot br = BudaRoot.findBudaRoot(bb);
+         if (br != null) br.handleSaveAllRequest();
        }
    }
 
@@ -417,7 +437,7 @@ private class NewFieldAction extends NewAction implements BuenoConstants.BuenoBu
       int idx = name.lastIndexOf(".");
       String cnm = name.substring(0,idx);
       BudaBubble bb = BaleFactory.getFactory().createFieldsBubble(proj,for_location.getFile(),cnm);
-      if (bb != null) bba.add(bb,new BudaConstraint(p));
+      addNewBubble(bb,bba,p);
    }
 
 }	// end of inner class NewFieldAction
@@ -429,15 +449,8 @@ private class NewTypeAction extends NewAction implements BuenoConstants.BuenoBub
 
    private final static long serialVersionUID = 1;
 
-   private BudaBubbleArea result_area;
-   private Point result_point;
-   private BudaBubble result_bubble;
-
    NewTypeAction(BuenoType typ,BuenoLocation loc) {
       super(typ,loc);
-      result_bubble = null;
-      result_area = null;
-      result_point = null;
     }
 
    NewTypeAction(BuenoLocation loc) {
@@ -451,19 +464,8 @@ private class NewTypeAction extends NewAction implements BuenoConstants.BuenoBub
     }
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
-      result_bubble = BaleFactory.getFactory().createFileBubble(proj,null,name);
-      result_area = bba;
-      result_point = p;
-      if (result_bubble != null) {
-	 if (SwingUtilities.isEventDispatchThread()) run();
-	 else SwingUtilities.invokeLater(this);
-      }
-   }
-
-   @Override public void run() {
-      if (result_bubble != null) {
-	 result_area.add(result_bubble,new BudaConstraint(result_point));
-      }
+      BudaBubble bb = BaleFactory.getFactory().createFileBubble(proj,null,name);
+      addNewBubble(bb,bba,p);
    }
 
 
@@ -490,7 +492,7 @@ private class NewInnerTypeAction extends NewAction implements BuenoConstants.Bue
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
       BudaBubble bb = BaleFactory.getFactory().createClassBubble(proj,name);
-      if (bb != null) bba.add(bb,new BudaConstraint(p));
+      addNewBubble(bb,bba,p);
    }
 
 }	// end of inner class NewInnerTypeAction
@@ -515,7 +517,7 @@ private class NewPackageAction extends NewAction implements BuenoConstants.Bueno
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
       BudaBubble bb = BaleFactory.getFactory().createFileBubble(proj,null,name);
-      if (bb != null) bba.add(bb,new BudaConstraint(p));
+      addNewBubble(bb,bba,p);
    }
 
 }	// end of inner class NewPackageAction
@@ -541,7 +543,7 @@ private class NewModuleAction extends NewAction implements BuenoConstants.BuenoB
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
       BudaBubble bb = BaleFactory.getFactory().createFileBubble(proj,null,name);
-      if (bb != null) bba.add(bb,new BudaConstraint(p));
+      addNewBubble(bb,bba,p);
    }
 
 }	// end of inner class NewModuleAction
