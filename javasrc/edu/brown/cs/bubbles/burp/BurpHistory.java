@@ -260,6 +260,7 @@ public boolean canRedo(JTextComponent be)
 
 public void beginEditAction(JTextComponent be)
 {
+   if (be == null) return;
    BurpEditorData ed = editor_map.get(be);
    if (ed != null) ed.beginEditAction();
 }
@@ -267,6 +268,7 @@ public void beginEditAction(JTextComponent be)
 
 public void endEditAction(JTextComponent be)
 {
+   if (be == null) return;
    BurpEditorData ed = editor_map.get(be);
    if (ed != null) ed.endEditAction();
 }

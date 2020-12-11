@@ -202,7 +202,7 @@ void dispose()
 
 BaleDocument getDocument()		{ return editor_pane.getBaleDocument(); }
 
-BaleEditorPane getEditor()		{ return editor_pane; }
+@Override public BaleEditorPane getEditor()	{ return editor_pane; }
 
 BaleFragmentType getFragmentType()	{ return fragment_type; }
 

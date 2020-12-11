@@ -35,6 +35,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 import javax.swing.text.Position;
 
@@ -1375,6 +1376,7 @@ interface BaleWindow {
    void removeCaretListener(CaretListener cl);
    BudaBubble getBudaBubble();
    Collection<String> getKeywords();
+   JTextComponent getEditor();
 }	// end of inner interface BaleWindow
 
 

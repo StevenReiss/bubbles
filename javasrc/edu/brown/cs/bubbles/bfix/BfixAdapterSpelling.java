@@ -29,7 +29,7 @@ import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
-
+import edu.brown.cs.bubbles.burp.BurpHistory;
 import edu.brown.cs.ivy.file.IvyStringDiff;
 
 import java.io.File;
@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+
+import javax.swing.text.JTextComponent;
 
 
 class BfixAdapterSpelling extends BfixAdapter implements BfixConstants
@@ -433,7 +435,7 @@ private static class SpellDoer implements RunnableFix {
    private long initial_time;
 
    SpellDoer(BfixCorrector cor,BaleWindowDocument doc,
-	 BumpProblem bp,SpellFix fix,long time) {
+         BumpProblem bp,SpellFix fix,long time) {
       for_corrector = cor;
       for_document = doc;
       for_problem = bp;
@@ -457,9 +459,20 @@ private static class SpellDoer implements RunnableFix {
       int len = for_fix.getOriginalText().length();
       int eoff = soff+len-1;
       String txt = for_fix.getText();
-   
-      for_document.replace(soff,eoff-soff+1,txt,false,false);
-      BoardMetrics.noteCommand("BFIX", "DoneSpellingCorrection_" + for_corrector.getBubbleId());
+      
+      BaleWindow edwin = for_corrector.getEditor();
+      JTextComponent edcmp = edwin.getEditor();
+      BurpHistory bh = BurpHistory.getHistory();
+      if (edcmp != null) {
+         bh.beginEditAction(edcmp);
+       }
+      try {
+         for_document.replace(soff,eoff-soff+1,txt,false,false);
+         BoardMetrics.noteCommand("BFIX", "DoneSpellingCorrection_" + for_corrector.getBubbleId());
+       }
+      finally {
+         if (edcmp != null) bh.endEditAction(edcmp);
+       }
     }
 
    @Override public double getPriority()                { return 0; }
