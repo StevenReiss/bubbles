@@ -122,6 +122,10 @@ public static BumpLocation getLocationFromXml(Element xml)
    String fnm = IvyXml.getTextElement(xml,"FILE");
    int offset = IvyXml.getAttrInt(xml,"OFFSET");
    int length = IvyXml.getAttrInt(xml,"LENGTH");
+   if (length < 0) {
+      int eff = IvyXml.getAttrInt(xml,"ENDOFFSET");
+      if (eff > 0) length = eff - offset;
+    }
    Element mi = IvyXml.getChild(xml,"ITEM");
    String pnm = IvyXml.getAttrString(xml,"PROJECT");
    if (pnm == null) pnm = IvyXml.getAttrString(mi,"PROJECT");

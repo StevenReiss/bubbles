@@ -1663,7 +1663,9 @@ static boolean checkEclipseDirectory(File ed)
    if (!execfnd) return false;
 
    File pdf = getPluginDirectory(ed);
-   if (pdf == null || !pdf.exists() || !pdf.isDirectory()) return false;
+   if (pdf == null || !pdf.exists() || !pdf.isDirectory() || 
+         !pdf.canWrite())
+      return false;
 
    // NEED A BETTER WAY OF CHECKING ECLIPSE VERSION
 
