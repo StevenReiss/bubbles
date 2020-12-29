@@ -1033,18 +1033,18 @@ private static class BubbleData {
       if (bubble_type != BubbleType.EXEC && bubble_type != BubbleType.USER) return false;
       int lvl = -1;
       for (int i = 0; i < stk.getNumFrames(); ++i) {
-	 if (stk.getFrame(i) == frm) {
-	    lvl = i;
-	    break;
-	  }
-	 else if (frm != null && stk.getFrame(i) != null && frm.getId() == stk.getFrame(i).getId()) {
-	    lvl = i;
-	    break;
-	 }
+         if (stk.getFrame(i) == frm) {
+            lvl = i;
+            break;
+          }
+         else if (frm != null && stk.getFrame(i) != null && frm.getId() == stk.getFrame(i).getId()) {
+            lvl = i;
+            break;
+         }
        }
       if (lvl != frame_level || stk.getNumFrames() != stack_depth &&
-	       bubble_type == BubbleType.EXEC)
-	 return false;
+               bubble_type == BubbleType.EXEC)
+         return false;
       return matchFrameMethod(frm,for_frame);
     }
 

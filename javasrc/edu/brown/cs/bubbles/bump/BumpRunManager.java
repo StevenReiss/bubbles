@@ -2071,7 +2071,8 @@ private class StepUserFilter implements BumpThreadFilter {
       if (evt == null || evt.getEventType() != BumpRunEventType.THREAD_CHANGE) return evt;
       if (!bt.getThreadState().isStopped()) return evt;
       BumpThreadStack stk = bt.getStack();
-      if (stk == null || stk.getNumFrames() == 0 || initial_stack == null || stk.getNumFrames() < initial_stack.getNumFrames()) {
+      if (stk == null || stk.getNumFrames() == 0 || initial_stack == null || 
+            stk.getNumFrames() < initial_stack.getNumFrames()) {
          removeThreadFilter(bt,this);
          return evt;
        }
