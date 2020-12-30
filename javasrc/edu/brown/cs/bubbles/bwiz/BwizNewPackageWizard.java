@@ -58,15 +58,16 @@ BwizNewPackageWizard(BuenoLocation loc)
 {
    super(loc,BuenoType.NEW_PACKAGE);
    String s = property_set.getPackageName();
+   if (s != null) setInitialName(s + ".");
    property_set.put(BuenoKey.KEY_TYPE,"class");
-   if (s != null) {
-      int idx = s.lastIndexOf(".");
-      if (idx >= 0) {
-         String fnm = s.substring(0,idx+1);
-         setInitialName(fnm);
-       }
-      // set up initial name
-    }
+   
+// if (s != null) {
+//    int idx = s.lastIndexOf(".");
+//    if (idx >= 0) {
+//       String fnm = s.substring(0,idx+1);
+//       setInitialName(fnm);
+//     }
+//  }
 }
 
 

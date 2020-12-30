@@ -240,6 +240,7 @@ protected BudaBubble(Component c,BudaBorder bdr)
    border_shape = null;
    is_fixed = false;
    is_userpos = false;
+   is_docked = false;
    spacer_movement = BudaMovement.ANY;
    has_focus = false;
    bubble_group = null;
@@ -1317,7 +1318,7 @@ final void outputBubbleXml(BudaXmlWriter xw,BudaBubbleScaler bs)
    xw.field("ID",getId());
    xw.field("FIXED",isFixed());
    xw.field("FLOAT",isFloating());
-   xw.field("DOCKED",isDocked());
+   xw.field("DOCKED",isDocked() && isFloating());
    xw.field("INTERIOR",bubble_color);
    xw.field("BORDER",border_color);
    xw.field("FOCUS",focus_color);

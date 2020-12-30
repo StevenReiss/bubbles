@@ -2191,10 +2191,13 @@ BudaBubble createBubble(BudaBubbleArea bba,Element e,Rectangle delta,int dx)
    if (x + size.width < 0 || x > bbasize.width || y + size.height < 0 || y > bbasize.height)
       return null;
 
+   boolean docked = IvyXml.getAttrBool(e,"DOCKED");
    if (IvyXml.getAttrBool(e,"FIXED")) pos = BudaBubblePosition.FIXED;
-   if (IvyXml.getAttrBool(e,"FLOAT") || IvyXml.getAttrBool(e,"DOCKED")) {
+   else if (!IvyXml.getAttrBool(e,"FLOAT")) docked = false;
+   
+   if (IvyXml.getAttrBool(e,"FLOAT") || docked) {
       Rectangle va = bubble_view.getViewRect();
-      pos = IvyXml.getAttrBool(e,"DOCKED") ? BudaBubblePosition.DOCKED : BudaBubblePosition.FLOAT;
+      pos = docked ? BudaBubblePosition.DOCKED : BudaBubblePosition.FLOAT;
       if (delta != null) {
 	 x -= delta.x;
 	 y -= delta.y;
@@ -2406,8 +2409,8 @@ private class RestoreSession implements Runnable {
 
    @Override public void run() {
       if (session_config != null) {
-	 setupSession(session_config);
-	 setupView(session_config);
+         setupSession(session_config);
+         setupView(session_config);
        }
       doneSetup();
     }
