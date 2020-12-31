@@ -711,11 +711,11 @@ private static class StartAction implements BudaConstants.ButtonListener {
 
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
       BumpProcess bp = findProcess(bba,pt);
-   
+
       BoardMetrics.noteCommand("BICEX","Start");
-   
+
       BowiFactory.startTask();
-   
+
       SeedeStarter ss = new SeedeStarter(bp,bba,pt);
       BoardThreadPool.start(ss);
     }
@@ -781,43 +781,43 @@ private static class SeedeStarter implements Runnable {
 
    @Override public void run() {
       if (eval_bubble != null) {
-         // running in Swing thread
-         BoardMetrics.noteCommand("BICEX","BubbleVisible");
-         BoardUserReport.noteReport("seede");
-         bubble_area.addBubble(eval_bubble,near_bubble,at_point,
-        			  BudaConstants.PLACEMENT_LOGICAL|BudaConstants.PLACEMENT_NEW|
-        			  BudaConstants.PLACEMENT_MOVETO|BudaConstants.PLACEMENT_USER);
+	 // running in Swing thread
+	 BoardMetrics.noteCommand("BICEX","BubbleVisible");
+	 BoardUserReport.noteReport("seede");
+	 bubble_area.addBubble(eval_bubble,near_bubble,at_point,
+				  BudaConstants.PLACEMENT_LOGICAL|BudaConstants.PLACEMENT_NEW|
+				  BudaConstants.PLACEMENT_MOVETO|BudaConstants.PLACEMENT_USER);
        }
       else {
-         if (for_process == null || !for_process.isRunning()) {
-            setupBubble(new BudaErrorBubble("No running process available for continuous evaluation"));
-            BowiFactory.stopTask();
-          }
-         else {
-            try {
-               the_factory.startSeede();
-               BicexExecution be = new BicexExecution(for_process);
-               the_factory.exec_map.put(be.getExecId(),be);
-               BicexEvaluationViewer bev = new BicexEvaluationViewer(be);
-               setupBubble(new BicexEvaluationBubble(bev));
-               Set<File> files;
-               if (at_point == null && near_bubble != null) {
-        	  files = computeRegionFiles(bubble_area,near_bubble.getLocation());
-        	}
-               else {
-        	  files = computeRegionFiles(bubble_area,at_point);
-        	}
-               if (!files.isEmpty()) be.addFiles(files);
-               be.startContinuousExecution();
-             }
-            catch (BicexException e) {
-               BoardLog.logE("BICEX","Problem starting SEEDE: " + e.getMessage(),e);
-               setupBubble(new BudaErrorBubble("Problem starting SEEDE"));
-             }
-            finally {
-               BowiFactory.stopTask();
-             }
-          }
+	 if (for_process == null || !for_process.isRunning()) {
+	    setupBubble(new BudaErrorBubble("No running process available for continuous evaluation"));
+	    BowiFactory.stopTask();
+	  }
+	 else {
+	    try {
+	       the_factory.startSeede();
+	       BicexExecution be = new BicexExecution(for_process);
+	       the_factory.exec_map.put(be.getExecId(),be);
+	       BicexEvaluationViewer bev = new BicexEvaluationViewer(be);
+	       setupBubble(new BicexEvaluationBubble(bev));
+	       Set<File> files;
+	       if (at_point == null && near_bubble != null) {
+		  files = computeRegionFiles(bubble_area,near_bubble.getLocation());
+		}
+	       else {
+		  files = computeRegionFiles(bubble_area,at_point);
+		}
+	       if (!files.isEmpty()) be.addFiles(files);
+	       be.startContinuousExecution();
+	     }
+	    catch (BicexException e) {
+	       BoardLog.logE("BICEX","Problem starting SEEDE: " + e.getMessage(),e);
+	       setupBubble(new BudaErrorBubble("Problem starting SEEDE"));
+	     }
+	    finally {
+	       BowiFactory.stopTask();
+	     }
+	  }
        }
     }
 
@@ -854,7 +854,7 @@ private class UpdateHandler implements MintHandler {
 	 switch (type) {
 	    case "EXEC" :
 	       BoardMetrics.noteCommand("BICEX","ExecReturned");
-	       bex.handleResult(msg.getXml());
+	       bex.handleResult(xml);
 	       break;
 	    case "RESET" :
 	       BoardMetrics.noteCommand("BICEX","ExecReset");
@@ -1010,17 +1010,17 @@ private static class TestPopupHandler implements BattPopupHandler {
 
    @Override public void handlePopupMenu(BattTest test,BudaBubble bbl,JPopupMenu menu) {
       if (test == null) return;
-   
+
       // don't offer to show the test if there are compiler errors
       BumpClient bc = BumpClient.getBump();
       switch (bc.getErrorType()) {
-         case FATAL :
-         case ERROR :
-            return;
-         default :
-            break;
+	 case FATAL :
+	 case ERROR :
+	    return;
+	 default :
+	    break;
        }
-   
+
       menu.add(new TestRunnerAction(bbl,test));
     }
 
