@@ -556,7 +556,9 @@ private class MetricsDialog extends JDialog implements ActionListener, CaretList
       cmmds_checkbox = pnl.addBoolean("Collect command execution data",collect_commands,null);
       optns_checkbox = pnl.addBoolean("Collect Options file updates",collect_options,null);
       wrkst_checkbox = pnl.addBoolean("Collect Working Sets",collect_workingset,null);
+      wrkst_checkbox.setVisible(false);
       scrns_checkbox = pnl.addBoolean("Collect Periodic Blurred Screen Shots",collect_screens,null);
+      scrns_checkbox.setVisible(false);
       // pnl.addSeparator();
       // dumps_checkbox = pnl.addBoolean("Send Automatic bug reports",collect_dumps,null);
    
@@ -586,35 +588,35 @@ private class MetricsDialog extends JDialog implements ActionListener, CaretList
 
    @Override public void actionPerformed(ActionEvent e) {
       if (e.getActionCommand().equals("CANCEL")) {
-	 BoardLog.logE("BOARD","BUBBLES: Setup aborted by user");
-	 System.exit(1);
+         BoardLog.logE("BOARD","BUBBLES: Setup aborted by user");
+         System.exit(1);
        }
       else if (e.getActionCommand().equals("OK")) {
-	 collect_screens = scrns_checkbox.isSelected();
-	 collect_experience = exprn_checkbox.isSelected();
-	 collect_active = activ_checkbox.isSelected();
-	 collect_commands = cmmds_checkbox.isSelected();
-	 collect_options = optns_checkbox.isSelected();
-	 collect_workingset = wrkst_checkbox.isSelected();
-
-	 // if (userid_textfield != null) user_id = userid_textfield.getText();
-	 if (user_id == null || user_id.equals("")) user_id = getUserId();
-	 else user_id = user_id.replace(" ","_");
-
-	 board_properties.setProperty(BOARD_METRIC_PROP_USERID,user_id);
-	 board_properties.setProperty(BOARD_METRIC_PROP_SCREENS,collect_screens);
-	 board_properties.setProperty(BOARD_METRIC_PROP_EXPERIENCE,collect_experience);
-	 board_properties.setProperty(BOARD_METRIC_PROP_ACTIVE,collect_active);
-	 board_properties.setProperty(BOARD_METRIC_PROP_COMMANDS,collect_commands);
-	 board_properties.setProperty(BOARD_METRIC_PROP_OPTIONS,collect_options);
-	 board_properties.setProperty(BOARD_METRIC_PROP_WORKINGSET,collect_workingset);
-
-	 try {
-	    board_properties.save();
-	  }
-	 catch (IOException ioe) { }
-
-	 this.setVisible(false);
+         collect_screens = scrns_checkbox.isSelected();
+         collect_experience = exprn_checkbox.isSelected();
+         collect_active = activ_checkbox.isSelected();
+         collect_commands = cmmds_checkbox.isSelected();
+         collect_options = optns_checkbox.isSelected();
+         collect_workingset = wrkst_checkbox.isSelected();
+   
+         // if (userid_textfield != null) user_id = userid_textfield.getText();
+         if (user_id == null || user_id.equals("")) user_id = getUserId();
+         else user_id = user_id.replace(" ","_");
+   
+         board_properties.setProperty(BOARD_METRIC_PROP_USERID,user_id);
+         board_properties.setProperty(BOARD_METRIC_PROP_SCREENS,collect_screens);
+         board_properties.setProperty(BOARD_METRIC_PROP_EXPERIENCE,collect_experience);
+         board_properties.setProperty(BOARD_METRIC_PROP_ACTIVE,collect_active);
+         board_properties.setProperty(BOARD_METRIC_PROP_COMMANDS,collect_commands);
+         board_properties.setProperty(BOARD_METRIC_PROP_OPTIONS,collect_options);
+         board_properties.setProperty(BOARD_METRIC_PROP_WORKINGSET,collect_workingset);
+   
+         try {
+            board_properties.save();
+          }
+         catch (IOException ioe) { }
+   
+         this.setVisible(false);
       }
    }
 

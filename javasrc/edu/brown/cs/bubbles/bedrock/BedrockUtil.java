@@ -593,6 +593,7 @@ static String findFileForClass(String cls)
 
    BedrockPlugin bp = BedrockPlugin.getPlugin();
    BedrockProject bpp = bp.getProjectManager();
+   File result = null;
    for (IProject ip : bpp.getOpenProjects()) {
       IJavaProject ijp = JavaCore.create(ip);
       try {
@@ -607,12 +608,20 @@ static String findFileForClass(String cls)
 	 if (ity != null) {
 	    IPath pt = ity.getPath();
 	    File f = getFileForPath(pt,ip);
-	    if (f.exists()) return f.getAbsolutePath();
+	    if (f.exists()) {
+               if (result == null) result = f;
+               else if (f.getName().endsWith(".java") &&
+                     result.getName().endsWith(".class")) {
+                  result = f;
+                }
+             }
 	  }
        }
       catch (JavaModelException e) { }
     }
 
+   if (result != null) return result.getAbsolutePath();
+   
    return null;
 }
 

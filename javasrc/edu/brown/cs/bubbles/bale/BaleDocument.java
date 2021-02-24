@@ -75,7 +75,7 @@ private BaleIndenter		our_indenter;
 private int			id_counter;		// count # of edits
 private long			last_edit;
 
-private static AtomicInteger    edit_counter = new AtomicInteger();
+private static AtomicInteger	edit_counter = new AtomicInteger();
 private static final long serialVersionUID = 1;
 
 
@@ -361,7 +361,7 @@ public boolean replace(int off,int len,String text,boolean fmt,boolean ind)
 {
    Position sp = null;
    Position ep = null;
-   
+
    setupDummyEditor();
 
    baleWriteLock();
@@ -406,14 +406,14 @@ public boolean replace(int off,int len,String text,boolean fmt,boolean ind)
 BaleDocument getBaseEditDocument()			{ return this; }
 
 
-void setupDummyEditor()                                 { }
+void setupDummyEditor() 				{ }
 
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Methods for external use of documents                                   */
-/*                                                                              */
+/*										*/
+/*	Methods for external use of documents					*/
+/*										*/
 /********************************************************************************/
 
 @Override public String getWindowText(int offset,int length)
@@ -638,8 +638,8 @@ float getFontHeight()
 /*										*/
 /********************************************************************************/
 
-@Override public String getProjectName() 	{ return null; }
-@Override public File getFile()		{ return null; }
+@Override public String getProjectName()	{ return null; }
+@Override public File getFile() 	{ return null; }
 String getFragmentName()			{ return null; }
 BaleFragmentType getFragmentType()		{ return BaleFragmentType.NONE; }
 @Override public BoardLanguage getLanguage()
@@ -682,7 +682,7 @@ BaleRegion getRegionFromEclipse(int soff,int eoff)	{ return null; }
 
 void save()					{ }
 void commit()					{ }
-void compile()                                  { }
+void compile()					{ }
 void revert()					{ }
 void checkpoint()				{ }
 
@@ -720,7 +720,7 @@ void removeRegions(List<BaleRegion> rgns)		{ }
 
 
 @Override public Position createHistoryPosition(int off) throws BadLocationException
-{
+{							
    return getBaseEditDocument().createPosition(getDocumentOffset(off));
 }
 

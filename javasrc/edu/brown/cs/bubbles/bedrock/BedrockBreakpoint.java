@@ -200,6 +200,7 @@ void start()
    bm.addBreakpointListener(this);
 
    setAllExceptionBreakpoint();
+   setAssertionBreakpoint();
 }
 
 
@@ -337,6 +338,39 @@ private void setAllExceptionBreakpoint()
       IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       IBreakpoint bp = JDIDebugModel.createExceptionBreakpoint(root,"java.lang.Throwable",
 								  false,true,false,false,null);
+      bm.addBreakpoint(bp);
+    }
+   catch (CoreException e) {
+      BedrockPlugin.logE("Problem setting exception breakpoint: " + e);
+    }
+   
+   saveBreakpoints();
+}
+
+
+
+private void setAssertionBreakpoint()
+{
+   IBreakpointManager bm = debug_plugin.getBreakpointManager();
+   
+   for (IBreakpoint bp : bm.getBreakpoints()) {
+      if (bp instanceof IJavaExceptionBreakpoint) {
+	 IJavaExceptionBreakpoint bjp = (IJavaExceptionBreakpoint) bp;
+	 try {
+            if (!bjp.isCaught()) continue;
+	    if (!bjp.getTypeName().equals("java.lang.AssertionError")) continue;
+	    if (!bjp.isEnabled()) continue;
+	    // breakpoint already set, ignore
+	    return;
+	  }
+	 catch (CoreException e ) { }
+       }
+    }
+   
+   try {
+      IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+      IBreakpoint bp = JDIDebugModel.createExceptionBreakpoint(root,"java.lang.AssertionError",
+            true,true,false,false,null);
       bm.addBreakpoint(bp);
     }
    catch (CoreException e) {
