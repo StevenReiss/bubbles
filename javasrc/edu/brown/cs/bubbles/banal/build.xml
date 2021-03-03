@@ -54,10 +54,21 @@
    </target>
 
    <target name='banalasm' >
+      <java jar='${PRO}/ivy/lib/jarjar.jar' fork='true' >
+	 <arg value='-rules' />
+	 <arg value='banalasm.rules' />
+	 <arg value='${PRO}/ivy/lib/asm.jar' />
+	 <arg value='-output' />
+	 <arg value='banalasm.jar' />
+      </java>
+      <copy file='banalasm.jar' tofile='${BUBBLES}/lib/bubblesasm.jar' />
+   </target>
+
+   <target name='banalasmold' >
       <java jar='${BUBBLES}/lib/jarjar.jar' fork='true' >
 	 <arg value='process' />
 	 <arg value='banalasm.rules' />
-	 <arg value='${BUBBLES}/lib/asm6.jar' />
+	 <arg value='${BUBBLES}/lib/asm.jar' />
 	 <arg value='banalasm.jar' />
       </java>
       <copy file='banalasm.jar' tofile='${BUBBLES}/lib/bubblesasm.jar' />

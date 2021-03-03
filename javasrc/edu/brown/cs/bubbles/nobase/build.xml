@@ -19,7 +19,7 @@
 	 <pathelement location='${BUBBLES}/java' />
 	 <pathelement location='${IVYBIN}' />
 	 <fileset dir='${BUBBLES}/lib/' includes='json.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='asm6.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='asm.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
 	 <fileset dir='${BUBBLES}/eclipsejar'>
@@ -30,7 +30,7 @@
 	 <pathelement location='${BUBBLES}/java' />
 	 <pathelement location='${IVYBIN}' />
 	 <fileset dir='${BUBBLES}/lib/' includes='json.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='asm6.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='asm.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
 	 <fileset dir='${BUBBLES}/eclipsejar'>

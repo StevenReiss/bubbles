@@ -27,6 +27,7 @@ package edu.brown.cs.bubbles.batt;
 
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.bump.BumpLocation;
+import edu.brown.cs.ivy.jcode.JcodeConstants;
 
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -37,6 +38,9 @@ import java.util.List;
 
 
 public interface BattConstants {
+
+
+int ASM_API = JcodeConstants.ASM_API;
 
 
 /********************************************************************************/

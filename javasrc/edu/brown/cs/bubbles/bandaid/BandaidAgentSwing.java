@@ -51,7 +51,7 @@ public class BandaidAgentSwing extends BandaidAgent implements BandaidConstants,
 
 private static Map<Object,StackTraceElement []>     create_map;
 
-private static final int ASM_API = Opcodes.ASM5;
+private static final int ASM_API = Opcodes.ASM9;
 
 private static final boolean do_debug = false;
 

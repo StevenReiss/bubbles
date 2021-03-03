@@ -54,7 +54,7 @@ private boolean 	nobase_starting;
 
 private static String [] nobase_libs = new String [] {
    "json.jar",
-   "asm6.jar",
+   "asm.jar",
    "jsoup.jar",
    "org.eclipse.jface.text.jar",
    "org.eclispe.jface.jar",

@@ -44,6 +44,8 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+import edu.brown.cs.ivy.jcode.JcodeConstants;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -252,7 +254,7 @@ private class KnownClassVisitor extends ClassVisitor {
    private AsmClass asm_data;
 
    KnownClassVisitor() {
-      super(Opcodes.ASM4);
+      super(JcodeConstants.ASM_API);
       asm_data = null;
     }
 
@@ -504,17 +506,17 @@ private class AsmClass {
       if (all_defined) return;
       all_defined = true;
       for (AsmField af : field_data) {
-	 if (scp.lookupVariable(af.getName()) == null) {
-	    RebaseJavaSymbol js = af.createField(typer);
-	    scp.defineVar(js);
-	  }
+         if (scp.lookupVariable(af.getName()) == null) {
+            RebaseJavaSymbol js = af.createField(typer);
+            scp.defineVar(js);
+          }
        }
       for (AsmMethod am : method_data) {
-	 RebaseJavaType atyp = am.getMethodType(typer,null);
-	 if (scp.lookupMethod(am.getName(),atyp) == null) {
-	    RebaseJavaSymbol js = am.createMethod(typer,null,getRebaseJavaType(typer));
-	    scp.defineMethod(js);
-	  }
+         RebaseJavaType atyp = am.getMethodType(typer,null);
+         if (scp.lookupMethod(am.getName(),atyp) == null) {
+            RebaseJavaSymbol js = am.createMethod(typer,null,getRebaseJavaType(typer));
+            scp.defineMethod(js);
+          }
        }
     }
 

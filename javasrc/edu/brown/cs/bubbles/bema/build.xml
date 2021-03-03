@@ -187,6 +187,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='helptext.html' />
 	 <fileset dir='${BUBBLES}' includes='images/**/*.png' />
 	 <fileset dir='${BUBBLES}/lib' includes='bubblesasm.jar' />
+	 <fileset dir='${BUBBLES}/lib' includes='bandaidasm.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='bandaid.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='batt*.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='javax.servlet.jar' />
@@ -210,7 +211,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='pydev.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='commons-compress.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='asm6.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='asm.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='json.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='seede.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='poppy.jar' />

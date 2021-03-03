@@ -20,7 +20,7 @@
 	 <pathelement location='${IVYBIN}' />
 	 <pathelement location='${BUBBLES}/lib/jsoup.jar' />
 	 <pathelement location='${BUBBLES}/lib/junit.jar' />
-	 <pathelement location='${BUBBLES}/lib/asm6.jar' />
+	 <pathelement location='${BUBBLES}/lib/asm.jar' />
 	 <pathelement location='${BUBBLES}/lib/commons-compress.jar' />
 	 <fileset dir='${PRO}/ivy/lib/eclipsejar'>
 	    <include name='*.jar' />
@@ -31,7 +31,7 @@
 	 <pathelement location='${IVYBIN}' />
 	 <pathelement location='${BUBBLES}/lib/jsoup.jar' />
 	 <pathelement location='${BUBBLES}/lib/junit.jar' />
-	 <pathelement location='${BUBBLES}/lib/asm6.jar' />
+	 <pathelement location='${BUBBLES}/lib/asm.jar' />
 	 <pathelement location='${BUBBLES}/lib/commons-compress.jar' />
 	 <fileset dir='${BUBBLES}/eclipsejar'>
 	    <include name='*.jar' />
@@ -42,7 +42,7 @@
 	 <pathelement location='${IVYBIN}' />
 	 <pathelement location='${BUBBLES}/lib/jsoup.jar' />
 	 <pathelement location='${BUBBLES}/lib/junit.jar' />
-	 <pathelement location='${BUBBLES}/lib/asm6.jar' />
+	 <pathelement location='${BUBBLES}/lib/asm.jar' />
 	 <pathelement location='${BUBBLES}/lib/commons-compress.jar' />
       </path>
       <path id='test1.classpath'>
@@ -50,7 +50,7 @@
 	 <pathelement location='${IVYBIN}' />
 	 <pathelement location='${BUBBLES}/lib/jsoup.jar' />
 	 <pathelement location='${BUBBLES}/lib/junit.jar' />
-	 <pathelement location='${BUBBLES}/lib/asm6.jar' />
+	 <pathelement location='${BUBBLES}/lib/asm.jar' />
 	 <pathelement location='${BUBBLES}/lib/commons-compress.jar' />
 	 <fileset dir='${BUBBLES}/eclipsejar'>
 	    <include name='*.jar' />

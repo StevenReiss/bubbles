@@ -73,10 +73,21 @@
    </target>
 
    <target name='bandaidasm' >
+      <java jar='${PRO}/ivy/lib/jarjar.jar' fork='true' >
+	 <arg value='-rules' />
+	 <arg value='bandaidasm.rules' />
+	 <arg value='${PRO}/ivy/lib/asm.jar' />
+	 <arg value='-output' />
+	 <arg value='bandaidasm.jar' />
+      </java>
+      <copy file='bandaidasm.jar' tofile='${BUBBLES}/lib/bandaidasm.jar' />
+   </target>
+
+   <target name='bandaidasmold' >
       <java jar='${BUBBLES}/lib/jarjar.jar' fork='true' >
 	 <arg value='process' />
 	 <arg value='bandaidasm.rules' />
-	 <arg value='${BUBBLES}/lib/asm6.jar' />
+	 <arg value='${BUBBLES}/lib/asm.jar' />
 	 <arg value='bandaidasm.jar' />
       </java>
       <copy file='bandaidasm.jar' tofile='${BUBBLES}/lib/bandaidasm.jar' />

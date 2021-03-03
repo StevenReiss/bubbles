@@ -450,7 +450,7 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
 *******************/
    "websocket.jar",
    "json.jar",
-   "asm6.jar",
+   "asm.jar",
    "helpdemos.xml",
    "helpdoc.xml",
    "rebusprops.xml",

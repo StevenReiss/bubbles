@@ -195,7 +195,7 @@ private class AsmClassVisitor extends ClassVisitor {
    private AsmClass asm_data;
 
    AsmClassVisitor(String proj) {
-      super(Opcodes.ASM6);
+      super(ASM_API);
       asm_data = null;
     }
 
@@ -266,7 +266,7 @@ private class AsmAnnotationVisitor extends AnnotationVisitor {
    private AsmMethod base_method;
 
    AsmAnnotationVisitor(AsmClass annot,AsmClass base,AsmField fld,AsmMethod mthd) {
-      super(Opcodes.ASM6);
+      super(ASM_API);
       base_class = base;
       base_field = fld;
       base_method = mthd;
@@ -300,7 +300,7 @@ private class AsmFieldVisitor extends FieldVisitor {
    private AsmField for_field;
 
    AsmFieldVisitor(AsmField fld) {
-      super(Opcodes.ASM6);
+      super(ASM_API);
       for_field = fld;
     }
 
@@ -324,7 +324,7 @@ private class AsmMethodVisitor extends MethodVisitor {
    private AsmMethod for_method;
 
    AsmMethodVisitor(AsmMethod mthd) {
-      super(Opcodes.ASM6);
+      super(ASM_API);
       for_method = mthd;
     }
 

@@ -68,7 +68,7 @@ private static final int	NUM_SETS = 3;
 private static final int	ENTRY_COUNT = 10240;
 private static final long	NULL_DELAY = 1000;
 
-private static final int	ASM_API = Opcodes.ASM5;
+private static final int	ASM_API = Opcodes.ASM9;
 
 
 

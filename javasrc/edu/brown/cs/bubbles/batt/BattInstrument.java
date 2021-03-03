@@ -234,7 +234,7 @@ private class BattTransformer extends ClassVisitor {
    private boolean is_abstract;
 
    BattTransformer(String name,ClassVisitor v) {
-      super(Opcodes.ASM6,v);
+      super(ASM_API,v);
       class_name = name;
       is_abstract = false;
     }
@@ -291,7 +291,7 @@ private class CoverageSetup extends MethodVisitor {
    private int		last_line;
 
    CoverageSetup(MethodVisitor v,String sclass) {
-      super(Opcodes.ASM6,v);
+      super(ASM_API,v);
       block_next = false;
       super_class = sclass;
       branch_targets = new HashSet<>();
@@ -452,7 +452,7 @@ private static class Tracer extends MethodVisitor {
    private Textifier output_printer;
 
    Tracer(MethodVisitor nmv,String name,Textifier out) {
-      super(Opcodes.ASM6,nmv);
+      super(ASM_API,nmv);
       method_name = name;
       output_printer = out;
     }

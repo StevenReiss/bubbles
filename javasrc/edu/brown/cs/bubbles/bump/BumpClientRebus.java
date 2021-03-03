@@ -55,7 +55,7 @@ private boolean 	rebus_starting;
 private static String [] rebus_libs = new String [] {
    "jsoup.jar",
    "junit.jar",
-   "asm6.jar",
+   "asm.jar",
    "org.eclipse.jdt.core.jar",
    "org.eclipse.core.jobs.jar",
    "org.eclipse.core.resources.jar",

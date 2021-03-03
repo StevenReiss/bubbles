@@ -22,7 +22,7 @@ foreach i ($LIB/org.eclipse.*.jar)
 end
 
 set CP8 = $LIB/mail.jar:$LIB/activation.jar
-set CP9 = $LIB/bubblesasm.jar:$LIB/asm5.jar:$LIB/junit.jar:$LIB/jsoup.jar:$LIB/json.jar
+set CP9 = $LIB/bubblesasm.jar:$LIB/asm.jar:$LIB/junit.jar:$LIB/jsoup.jar:$LIB/json.jar
 
 set CPA = ""
 foreach i ($LIB/freetts/*)
