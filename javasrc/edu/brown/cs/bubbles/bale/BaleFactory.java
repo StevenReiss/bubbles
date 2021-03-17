@@ -1139,17 +1139,19 @@ public void applyEdits(Element edits)
 }
 
 
-public void applyEdits(File file,Element edits)
+public boolean applyEdits(File file,Element edits)
 {
-   if (file == null || edits == null) return;
+   if (file == null || edits == null) return false;
 
    BaleDocument bd = getDocument(null,file);
-   if (bd == null) return;
-   
+   if (bd == null) return false;
+
    bd.setupDummyEditor();
-   
+
    BaleApplyEdits bae = new BaleApplyEdits(bd);
    bae.applyEdits(edits);
+
+   return true;
 }
 
 
@@ -1649,22 +1651,22 @@ private static class FormatImporter implements BudaConstants.ButtonListener {
       if (!IvyXml.isElement(xml,"profiles")) n1 = IvyXml.getChild(xml,"profiles");
       Element n2 = IvyXml.getChild(n1,"profile");
       for (Element n3 : IvyXml.children(n2,"setting")) {
-         xw.begin("OPTION");
-         xw.field("NAME",IvyXml.getAttrString(n3,"id"));
-         xw.field("VALUE",IvyXml.getAttrString(n3,"value"));
-         xw.end("OPTION");
+	 xw.begin("OPTION");
+	 xw.field("NAME",IvyXml.getAttrString(n3,"id"));
+	 xw.field("VALUE",IvyXml.getAttrString(n3,"value"));
+	 xw.end("OPTION");
        }
       xw.end("OPTIONS");
       bump_client.loadPreferences(null,xw.toString());
       String v = BALE_PROPERTIES.getProperty("indent.tabulation.size");
       if (v == null) {
-         v = BumpClient.getBump().getOption("org.eclipse.jdt.core.formatter.tabulation.size");
-         if (v != null) {
-            try {
-               if (v != null) BaleTabHandler.setBaseTabSize(Integer.parseInt(v));
-             }
-            catch (NumberFormatException e) { }
-          }
+	 v = BumpClient.getBump().getOption("org.eclipse.jdt.core.formatter.tabulation.size");
+	 if (v != null) {
+	    try {
+	       if (v != null) BaleTabHandler.setBaseTabSize(Integer.parseInt(v));
+	     }
+	    catch (NumberFormatException e) { }
+	  }
        }
       xw.close();
       format_time = System.currentTimeMillis();

@@ -306,110 +306,67 @@ private class RenamePanel extends JPanel {
 /*										*/
 /********************************************************************************/
 
-//private void rename()
-//{
-//   String ntext = rename_field.getText();
-//
-//   if (for_id == null || for_document == null) return;
-//
-//   BowiFactory.startTask(BowiTaskType.RENAME);
-//
-//   try {
-//      int soff = for_document.mapOffsetToEclipse(for_id.getStartOffset());
-//      int eoff = for_document.mapOffsetToEclipse(for_id.getEndOffset());
-//
-//      BudaRoot br = BudaRoot.findBudaRoot(for_editor);
-//      if (br != null) br.handleSaveAllRequest();
-//
-//      BaleEditorPane oed = for_editor;
-//      BumpClient bc = BumpClient.getBump();
-//      Element edits = bc.rename(for_document.getProjectName(),for_document.getFile(),soff,eoff,ntext);
-//
-//      removeContext();
-//
-//      if (edits == null) return;
-//
-//      BurpHistory.getHistory().beginEditAction(oed);
-//      try {
-//	 BaleApplyEdits bae = new BaleApplyEdits();
-//	 bae.applyEdits(edits);
-//       }
-//      finally {
-//	 BurpHistory.getHistory().endEditAction(oed);
-//       }
-//
-//      if (br != null) {
-//	 br.handleSaveAllRequest();
-//	 bc.compile(false,true,true);
-//       }
-//    }
-//   finally {
-//      BowiFactory.stopTask(BowiTaskType.RENAME);
-//    }
-//}
-
-
 private class RenameDoer implements Runnable {
 
    private String rename_text;
    private Element rename_edits;
    private int rename_phase;
-   
+
    RenameDoer() {
       rename_text = rename_field.getText();
       rename_edits = null;
       rename_phase = 0;
     }
-         
+	
    @Override public void run() {
       BudaRoot br = BudaRoot.findBudaRoot(for_editor);
       BumpClient bc = BumpClient.getBump();
       BaleEditorPane oed = for_editor;
-    
+
       switch (rename_phase) {
-         case 0 :
-            BaleElement id = for_id;
-            BaleDocument doc = for_document;
-            if (id == null || doc == null) return;
-            removeContext();
-            
-            BowiFactory.startTask();
-   
-            if (br != null) br.handleSaveAllRequest();
-   
-            int soff = doc.mapOffsetToEclipse(id.getStartOffset());
-            int eoff = doc.mapOffsetToEclipse(id.getEndOffset());
-           
-            rename_edits = bc.rename(doc.getProjectName(),doc.getFile(),soff,eoff,rename_text);
-            rename_phase = 1;
-            SwingUtilities.invokeLater(this);
-            break;
-         case 1 :
-            if (rename_edits != null) {
-               BurpHistory.getHistory().beginEditAction(oed);
-               try {
-                  BaleApplyEdits bae = new BaleApplyEdits();
-                  bae.applyEdits(rename_edits);
-                }
-               finally {
-                  BurpHistory.getHistory().endEditAction(oed);
-                }
-             }
-            rename_phase = 2;
-            BoardThreadPool.start(this);
-            break;
-         case 2 :   
-            br = BudaRoot.findBudaRoot(for_editor);
-            if (br != null) {
-               br.handleSaveAllRequest();
-               bc.compile(false,true,true);
-             }
-            BowiFactory.stopTask();
-            break;
+	 case 0 :
+	    BaleElement id = for_id;
+	    BaleDocument doc = for_document;
+	    if (id == null || doc == null) return;
+	    removeContext();
+	
+	    BowiFactory.startTask();
+
+	    if (br != null) br.handleSaveAllRequest();
+
+	    int soff = doc.mapOffsetToEclipse(id.getStartOffset());
+	    int eoff = doc.mapOffsetToEclipse(id.getEndOffset());
+	
+	    rename_edits = bc.rename(doc.getProjectName(),doc.getFile(),soff,eoff,rename_text);
+	    rename_phase = 1;
+	    SwingUtilities.invokeLater(this);
+	    break;
+	 case 1 :
+	    if (rename_edits != null) {
+	       BurpHistory.getHistory().beginEditAction(oed);
+	       try {
+		  BaleApplyEdits bae = new BaleApplyEdits();
+		  bae.applyEdits(rename_edits);
+		}
+	       finally {
+		  BurpHistory.getHistory().endEditAction(oed);
+		}
+	     }
+	    rename_phase = 2;
+	    BoardThreadPool.start(this);
+	    break;
+	 case 2 :
+	    br = BudaRoot.findBudaRoot(for_editor);
+	    if (br != null) {
+	       br.handleSaveAllRequest();
+	       bc.compile(false,true,true);
+	     }
+	    BowiFactory.stopTask();
+	    break;
       }
    }
-   
-}       // end of inner class RanameDoer
+
+}	// end of inner class RanameDoer
 
 
 

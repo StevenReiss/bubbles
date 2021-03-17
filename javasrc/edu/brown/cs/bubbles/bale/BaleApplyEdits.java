@@ -96,7 +96,8 @@ void applyEdits(Element xml)
 
 private void applyLocalEdits(Element xml)
 {
-   if (IvyXml.isElement(xml,"EDITS") || IvyXml.isElement(xml,"RESULT")) {
+   if (IvyXml.isElement(xml,"EDITS") || IvyXml.isElement(xml,"RESULT") || 
+         IvyXml.isElement(xml,"REPAIREDIT")) {
       for (Element c : IvyXml.children(xml)) applyLocalEdits(c);
     }
    else if (IvyXml.isElement(xml,"CHANGE")) {

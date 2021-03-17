@@ -213,107 +213,107 @@ private static class SpellFixer extends BfixFixer {
       Set<SpellFix> totry = new TreeSet<SpellFix>();
       int minsize = Math.min(fix_size, for_identifier.length()-1);
       minsize = Math.min(minsize,(for_identifier.length()+2)/3);
-      
-      
+
+
       BumpClient bc = BumpClient.getBump();
       Collection<BumpCompletion> cmps = bc.getCompletions(proj,file,-1,for_problem.getStart());
       if (cmps == null) return null;
       for (BumpCompletion bcm : cmps) {
-         String txt = bcm.getCompletion();
-         if (txt == null || txt.length() == 0) continue;
-         double d = IvyStringDiff.stringDiff(for_identifier,txt);
-         if (d <= minsize && d > 0) {
-            BoardLog.logD("BFIX","SPELL: Consider replacing " + for_identifier + " WITH " + txt);
-            SpellFix sf = new SpellFix(for_identifier,txt,d);
-            totry.add(sf);
-          }
+	 String txt = bcm.getCompletion();
+	 if (txt == null || txt.length() == 0) continue;
+	 double d = IvyStringDiff.stringDiff(for_identifier,txt);
+	 if (d <= minsize && d > 0) {
+	    BoardLog.logD("BFIX","SPELL: Consider replacing " + for_identifier + " WITH " + txt);
+	    SpellFix sf = new SpellFix(for_identifier,txt,d);
+	    totry.add(sf);
+	  }
        }
       if (totry.size() == 0) {
-         cmps = bc.getCompletions(proj,file,-1,for_problem.getStart()+1);
-         if (cmps != null) {
-            for (BumpCompletion bcm : cmps) {
-               String txt = bcm.getCompletion();
-               if (txt == null || txt.length() == 0) continue;
-               double d = IvyStringDiff.stringDiff(for_identifier,txt);
-               if (d <= minsize && d > 0) {
-                  BoardLog.logD("BFIX","SPELL: Consider replacing " + for_identifier + " WITH " + txt);
-                  SpellFix sf = new SpellFix(for_identifier,txt,d);
-                  totry.add(sf);
-                }
-             }
-          }
+	 cmps = bc.getCompletions(proj,file,-1,for_problem.getStart()+1);
+	 if (cmps != null) {
+	    for (BumpCompletion bcm : cmps) {
+	       String txt = bcm.getCompletion();
+	       if (txt == null || txt.length() == 0) continue;
+	       double d = IvyStringDiff.stringDiff(for_identifier,txt);
+	       if (d <= minsize && d > 0) {
+		  BoardLog.logD("BFIX","SPELL: Consider replacing " + for_identifier + " WITH " + txt);
+		  SpellFix sf = new SpellFix(for_identifier,txt,d);
+		  totry.add(sf);
+		}
+	     }
+	  }
        }
-      
+
       String key = for_identifier;
       if (key.length() > 3) {
-         int start = 0;
-         for (int i = 0; i < 3; ++i) {
-            if (Character.isJavaIdentifierPart(key.charAt(i))) ++start;
-            else break;
-          }
-         key = key.substring(0,start) + "*";
-         List<BumpLocation> rslt = bc.findTypes(proj,key);
-         if (rslt != null) {
-            for (BumpLocation bl : rslt) {
-               String nm = bl.getSymbolName();
-               int idx = nm.lastIndexOf(".");
-               if (idx >= 0) nm = nm.substring(idx+1);
-               double d = IvyStringDiff.stringDiff(for_identifier,nm);
-               if (d <= minsize && d > 0) {
-                  BoardLog.logD("BFIX","SPELL: Consider replacing " + for_identifier + " WITH " + nm);
-                  SpellFix sf = new SpellFix(for_identifier,nm,d);
-                  totry.add(sf);
-                }
-             }
-          }
+	 int start = 0;
+	 for (int i = 0; i < 3; ++i) {
+	    if (Character.isJavaIdentifierPart(key.charAt(i))) ++start;
+	    else break;
+	  }
+	 key = key.substring(0,start) + "*";
+	 List<BumpLocation> rslt = bc.findTypes(proj,key);
+	 if (rslt != null) {
+	    for (BumpLocation bl : rslt) {
+	       String nm = bl.getSymbolName();
+	       int idx = nm.lastIndexOf(".");
+	       if (idx >= 0) nm = nm.substring(idx+1);
+	       double d = IvyStringDiff.stringDiff(for_identifier,nm);
+	       if (d <= minsize && d > 0) {
+		  BoardLog.logD("BFIX","SPELL: Consider replacing " + for_identifier + " WITH " + nm);
+		  SpellFix sf = new SpellFix(for_identifier,nm,d);
+		  totry.add(sf);
+		}
+	     }
+	  }
        }
       Collection<String> keys = for_corrector.getEditor().getKeywords();
-      
+
       // this should be done by finding annotation types
       // keys.add("Override");
       // keys.add("SuppressWarnings");
-      
+
       for (String s : keys) {
-         double d = IvyStringDiff.stringDiff(for_identifier,s);
-         if (d <= minsize && d > 0) {
-            BoardLog.logD("BFIX","SPELL: Consider replacing " + for_identifier + " WITH " + s);
-            SpellFix sf = new SpellFix(for_identifier,s,d);
-            totry.add(sf);
-          }
+	 double d = IvyStringDiff.stringDiff(for_identifier,s);
+	 if (d <= minsize && d > 0) {
+	    BoardLog.logD("BFIX","SPELL: Consider replacing " + for_identifier + " WITH " + s);
+	    SpellFix sf = new SpellFix(for_identifier,s,d);
+	    totry.add(sf);
+	  }
        }
-      
+
       // remove problematic cases
       for (Iterator<SpellFix> it = totry.iterator(); it.hasNext(); ) {
-         SpellFix sf = it.next();
-         String txt = sf.getText();
-         boolean rem = false;
-         for (SpellProblem sp : spell_problems) {
-            if (sp.ignore(for_identifier,txt)) {
-               rem = true;
-               break;
-             }
-          }
-         if (rem) {
-            it.remove();
-            break;
-          }
-         // if (for_identifier.equals("put") && txt.equals("get")) it.remove();
-         // else if (for_identifier.startsWith("set") && txt.startsWith("get")) it.remove();
-         // else if (for_identifier.equals("List") && txt.equals("int")) it.remove();
-         // else if (for_identifier.equals("is") && txt.equals("if")) it.remove();
-         // else if (txt.equals("if")) it.remove();
-         // else if (for_identifier.equals("add") && txt.equals("do")) it.remove();
-         // else if (for_identifier.equals("min") && txt.equals("sin")) it.remove();
-         // else if (for_identifier.equals(txt + "2D")) it.remove();
-         // else if (txt.equals(for_identifier + "2D")) it.remove();
-         // else if (for_identifier.equals("IOException")) it.remove();
+	 SpellFix sf = it.next();
+	 String txt = sf.getText();
+	 boolean rem = false;
+	 for (SpellProblem sp : spell_problems) {
+	    if (sp.ignore(for_identifier,txt)) {
+	       rem = true;
+	       break;
+	     }
+	  }
+	 if (rem) {
+	    it.remove();
+	    break;
+	  }
+	 // if (for_identifier.equals("put") && txt.equals("get")) it.remove();
+	 // else if (for_identifier.startsWith("set") && txt.startsWith("get")) it.remove();
+	 // else if (for_identifier.equals("List") && txt.equals("int")) it.remove();
+	 // else if (for_identifier.equals("is") && txt.equals("if")) it.remove();
+	 // else if (txt.equals("if")) it.remove();
+	 // else if (for_identifier.equals("add") && txt.equals("do")) it.remove();
+	 // else if (for_identifier.equals("min") && txt.equals("sin")) it.remove();
+	 // else if (for_identifier.equals(txt + "2D")) it.remove();
+	 // else if (txt.equals(for_identifier + "2D")) it.remove();
+	 // else if (for_identifier.equals("IOException")) it.remove();
        }
-      
+
       if (totry.size() == 0) {
-         BoardLog.logD("BFIX", "SPELL: No spelling correction found");
-         return null;
+	 BoardLog.logD("BFIX", "SPELL: No spelling correction found");
+	 return null;
        }
-      
+
       String pid = createPrivateBuffer(proj,filename);
       if (pid == null) return null;
       BoardLog.logD("BFIX","SPELL: using private buffer " + pid);
@@ -321,60 +321,60 @@ private static class SpellFixer extends BfixFixer {
       BoardMetrics.noteCommand("BFIX","SpellCheck_" + totry.size());
       SpellFix badfix = null;
       boolean havebad = false;
-      
+
       try {
-         Collection<BumpProblem> oprobs = bc.getPrivateProblems(filename,pid);
-         if (oprobs == null) {
-            BoardLog.logE("BFIX","SPELL: Problem getting errors for " + pid);
-            return null;
-          }
-         int probct = getErrorCount(oprobs,for_problem);
-         if (!checkProblemPresent(for_problem,oprobs)) {
-            BoardLog.logD("BFIX","SPELL: Spelling problem went away");
-            return null;
-          }
-         int soff = for_problem.getStart();
-         int eoff = soff + for_identifier.length();
-         
-         for (SpellFix sf : totry) {
-            bc.beginPrivateEdit(filename,pid);
-            BoardLog.logD("BFIX","SPELL: Try replacing " + for_identifier + " WITH " + sf.getText());
-            bc.editPrivateFile(proj,file,pid,soff,eoff,sf.getText());
-            Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
-            bc.beginPrivateEdit(filename,pid);		// undo and wait
-            bc.editPrivateFile(proj,file,pid,soff,soff+sf.getText().length(),for_identifier);
-            bc.getPrivateProblems(filename,pid);
-            
-            int edelta = sf.getText().length() - for_identifier.length();
-            if (checkAnyProblemPresent(for_problem,probs,0,edelta)) continue;
-            if (checkAnyProblemPresent(probs,for_problem.getFile(),soff,eoff+edelta)) continue;
-            if (probs == null || getErrorCount(probs) >= probct) continue;
-            else if (getErrorCount(probs) == probct) {
-               double score = sf.getEditCount();
-               score /= for_identifier.length();
-               if (score < 0.1) {
-                  if (havebad) badfix = null;
-                  else {
-                     havebad = true;
-                     badfix = sf;
-                   }
-                }
-               continue;
-             }
-            
-            if (usefix != null) {
-               if (sf.getEditCount() > usefix.getEditCount()) break;
-               // multiple edits of same length seem to work out -- ignore.
-               return null;
-             }
-            else usefix = sf;
-          }
+	 Collection<BumpProblem> oprobs = bc.getPrivateProblems(filename,pid);
+	 if (oprobs == null) {
+	    BoardLog.logE("BFIX","SPELL: Problem getting errors for " + pid);
+	    return null;
+	  }
+	 int probct = getErrorCount(oprobs,for_problem);
+	 if (!checkProblemPresent(for_problem,oprobs)) {
+	    BoardLog.logD("BFIX","SPELL: Spelling problem went away");
+	    return null;
+	  }
+	 int soff = for_problem.getStart();
+	 int eoff = soff + for_identifier.length();
+	
+	 for (SpellFix sf : totry) {
+	    bc.beginPrivateEdit(filename,pid);
+	    BoardLog.logD("BFIX","SPELL: Try replacing " + for_identifier + " WITH " + sf.getText());
+	    bc.editPrivateFile(proj,file,pid,soff,eoff,sf.getText());
+	    Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
+	    bc.beginPrivateEdit(filename,pid);		// undo and wait
+	    bc.editPrivateFile(proj,file,pid,soff,soff+sf.getText().length(),for_identifier);
+	    bc.getPrivateProblems(filename,pid);
+	
+	    int edelta = sf.getText().length() - for_identifier.length();
+	    if (checkAnyProblemPresent(for_problem,probs,0,edelta)) continue;
+	    if (checkAnyProblemPresent(probs,for_problem.getFile(),soff,eoff+edelta)) continue;
+	    if (probs == null || getErrorCount(probs) >= probct) continue;
+	    else if (getErrorCount(probs) == probct) {
+	       double score = sf.getEditCount();
+	       score /= for_identifier.length();
+	       if (score < 0.1) {
+		  if (havebad) badfix = null;
+		  else {
+		     havebad = true;
+		     badfix = sf;
+		   }
+		}
+	       continue;
+	     }
+	
+	    if (usefix != null) {
+	       if (sf.getEditCount() > usefix.getEditCount()) break;
+	       // multiple edits of same length seem to work out -- ignore.
+	       return null;
+	     }
+	    else usefix = sf;
+	  }
        }
       finally {
-         bc.removePrivateBuffer(proj,filename,pid);
+	 bc.removePrivateBuffer(proj,filename,pid);
        }
       if (havebad && badfix != null && usefix == null) usefix = badfix;
-      
+
       if (usefix == null) return null;
       if (for_corrector.getStartTime() != initial_time) return null;
       BoardLog.logD("BFIX","SPELL: DO replace " + for_identifier + " WITH " + usefix.getText());
@@ -435,7 +435,7 @@ private static class SpellDoer implements RunnableFix {
    private long initial_time;
 
    SpellDoer(BfixCorrector cor,BaleWindowDocument doc,
-         BumpProblem bp,SpellFix fix,long time) {
+	 BumpProblem bp,SpellFix fix,long time) {
       for_corrector = cor;
       for_document = doc;
       for_problem = bp;
@@ -448,36 +448,37 @@ private static class SpellDoer implements RunnableFix {
       List<BumpProblem> probs = bc.getProblems(for_document.getFile());
       if (!checkProblemPresent(for_problem,probs)) return;
       if (for_corrector.getStartTime() != initial_time) return;
-   
+
       int soff = for_document.mapOffsetToJava(for_problem.getStart());
       int eoff0 = for_document.mapOffsetToJava(for_problem.getEnd());
       if (!checkSafePosition(for_corrector,soff,eoff0)) return;
-   
+
       BoardMetrics.noteCommand("BFIX","SpellingCorrection_" + for_corrector.getBubbleId());
       BoardLog.logD("BFIX","SPELL Making correction " + for_fix.getText() + " for " + for_fix.getOriginalText());
-   
+
       int len = for_fix.getOriginalText().length();
       int eoff = soff+len-1;
       String txt = for_fix.getText();
-      
+
       BaleWindow edwin = for_corrector.getEditor();
       JTextComponent edcmp = edwin.getEditor();
       BurpHistory bh = BurpHistory.getHistory();
       if (edcmp != null) {
-         bh.beginEditAction(edcmp);
+	 bh.beginEditAction(edcmp);
        }
       try {
-         for_document.replace(soff,eoff-soff+1,txt,false,false);
-         BoardMetrics.noteCommand("BFIX", "DoneSpellingCorrection_" + for_corrector.getBubbleId());
+	 for_document.replace(soff,eoff-soff+1,txt,false,false);
+	 BoardMetrics.noteCommand("BFIX", "DoneSpellingCorrection_" + for_corrector.getBubbleId());
        }
       finally {
-         if (edcmp != null) bh.endEditAction(edcmp);
+	 if (edcmp != null) bh.endEditAction(edcmp);
        }
     }
 
-   @Override public double getPriority()                { return 0; }
-   
+   @Override public double getPriority()		{ return 0; }
+
 }	// end of inner class SpellDoer
+
 
 
 
@@ -497,8 +498,8 @@ private static class SpellProblem {
    SpellProblem(String desc) {
       desc = desc.trim();
       if (desc.startsWith("^")) {
-         starts_with = true;
-         desc = desc.substring(1);
+	 starts_with = true;
+	 desc = desc.substring(1);
        }
       else starts_with = false;
       original_identifier = null;
@@ -506,31 +507,31 @@ private static class SpellProblem {
       using_suffix = null;
       StringTokenizer tok = new StringTokenizer(desc,",");
       if (tok.hasMoreTokens()) {
-         original_identifier = tok.nextToken().trim();
-         if (original_identifier.equals("*")) original_identifier = null;
+	 original_identifier = tok.nextToken().trim();
+	 if (original_identifier.equals("*")) original_identifier = null;
        }
       if (tok.hasMoreTokens()) {
-         target_identifier = tok.nextToken().trim();
-         if (target_identifier.equals("*")) target_identifier = null;
+	 target_identifier = tok.nextToken().trim();
+	 if (target_identifier.equals("*")) target_identifier = null;
        }
       if (tok.hasMoreTokens()) {
-         using_suffix = tok.nextToken().trim();
-         if (using_suffix.equals("*")) using_suffix = null;
+	 using_suffix = tok.nextToken().trim();
+	 if (using_suffix.equals("*")) using_suffix = null;
        }
     }
 
    boolean ignore(String orig,String txt) {
       if (original_identifier != null) {
-         if (starts_with && !orig.startsWith(original_identifier)) return false;
-         else if (!starts_with && !orig.equals(original_identifier)) return false;
+	 if (starts_with && !orig.startsWith(original_identifier)) return false;
+	 else if (!starts_with && !orig.equals(original_identifier)) return false;
        }
       if (target_identifier != null) {
-         if (starts_with && !txt.startsWith(target_identifier)) return false;
-         if (!starts_with && !txt.equals(target_identifier)) return false;
+	 if (starts_with && !txt.startsWith(target_identifier)) return false;
+	 if (!starts_with && !txt.equals(target_identifier)) return false;
        }
       if (using_suffix != null) {
-         if (!orig.equals(txt + using_suffix) && !txt.equals(orig + using_suffix))
-            return false;
+	 if (!orig.equals(txt + using_suffix) && !txt.equals(orig + using_suffix))
+	    return false;
        }
       return true;
     }
@@ -541,13 +542,13 @@ private static class SpellProblem {
       if (original_identifier != null) buf.append(original_identifier);
       else buf.append("*");
       if (target_identifier != null) {
-         buf.append(",");
-         buf.append(target_identifier);
+	 buf.append(",");
+	 buf.append(target_identifier);
        }
       else if (using_suffix != null) buf.append(",*");
       if (using_suffix != null) {
-         buf.append(",");
-         buf.append(using_suffix);
+	 buf.append(",");
+	 buf.append(using_suffix);
        }
       return buf.toString();
     }
