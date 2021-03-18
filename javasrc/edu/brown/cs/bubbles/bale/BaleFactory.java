@@ -60,6 +60,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.Segment;
 import javax.swing.text.StyleContext;
@@ -1155,6 +1157,33 @@ public boolean applyEdits(File file,Element edits)
 }
 
 
+JTextComponent getTextComponent(BaleDocument doc)
+{
+   if (doc == null) return null;
+   
+   BudaBubble use = null;
+   for (BudaBubble bb : buda_root.getCurrentBubbleArea().getBubbles()) {
+      Document d = bb.getContentDocument();
+      if (d == null) continue;
+      if (d == doc) {
+         use = bb;
+         break;
+       }
+      else if (d instanceof BaleDocument) {
+         BaleDocument bd = (BaleDocument) d;
+         if (bd.getBaseEditDocument() == doc) use = bb;
+       }
+    }
+   if (use == null) return null;
+   
+   Component c = use.getContentPane();
+   if (c instanceof BaleFragmentEditor) {
+      BaleFragmentEditor bfe = (BaleFragmentEditor) c;
+      return bfe.getEditor();
+    }
+   
+   return null;
+}
 
 /********************************************************************************/
 /*										*/

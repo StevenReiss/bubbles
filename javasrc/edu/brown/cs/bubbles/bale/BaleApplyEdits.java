@@ -32,12 +32,13 @@ package edu.brown.cs.bubbles.bale;
 
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.bump.BumpClient;
-
+import edu.brown.cs.bubbles.burp.BurpHistory;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
 
 import javax.swing.text.BadLocationException;
+import javax.swing.text.JTextComponent;
 
 import java.io.File;
 import java.util.Comparator;
@@ -125,14 +126,23 @@ private void applyLocalEdits(Element xml)
    else if (IvyXml.isElement(xml,"EDIT")) {
       String typ = IvyXml.getAttrString(xml,"TYPE");
       if (typ == null) return;
-      if (typ.equals("MULTI")) {
-	 Set<Element> edits = new TreeSet<Element>(new EditSorter());
-	 extractEdits(xml,edits);
-	 for (Element ed : edits) {
-	    applyEdit(ed);
-	  }
+      JTextComponent tc = BaleFactory.getFactory().getTextComponent(for_document);
+      BurpHistory bh = BurpHistory.getHistory();
+      BoardLog.logD("BALE","Found text component for apply: " + tc);
+      bh.beginEditAction(tc);
+      try {
+         if (typ.equals("MULTI")) {
+            Set<Element> edits = new TreeSet<Element>(new EditSorter());
+            extractEdits(xml,edits);
+            for (Element ed : edits) {
+               applyEdit(ed);
+             }
+          }
+         else applyEdit(xml);
        }
-      else applyEdit(xml);
+      finally {
+         bh.endEditAction(tc);
+       }
     }
 }
 
@@ -281,6 +291,7 @@ private void applyEdit(Element ed)
        }
     }
 }
+
 
 
 
