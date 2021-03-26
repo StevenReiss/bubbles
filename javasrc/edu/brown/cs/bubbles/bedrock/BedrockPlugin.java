@@ -400,7 +400,7 @@ private String sendMessageWait(String msg,long delay)
    String s = msg;
    if (s.length() > 50) s = s.substring(0,50);
    BedrockPlugin.logD("Send message: " + s);
-   
+
    return rply.waitForString(delay);
 }
 
@@ -442,7 +442,7 @@ String finishMessageWait(IvyXmlWriter xw)
 String finishMessageWait(IvyXmlWriter xw,long delay)
 {
    xw.end("BEDROCK");
-   
+
    return sendMessageWait(xw.toString(),delay);
 }
 
@@ -621,12 +621,12 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrBool(xml,"TRACE",false));
 	 break;
       case "ADDEXCEPTIONBREAKPOINT" :
-	 bedrock_breakpoint.setExceptionBreakpoint(proj,IvyXml.getAttrString(xml,"CLASS"), 
-               IvyXml.getAttrBool(xml,"CAUGHT",false),
+	 bedrock_breakpoint.setExceptionBreakpoint(proj,IvyXml.getAttrString(xml,"CLASS"),
+	       IvyXml.getAttrBool(xml,"CAUGHT",false),
 	       IvyXml.getAttrBool(xml,"UNCAUGHT",true),
 	       IvyXml.getAttrBool(xml,"CHECKED",false),
 	       IvyXml.getAttrBool(xml,"SUSPENDVM",false),
-               IvyXml.getAttrBool(xml,"SUBCLASS",true));
+	       IvyXml.getAttrBool(xml,"SUBCLASS",true));
 	 break;
       case "EDITBREAKPOINT" :
 	 bedrock_breakpoint.editBreakpoint(IvyXml.getAttrInt(xml,"ID"),
@@ -889,11 +889,11 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 xw.text(Integer.toString(num_clients));
 	 break;
       case "SAVEWORKSPACE" :
-         saveEclipse();
-         xw.text("SAVED");
-         break;
+	 saveEclipse();
+	 xw.text("SAVED");
+	 break;
       case "EXIT" :
-         logD("EXIT Request received " + num_clients + " " + doing_exit);
+	 logD("EXIT Request received " + num_clients + " " + doing_exit);
 	 if (--num_clients <= 0) {
 	    xw.text("EXITING");
 	    forceExit();
@@ -929,6 +929,9 @@ void forceExit()
    BedrockPlugin.logD("Stopping application");
    shutdown_mint = true;
 }
+
+
+
 
 
 

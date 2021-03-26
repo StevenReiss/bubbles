@@ -22,4 +22,24 @@
      <MAIN>edu.brown.cs.seedebb.brepair.BrepairFactory</MAIN>
   </PLUGIN>
 
+  <PLUGIN NAME="ROSE"
+	  DESCRIPTION="Quick Repair of Run Time Bugs for Java"
+	  URL="http://www.cs.brown.edu/people/spr/bubbles/dropins/rose.jar" >
+     <RESOURCE>Rose.props</RESOURCE>
+     <RESOURCE>rose.palette</RESOURCE>
+     <RESOURCE>images/rose.png</RESOURCE>
+     <MAIN>edu.brown.cs.rose.bush.BushFactory</MAIN>
+     <REQUIRES>SEEDE</REQUIRES>
+     <REQUIRES>FAIT</REQUIRES>
+  </PLUGIN>
+
 </PLUGINS>
+
+
+
+
+
+
+
+
+

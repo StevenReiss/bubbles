@@ -39,6 +39,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -248,9 +249,23 @@ private class PluginList extends JList<PluginData> {
 {
    String cmd = evt.getActionCommand();
    if (cmd.equals("INSTALL")) {
-      for (PluginData pd : avail_list.getSelectedValuesList()) {
-	 avail_set.removeElement(pd);
-	 install_set.addElement(pd);
+      List<PluginData> toadd = new ArrayList<>(avail_list.getSelectedValuesList());
+      while (!toadd.isEmpty()) {
+         Set<String> req = new HashSet<>();
+         for (PluginData pd : toadd) {
+            avail_set.removeElement(pd);
+            install_set.addElement(pd);
+            for (String s : pd.getRequiredPlugins()) req.add(s);
+          }
+         toadd.clear();
+         for (String nm : req) {
+            for (PluginData pd : avail_set) {
+               if (pd.getName().equals(nm)) {
+                  toadd.add(pd);
+                  break;
+                }
+             }
+          }
        }
     }
    else if (cmd.equals("REMOVE")) {
@@ -390,6 +405,7 @@ private static class PluginData implements Comparable<PluginData> {
    private String plugin_url;
    private List<String> plugin_mains;
    private List<String> plugin_resources;
+   private List<String> plugin_requires;
    private File plugin_file;
    private boolean plugin_installed;
 
@@ -410,8 +426,15 @@ private static class PluginData implements Comparable<PluginData> {
 	 plugin_resources.add(IvyXml.getText(e).trim());
        }
       String s1 = IvyXml.getAttrString(xml,"RESOURCE");
-      if (s1 != null) plugin_resources.add(s);
+      if (s1 != null) plugin_resources.add(s1);
 
+      plugin_requires = new ArrayList<>();
+      for (Element e : IvyXml.children(xml,"REQUIRES")) {
+	 plugin_requires.add(IvyXml.getText(e).trim());
+       }
+      String s2 = IvyXml.getAttrString(xml,"REQUIRES");
+      if (s2 != null) plugin_requires.add(s2);
+      
       plugin_file = null;
       checkInstalled();
     }
@@ -419,6 +442,7 @@ private static class PluginData implements Comparable<PluginData> {
    boolean isInstalled()		{ return plugin_installed; }
    String getName()			{ return plugin_name; }
    String getDescription()		{ return plugin_description; }
+   List<String> getRequiredPlugins()    { return plugin_requires; }
 
    @Override public String toString()	{ return plugin_name; }
 

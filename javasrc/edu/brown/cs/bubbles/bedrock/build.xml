@@ -95,6 +95,8 @@
    <target name='macplugin' depends='plugin' if='ivy.present'>
       <copy file='bedrock.jar'
 		tofile='/vol/Developer/eclipse-2020-03/Eclipse.app/Contents/Eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+      <copy file='bedrock.jar'
+		tofile='/vol/Developer/jee-2020-09/Eclipse.app/Contents/Eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
    </target>
 
 </project>
