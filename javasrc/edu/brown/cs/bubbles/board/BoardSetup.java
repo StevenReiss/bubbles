@@ -1777,7 +1777,7 @@ private boolean checkInstall()
 	 checkJarLibraries();
 	 checkBinFiles();
 	 File nobbles = new File(f.getParentFile(),"nobbles.jar");
-	 File pybbles = new File(f.getParentFile(),"pybbles.jar");
+	 File pybbles = new File(f.getParentFile(),"pybles.jar");
 	 File cloudbb = new File(f.getParentFile(),"cloudbb.jar");
 	 Path jarpath = f.toPath();
 	 Path nblpath = nobbles.toPath();
@@ -2858,7 +2858,7 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
 	    eclipse_warning.setForeground(WARNING_COLOR);
 	    pnl.add(eclipse_warning);
 	    if (eclipse_directory == null && install_jar) {
-	       eclipse_button = pnl.addBottomButton("INSTALL ECLIPSE","ECLIPSE",this);
+	       // eclipse_button = pnl.addBottomButton("INSTALL ECLIPSE","ECLIPSE",this);
 	     }
 	    break;
 	 case PYTHON :

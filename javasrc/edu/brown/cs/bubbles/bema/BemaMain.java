@@ -207,9 +207,9 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-nor")) {                 // -norestore
 	    restore_session = false;
 	  }
-         else if (args[i].startsWith("-u")) {                   // -update
-            auto_update = true;
-          }
+	 else if (args[i].startsWith("-u")) {                   // -update
+	    auto_update = true;
+	  }
 	 else if (args[i].startsWith("-nou")) {                 // -noupdate
 	    auto_update = false;
 	  }
@@ -827,7 +827,7 @@ private void checkDefaultLanguage()
 	 useJavaScript();
 	 break;
        }
-      else if (elt.equals("pybbles.jar")) {
+      else if (elt.equals("pybbles.jar") || elt.equals("pybles.jar")) {
 	 usePython();
 	 break;
        }

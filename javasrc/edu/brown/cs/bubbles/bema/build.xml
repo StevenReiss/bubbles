@@ -226,6 +226,7 @@
 	 <fileset dir='${BUBBLES}/lib' includes='marytts/*.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='words' />
 	 <fileset dir='${BUBBLES}/bin' includes='cloud*' />
+	 <fileset dir='${BUBBLES}/bin' includes='extcodebb' />
 	 <fileset dir='${BUBBLES}/lib' includes='speech.properties' />
       </jar>
       <copy file='bubbles.jar' tofile='${BUBBLES}/bubbles.jar' />

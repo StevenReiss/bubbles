@@ -2983,7 +2983,7 @@ static class KeyItem {
       key = fixKey(key);
       key_stroke = KeyStroke.getKeyStroke(key);
       if (key_stroke == null) {
-	 BoardLog.logE("BALE","Bad key definition: " + key);
+         BoardLog.logE("BALE","Bad key definition: " + key);
        }
       key_action = a;
     }
@@ -2999,7 +2999,7 @@ static class KeyItem {
 
    void addToKeyMap(Keymap kmp) {
       if (key_stroke != null && key_action != null) {
-	 kmp.addActionForKeyStroke(key_stroke,key_action);
+         kmp.addActionForKeyStroke(key_stroke,key_action);
        }
     }
 

@@ -142,7 +142,7 @@ private BudaTopBar		bubble_topbar;
 private BudaBubble		search_bubble;
 private BudaBubble		docsearch_bubble;
 private JPanel			button_panel;
-private List<Component> button_panels;
+private List<Component>         button_panels;
 private Collection<BudaTask>	task_shelf;
 private BudaRelations		relation_data;
 private BudaChannelSet		cur_channels;
@@ -1407,11 +1407,19 @@ private void setupGlobalActions()
 {
    int menumask = SwingText.getMenuShortcutKeyMaskEx();
    int menudown = 0;
-   if (menumask == InputEvent.CTRL_DOWN_MASK)
+   int altdown = 0;
+   if (menumask == InputEvent.CTRL_DOWN_MASK) {
       menudown = InputEvent.CTRL_DOWN_MASK;
-   else if (menumask == InputEvent.META_DOWN_MASK)
+      altdown = InputEvent.ALT_DOWN_MASK;
+    }
+   else if (menumask == InputEvent.META_DOWN_MASK) {
       menudown = InputEvent.META_DOWN_MASK;
-   else menudown = InputEvent.CTRL_DOWN_MASK;
+      altdown = InputEvent.CTRL_DOWN_MASK;
+    }
+   else {
+      menudown = InputEvent.CTRL_DOWN_MASK;
+      altdown = InputEvent.ALT_DOWN_MASK;
+    }
 
    registerKeyAction(BudaToolbar.getMenuBarAction(this),"Show menu bar",
 			KeyStroke.getKeyStroke(KeyEvent.VK_F1,0));
@@ -1444,13 +1452,13 @@ private void setupGlobalActions()
    registerKeyAction(new FloaterHandler(),"Toggle Bubble Floating",
 			KeyStroke.getKeyStroke(KeyEvent.VK_F12, menudown));
    registerKeyAction(new FocusDirectionHandler(FocusDirectionHandler.LEFT, 0.5f),"Move focus to closest bubble on left",
-			KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, menudown|InputEvent.ALT_DOWN_MASK));
+			KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, menudown|altdown));
    registerKeyAction(new FocusDirectionHandler(FocusDirectionHandler.RIGHT, 0.5f),"Move focus to closest bubble on right",
-			KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, menudown|InputEvent.ALT_DOWN_MASK));
+			KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, menudown|altdown));
    registerKeyAction(new FocusDirectionHandler(FocusDirectionHandler.UP, 0.5f),"Move focus to closest bubble above",
-			KeyStroke.getKeyStroke(KeyEvent.VK_UP, menudown|InputEvent.ALT_DOWN_MASK));
+			KeyStroke.getKeyStroke(KeyEvent.VK_UP, menudown|altdown));
    registerKeyAction(new FocusDirectionHandler(FocusDirectionHandler.DOWN, 0.5f),"Move focus to closest bubble below",
-			KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, menudown|InputEvent.ALT_DOWN_MASK));
+			KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, menudown|altdown));
    registerKeyAction(new PanHandler(-1,0),"pan left",
 			KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, menudown));
    registerKeyAction(new PanHandler(1,0),"pan right",
@@ -2363,7 +2371,6 @@ private void setupView(Element config)
    int px = (int) IvyXml.getAttrDouble(viewcfg,"X",BUBBLE_DISPLAY_START_X);
    int py = (int) IvyXml.getAttrDouble(viewcfg,"Y",BUBBLE_DISPLAY_START_Y);
    py += delta;
-
    int mintop = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
    if (py < mintop) py = mintop;
 
@@ -2408,10 +2415,9 @@ private class RestoreSession implements Runnable {
     }
 
    @Override public void run() {
-      if (session_config != null) {
-         setupSession(session_config);
-         setupView(session_config);
-       }
+      setupSession(session_config);
+      setupView(session_config);
+      
       doneSetup();
     }
 

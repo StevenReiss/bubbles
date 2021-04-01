@@ -1,0 +1,25 @@
+#! /bin/csh -f
+
+set x1 = `fgrep edu.brown.cs.bubbles.jar ~/.bubbles/System.props | sed -e 's/^.*">//' | sed -e 's/<.*$//'`
+set x2 = `fgrep edu.brown.cs.bubbles.install ~/.bubbles/System.props | sed -e 's/^.*">//' | sed -e 's/<.*$//'`
+
+if (X$x1 == X) then
+   echo Bubbles not yet set up.  Please run the jar file directly to set it up.
+   exit 1
+endif
+
+# Remove the above check and change the set below to be the directory containing the jar file
+# and set x2 to ""
+# Alternatively, just use the last line with the proper path
+
+set BUBBLES = $x1
+
+
+if (X$x2 != X) then
+   if (-e $x2/bin/codebb) then
+      exec $x2/bin/codebb $*
+      exit 0
+    endif
+endif
+
+java -jar $BUBBLES/bubbles.jar	$*

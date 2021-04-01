@@ -98,8 +98,8 @@ private Map<String,String>	eclipse_versions;
 private File			eclipse_directory;
 private String			eclipse_version;
 
-private static final String ECLIPSE_URL = "ftp://ftp.oregonstate.edu/.1/eclipse/" +
-      "technology/epp/downloads/release/$(V)/" +
+private static final String ECLIPSE_URL = "https://www.eclipse.org/downloads/download.php?" +
+      "file=/technology/epp/downloads/release/$(V)/" +
       "R/eclipse-java-$(V)-R-$(OS).tar.gz";
 
 
@@ -227,13 +227,11 @@ private String runInstaller()
 private boolean getEclipseVersions()
 {
    eclipse_versions = new LinkedHashMap<>();
-   addEclipseVersion("2019-12");
-   addEclipseVersion("2019-09");
-   addEclipseVersion("2019-06");
-   addEclipseVersion("2019-03");
-   addEclipseVersion("2018-12");
-   addEclipseVersion("2018-09");
-   addEclipseVersion("photon");
+   addEclipseVersion("2021-03");
+   addEclipseVersion("2020-12");
+   addEclipseVersion("2020-09");
+   addEclipseVersion("2020-06");
+   addEclipseVersion("2020-03");
 
    return true;
 }
