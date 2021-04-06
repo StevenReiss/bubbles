@@ -517,6 +517,7 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
 *********/
 
    "words",
+   "cocker.jar",
 
    "marytts/marytts.jar",
    "marytts/marytts-lang-en-5.2.jar",

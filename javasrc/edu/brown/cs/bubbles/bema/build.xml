@@ -216,6 +216,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='seede.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='poppy.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='cocker.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='activation.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='reports.xml' />
