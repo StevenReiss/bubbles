@@ -2999,52 +2999,52 @@ private static class MouseEventQueue extends EventQueue {
    @Override protected void dispatchEvent(AWTEvent e) {
       // only want mouse events for buttons other than 1
       if (!(e instanceof MouseEvent)) {
-	 if (e instanceof InputEvent) {
-	    BudaHover.removeHovers();
-	    InputEvent ie = (InputEvent) e;
-	    BoardMetrics.noteActive(ie.getWhen());
-	  }
-	 resend(e);
-	 return;
+         if (e instanceof InputEvent) {
+            BudaHover.removeHovers();
+            InputEvent ie = (InputEvent) e;
+            BoardMetrics.noteActive(ie.getWhen());
+          }
+         resend(e);
+         return;
        }
-
+   
       MouseEvent me = (MouseEvent) e;
       BoardMetrics.noteActive(me.getWhen());
       last_mouse = me;
-
+   
       if (drag_area == null) {
-	 if (me.getButton() == MouseEvent.BUTTON1 ||
-		(me.getID() != MouseEvent.MOUSE_CLICKED && me.getID() != MouseEvent.MOUSE_PRESSED)) {
-	    resend(e);
-	    return;
-	  }
+         if (me.getButton() == MouseEvent.BUTTON1 ||
+        	(me.getID() != MouseEvent.MOUSE_CLICKED && me.getID() != MouseEvent.MOUSE_PRESSED)) {
+            resend(e);
+            return;
+          }
        }
-
+   
       if (me.getID() == MouseEvent.MOUSE_DRAGGED || me.getID() == MouseEvent.MOUSE_RELEASED) {
-	 if (drag_area == null) {
-	    resend(e);
-	    return;
-	  }
+         if (drag_area == null) {
+            resend(e);
+            return;
+          }
        }
       else if (drag_area != null && me.getID() != MouseEvent.MOUSE_EXITED) {
-	 clearDragArea();
+         clearDragArea();
        }
-
+   
       if (drag_area == null) setDragArea(me);
-
+   
       if (drag_area != null) {
-	 Point pt = SwingUtilities.convertPoint(me.getComponent(),me.getPoint(),drag_area);
-	 me.translatePoint(pt.x-me.getX(),pt.y-me.getY());
-	 if (me.getID() == MouseEvent.MOUSE_DRAGGED || me.getID() == MouseEvent.MOUSE_MOVED)
-	    drag_area.processMouseMotionEvent(me);
-	 else
-	    drag_area.processMouseEvent(me);
-	 if (me.getID() == MouseEvent.MOUSE_RELEASED || me.getID() == MouseEvent.MOUSE_CLICKED)
-	    clearDragArea();
-
-	 return;
+         Point pt = SwingUtilities.convertPoint(me.getComponent(),me.getPoint(),drag_area);
+         me.translatePoint(pt.x-me.getX(),pt.y-me.getY());
+         if (me.getID() == MouseEvent.MOUSE_DRAGGED || me.getID() == MouseEvent.MOUSE_MOVED)
+            drag_area.processMouseMotionEvent(me);
+         else
+            drag_area.processMouseEvent(me);
+         if (me.getID() == MouseEvent.MOUSE_RELEASED || me.getID() == MouseEvent.MOUSE_CLICKED)
+            clearDragArea();
+   
+         return;
        }
-
+   
       resend(e);
       return;
     }

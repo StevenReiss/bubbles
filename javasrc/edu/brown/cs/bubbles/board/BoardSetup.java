@@ -172,7 +172,7 @@ private static final long MIN_MEMORY = 1024*1024*1024;
 
 
 private static String [] ivy_props = new String [] {
-   "IVY", "edu.brown.cs.IVY", "edu.brown.cs.ivy.IVY"
+   "IVY", "edu.brown.cs.IVY", "edu.brown.cs.ivy.IVY", "BROWN_IVY_IVY"
 };
 
 private static String [] ivy_env = new String [] {

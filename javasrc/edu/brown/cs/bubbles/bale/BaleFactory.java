@@ -1620,25 +1620,25 @@ static class QuickFix extends AbstractAction {
       List<BaleFixer> fixes = new ArrayList<BaleFixer>();
       List<BumpFix> fixlist = for_problem.getFixes();
       if (fixlist != null) {
-	 for (BumpFix bf : fixlist) {
-	    BaleFixer fixer = new BaleFixer(for_problem,bf);
-	    if (fixer.isValid()) fixes.add(fixer);
-	 }
+         for (BumpFix bf : fixlist) {
+            BaleFixer fixer = new BaleFixer(for_problem,bf);
+            if (fixer.isValid()) fixes.add(fixer);
+         }
       }
       if (fixes.isEmpty()) {
-	 JOptionPane.showMessageDialog(for_editor,"No quick fixes available");
-	 return;
+         JOptionPane.showMessageDialog(for_editor,"No quick fixes available");
+         return;
        }
-
+   
       BaleFixer fix = null;
       Collections.sort(fixes);
       Object [] fixalts = fixes.toArray();
       fix = (BaleFixer) JOptionPane.showInputDialog(for_editor,"Select Quick Fix",
-						       "Quick Fix Selector",
-						       JOptionPane.QUESTION_MESSAGE,
-						       null,fixalts,fixes.get(0));
+        					       "Quick Fix Selector",
+        					       JOptionPane.QUESTION_MESSAGE,
+        					       null,fixalts,fixes.get(0));
       if (fix == null) return;
-
+   
       fix.actionPerformed(e);
       BoardMetrics.noteCommand("BALE","QuickFixOption");
     }

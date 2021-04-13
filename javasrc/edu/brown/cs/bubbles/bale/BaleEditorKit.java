@@ -284,7 +284,7 @@ private static final KeyItem [] key_defs = new KeyItem[] {
    new KeyItem("menu K",find_next_action),
    new KeyItem("menu shift K",find_prev_action),
    new KeyItem("menu D",delete_line_action),
-   new KeyItem("menu shift DELETE",delete_to_eol_action),
+   new KeyItem("menu shift D",delete_to_eol_action),
    new KeyItem("menu shift ENTER",insert_line_above_action),
    new KeyItem("shift ENTER",insert_line_below_action),
    new KeyItem("menu I",indent_lines_action),
@@ -341,6 +341,7 @@ private static final KeyItem [] key_defs = new KeyItem[] {
    new KeyItem("shift xalt J",javadoc_comment_action),
 
    new KeyItem("menu 1",quick_fix_action),
+   new KeyItem("alt 1",quick_fix_action),
 };
 
 
@@ -1100,15 +1101,15 @@ private static class DeleteToEolAction extends TextAction {
       BaleDocument bd = be.getBaleDocument();
       bd.baleWriteLock();
       try {
-	 int sdel = be.getSelectionStart();
-	 int eoff = be.getSelectionEnd();
-	 int elno = bd.findLineNumber(eoff);
-	 int edel = bd.findLineOffset(elno+1) - 1;
-
-	 try {
-	    if (edel != sdel) bd.remove(sdel,edel-sdel);
-	  }
-	 catch (BadLocationException ex) { }
+         int sdel = be.getSelectionStart();
+         int eoff = be.getSelectionEnd();
+         int elno = bd.findLineNumber(eoff);
+         int edel = bd.findLineOffset(elno+1) - 1;
+   
+         try {
+            if (edel != sdel) bd.remove(sdel,edel-sdel);
+          }
+         catch (BadLocationException ex) { }
        }
       finally { bd.baleWriteUnlock(); }
     }
@@ -1756,8 +1757,8 @@ private static class SelectParagraphAction extends TextAction {
       BaleDocument bd = target.getBaleDocument();
       int soff = target.getSelectionStart();
       BaleElement be = bd.getCharacterElement(soff);
-      while (be != null && !be.isLeaf() && !be.isLineElement()) {
-	 be = be.getBaleParent();
+      while (be != null && (be.isLeaf() || be.isLineElement())) {
+         be = be.getBaleParent();
        }
       if (be == null) return;
       target.setCaretPosition(be.getStartOffset());
@@ -2832,30 +2833,29 @@ private static class QuickFixAction extends TextAction {
       int soff = target.getSelectionStart();
       List<BumpProblem> probs = bd.getProblemsAtLocation(soff);
       if (probs == null) return;
-
+   
       List<BaleFixer> fixes = new ArrayList<BaleFixer>();
       for (BumpProblem bp : probs) {
-	 if (bp.getFixes() != null) {
-	    for (BumpFix bf : bp.getFixes()) {
-	       BaleFixer fixer = new BaleFixer(bp,bf);
-	       if (fixer.isValid()) fixes.add(fixer);
-	     }
-	  }
+         if (bp.getFixes() != null) {
+            for (BumpFix bf : bp.getFixes()) {
+               BaleFixer fixer = new BaleFixer(bp,bf);
+               if (fixer.isValid()) fixes.add(fixer);
+             }
+          }
        }
       if (fixes.isEmpty()) return;
-
+   
       BaleFixer fix = null;
       if (fixes.size() == 1) fix = fixes.get(0);
       else {
-	 Collections.sort(fixes);
-	 Object [] fixalts = fixes.toArray();
-	 // TODO:  should sort the fixes by relevance and edit size
-	 fix = (BaleFixer) JOptionPane.showInputDialog(target,"Select Quick Fix","Quick Fix Selector",
-							  JOptionPane.QUESTION_MESSAGE,
-							  null,fixalts,fixes.get(0));
+         Collections.sort(fixes);
+         Object [] fixalts = fixes.toArray();
+         fix = (BaleFixer) JOptionPane.showInputDialog(target,"Select Quick Fix","Quick Fix Selector",
+        						  JOptionPane.QUESTION_MESSAGE,
+        						  null,fixalts,fixes.get(0));
        }
       if (fix == null) return;
-
+   
       fix.actionPerformed(e);
       BoardMetrics.noteCommand("BALE","QuickFix");
    }
