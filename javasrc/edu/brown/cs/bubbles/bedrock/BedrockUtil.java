@@ -497,7 +497,7 @@ static void outputBreakpoint(IBreakpoint xbp,IvyXmlWriter xw)
             Object val = eb.getMarker().getAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses");
             if (val != null) xw.field("ISSUBCLASSES",val);
             else {
-               eb.getMarker().getAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",true);
+               eb.getMarker().setAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",true);
                xw.field("ISSUBCLASSES",true);
              }
             for (String ef : eb.getExclusionFilters()) {

@@ -31,7 +31,6 @@ import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
-import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 
@@ -39,9 +38,9 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -166,22 +165,16 @@ private class ExceptionSet implements Runnable {
 
    @Override public void run() {
       Set<String> etypes = new TreeSet<String>();
-
+   
       // this doesn't get system classes although it should
       BumpClient bc = BumpClient.getBump();
-      List<BumpLocation> locs = bc.findAllClasses("*Exception");
-      if (locs != null) {
-	 for (BumpLocation bl : locs) {
-	    etypes.add(bl.getSymbolName());
-	  }
+      for (String nm : bc.findAllSubclasses("java.lang.Throwable")) {
+         if (nm.startsWith("org.junit") && nm.contains(".internal.")) continue;
+         if (nm.startsWith("org.eclipse") && nm.contains(".internal.")) continue;
+         if (nm.contains("$")) continue;
+         etypes.add(nm);
        }
-     locs = bc.findAllClasses("*Error");
-      if (locs != null) {
-	 for (BumpLocation bl : locs) {
-	    etypes.add(bl.getSymbolName());
-	  }
-       }
-
+      
       DefaultComboBoxModel<String> mdl = (DefaultComboBoxModel<String>) exception_box.getModel();
       mdl.removeAllElements();
       for (String s : etypes) mdl.addElement(s);

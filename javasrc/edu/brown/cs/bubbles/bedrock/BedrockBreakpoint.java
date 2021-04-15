@@ -338,6 +338,7 @@ private void setAllExceptionBreakpoint()
       IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       IBreakpoint bp = JDIDebugModel.createExceptionBreakpoint(root,"java.lang.Throwable",
 								  false,true,false,false,null);
+      bp.getMarker().setAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",true);
       bm.addBreakpoint(bp);
     }
    catch (CoreException e) {
@@ -371,6 +372,7 @@ private void setAssertionBreakpoint()
       IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       IBreakpoint bp = JDIDebugModel.createExceptionBreakpoint(root,"java.lang.AssertionError",
             true,true,false,false,null);
+      bp.getMarker().setAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",true);
       bm.addBreakpoint(bp);
     }
    catch (CoreException e) {
@@ -502,7 +504,7 @@ private void setBreakProperty(IBreakpoint bp,String p,String v) throws BedrockEx
 	    eb.setExclusionFilters(inf);
 	  }
        }
-      else if (p.equals("SUBCLASSES")) {
+      else if (p.equals("SUBCLASSES") || p.equals("ISSUBCLASSES")) {
          if (bp instanceof IJavaExceptionBreakpoint) {
             IJavaExceptionBreakpoint eb = (IJavaExceptionBreakpoint) bp;
             boolean v0 = true;

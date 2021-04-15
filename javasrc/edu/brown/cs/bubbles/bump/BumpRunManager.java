@@ -399,7 +399,6 @@ private void startDebugServer()
 
       List<String> args = new ArrayList<String>();
       args.add(IvyExecQuery.getJavaPath());
-      // args.add("-Xmx512m");
       args.add("-cp");
       args.add(System.getProperty("java.class.path"));
       args.add("edu.brown.cs.bubbles.bump.BumpDebugServer");

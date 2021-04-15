@@ -1577,7 +1577,7 @@ private void saveProperties()
 	 case JAVA :
 	 case PYTHON :
 	 case REBUS :
-	    system_properties.setProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS,"-Xmx512m");
+//          system_properties.setProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS,"-Xmx512m");
 	    break;
 	 case JS :
 	    system_properties.setProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS,"-Xmx1536m");

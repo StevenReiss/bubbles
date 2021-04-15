@@ -58,9 +58,11 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -1610,6 +1612,41 @@ public List<BumpLocation> findAllClasses(String nm)
    Element xml = getXmlReply("PATTERNSEARCH",null,sw.toString(),null,0);
 
    return getSearchResults(null,xml,false);
+}
+
+
+
+public List<BumpLocation> findAllImplements(String nm)
+{
+   // this doesn't work
+   waitForIDE();
+   
+   StringWriter sw = new StringWriter();
+   sw.write("PATTERN='");
+   IvyXml.outputXmlString(nm,sw);
+   sw.write("' DEFS='true' REFS='false' SYSTEM='true' IMPLS='true'");
+   sw.write(" FOR='CLASS'");
+   
+   Element xml = getXmlReply("PATTERNSEARCH",null,sw.toString(),null,0);
+   
+   return getSearchResults(null,xml,false);
+}
+
+
+
+public Set<String> findAllSubclasses(String base)
+{  
+   Set<String> etypes = new HashSet<String>();
+
+   Element e = getTypeHierarchy(null,null,base,true);
+   Element typ = IvyXml.getChild(e,"TYPE");
+   for (Element styp : IvyXml.children(typ,"SUBTYPE")) {
+      String nm = IvyXml.getAttrString(styp,"NAME");
+      if (nm == null) continue;
+      etypes.add(nm);
+    }
+   
+   return etypes;
 }
 
 

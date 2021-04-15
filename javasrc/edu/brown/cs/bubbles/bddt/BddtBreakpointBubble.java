@@ -740,7 +740,7 @@ private class NewExceptionAction extends AbstractAction {
       BudaBubble bb = new BddtExceptionBreakpointBubble();
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtBreakpointBubble.this);
       if (bba != null) {
-	 bba.addBubble(bb,BddtBreakpointBubble.this,null,PLACEMENT_ABOVE|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+         bba.addBubble(bb,BddtBreakpointBubble.this,null,PLACEMENT_ABOVE|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
        }
     }
 
