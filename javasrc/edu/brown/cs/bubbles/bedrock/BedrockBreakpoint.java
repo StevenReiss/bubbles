@@ -337,7 +337,7 @@ private void setAllExceptionBreakpoint()
    try {
       IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       IBreakpoint bp = JDIDebugModel.createExceptionBreakpoint(root,"java.lang.Throwable",
-								  false,true,false,false,null);
+								  false,true,false,true,null);
       bp.getMarker().setAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",true);
       bm.addBreakpoint(bp);
     }

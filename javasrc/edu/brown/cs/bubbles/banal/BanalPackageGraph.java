@@ -544,10 +544,10 @@ private abstract class NodeData implements BanalPackageNode {
       if (node_name.equals("java.lang.Error")) return true;
       if (node_name.equals("java.lang.Exception")) return true;
       for (LinkData ld : out_links.values()) {
-	 if (ld.getTypes().containsKey(PackageRelationType.SUPERCLASS)) {
-	    ClassData cd =  (ClassData) ld.getToNode();
-	    return cd.isThrowable();
-	  }
+         if (ld.getTypes().containsKey(PackageRelationType.SUPERCLASS)) {
+            ClassData cd =  (ClassData) ld.getToNode();
+            return cd.isThrowable();
+          }
        }
       return false;
     }

@@ -1175,6 +1175,8 @@ private class CreateBubble implements Runnable {
 private void addExecutionAnnot(BumpThread bt)
 {
    removeExecutionAnnot(bt);
+   
+   BoardProperties props = BoardProperties.getProperties("Bddt");
 
    BumpThreadStack stk = bt.getStack();
    if (stk != null && stk.getNumFrames() > 0) {
@@ -1184,7 +1186,19 @@ private void addExecutionAnnot(BumpThread bt)
 	 exec_annots.put(bt,ea);
 	 BaleFactory.getFactory().addAnnotation(ea);
 	 setActiveFrame(bsf);
-      }
+       }
+      else if (!props.getBoolean("Bddt.show.library.bubbles") && 
+            props.getBoolean("Bddt.show.user.bubble")) {
+         for (int i = 1; i < stk.getNumFrames(); ++i) {
+            BumpStackFrame bsf1 = stk.getFrame(i);
+            if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0) {
+               ExecutionAnnot ea = new ExecutionAnnot(bt,bsf1);
+               exec_annots.put(bt,ea);
+               BaleFactory.getFactory().addAnnotation(ea);
+               setActiveFrame(bsf1);
+             }
+          }
+       }
     }
 }
 
@@ -1248,18 +1262,18 @@ private class ExecutionAnnot implements BaleAnnotation {
       for_frame = frm;
       for_file = frm.getFile();
       boolean lcl = frm.isSystem();
-
+   
       for_document = BaleFactory.getFactory().getFileOverview(null,for_file,lcl);
       int off = for_document.findLineOffset(frm.getLineNumber());
       annot_color = BoardColors.getColor(BDDT_EXECUTE_ANNOT_COLOR_PROP);
       except_color = BoardColors.getColor(BDDT_EXECUTE_EXCEPT_COLOR_PROP);
-
+   
       execute_pos = null;
       try {
-	 execute_pos = for_document.createPosition(off);
+         execute_pos = for_document.createPosition(off);
        }
       catch (BadLocationException e) {
-	 BoardLog.logE("BDDT","Bad execution position",e);
+         BoardLog.logE("BDDT","Bad execution position",e);
        }
     }
 
