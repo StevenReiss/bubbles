@@ -67,7 +67,7 @@ public static void main(String [] args)
    System.err.println("CHECK " + Desktop.getDesktop().isSupported(Desktop.Action.BROWSE));
 
    try {
-      Desktop.getDesktop().browse(new URI("http://conifer.cs.brown.edu/s6"));
+      Desktop.getDesktop().browse(new URI("http://conifer2.cs.brown.edu/s6"));
     }
    catch (Throwable t) {
       System.err.println("PROBLEM OPENING: " + t);

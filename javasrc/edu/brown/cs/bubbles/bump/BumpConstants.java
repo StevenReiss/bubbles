@@ -826,6 +826,7 @@ interface BumpStackFrame {
    boolean evaluateInternal(String expr,String saveid,BumpEvaluationHandler hdlr);
 
    boolean match(BumpStackFrame frm);
+   boolean sameFrame(BumpStackFrame frm);
    String getDisplayString();
 
 }	// end of inner interface BumpStackFrame

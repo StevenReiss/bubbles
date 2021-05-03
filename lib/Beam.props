@@ -17,11 +17,9 @@
 <entry key="Beam.problem.font">SansSerif/0/11</entry>
 <entry key="Beam.note.font.size">12</entry>
 <entry key="Beam.note.font">Serif/0/12</entry>
-<entry key="Beam.tracbug.url">http://codebubbles@conifer.cs.brown.edu:8000/bubbles/</entry>
-<entry key="Beam.tracbug.screenshot">false</entry>
 <entry key="Beam.help.video">http://www.eecs.ucf.edu/isuelab/codebubbles.mp4</entry>
 <entry key="Beam.help.home">http://www.cs.brown.edu/people/spr/codebubbles/</entry>
-<entry key="Beam.help.wiki">http://conifer.cs.brown.edu:8000/bubbles/wiki/OverView</entry>
+<entry key="Beam.help.wiki">http://conifer2.cs.brown.edu:8000/bubbles/wiki/OverView</entry>
 <entry key="Beam.help.tutorial">http://www.cs.brown.edu/people/spr/codebubbles/tutorial</entry>
 <entry key="Beam.help.mailto">spr@cs.brown.edu</entry>
 <entry key="Beam.show.save">true</entry>

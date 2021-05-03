@@ -71,7 +71,7 @@ public static void main(String [] args)
 
 /***
 *
-*	We want to issue a find command on conifer to find and dump the appropriate
+*	We want to issue a find command on conifer2 to find and dump the appropriate
 *	log files.  Then we only need to read standard out to get all the relevant
 *	entries.
 *
@@ -85,7 +85,7 @@ public static void main(String [] args)
 ****/
 
 private final static String BASE_DIR = "/vol/web/html/bubbles/uploads";
-private final static String SSHCMD = "ssh conifer";
+private final static String SSHCMD = "ssh conifer2";
 private final static String CMD = "find " + BASE_DIR + " -type f";
 // private final static String LISTARGS = "-print -exec cat {} \\;";
 private final static String CMD_MATCH = "-name '*COMMAND*'";

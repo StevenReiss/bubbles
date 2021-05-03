@@ -739,7 +739,7 @@ private class ThreadsTable extends JTable implements BudaConstants.BudaBubbleOut
       int row = rowAtPoint(e.getPoint());
       BumpThread bt = getActualThread(row);
       if (bt == null) return null;
-
+   
       StringBuffer buf = new StringBuffer();
       buf.append("<html>");
       buf.append("Thread " + bt.getName());
@@ -747,59 +747,59 @@ private class ThreadsTable extends JTable implements BudaConstants.BudaBubbleOut
       buf.append(bt.getThreadState().toString());
       buf.append("</td></tr>");
       BumpThreadStateDetail dtl = bt.getThreadDetails();
-
+   
       if (bt.getThreadState().isException()) {
-	 buf.append("<tr><td>Exception:</td><td>");
-	 if (bt.getExceptionType() != null)  buf.append(bt.getExceptionType().toString());
-	 buf.append("</td></tr>");
+         buf.append("<tr><td>Exception:</td><td>");
+         if (bt.getExceptionType() != null)  buf.append(bt.getExceptionType().toString());
+         buf.append("</td></tr>");
        }
       else if (dtl != null && dtl != BumpThreadStateDetail.NONE) {
-	 buf.append("<tr><td>Detail:</td><td>");
-	 buf.append(dtl.toString());
-	 buf.append("</td></tr>");
+         buf.append("<tr><td>Detail:</td><td>");
+         buf.append(dtl.toString());
+         buf.append("</td></tr>");
        }
-
+   
       buf.append("<tr><td>Type:</td><td>");
       buf.append(bt.getThreadType().toString());
       buf.append("</td></tr>");
-
+   
       outputTime(bt.getCpuTime(),"Cpu Time",buf);
       outputTime(bt.getUserTime(),"User Time",buf);
       outputTime(bt.getWaitTime(),"Wait Time",buf);
       outputTime(bt.getBlockTime(),"Block Time",buf);
       outputCount(bt.getWaitCount(),"Number Waits",buf);
       outputCount(bt.getBlockCount(),"Number Blocks",buf);
-
+   
       BumpThreadStack stk = bt.getStack();
       if (stk != null && stk.getNumFrames() > 0) {
-	 BumpStackFrame frm = stk.getFrame(0);
-	 buf.append("<tr><td>In Class:</td><td>");
-	 buf.append(frm.getFrameClass());
-	 buf.append("</td></tr>");
-	 buf.append("<tr><td>In Method:</td><td>");
-	 String mnm = frm.getMethod();
-	 int idx1 = mnm.lastIndexOf(".");
-	 if (idx1 > 0) mnm = mnm.substring(idx1+1);
-	 if (mnm.equals("<clinit>")) mnm = "Static Initializer";
-	 else if (mnm.equals("<init>")) {
-	    String cls = frm.getFrameClass();
-	    idx1 = cls.lastIndexOf(".");
-	    if (idx1 >= 0) cls = cls.substring(idx1+1);
-	    idx1 = cls.lastIndexOf("$");
-	    if (idx1 > 0) cls = cls.substring(idx1+1);
-	    mnm = cls;
-	  }
-	 buf.append(mnm);
-	 buf.append(frm.getSignature());
-	 buf.append("</td></tr>");
-	 if (frm.getLineNumber() > 0) {
-	    buf.append("<tr><td>At line:</td><td>");
-	    buf.append(frm.getLineNumber());
-	    buf.append("</td></tr>");
-	 }
+         BumpStackFrame frm = stk.getFrame(0);
+         buf.append("<tr><td>In Class:</td><td>");
+         buf.append(frm.getFrameClass());
+         buf.append("</td></tr>");
+         buf.append("<tr><td>In Method:</td><td>");
+         String mnm = frm.getMethod();
+         int idx1 = mnm.lastIndexOf(".");
+         if (idx1 > 0) mnm = mnm.substring(idx1+1);
+         if (mnm.equals("<clinit>")) mnm = "Static Initializer";
+         else if (mnm.equals("<init>")) {
+            String cls = frm.getFrameClass();
+            idx1 = cls.lastIndexOf(".");
+            if (idx1 >= 0) cls = cls.substring(idx1+1);
+            idx1 = cls.lastIndexOf("$");
+            if (idx1 > 0) cls = cls.substring(idx1+1);
+            mnm = cls;
+          }
+         buf.append(mnm);
+         buf.append(frm.getSignature());
+         buf.append("</td></tr>");
+         if (frm.getLineNumber() > 0) {
+            buf.append("<tr><td>At line:</td><td>");
+            buf.append(frm.getLineNumber());
+            buf.append("</td></tr>");
+         }
       }
       buf.append("</table>");
-
+   
       return buf.toString();
    }
 

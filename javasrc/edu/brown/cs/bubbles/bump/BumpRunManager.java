@@ -1924,6 +1924,12 @@ private class StackFrame implements BumpStackFrame {
 
       return true;
     }
+   
+   @Override public boolean sameFrame(BumpStackFrame frm) {
+      if (frm == null) return false;
+      if (frame_id.equals(frm.getId())) return true;
+      return false;
+    }
 
    @Override public String getDisplayString() {
       String mnm = getMethod();

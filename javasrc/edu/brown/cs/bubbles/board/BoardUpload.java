@@ -154,6 +154,9 @@ private static String getSaveAddress()
    
    BoardProperties bp = BoardProperties.getProperties("Board");
    String rslt = bp.getProperty(BOARD_SAVE_ADDR_PROP);
+   if (rslt == null) return null;
+   
+   rslt = rslt.replace("conifer.cs.brown.edu","conifer2.cs.brown.edu");
 
    return rslt;
 }
@@ -163,7 +166,10 @@ public static String getUploadUrl()
 {
    BoardProperties bp = BoardProperties.getProperties("Board");
    String rslt = bp.getProperty(BOARD_UPLOAD_URL);
-
+   if (rslt == null) return null;
+   
+   rslt = rslt.replace("conifer.cs.brown.edu","conifer2.cs.brown.edu");
+   
    return rslt;
 }
 

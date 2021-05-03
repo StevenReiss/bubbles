@@ -227,6 +227,7 @@ static String getRepoUrl()
    String rslt = bp.getProperty("Bvcr.repo.url");
 
    if (rslt == null || rslt.length() == 0 || rslt.startsWith("*")) return null;
+   rslt = rslt.replace("conifer.cs.brown.edu","conifer2.cs.brown.edu");
 
    if (!rslt.endsWith("/")) rslt += "/";
 

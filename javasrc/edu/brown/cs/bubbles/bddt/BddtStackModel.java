@@ -814,7 +814,7 @@ private class ThreadNode extends AbstractNode {
       BumpThreadStack stk = for_thread.getStack();
       if (stk == null) return;
       for (int i = 0; i < stk.getNumFrames(); ++i) {
-	 addChild(new FrameNode(this,stk.getFrame(i)));
+         addChild(new FrameNode(this,stk.getFrame(i)));
        }
     }
 

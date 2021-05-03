@@ -1196,6 +1196,7 @@ private void addExecutionAnnot(BumpThread bt)
                exec_annots.put(bt,ea);
                BaleFactory.getFactory().addAnnotation(ea);
                setActiveFrame(bsf1);
+               break;
              }
           }
        }
@@ -1230,7 +1231,18 @@ void setActiveFrame(BumpStackFrame frm)
 	 frame_annot = null;
        }
       active_frame = frm;
-      if (frm.getLevel() != 0 && frm.getFile() != null) {
+      int stoplvl = 0;
+      if (frm.getThread().getExceptionType() != null) {
+         BumpThreadStack stk = frm.getThread().getStack();
+         for (int i = 0; i < stk.getNumFrames(); ++i) {
+            BumpStackFrame bsf1 = stk.getFrame(i);
+            if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0) {
+               stoplvl = i;
+               break;
+             }
+          }
+       }
+      if (frm.getLevel() > stoplvl && frm.getFile() != null) {
 	 frame_annot = new FrameAnnot(frm);
 	 BaleFactory.getFactory().addAnnotation(frame_annot);
        }
@@ -1300,7 +1312,9 @@ private class ExecutionAnnot implements BaleAnnotation {
 
    @Override public Color getLineColor(BudaBubble bbl) {
       BumpStackFrame frm = bubble_manager.getFrameForBubble(bbl);
-      if (frm != null && frm != for_frame) return null;
+      if (frm != null && !frm.sameFrame(for_frame)) {
+         return null;
+       }
       if (for_thread.getExceptionType() != null) return except_color;
       return annot_color;
     }
@@ -1339,12 +1353,12 @@ private class FrameAnnot implements BaleAnnotation {
       if (for_document == null) return;
       int off = for_document.findLineOffset(frm.getLineNumber());
       annot_color = BoardColors.getColor(BDDT_FRAME_ANNOT_COLOR_PROP);
-
+   
       try {
-	 execute_pos = for_document.createPosition(off);
+         execute_pos = for_document.createPosition(off);
        }
       catch (BadLocationException e) {
-	 BoardLog.logE("BDDT","Bad execution position",e);
+         BoardLog.logE("BDDT","Bad execution position",e);
        }
     }
 

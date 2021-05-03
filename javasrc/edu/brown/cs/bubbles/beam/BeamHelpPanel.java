@@ -150,7 +150,7 @@ void showHelpTutorial()
 private abstract class HelpUrlAction extends AbstractAction {
 
    private String url_name;
-
+   
    private static final long serialVersionUID = 1;
 
    HelpUrlAction(String nm,String key,String dflt) {
@@ -161,6 +161,7 @@ private abstract class HelpUrlAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent e) {
       try {
+         url_name = url_name.replace("conifer.cs.brown.edu","conifer2.cs.brown.edu");
          URI u = new URI(url_name);
          BeamFactory.showBrowser(u);
        }
