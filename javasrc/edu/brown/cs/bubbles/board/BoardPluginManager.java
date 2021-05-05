@@ -27,6 +27,7 @@ import edu.brown.cs.ivy.swing.SwingGridPanel;
 import edu.brown.cs.ivy.swing.SwingListSet;
 import edu.brown.cs.ivy.xml.IvyXml;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,6 +60,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.text.View;
 
 import org.w3c.dom.Element;
 
@@ -77,13 +79,10 @@ public static void main(String [] args)
 {
    BoardPluginManager bpm = new BoardPluginManager();
    bpm.managePlugins();
-   try {
-      Thread.sleep(1000);
-    }
-   catch (InterruptedException e) { }
-
+   
    for ( ; ; ) {
-      if (!bpm.working_dialog.isActive()) System.exit(0);
+      JDialog dlg = bpm.working_dialog;
+      if (!dlg.isVisible()) System.exit(0);
     }
 }
 
@@ -253,6 +252,7 @@ private class PluginList extends JList<PluginData> {
       while (!toadd.isEmpty()) {
          Set<String> req = new HashSet<>();
          for (PluginData pd : toadd) {
+            if (!checkCanInstall(pd)) continue;
             avail_set.removeElement(pd);
             install_set.addElement(pd);
             for (String s : pd.getRequiredPlugins()) req.add(s);
@@ -316,6 +316,34 @@ public void updatePlugins()
 	 pd.update();
        }
     }
+}
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Check if user lets us install a plugin                                  */
+/*                                                                              */
+/********************************************************************************/
+
+private boolean checkCanInstall(PluginData pd)
+{
+   if (pd.getWarning() != null) {
+      String warn = pd.getWarning();
+      JLabel lbl = new JLabel(warn);
+      View view = (View) lbl.getClientProperty(javax.swing.plaf.basic.BasicHTML.propertyKey);
+      view.setSize(400,0);
+      float w = view.getPreferredSpan(View.X_AXIS);
+      float h = view.getPreferredSpan(View.Y_AXIS);
+      Dimension sz = new Dimension((int) Math.ceil(w),(int) Math.ceil(h));
+      lbl.setPreferredSize(sz);
+      lbl.setSize(sz);
+     
+      int sts = JOptionPane.showConfirmDialog(working_dialog,lbl,
+            "Confirm Plugin " + pd.getName(),
+            JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+      return sts == JOptionPane.YES_OPTION;
+    }
+   return true;
 }
 
 
@@ -403,6 +431,7 @@ private static class PluginData implements Comparable<PluginData> {
    private String plugin_name;
    private String plugin_description;
    private String plugin_url;
+   private String plugin_warning;
    private List<String> plugin_mains;
    private List<String> plugin_resources;
    private List<String> plugin_requires;
@@ -413,7 +442,11 @@ private static class PluginData implements Comparable<PluginData> {
       plugin_name = IvyXml.getAttrString(xml,"NAME");
       plugin_description = IvyXml.getAttrString(xml,"DESCRIPTION");
       plugin_url = IvyXml.getAttrString(xml,"URL");
-
+      plugin_warning = IvyXml.getTextElement(xml,"WARNING");
+      if (plugin_warning != null) {
+         plugin_warning = plugin_warning.trim();
+         if (plugin_warning.length() == 0) plugin_warning = null;
+       }
       plugin_mains = new ArrayList<>();
       for (Element e : IvyXml.children(xml,"MAIN")) {
 	 plugin_mains.add(IvyXml.getText(e).trim());
@@ -443,6 +476,7 @@ private static class PluginData implements Comparable<PluginData> {
    String getName()			{ return plugin_name; }
    String getDescription()		{ return plugin_description; }
    List<String> getRequiredPlugins()    { return plugin_requires; }
+   String getWarning()                  { return plugin_warning; }
 
    @Override public String toString()	{ return plugin_name; }
 
