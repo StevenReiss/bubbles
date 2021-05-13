@@ -78,7 +78,7 @@ protected boolean defineProject(BuenoProjectCreationControl ctrl,BuenoProjectPro
    Set<File> rsrcs = new HashSet<File>();
 
    findFiles(dir,srcs,libs,rsrcs);
-   Map<File,List<File>> roots = new HashMap<File,List<File>>();
+   Map<File,List<File>> roots = new HashMap<>();
    for (File sf : srcs) {
       String pkg = ctrl.getPackageName(sf);
       File par = sf.getParentFile();

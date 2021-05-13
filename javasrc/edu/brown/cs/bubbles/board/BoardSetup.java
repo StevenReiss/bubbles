@@ -594,7 +594,7 @@ public void setJavaArgs(Collection<String> args)
 
 public void setJavaArgs(String [] args)
 {
-   java_args = new ArrayList<String>();
+   java_args = new ArrayList<>();
    if (args != null) for (String s : args) java_args.add(s);
 }
 
@@ -2231,6 +2231,7 @@ private static boolean checkWorkspaceDirectory(File wsd,boolean create)
    if (wsd == null) return false;
 
    if (create) {
+      if (wsd.getParentFile() == null) return false;
       if (!wsd.getParentFile().exists()) return false;
       if (!wsd.getParentFile().canWrite()) return false;
       if (wsd.exists() && !wsd.isDirectory()) return false;
@@ -3175,12 +3176,12 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
 
    private void checkStatus() {
       if (checkWorkspace()) {
-	 accept_button.setEnabled(true);
-	 workspace_warning.setVisible(false);
+         accept_button.setEnabled(true);
+         workspace_warning.setVisible(false);
        }
       else {
-	 accept_button.setEnabled(false);
-	 workspace_warning.setVisible(true);
+         accept_button.setEnabled(false);
+         workspace_warning.setVisible(true);
        }
     }
 

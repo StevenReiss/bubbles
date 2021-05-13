@@ -723,6 +723,8 @@ private File findAndroidRoot(File f,Set<File> done)
       str.slashStarComments(true);
       str.eolIsSignificant(false);
       str.lowerCaseMode(false);
+      str.wordChars('_','_');
+      str.wordChars('$','$');
 
       StringBuilder pkg = new StringBuilder();
 
