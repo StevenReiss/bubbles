@@ -857,6 +857,7 @@ public String getEclipsePath()
    int fnd = 0;
    String ejp = getLibraryPath("eclipsejar");
    File ejr = new File(ejp);
+   BoardLog.logD("BOARD","TRY1 ECLIPSE AT " + ejr);
    if (ejr.exists() && ejr.isDirectory()) {
       for (File nfil : ejr.listFiles()) {
 	 if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {
@@ -871,6 +872,7 @@ public String getEclipsePath()
       File f2 = new File(f1,"ivy");                      // /pro/ivy
       File f3 = new File(f2,"lib");                      // /pro/ivy/lib
       File f4 = new File(f3,"eclipsejar");
+      BoardLog.logD("BOARD","TRY2 ECLIPSE AT " + f4);
       if (f4.exists() && f4.isDirectory()) {
 	 for (File nfil : f4.listFiles()) {
 	    if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {
@@ -881,6 +883,24 @@ public String getEclipsePath()
 	  }
        }
     }
+
+   if (fnd == 0) {
+      File f1 = ejr.getParentFile().getParentFile();	// /pro/bubbles/lib --> /pro
+      File f2 = new File(f1,"ivy");                      // /pro/ivy
+      File f3 = new File(f2,"lib");                      // /pro/ivy/lib
+      File f4 = new File(f3,"eclipsejar");
+      BoardLog.logD("BOARD","TRY3 ECLIPSE AT " + f4);
+      if (f4.exists() && f4.isDirectory()) {
+	 for (File nfil : f4.listFiles()) {
+	    if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {
+	       if (fnd > 0) buf.append(File.pathSeparator);
+	       buf.append(nfil.getPath());
+	       ++fnd;
+	     }
+	  }
+       }
+    }
+
    if (fnd == 0) {
       String xcp = System.getProperty("java.class.path");
       StringTokenizer ptok = new StringTokenizer(xcp,File.pathSeparator);
@@ -1577,7 +1597,7 @@ private void saveProperties()
 	 case JAVA :
 	 case PYTHON :
 	 case REBUS :
-//          system_properties.setProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS,"-Xmx512m");
+//	    system_properties.setProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS,"-Xmx512m");
 	    break;
 	 case JS :
 	    system_properties.setProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS,"-Xmx1536m");
@@ -3176,12 +3196,12 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
 
    private void checkStatus() {
       if (checkWorkspace()) {
-         accept_button.setEnabled(true);
-         workspace_warning.setVisible(false);
+	 accept_button.setEnabled(true);
+	 workspace_warning.setVisible(false);
        }
       else {
-         accept_button.setEnabled(false);
-         workspace_warning.setVisible(true);
+	 accept_button.setEnabled(false);
+	 workspace_warning.setVisible(true);
        }
     }
 

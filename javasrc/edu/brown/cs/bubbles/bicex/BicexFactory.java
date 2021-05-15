@@ -530,17 +530,7 @@ private void startSeede()
 	    String elt = tok.nextToken();
 	    if (!elt.startsWith("/") &&  !elt.startsWith("\\")) {
 	       if (elt.equals("eclipsejar")) {
-		  String ejp = setup.getLibraryPath(elt);
-		  File ejr = new File(ejp);
-		  if (ejr.exists() && ejr.isDirectory()) {
-		     for (File nfil : ejr.listFiles()) {
-			if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {
-			   if (buf.length() > 0) buf.append(File.pathSeparator);
-			   buf.append(nfil.getPath());
-			}
-		     }
-		   }
-		  continue;
+		  elt = bs.getEclipsePath();
 		}
 	       else {
 		  elt = setup.getLibraryPath(elt);
