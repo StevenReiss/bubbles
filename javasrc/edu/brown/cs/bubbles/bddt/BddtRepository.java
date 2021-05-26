@@ -199,6 +199,8 @@ private static class ProcessName extends BassNameBase {
     }
 
    @Override protected String getParameters()		{ return null; }
+   
+   BumpProcess getProcess()                             { return for_process; }
 
    private String getProcessProject() {
       if (for_process.getLaunch() == null) return null;
@@ -298,12 +300,19 @@ private class ModelHandler implements BumpConstants.BumpRunEventHandler {
       if (cfg != null) {
 	 m.add(new CloneLaunchAction(cfg));
 	 m.add(new DebugLaunchAction(cfg));
-	 m.add(new RunLaunchAction(cfg));
+//       m.add(new RunLaunchAction(cfg));
 	 m.add(new DeleteLaunchAction(cfg));
        }
     }
    else if (forname == null && fullname.contains("@Launch Configurations")) {
       BddtFactory.getFactory().addNewConfigurationActions(m);
+    }
+   else if (forname instanceof ProcessName) {
+      ProcessName pn = (ProcessName) forname;
+      BumpProcess bp = pn.getProcess();
+      if (bp != null) {
+         m.add(new TerminateProcessAction(bp));
+       }
     }
 }
 
@@ -344,6 +353,7 @@ private static class DeleteLaunchAction extends AbstractAction {
 
 
 
+@SuppressWarnings("unused")
 private class RunLaunchAction extends AbstractAction {
 
    private BumpLaunchConfig for_config;
@@ -377,6 +387,20 @@ private class DebugLaunchAction extends AbstractAction {
 }	// end of inner class RunLaunchAction
 
 
+private class TerminateProcessAction extends AbstractAction {
+   
+   private BumpProcess for_process;
+   
+   TerminateProcessAction(BumpProcess bp) {
+      super("Terminate " + bp.getName());
+      for_process = bp;
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      bump_client.terminate(for_process);
+    }
+   
+}       // end of inner class TerminateProcessAction
 
 
 

@@ -1181,7 +1181,7 @@ private void addExecutionAnnot(BumpThread bt)
    BumpThreadStack stk = bt.getStack();
    if (stk != null && stk.getNumFrames() > 0) {
       BumpStackFrame bsf = stk.getFrame(0);
-      if (frameFileExists(bsf) && bsf.getLineNumber() > 0) {
+      if (frameFileExists(bsf) && bsf.getLineNumber() > 0 && !bsf.isSystem()) {
 	 ExecutionAnnot ea = new ExecutionAnnot(bt,bsf);
 	 exec_annots.put(bt,ea);
 	 BaleFactory.getFactory().addAnnotation(ea);

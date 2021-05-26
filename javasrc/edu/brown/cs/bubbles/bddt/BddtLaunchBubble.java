@@ -466,7 +466,7 @@ private String getNewName()
 	 edit_config = edit_config.setMainClass(cls);
          if (cls != null) {
             String proj = project_map.get(cls);
-            if (proj != null) project_name.setSelectedItem(proj);
+            if (proj != null && project_name != null) project_name.setSelectedItem(proj);
           }
        }
     }

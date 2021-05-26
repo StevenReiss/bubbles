@@ -1048,7 +1048,7 @@ private static class CallFormatter {
 /********************************************************************************/
 
 void evaluateExpression(String proj,String bid,String expr,String tname,String frid,boolean impl,
-			   boolean bkpt,String eid,int lvl,int arraysz,String saveid,
+			   boolean bkpt,String eid,int lvl,int arraysz,String saveid,boolean allframes,
 			   IvyXmlWriter xw) throws BedrockException
 {
    IProject ip = our_plugin.getProjectManager().findProject(proj);
@@ -1086,28 +1086,52 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 	 if (!(sfrm instanceof IJavaStackFrame))
 	    throw new BedrockException("Stack frame " + frid + " not java frame");
 	 IJavaStackFrame jsf = (IJavaStackFrame) sfrm;
-         
-         if (jproj == null) {
-            BedrockProject bp = BedrockPlugin.getPlugin().getProjectManager();
-            String pnm = launch.getAttribute("org.eclipse.jdt.launching.PROJECT_ATTR");
-            if (pnm != null) {
-               IProject ip1 = bp.findProject(pnm);
-               if (ip1 != null) jproj = JavaCore.create(ip1);
-             }
-            if (jproj == null) {
-               IProject ip1 = bp.findProjectForFile(null,jsf.getSourcePath());
-               if (ip1 != null) jproj = JavaCore.create(ip1);
-             }
-            if (jproj == null) {
-               BedrockPlugin.logD("Can't find project for frame " + jsf.getSourcePath() + " " +
-                     jsf.getSourceName());
-             }
-          }
-       
+
+	 if (jproj == null) {
+	    BedrockProject bp = BedrockPlugin.getPlugin().getProjectManager();
+	    String pnm = launch.getAttribute("org.eclipse.jdt.launching.PROJECT_ATTR");
+	    if (pnm != null) {
+	       IProject ip1 = bp.findProject(pnm);
+	       if (ip1 != null) jproj = JavaCore.create(ip1);
+	     }
+	    if (jproj == null) {
+	       IProject ip1 = bp.findProjectForFile(null,jsf.getSourcePath());
+	       if (ip1 != null) jproj = JavaCore.create(ip1);
+	     }
+	    if (jproj == null) {
+	       BedrockPlugin.logD("Can't find project for frame " + jsf.getSourcePath() + " " +
+		     jsf.getSourceName());
+	     }
+	  }
+
 	 BedrockPlugin.logD("COMPILE EXPRESSION " + expr);
 	 IAstEvaluationEngine eeng = EvaluationManager.newAstEvaluationEngine(jproj,tgt);
 	 ICompiledExpression eexp = eeng.getCompiledExpression(expr,jsf);
-	 eeng.evaluateExpression(eexp,jsf,new EvalListener(jsf,bid,eid,saveid,lvl,arraysz),detail,bkpt);
+         IStackFrame origframe = jsf;
+	 if (eexp.hasErrors() && allframes) {
+	    String [] errs = eexp.getErrorMessages();
+	    for (String err : errs) {
+	       BedrockPlugin.logD("COMPILER ERRORS FOUND: " + err + " " + jsf + " " + frid + " " + thrd);
+	     }
+            HashSet<String> done = new HashSet<>();
+            for (IStackFrame frame: thrd.getStackFrames()) {
+               if (frame instanceof IJavaStackFrame) {
+                  IJavaStackFrame njsf = (IJavaStackFrame) frame;
+                  String key = njsf.getSourceName() + njsf.getMethodName() + njsf.getLineNumber();
+                  if (!done.add(key)) continue;
+                  if (njsf == jsf) continue;
+                  eexp = eeng.getCompiledExpression(expr,njsf);
+                  if (eexp.hasErrors()) {
+                     BedrockPlugin.logD("COMPILER ERRORS FOUND: " + njsf);
+                     continue;
+                   }
+                  BedrockPlugin.logD("COMPILED OKAY");
+                  jsf = njsf;
+                  break;
+                }
+             }
+	  }
+	 eeng.evaluateExpression(eexp,jsf,new EvalListener(origframe,bid,eid,saveid,lvl,arraysz),detail,bkpt);
 	 BedrockPlugin.logD("START EVALUATION OF " + expr + " " + bid + " " + eid + " " +
 	       jsf.hashCode() + " " + thrd.hashCode());
 	 evaldone = true;

@@ -857,7 +857,6 @@ public String getEclipsePath()
    int fnd = 0;
    String ejp = getLibraryPath("eclipsejar");
    File ejr = new File(ejp);
-   BoardLog.logD("BOARD","TRY1 ECLIPSE AT " + ejr);
    if (ejr.exists() && ejr.isDirectory()) {
       for (File nfil : ejr.listFiles()) {
 	 if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {
@@ -872,7 +871,6 @@ public String getEclipsePath()
       File f2 = new File(f1,"ivy");                      // /pro/ivy
       File f3 = new File(f2,"lib");                      // /pro/ivy/lib
       File f4 = new File(f3,"eclipsejar");
-      BoardLog.logD("BOARD","TRY2 ECLIPSE AT " + f4);
       if (f4.exists() && f4.isDirectory()) {
 	 for (File nfil : f4.listFiles()) {
 	    if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {
@@ -889,7 +887,6 @@ public String getEclipsePath()
       File f2 = new File(f1,"ivy");                      // /pro/ivy
       File f3 = new File(f2,"lib");                      // /pro/ivy/lib
       File f4 = new File(f3,"eclipsejar");
-      BoardLog.logD("BOARD","TRY3 ECLIPSE AT " + f4);
       if (f4.exists() && f4.isDirectory()) {
 	 for (File nfil : f4.listFiles()) {
 	    if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {

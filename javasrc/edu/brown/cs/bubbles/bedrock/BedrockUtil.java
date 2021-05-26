@@ -596,6 +596,7 @@ static String findFileForClass(String cls)
    File result = null;
    for (IProject ip : bpp.getOpenProjects()) {
       IJavaProject ijp = JavaCore.create(ip);
+      if (ijp == null) continue;
       try {
 	 IType ity = ijp.findType(cls);
 	 if (ity == null && cls.indexOf("$") > 0) {

@@ -692,7 +692,8 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrString(xml,"REPLYID"),
 	       IvyXml.getAttrInt(xml,"LEVEL"),
 	       IvyXml.getAttrInt(xml,"ARRAY"),
-	       IvyXml.getAttrString(xml,"SAVEID"),xw);
+	       IvyXml.getAttrString(xml,"SAVEID"),
+               IvyXml.getAttrBool(xml,"ALLFRAMES"),xw);
 	 break;
       case "EDITPARAM" :
 	 bedrock_editor.handleParameter(IvyXml.getAttrString(xml,"BID","*"),
