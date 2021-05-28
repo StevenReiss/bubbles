@@ -162,7 +162,7 @@ private BandaidController(String args,Instrumentation inst)
    defineAgent(new BandaidAgentHistory(this));
    defineAgent(new BandaidAgentSwing(this));
    defineAgent(new BandaidAgentTrie(this));
-   defineAgent(new BandaidAgentTracer(this));
+// defineAgent(new BandaidAgentTracer(this));	
 
    scanArgs(args);
 
@@ -335,7 +335,7 @@ private void setupClassTypes()
    package_map.put("org.postgresql.",ClassType.SYSTEM);
    package_map.put("jrockit.",ClassType.SYSTEM);
    package_map.put("com.jogamp.",ClassType.SYSTEM);
-															
+												
    package_map.put("edu.brown.cs.dyvise.dyper.",ClassType.SYSTEM);
    package_map.put("edu.brown.cs.bubbles.bandaid.",ClassType.SYSTEM);
    package_map.put("org.eclipse.",ClassType.SYSTEM);

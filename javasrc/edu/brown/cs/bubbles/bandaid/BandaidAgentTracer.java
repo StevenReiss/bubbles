@@ -406,15 +406,15 @@ private class TracePatcher extends MethodVisitor {
       // System.err.println("PATCH " + v + " " + args);
       String atyp = "(I";
       for (int i = 0; args != 0; ++i) {
-	 if ((args & 1) != 0) {
-	    super.visitVarInsn(Opcodes.ALOAD,i);
-	    atyp += "Ljava/lang/Object;";
-	  }
-	 args >>>= 1;
+         if ((args & 1) != 0) {
+            super.visitVarInsn(Opcodes.ALOAD,i);
+            atyp += "Ljava/lang/Object;";
+          }
+         args >>>= 1;
        }
       atyp += ")V";
       super.visitMethodInsn(Opcodes.INVOKESTATIC,"edu/brown/cs/bubbles/bandaid/BandaidAgentTracer",
-	    "traceEntry",atyp,false);
+            "traceEntry",atyp,false);
     }
 
 }	// end of inner class TracePatcher
@@ -440,7 +440,7 @@ private static class Tracer extends MethodVisitor {
    @Override public void visitEnd() {
       TraceMethodVisitor tmv = (TraceMethodVisitor) this.mv;
       List<?> tx = tmv.p.getText();
-      // System.err.println("TRACE METHOD " + method_name);
+      System.err.println("TRACE METHOD " + method_name);
       for (Object o : tx) {
 	 System.err.print(o.toString());
        }
