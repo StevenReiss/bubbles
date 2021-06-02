@@ -195,6 +195,13 @@ void reload()
 }
 
 
+int getNextTabPosition(int cpos,BaleTabHandler bth)
+{
+   return -1;
+}
+
+
+
 /********************************************************************************/
 /*										*/
 /*	Methods to convert offsets for fragment and document			*/

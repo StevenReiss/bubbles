@@ -621,6 +621,11 @@ int getFirstNonspace(int line)
 
 int getNextTabPosition(int cpos)
 {
+   if (getContent() instanceof BaleFragmentContent) {
+      BaleFragmentContent bfc = (BaleFragmentContent) getContent();
+      int rslt = bfc.getNextTabPosition(cpos,tab_handler);
+      if (rslt > 0) return rslt;
+    }
    return tab_handler.nextTabPosition(cpos);
 }
 

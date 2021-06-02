@@ -259,6 +259,24 @@ private void fixupOffset(BaleRegion br,int off,boolean edit)
 
 
 /********************************************************************************/
+/*                                                                              */
+/*      Tab methods                                                             */
+/*                                                                              */
+/********************************************************************************/
+
+@Override int getNextTabPosition(int cpos,BaleTabHandler tbh)
+{
+   if (indent_string == null) return -1;
+   int ind = indent_string.length();
+   if (ind == 0) return -1;
+   int rslt = tbh.nextTabPosition(cpos+ind);
+   rslt -= ind;
+   return rslt;
+}
+
+
+
+/********************************************************************************/
 /*										*/
 /*	Methods to manage removal of initial space				*/
 /*										*/

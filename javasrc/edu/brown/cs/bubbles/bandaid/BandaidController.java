@@ -32,6 +32,7 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.management.*;
 import java.net.*;
+import java.security.ProtectionDomain;
 import java.util.*;
 
 
@@ -109,6 +110,8 @@ private Instrumentation 	class_inst;
 private static final double	CHECK_OVERHEAD = 1.000; 	// 1 ms for timer checks
 private static final double	REPORT_OVERHEAD = 1.000;	// 1 ms for timer checks
 
+private static boolean do_debug = false;
+
 private static BandaidController the_control = null;
 
 
@@ -162,7 +165,7 @@ private BandaidController(String args,Instrumentation inst)
    defineAgent(new BandaidAgentHistory(this));
    defineAgent(new BandaidAgentSwing(this));
    defineAgent(new BandaidAgentTrie(this));
-// defineAgent(new BandaidAgentTracer(this));	
+   defineAgent(new BandaidAgentTracer(this));	
 
    scanArgs(args);
 
@@ -215,6 +218,9 @@ private BandaidController(String args,Instrumentation inst)
 	    class_inst.addTransformer(cft,true);
 	  }
        }
+    }
+   if (do_debug) {
+      class_inst.addTransformer(new DebugOutput());
     }
 }
 
@@ -901,6 +907,36 @@ private class ClassMonitor extends Thread {
 
 }	// end of subclass ClassMonitor
 
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Class transformer to save output                                        */
+/*                                                                              */
+/********************************************************************************/
+
+private static class DebugOutput implements ClassFileTransformer {
+   
+   private File output_directory;
+   
+   DebugOutput() {
+      output_directory = new File("/vol/spr/debug");
+      output_directory.mkdir();
+    }
+   
+   @Override public byte [] transform(ClassLoader ldr,String nm,Class<?> cls,
+         ProtectionDomain pd,byte [] file) {
+      File f1 = new File(output_directory,nm + ".class");
+      f1.getParentFile().mkdirs();
+      try (FileOutputStream fos = new FileOutputStream(f1)) {
+         fos.write(file);
+       }
+      catch (IOException e) { 
+         System.err.println("Problem creating output file" + nm + ": " + e);
+       }
+      return null;
+    }
+}
 
 
 

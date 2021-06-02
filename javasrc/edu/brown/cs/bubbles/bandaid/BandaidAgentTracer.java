@@ -230,16 +230,16 @@ private class ClassTransformer extends ClassVisitor {
       TraceData td = method_data.get(key);
       // System.err.println("TRACE CHECK " + class_name + " " + key + " " + td);
       if (td == null && nm.equals("<init>") && class_name.contains("$") &&
-	     (class_access & Opcodes.ACC_STATIC) == 0) {
-	 int idx = d.indexOf(";");
-	 key = nm + "(" + d.substring(idx+1);
-	 td = method_data.get(key);
+             (class_access & Opcodes.ACC_STATIC) == 0) {
+         int idx = d.indexOf(";");
+         key = nm + "(" + d.substring(idx+1);
+         td = method_data.get(key);
        }
       // System.err.println("TRACE CHECK1 " + class_name + " " + key + " " + td);
       if (td != null) {
-	 if (do_debug) mv = new Tracer(mv,key);
-	 mv = new TracePatcher(mv,td,super_name);
-	 mv = new CodeSizeEvaluator(mv);
+         if (do_debug) mv = new Tracer(mv,key);
+         mv = new TracePatcher(mv,td,super_name);
+         mv = new CodeSizeEvaluator(mv);
        }
       return mv;
     }

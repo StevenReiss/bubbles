@@ -844,46 +844,46 @@ private static class TabAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane tgt = getBaleEditor(e);
       if (!checkEditor(tgt)) return;
-
+   
       BaleDocument bd = tgt.getBaleDocument();
       bd.baleWriteLock();
       try {
-	 int soff = tgt.getSelectionStart();
-	 int eoff = tgt.getSelectionEnd();
-	 if (soff != eoff) {
-	    int slno = bd.findLineNumber(soff);
-	    int elno = bd.findLineNumber(eoff);
-	    if (slno != elno) {
-	       if (elno < slno) {
-		  int x = elno;
-		  elno = slno;
-		  slno = x;
-		}
-	       for (int i = slno; i <= elno; ++i) {
-		  bd.fixLineIndent(i);
-		}
-	       return;
-	     }
-	  }
-
-	 int cpos = bd.getColumnPosition(soff);
-	 int pos = bd.getNextTabPosition(cpos);
-	 if (tgt.getOverwriteMode()) {
-	    int npos = eoff;
-	    int mod = e.getModifiers();
-	    for (int i = 0; i < pos-cpos; ++i) {
-	       ++npos;
-	       if (eoff != soff || ((mod & ActionEvent.SHIFT_MASK) != 0)) {
-		  tgt.setSelectionEnd(npos);
-	       }
-	       else tgt.setSelectionStart(npos);
-	    }
-	  }
-	 else {
-	    StringBuffer buf = new StringBuffer();
-	    for (int i = cpos; i < pos; ++i) buf.append(" ");
-	    tgt.replaceSelection(buf.toString());
-	  }
+         int soff = tgt.getSelectionStart();
+         int eoff = tgt.getSelectionEnd();
+         if (soff != eoff) {
+            int slno = bd.findLineNumber(soff);
+            int elno = bd.findLineNumber(eoff);
+            if (slno != elno) {
+               if (elno < slno) {
+        	  int x = elno;
+        	  elno = slno;
+        	  slno = x;
+        	}
+               for (int i = slno; i <= elno; ++i) {
+        	  bd.fixLineIndent(i);
+        	}
+               return;
+             }
+          }
+   
+         int cpos = bd.getColumnPosition(soff);
+         int pos = bd.getNextTabPosition(cpos);
+         if (tgt.getOverwriteMode()) {
+            int npos = eoff;
+            int mod = e.getModifiers();
+            for (int i = 0; i < pos-cpos; ++i) {
+               ++npos;
+               if (eoff != soff || ((mod & ActionEvent.SHIFT_MASK) != 0)) {
+        	  tgt.setSelectionEnd(npos);
+               }
+               else tgt.setSelectionStart(npos);
+            }
+          }
+         else {
+            StringBuffer buf = new StringBuffer();
+            for (int i = cpos; i < pos; ++i) buf.append(" ");
+            tgt.replaceSelection(buf.toString());
+          }
        }
       finally { bd.baleWriteUnlock(); }
     }

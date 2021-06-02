@@ -1016,31 +1016,31 @@ private class RunEventHandler implements BumpRunEventHandler {
    @Override synchronized public void handleProcessEvent(BumpRunEvent evt) {
       BumpLaunchConfig elc = evt.getLaunchConfiguration();
       switch (evt.getEventType()) {
-	 case PROCESS_ADD :
-	    if (cur_process == null && launch_state == LaunchState.STARTING &&
-		   (elc == null || elc == launch_config)) {
-	       setProcess(evt.getProcess());
-	       last_stopped = null;
-	       BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
-	       BddtFactory.getFactory().getHistoryControl().clearHistory(cur_process);
-	     }
-	    break;
-	 case PROCESS_REMOVE :
-	    if (cur_process == evt.getProcess()) {
-	       setLaunchState(LaunchState.TERMINATED);
-	       thread_states.clear();
-	       setProcess(null);
-	       last_stopped = null;
-	     }
-	    else if (cur_process == null && launch_state == LaunchState.STARTING &&
-			(elc == null || elc == launch_config)) {
-	       setLaunchState(LaunchState.TERMINATED);
-	       thread_states.clear();
-	       last_stopped = null;
-	     }
-	    break;
-	 default:
-	    break;
+         case PROCESS_ADD :
+            if (cur_process == null && launch_state == LaunchState.STARTING &&
+        	   (elc == null || elc == launch_config)) {
+               setProcess(evt.getProcess());
+               last_stopped = null;
+               BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
+               BddtFactory.getFactory().getHistoryControl().clearHistory(cur_process);
+             }
+            break;
+         case PROCESS_REMOVE :
+            if (cur_process == evt.getProcess()) {
+               setLaunchState(LaunchState.TERMINATED);
+               thread_states.clear();
+               setProcess(null);
+               last_stopped = null;
+             }
+            else if (cur_process == null && launch_state == LaunchState.STARTING &&
+        		(elc == null || elc == launch_config)) {
+               setLaunchState(LaunchState.TERMINATED);
+               thread_states.clear();
+               last_stopped = null;
+             }
+            break;
+         default:
+            break;
        }
     }
 
@@ -1183,6 +1183,7 @@ private void addExecutionAnnot(BumpThread bt)
       BumpStackFrame bsf = stk.getFrame(0);
       if (frameFileExists(bsf) && bsf.getLineNumber() > 0 && !bsf.isSystem()) {
 	 ExecutionAnnot ea = new ExecutionAnnot(bt,bsf);
+         removeExecutionAnnot(bt);
 	 exec_annots.put(bt,ea);
 	 BaleFactory.getFactory().addAnnotation(ea);
 	 setActiveFrame(bsf);
@@ -1193,6 +1194,7 @@ private void addExecutionAnnot(BumpThread bt)
             BumpStackFrame bsf1 = stk.getFrame(i);
             if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0) {
                ExecutionAnnot ea = new ExecutionAnnot(bt,bsf1);
+               removeExecutionAnnot(bt);
                exec_annots.put(bt,ea);
                BaleFactory.getFactory().addAnnotation(ea);
                setActiveFrame(bsf1);
