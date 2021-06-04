@@ -163,129 +163,131 @@ private class ThreadData {
    void setState(ThreadInfo ti,StackTraceElement [] trc) {
       State st = State.NONE;
       switch (ti.getThreadState()) {
-	 case NEW :
-	    st = State.NEW;
-	    break;
-	 case RUNNABLE :
-	    break;
-	 case BLOCKED :
-	    st = State.BLOCKED;
-	    break;
-	 case WAITING :
-	    st = State.WAITING;
-	    break;
-	 case TIMED_WAITING :
-	    st = State.TIMED_WAITING;
-	    break;
-	 case TERMINATED :
-	    st = State.DEAD;
-	    break;
+         case NEW :
+            st = State.NEW;
+            break;
+         case RUNNABLE :
+            break;
+         case BLOCKED :
+            st = State.BLOCKED;
+            break;
+         case WAITING :
+            st = State.WAITING;
+            break;
+         case TIMED_WAITING :
+            st = State.TIMED_WAITING;
+            break;
+         case TERMINATED :
+            st = State.DEAD;
+            break;
        }
-
+   
       if (ti.isInNative() || st == State.NONE) {
-	 st = State.RUNNING_SYSTEM;
-	 for (int j = 0; j < trc.length; ++j) {
-	    StackTraceElement te = trc[j];
-	    String nm = te.getClassName();
-	    if (j == 0 && the_control.isIOClass(nm)) {
-	       st = State.RUNNING_IO;
-	       break;
-	     }
-	    if (!the_control.isSystemClass(nm)) {
-	       st = State.RUNNING;
-	       MonitorInfo [] mons = ti.getLockedMonitors();
-	       if (mons != null && mons.length > 0) st = State.RUNNING_SYNC;
-	       break;
-	     }
-	  }
+         st = State.RUNNING_SYSTEM;
+         for (int j = 0; j < trc.length; ++j) {
+            StackTraceElement te = trc[j];
+            String nm = te.getClassName();
+            if (j == 0 && the_control.isIOClass(nm)) {
+               st = State.RUNNING_IO;
+               break;
+             }
+            if (!the_control.isSystemClass(nm)) {
+               st = State.RUNNING;
+               MonitorInfo [] mons = ti.getLockedMonitors();
+               if (mons != null && mons.length > 0) st = State.RUNNING_SYNC;
+               break;
+             }
+          }
        }
       if (st == State.WAITING || st == State.RUNNING) {
-	 StackTraceElement te = trc[0];
-	 String cnm = te.getClassName();
-	 String mnm = te.getMethodName();
-	 if (mnm.equals("park")) {
-	    switch (cnm) {
-	       case "java.util.concurrent.locks.LockSupport" :
-	       case "jdk.internal.misc.Unsafe" :
-		  st = State.IDLE;
-		  break;
-	     }
-	  }
-
+         StackTraceElement te = trc[0];
+         String cnm = te.getClassName();
+         String mnm = te.getMethodName();
+         if (mnm.equals("park")) {
+            switch (cnm) {
+               case "java.util.concurrent.locks.LockSupport" :
+               case "jdk.internal.misc.Unsafe" :
+        	  st = State.IDLE;
+        	  break;
+             }
+          }
+         else if (mnm.startsWith("waitFor")) {
+            st = State.WAITING;
+          }
        }
-
+   
       if (ti.isSuspended()) {
-	 switch (st) {
-	    case RUNNING :
-	       st = State.STOPPED;
-	       break;
-	    case RUNNING_IO :
-	       st = State.STOPPED_IO;
-	       break;
-	    case RUNNING_SYNC :
-	       st = State.STOPPED_SYNC;
-	       break;
-	    case RUNNING_SYSTEM :
-	       st = State.STOPPED_SYSTEM;
-	       break;
-	    case BLOCKED :
-	       st = State.STOPPED_BLOCKED;
-	       break;
-	    case WAITING :
-	       st = State.STOPPED_WAITING;
-	       break;
-	    case IDLE :
-	       st = State.STOPPED_IDLE;
-	       break;
-	    case TIMED_WAITING :
-	       st = State.STOPPED_TIMED;
-	       break;
-	    default:
-	       break;
-	 }
+         switch (st) {
+            case RUNNING :
+               st = State.STOPPED;
+               break;
+            case RUNNING_IO :
+               st = State.STOPPED_IO;
+               break;
+            case RUNNING_SYNC :
+               st = State.STOPPED_SYNC;
+               break;
+            case RUNNING_SYSTEM :
+               st = State.STOPPED_SYSTEM;
+               break;
+            case BLOCKED :
+               st = State.STOPPED_BLOCKED;
+               break;
+            case WAITING :
+               st = State.STOPPED_WAITING;
+               break;
+            case IDLE :
+               st = State.STOPPED_IDLE;
+               break;
+            case TIMED_WAITING :
+               st = State.STOPPED_TIMED;
+               break;
+            default:
+               break;
+         }
       }
-
+   
       if (st != cur_state) {
-	 cur_state = st;
-	 last_change = current_count;
+         cur_state = st;
+         last_change = current_count;
        }
-
+      
       last_update = current_count;
     }
 
    boolean output(BandaidXmlWriter xw) {
       boolean rpt = (last_change > last_report);
       switch (cur_state) {
-	 case RUNNING :
-	 case RUNNING_SYNC :
-	 case RUNNING_IO :
-	 case RUNNING_SYSTEM :
-	 case BLOCKED :
-	 case WAITING :
-	 case IDLE :
-	 case TIMED_WAITING :
-	    rpt = true;
-	    break;
-	 default:
-	    break;
+         case RUNNING :
+         case RUNNING_SYNC :
+         case RUNNING_IO :
+         case RUNNING_SYSTEM :
+         case BLOCKED :
+         case WAITING :
+         case IDLE :
+         case TIMED_WAITING :
+            rpt = true;
+            break;
+         default:
+            break;
       }
-
+   
       if (rpt) {
-	 xw.begin("THREAD");
-	 xw.field("ID",thread_info.getThreadId());
-	 xw.field("NAME",thread_info.getThreadName());
-	 xw.field("STATE",cur_state.toString());
-	 xw.field("BLOCKCT",thread_info.getBlockedCount());
-	 xw.field("BLOCKTM",thread_info.getBlockedTime());
-	 xw.field("WAITCT",thread_info.getWaitedCount());
-	 xw.field("WAITTM",thread_info.getWaitedTime());
-	 xw.field("CPUTM",the_control.getThreadCpuTime(thread_info.getThreadId()));
-	 xw.field("USERTM",the_control.getThreadUserTime(thread_info.getThreadId()));
-	 xw.end();
+         xw.begin("THREAD");
+         xw.field("ID",thread_info.getThreadId());
+         xw.field("NAME",thread_info.getThreadName());
+         xw.field("STATE",cur_state.toString());
+         xw.field("BLOCKCT",thread_info.getBlockedCount());
+         xw.field("BLOCKTM",thread_info.getBlockedTime());
+         xw.field("WAITCT",thread_info.getWaitedCount());
+         xw.field("WAITTM",thread_info.getWaitedTime());
+         xw.field("CPUTM",the_control.getThreadCpuTime(thread_info.getThreadId()));
+         xw.field("USERTM",the_control.getThreadUserTime(thread_info.getThreadId()));
+         xw.end();
        }
-
+   
       if (current_count != last_update) return false;
-
+   
       return true;
     }
 }	// end of inner class ThreadData

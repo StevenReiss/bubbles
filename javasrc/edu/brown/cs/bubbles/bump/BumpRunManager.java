@@ -1474,92 +1474,97 @@ private class ProcessData implements BumpProcess {
    void handleBandaidData(long when,Element xml) {
       Map<String,ThreadData> ths = new HashMap<String,ThreadData>();
       for (ThreadData td : active_threads.values()) {
-	 if (td.getProcess() == this) ths.put(td.getName(),td);
+         // management thread id and eclipse thread id don't match -- need to use names
+         // this has problems when there are threads with identical names
+         if (td.getProcess() == this) ths.put(td.getName(),td);
        }
-
+   
       Element x = IvyXml.getChild(xml,"STATES");
       for (Element tc : IvyXml.children(x,"THREAD")) {
-	 String nm = IvyXml.getAttrString(tc,"NAME");
-	 ThreadData td = ths.get(nm);
-	 if (td != null && td.handleBandaidData(tc)) {
-	    ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
-	    for (BumpRunEventHandler reh : event_handlers) {
-	       try {
-		  reh.handleThreadEvent(evt);
-		}
-	       catch (Throwable t) {
-		  BoardLog.logE("BUMP","Problem handling state event",t);
-		}
-	     }
-	  }
+         String id = IvyXml.getAttrString(tc,"NAME");
+         ThreadData td = ths.get(id);
+         if (td != null && td.handleBandaidData(tc)) {
+            ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
+            for (BumpRunEventHandler reh : event_handlers) {
+               try {
+                  reh.handleThreadEvent(evt);
+                }
+               catch (Throwable t) {
+                  BoardLog.logE("BUMP","Problem handling state event",t);
+                }
+             }
+          }
+         else if (td == null) {
+            System.err.println("Can't find thread " + id + " " + IvyXml.convertXmlToString(tc));
+          }
        }
-
+      
       Element dx = IvyXml.getChild(xml,"DEADLOCKS");
       if (dx != null) {
-	 for (Element de : IvyXml.children(dx,"DEADLOCK")) {
-	    for (Element te : IvyXml.children(de,"THREAD")) {
-	       String nm = IvyXml.getAttrString(te,"NAME");
-	       ThreadData td = ths.get(nm);
-	       if (td != null && td.handleBandaidDeadlock()) {
-		  ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
-		  for (BumpRunEventHandler reh : event_handlers) {
-		     try {
-			reh.handleThreadEvent(evt);
-		      }
-		     catch (Throwable t) {
-			BoardLog.logE("BUMP","Problem handling deadlock state event",t);
-		      }
-		   }
-		}
-	     }
-	  }
+         for (Element de : IvyXml.children(dx,"DEADLOCK")) {
+            for (Element te : IvyXml.children(de,"THREAD")) {
+               String id = IvyXml.getAttrString(te,"NAME");
+               ThreadData td = ths.get(id);
+               if (td != null && td.handleBandaidDeadlock()) {
+                  ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
+                  for (BumpRunEventHandler reh : event_handlers) {
+                     try {
+                        reh.handleThreadEvent(evt);
+                      }
+                     catch (Throwable t) {
+                        BoardLog.logE("BUMP","Problem handling deadlock state event",t);
+                      }
+                   }
+                }
+             }
+          }
        }
-
+   
       Element px = IvyXml.getChild(xml,"CPUPERF");
       if (px != null) {
-	 if (perf_writer != null) {
-	    perf_writer.println(IvyXml.convertXmlToString(px));
-	    perf_writer.flush();
-	  }
-	 ProcessPerfEvent ppe = new ProcessPerfEvent(this,px);
-	 for (BumpRunEventHandler reh : event_handlers) {
-	    try {
-	       reh.handleProcessEvent(ppe);
-	     }
-	    catch (Throwable t) {
-	       BoardLog.logE("BUMP","Problem handling performance event",t);
-	     }
-	  }
+         if (perf_writer != null) {
+            perf_writer.println(IvyXml.convertXmlToString(px));
+            perf_writer.flush();
+          }
+         ProcessPerfEvent ppe = new ProcessPerfEvent(this,px);
+         for (BumpRunEventHandler reh : event_handlers) {
+            try {
+               reh.handleProcessEvent(ppe);
+             }
+            catch (Throwable t) {
+               BoardLog.logE("BUMP","Problem handling performance event",t);
+             }
+          }
        }
       Element tx = IvyXml.getChild(xml,"TRIE");
       if (tx != null) {
-	 if (trie_writer != null) {
-	    trie_writer.println(IvyXml.convertXmlToString(tx));
-	    trie_writer.flush();
-	  }
-	 ProcessTrieEvent pte = new ProcessTrieEvent(this,tx);
-	 for (BumpRunEventHandler reh : event_handlers) {
-	    try {
-	       reh.handleProcessEvent(pte);
-	     }
-	    catch (Throwable t) {
-	       BoardLog.logE("BUMP","Problem handling trie event",t);
-	     }
-	  }
+         if (trie_writer != null) {
+            trie_writer.println(IvyXml.convertXmlToString(tx));
+            trie_writer.flush();
+          }
+         ProcessTrieEvent pte = new ProcessTrieEvent(this,tx);
+         for (BumpRunEventHandler reh : event_handlers) {
+            try {
+               reh.handleProcessEvent(pte);
+             }
+            catch (Throwable t) {
+               BoardLog.logE("BUMP","Problem handling trie event",t);
+             }
+          }
        }
       Element rx = IvyXml.getChild(xml,"TRACE");
       if (rx != null) {
-	 // BoardLog.logD("BUMP","TRACE DATA: " + IvyXml.convertXmlToString(rx));
-	 ProcessTraceEvent pre = new ProcessTraceEvent(this,rx);
-	 for (BumpRunEventHandler reh : event_handlers) {
-	    try {
-	       reh.handleProcessEvent(pre);
-	     }
-	    catch (Throwable t) {
-	       BoardLog.logE("BUMP","Problem handling trace event",t);
-	     }
-	  }    }
-
+         // BoardLog.logD("BUMP","TRACE DATA: " + IvyXml.convertXmlToString(rx));
+         ProcessTraceEvent pre = new ProcessTraceEvent(this,rx);
+         for (BumpRunEventHandler reh : event_handlers) {
+            try {
+               reh.handleProcessEvent(pre);
+             }
+            catch (Throwable t) {
+               BoardLog.logE("BUMP","Problem handling trace event",t);
+             }
+          }   
+       }
    }
 
 }	// end of inner class ProcessData
@@ -1711,18 +1716,18 @@ private class ThreadData implements BumpThread {
       boolean chng = false;
       BumpThreadState state = IvyXml.getAttrEnum(xml,"STATE",thread_state);
       if (state == BumpThreadState.BLOCKED &&
-	    thread_state == BumpThreadState.DEADLOCKED)
-	 state = thread_state;
+            thread_state == BumpThreadState.DEADLOCKED)
+         state = thread_state;
       else if (state == BumpThreadState.STOPPED_BLOCKED &&
-	    thread_state == BumpThreadState.STOPPED_DEADLOCK)
-	 state = thread_state;
-
+            thread_state == BumpThreadState.STOPPED_DEADLOCK)
+         state = thread_state;
+   
       if (state != thread_state) {
-	 if (state.isRunning() == thread_state.isRunning() && !thread_state.isException()) {
-	    chng = true;
-	    thread_state = state;
-	    // System.err.println("SET BANDAID STATE OF " + thread_name + " TO " + state);
-	 }
+         if (state.isRunning() == thread_state.isRunning() && !thread_state.isException()) {
+            chng = true;
+            thread_state = state;
+            // System.err.println("SET BANDAID STATE OF " + thread_name + " TO " + state);
+         }
        }
       cpu_time = IvyXml.getAttrLong(xml,"CPUTM");
       user_time = IvyXml.getAttrLong(xml,"USERTM");
@@ -2192,22 +2197,22 @@ private class BandaidHistoryHandler implements MintHandler {
       String pid = args.getArgument(0);
       String tnm = args.getArgument(1);
       Element xml = msg.getXml();
-
+   
       ProcessData pd = named_processes.get(pid);
       if (pd == null) return;
       for (ThreadData td : active_threads.values()) {
-	 if (td.getProcess() == pd && !td.isInternal() && td.getName().equals(tnm)) {
-	    ThreadHistoryEvent the = new ThreadHistoryEvent(td,xml);
-	    for (BumpRunEventHandler reh : event_handlers) {
-	       try {
-		  reh.handleThreadEvent(the);
-		}
-	       catch (Throwable t) {
-		  BoardLog.logE("BUMP","Problem handling history event",t);
-		}
-	     }
-	    break;
-	  }
+         if (td.getProcess() == pd && !td.isInternal() && td.getName().equals(tnm)) {
+            ThreadHistoryEvent the = new ThreadHistoryEvent(td,xml);
+            for (BumpRunEventHandler reh : event_handlers) {
+               try {
+        	  reh.handleThreadEvent(the);
+        	}
+               catch (Throwable t) {
+        	  BoardLog.logE("BUMP","Problem handling history event",t);
+        	}
+             }
+            break;
+          }
        }
     }
 

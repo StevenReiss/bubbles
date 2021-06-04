@@ -516,37 +516,38 @@ private class TableUpdater implements Runnable {
    @Override public void run() {
       BumpThread bt;
       switch (run_event.getEventType()) {
-	 case THREAD_ADD :
-	    bt = run_event.getThread();
-	    if (bt != null) {
-	       if (!thread_set.add(bt)) {
-		  // BoardLog.logD("BDDT","THREAD ALREADY IN THREADSET " + bt.getId());
-		  return;
-	       }
-	       synchronized (bump_threads) {
-		  bump_threads.clear();
-		  bump_threads.addAll(thread_set);
-		}
-	     }
-	    break;
-	 case THREAD_REMOVE :
-	    bt = run_event.getThread();
-	    if (bt != null) {
-	       thread_set.remove(bt);
-	       synchronized (bump_threads) {
-		  bump_threads.remove(bt);
-		}
-	     }
-	    break;
-	 case THREAD_CHANGE :
-	     // BoardLog.logD("BDDT","THREAD CHANGE " + run_event.getThread().getThreadState());
-	    //TODO: Update thread
-	    break;
-	 case THREAD_TRACE :
-	 case THREAD_HISTORY :
-	    return;
-	 default:
-	    break;
+         case THREAD_ADD :
+            bt = run_event.getThread();
+            if (bt != null) {
+               if (!thread_set.add(bt)) {
+        	  // BoardLog.logD("BDDT","THREAD ALREADY IN THREADSET " + bt.getId());
+        	  return;
+               }
+               synchronized (bump_threads) {
+        	  bump_threads.clear();
+        	  bump_threads.addAll(thread_set);
+        	}
+             }
+            break;
+         case THREAD_REMOVE :
+            bt = run_event.getThread();
+            if (bt != null) {
+               thread_set.remove(bt);
+               synchronized (bump_threads) {
+        	  bump_threads.remove(bt);
+        	}
+             }
+            break;
+         case THREAD_CHANGE :
+   //       bt = run_event.getThread();
+   //       BoardLog.logD("BDDT","THREAD CHANGE " + bt.getId() + " " + run_event.getThread().getThreadState());
+            //TODO: Update thread
+            break;
+         case THREAD_TRACE :
+         case THREAD_HISTORY :
+            return;
+         default:
+            break;
        }
       threads_model.fireTableDataChanged();
     }
