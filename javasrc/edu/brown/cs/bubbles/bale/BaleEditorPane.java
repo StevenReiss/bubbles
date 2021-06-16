@@ -453,7 +453,7 @@ private class RemoveBubbleHandler implements ActionListener {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BaleEditorPane.this);
       BudaBubble bbl = BudaRoot.findBudaBubble(BaleEditorPane.this);
       if (bbl != null && bba != null) {
-	 bba.userRemoveBubble(bbl);
+         bba.userRemoveBubble(bbl);
        }
     }
 

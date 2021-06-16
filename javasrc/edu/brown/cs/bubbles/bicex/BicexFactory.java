@@ -1035,81 +1035,81 @@ private static class TestRunnerAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       BumpClient bc = BumpClient.getBump();
-
+   
       BumpLaunchConfig launch = BattFactory.getLaunchConfigurationForTest(test_case);
       if (launch == null) {
-	 showError("Couldn't create launch for test case");
-	 return;
+         showError("Couldn't create launch for test case");
+         return;
        }
-
+   
       String cls = test_case.getClassName();
       String mthd = test_case.getMethodName();
-
+   
       BowiFactory.startTask();
       BumpBreakpoint bpt = null;
       BumpLocation loc = null;
       List<BumpBreakpoint> origbpts = bc.getAllBreakpoints();
       int lno = 0;
-
+   
       List<BumpLocation> locs = bc.findMethod(null,cls + "." + mthd,false);
       if (locs == null || locs.isEmpty()) {
-	 showError("Couldn't find method " + cls + "." + mthd + " for test case");
-	 return;
+         showError("Couldn't find method " + cls + "." + mthd + " for test case");
+         return;
        }
       loc = locs.get(0);
       BaleFileOverview bfo = BaleFactory.getFactory().getFileOverview(null,loc.getFile());
       lno = bfo.findLineNumber(loc.getDefinitionOffset());
-
+   
       boolean addfg = bc.getBreakModel().addLineBreakpoint(null,loc.getFile(),null,lno,BumpBreakMode.SUSPEND_THREAD);
       if (!addfg) {
-	 BoardLog.logX("BICEX","Failed to create breakpoint " +  lno + " " + loc.getFile() + " " +
-	       locs.size() + " " + addfg);
-	 showError("Failed to create breakpoint at start of " + mthd);
-	 return;
+         BoardLog.logX("BICEX","Failed to create breakpoint " +  lno + " " + loc.getFile() + " " +
+               locs.size() + " " + addfg);
+         showError("Failed to create breakpoint at start of " + mthd);
+         return;
        }
       for (int i = 0; i < 10; ++i) {
-	 List<BumpBreakpoint> newbpts = bc.getAllBreakpoints();
-	 newbpts.removeAll(origbpts);
-	 if (newbpts.size() > 0) {
-	    bpt = newbpts.get(0);
-	    break;
-	  }
-	 else {
-	    try {
-	       Thread.sleep(500);		   // wait for asynch breakpoint to be reported
-	     }
-	    catch (InterruptedException e) { }
-	  }
+         List<BumpBreakpoint> newbpts = bc.getAllBreakpoints();
+         newbpts.removeAll(origbpts);
+         if (newbpts.size() > 0) {
+            bpt = newbpts.get(0);
+            break;
+          }
+         else {
+            try {
+               Thread.sleep(500);		   // wait for asynch breakpoint to be reported
+             }
+            catch (InterruptedException e) { }
+          }
        }
-
+   
       if (bpt == null) {
-	 BoardLog.logX("BICEX","Failed to find breakpoint " +  lno + " " + loc.getFile() + " " +
-	       locs.size() + " " + addfg);
-	 showError("Failed to create breakpoint at start of " + mthd);
-	 return;
+         BoardLog.logX("BICEX","Failed to find breakpoint " +  lno + " " + loc.getFile() + " " +
+               locs.size() + " " + addfg);
+         showError("Failed to create breakpoint at start of " + mthd);
+         return;
        }
-
+   
       debug_process = bc.startDebug(launch,null);
       if (debug_process != null) {
-	 if (!waitForBreak()) {
-	    bc.terminate(debug_process);
-	    debug_process = null;
-	  }
+         if (!waitForBreak()) {
+            bc.terminate(debug_process);
+            debug_process = null;
+          }
        }
       bc.getBreakModel().removeBreakpoint(bpt.getBreakId());
       boolean havebpt = false;			   // remove excess breakpoints from failed runs
       for (BumpBreakpoint bp : origbpts) {
-	 File file = bp.getFile();
-	 if (file.equals(loc.getFile())) {
-	    if (bp.getLineNumber() == lno) {
-	       if (!havebpt) havebpt = true;
-	       else {
-		  bc.getBreakModel().removeBreakpoint(bp.getBreakId());
-		}
-	     }
-	  }
+         File file = bp.getFile();
+         if (file.equals(loc.getFile())) {
+            if (bp.getLineNumber() == lno) {
+               if (!havebpt) havebpt = true;
+               else {
+        	  bc.getBreakModel().removeBreakpoint(bp.getBreakId());
+        	}
+             }
+          }
        }
-
+   
       BoardMetrics.noteCommand("BICEX","StartTest");
       SeedeStarter ss = new SeedeStarter(debug_process,near_bubble);
       BoardThreadPool.start(ss);

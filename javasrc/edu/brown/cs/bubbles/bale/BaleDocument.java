@@ -501,6 +501,7 @@ void waitForAst()
    synchronized (this) {
       int ctr = 0;
       while (be.getAstNode() == null && ctr < 4) {
+	 BoardLog.logE("BALE","AST not found for " + be);
 	 try {
 	    ++ctr;
 	    wait(1000*ctr);
@@ -725,7 +726,7 @@ void removeRegions(List<BaleRegion> rgns)		{ }
 
 
 @Override public Position createHistoryPosition(int off) throws BadLocationException
-{							
+{						
    return getBaseEditDocument().createPosition(getDocumentOffset(off));
 }
 

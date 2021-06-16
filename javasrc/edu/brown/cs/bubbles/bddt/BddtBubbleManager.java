@@ -35,11 +35,15 @@ import edu.brown.cs.bubbles.buda.BudaBubbleLink;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaDefaultPort;
 import edu.brown.cs.bubbles.buda.BudaRoot;
+import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -721,6 +725,8 @@ private void setupBubbleArea()
 	 bubble_map.put(bb,new BubbleData(bb));
        }
     }
+   
+   bubble_area.getParent().addContainerListener(new ChannelListener());
 
    BudaRoot.addBubbleViewCallback(new BubbleUpdater());
 }
@@ -945,6 +951,21 @@ private class BubbleUpdater implements BubbleViewCallback {
    @Override public void copyFromTo(BudaBubble f,BudaBubble t)		{ }
 
 }
+
+
+private class ChannelListener implements ContainerListener {
+
+   @Override public void componentAdded(ContainerEvent e) { }
+   
+   @Override public void componentRemoved(ContainerEvent e) {
+      Component c = e.getChild();
+      if (c == null || c != bubble_area) return;
+      if (launch_control == null) return;
+      BumpClient bc = BumpClient.getBump();
+      bc.terminate(launch_control.getProcess());
+    }
+   
+}       // end of inner class ChannelListener
 
 
 

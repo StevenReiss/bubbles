@@ -2889,7 +2889,6 @@ public boolean terminate(BumpLaunch bl)
 
 public boolean terminate(BumpProcess bp)
 {
-
    if (bp == null) return false;
    if (bp.isDummy()) return terminate(bp.getLaunch());
 

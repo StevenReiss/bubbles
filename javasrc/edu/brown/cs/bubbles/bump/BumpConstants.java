@@ -482,10 +482,10 @@ enum BumpThreadState {
 
    public BumpThreadState getExceptionState() {
       switch (this) {
-	 case DEAD :
-	    return this;
-	 default :
-	    return EXCEPTION;
+         case DEAD :
+            return this;
+         default :
+            return EXCEPTION;
        }
     }
 

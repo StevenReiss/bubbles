@@ -527,19 +527,19 @@ private class StopAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	 case PARTIAL_PAUSE :
-	 case PAUSED :
-	    if (cur_process != null) {
-	       BoardMetrics.noteCommand("BDDT","TerminateDebug");
-	       waitForFreeze();
-	       bump_client.terminate(cur_process);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            break;
+         case STARTING :
+         case RUNNING :
+         case PARTIAL_PAUSE :
+         case PAUSED :
+            if (cur_process != null) {
+               BoardMetrics.noteCommand("BDDT","TerminateDebug");
+               waitForFreeze();
+               bump_client.terminate(cur_process);
+             }
+            break;
        }
     }
 

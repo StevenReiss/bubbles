@@ -783,6 +783,7 @@ private void handleThreadEvent(Element xml,long when)
 {
    RunEventKind kind = IvyXml.getAttrEnum(xml,"KIND",RunEventKind.NONE);
    BumpThreadStateDetail dtl = IvyXml.getAttrEnum(xml,"DETAIL",BumpThreadStateDetail.NONE);
+   boolean iseval = IvyXml.getAttrBool(xml,"EVAL");
 
    Element thrd = IvyXml.getChild(xml,"THREAD");
    if (thrd == null) return;
@@ -826,7 +827,8 @@ private void handleThreadEvent(Element xml,long when)
 	 td.setThreadState(ost.getRunState(),dtl);
 	 break;
       case SUSPEND :
-	 if (checkException(td,thrd)) {
+         if (dtl == BumpThreadStateDetail.EVALUATION_IMPLICIT && iseval) return;
+	 else if (checkException(td,thrd)) {
 	    td.setThreadState(ost.getExceptionState(),dtl);
 	  }
 	 else if (!td.getThreadState().isStopped()) {

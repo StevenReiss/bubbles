@@ -3254,9 +3254,9 @@ private class UndoRemove implements BudaHintActions {
 
    @Override public void finalAction() {
       if (bubble_set != null) {
-	 for (BudaBubble bb : bubble_set) {
-	    disposeBubble(bb);
-	  }
+         for (BudaBubble bb : bubble_set) {
+            disposeBubble(bb);
+          }
        }
       bubble_set = null;
       link_set = null;

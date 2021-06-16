@@ -154,7 +154,7 @@ Element getChangesForFile(String proj,String file)
    cmd += " PROJECT='" + proj + "'";
    cmd += " FILE='" + file + "' />";
    mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
-   Element e = rply.waitForXml();
+   Element e = rply.waitForXml(60000);
 
    // This should use e to get the set of lines changed in the original version
    // and then map these to lines changed in the users version
@@ -501,14 +501,19 @@ private class ServerSetup implements Runnable {
 	 MintDefaultReply rply = new MintDefaultReply();
 	 String cmd = "<BVCR DO='PROJECTS' />";
 	 mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
-	 Element e = rply.waitForXml();
-	 for (Element pe : IvyXml.children(e,"PROJECT")) {
-	    String nm = IvyXml.getAttrString(pe,"NAME");
-	    String root = IvyXml.getAttrString(pe,"ROOT");
-	    String type = IvyXml.getAttrString(pe,"TYPE");
-	    BvcrControlPanel pnl = new BvcrControlPanel(nm,type,root);
-	    control_panels.put(nm,pnl);
-	  }
+	 Element e = rply.waitForXml(60000);
+         if (e == null) {
+            server_running = false;
+          }
+         else {
+            for (Element pe : IvyXml.children(e,"PROJECT")) {
+               String nm = IvyXml.getAttrString(pe,"NAME");
+               String root = IvyXml.getAttrString(pe,"ROOT");
+               String type = IvyXml.getAttrString(pe,"TYPE");
+               BvcrControlPanel pnl = new BvcrControlPanel(nm,type,root);
+               control_panels.put(nm,pnl);
+             }
+          }
        }
       noteSetup(true);
     }
