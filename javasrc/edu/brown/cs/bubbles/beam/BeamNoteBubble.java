@@ -67,8 +67,13 @@ import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.HTMLEditorKit;
+
+
 
 import java.awt.Color;
 import java.awt.Component;
@@ -87,6 +92,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedReader;
 import java.io.File;
@@ -168,6 +174,7 @@ private static final KeyItem [] key_defs = new KeyItem[] {
    new KeyItem("menu B",new NoteEditorKit.BoldAction()),
       new KeyItem("menu I",new NoteEditorKit.ItalicAction()),
       new KeyItem("menu U",new NoteEditorKit.UnderlineAction()),
+      new KeyItem("menu T",new StrikeThruAction()),
       new KeyItem("menu 1",new NoteEditorKit.NoteFontSizeAction("font_size_10",10)),
       new KeyItem("menu 2",new NoteEditorKit.NoteFontSizeAction("font_size_12",12)),
       new KeyItem("menu 3",new NoteEditorKit.NoteFontSizeAction("font_size_16",14)),
@@ -882,6 +889,27 @@ private static class NoteEditorKit extends HTMLEditorKit
 }	// end of inner class NoteEditorKit
 
 
+private static class StrikeThruAction extends StyledEditorKit.StyledTextAction {
+   
+   StrikeThruAction() {
+      super("font-strikethrough");
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      JEditorPane editor = getEditor(e);
+      if (editor != null) {
+         StyledEditorKit kit = getStyledEditorKit(editor);
+         MutableAttributeSet attr = kit.getInputAttributes();
+         boolean on = (StyleConstants.isStrikeThrough(attr));
+         Object val = (on ? TextAttribute.STRIKETHROUGH : TextAttribute.STRIKETHROUGH);
+         SimpleAttributeSet sas = new SimpleAttributeSet();
+         sas.addAttribute(TextAttribute.STRIKETHROUGH,val);
+       }
+    }
+   
+}       // end of inner class StrikeThruAction
+
+
 
 private static class SaveAction extends AbstractAction {
 
@@ -918,7 +946,7 @@ private static class KeyItem {
 
    void addToKeyMap(Keymap kmp) {
       if (key_stroke != null && key_action != null) {
-	 kmp.addActionForKeyStroke(key_stroke,key_action);
+         kmp.addActionForKeyStroke(key_stroke,key_action);
        }
     }
 

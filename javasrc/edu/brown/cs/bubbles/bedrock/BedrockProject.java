@@ -305,6 +305,7 @@ void openProject(String name,boolean fil,boolean pat,boolean cls,boolean opt,boo
    setupProjects();
 
    IProject p = findProject(name);
+   if (p == null) return;
 
    attachProject(p,false);
 
@@ -619,10 +620,10 @@ private static final class RunPropDialog implements Runnable {
    @Override public void run() {
       PropertyDialogAction act = new PropertyDialogAction(use_provider,use_provider);
       try {
-         act.run();
+	 act.run();
        }
       catch (Throwable t) {
-         BedrockPlugin.logE("BEDROCK: Problem with project property: " + t,t);
+	 BedrockPlugin.logE("BEDROCK: Problem with project property: " + t,t);
        }
     }
 
@@ -753,6 +754,8 @@ static boolean useProject(String name)
 
 private void attachProject(IProject p,boolean setup)
 {
+   if (p == null) return;
+
    if (!open_projects.contains(p)) {
       open_projects.add(p);
     }
@@ -764,15 +767,15 @@ private void attachProject(IProject p,boolean setup)
       if (setup) setupDefaults(ijp);
     }
    catch (JavaModelException e) {
-      BedrockPlugin.logE("Error resolving project: " + e);
+      BedrockPlugin.logE("Error resolving project: " + e,e);
       return;
     }
    catch (CoreException e) {
-      BedrockPlugin.logE("Error opening project: " + e);
+      BedrockPlugin.logE("Error opening project: " + e,e);
       return;
     }
    catch (Throwable e) {
-      BedrockPlugin.logE("Error with project attach: " + e);
+      BedrockPlugin.logE("Error with project attach: " + e,e);
       return;
     }
 
@@ -792,9 +795,6 @@ private void detachProject(IProject p)
 
 private void setupProjects()
 {
-   BedrockPlugin.logD("CHECK SETUP " + projects_setup + " " + PlatformUI.isWorkbenchRunning());
-
-// if (!projects_setup && PlatformUI.isWorkbenchRunning()) {
    if (!projects_setup) {
       BedrockApplication.getDisplay();		     // wait for setup
       IWorkspace ws = ResourcesPlugin.getWorkspace();
@@ -1147,7 +1147,7 @@ ICompilationUnit getCompilationUnit(String proj,String file) throws BedrockExcep
    ICompilationUnit icu = checkFilePrefix(ijp,null,file);
    if (icu != null) return icu;
    if (ijp == null) return null;
-   
+
    String cfile = file;
    try {
       File f1 = new File(file);
@@ -1174,17 +1174,17 @@ ICompilationUnit getCompilationUnit(String proj,String file) throws BedrockExcep
 	       icu = checkFilePrefix(ijp,f1.getAbsolutePath(),file);
 	       if (icu != null) return icu;
 	     }
-            if (cfile != null) {
-               icu = checkFilePrefix(ijp,f.getAbsolutePath(),cfile);
-               if (icu != null) return icu;
-               if (f1 != null && !f.equals(f1)) {
-                  icu = checkFilePrefix(ijp,f1.getAbsolutePath(),cfile);
-                  if (icu != null) return icu;
-                }
-             }
+	    if (cfile != null) {
+	       icu = checkFilePrefix(ijp,f.getAbsolutePath(),cfile);
+	       if (icu != null) return icu;
+	       if (f1 != null && !f.equals(f1)) {
+		  icu = checkFilePrefix(ijp,f1.getAbsolutePath(),cfile);
+		  if (icu != null) return icu;
+		}
+	     }
 	  }
        }
-      
+
       BedrockPlugin.logD("Can't find resolved entry for " + file + " " + ijp.getPath());
     }
    catch (JavaModelException e) {

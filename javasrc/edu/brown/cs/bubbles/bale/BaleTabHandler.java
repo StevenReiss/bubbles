@@ -54,7 +54,6 @@ class BaleTabHandler implements TabExpander, BaleConstants
 /********************************************************************************/
 
 private BaleElement cur_element;
-private int tab_size;
 private Font last_font;
 private int font_width;
 private int font_height;
@@ -85,7 +84,6 @@ static {
 
 BaleTabHandler()
 {
-   tab_size = base_tab_size;
    last_font = null;
    font_width = 0;
    cur_element = null;
@@ -118,7 +116,7 @@ int getSpaceWidth() {
 
 int getTabSize() {
    setFont();
-   return tab_size;
+   return base_tab_size;
 }
 
 
@@ -159,8 +157,8 @@ int nextTabPosition(int pos)
 
 private int localNextTabPosition(int pos)
 {
-   int npos = (pos + 1 + tab_size);
-   int r = npos % tab_size;
+   int npos = (pos + 1 + base_tab_size);
+   int r = npos % base_tab_size;
    npos -= r;
 
    return npos;
@@ -187,10 +185,6 @@ private void setFont()
       font_width = (int) r.getWidth();
       font_height = ht;
       last_font = fn;
-      // Integer ivl = (Integer)(cur_element.getAttributes().getAttribute(BOARD_ATTR_TAB_SIZE));
-      // if (ivl == null) tab_size = 0;
-      // else tab_size = ivl;
-      if (tab_size <= 0) tab_size = base_tab_size;
     }
 }
 
