@@ -482,17 +482,17 @@ private static class EditPathEntryBubble extends BudaBubble implements ActionLis
       pnl.beginLayout();
       pnl.addBannerLabel("Edit Project Path Entry");
       switch (for_path.getPathType()) {
-	 case LIBRARY :
-	    pnl.addFileField("Library",for_path.getBinaryPath(),0,this,null);
-	    pnl.addFileField("Source Attachment",for_path.getSourcePath(),0,this,null);
-	    pnl.addFileField("Java Doc Attachment",for_path.getJavadocPath(),0,this,null);
-	    break;
-	 default:
-	    break;
+         case LIBRARY :
+            pnl.addFileField("Library",for_path.getBinaryPath(),0,this,null);
+            pnl.addFileField("Source Attachment",for_path.getSourcePath(),0,this,null);
+            pnl.addFileField("Java Doc Attachment",for_path.getJavadocPath(),0,this,null);
+            break;
+         default:
+            break;
        }
       pnl.addBoolean("Exported",for_path.isExported(),this);
       pnl.addBoolean("Optional",for_path.isOptional(),this);
-
+   
       pnl.addBottomButton("Close","Close",this);
       pnl.addBottomButtons();
       setContentPane(pnl);

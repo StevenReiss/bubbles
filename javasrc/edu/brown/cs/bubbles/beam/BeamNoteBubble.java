@@ -728,12 +728,12 @@ private static class NoteArea extends JEditorPane
       setKeymap(note_keymap);
       Dimension d = new Dimension(beam_properties.getInt(NOTE_WIDTH),beam_properties.getInt(NOTE_HEIGHT));
       if (cnts != null) {
-         JLabel lbl = new JLabel(cnts);
-         Dimension d1 = lbl.getPreferredSize();
-         d1.width = Math.min(d1.width,900);
-         d1.height = Math.min(d1.height,400);
-         d.width = Math.max(d.width, d1.width);
-         d.height = Math.max(d1.height, d1.height);
+	 JLabel lbl = new JLabel(cnts);
+	 Dimension d1 = lbl.getPreferredSize();
+	 d1.width = Math.min(d1.width,900);
+	 d1.height = Math.min(d1.height,400);
+	 d.width = Math.max(d.width, d1.width);
+	 d.height = Math.max(d1.height, d1.height);
       }
       setPreferredSize(d);
       setSize(d);
@@ -742,14 +742,14 @@ private static class NoteArea extends JEditorPane
       addMouseListener(new BudaConstants.FocusOnEntry());
       addMouseListener(new LinkListener());
       addHyperlinkListener(new HyperListener());
-   
+
       Color tc = BoardColors.getColor(NOTE_TOP_COLOR_PROP);
       Color bc = BoardColors.getColor(NOTE_BOTTOM_COLOR_PROP);
       if (tc.getRGB() == bc.getRGB()) {
-         setBackground(tc);
+	 setBackground(tc);
        }
       else setBackground(BoardColors.transparent());
-   
+
       BurpHistory.getHistory().addEditor(this);
     }
 
@@ -890,24 +890,26 @@ private static class NoteEditorKit extends HTMLEditorKit
 
 
 private static class StrikeThruAction extends StyledEditorKit.StyledTextAction {
-   
+
+   private static final long serialVersionUID = 1;
+
    StrikeThruAction() {
       super("font-strikethrough");
     }
-   
+
    @Override public void actionPerformed(ActionEvent e) {
       JEditorPane editor = getEditor(e);
       if (editor != null) {
-         StyledEditorKit kit = getStyledEditorKit(editor);
-         MutableAttributeSet attr = kit.getInputAttributes();
-         boolean on = (StyleConstants.isStrikeThrough(attr));
-         Object val = (on ? TextAttribute.STRIKETHROUGH : TextAttribute.STRIKETHROUGH);
-         SimpleAttributeSet sas = new SimpleAttributeSet();
-         sas.addAttribute(TextAttribute.STRIKETHROUGH,val);
+	 StyledEditorKit kit = getStyledEditorKit(editor);
+	 MutableAttributeSet attr = kit.getInputAttributes();
+	 boolean on = (StyleConstants.isStrikeThrough(attr));
+	 Object val = (on ? TextAttribute.STRIKETHROUGH : TextAttribute.STRIKETHROUGH);
+	 SimpleAttributeSet sas = new SimpleAttributeSet();
+	 sas.addAttribute(TextAttribute.STRIKETHROUGH,val);
        }
     }
-   
-}       // end of inner class StrikeThruAction
+
+}	// end of inner class StrikeThruAction
 
 
 
@@ -946,7 +948,7 @@ private static class KeyItem {
 
    void addToKeyMap(Keymap kmp) {
       if (key_stroke != null && key_action != null) {
-         kmp.addActionForKeyStroke(key_stroke,key_action);
+	 kmp.addActionForKeyStroke(key_stroke,key_action);
        }
     }
 
@@ -1009,11 +1011,11 @@ private static class HyperListener implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-         URL u = e.getURL();
-         try {
-            BeamFactory.showBrowser(u.toURI());
-          }
-         catch (URISyntaxException ex) { }
+	 URL u = e.getURL();
+	 try {
+	    BeamFactory.showBrowser(u.toURI());
+	  }
+	 catch (URISyntaxException ex) { }
        }
     }
 

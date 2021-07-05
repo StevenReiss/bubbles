@@ -1,4 +1,4 @@
-\project name='bubbles.bema' default='compile'>
+<project name='bubbles.bema' default='compile'>
 
    <property file='../../../../../../build.properties' />
    <property name='PRO' value='/pro' />

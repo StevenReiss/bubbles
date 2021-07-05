@@ -2528,7 +2528,8 @@ private void handleMouseMoved(MouseEvent e)
     }
 
    last_mouse = mr;
-
+// System.err.println("REGION " + mr.getRegion());
+   
    switch (mr.getRegion()) {
       default :
 	 BudaCursorManager.setTemporaryCursor(this, null);
@@ -2637,19 +2638,19 @@ private class MouseRegion implements BudaHelpRegion {
 
    MouseRegion(int x,int y) {
       // if (scale_factor != 1.0) {
-         // x = (int)(x / scale_factor);
-         // y = (int)(y / scale_factor);
-       // }
-   
+      // x = (int)(x / scale_factor);
+      // y = (int)(y / scale_factor);
+      // }
+      
       region_type = BudaRegion.NONE;
       in_bubble = null;
       in_group = null;
       in_link = null;
       mouse_loc = new Point(x,y);
-   
+      
       int maxlayer = Integer.MIN_VALUE;
       // First see if the mouse is inside a bubble
-   
+      
       synchronized (active_bubbles) {
          for (BudaBubble bb : active_bubbles) {
             BudaRegion br = bb.correlate(x,y);
@@ -2660,35 +2661,35 @@ private class MouseRegion implements BudaHelpRegion {
              }
           }
        }
-   
+      
       // Next see if the mouse is on a link
       if (region_type == BudaRegion.NONE) {
          synchronized (bubble_links) {
             for (BudaBubbleLink bl : bubble_links) {
                BudaRegion br = bl.correlate(x,y);
                if (br != BudaRegion.NONE) {
-        	  region_type = br;
-        	  in_link = bl;
-        	  break;
-        	}
+                  region_type = br;
+                  in_link = bl;
+                  break;
+                }
              }
           }
        }
-   
+      
       // If not, check if it is inside a bubble group
       if (region_type == BudaRegion.NONE) {
          synchronized (bubble_groups) {
             for (BudaBubbleGroup bg : bubble_groups) {
                BudaRegion br = bg.correlate(x,y);
                if (br != BudaRegion.NONE) {
-        	  region_type = br;
-        	  in_group = bg;
-        	  break;
-        	}
+                  region_type = br;
+                  in_group = bg;
+                  break;
+                }
              }
           }
        }
-    }
+   }
 
    @Override public BudaRegion getRegion()	{ return region_type; }
    @Override public BudaBubble getBubble()	{ return in_bubble; }

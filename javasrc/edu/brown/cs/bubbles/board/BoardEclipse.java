@@ -302,9 +302,9 @@ private class EclipsePanel implements ActionListener, UndoableEditListener {
       pnl.setOpaque(true);
       pnl.beginLayout();
       pnl.addBannerLabel("Install Eclipse");
-
+   
       File pfl = new File(install_directory,"eclipse");
-
+   
       String explstr = "<html><p>";
       explstr += "Code Bubbles requires a writable Eclipse installation ";
       explstr += "in order to work for Java programs.  It is not needed if ";
@@ -319,7 +319,7 @@ private class EclipsePanel implements ActionListener, UndoableEditListener {
       explstr += "of the <a href='https://www.eclipse.org/legal/epl/notice.php'>";
       explstr += "Eclipse Foundation Software User Agreement</a>.";
       explstr += "<p><p>";
-
+   
       JEditorPane expl = new SwingEditorPane("text/html",explstr);
       expl.setEditable(false);
       expl.addHyperlinkListener(new HyperListener());
@@ -327,18 +327,18 @@ private class EclipsePanel implements ActionListener, UndoableEditListener {
       pnl.addLabellessRawComponent("EXPLANATION",expl);
       eclipse_field = pnl.addFileField("Eclipse Home",pfl,JFileChooser.DIRECTORIES_ONLY,this,this);
       version_choice = pnl.addChoice("Install Eclipse Version",eclipse_versions.keySet(),0,this);
-
+   
       pnl.addBottomButton("CANCEL","CANCEL",this);
       install_button = pnl.addBottomButton("INSTALL","INSTALL",this);
       install_button.setEnabled(false);
       pnl.addBottomButtons();
-
+   
       Dimension sz = new Dimension(ECLIPSE_WIDTH,ECLIPSE_HEIGHT);
       pnl.setSize(sz);
       pnl.setPreferredSize(sz);
-
+   
       recheck();
-
+   
       return pnl;
     }
 

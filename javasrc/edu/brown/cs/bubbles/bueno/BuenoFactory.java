@@ -564,20 +564,20 @@ private static class TemplatePanel extends SwingGridPanel implements ActionListe
       List<String> alts = new ArrayList<>();
       alts.add("Use File Specified Above");
       if (f2 .exists() && f2.listFiles() != null) {
-	 for (File f3 : f2.listFiles()) {
-	    if (f3.isDirectory() && f3.listFiles() != null) {
-	       boolean fnd = false;
-	       for (File f4 : f3.listFiles()) {
-		  if (f4.isFile() && f4.getName().endsWith(".template")) {
-		     fnd = true;
-		   }
-		}
-	       if (fnd) alts.add(f3.getName());
-	     }
-	  }
+         for (File f3 : f2.listFiles()) {
+            if (f3.isDirectory() && f3.listFiles() != null) {
+               boolean fnd = false;
+               for (File f4 : f3.listFiles()) {
+        	  if (f4.isFile() && f4.getName().endsWith(".template")) {
+        	     fnd = true;
+        	   }
+        	}
+               if (fnd) alts.add(f3.getName());
+             }
+          }
        }
       if (alts.size() > 1) {
-	 source_field = addChoice("Copy from Workspace ",alts,"None",null);
+         source_field = addChoice("Copy from Workspace ",alts,"None",null);
        }
       else source_field = null;
       addBottomButton("Import","IMPORT",this);

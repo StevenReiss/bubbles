@@ -30,6 +30,7 @@ import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.ivy.exec.IvyExec;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -137,7 +138,8 @@ BuenoProjectMakerGit()
    pnl.beginLayout();
    JTextField urlfld = pnl.addTextField("GIT Repo URL",props.getString(GIT_URL),48,uact,uact);
    props.put(GIT_URL_FIELD,urlfld);
-   JTextField dirfld = pnl.addFileField("Target Directory",props.getString(GIT_DIR),32,uact,uact);
+   JTextField dirfld = pnl.addFileField("Target Directory",props.getString(GIT_DIR),
+         JFileChooser.DIRECTORIES_ONLY,uact,uact);
    props.put(GIT_DIR_FIELD,dirfld);
    pnl.addSeparator();
    

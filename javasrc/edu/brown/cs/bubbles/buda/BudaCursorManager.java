@@ -97,6 +97,9 @@ public static void setCursor(Component comp, Cursor curs)
 
 public static void setTemporaryCursor(Component comp, Cursor curs)
 {
+// Throwable t = new Throwable("SET TEMP " + curs);
+// t.printStackTrace();
+   
    if (curs == null && the_manager.global_cursor_set.contains(comp)) { 
       curs = the_manager.global_cursor;
     }

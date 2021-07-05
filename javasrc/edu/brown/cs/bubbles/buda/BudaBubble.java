@@ -1088,11 +1088,18 @@ BudaRegion correlate(int x,int y)
    if (x0 < 0 || x0 > r.getWidth()) return BudaRegion.NONE;
    if (y0 < 0 || y0 > r.getHeight()) return BudaRegion.NONE;
 
-   int x2 = (int) (x0 - getContentLeftOffset());
-   int y2 = (int) (y0 - getContentRightOffset());
+   int xbw = (int) getContentLeftOffset();
+   int ybw = (int) getContentBottomOffset();
+   xbw = Math.max(4,xbw);
+   ybw = Math.max(4,ybw);
+   int x2 = x0 - xbw;
+   int y2 = y0 - ybw;
 
    if (content_pane != null && content_pane.contains(x2,y2)) return BudaRegion.COMPONENT;
-
+ 
+// BoardLog.logD("BUDA","BORDER " + border_type + " " + x0 + " " + y0 + " " + 
+//    x1 + " " + y1 + " " + x2 + " " + y2);
+   
    if (border_type != BudaBorder.NONE) {
       if (y0 < BUBBLE_BORDER_DELTA) {
 	 if (x0 < BUBBLE_BORDER_DELTA) return BudaRegion.BORDER_NW;
