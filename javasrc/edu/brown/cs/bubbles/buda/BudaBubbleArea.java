@@ -1288,7 +1288,7 @@ void setColors(String top,String bottom)
 public boolean isPrimaryArea()			{ return channel_set == null; }
 
 
-BudaChannelSet getChannelSet()			{ return channel_set; }
+public BudaChannelSet getChannelSet()			{ return channel_set; }
 
 
 

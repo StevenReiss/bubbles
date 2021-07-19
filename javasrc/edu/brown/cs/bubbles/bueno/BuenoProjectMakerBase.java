@@ -126,7 +126,13 @@ protected void findFiles(File dir,Set<File> srcs,Set<File> libs,Set<File> rsrcs)
       if (dir.getName().equals("bBACKUP")) return;
       else if (dir.getName().startsWith(".")) return;
       else if (dir.getName().equals("node_modules")) return;
-      if (dir.getName().equals("resources")) rsrcs.add(dir);
+      if (dir.getName().equals("resources")) {
+         boolean havesrc = false;
+         for (String fnm : dir.list()) {
+            if (fnm.endsWith(".java")) havesrc = true;
+          }
+         if (!havesrc) rsrcs.add(dir);
+       }
       if (dir.listFiles() != null) {
 	 for (File sf : dir.listFiles()) {
 	    findFiles(sf,srcs,libs,rsrcs);

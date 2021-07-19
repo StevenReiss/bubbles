@@ -735,8 +735,10 @@ public static BumpLaunchConfig getLaunchConfigurationForTest(BattTest btc)
    String cnm = btc.getClassName();
    List<BumpLocation> locs = bc.findAllClasses(cnm);
    if (locs != null && locs.size() > 0) {
-      BumpLocation loc = locs.get(0);
-      pnm = loc.getProject();
+      for (BumpLocation bl : locs) {
+         pnm = bl.getProject();
+         if (pnm != null) break;
+       }
     }
 
    BumpLaunchConfig blc = brm.createLaunchConfiguration(nm,BumpLaunchConfigType.JUNIT_TEST);

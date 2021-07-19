@@ -45,6 +45,7 @@ import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
 
+import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -68,6 +69,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Shape;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -98,6 +100,9 @@ private PerfEventHandler	event_handler;
 private double			base_samples;
 private double			total_samples;
 private double			base_time;
+private double                  reset_samples;
+private double                  reset_totals;
+private double                  reset_time;
 private Map<String,PerfNode>	node_map;
 
 private static final String [] column_names = new String[] {
@@ -125,6 +130,9 @@ BddtPerfViewTable(BddtLaunchControl ctrl)
    base_samples = 1;
    total_samples = 1;
    base_time = 0;
+   reset_samples = 0;
+   reset_totals = 0;
+   reset_time = 0;
    node_map = new HashMap<String,PerfNode>();
 
    setupBubble();
@@ -174,6 +182,34 @@ private void setupBubble()
 
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+private double getBaseTime()
+{
+   return base_time - reset_time;
+}
+
+
+private double getBaseSamples()
+{
+   double v = base_samples - reset_samples;
+   if (v <= 0) v = 1;
+   return v;
+}
+
+
+private double getTotalSamples()
+{
+   double v = total_samples - reset_totals;
+   if (v <= 0) v = 1;
+   return v;
+}
+
+
 
 /********************************************************************************/
 /*										*/
@@ -185,6 +221,7 @@ private void setupBubble()
 {
    JPopupMenu popup = new JPopupMenu();
 
+   popup.add(new ResetAction());
    popup.add(getFloatBubbleAction());
 
    popup.show(this,e.getX(),e.getY());
@@ -253,31 +290,33 @@ private class PerfEventHandler implements BumpRunEventHandler {
 
    @Override public void handleProcessEvent(BumpRunEvent evt) {
       if (evt.getProcess() != null &&
-	     evt.getProcess() != launch_control.getProcess())
-	 return;
+             evt.getProcess() != launch_control.getProcess())
+         return;
       else if (evt.getProcess() == null &&
-		  evt.getEventType() != BumpRunEventType.PROCESS_ADD)
-	 return;
-
+        	  evt.getEventType() != BumpRunEventType.PROCESS_ADD)
+         return;
+   
       switch (evt.getEventType()) {
-	 case PROCESS_ADD :
-	    perf_model.clear();
-	    break;
-	 case PROCESS_PERFORMANCE :
-	    Element xml = (Element) evt.getEventData();
-	    base_samples = IvyXml.getAttrDouble(xml,"ACTIVE",0);
-	    total_samples = IvyXml.getAttrDouble(xml,"SAMPLES",0);
-	    base_time = IvyXml.getAttrDouble(xml,"TIME",0);
-	    for (Element itm : IvyXml.children(xml,"ITEM")) {
-	       PerfNode pn = findNode(IvyXml.getAttrString(itm,"NAME"));
-	       pn.update(itm);
-	     }
-	    break;
-	 case PROCESS_TRIE :
-	    xml = (Element) evt.getEventData();
-	    break;
-	 default:
-	    break;
+         case PROCESS_ADD :
+            perf_model.clear();
+            break;
+         case PROCESS_PERFORMANCE :
+            Element xml = (Element) evt.getEventData();
+            double t = IvyXml.getAttrDouble(xml,"TIME",0);
+            if (base_time > t) break;
+            base_samples = IvyXml.getAttrDouble(xml,"ACTIVE",0);
+            total_samples = IvyXml.getAttrDouble(xml,"SAMPLES",0);
+            base_time = t;
+            for (Element itm : IvyXml.children(xml,"ITEM")) {
+               PerfNode pn = findNode(IvyXml.getAttrString(itm,"NAME"));
+               pn.update(itm);
+             }
+            break;
+         case PROCESS_TRIE :
+            xml = (Element) evt.getEventData();
+            break;
+         default:
+            break;
        }
     }
 
@@ -471,23 +510,23 @@ private class PerfModel extends AbstractTableModel {
       PerfNode pn = getNode(row);
       if (pn == null) return null;
       switch (col) {
-	 case 0 :			// package
-	    return pn.getPackage();
-	 case 1 :			// class
-	    return pn.getClassName();
-	 case 2 :			// method
-	    return pn.getMethodName();
-	 case 3 :			// line
-	    return pn.getLineNumber();
-	 case 4 :
-	    if (row == 1) System.err.println("BASE: " + pn.getBaseCount());
-	    return pn.getBaseCount()* base_time/base_samples;
-	 case 5 :
-	    return 100 * pn.getBaseCount() / base_samples;
-	 case 6 :
-	    return pn.getTotalCount() * base_time/base_samples;
-	 case 7 :
-	    return 100 * pn.getTotalCount() / total_samples;
+         case 0 :			// package
+            return pn.getPackage();
+         case 1 :			// class
+            return pn.getClassName();
+         case 2 :			// method
+            return pn.getMethodName();
+         case 3 :			// line
+            return pn.getLineNumber();
+         case 4 :
+            if (row == 1) System.err.println("BASE: " + pn.getBaseCount());
+            return pn.getBaseCount()* getBaseTime()/getBaseSamples();
+         case 5 :
+            return 100 * pn.getBaseCount() / getBaseSamples();
+         case 6 :
+            return pn.getTotalCount() * getBaseTime()/getBaseSamples();
+         case 7 :
+            return 100 * pn.getTotalCount() / getTotalSamples();
        }
       return null;
     }
@@ -564,6 +603,8 @@ private class PerfNode implements Comparable<PerfNode> {
    private String file_name;
    private int base_count;
    private int total_count;
+   private int reset_count;
+   private int reset_total;
 
    PerfNode(String nm) {
       full_name = nm;
@@ -586,6 +627,8 @@ private class PerfNode implements Comparable<PerfNode> {
 
       base_count = 0;
       total_count = 0;
+      reset_count = 0;
+      reset_total = 0;
     }
 
    String getPackage()				{ return package_name; }
@@ -604,9 +647,14 @@ private class PerfNode implements Comparable<PerfNode> {
       SwingUtilities.invokeLater(new ChangeHandler(this));
       // perf_model.handleChange(this);
     }
+   
+   void reset() {
+      reset_count = base_count;
+      reset_total = total_count;
+    }
 
-   int getBaseCount()			{ return base_count; }
-   int getTotalCount()			{ return total_count; }
+   int getBaseCount()			{ return base_count - reset_count; }
+   int getTotalCount()			{ return total_count - reset_total; }
 
    @Override public int compareTo(PerfNode pn) {
        return full_name.compareTo(pn.full_name);
@@ -616,9 +664,9 @@ private class PerfNode implements Comparable<PerfNode> {
       StringBuilder buf = new StringBuilder();
       buf.append("<html><table>");
       if (package_name != null) {
-	 buf.append("<tr><td>Package</td><td>");
-	 buf.append(package_name);
-	 buf.append("</td></tr>");
+         buf.append("<tr><td>Package</td><td>");
+         buf.append(package_name);
+         buf.append("</td></tr>");
        }
       buf.append("<tr><td>Class</td><td>");
       buf.append(class_name);
@@ -626,32 +674,50 @@ private class PerfNode implements Comparable<PerfNode> {
       buf.append("<tr><td>Method</td><td>");
       buf.append(method_name);
       if (line_number > 0) {
-	 buf.append("</td></tr>");
-	 buf.append("<tr><td>Line Number</td><td>");
-	 buf.append(line_number);
-	 buf.append("</td></tr>");
+         buf.append("</td></tr>");
+         buf.append("<tr><td>Line Number</td><td>");
+         buf.append(line_number);
+         buf.append("</td></tr>");
        }
       buf.append("</td></tr>");
       buf.append("<tr><td>Class</td><td>");
       buf.append(class_name);
       buf.append("</td></tr>");
       if (base_count > 0) {
-	 buf.append("</td></tr>");
-	 buf.append("<tr><td>Base Time</td><td>");
-	 buf.append(IvyFormat.formatTime(base_count * base_time / base_samples));
-	 buf.append(" sec (");
-	 buf.append(IvyFormat.formatPercent(base_count / base_samples));
-	 buf.append(")");
-	 buf.append("</td></tr>");
+         buf.append("</td></tr>");
+         buf.append("<tr><td>Base Time</td><td>");
+         buf.append(IvyFormat.formatTime(base_count * base_time / base_samples));
+         buf.append(" sec (");
+         buf.append(IvyFormat.formatPercent(base_count / base_samples));
+         buf.append(")");
+         buf.append("</td></tr>");
+       }
+      if (base_count > reset_count && reset_count > 0) {
+         buf.append("</td></tr>");
+         buf.append("<tr><td>Base Time Since Reset</td><td>");
+         buf.append(IvyFormat.formatTime((base_count-reset_count) * getBaseTime() / getBaseSamples()));
+         buf.append(" sec (");
+         buf.append(IvyFormat.formatPercent((base_count-reset_count) / base_samples));
+         buf.append(")");
+         buf.append("</td></tr>");
        }
       if (total_count > 0) {
-	 buf.append("</td></tr>");
-	 buf.append("<tr><td>Total Time</td><td>");
-	 buf.append(IvyFormat.formatTime(total_count * base_time / base_samples));
-	 buf.append(" sec (");
-	 buf.append(IvyFormat.formatPercent(total_count / total_samples));
-	 buf.append(")");
-	 buf.append("</td></tr>");
+         buf.append("</td></tr>");
+         buf.append("<tr><td>Total Time</td><td>");
+         buf.append(IvyFormat.formatTime(total_count * base_time / base_samples));
+         buf.append(" sec (");
+         buf.append(IvyFormat.formatPercent(total_count / total_samples));
+         buf.append(")");
+         buf.append("</td></tr>");
+       }
+      if (total_count > reset_total && reset_total > 0) {
+         buf.append("</td></tr>");
+         buf.append("<tr><td>Total Time Since Reset</td><td>");
+         buf.append(IvyFormat.formatTime((total_count-reset_total) * getBaseTime() / getBaseSamples()));
+         buf.append(" sec (");
+         buf.append(IvyFormat.formatPercent((total_count-reset_total) / getTotalSamples()));
+         buf.append(")");
+         buf.append("</td></tr>");
        }
       buf.append("</table>");
       return buf.toString();
@@ -677,6 +743,30 @@ private class ChangeHandler implements Runnable {
 
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Action to reset counters                                                */
+/*                                                                              */
+/********************************************************************************/
+
+private class ResetAction extends AbstractAction {
+   
+   ResetAction() {
+      super("Reset Counters");
+    }
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+      synchronized (node_map) {
+         reset_time = base_time;
+         reset_samples = base_samples-1;
+         reset_totals = total_samples-1;
+         for (PerfNode pn : node_map.values()) {
+            pn.reset();
+          }
+       }
+    }
+   
+}       // end of inner class ResetAction
 
 }	// end of class BddtPerfViewTable
 

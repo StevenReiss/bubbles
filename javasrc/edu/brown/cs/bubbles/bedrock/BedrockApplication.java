@@ -201,13 +201,13 @@ private static class Stopper extends Thread {
 
    @Override public void run() {
       synchronized (this) {
-	 try {
-	    wait(1000);
-	  }
-	 catch (InterruptedException e) {
-	  }
-	 BedrockPlugin.logD("Forcing EXIT After delay");
-	 System.exit(0);
+         try {
+            wait(1000);
+          }
+         catch (InterruptedException e) {
+          }
+         BedrockPlugin.logD("Forcing EXIT After delay");
+         System.exit(0);
        }
     }
 
@@ -376,7 +376,7 @@ private synchronized void noteSetup()
       synchronized (this) {		   // wait until exit request
 	 while (!exit_ok) {
 	    try {
-	       wait(60000);
+	       wait(15000);
 	     }
 	    catch (InterruptedException e) { }
 	    if (!exit_ok) {
@@ -620,29 +620,29 @@ private class EndChecker extends Thread {
    @Override public void run() {
       int ctr = 0;
       for ( ; ; ) {
-	 try {
-	    sleep(10000);
-	  }
-	 catch (InterruptedException e) { }
-	 if (PlatformUI.isWorkbenchRunning()) {
-	    BedrockPlugin bp = BedrockPlugin.getPlugin();
-	    String cmd = "PING";
-	    if (ctr > 0) cmd += ctr;
-	    IvyXmlWriter xw = bp.beginMessage(cmd);
-	    String resp = bp.finishMessageWait(xw,10000);
-	    if (resp != null) ctr = 0;
-	    else {
-	       BedrockPlugin.logD("BEDROCK: END CHECKER " + ctr);
-	       if (++ctr >= 6) {
-		  BedrockPlugin.logI("BEDROCK: End checker stopping");
-		  xw = bp.beginMessage("STOP");
-		  bp.finishMessage(xw);
-		  bp.forceExit();
-		}
-	     }
-	  }
+         try {
+            sleep(10000);
+          }
+         catch (InterruptedException e) { }
+         if (PlatformUI.isWorkbenchRunning()) {
+            BedrockPlugin bp = BedrockPlugin.getPlugin();
+            String cmd = "PING";
+            if (ctr > 0) cmd += ctr;
+            IvyXmlWriter xw = bp.beginMessage(cmd);
+            String resp = bp.finishMessageWait(xw,5000);
+            if (resp != null) ctr = 0;
+            else {
+               BedrockPlugin.logD("BEDROCK: END CHECKER " + ctr);
+               if (++ctr >= 4) {
+                  BedrockPlugin.logI("BEDROCK: End checker stopping");
+                  xw = bp.beginMessage("STOP");
+                  bp.finishMessage(xw);
+                  bp.forceExit();
+                }
+             }
+          }
        }
-    }
+   }
 
 }	// end of inner class EndChecker
 

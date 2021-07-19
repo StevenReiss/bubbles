@@ -514,12 +514,12 @@ private class PanelHandler extends AbstractAction implements ActionListener {
                useworkingset = false;
             if (useworkingset) {
                if (active_working_set == null) {
-        	  setPriorViewport(br);
-        	  active_working_set = working_sets.get(0);
-        	}
+                  setPriorViewport(br);
+                  active_working_set = working_sets.get(0);
+                }
                else if (prior_viewport != null) {
-        	  br.setViewport(prior_viewport.x,prior_viewport.y);
-        	}
+                  br.setViewport(prior_viewport.x,prior_viewport.y);
+                }
              }
             else {
                if (br.getChannelSet() == debug_channels) br.setChannelSet(null);
@@ -530,7 +530,7 @@ private class PanelHandler extends AbstractAction implements ActionListener {
       else if (cmd.equals("NEW")) {
          setPriorViewport(br);
          if (current_configuration == null) setCurrentLaunchConfig(null);
-   
+         
          if (current_configuration != null) {
             BoardMetrics.noteCommand("BDDT","NewDebug");
             newDebugger(current_configuration);
@@ -670,6 +670,7 @@ void addNewConfigurationActions(JPopupMenu menu)
       case JAVA :
 	 menu.add(new CreateConfigAction(BumpLaunchConfigType.JAVA_APP));
 	 menu.add(new CreateConfigAction(BumpLaunchConfigType.REMOTE_JAVA));
+         menu.add(new CreateConfigAction(BumpLaunchConfigType.JUNIT_TEST));
 	 break;
       case PYTHON :
 	 menu.add(new CreateConfigAction(BumpLaunchConfigType.PYTHON));

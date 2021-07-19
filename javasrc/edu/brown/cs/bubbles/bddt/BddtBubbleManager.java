@@ -49,6 +49,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.swing.JComponent;
+
 
 
 class BddtBubbleManager implements BddtConstants, BudaConstants, BumpConstants
@@ -716,18 +718,20 @@ private static boolean sameMethod(String m1,String m2)
 private void setupBubbleArea()
 {
    if (bubble_area != null) return;
-
+   
+   
    bubble_area = BudaRoot.findBudaBubbleArea(launch_control);
    if (bubble_area == null) return;
-
+   
+   JComponent c2 = (JComponent) bubble_area.getParent().getParent().getParent();
+   c2.addContainerListener(new ChannelListener());
+   
    for (BudaBubble bb : bubble_area.getBubbles()) {
       if (bubble_map.get(bb) == null) {
 	 bubble_map.put(bb,new BubbleData(bb));
        }
     }
    
-   bubble_area.getParent().addContainerListener(new ChannelListener());
-
    BudaRoot.addBubbleViewCallback(new BubbleUpdater());
 }
 
@@ -959,7 +963,15 @@ private class ChannelListener implements ContainerListener {
    
    @Override public void componentRemoved(ContainerEvent e) {
       Component c = e.getChild();
-      if (c == null || c != bubble_area) return;
+      if (c == null) return;
+      boolean fnd = false;
+      for (Component c1 = bubble_area; c1 != null; c1 = c1.getParent()) {
+         if (c == c1) {
+            fnd = true;
+            break;
+          }
+       }
+      if (!fnd) return;
       if (launch_control == null) return;
       BumpClient bc = BumpClient.getBump();
       bc.terminate(launch_control.getProcess());

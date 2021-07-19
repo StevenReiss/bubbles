@@ -113,7 +113,7 @@ public BudaChannelSet(BudaRoot root,String topc,String botc,String dflt)
 /*										*/
 /********************************************************************************/
 
-JComponent getComponent()		{ return scroll_pane; }
+public JComponent getComponent()		{ return scroll_pane; }
 
 
 public BudaBubbleArea getBubbleArea()

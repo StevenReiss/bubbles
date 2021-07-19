@@ -264,12 +264,18 @@ void setInitialSize(Dimension d)
    }
 
    eps.width += BALE_ANNOT_NUMBER_WIDTH;
-
-   Dimension cbs = crumb_bar.getPreferredSize();
-   if (cbs.width > eps.width) {
-      cbs.width = eps.width;
-      crumb_bar.setSize(cbs);
-      crumb_bar.setPreferredSize(cbs);
+   
+   bd.baleReadLock();
+   try {
+      Dimension cbs = crumb_bar.getPreferredSize();
+      if (cbs.width > eps.width) {
+         cbs.width = eps.width;
+         crumb_bar.setSize(cbs);
+         crumb_bar.setPreferredSize(cbs);
+       }
+    }
+   finally {
+      bd.baleReadUnlock();
     }
 
    bd.baleWriteLock();
@@ -279,10 +285,10 @@ void setInitialSize(Dimension d)
       Dimension xps = getPreferredSize();
       setSize(xps);
       bd.fixElisions();
-   }
+    }
    finally {
       bd.baleWriteUnlock();
-   }
+    }
 }
 
 

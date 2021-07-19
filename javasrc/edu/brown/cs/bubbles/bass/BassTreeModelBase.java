@@ -327,8 +327,6 @@ private static class TreeSorter implements Comparator<BassName> {
 /*										*/
 /********************************************************************************/
 
-
-
 void requestRebuild()
 {
    synchronized (this) {
