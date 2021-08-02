@@ -903,7 +903,7 @@ static class Branch extends BaleElement {
    private void checkCycle(BaleElement chld) {
       for (BaleElement be = this; be != null; be = be.getBaleParent()) {
 	 if (be == chld)
-	    throw new IllegalArgumentException("Circular position request");
+	    throw new IllegalArgumentException("Circular position request for " + be);
        }
     }
 

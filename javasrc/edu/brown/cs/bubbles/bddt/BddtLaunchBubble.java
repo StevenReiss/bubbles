@@ -95,8 +95,8 @@ private JButton 		debug_button;
 private JButton 		save_button;
 private JButton 		revert_button;
 private JButton 		clone_button;
-private SwingComboBox<String>   project_name;
-private SwingComboBox<String>   start_class;
+private SwingComboBox<String>	project_name;
+private SwingComboBox<String>	start_class;
 private JCheckBox		stop_in_main;
 private JTextComponent		test_class;
 private JTextComponent		test_name;
@@ -105,7 +105,7 @@ private JTextComponent		log_file;
 private JTextComponent		working_directory;
 private SwingNumericField	port_number;
 private boolean 		doing_load;
-private Map<String,String>      project_map;
+private Map<String,String>	project_map;
 
 
 
@@ -185,7 +185,7 @@ private void setupPanel()
       case JAVA_APP :
 	 start_class = pnl.addChoice("Start Class",starts,launch_config.getMainClass(),false,this);
 	 // start_class.setEditable(true);
-         start_class.setCaseSensitive(false);
+	 start_class.setCaseSensitive(false);
 	 if (launch_config.getMainClass() == null) {
 	    String s = (String) start_class.getSelectedItem();
 	    if (s != null) {
@@ -228,7 +228,7 @@ private void setupPanel()
 	 break;
     }
 
-   FileSystemView fsv = BoardFileSystemView.getFileSystemView(); 
+   FileSystemView fsv = BoardFileSystemView.getFileSystemView();
    log_file = pnl.addFileField("Record Output",launch_config.getLogFile(),
 				  JFileChooser.FILES_ONLY,null,fsv,null,null,this);
    working_directory = pnl.addFileField("Working Directory",launch_config.getWorkingDirectory(),
@@ -250,39 +250,41 @@ private void setupPanel()
 
 private void getStartClasses()
 {
+   if (launch_config == null) return;
+
    project_map = new TreeMap<>();
 
    BassRepository br = BassFactory.getRepository(BassConstants.SearchType.SEARCH_CODE);
    for (BassName bn : br.getAllNames()) {
       switch (launch_config.getConfigType()) {
-         case UNKNOWN :
-            break;
-         case JAVA_APP :
-            if (bn.getName().endsWith(".main") &&
-                  bn.getNameType() == BassNameType.METHOD &&
-                  Modifier.isPublic(bn.getModifiers()) &&
-                  Modifier.isStatic(bn.getModifiers())) {
-               String cn = bn.getClassName();
-               String pn = bn.getPackageName();
-               if (pn != null) cn = pn + "." + cn;
-               project_map.put(cn,bn.getProject());
-             }
-            break;
-         case JUNIT_TEST :
-         case REMOTE_JAVA :
-            break;
-         case PYTHON :
-            if (bn.getNameType() == BassNameType.MODULE) {
-               String cn = bn.getPackageName();
-               project_map.put(cn,bn.getProject());
-             }
-            break;
-         case JS :
-            if (bn.getNameType() == BassNameType.MODULE) {
-               String cn = bn.getPackageName();
-               project_map.put(cn,bn.getProject());
-             }
-            break;
+	 case UNKNOWN :
+	    break;
+	 case JAVA_APP :
+	    if (bn.getName().endsWith(".main") &&
+		  bn.getNameType() == BassNameType.METHOD &&
+		  Modifier.isPublic(bn.getModifiers()) &&
+		  Modifier.isStatic(bn.getModifiers())) {
+	       String cn = bn.getClassName();
+	       String pn = bn.getPackageName();
+	       if (pn != null) cn = pn + "." + cn;
+	       project_map.put(cn,bn.getProject());
+	     }
+	    break;
+	 case JUNIT_TEST :
+	 case REMOTE_JAVA :
+	    break;
+	 case PYTHON :
+	    if (bn.getNameType() == BassNameType.MODULE) {
+	       String cn = bn.getPackageName();
+	       project_map.put(cn,bn.getProject());
+	     }
+	    break;
+	 case JS :
+	    if (bn.getNameType() == BassNameType.MODULE) {
+	       String cn = bn.getPackageName();
+	       project_map.put(cn,bn.getProject());
+	     }
+	    break;
        }
     }
 }
@@ -294,12 +296,12 @@ private Collection<String> getStartClassesForProject()
    if (project_name == null) return project_map.keySet();
    String pnm = (String) project_name.getSelectedItem();
    if (pnm == null || pnm.length() == 0) return project_map.keySet();
-   
+
    List<String> rslt = new ArrayList<>();
    for (String s : project_map.keySet()) {
       if (pnm.equals(project_map.get(s))) rslt.add(s);
     }
-   
+
    return rslt;
 }
 
@@ -332,7 +334,7 @@ private void reload()
    if (test_name != null) test_name.setText(launch_config.getTestName());
    if (host_name != null) host_name.setText(launch_config.getRemoteHost());
    if (port_number != null) port_number.setValue(launch_config.getRemotePort());
-   
+
    doing_load = false;
 }
 
@@ -422,7 +424,7 @@ private String getNewName()
 	    edit_config = null;
 	  }
 	 reload();
-         reloadRepository();
+	 reloadRepository();
        }
       BddtFactory bf = BddtFactory.getFactory();
       bf.newDebugger(launch_config);
@@ -462,18 +464,18 @@ private String getNewName()
    else if (cmd.equals("Start Class")) {
       if (edit_config == null) edit_config = launch_config;
       if (edit_config != null && start_class != null) {
-         String cls = (String) start_class.getSelectedItem();
+	 String cls = (String) start_class.getSelectedItem();
 	 edit_config = edit_config.setMainClass(cls);
-         if (cls != null) {
-            String proj = project_map.get(cls);
-            if (proj != null && project_name != null) project_name.setSelectedItem(proj);
-          }
+	 if (cls != null) {
+	    String proj = project_map.get(cls);
+	    if (proj != null && project_name != null) project_name.setSelectedItem(proj);
+	  }
        }
     }
    else if (cmd.equals("Module to Run")) {
       if (edit_config == null) edit_config = launch_config;
       if (edit_config != null && start_class != null) {
-         edit_config = edit_config.setMainClass((String) start_class.getSelectedItem());
+	 edit_config = edit_config.setMainClass((String) start_class.getSelectedItem());
        }
     }
    else if (cmd.equals("Stop in Main")) {
@@ -493,24 +495,24 @@ private String getNewName()
       if (edit_config != null) {
 	 edit_config = edit_config.setProject(pnm);
 	 if (start_class != null) {
-            Collection<String> starts = getStartClassesForProject();
+	    Collection<String> starts = getStartClassesForProject();
 	    String nm = edit_config.getMainClass();
 	    boolean fnd = false;
 	    start_class.removeAllItems();
-            String st0 = null;
+	    String st0 = null;
 	    for (String s : starts) {
-               if (st0 == null) st0 = s;
-               if (s.equals(nm)) {
-                  nm = s;               // so objects == in selection
-                  fnd = true;
-                }
-               start_class.addItem(s);
+	       if (st0 == null) st0 = s;
+	       if (s.equals(nm)) {
+		  nm = s;		// so objects == in selection
+		  fnd = true;
+		}
+	       start_class.addItem(s);
 	     }
 	    if (!fnd) {
-               nm = st0;
-             }	   
-            start_class.setSelectedItem(nm);
-            start_class.repaint();
+	       nm = st0;
+	     }
+	    start_class.setSelectedItem(nm);
+	    start_class.repaint();
 	  }
        }
     }

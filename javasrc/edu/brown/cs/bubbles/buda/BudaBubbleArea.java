@@ -349,7 +349,7 @@ public void removeCurrentBubble(MouseEvent e)
    if (!SwingUtilities.isEventDispatchThread()) {
       BoardLog.logX("BUDA","Adding bubble from non-awt thread " + c.getClass());
     }
-   
+
    if (c instanceof BudaBubble) {
       bb = (BudaBubble) c;
     }
@@ -421,7 +421,7 @@ public void removeCurrentBubble(MouseEvent e)
 	 floating_bubbles.put(bb,floc);
 	 loc = setFloatingLocation(bb);
 	 bb.setFloating(true);
-         setupDockedBubble(bb);
+	 setupDockedBubble(bb);
 	 setLayer(bb,MODAL_LAYER);
       }
     }
@@ -479,7 +479,7 @@ private void setupDockedBubble(BudaBubble bb)
 {
    if (bb == null) return;
    if (!bb.isFixed() && !bb.isFloating()) return;
-   
+
    List<BudaBubbleDock> docks = new ArrayList<>();
    Point loc = bb.getLocation();
    Dimension bbsz = bb.getSize();
@@ -494,7 +494,7 @@ private void setupDockedBubble(BudaBubble bb)
       bb.setDocked(false);
       return;
     }
-   
+
    if (Math.abs(x0 - r2.x) < 4) {
       loc.x = r2.x;
       docks.add(BudaBubbleDock.WEST);
@@ -1966,7 +1966,7 @@ private Point setFloatingLocation(BudaBubble bb)
       Rectangle r2 = getViewport();
       if (!r1.intersects(r2)) {
 	 floating_bubbles.remove(bb);
-         docked_bubbles.remove(bb);
+	 docked_bubbles.remove(bb);
 	 Point p2 = bb.getFixedWorkingSetPosition();
 	 if (p2 == null) return null;
 	 Point p3 = SwingUtilities.convertPoint(for_root,p2,this);
@@ -2075,12 +2075,12 @@ private Point setDockedLocation(BudaBubble bb)
    if (r1 == null) {
       if (SwingUtilities.isEventDispatchThread()) return null;
       for (int i = 0; i < 210; ++i) {
-         r1 = for_root.getShadedViewport();
-         if (r1 != null) break;
-         try {
-            Thread.sleep(10);
-          }
-         catch (InterruptedException e) { }
+	 r1 = for_root.getShadedViewport();
+	 if (r1 != null) break;
+	 try {
+	    Thread.sleep(10);
+	  }
+	 catch (InterruptedException e) { }
        }
       if (r1 == null) return null;
     }
@@ -2440,7 +2440,7 @@ private void handleMouseEvent(MouseEvent e)
        }
     }
    else if(e.getID() == MouseEvent.MOUSE_PRESSED && e.getButton() == MouseEvent.BUTTON1) {
-      if (mr.getBubble() != null && pr.getRegion() != mr.getRegion() && pr.getBubble() != null) {
+      if (pr != null && mr.getBubble() != null && pr.getRegion() != mr.getRegion() && pr.getBubble() != null) {
 	 int deltax = Math.abs(pr.getLocation().x - mr.getLocation().x);
 	 int deltay = Math.abs(pr.getLocation().y - mr.getLocation().y);
 	 if (deltax <= 1 && deltay <= 1) {
@@ -2529,7 +2529,7 @@ private void handleMouseMoved(MouseEvent e)
 
    last_mouse = mr;
 // System.err.println("REGION " + mr.getRegion());
-   
+
    switch (mr.getRegion()) {
       default :
 	 BudaCursorManager.setTemporaryCursor(this, null);
@@ -2641,53 +2641,53 @@ private class MouseRegion implements BudaHelpRegion {
       // x = (int)(x / scale_factor);
       // y = (int)(y / scale_factor);
       // }
-      
+
       region_type = BudaRegion.NONE;
       in_bubble = null;
       in_group = null;
       in_link = null;
       mouse_loc = new Point(x,y);
-      
+
       int maxlayer = Integer.MIN_VALUE;
       // First see if the mouse is inside a bubble
-      
+
       synchronized (active_bubbles) {
-         for (BudaBubble bb : active_bubbles) {
-            BudaRegion br = bb.correlate(x,y);
-            if (br != BudaRegion.NONE && JLayeredPane.getLayer(bb) > maxlayer) {
-               maxlayer = JLayeredPane.getLayer(bb);
-               region_type = br;
-               in_bubble = bb;
-             }
-          }
+	 for (BudaBubble bb : active_bubbles) {
+	    BudaRegion br = bb.correlate(x,y);
+	    if (br != BudaRegion.NONE && JLayeredPane.getLayer(bb) > maxlayer) {
+	       maxlayer = JLayeredPane.getLayer(bb);
+	       region_type = br;
+	       in_bubble = bb;
+	     }
+	  }
        }
-      
+
       // Next see if the mouse is on a link
       if (region_type == BudaRegion.NONE) {
-         synchronized (bubble_links) {
-            for (BudaBubbleLink bl : bubble_links) {
-               BudaRegion br = bl.correlate(x,y);
-               if (br != BudaRegion.NONE) {
-                  region_type = br;
-                  in_link = bl;
-                  break;
-                }
-             }
-          }
+	 synchronized (bubble_links) {
+	    for (BudaBubbleLink bl : bubble_links) {
+	       BudaRegion br = bl.correlate(x,y);
+	       if (br != BudaRegion.NONE) {
+		  region_type = br;
+		  in_link = bl;
+		  break;
+		}
+	     }
+	  }
        }
-      
+
       // If not, check if it is inside a bubble group
       if (region_type == BudaRegion.NONE) {
-         synchronized (bubble_groups) {
-            for (BudaBubbleGroup bg : bubble_groups) {
-               BudaRegion br = bg.correlate(x,y);
-               if (br != BudaRegion.NONE) {
-                  region_type = br;
-                  in_group = bg;
-                  break;
-                }
-             }
-          }
+	 synchronized (bubble_groups) {
+	    for (BudaBubbleGroup bg : bubble_groups) {
+	       BudaRegion br = bg.correlate(x,y);
+	       if (br != BudaRegion.NONE) {
+		  region_type = br;
+		  in_group = bg;
+		  break;
+		}
+	     }
+	  }
        }
    }
 
@@ -2759,15 +2759,15 @@ private class BubbleMoveContext extends MouseContext {
 
    @Override void next(MouseEvent e) {
       if (for_bubble == null) return;
-   
+
       for_bubble.forceFreeze();
-   //    if (docked_bubbles.containsKey(for_bubble)) {
-   //       docked_bubbles.remove(for_bubble);
-   //       for_bubble.setDocked(false);
-   //     }
-   
+   //	 if (docked_bubbles.containsKey(for_bubble)) {
+   //	    docked_bubbles.remove(for_bubble);
+   //	    for_bubble.setDocked(false);
+   //	  }
+
       BudaCursorManager.setGlobalCursorForComponent(for_bubble, palm_cursor);
-   
+
       ++move_count;
       setLayer(for_bubble,DRAG_LAYER,0);
       Point p0 = e.getPoint();
@@ -2775,50 +2775,50 @@ private class BubbleMoveContext extends MouseContext {
       // int y0 = initial_location.y + (int)(p0.y / scale_factor) - initial_mouse.y;
       int x0 = initial_location.x + p0.x - initial_mouse.x;
       int y0 = initial_location.y + p0.y - initial_mouse.y;
-   
+
       // if (scale_factor != 1.0) {
-         // p0 = new Point((int)(p0.x / scale_factor), (int)(p0.y / scale_factor));
+	 // p0 = new Point((int)(p0.x / scale_factor), (int)(p0.y / scale_factor));
        // }
-   
+
       checkMoveViewport(p0);
-   
+
       if (x0 + bubble_size.width < MIN_SHOW_SIZE) {
-         x0 = MIN_SHOW_SIZE - bubble_size.width;
+	 x0 = MIN_SHOW_SIZE - bubble_size.width;
        }
       else if (x0 > area_size.width - MIN_SHOW_SIZE) {
-         x0 = area_size.width - MIN_SHOW_SIZE;
+	 x0 = area_size.width - MIN_SHOW_SIZE;
        }
       if (y0 + bubble_size.height < MIN_SHOW_SIZE) {
-         y0 = MIN_SHOW_SIZE - bubble_size.height;
+	 y0 = MIN_SHOW_SIZE - bubble_size.height;
        }
       else if (y0 > area_size.height - MIN_SHOW_SIZE) {
-         y0 = area_size.height - MIN_SHOW_SIZE;
+	 y0 = area_size.height - MIN_SHOW_SIZE;
        }
-   
+
       for_bubble.setLocation(x0,y0);
       fixupGroups(for_bubble);
       if (for_bubble.isUserPos()) repaint();
-      
+
       setupDockedBubble(for_bubble);
     }
 
    @Override void finish() {
       super.finish();
       if (for_bubble == null) return;
-   
+
       for_bubble.unfreeze();
       for_bubble.grabFocus();
       setLayer(for_bubble,start_layer,0);
-   
+
       if (for_root.noteBubbleActionDone(for_bubble)) return;
-   
+
       fixupBubble(for_bubble);
       fixupGroups(for_bubble);
       if (for_bubble.isUserPos()) repaint();
-   
+
       BudaCursorManager.resetDefaults(for_bubble);
       //for_bubble.setCursor(for_bubble.getBubbleCursor());
-   
+
       if (move_count > 0) BoardMetrics.noteCommand("BUDA","bubbleMoved");
       removeMovingBubble(for_bubble);
     }
@@ -3255,9 +3255,9 @@ private class UndoRemove implements BudaHintActions {
 
    @Override public void finalAction() {
       if (bubble_set != null) {
-         for (BudaBubble bb : bubble_set) {
-            disposeBubble(bb);
-          }
+	 for (BudaBubble bb : bubble_set) {
+	    disposeBubble(bb);
+	  }
        }
       bubble_set = null;
       link_set = null;
@@ -3312,14 +3312,14 @@ private class AutoScroller extends javax.swing.Timer implements ActionListener
       delta_x = dx;
       delta_y = dy;
       if (dx == 0 && dy == 0) {
-         if (isRunning()) {
-            BoardMetrics.noteCommand("BUDA","autoScrollStop");
-            stop();
-          }
+	 if (isRunning()) {
+	    BoardMetrics.noteCommand("BUDA","autoScrollStop");
+	    stop();
+	  }
        }
       else if (!isRunning()) {
-         start();
-         BoardMetrics.noteCommand("BUDA","autoScrollStart");
+	 start();
+	 BoardMetrics.noteCommand("BUDA","autoScrollStart");
       }
     }
 
@@ -3353,33 +3353,33 @@ private class BubbleManager implements ComponentListener, ContainerListener {
    @Override public void componentMoved(ComponentEvent e) {
       if (cur_viewport == null) return;
       if (e.getSource() instanceof BudaBubble) {
-         BudaBubble bbl = (BudaBubble) e.getSource();
-         if (bbl.isFloating()) {
-            Point floc = new Point(bbl.getLocation());
-            floc.x -= cur_viewport.x;
-            floc.y -= cur_viewport.y;
-            floating_bubbles.put(bbl,floc);
-            bbl.noteFloatMoved();
-          }
-         else if (bbl.getFixedWorkingSet() != null) {
-            bbl.noteFloatMoved();
-          }
-         else {
-            if (moving_bubbles.contains(bbl)) fixupGroups(bbl);
-            else repaint();
-            routes_valid = false;
-          }
-         updateOverview();
+	 BudaBubble bbl = (BudaBubble) e.getSource();
+	 if (bbl.isFloating()) {
+	    Point floc = new Point(bbl.getLocation());
+	    floc.x -= cur_viewport.x;
+	    floc.y -= cur_viewport.y;
+	    floating_bubbles.put(bbl,floc);
+	    bbl.noteFloatMoved();
+	  }
+	 else if (bbl.getFixedWorkingSet() != null) {
+	    bbl.noteFloatMoved();
+	  }
+	 else {
+	    if (moving_bubbles.contains(bbl)) fixupGroups(bbl);
+	    else repaint();
+	    routes_valid = false;
+	  }
+	 updateOverview();
       }
    }
 
    @Override public void componentResized(ComponentEvent e) {
       if (e.getSource() instanceof BudaBubble) {
-         BudaBubble bb = (BudaBubble) e.getSource();
-         fixupBubble(bb);
-         fixupGroups(bb);
-         routes_valid = false;
-         updateOverview();
+	 BudaBubble bb = (BudaBubble) e.getSource();
+	 fixupBubble(bb);
+	 fixupGroups(bb);
+	 routes_valid = false;
+	 updateOverview();
        }
     }
 
@@ -3391,14 +3391,14 @@ private class BubbleManager implements ComponentListener, ContainerListener {
 
    @Override public void componentAdded(ContainerEvent e) {
       if (e.getChild() instanceof BudaBubble) {
-         BudaBubble bb = (BudaBubble) e.getChild();
-         if (bb.isShowing()) {
-            localAddBubble(bb,true);
-            updateOverview();
-          }
-         else {
-            BoardLog.logD("BUDA", "Non-showing bubble added: " + bb);
-          }
+	 BudaBubble bb = (BudaBubble) e.getChild();
+	 if (bb.isShowing()) {
+	    localAddBubble(bb,true);
+	    updateOverview();
+	  }
+	 else {
+	    BoardLog.logD("BUDA", "Non-showing bubble added: " + bb);
+	  }
        }
     }
 
@@ -3413,7 +3413,7 @@ private class BubbleManager implements ComponentListener, ContainerListener {
    private void updateOverview() {
       checkAreaDimensions();
       for (BubbleAreaCallback cb : area_callbacks) {
-         cb.updateOverview();
+	 cb.updateOverview();
        }
     }
 
@@ -3487,21 +3487,21 @@ private class BubbleDropper extends TransferHandler {
       DataFlavor df = BudaRoot.getBubbleTransferFlavor();
       // TODO: need to handle text transfers
       try {
-         BudaDragBubble bdb = (BudaDragBubble) t.getTransferData(df);
-         TransferHandler.DropLocation loc = sup.getDropLocation();
-         Point pt = loc.getDropPoint();
-         BudaBubble [] bba = bdb.createBubbles();
-         int y = pt.y;
-         for (BudaBubble bb : bba) {
-            if (bb != null) {
-               addBubble(bb,pt.x,y);
-               bb.markBubbleAsNew();
-               y += 10;
-             }
-          }
-         sup.setDropAction(COPY);
-         BoardMetrics.noteCommand("BUDA","bubbleDrop");
-         return true;
+	 BudaDragBubble bdb = (BudaDragBubble) t.getTransferData(df);
+	 TransferHandler.DropLocation loc = sup.getDropLocation();
+	 Point pt = loc.getDropPoint();
+	 BudaBubble [] bba = bdb.createBubbles();
+	 int y = pt.y;
+	 for (BudaBubble bb : bba) {
+	    if (bb != null) {
+	       addBubble(bb,pt.x,y);
+	       bb.markBubbleAsNew();
+	       y += 10;
+	     }
+	  }
+	 sup.setDropAction(COPY);
+	 BoardMetrics.noteCommand("BUDA","bubbleDrop");
+	 return true;
        }
       catch (Exception e) { }
       return false;

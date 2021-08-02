@@ -124,7 +124,7 @@ static void enterApplication()
 
 static void stopApplication()
 {
-   BedrockPlugin.logD("BEDROCK: STOP APP REQUEST " + the_app);
+   BedrockPlugin.logD("BEDROCK: STOP APP REQUEST " + the_app + " " + the_app.exit_ctr);
 
    if (the_app == null) return;
 
@@ -621,7 +621,7 @@ private class EndChecker extends Thread {
       int ctr = 0;
       for ( ; ; ) {
          try {
-            sleep(10000);
+            sleep(3000);
           }
          catch (InterruptedException e) { }
          if (PlatformUI.isWorkbenchRunning()) {
@@ -633,7 +633,7 @@ private class EndChecker extends Thread {
             if (resp != null) ctr = 0;
             else {
                BedrockPlugin.logD("BEDROCK: END CHECKER " + ctr);
-               if (++ctr >= 4) {
+               if (++ctr >= 3) {
                   BedrockPlugin.logI("BEDROCK: End checker stopping");
                   xw = bp.beginMessage("STOP");
                   bp.finishMessage(xw);
