@@ -156,6 +156,7 @@ BudaBubbleArea(BudaRoot br,Element cfg,BudaChannelSet cs)
    for_root = br;
    layout_manager = new BudaLayoutManager();
    setLayout(layout_manager);
+   setFocusable(true);
    setOpaque(true);
    first_time = true;
 
@@ -2423,6 +2424,7 @@ private void handleMouseEvent(MouseEvent e)
    MouseRegion mr = new MouseRegion(e);
    MouseRegion pr = last_mouse;
    last_mouse = mr;
+   
 
    for_root.setCurrentChannel(this);
 
@@ -2571,6 +2573,12 @@ private void handleMouseSet(MouseEvent e)
 
 
 private class Mouser extends MouseAdapter {
+   
+   private boolean exited_window;
+   
+   Mouser() {
+      exited_window = false;
+    }
 
    @Override public void mouseClicked(MouseEvent e) {
       handleMouseEvent(e);
@@ -2601,7 +2609,19 @@ private class Mouser extends MouseAdapter {
       handleMouseMoved(e);
     }
 
+   @Override public void mouseEntered(MouseEvent e) {
+      if (exited_window) {
+         exited_window = false;
+         requestFocusInWindow();
+       }
+    }
+   
    @Override public void mouseExited(MouseEvent e) {
+      Point p = e.getPoint();
+      Rectangle r1 = getViewport();
+      if (!r1.contains(p)) {
+         exited_window = true;
+       }
     }
 
    @Override public void mouseWheelMoved(MouseWheelEvent e) {

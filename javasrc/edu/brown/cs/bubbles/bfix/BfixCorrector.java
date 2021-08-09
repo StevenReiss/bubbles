@@ -324,7 +324,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
 	    }
 	    fnd = true;
 	    done.add(bp);
-	    rw.waitForDone();
+	    if (!rw.waitForDone()) return;
 	    break;
 	 }
       }
@@ -369,15 +369,15 @@ private class RunAndWait implements Runnable, BumpProblemHandler {
       fixer_run.run();
    }
 
-   synchronized void waitForDone() {
+   synchronized boolean waitForDone() {
       while (!is_done) {
-	 try {
-	    wait(10000);
-	 }
-	 catch (InterruptedException e) { }
-	 break;
+         try {
+            wait(10000);
+         }
+         catch (InterruptedException e) { }
+         return false;
       }
-      return;
+      return true;
    }
 
    @Override public void handleProblemRemoved(BumpProblem bp)	{ }

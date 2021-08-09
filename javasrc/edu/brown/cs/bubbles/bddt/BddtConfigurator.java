@@ -61,6 +61,16 @@ class BddtConfigurator implements BddtConstants, BudaConstants.BubbleConfigurato
    else if (typ != null && typ.equals("BREAKPOINTBUBBLE")) {
       bb = new BddtBreakpointBubble();
     }
+   else if (typ != null && typ.equals("LAUNCHBUBBLE")) {
+      String cnm = IvyXml.getAttrString(cnt,"CONFIG");
+      BumpClient bc = BumpClient.getBump();
+      for (BumpLaunchConfig blc : bc.getRunModel().getLaunchConfigurations()) {
+         if (blc.getConfigName().equals(cnm)) {
+            bb = new BddtLaunchBubble(blc);
+            break;
+          }
+       }
+    }
 
    // TODO: handle threads bubbles, process bubble, console bubbles
 
@@ -75,8 +85,15 @@ class BddtConfigurator implements BddtConstants, BudaConstants.BubbleConfigurato
    String typ = IvyXml.getAttrString(cnt,"TYPE");
    if (typ == null) return false;
    else if (typ.equals("CONFIGS")) ;
-   else if (typ.equals("BReAKPOINTBUBBLE")) {
+   else if (typ.equals("BREAKPOINTBUBBLE")) {
       if (bb instanceof BddtBreakpointBubble) return true;
+    }
+   else if (typ.equals("LAUNCHBUBBLE")) {
+      if (bb instanceof BddtLaunchBubble) {
+         BddtLaunchBubble lb = (BddtLaunchBubble) bb;
+         String cnm = IvyXml.getAttrString(cnt,"CONFIG");
+         if (lb.getLaunchConfig().getConfigName().equals(cnm)) return true;
+       }
     }
    return false;
 }

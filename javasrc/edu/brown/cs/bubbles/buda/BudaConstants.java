@@ -1317,6 +1317,35 @@ class FocusOnEntry extends MouseAdapter implements Serializable {
 }	// end of inner class FocusOnEntry
 
 
+/**
+ *	This is a helper class that classes might add as a mouse listener
+ *	to effect focus on entry.  It also restores focus on exit to the
+ *      bubble area.
+ **/
+
+class FocusOnEntryExit extends MouseAdapter implements Serializable {
+
+   private JComponent for_component;
+   
+   private static final long serialVersionUID = 1;
+   
+   public FocusOnEntryExit()			{ for_component = null; }
+   public FocusOnEntryExit(JComponent c)        { for_component = c; }
+   
+   @Override public void mouseEntered(MouseEvent e) {
+      JComponent c = (for_component == null ? (JComponent) e.getSource() : for_component);
+      c.requestFocusInWindow();
+    }
+   
+   @Override public void mouseExited(MouseEvent e) {
+      JComponent c = (for_component == null ? (JComponent) e.getSource() : for_component);
+      BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(c);
+      if (bba != null) bba.requestFocusInWindow();
+    }
+
+}	// end of inner class FocusOnEntry
+
+
 
 /********************************************************************************/
 /*										*/

@@ -367,8 +367,8 @@ private class Rebuilder implements Runnable {
                long delta = start_time - System.currentTimeMillis();
                if (delta <= 0) break;
                try {
-        	  wait(delta);
-        	}
+                  wait(delta);
+                }
                catch (InterruptedException e) { }
              }
             begin_time = start_time;

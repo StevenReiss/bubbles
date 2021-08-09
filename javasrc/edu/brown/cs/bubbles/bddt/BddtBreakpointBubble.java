@@ -140,9 +140,10 @@ BddtBreakpointBubble()
    setContentPane(mainpanel);
    mainpanel.addMouseListener(this);
    BumpClient.getBump().addBreakpointHandler(null, this);
-
-   mainpanel.addMouseListener(new FocusOnEntry());
-
+   
+   mainpanel.addMouseListener(new FocusOnEntryExit());
+   addMouseListener(new FocusOnEntryExit());
+   
    update_timer = new Timer(300,this);
    update_timer.setRepeats(false);
 }

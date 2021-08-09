@@ -106,7 +106,18 @@ BddtRepository()
 
 @Override public Iterable<BassName> getAllNames()
 {
-   List<BassName> rslt = new ArrayList<BassName>(config_map.values());
+   List<BassName> rslt = new ArrayList<>();
+   for (Map.Entry<BumpLaunchConfig,ConfigName> ent : config_map.entrySet()) {
+      BumpLaunchConfig blc = ent.getKey();
+      ConfigName cnm = ent.getValue();
+      String bnm = BDDT_LAUNCH_CONFIG_PREFIX + blc.getConfigName().replace(".","_");
+      if (!blc.isWorkingCopy() && !cnm.getSymbolName().equals(bnm)) {
+         cnm = new ConfigName(blc);
+         ent.setValue(cnm);
+       }
+      rslt.add(cnm);
+    }
+    
    rslt.addAll(process_map.values());
 
    return rslt;
