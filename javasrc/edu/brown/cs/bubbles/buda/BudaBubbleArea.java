@@ -2425,7 +2425,6 @@ private void handleMouseEvent(MouseEvent e)
    MouseRegion pr = last_mouse;
    last_mouse = mr;
    
-
    for_root.setCurrentChannel(this);
 
    if (e.getID() == MouseEvent.MOUSE_CLICKED && e.getButton() == MouseEvent.BUTTON2) {

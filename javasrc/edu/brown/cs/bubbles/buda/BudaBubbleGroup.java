@@ -494,9 +494,11 @@ void handlePopupMenu(MouseEvent e)
    if (bb1 == null) return;
    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb1);
    if (bba == null) return;
+   BudaRoot br = BudaRoot.findBudaRoot(bba);
 
    JPopupMenu pm = new JPopupMenu();
    pm.add(new RemoveAction());
+   br.addGroupButtons(bba,this,pm);
    pm.show(bba,e.getX(),e.getY());
 }
 
@@ -776,20 +778,8 @@ private class GroupTitle extends SwingTextField implements ActionListener, Focus
     }
 
    @Override public void actionPerformed(ActionEvent e) {
-      String t = getText();
-      String ottl = getTitle();
-      setTitle(t);
-      getParent().repaint();
       orig_size = null;
-      if (ottl == null && t != null && t.length() > 0 && group_bubbles.size() > 1) {
-         for (BudaBubble bb : group_bubbles) {
-            BudaRoot br = BudaRoot.findBudaRoot(bb);
-            if (br != null) {
-               br.noteNamedBubbleGroup(BudaBubbleGroup.this);
-               break;
-             }
-          }
-       }
+      setGroupName();
     }
 
    @Override public void focusGained(FocusEvent e) {
@@ -809,13 +799,30 @@ private class GroupTitle extends SwingTextField implements ActionListener, Focus
       checkColors();
       setBackground(label_color);
       setOpaque(false);
+      setGroupName();
+    }
+   
+   private void setGroupName() {
       String t = getText();
-      if (!t.equals(group_title)) {
-          setTitle(t);
-          orig_size = null;
-          getParent().repaint();
+      if (t.equals(group_title)) {
+         if (orig_size != null) setSize(orig_size);
        }
-      else if (orig_size != null) setSize(orig_size);
+      String ottl = group_title;
+      setTitle(t);
+      orig_size = null;
+      getParent().repaint();
+      BudaBubbleArea bba = null;
+      for (BudaBubble bb : group_bubbles) {
+         bba = BudaRoot.findBudaBubbleArea(bb);
+         if (bba != null) break;
+       }
+      if (bba == null) return;
+      BudaRoot br = BudaRoot.findBudaRoot(bba);
+      if (br == null) return;
+      if (ottl == null && t.length() > 0 && group_bubbles.size() > 1) {
+         br.noteNamedBubbleGroup(BudaBubbleGroup.this);
+       }
+      br.noteNamedGroup(bba,BudaBubbleGroup.this,ottl);
     }
 
 }	// end of inner class GroupTitle

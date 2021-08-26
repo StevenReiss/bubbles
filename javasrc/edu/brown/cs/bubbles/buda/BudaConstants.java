@@ -36,6 +36,7 @@ import edu.brown.cs.bubbles.board.BoardProperties;
 import org.w3c.dom.Element;
 
 import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
 
 import java.awt.Font;
 import java.awt.Insets;
@@ -897,18 +898,21 @@ interface BubbleAreaCallback extends EventListener {
 
 interface BubbleViewCallback extends EventListener {
 
-   public void doneConfiguration();
+   default void doneConfiguration() { }
 
-   public void focusChanged(BudaBubble bb,boolean set);
-   public void bubbleAdded(BudaBubble bb);
-   public void bubbleRemoved(BudaBubble bb);
-   public boolean bubbleActionDone(BudaBubble bb);
+   default void focusChanged(BudaBubble bb,boolean set) { }
+   default void bubbleAdded(BudaBubble bb) { }
+   default void bubbleRemoved(BudaBubble bb) { }
+   default boolean bubbleActionDone(BudaBubble bb)              { return false; }
 
-   public void workingSetAdded(BudaWorkingSet ws);
-   public void workingSetRemoved(BudaWorkingSet ws);
+   default void workingSetAdded(BudaWorkingSet ws) { }
+   default void workingSetRemoved(BudaWorkingSet ws) { }
 
-   public void copyFromTo(BudaBubble from,BudaBubble to);
-
+   default void copyFromTo(BudaBubble from,BudaBubble to) { }
+   
+   default void addGroupButtons(BudaBubbleArea bba,BudaBubbleGroup grp,JPopupMenu menu) { }
+   default void noteNamedGroup(BudaBubbleArea bba,BudaBubbleGroup grp,String oldname) { }
+   
 }
 
 

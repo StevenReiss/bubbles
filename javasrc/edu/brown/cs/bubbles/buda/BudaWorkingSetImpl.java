@@ -400,13 +400,6 @@ void outputXml(BudaXmlWriter xw)
 
 private class GrowCallback implements BubbleViewCallback {
    
-   @Override public void doneConfiguration()                            { }
-   @Override public void bubbleRemoved(BudaBubble bb)                   { }
-   @Override public void focusChanged(BudaBubble bb,boolean set)        { }
-   @Override public void workingSetAdded(BudaWorkingSet ws)             { }
-   @Override public void workingSetRemoved(BudaWorkingSet ws)           { }
-   @Override public void copyFromTo(BudaBubble from,BudaBubble to)      { }
-   
    @Override public void bubbleAdded(BudaBubble bb) {
       checkBubble(bb);
     }

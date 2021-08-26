@@ -835,14 +835,6 @@ private static class BreakpointAction extends AbstractAction {
 
 private class DebugBubbleChecker implements BubbleViewCallback {
 
-   @Override public void doneConfiguration()				{ }
-   @Override public void focusChanged(BudaBubble bb,boolean set)	{ }
-   @Override public void bubbleAdded(BudaBubble bb)			{ }
-   @Override public void bubbleRemoved(BudaBubble bb)			{ }
-   @Override public boolean bubbleActionDone(BudaBubble bb)		{ return false; }
-   @Override public void workingSetAdded(BudaWorkingSet ws)		{ }
-   @Override public void copyFromTo(BudaBubble f,BudaBubble t)		{ }
-
    @Override public void workingSetRemoved(BudaWorkingSet ws) {
       if (working_sets.contains(ws)) {
 	 working_sets.remove(ws);

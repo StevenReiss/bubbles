@@ -294,24 +294,12 @@ private int countItems(Set<MenuItem> itms,Set<Object> done)
 /*										*/
 /********************************************************************************/
 
-@Override public void focusChanged(BudaBubble bb,boolean set)	{ }
-
-@Override public void bubbleAdded(BudaBubble bb)		{ }
-
 @Override public void bubbleRemoved(BudaBubble bb)
 {
    for (MenuData md : active_menus) {
       if (md.searchUsed(bb) || md.menuUsed(bb)) break;
     }
 }
-
-@Override public boolean bubbleActionDone(BudaBubble bb)	{ return false; }
-
-@Override public void workingSetAdded(BudaWorkingSet ws)	{ }
-@Override public void workingSetRemoved(BudaWorkingSet ws)	{ }
-
-@Override public void doneConfiguration()			{ }
-@Override public void copyFromTo(BudaBubble f,BudaBubble t)	{ }
 
 
 

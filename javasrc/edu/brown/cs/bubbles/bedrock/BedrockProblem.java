@@ -164,7 +164,14 @@ private String [] getArguments(IMarkerDelta imd)
    catch (NumberFormatException e) { return null; }
    String [] rslt;
    if (narg == 0) rslt = new String [0];
-   else rslt = v.substring(idx+1).split("#");
+   else {
+      String s1 = v.substring(idx+1);
+      s1 = s1.replace("##","@@@@@");
+      rslt = s1.split("#");
+      for (int i = 0; i < rslt.length; ++i) {
+	 rslt[i] = rslt[i].replace("@@@@@","#");
+       }
+    }
    if (rslt.length != narg) {
       BedrockPlugin.logE("Problem parsing arguments " + narg + " " + rslt.length + " " + v);
    }

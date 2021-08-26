@@ -132,10 +132,6 @@ private static boolean isBubbleRelevant(BudaBubble bb)
 
 private class BubbleViewer implements BudaConstants.BubbleViewCallback
 {
-   @Override public void focusChanged(BudaBubble bb,boolean set)	{ }
-
-   @Override public boolean bubbleActionDone(BudaBubble bb)		{ return false; }
-
    @Override public void bubbleAdded(BudaBubble bb) {
       if (isBubbleRelevant(bb)) handleBubbleAdded(bb);
     }

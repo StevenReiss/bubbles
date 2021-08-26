@@ -251,19 +251,6 @@ private void computeRegion()
 }
 
 
-@Override public boolean bubbleActionDone(BudaBubble bb)
-{
-   return false;
-}
-
-
-@Override public void workingSetAdded(BudaWorkingSet ws)	{ }
-@Override public void workingSetRemoved(BudaWorkingSet ws)	{ }
-
-@Override public void doneConfiguration()			{ }
-@Override public void copyFromTo(BudaBubble f,BudaBubble t)	{ }
-
-
 
 /********************************************************************************/
 /*										*/

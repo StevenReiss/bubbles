@@ -36,7 +36,6 @@ import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaConstants.BubbleViewCallback;
-import edu.brown.cs.bubbles.buda.BudaConstants.BudaWorkingSet;
 import edu.brown.cs.bubbles.buda.BudaConstraint;
 import edu.brown.cs.bubbles.buda.BudaCursorManager;
 import edu.brown.cs.bubbles.buda.BudaRoot;
@@ -488,14 +487,6 @@ private static class BussBubbleCallback implements BubbleViewCallback {
    BussBubbleCallback(BussBubble bussBubble){
       buss_bubble = bussBubble;
     }
-
-   @Override public void focusChanged(BudaBubble bb,boolean set)	{ }
-   @Override public void bubbleAdded(BudaBubble bb)			{ }
-   @Override public void bubbleRemoved(BudaBubble bb)			{ }
-   @Override public void workingSetAdded(BudaWorkingSet ws)		{ }
-   @Override public void workingSetRemoved(BudaWorkingSet ws)		{ }
-   @Override public void doneConfiguration()				{ }
-   @Override public void copyFromTo(BudaBubble f,BudaBubble t)		{ }
 
    @Override public boolean bubbleActionDone(BudaBubble bb) {
       if (buss_bubble.getEditorBubble() != bb) return false;

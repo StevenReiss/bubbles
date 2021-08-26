@@ -355,9 +355,6 @@ private void expandForGroup(Rectangle r,BudaBubble grpb)
 
 
 
-@Override public void bubbleAdded(BudaBubble bb)		{ }
-@Override public boolean bubbleActionDone(BudaBubble bb)	{ return false; }
-
 @Override public void bubbleRemoved(BudaBubble bb)
 {
    if (BudaRoot.findBudaBubbleArea(bb) == bubble_area) {
@@ -370,12 +367,6 @@ private void expandForGroup(Rectangle r,BudaBubble grpb)
        }
     }
 }
-
-@Override public void workingSetAdded(BudaWorkingSet ws)	{ }
-@Override public void workingSetRemoved(BudaWorkingSet ws)	{ }
-
-@Override public void doneConfiguration()			{ }
-@Override public void copyFromTo(BudaBubble f,BudaBubble t)	{ }
 
 
 

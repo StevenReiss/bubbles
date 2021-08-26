@@ -928,8 +928,6 @@ private static boolean matchFrameMethod(BumpStackFrame sf1,BumpStackFrame sf2)
 
 private class BubbleUpdater implements BubbleViewCallback {
 
-   @Override public void focusChanged(BudaBubble bb,boolean set)	{ }
-
    @Override public void bubbleAdded(BudaBubble bb) {
       if (bb.isTransient()) return;
       if (BudaRoot.findBudaBubbleArea(bb) != bubble_area) return;
@@ -945,14 +943,6 @@ private class BubbleUpdater implements BubbleViewCallback {
    @Override public void bubbleRemoved(BudaBubble bb) {
       bubble_map.remove(bb);
     }
-
-   @Override public boolean bubbleActionDone(BudaBubble bb)		{ return false; }
-
-   @Override public void workingSetAdded(BudaWorkingSet ws)		{ }
-   @Override public void workingSetRemoved(BudaWorkingSet ws)		{ }
-
-   @Override public void doneConfiguration()				{ }
-   @Override public void copyFromTo(BudaBubble f,BudaBubble t)		{ }
 
 }
 

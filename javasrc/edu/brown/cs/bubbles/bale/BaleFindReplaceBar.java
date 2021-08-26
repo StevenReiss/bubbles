@@ -482,6 +482,10 @@ private void replace()
 
 private void replaceAll()
 {
+   if (search_for == null) return;
+   // update occurrence set in case of edits
+   findAllOccurences(search_for,last_dir);
+   
    if (occurrences_set == null || occurrences_set.isEmpty()) return;
    if (current_index < 0 || current_index >= occurrences_set.size()) return;
    if (search_for == null) return;

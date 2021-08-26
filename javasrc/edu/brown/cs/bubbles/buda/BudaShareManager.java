@@ -357,15 +357,7 @@ private class Updater implements Runnable {
 private class BubbleChecker implements BubbleAreaCallback, BubbleViewCallback {
 
    @Override public void moveDelta(int dx,int dy)		{ }
-   @Override public void doneConfiguration()			{ }
-   @Override public void bubbleAdded(BudaBubble bb)		{ }
-   @Override public void bubbleRemoved(BudaBubble bb)		{ }
-   @Override public boolean bubbleActionDone(BudaBubble bb)	{ return false; }
-   @Override public void workingSetAdded(BudaWorkingSet ws)	{ }
-   @Override public void workingSetRemoved(BudaWorkingSet ws)	{ }
-   @Override public void copyFromTo(BudaBubble f,BudaBubble t)	{ }
-   @Override public void focusChanged(BudaBubble b,boolean fg)	{ }
-
+   
    @Override public void updateOverview() {
       checkStates();
     }

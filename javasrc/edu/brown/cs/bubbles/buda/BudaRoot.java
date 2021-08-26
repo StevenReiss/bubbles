@@ -1441,12 +1441,12 @@ private void setupGlobalActions()
 			KeyStroke.getKeyStroke(KeyEvent.VK_F11,0));
    registerKeyAction(new SearchKeyHandler(false,true,false),"Search for Documentation",
 			KeyStroke.getKeyStroke(KeyEvent.VK_F12,0));
-   registerKeyAction(new ZoomHandler(1),"Zoom in",
-			KeyStroke.getKeyStroke(KeyEvent.VK_PLUS,menudown));
-   registerKeyAction(new ZoomHandler(1),"Zoom in",
-		KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,menudown|InputEvent.SHIFT_DOWN_MASK));
-   registerKeyAction(new ZoomHandler(-1),"Zoom out",
-			KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,menudown));
+// registerKeyAction(new ZoomHandler(1),"Zoom in",
+//	        KeyStroke.getKeyStroke(KeyEvent.VK_PLUS,menudown));
+// registerKeyAction(new ZoomHandler(1),"Zoom in",
+//              KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,menudown|InputEvent.SHIFT_DOWN_MASK));
+// registerKeyAction(new ZoomHandler(-1),"Zoom out",
+//	        KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,menudown));
    registerKeyAction(new ZoomHandler(0),"Reset zoom",
 			KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,menudown));
    registerKeyAction(new FloaterHandler(),"Toggle Bubble Floating",
@@ -2730,6 +2730,23 @@ void noteConfigureDone()
 {
    for (BubbleViewCallback cb : view_callbacks) {
       cb.doneConfiguration();
+    }
+}
+
+
+void noteNamedGroup(BudaBubbleArea bba,BudaBubbleGroup grp,String oldname)
+{
+   for (BubbleViewCallback cb : view_callbacks) {
+      cb.noteNamedGroup(bba,grp,oldname);
+    }
+}
+
+
+
+void addGroupButtons(BudaBubbleArea bba,BudaBubbleGroup grp,JPopupMenu menu) 
+{
+   for (BubbleViewCallback cb : view_callbacks) {
+      cb.addGroupButtons(bba,grp,menu);
     }
 }
 

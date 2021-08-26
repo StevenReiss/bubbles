@@ -1865,7 +1865,10 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 	  }
 	 else if (typ.equals("Ljava/lang/String;") || typ.equals("java.lang.String")) {
 	    xw.field("KIND","STRING");
-	  }
+            // txt is not quite right here if the string is complex
+            // e.g \UD83D\UDE30" gets mapped to "\u07D8\u00B0"
+          }
+         
 	 else if (val instanceof IJavaObject) {
 	    IJavaObject obj = (IJavaObject) val;
 	    IVariable [] vars = obj.getVariables();
