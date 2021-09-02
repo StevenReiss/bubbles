@@ -101,6 +101,8 @@ enum BassNameType {
    CODE,
    ANNOTATION,
    UML,
+   VIRTUAL_FILE,
+   VIRTUAL_CODE,
    OTHER
 }
 
@@ -283,7 +285,9 @@ interface BassRepository {
 /**
  *	Tell if this repository matches or includes another
  **/
-   boolean includesRepository(BassRepository br);
+   default boolean includesRepository(BassRepository br) {
+      return br == this;
+    }
 
 
 }	// end of interface BassRepository

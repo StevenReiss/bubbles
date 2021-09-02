@@ -599,6 +599,7 @@ static String findFileForClass(String cls)
       if (ijp == null) continue;
       try {
 	 IType ity = ijp.findType(cls);
+
 	 if (ity == null && cls.indexOf("$") > 0) {
 	    ity = ijp.findType(cls.replace('$','.'));
 	    if (ity == null) {

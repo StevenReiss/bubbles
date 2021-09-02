@@ -33,6 +33,7 @@ import edu.brown.cs.bubbles.bass.BassName;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardImage;
 import edu.brown.cs.bubbles.board.BoardMetrics;
+import edu.brown.cs.bubbles.board.BoardMouser;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -73,7 +74,6 @@ import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.Iterator;
@@ -81,7 +81,7 @@ import java.util.List;
 
 
 class BddtBreakpointBubble extends BudaBubble implements BddtConstants, BudaConstants,
-	BumpConstants, BumpBreakpointHandler, MouseListener, ActionListener, BudaBubbleOutputer {
+	BumpConstants, BumpBreakpointHandler, ActionListener, BudaBubbleOutputer {
 
 
 
@@ -124,7 +124,7 @@ BddtBreakpointBubble()
    breakpoint_table = new BreakpointTable(table_model);
    breakpoint_table.setPreferredScrollableViewportSize(BDDT_BREAKPOINT_INITIAL_SIZE);
    breakpoint_table.setOpaque(false);
-   breakpoint_table.addMouseListener(this);
+   breakpoint_table.addMouseListener(new Mouser());
 
    tool_bar = new BreakpointToolBar();
    tool_bar.setVisible(true);
@@ -138,7 +138,7 @@ BddtBreakpointBubble()
    mainpanel.add(tool_bar,BorderLayout.SOUTH);
    mainpanel.add(scroll,BorderLayout.CENTER);
    setContentPane(mainpanel);
-   mainpanel.addMouseListener(this);
+   mainpanel.addMouseListener(new Mouser());
    BumpClient.getBump().addBreakpointHandler(null, this);
    
    mainpanel.addMouseListener(new FocusOnEntryExit());
@@ -214,39 +214,6 @@ private String getToolTip(BumpBreakpoint bp)
 /**
  * Opens up the associated bubble on a double click
  */
-
-@Override public void mouseClicked(MouseEvent e)
-{
-   if (e.getSource() == breakpoint_table && e.getClickCount() > 1) {
-      int row = breakpoint_table.rowAtPoint(e.getPoint());
-      BumpBreakpoint bp = breakpoint_table.getActualBreakpoint(row);
-      if (bp == null) return;
-      File f = bp.getFile();
-      int ln = bp.getLineNumber();
-      if (f != null && ln > 0) showBubble(f,ln);
-   }
-}
-
-@Override public void mouseEntered(MouseEvent e)
-{
-   if (e.getSource() == breakpoint_table) {
-      // tool_bar.setVisible(true);
-   }
-}
-
-
-@Override public void mouseExited(MouseEvent e)
-{
-   if (e.getSource() == this) {
-      // tool_bar.setVisible(false);
-   }
-}
-
-@Override public void mousePressed(MouseEvent e)
-{}
-
-@Override public void mouseReleased(MouseEvent e)
-{}
 
 
 @Override public void handlePopupMenu(MouseEvent e)
@@ -456,6 +423,7 @@ private class BreakpointTable extends JTable {
 
    BumpBreakpoint getActualBreakpoint(int row) {
       RowSorter<?> rs = getRowSorter();
+      if (row >= getModel().getRowCount()) return null;
       if (rs != null) row = rs.convertRowIndexToModel(row);
       return bump_client.getAllBreakpoints().get(row);
     }
@@ -538,32 +506,32 @@ private class BreakpointTableModel extends AbstractTableModel {
       if (bpl == null || row < 0 || row >= bpl.size()) return null;
       BumpBreakpoint bp = bpl.get(row);
       switch (col) {
-	 case 0:
-	    return bp.getLineNumber();
-	 case 1:
-	    return bp.getProperty("CLASS");
-	 case 2:
-	    return bp.getProperty("TYPE");
-	 case 3:
-	    return bp.getBoolProperty("ENABLED");
-
-	 default:
-	    return null;
+         case 0:
+            return bp.getLineNumber();
+         case 1:
+            return bp.getProperty("CLASS");
+         case 2:
+            return bp.getProperty("TYPE");
+         case 3:
+            return bp.getBoolProperty("ENABLED");
+   
+         default:
+            return null;
        }
     }
 
    @Override public Class<?> getColumnClass(int col) {
       switch (col) {
-	 case 0:
-	    return Integer.class;
-	 case 1:
-	    return String.class;
-	 case 2:
-	    return String.class;
-	 case 3:
-	    return Boolean.class;
-	 default:
-	    return null;
+         case 0:
+            return Integer.class;
+         case 1:
+            return String.class;
+         case 2:
+            return String.class;
+         case 3:
+            return Boolean.class;
+         default:
+            return null;
        }
     }
 
@@ -760,6 +728,31 @@ private static class NewFieldWatchAction extends AbstractAction {
     }
 
 }	// end of inner class NewExceptionAction
+
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Mouse handler                                                           */
+/*                                                                              */
+/********************************************************************************/
+
+private class Mouser extends BoardMouser {
+   
+   @Override public void mouseClicked(MouseEvent e) {
+      if (e.getSource() == breakpoint_table && e.getClickCount() > 1) {
+         int row = breakpoint_table.rowAtPoint(e.getPoint());
+         BumpBreakpoint bp = breakpoint_table.getActualBreakpoint(row);
+         if (bp == null) return;
+         File f = bp.getFile();
+         int ln = bp.getLineNumber();
+         if (f != null && ln > 0) showBubble(f,ln);
+       }
+    }
+   
+}       // end of inner class Mouser
+
 
 
 }	// end of class BddtBreakpointBubble

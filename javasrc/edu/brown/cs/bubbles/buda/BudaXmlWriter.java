@@ -57,20 +57,20 @@ public class BudaXmlWriter extends IvyXmlWriter implements BudaConstants {
 /*										*/
 /********************************************************************************/
 
-BudaXmlWriter(String file) throws IOException
+public BudaXmlWriter(String file) throws IOException
 {
    super(file);
 }
 
 
 
-BudaXmlWriter(File file) throws IOException
+public BudaXmlWriter(File file) throws IOException
 {
    super(file);
 }
 
 
-BudaXmlWriter()
+public BudaXmlWriter()
 { }
 
 

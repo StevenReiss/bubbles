@@ -334,6 +334,7 @@ private String getClassName(BudaBubble bb)
 	 if (idx >= 0) nm = nm.substring(0,idx);
 	 break;
       case OVERVIEW :
+      case NOTE : 
       default:
 	 break;
     }

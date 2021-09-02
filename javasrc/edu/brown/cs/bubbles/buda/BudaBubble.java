@@ -743,12 +743,12 @@ public Document getContentDocument()		{ return null; }
 String getContentKey()
 {
    String p1,p2,p3;
-
+   
    p1 = getContentProject();
    if (getContentFile() == null) p2 = "";
    else p2 = getContentFile().getPath();
    p3 = getContentName();
-
+   
    if (p1 == null) p1 = "*";
    if (p3 == null) return null;
 
@@ -1319,6 +1319,13 @@ Point scalePoint(Point p0)
 /*										*/
 /********************************************************************************/
 
+public void outputBubbleXml(BudaXmlWriter xw)
+{
+   outputBubbleXml(xw,null);
+}
+
+
+
 final void outputBubbleXml(BudaXmlWriter xw,BudaBubbleScaler bs)
 {
    xw.begin("BUBBLE");
@@ -1354,7 +1361,7 @@ final void outputBubbleXml(BudaXmlWriter xw,BudaBubbleScaler bs)
 
 
 
-BudaBubbleOutputer getBubbleOutputer()
+public BudaBubbleOutputer getBubbleOutputer()
 {
    if (this instanceof BudaBubbleOutputer) return (BudaBubbleOutputer) this;
 
@@ -1591,6 +1598,7 @@ public String getHashId()
    String s1 = getContentProject();
    File f2 = getContentFile();
    String s3 = getContentName();
+   if (getContentType() == BudaContentNameType.NOTE) f2 = null;
    if (s1 == null && f2 == null && s3 == null) {
       Component c = getContentPane();
       if (c != null) return c.getClass().getName();

@@ -156,12 +156,32 @@ void removeBubble(BudaBubble bb)
 
 public Collection<BudaBubble> getBubbles()
 {
-   return new ArrayList<BudaBubble>(group_bubbles);
+   return new ArrayList<>(group_bubbles);
 }
 
 
 
 boolean isEmpty()			{ return group_bubbles.isEmpty(); }
+
+
+public BudaBubbleArea getBudaBubbleArea()
+{
+   for (BudaBubble bb : group_bubbles) {
+       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb);
+       if (bba != null) return bba;
+    } 
+   return null;
+}
+
+
+public BudaRoot getBudaRoot()
+{
+   for (BudaBubble bb : group_bubbles) {
+      BudaRoot br = BudaRoot.findBudaRoot(bb);
+      if (br != null) return br;
+    } 
+   return null;
+}
 
 
 
@@ -171,6 +191,13 @@ boolean isEmpty()			{ return group_bubbles.isEmpty(); }
 /*	Access methods								*/
 /*										*/
 /********************************************************************************/
+
+public Color getColor()
+{
+   return right_color;
+}
+
+
 
 void setColor(Color c)
 {
@@ -207,7 +234,7 @@ int getSize()				{ return group_bubbles.size(); }
 
 
 
-String getTitle()			{ return group_title; }
+public String getTitle()			{ return group_title; }
 void setTitle(String ttl)
 {
    if (ttl != null && ttl.length() == 0) ttl = null;
@@ -233,6 +260,18 @@ void setTitle(String ttl)
 
 JComponent getTitleComponent()		{ return title_field; }
 
+
+
+public Point getCenter()
+{
+   Rectangle r0 = null;
+   for (BudaBubble bb : getBubbles()) {
+      if (r0 == null) r0 = bb.getBounds();
+      else r0.add(bb.getBounds());
+    }
+   if (r0 == null) return null;
+   return new Point( r0.x + r0.width/2,r0.y + r0.height/2);
+}
 
 
 
@@ -486,19 +525,14 @@ void outputXml(BudaXmlWriter xw)
 
 void handlePopupMenu(MouseEvent e)
 {
-   BudaBubble bb1 = null;
-   for (BudaBubble bb : group_bubbles) {
-      bb1 = bb;
-      break;
-    }
-   if (bb1 == null) return;
-   BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb1);
+   BudaBubbleArea bba = getBudaBubbleArea();
    if (bba == null) return;
    BudaRoot br = BudaRoot.findBudaRoot(bba);
-
+   if (br == null) return;
+   
    JPopupMenu pm = new JPopupMenu();
    pm.add(new RemoveAction());
-   br.addGroupButtons(bba,this,pm);
+   br.addGroupButtons(this,pm);
    pm.show(bba,e.getX(),e.getY());
 }
 
@@ -513,8 +547,8 @@ private class RemoveAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BudaBubble bb1 = null;
       for (BudaBubble bb : group_bubbles) {
-	 bb1 = bb;
-	 break;
+         bb1 = bb;
+         break;
        }
       if (bb1 == null) return;
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb1);
@@ -593,6 +627,13 @@ Area getShape()
     }
 
    return group_shape;
+}
+
+
+public Rectangle getBounds()
+{
+   if (group_bounds == null) getShape();
+   return group_bounds;
 }
 
 
@@ -811,18 +852,12 @@ private class GroupTitle extends SwingTextField implements ActionListener, Focus
       setTitle(t);
       orig_size = null;
       getParent().repaint();
-      BudaBubbleArea bba = null;
-      for (BudaBubble bb : group_bubbles) {
-         bba = BudaRoot.findBudaBubbleArea(bb);
-         if (bba != null) break;
-       }
-      if (bba == null) return;
-      BudaRoot br = BudaRoot.findBudaRoot(bba);
+      BudaRoot br = getBudaRoot();
       if (br == null) return;
       if (ottl == null && t.length() > 0 && group_bubbles.size() > 1) {
          br.noteNamedBubbleGroup(BudaBubbleGroup.this);
        }
-      br.noteNamedGroup(bba,BudaBubbleGroup.this,ottl);
+      br.noteNamedGroup(BudaBubbleGroup.this,ottl);
     }
 
 }	// end of inner class GroupTitle

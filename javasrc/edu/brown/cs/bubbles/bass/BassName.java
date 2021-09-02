@@ -32,6 +32,8 @@ package edu.brown.cs.bubbles.bass;
 
 import edu.brown.cs.bubbles.bass.BassConstants.BassNameType;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.bubbles.buda.BudaBubbleArea;
+import edu.brown.cs.bubbles.buda.BudaBubbleGroup;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import java.util.Collection;
@@ -53,6 +55,17 @@ public interface BassName {
  *	documentation bubble, or something else.
  **/
 public BudaBubble createBubble();
+
+/**
+ *      Create a group of bubbles for this name.  This is an alternative to creating
+ *      a single bubble using createBubble().  One of these two routines should return
+ *      null.
+ **/
+
+default public BudaBubbleGroup createBubbleGroup(BudaBubbleArea bba)    { return null; }     
+
+
+
 
 /**
  *	Create a preview bubble corresponding to this name.  This might be a code bubble, a

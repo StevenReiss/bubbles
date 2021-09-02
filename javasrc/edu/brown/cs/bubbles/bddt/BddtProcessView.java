@@ -27,6 +27,7 @@ package edu.brown.cs.bubbles.bddt;
 
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardMetrics;
+import edu.brown.cs.bubbles.board.BoardMouser;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
@@ -57,7 +58,6 @@ import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -129,6 +129,7 @@ BddtProcessView()
     }
    process_model = new ProcessModel();
    process_table = new ProcessTable();
+   addMouseListener(new ProcessMouser());
 
    run_model.addRunEventHandler(new ProcessHandler());
 
@@ -350,8 +351,7 @@ private class ProcessModel extends AbstractTableModel {
 /*										*/
 /********************************************************************************/
 
-private class ProcessTable extends JTable implements MouseListener,
-      BudaConstants.BudaBubbleOutputer
+private class ProcessTable extends JTable implements BudaConstants.BudaBubbleOutputer
 {
    private CellDrawer [] cell_drawer;
 
@@ -363,7 +363,6 @@ private class ProcessTable extends JTable implements MouseListener,
       fixColumnSizes();
       setIntercellSpacing(new Dimension(2,1));
       setToolTipText("");
-      addMouseListener(this);
       setOpaque(false);
       for (Enumeration<TableColumn> e = getColumnModel().getColumns(); e.hasMoreElements(); ) {
 	 TableColumn tc = e.nextElement();
@@ -388,20 +387,6 @@ private class ProcessTable extends JTable implements MouseListener,
     if (col_min_size[i] != 0) tc.setMinWidth(col_min_size[i]);
        }
     }
-
-   @Override public void mouseClicked(MouseEvent e) {
-      if (e.getClickCount() == 2) {
-	 int row = rowAtPoint(e.getPoint());
-	 BumpProcess blp = getActualProcess(row);
-	 if (blp == null) return;
-	 System.err.println("START CONFIGURATION " + blp.getId());
-       }
-    }
-
-   @Override public void mouseEntered(MouseEvent _e)		{ }
-   @Override public void mouseExited(MouseEvent _e)		{ }
-   @Override public void mouseReleased(MouseEvent e)		{ }
-   @Override public void mousePressed(MouseEvent e)		{ }
 
    @Override protected void paintComponent(Graphics g) {
       synchronized (active_processes) {
@@ -429,6 +414,24 @@ private class ProcessTable extends JTable implements MouseListener,
 
 
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      Mouse Handlers                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+private class ProcessMouser extends BoardMouser {
+   
+   @Override public void mouseClicked(MouseEvent e) {
+      if (e.getClickCount() == 2) {
+         int row = process_table.rowAtPoint(e.getPoint());
+         BumpProcess blp = getActualProcess(row);
+         if (blp == null) return;
+         System.err.println("START CONFIGURATION " + blp.getId());
+       }
+    }
+}
 
 /********************************************************************************/
 /*										*/

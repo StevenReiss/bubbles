@@ -205,7 +205,7 @@ private static class ProcessName extends BassNameBase {
    @Override protected String getSymbolName() {
       if (for_process.getLaunch() == null) return "???";
       else if (for_process.getLaunch().getConfiguration() == null) return "???";
-
+   
       return BDDT_PROCESS_PREFIX + for_process.getLaunch().getConfiguration().getConfigName() + "." + for_process.getId();
     }
 

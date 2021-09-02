@@ -668,18 +668,18 @@ private class MenuConfigurator implements BubbleConfigurator {
    @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml) {
       Element cnt = IvyXml.getChild(xml,"CONTENT");
       String typ = IvyXml.getAttrString(cnt,"TYPE");
-
+   
       BudaBubble bb = null;
-
+   
       if (typ.equals("MENU")) {
-	 Point p = new Point(IvyXml.getAttrInt(xml,"X"),IvyXml.getAttrInt(xml,"Y"));
-	 MenuPanel menu = createMenu(p,0);
-	 if (menu != null) {
-	    menu.setTransparent();
-	    bb = new MenuBubble(menu);
-	  }
+         Point p = new Point(IvyXml.getAttrInt(xml,"X"),IvyXml.getAttrInt(xml,"Y"));
+         MenuPanel menu = createMenu(p,0);
+         if (menu != null) {
+            menu.setTransparent();
+            bb = new MenuBubble(menu);
+          }
        }
-
+   
       return bb;
     }
 

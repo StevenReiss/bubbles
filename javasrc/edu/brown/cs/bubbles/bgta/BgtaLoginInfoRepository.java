@@ -72,10 +72,7 @@ BgtaLoginInfoRepository(Vector<BgtaManager> mans,BgtaRepository rep)
    return new ArrayList<BassName>(all_info);
 }
 
-@Override public boolean includesRepository(BassRepository br)
-{
-   return br == this;
-}
+
 
 
 

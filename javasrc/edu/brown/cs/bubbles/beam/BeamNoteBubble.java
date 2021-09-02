@@ -290,6 +290,30 @@ BeamNoteBubble(String name,String cnts,BeamNoteAnnotation annot)
 
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+@Override public BudaContentNameType getContentType()
+{
+   return BudaContentNameType.NONE;
+}
+
+
+@Override public File getContentFile()
+{
+   return getNoteFile();
+}
+
+
+@Override public String getContentName()
+{
+   return note_name;
+}
+
+
 
 /********************************************************************************/
 /*										*/
@@ -352,6 +376,8 @@ static BudaBubble createSavedNoteBubble()
    note_area.setFont(ft);
 }
 
+
+
 /********************************************************************************/
 /*										*/
 /*	Painting methods							*/
@@ -365,7 +391,6 @@ static BudaBubble createSavedNoteBubble()
    g.setColor(BoardColors.getColor(NOTE_OVERVIEW_COLOR_PROP));
    g.fillRect(0,0,sz.width,sz.height);
 }
-
 
 
 

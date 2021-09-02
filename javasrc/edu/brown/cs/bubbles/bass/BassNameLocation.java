@@ -269,6 +269,7 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
       case FILE :
       case OTHER_CLASS :
       case MODULE :
+      case VIRTUAL_CODE :
 	 String nm = getUserSymbolName();
 	 nm = stripTemplates(nm);
 	 return nm;			// we add <PREFIX> or <BODY> for classes

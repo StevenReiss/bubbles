@@ -241,6 +241,7 @@ protected String getLocalName()
       case CONSTRUCTOR :
       case STATICS :
       case MAIN_PROGRAM :
+      case VIRTUAL_CODE :
 	 String nm = getSymbolName();
 	 int idx1 = nm.lastIndexOf(".");
 	 if (idx1 <= 0) return null;

@@ -178,6 +178,7 @@ private static boolean debug_graphics = false;
 private static final long serialVersionUID = 1L;
 
 private static DataFlavor bubble_flavor;
+private static DataFlavor bubble_group_flavor;
 
 private static int color_index;
 private static int color_step;
@@ -195,6 +196,7 @@ static {
    bubble_config = new LinkedHashMap<>();
    port_config = new HashMap<>();
    bubble_flavor = new DataFlavor(BudaDragBubble.class,"Bubble");
+   bubble_group_flavor = new DataFlavor(BudaDragBubbleGroup.class,"BubbleGroup");
    hyperlink_config = new HashMap<>();
 
    port_config.put("BUDA",new DefaultPortConfigurator());
@@ -626,6 +628,13 @@ void handleNewWorkingSet(Component c,String lbl)
  **/
 
 public static DataFlavor getBubbleTransferFlavor()	{ return bubble_flavor; }
+
+
+/**
+ *      Return the data transfer flavor for drag and drop bubble groups
+ **/
+
+public static DataFlavor getBubbleGroupTransferFlavor() { return bubble_group_flavor; }
 
 
 
@@ -2172,7 +2181,19 @@ BudaBubble createBubble(BudaBubbleArea bba,Element e,Rectangle delta)
 
 
 
+public BudaBubble createConfigBubble(BudaBubbleArea bba,Element e)
+{
+   return createBubble(bba,e,null,0,false);
+}
+
+
+
 BudaBubble createBubble(BudaBubbleArea bba,Element e,Rectangle delta,int dx)
+{
+   return createBubble(bba,e,delta,dx,true);
+}
+
+BudaBubble createBubble(BudaBubbleArea bba,Element e,Rectangle delta,int dx,boolean upd)
 {
    String key = IvyXml.getAttrString(e,"CONFIG");
    if (key == null) {
@@ -2218,8 +2239,13 @@ BudaBubble createBubble(BudaBubbleArea bba,Element e,Rectangle delta,int dx)
 
    bb.setTransient(false);		// transient bubbles aren't saved
 
-   BudaConstraint cnst = new BudaConstraint(pos,x,y);
-   add(bb,cnst);
+   if (upd) {
+      BudaConstraint cnst = new BudaConstraint(pos,x,y);
+      add(bb,cnst);
+    }
+   else {
+      bb.setLocation(x,y);
+    }
 
    return bb;
 }
@@ -2734,19 +2760,19 @@ void noteConfigureDone()
 }
 
 
-void noteNamedGroup(BudaBubbleArea bba,BudaBubbleGroup grp,String oldname)
+void noteNamedGroup(BudaBubbleGroup grp,String oldname)
 {
    for (BubbleViewCallback cb : view_callbacks) {
-      cb.noteNamedGroup(bba,grp,oldname);
+      cb.noteNamedGroup(grp,oldname);
     }
 }
 
 
 
-void addGroupButtons(BudaBubbleArea bba,BudaBubbleGroup grp,JPopupMenu menu) 
+void addGroupButtons(BudaBubbleGroup grp,JPopupMenu menu) 
 {
    for (BubbleViewCallback cb : view_callbacks) {
-      cb.addGroupButtons(bba,grp,menu);
+      cb.addGroupButtons(grp,menu);
     }
 }
 

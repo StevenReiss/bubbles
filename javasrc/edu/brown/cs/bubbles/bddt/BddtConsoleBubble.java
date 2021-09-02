@@ -28,6 +28,7 @@ import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardFont;
 import edu.brown.cs.bubbles.board.BoardLog;
+import edu.brown.cs.bubbles.board.BoardMouser;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.bump.BumpClient;
@@ -60,7 +61,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Iterator;
@@ -329,7 +329,7 @@ private class InputHandler implements ActionListener {
 /*										*/
 /********************************************************************************/
 
-private class GotoMouser extends MouseAdapter {
+private class GotoMouser extends BoardMouser {
 
    @Override public void mouseClicked(MouseEvent evt) {
       GotoLine gl = checkForGoto(evt.getPoint());

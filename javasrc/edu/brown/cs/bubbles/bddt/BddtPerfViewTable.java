@@ -31,6 +31,7 @@ import edu.brown.cs.bubbles.bass.BassFactory;
 import edu.brown.cs.bubbles.bass.BassName;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardFileSystemView;
+import edu.brown.cs.bubbles.board.BoardMouser;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -70,7 +71,6 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -229,47 +229,47 @@ private double getTotalSamples()
 
 
 
-private class ClickHandler extends MouseAdapter {
+private class ClickHandler extends BoardMouser {
 
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2) {
-	 int r = perf_table.rowAtPoint(e.getPoint());
-	 if (r < 0) return;
-	 PerfNode pn = perf_table.getActualNode(r);
-	 if (pn == null) return;
-	 String fct = pn.getPackage();
-	 if (fct != null) fct += "." + pn.getClassName();
-	 else fct = pn.getClassName();
-	 fct += "." + pn.getMethodName();
-	 int lno = pn.getLineNumber();
-	 String file = pn.getFileName();
-
-	 BudaBubble bb = null;
-
-	 BaleFactory bf = BaleFactory.getFactory();
-	 if (lno > 0 && file != null) {
+         int r = perf_table.rowAtPoint(e.getPoint());
+         if (r < 0) return;
+         PerfNode pn = perf_table.getActualNode(r);
+         if (pn == null) return;
+         String fct = pn.getPackage();
+         if (fct != null) fct += "." + pn.getClassName();
+         else fct = pn.getClassName();
+         fct += "." + pn.getMethodName();
+         int lno = pn.getLineNumber();
+         String file = pn.getFileName();
+   
+         BudaBubble bb = null;
+   
+         BaleFactory bf = BaleFactory.getFactory();
+         if (lno > 0 && file != null) {
             FileSystemView fsv = BoardFileSystemView.getFileSystemView();
-	    File f = fsv.createFileObject(file);
-	    if (launch_control.fileExists(f)) {
-	       BaleConstants.BaleFileOverview bfo = bf.getFileOverview(null,f);
-	       if (bfo != null) {
-		  int loff = bfo.findLineOffset(lno);
-		  int eoff = bfo.mapOffsetToEclipse(loff);
-		  BassFactory bsf = BassFactory.getFactory();
-		  BassName bn = bsf.findBubbleName(f,eoff);
-		  if (bn != null) bb = bn.createBubble();
-	       }
-	     }
-	  }
-	 if (bb == null) {
-	    bb = bf.createMethodBubble(launch_control.getProject(), fct);
-	  }
-
-	 if (bb == null) return;
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(perf_table);
-	 if (bba != null) {
-	    bba.addBubble(bb,BddtPerfViewTable.this,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
-	  }
+            File f = fsv.createFileObject(file);
+            if (launch_control.fileExists(f)) {
+               BaleConstants.BaleFileOverview bfo = bf.getFileOverview(null,f);
+               if (bfo != null) {
+        	  int loff = bfo.findLineOffset(lno);
+        	  int eoff = bfo.mapOffsetToEclipse(loff);
+        	  BassFactory bsf = BassFactory.getFactory();
+        	  BassName bn = bsf.findBubbleName(f,eoff);
+        	  if (bn != null) bb = bn.createBubble();
+               }
+             }
+          }
+         if (bb == null) {
+            bb = bf.createMethodBubble(launch_control.getProject(), fct);
+          }
+   
+         if (bb == null) return;
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(perf_table);
+         if (bba != null) {
+            bba.addBubble(bb,BddtPerfViewTable.this,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+          }
        }
     }
 

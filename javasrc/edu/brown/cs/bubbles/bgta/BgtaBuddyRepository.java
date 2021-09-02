@@ -99,10 +99,7 @@ BgtaManager getManager()
     }
 }
 
-@Override public boolean includesRepository(BassRepository br)
-{
-   return br == this;
-}
+
 
 /********************************************************************************/
 /*										*/

@@ -32,6 +32,7 @@ import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardImage;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
+import edu.brown.cs.bubbles.board.BoardMouser;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
@@ -65,7 +66,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -685,22 +685,22 @@ void addNewConfigurationActions(JPopupMenu menu)
 
 
 
-private class ConfigSelector extends MouseAdapter {
+private class ConfigSelector extends BoardMouser {
 
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getButton() == MouseEvent.BUTTON3) {
-	 JPopupMenu menu = new JPopupMenu();
-	 BumpClient bc = BumpClient.getBump();
-	 BumpRunModel bm = bc.getRunModel();
-	 Collection<BumpLaunchConfig> blcs = new TreeSet<BumpLaunchConfig>(new ConfigComparator());
-	 for (BumpLaunchConfig blc : bm.getLaunchConfigurations()) {
-	    if (!blc.isWorkingCopy()) blcs.add(blc);
-	  }
-	 for (BumpLaunchConfig blc : blcs) {
-	    menu.add(new ConfigAction(blc));
-	  }
-	 addNewConfigurationActions(menu);
-	 menu.show((Component) e.getSource(),e.getX(),e.getY());
+         JPopupMenu menu = new JPopupMenu();
+         BumpClient bc = BumpClient.getBump();
+         BumpRunModel bm = bc.getRunModel();
+         Collection<BumpLaunchConfig> blcs = new TreeSet<BumpLaunchConfig>(new ConfigComparator());
+         for (BumpLaunchConfig blc : bm.getLaunchConfigurations()) {
+            if (!blc.isWorkingCopy()) blcs.add(blc);
+          }
+         for (BumpLaunchConfig blc : blcs) {
+            menu.add(new ConfigAction(blc));
+          }
+         addNewConfigurationActions(menu);
+         menu.show((Component) e.getSource(),e.getX(),e.getY());
        }
     }
 
@@ -818,8 +818,8 @@ private static class BreakpointAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BumpBreakModel mdl = BumpClient.getBump().getBreakModel();
       mdl.toggleBreakpoint(bale_context.getEditor().getContentProject(),
-	    bale_context.getEditor().getContentFile(),
-	    bale_context.getLineNumber(),break_mode);
+            bale_context.getEditor().getContentFile(),
+            bale_context.getLineNumber(),break_mode);
       BoardMetrics.noteCommand("BDDT","ANNOT_" + e.getActionCommand());
     }
 

@@ -2215,6 +2215,47 @@ private void addBubbleGroup(BudaBubbleGroup bg)
 
 
 
+public BudaBubbleGroup createHiddenBubbleGroup(String nm,Collection<BudaBubble> bbl)
+{
+   BudaBubbleGroup grp = new BudaBubbleGroup();
+   grp.setTitle(nm);
+   for (BudaBubble bb : bbl) {
+      bb.setVisible(false);
+      grp.addBubble(bb);
+    }
+   return grp;
+}
+
+
+public void showBubbleGroup(BudaBubbleGroup bbg,Point loc)
+{ 
+   Point ctr = bbg.getCenter();
+   Rectangle bnds = bbg.getBounds();
+   int dy = bnds.height/2;
+   int delta = 100;
+   if (loc.y < dy + delta) loc.y = dy+delta;
+   
+   for (BudaBubble bbl : bbg.getBubbles()) {
+      Point pt = bbl.getLocation();
+      pt.x += loc.x - ctr.x;
+      pt.y += loc.y - ctr.y;
+      bbl.setVisible(true);
+      addBubble(bbl,pt.x,pt.y);
+    }
+   addBubbleGroup(bbg);
+   
+   BudaGroupSpacer gs = new BudaGroupSpacer(this,bbg);
+   gs.makeRoomFor(bbg);
+   
+   for (BudaBubble bbl : bbg.getBubbles()) {
+      BudaBubbleGroup ngrp = getBubbleGroup(bbl);
+      ngrp.setTitle(bbg.getTitle());
+      break;
+    }
+}
+
+
+
 
 private void removeBubbleGroup(BudaBubbleGroup bg)
 {
@@ -2426,7 +2467,6 @@ private void handleMouseEvent(MouseEvent e)
    last_mouse = mr;
    
    for_root.setCurrentChannel(this);
-
    if (e.getID() == MouseEvent.MOUSE_CLICKED && e.getButton() == MouseEvent.BUTTON2) {
       if (mr.getBubble() != null) userRemoveBubble(mr.getBubble());
       else if (mr.getGroup() != null) {
@@ -2585,8 +2625,8 @@ private class Mouser extends MouseAdapter {
 
    @Override public void mousePressed(MouseEvent e) {
       if (mouse_context != null) {
-	 mouse_context.finish();
-	 mouse_context = null;
+         mouse_context.finish();
+         mouse_context = null;
        }
       handleMouseEvent(e);
     }
@@ -2986,14 +3026,14 @@ private class GroupMoveContext extends MouseContext {
    @Override void finish() {
       super.finish();
       for (BudaBubble b : move_bubbles) {
-	 b.unfreeze();
+         b.unfreeze();
        }
       fixupBubbleGroup(move_bubbles.get(0));
-
+   
       BudaCursorManager.resetDefaults(BudaBubbleArea.this);
-
+   
       if (move_count > 0) BoardMetrics.noteCommand("BUDA","bubbleGroupMoved");
-
+   
       removeMovingBubbles(move_bubbles);
     }
 
@@ -3178,7 +3218,7 @@ public void userRemoveBubble(BudaBubble bb)
       return;
     }
 
-   BudaHintBubble undo = new BudaHintBubble("Undo Delete Bubble",ur,30000);
+   BudaHintBubble undo = new BudaHintBubble("Undo Delete Bubble",ur,UNDO_REMOVE_TIME);
 
    Dimension usz = undo.getSize();
    add(undo,new BudaConstraint(BudaBubblePosition.FIXED,
@@ -3194,8 +3234,8 @@ public void userRemoveBubble(BudaBubble bb)
 
 void userRemoveGroup(BudaBubbleGroup bg)
 {
-   BudaHintBubble undo = new BudaHintBubble("Undo Delete Group",
-					       new UndoRemove(bg.getBubbles()),30000);
+   BudaHintBubble undo = new BudaHintBubble("Undo Delete Group",			       
+         new UndoRemove(bg.getBubbles()),UNDO_REMOVE_TIME);
 
    Rectangle r0 = null;
    for (BudaBubble bb : bg.getBubbles()) {
@@ -3244,10 +3284,10 @@ private class UndoRemove implements BudaHintActions {
    private void setupLinks() {
       link_set = new ArrayList<BudaBubbleLink>();
       synchronized (bubble_links) {
-	 for (BudaBubbleLink bl : bubble_links) {
-	    if (bubble_set.contains(bl.getSource()) || bubble_set.contains(bl.getTarget()))
-	       link_set.add(bl);
-	  }
+         for (BudaBubbleLink bl : bubble_links) {
+            if (bubble_set.contains(bl.getSource()) || bubble_set.contains(bl.getTarget()))
+               link_set.add(bl);
+          }
        }
     }
 
@@ -3410,14 +3450,14 @@ private class BubbleManager implements ComponentListener, ContainerListener {
 
    @Override public void componentAdded(ContainerEvent e) {
       if (e.getChild() instanceof BudaBubble) {
-	 BudaBubble bb = (BudaBubble) e.getChild();
-	 if (bb.isShowing()) {
-	    localAddBubble(bb,true);
-	    updateOverview();
-	  }
-	 else {
-	    BoardLog.logD("BUDA", "Non-showing bubble added: " + bb);
-	  }
+         BudaBubble bb = (BudaBubble) e.getChild();
+         if (bb.isShowing()) {
+            localAddBubble(bb,true);
+            updateOverview();
+          }
+         else {
+            BoardLog.logD("BUDA", "Non-showing bubble added: " + bb);
+          }
        }
     }
 
@@ -3432,7 +3472,7 @@ private class BubbleManager implements ComponentListener, ContainerListener {
    private void updateOverview() {
       checkAreaDimensions();
       for (BubbleAreaCallback cb : area_callbacks) {
-	 cb.updateOverview();
+         cb.updateOverview();
        }
     }
 
@@ -3506,21 +3546,25 @@ private class BubbleDropper extends TransferHandler {
       DataFlavor df = BudaRoot.getBubbleTransferFlavor();
       // TODO: need to handle text transfers
       try {
-	 BudaDragBubble bdb = (BudaDragBubble) t.getTransferData(df);
-	 TransferHandler.DropLocation loc = sup.getDropLocation();
-	 Point pt = loc.getDropPoint();
-	 BudaBubble [] bba = bdb.createBubbles();
-	 int y = pt.y;
-	 for (BudaBubble bb : bba) {
-	    if (bb != null) {
-	       addBubble(bb,pt.x,y);
-	       bb.markBubbleAsNew();
-	       y += 10;
-	     }
-	  }
-	 sup.setDropAction(COPY);
-	 BoardMetrics.noteCommand("BUDA","bubbleDrop");
-	 return true;
+         BudaDragBubble bdb = (BudaDragBubble) t.getTransferData(df);
+         TransferHandler.DropLocation loc = sup.getDropLocation();
+         Point pt = loc.getDropPoint();
+         BudaBubble [] bba = bdb.createBubbles();
+         int y = pt.y;
+         for (BudaBubble bb : bba) {
+            if (bb != null) {
+               addBubble(bb,pt.x,y);
+               bb.markBubbleAsNew();
+               y += 10;
+             }
+          }
+         BudaBubbleGroup bbg = bdb.createBubbleGroup();
+         if (bbg != null) {
+            showBubbleGroup(bbg,pt);
+          }
+         sup.setDropAction(COPY);
+         BoardMetrics.noteCommand("BUDA","bubbleDrop");
+         return true;
        }
       catch (Exception e) { }
       return false;

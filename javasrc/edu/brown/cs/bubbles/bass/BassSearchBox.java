@@ -41,6 +41,7 @@ import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.bowi.BowiFactory;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
+import edu.brown.cs.bubbles.buda.BudaBubbleGroup;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaConstraint;
 import edu.brown.cs.bubbles.buda.BudaCursorManager;
@@ -545,7 +546,16 @@ private void createBubble(BassName bn,int ypos)
    BowiFactory.startTask();
    try {
       BudaBubble bb = bn.createBubble();
-      addAndLocateBubble(bb,ypos,null);
+      if (bb != null) {
+         addAndLocateBubble(bb,ypos,null);
+       }
+      else {
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
+         BudaBubbleGroup bbg = bn.createBubbleGroup(bba);
+         if (bbg != null) {
+            addAndLocateBubbleGroup(bbg,ypos,null);
+          }      
+       }
     }
    finally { BowiFactory.stopTask(); }
 }
@@ -604,6 +614,43 @@ void addAndLocateBubble(BudaBubble bb, int ypos,Point ploc)
     }
 }
 
+
+private void addAndLocateBubbleGroup(BudaBubbleGroup bbg, int ypos,Point ploc)
+{
+   BudaRoot root = BudaRoot.findBudaRoot(this);
+   Rectangle loc = BudaRoot.findBudaLocation(this);
+   BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
+   BudaBubble obb = BudaRoot.findBudaBubble(this);
+   if (bba == null || root == null || obb == null || bbg == null) return;
+   
+   if (ypos == 0) {
+      if (loc != null) ypos = loc.y;
+      else if (ploc != null) ypos = ploc.y;
+    }
+   if (loc == null && ploc != null) loc = new Rectangle(ploc);
+   if (loc == null) return;
+   if (is_static) {
+      Rectangle bbnds = bbg.getBounds();
+      int potx = loc.x - bbnds.width - BUBBLE_CREATION_SPACE;
+      if (potx < root.getCurrentViewport().x)
+	 loc.x = loc.x + obb.getWidth() + BUBBLE_CREATION_SPACE;
+      else loc.x = potx;
+      loc.y = ypos;
+    }
+   
+   Iterable<BudaBubble> cbb = root.getCurrentBubbleArea().getBubbles();
+   Rectangle r;
+   for(BudaBubble b : cbb) {
+      r = b.getBounds();
+      if (b != obb && r.contains(loc.getLocation())) {
+         loc.x = r.x + r.width + BUBBLE_CREATION_NEAR_SPACE;
+         break;
+       }
+    }
+   
+   bba.showBubbleGroup(bbg,loc.getLocation());
+}
+   
 
 /*
  * Added by Hsu-Sheng Ko
@@ -961,20 +1008,20 @@ private static class TextSearchAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private static class Transferer extends TransferHandler {
+private class Transferer extends TransferHandler {
 
    private static final long serialVersionUID = 1;
 
    @Override protected Transferable createTransferable(JComponent c) {
       BassSearchBox bsb = null;
       for (Component jc = c; jc != null; jc = jc.getParent()) {
-	 if (jc instanceof BassSearchBox) {
-	    bsb = (BassSearchBox) jc;
-	    break;
-	  }
+         if (jc instanceof BassSearchBox) {
+            bsb = (BassSearchBox) jc;
+            break;
+          }
        }
       if (bsb == null) return null;
-
+   
       TreePath [] tp = bsb.active_options.getSelectionPaths();
       if (tp == null) return null;
       TransferBubble tb = new TransferBubble(tp);
@@ -990,8 +1037,9 @@ private static class Transferer extends TransferHandler {
 
 
 
-private static class TransferBubble implements Transferable, BudaConstants.BudaDragBubble {
-
+private class TransferBubble implements Transferable, BudaConstants.BudaDragBubble,
+        BudaConstants.BudaDragBubbleGroup 
+{
    private List<BassName> tree_entries;
 
    TransferBubble(TreePath [] pths) {
@@ -1011,8 +1059,9 @@ private static class TransferBubble implements Transferable, BudaConstants.BudaD
     }
 
    @Override public DataFlavor [] getTransferDataFlavors() {
-       // return new DataFlavor [] { BudaRoot.getBubbleTransferFlavor(), DataFlavor.stringFlavor };
-       return new DataFlavor [] { BudaRoot.getBubbleTransferFlavor() };
+       return new DataFlavor [] { 
+             BudaRoot.getBubbleTransferFlavor(),
+             BudaRoot.getBubbleGroupTransferFlavor() };
      }
 
    @Override public boolean isDataFlavorSupported(DataFlavor f) {
@@ -1021,14 +1070,26 @@ private static class TransferBubble implements Transferable, BudaConstants.BudaD
     }
 
    @Override public BudaBubble [] createBubbles() {
-      BudaBubble [] rslt = new BudaBubble[tree_entries.size()];
-      int i = 0;
+      List<BudaBubble> rlst = new ArrayList<>();
       for (BassName ent : tree_entries) {
-	 rslt[i++] = ent.createBubble();
+         BudaBubble bbl = ent.createBubble();
+         if (bbl != null) rlst.add(ent.createBubble());
        }
+      BudaBubble [] rslt = new BudaBubble[rlst.size()];
+      rslt = rlst.toArray(rslt);
       return rslt;
     }
 
+   @Override public BudaBubbleGroup createBubbleGroup() {
+      BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BassSearchBox.this);
+      if (bba == null) return null;
+      for (BassName ent : tree_entries) {
+         BudaBubbleGroup grp = ent.createBubbleGroup(bba);
+         if (grp != null) return grp;
+       }
+      return null;
+    }
+   
 }	// end of inner class TransferBubble
 
 
@@ -1063,20 +1124,20 @@ private class Mouser extends MouseAdapter {
       TreePath spath = pressed_path;
       if (spath == null) spath = active_options.getPathForLocation(e.getX(),e.getY());
       if (spath != null && e.isControlDown()) {
-	 active_options.collapsePath(spath);
-	 return;
+         active_options.collapsePath(spath);
+         return;
        }
       int cct = BoardProperties.getProperties("Bass").getInt("Bass.click.count",1);
       if (spath != null && e.getClickCount() == cct) {
-	    BassTreeNode tn = (BassTreeNode) spath.getLastPathComponent();
-	    BassName bn = tn.getBassName();
-	    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(active_options);
-	    if (bn != null && bba != null) {
-	       Point pt = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),bba);
-	       createBubble(bn,pt.y);
-	       if (!is_static && getParent() != null) getParent().setVisible(false);
-	     }
-	  }
+            BassTreeNode tn = (BassTreeNode) spath.getLastPathComponent();
+            BassName bn = tn.getBassName();
+            BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(active_options);
+            if (bn != null && bba != null) {
+               Point pt = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),bba);
+               createBubble(bn,pt.y);
+               if (!is_static && getParent() != null) getParent().setVisible(false);
+             }
+          }
       input_field.grabFocus();
    }
 

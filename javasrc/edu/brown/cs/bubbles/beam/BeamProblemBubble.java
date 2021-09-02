@@ -378,25 +378,25 @@ private class BubbleShower implements Runnable {
 
    @Override public void run() {
       if (bass_name == null) {
-	 BaleFactory bf = BaleFactory.getFactory();
-	 BaleConstants.BaleFileOverview bfo = bf.getFileOverview(null,for_file);
-	 if (bfo == null) return;
-	 int loff = bfo.findLineOffset(at_line);
-	 int eoff = bfo.mapOffsetToEclipse(loff);
-
-	 BassFactory bsf = BassFactory.getFactory();
-	 bass_name = bsf.findBubbleName(for_file,eoff);
-	 if (bass_name == null) return;
-
-	 SwingUtilities.invokeLater(this);
+         BaleFactory bf = BaleFactory.getFactory();
+         BaleConstants.BaleFileOverview bfo = bf.getFileOverview(null,for_file);
+         if (bfo == null) return;
+         int loff = bfo.findLineOffset(at_line);
+         int eoff = bfo.mapOffsetToEclipse(loff);
+   
+         BassFactory bsf = BassFactory.getFactory();
+         bass_name = bsf.findBubbleName(for_file,eoff);
+         if (bass_name == null) return;
+   
+         SwingUtilities.invokeLater(this);
        }
       else {		// in Swing thread
-	 BudaBubble bb = bass_name.createBubble();
-	 if (bb == null) return;
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BeamProblemBubble.this);
-	 if (bba != null) {
-	    bba.addBubble(bb,BeamProblemBubble.this,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
-	  }
+         BudaBubble bb = bass_name.createBubble();
+         if (bb == null) return;
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BeamProblemBubble.this);
+         if (bba != null) {
+            bba.addBubble(bb,BeamProblemBubble.this,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+          }
        }
     }
 

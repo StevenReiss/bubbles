@@ -603,7 +603,7 @@ private class TaskRegion implements BbookRegion
    boolean contains(File f) {
       if (f == null) return false;
       for (BudaBubble bb : active_bubbles) {
-	 if (f.equals(bb.getContentFile())) return true;
+         if (f.equals(bb.getContentFile())) return true;
        }
       return false;
     }

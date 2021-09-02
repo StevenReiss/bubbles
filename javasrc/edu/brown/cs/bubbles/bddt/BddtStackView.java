@@ -28,6 +28,7 @@ package edu.brown.cs.bubbles.bddt;
 import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardMetrics;
+import edu.brown.cs.bubbles.board.BoardMouser;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.buda.BudaBubble;
@@ -87,7 +88,6 @@ import java.awt.Shape;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -364,30 +364,30 @@ void expandFirst()
 
 
 
-private class ClickHandler extends MouseAdapter {
+private class ClickHandler extends BoardMouser {
 
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2 || e.getClickCount() == 3) {
-	 Point pt = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),value_component);
-	 pt = new Point(pt.x,pt.y-5);
-	 int row = value_component.rowAtPoint(pt);
-	 Object v0 = value_component.getValueAt(row,-1);
-	 ValueTreeNode tn = null;
-	 if (v0 instanceof ValueTreeNode) tn = (ValueTreeNode) v0;
-	 if (tn != null) {
-	    AbstractAction aa = null;
-	    boolean isfrm = tn.getFrame() != null && tn.getValue() == null;
-	    if (isfrm && e.getClickCount() == 2) {
-	       aa = new SourceAction(tn);
-	     }
-	    else if (isfrm && e.getClickCount() == 3) {
-	       aa = new ExtractAction(tn);
-	     }
-	    else if (!isfrm && e.getClickCount() == 2) {
-	       aa = new ExtractAction(tn);
-	     }
-	    if (aa != null) aa.actionPerformed(null);
-	  }
+         Point pt = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),value_component);
+         pt = new Point(pt.x,pt.y-5);
+         int row = value_component.rowAtPoint(pt);
+         Object v0 = value_component.getValueAt(row,-1);
+         ValueTreeNode tn = null;
+         if (v0 instanceof ValueTreeNode) tn = (ValueTreeNode) v0;
+         if (tn != null) {
+            AbstractAction aa = null;
+            boolean isfrm = tn.getFrame() != null && tn.getValue() == null;
+            if (isfrm && e.getClickCount() == 2) {
+               aa = new SourceAction(tn);
+             }
+            else if (isfrm && e.getClickCount() == 3) {
+               aa = new ExtractAction(tn);
+             }
+            else if (!isfrm && e.getClickCount() == 2) {
+               aa = new ExtractAction(tn);
+             }
+            if (aa != null) aa.actionPerformed(null);
+          }
        }
     }
 

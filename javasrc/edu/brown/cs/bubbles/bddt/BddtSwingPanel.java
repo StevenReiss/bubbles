@@ -512,24 +512,24 @@ private class StackNode extends CommonNode {
       checkFile();
       BudaBubble bb = null;
       if (launch_control.fileExists(file_name) && line_number > 0) {
-	 BaleFactory bf = BaleFactory.getFactory();
-	 BaleConstants.BaleFileOverview bfo = bf.getFileOverview(null,file_name);
-	 if (bfo != null) {
-	    int loff = bfo.findLineOffset(line_number);
-	    int eoff = bfo.mapOffsetToEclipse(loff);
-	    BassFactory bsf = BassFactory.getFactory();
-	    BassName bn = bsf.findBubbleName(file_name,eoff);
-	    if (bn != null) bb = bn.createBubble();
-	  }
-	 if (bb == null) {
-	    String fct = class_name + "." + method_name;
-	    bb = bf.createMethodBubble(null,fct);
-	  }
+         BaleFactory bf = BaleFactory.getFactory();
+         BaleConstants.BaleFileOverview bfo = bf.getFileOverview(null,file_name);
+         if (bfo != null) {
+            int loff = bfo.findLineOffset(line_number);
+            int eoff = bfo.mapOffsetToEclipse(loff);
+            BassFactory bsf = BassFactory.getFactory();
+            BassName bn = bsf.findBubbleName(file_name,eoff);
+            if (bn != null) bb = bn.createBubble();
+          }
+         if (bb == null) {
+            String fct = class_name + "." + method_name;
+            bb = bf.createMethodBubble(null,fct);
+          }
        }
       if (bb == null) return;
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtSwingPanel.this);
       if (bba != null)
-	 bba.addBubble(bb,BddtSwingPanel.this,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+         bba.addBubble(bb,BddtSwingPanel.this,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
     }
 
    private void checkFile() {
@@ -556,8 +556,8 @@ private class ClickHandler extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2) {
-	 CommonTree tr = (CommonTree) e.getSource();
-	 tr.handleClick(e.getX(),e.getY());
+         CommonTree tr = (CommonTree) e.getSource();
+         tr.handleClick(e.getX(),e.getY());
        }
     }
 

@@ -264,6 +264,11 @@ int   AUTOSCROLL_INITIAL_DELAY = 0;		// initial delay before autoscrolling start
 int   AUTOSCROLL_SPEED = 40;			// speed in pixels for autoscrolling
 
 
+/**
+ *      Time undo remove remains up
+ **/
+int   UNDO_REMOVE_TIME = 30000;
+
 
 /**
  *	Minimum amount of a bubble that must show.  This is used to restrict bubble movement
@@ -860,7 +865,8 @@ enum BudaContentNameType {
    FIELD,
    CLASS_ITEM,		// all fields or class prefix or class initializers
    FILE,
-   OVERVIEW
+   OVERVIEW,
+   NOTE
 }
 
 
@@ -898,20 +904,20 @@ interface BubbleAreaCallback extends EventListener {
 
 interface BubbleViewCallback extends EventListener {
 
-   default void doneConfiguration() { }
+   default void doneConfiguration()                             { }
 
-   default void focusChanged(BudaBubble bb,boolean set) { }
-   default void bubbleAdded(BudaBubble bb) { }
-   default void bubbleRemoved(BudaBubble bb) { }
+   default void focusChanged(BudaBubble bb,boolean set)         { }
+   default void bubbleAdded(BudaBubble bb)                      { }
+   default void bubbleRemoved(BudaBubble bb)                    { }
    default boolean bubbleActionDone(BudaBubble bb)              { return false; }
 
-   default void workingSetAdded(BudaWorkingSet ws) { }
-   default void workingSetRemoved(BudaWorkingSet ws) { }
+   default void workingSetAdded(BudaWorkingSet ws)              { }
+   default void workingSetRemoved(BudaWorkingSet ws)            { }
 
-   default void copyFromTo(BudaBubble from,BudaBubble to) { }
+   default void copyFromTo(BudaBubble from,BudaBubble to)       { }
    
-   default void addGroupButtons(BudaBubbleArea bba,BudaBubbleGroup grp,JPopupMenu menu) { }
-   default void noteNamedGroup(BudaBubbleArea bba,BudaBubbleGroup grp,String oldname) { }
+   default void addGroupButtons(BudaBubbleGroup grp,JPopupMenu menu) { }
+   default void noteNamedGroup(BudaBubbleGroup grp,String oldname) { }
    
 }
 
@@ -993,7 +999,8 @@ enum SearchType {
    SEARCH_EXPLORER,
    SEARCH_LAUNCH_CONFIG,
    SEARCH_ALL,
-   SEARCH_COURSES
+   SEARCH_COURSES,
+   SEARCH_VIRTUAL_FILES
 }
 
 
@@ -1109,6 +1116,14 @@ interface ButtonListener extends EventListener {
 interface BudaDragBubble {
 
    BudaBubble [] createBubbles();
+   default BudaBubbleGroup createBubbleGroup()          { return null; }
+
+}
+
+
+interface BudaDragBubbleGroup {
+   
+   BudaBubbleGroup createBubbleGroup();
 
 }
 
