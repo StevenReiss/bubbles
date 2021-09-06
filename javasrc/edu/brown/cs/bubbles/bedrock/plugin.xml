@@ -42,4 +42,27 @@
       </application>
    </extension>
 
+   <extension point='org.eclipse.ui.actionSets'>
+       <actionSet
+	    id='edu.brown.cs.bubbles.bedrock.BedrockBubblesAction'
+	    label='Start Bubbles'
+	    visible='true'
+	    description='Start Code Bubbles'>
+	    <menu
+		id='edu.brown.cs.bubbles.BubblesMenu'
+		label='Code Bubbles'>
+		<separator name='Start'/>
+	    </menu>
+	    <action id='edu.brown.cs.bubbles.bedrock.BedrockBubblesAction'
+		menubarPath='edu.brown.cs.bubbles.BubblesMenu/Start'
+		toolbarPath='Normal'
+		label='Start Code Bubbles'
+		tooltip='Press to install or start Code Bubbles'
+		icons='icons/helloworld.gif'
+		class='edu.brown.cs.bubbles.bedrock.BedrockBubblesAction' />
+	</actionSet>
+   </extension>
+
+
+
 </plugin>

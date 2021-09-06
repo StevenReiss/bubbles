@@ -97,6 +97,20 @@
 		tofile='/vol/Developer/eclipse-2020-03/Eclipse.app/Contents/Eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
       <copy file='bedrock.jar'
 		tofile='/vol/Developer/jee-2020-09/Eclipse.app/Contents/Eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+      <copy file='bedrock.jar'
+		tofile='/Users/spr/.p2/pool/plugins/bedrock_1.0.0.jar' />
    </target>
 
+   <target name='plugintest' depends='compile' if='ivy.present'>
+      <jar destfile="bedrocktest.jar" manifest='test/manifest.mf'>
+	 <fileset dir='${PRO}/ivy/java' includes= '**/*.class' />
+	 <fileset dir='${BUBBLES}/java' includes= '**/bedrock/*.class' />
+	 <fileset dir='${BUBBLES}/bedrock/src/test/' includes='plugin.xml' />
+	 <fileset dir='${BUBBLES}/images' includes='agt_web.png' />
+      </jar>
+      <copy file='bedrocktest.jar'
+		tofile='/vol/Developer/jee-2020-09/Eclipse.app/Contents/Eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+      <copy file='bedrocktest.jar'
+		tofile='/Users/spr/.p2/pool/plugins/bedrock_1.0.0.jar' />
+   </target>
 </project>
