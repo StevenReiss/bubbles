@@ -33,14 +33,18 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class BedrockBubblesAction implements IWorkbenchWindowActionDelegate
+import edu.brown.cs.ivy.xml.IvyXmlWriter;
+
+public class BedrockBubblesAction implements IWorkbenchWindowActionDelegate, BedrockConstants
 {
 
 
@@ -58,12 +62,24 @@ private File                    props_file;
 private Properties              system_props;
 private boolean                 bubbles_install;
 private boolean                 auto_start;
+private Process                 bubbles_process;
+private String                  prop_base;
 
 private static final String BUBBLES_URL =
    "https://www.cs.brown.edu/people/spr/bubbles/bubbles.jar";
 // private static final long BUBBLES_LENGTH = 110*1024*1024;
 
-private static final String BUBBLES_DIR = ".bubbles";
+private final static String BUBBLES_DIR = ".bubbles";
+// private static final String BUBBLES_DIR = ".bubbles.test";
+
+
+private final String [] ECLIPSE_START = new String [] {
+      "eclipse", "eclipse.exe", "Eclipse.app",
+      "STS.exe", "STS", "STS.app",
+      "sts.exe", "stS", "sts.app",
+      "myeclipse", "myeclipse.exe", "myeclipse.app",
+      "Eclipse JEE.app", "eclipse JEE.app",
+};
 
 
 
@@ -83,8 +99,10 @@ public BedrockBubblesAction()
    system_props = null;
    bubbles_install = false;
    auto_start = false;
+   bubbles_process = null;
+   
+ 
 }
-
 
 
 /********************************************************************************/
@@ -99,6 +117,11 @@ public BedrockBubblesAction()
    active_window = window;
    
    setupDirectories();
+   
+   if (system_props != null) {
+      String lvl = system_props.getProperty("edu.brown.cs.bubbles.log_level");
+      if (lvl != null && lvl.startsWith("D")) BedrockPlugin.setLogLevel(BedrockLogLevel.DEBUG);
+    }
 }
 
 
@@ -128,6 +151,8 @@ public BedrockBubblesAction()
 
 @Override public void run(IAction proxy)
 {
+   if (active_window == null) return;
+   
    setupAction(proxy);
    
    System.err.println("BEDROCK ACTION RUN " + proxy);
@@ -138,8 +163,8 @@ public BedrockBubblesAction()
       startBubbles();
     }
    
-   Shell shell = active_window.getShell();
-   MessageDialog.openInformation(shell,"Hello world.","Hello world!");
+// Shell shell = active_window.getShell();
+// MessageDialog.openInformation(shell,"Hello world.","Hello world!");
 }
 
 
@@ -157,6 +182,7 @@ private void setupAction(IAction proxy)
          proxy.getStyle() + " " + proxy.getText() + " " + proxy.getToolTipText() +
          " " + proxy.isChecked() + " " + proxy.isEnabled() + " " + proxy.isHandled() +
          " " + proxy.getImageDescriptor() + " " + proxy.getId());
+   bubbles_running = isBubblesRunning();
    
    our_action = proxy;
    
@@ -187,8 +213,15 @@ private void setupDirectories()
    bubbles_dir = new File(drop,"bubbles");
    
    system_props = null;
-   File home = new File(System.getProperty("user.home"));
-   File bhome = new File(home,BUBBLES_DIR);
+   prop_base = System.getProperty("edu.brown.cs.bubbles.BEDROCKBASE");
+   if (prop_base == null) prop_base = System.getenv("BUBBLES_BEDROCKBASE");
+   if (prop_base == null) prop_base = BUBBLES_DIR; 
+   File bhome = new File(prop_base);
+   if (!bhome.isAbsolute()) {
+      File home = new File(System.getProperty("user.home"));
+      bhome = new File(home,prop_base);
+    }
+   bhome.mkdirs();
    props_file = new File(bhome,"System.props");
    if (props_file.exists() && props_file.canRead()) {
       try (InputStream ins = new FileInputStream(props_file)) {
@@ -213,12 +246,7 @@ private void setupDirectories()
             bubbles_install = true;
           }      
        }
-      String auto = system_props.getProperty("edu.brown.cs.bubbles.autostart");
-      if (auto != null && auto.length() >= 1) {
-         char c = auto.charAt(0);
-         if (c == 'f' || c == 'F' || c == '0' || c == 'n' || c == 'N') auto_start = false;
-         else auto_start = true;
-       }
+      auto_start = getBooleanProp("edu.brown.cs.bubbles.autostart",false);
     }
 }
 
@@ -238,29 +266,128 @@ private boolean installValid()
 
 
 
+private boolean getBooleanProp(String name,boolean dflt)
+{
+   boolean rslt = dflt;
+   if (system_props != null) {
+      String p = system_props.getProperty(name);
+      if (p != null && p.length() >= 1) {
+         char c = p.charAt(0);
+         if (c == 'f' || c == 'F' || c == '0' || c == 'n' || c == 'N') rslt = false;
+         else rslt = true;
+       }
+    }
+   
+   return rslt;
+}
+
+
+
+
 /********************************************************************************/
 /*                                                                              */
 /*      Methods to install code bubbles                                         */
 /*                                                                              */
 /********************************************************************************/
 
-private void installBubbles()
+private boolean installBubbles()
 {
    System.err.println("INSTALL BUBBLES");
    bubbles_dir.mkdirs();
    Downloader dl = new Downloader(bubbles_dir);
    dl.start();
-   dl.waitForDownload();
+   boolean fg = dl.waitForDownload();
+   if (!fg) return false;
+ 
+   if (!updateProperties()) return false;
+ 
+   File f = new File(bubbles_dir,"bubbles.jar");
+   ProcessBuilder pb = new ProcessBuilder("java","-jar",f.getPath(),"-insnobed");
+   System.err.println("BUBBLES RUN " + pb.command());
    
+   try {
+      Process p = pb.start();
+      try {
+         int sts = p.waitFor();
+         System.err.println("BUBBLES SETUP STATUS " + sts);
+         if (sts > 0) return false;
+       }
+      catch (InterruptedException e) { }
+    }
+   catch (IOException e) {
+      System.err.println("BUBBLES: Problem setting up bubbles: " + e);
+      return false;
+    }
+         
+   our_action.setText("Start Code Bubbles");
+   
+   return true;
+}
+
+
+
+
+private File getEclipseDirectory()
+{
    String ehome = System.getProperty("eclipse.home.location");
    if (ehome.startsWith("file:")) ehome = ehome.substring(5);
-   String earch = System.getProperty("os.arch");
+   File fehome = new File(ehome);
+   boolean fnd = false;
+   while (fehome != null) {
+      System.err.println("BUBBLES CHECK HOME: " + fehome);
+      for (String s : ECLIPSE_START) {
+         File f1 = new File(fehome,s);
+         System.err.println("CHECK " + f1 + " " + f1.exists() + " " + 
+               f1.canExecute() + " " + f1.canRead() + " " + f1.getName() + " " +
+               f1.getName().endsWith(".app") + " " +
+               f1.isDirectory());
+//       if (f1.exists() && f1.canExecute() && f1.canRead()) { 
+         if (f1.exists() && f1.canExecute() && f1.canRead() && 
+               (f1.getName().endsWith(".app") || !f1.isDirectory())) {
+            fnd = true; 
+            break;
+          }
+       }
+      if (fnd) break;
+      fehome = fehome.getParentFile();
+    }
    
-         
-   // exec java -jar bubbles_dir/bubbles.jar -install
-   // run bubbles.jar in setup mode
-   our_action.setText("Start Code Bubbles");
+   return fehome;
 }
+
+
+
+private boolean updateProperties()
+{
+   File fehome = getEclipseDirectory();
+   if (fehome == null) {
+      System.err.println("BUBBLES: No eclipse directory");
+      return false;
+    }
+  
+   if (system_props == null) system_props = new Properties();
+   
+   String earch = System.getProperty("os.arch");
+   system_props.setProperty("edu.brown.cs.bubbles.eclipse." + earch,fehome.getPath());
+   
+   IWorkspace ws = ResourcesPlugin.getWorkspace();
+   IWorkspaceRoot root = ws.getRoot();
+   IPath rootpath = root.getFullPath();
+   system_props.setProperty("edu.brown.cs.bubbles.workspace",rootpath.toOSString());
+   
+   system_props.setProperty("edu.brown.cs.bubbles.ask_workspace","false");
+   
+   try (FileOutputStream fos = new FileOutputStream(props_file)) {
+      system_props.storeToXML(fos,"Bubbles Startup");
+    }
+   catch (IOException e) {
+      System.err.println("BUBBLES Error writing properties file: " + e);
+      return false;
+    }
+    
+   return true;
+}
+
 
 
 
@@ -270,25 +397,44 @@ private void installBubbles()
 /*                                                                              */
 /********************************************************************************/
 
-private void startBubbles()
+private boolean startBubbles()
 {
-   // ensure installed
-   // check if bubbles running -- ignore if so
+   if (!installValid()) return false;
+   if (bubbles_process != null) return true;
    
-   // Set eclipse in system_props
-   // Set current workspace in system_props
-   // Set ask workspace = false in system_props
-   // Save system props
+   if (!updateProperties()) return false;
+   // check if bubbles running -- ignore if so
    
    System.err.println("START BUBBLES");
    if (bubbles_install) {
       System.err.println("START BUBBLES FROM INSTALLATION");
     }
    else {
-      System.err.println("START BUBBLES FROM JAR");
+      String mint = BedrockPlugin.getPlugin().getMintName();
+      File f = new File(bubbles_dir,"bubbles.jar");
+      IWorkspace ws = ResourcesPlugin.getWorkspace();
+      IWorkspaceRoot root = ws.getRoot();
+      IPath rootpath = root.getRawLocation();
+      ProcessBuilder pb = new ProcessBuilder("java","-jar",f.getPath(),
+            rootpath.toOSString(),"-msg",mint);
+      System.err.println("RUN: " + pb.command());
+      try {
+         bubbles_process = pb.start();
+       }
+      catch (IOException e) {
+         return false;
+       }
     }
    
    bubbles_running = true;
+   
+   boolean hide = !getBooleanProp("edu.brown.cs.bubbles.foreground",true);
+   if (hide) {
+      BedrockApplication ba = new BedrockApplication(true);
+      ba.startedBubbles(hide);
+    }
+  
+   return true;
 }
 
 
@@ -297,6 +443,18 @@ private void shutdownBubbles()
    if (bubbles_running) {
       System.err.println("SHUTDONW BUBBLES");
     }
+}
+
+
+private boolean isBubblesRunning()
+{
+   BedrockPlugin bp = BedrockPlugin.getPlugin();
+   String cmd = "PING";
+   IvyXmlWriter xw = bp.beginMessage(cmd);
+   String resp = bp.finishMessageWait(xw,5000);
+   if (resp != null) return true;
+   
+   return false;
 }
 
 
@@ -355,12 +513,14 @@ private class Downloader extends Thread {
             status = true;
           }
          catch (Throwable e) {
+            System.err.println("BUBBLES DOWNLOAD ERROR: " + e);
             remove = true;
           }
          if (remove) {
             f.delete();
           }
          synchronized (this) {
+            System.err.println("BUBBLES DOWNLOAD " + status);
             download_ok = status;
             notifyAll();
           }

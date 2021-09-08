@@ -80,6 +80,7 @@ int	MAX_TEXT_SEARCH_RESULTS = 128;
 
 // Must Match BumpConstants.BUMP_MINT_NAME
 String	BEDROCK_MESSAGE_ID = "BUBBLES_" + System.getProperty("user.name").replace(" ","_");
+String  BEDROCK_MINT_ID = "BUBBLES_" + System.getProperty("user.name").replace(" ","_") + "_@@@";
 // String BEDROCK_MESSAGE_ID = "BUBBLES";
 
 

@@ -78,6 +78,7 @@ private boolean exit_ok;
 private Display base_display;
 private int	exit_ctr;
 private boolean is_setup;
+private boolean from_eclipse;
 
 private Location base_location;
 
@@ -100,11 +101,18 @@ private static BedrockApplication      the_app;
 
 public BedrockApplication()
 {
+   this(false);
+}
+
+
+BedrockApplication(boolean ecl)
+{
    exit_ok = false;
    exit_ctr = 0;
    base_display = null;
    is_setup = false;
-
+   from_eclipse = ecl;
+   
    the_app = this;
 }
 
@@ -124,9 +132,9 @@ static void enterApplication()
 
 static void stopApplication()
 {
-   BedrockPlugin.logD("BEDROCK: STOP APP REQUEST " + the_app + " " + the_app.exit_ctr);
+   BedrockPlugin.logD("BEDROCK: STOP APP REQUEST " + the_app);
 
-   if (the_app == null) return;
+   if (the_app == null || the_app.from_eclipse) return;
 
    synchronized (the_app) {
       the_app.exit_ok = true;
@@ -454,6 +462,28 @@ private void forceLoads()
 
 
 
+
+void startedBubbles(boolean hide)
+{
+   BedrockPlugin.logI("APP START");
+   
+   hide_display = hide;
+   
+   IWorkbench wb = PlatformUI.getWorkbench();
+   base_display = wb.getDisplay();
+   
+   if (base_display != null && hide_display) {
+      for (Shell sh1 : base_display.getShells()) {
+         BedrockPlugin.logD("SHELL2 " + sh1.isVisible() + " " + sh1.getText());
+         sh1.setVisible(false);
+       }
+      Shell sh = base_display.getActiveShell();
+      if (sh != null) sh.setVisible(false);
+      // might want to add an IWindowListener to wb to handle closing windows dynamically
+    }
+}  
+
+
 /********************************************************************************/
 /*										*/
 /*	Workbench advisor							*/
@@ -482,28 +512,28 @@ private class WbAdvisor extends WorkbenchAdvisor {
 
    @Override public void postStartup() {
       BedrockPlugin.logD("BEDROCK POST STARTUP " + use_display + " " + hide_display);
-
+   
       // super.postStartup();
-
+   
       forceLoads();
       noteSetup();
-
+   
       if (hide_display) {
-	 for (Shell sh1 : the_app.base_display.getShells()) {
-	    BedrockPlugin.logD("BEDROCK: SHELL4 " + sh1.isVisible() + " " + sh1.getText());
-	    sh1.setVisible(false);
-	  }
-	 Shell sh = base_display.getActiveShell();
-	 if (sh != null) {
-	    BedrockPlugin.logD("BEDROCK: SHELL5 " + sh.isVisible() + " " + sh.getText());
-	    sh.setVisible(false);
-	    // sh.close();
-	  }
+         for (Shell sh1 : the_app.base_display.getShells()) {
+            BedrockPlugin.logD("BEDROCK: SHELL4 " + sh1.isVisible() + " " + sh1.getText());
+            sh1.setVisible(false);
+          }
+         Shell sh = base_display.getActiveShell();
+         if (sh != null) {
+            BedrockPlugin.logD("BEDROCK: SHELL5 " + sh.isVisible() + " " + sh.getText());
+            sh.setVisible(false);
+            // sh.close();
+          }
        }
       if (tiny_display) {
-	 Shell sh = base_display.getActiveShell();
-	 sh.setMinimumSize(1,1);
-	 sh.setSize(1,1);
+         Shell sh = base_display.getActiveShell();
+         sh.setMinimumSize(1,1);
+         sh.setSize(1,1);
        }
     }
 
@@ -520,9 +550,9 @@ private class WbWindowAdvisor extends WorkbenchWindowAdvisor {
    @Override public void preWindowOpen() {
       // remove the window
       super.preWindowOpen();
-
+   
       BedrockPlugin.logD("PRE WINDOW OPEN " + use_display + " " + hide_display);
-
+   
       hideWindows();
     }
 

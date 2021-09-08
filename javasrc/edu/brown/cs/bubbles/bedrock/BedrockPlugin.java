@@ -45,7 +45,9 @@ import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -203,6 +205,13 @@ private void initWorkbench() {
 /*										*/
 /********************************************************************************/
 
+String getMintName()    
+{
+   return mint_control.getMintName();
+}
+
+
+
 private synchronized void setupMint()
 {
    IvySetup.setup();
@@ -211,8 +220,20 @@ private synchronized void setupMint()
 
    String mintname = System.getProperty("edu.brown.cs.bubbles.MINT");
    if (mintname == null) mintname = System.getProperty("edu.brown.cs.bubbles.mint");
+   if (mintname == null) {
+      IWorkspace ws = ResourcesPlugin.getWorkspace();
+      IWorkspaceRoot root = ws.getRoot();
+      IPath rootpath = root.getFullPath();
+      String wsname = rootpath.toOSString();
+      int idx = wsname.lastIndexOf(File.separator);
+      if (idx > 0) wsname = wsname.substring(idx+1);
+      if (wsname == null) wsname = "";
+      else wsname = wsname.replace(" ","_");
+      mintname = BEDROCK_MINT_ID;
+      mintname = mintname.replace("@@@",wsname);
+    }
    if (mintname == null) mintname = BEDROCK_MESSAGE_ID;
-
+   
    mint_control = MintControl.create(mintname,MintSyncMode.SINGLE);
    mint_control.register("<BUBBLES DO='_VAR_1' />",new CommandHandler());
 }
@@ -1178,6 +1199,12 @@ static void log(BedrockLogLevel lvl,String msg,Throwable t)
       if (t != null) t.printStackTrace();
     }
    if (log_file != null) log_file.flush();
+}
+
+
+static void setLogLevel(BedrockLogLevel lvl)
+{
+   log_level = lvl;
 }
 
 

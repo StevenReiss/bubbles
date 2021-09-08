@@ -148,6 +148,7 @@ private String		course_name;
 private BoardLanguage	for_language;
 private String		palette_name;
 private boolean 	install_only;
+private boolean         no_bedrock;
 private Map<String,ClassLoader> class_loaders;
 
 
@@ -178,6 +179,7 @@ private BemaMain(String [] args)
    course_name = null;
    for_language = null;
    install_only = false;
+   no_bedrock = false;
    auto_update = null;
    palette_name = null;
    class_loaders = new HashMap<>();
@@ -291,8 +293,12 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-r")) {                   // -restore
 	    restore_session = true;
 	  }
-	 else if (args[i].startsWith("-install")) {
+	 else if (args[i].startsWith("-install")) {             // -install - force installation
 	    install_only = true;
+	  }
+         else if (args[i].startsWith("-insnobed")) {            // -insnobed -- install w/o bedrock
+	    install_only = true;
+            no_bedrock = true;
 	  }
 	 else if (args[i].startsWith("-pal") && i+1 < ln) {     // -palette <file>
 	    palette_name = args[++i];
@@ -359,6 +365,7 @@ private void start()
    if (run_mode != null) bs.setRunMode(run_mode);
    bs.setJavaArgs(java_args);
    if (auto_update != null) bs.setAutoUpdate(auto_update);
+   if (no_bedrock) bs.setPluginRunning();
 
    if (bs.getCourseName() != null) {
       BeduFactory.getFactory();
