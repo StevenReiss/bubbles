@@ -45,7 +45,7 @@
    <extension point='org.eclipse.ui.actionSets'>
        <actionSet
 	    id='edu.brown.cs.bubbles.bedrock.BedrockBubblesAction'
-	    label='Start Bubbles'
+	    label='Start Code Bubbles'
 	    visible='true'
 	    description='Start Code Bubbles'>
 	    <menu
@@ -58,7 +58,6 @@
 		toolbarPath='Normal'
 		label='Start Code Bubbles'
 		tooltip='Press to install or start Code Bubbles'
-		icons='icons/helloworld.gif'
 		class='edu.brown.cs.bubbles.bedrock.BedrockBubblesAction' />
 	</actionSet>
    </extension>

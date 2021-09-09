@@ -480,8 +480,11 @@ void startedBubbles(boolean hide)
          BedrockPlugin.logD("SHELL4 " + sh1.isVisible() + " " + sh1.getText());
 //       sh1.setVisible(false);
        }
-//    Shell sh = base_display.getActiveShell();
-//    if (sh != null) sh.setVisible(false);
+      Shell sh = base_display.getActiveShell();
+      if (sh != null) {
+         // this makes eclipse unusable for some reason -- try to fix
+//       sh.setVisible(false);
+       }
     }
 }  
 
@@ -508,6 +511,7 @@ private class WbAdvisor extends WorkbenchAdvisor {
     }
 
    @Override public boolean openWindows() {
+      System.err.println("OPEN WINDOWS");
       if (hide_display) return true;
       return super.openWindows();
     }
@@ -612,6 +616,7 @@ private class WbShellRemover extends ShellAdapter {
 
    @Override public void shellDeiconified(ShellEvent e) {
       BedrockPlugin.logD("BEDROCK: DEICON SHELL");
+      System.err.println("SHELL DEICON");
       Shell sh = (Shell) e.getSource();
       if (hide_display) sh.setVisible(false);
     }

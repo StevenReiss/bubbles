@@ -288,7 +288,7 @@ private boolean installBubbles()
  
    File f = new File(bubbles_dir,"bubbles.jar");
    ProcessBuilder pb = new ProcessBuilder("java","-jar",f.getPath(),"-install","-insnobed");
-   BedrockPlugin.logD("BUBBLES RUN " + pb.command());
+   BedrockPlugin.logI("BUBBLES RUN " + pb.command());
    
    try {
       Process p = pb.start();
@@ -353,7 +353,7 @@ private boolean updateProperties()
    
    IWorkspace ws = ResourcesPlugin.getWorkspace();
    IWorkspaceRoot root = ws.getRoot();
-   IPath rootpath = root.getFullPath();
+   IPath rootpath = root.getRawLocation();
    system_props.setProperty("edu.brown.cs.bubbles.workspace",rootpath.toOSString());
    system_props.setProperty("edu.brown.cs.bubbles.ask_workspace","false");
    

@@ -1243,6 +1243,8 @@ void resetProperties()
 
 public void doInstall()
 {
+   auto_update = true;
+   
    if (!checkInstall()) return;
 
    if (eclipse_directory == null && board_language == BoardLanguage.JAVA) {
@@ -1778,7 +1780,7 @@ private boolean checkInstall()
 	 ins = getClass().getClassLoader().getResourceAsStream(s);
 	 if (ins == null) {
 	    ok = false;
-	    // System.err.println("BOARD: Setup failed on " + s);
+	    System.err.println("BOARD: Setup failed on " + s);
 	  }
 	 else ins.close();
        }
@@ -1786,8 +1788,8 @@ private boolean checkInstall()
 	 URL url = BoardImage.class.getClassLoader().getResource(BOARD_RESOURCE_CHECK);
 	 if (url == null || !url.toString().startsWith("jar")) ok = false;
        }
-      // System.err.println("BOARD: CHECK INSTALL: " + ok + " " + install_jar);
       install_jar = ok;
+      
       if (install_jar) {
 	 URL url = getClass().getClassLoader().getResource(BOARD_RESOURCE_PLUGIN);
 	 String file = url.toString();
