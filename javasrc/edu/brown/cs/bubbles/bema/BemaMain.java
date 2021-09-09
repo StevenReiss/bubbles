@@ -297,7 +297,6 @@ private void scanArgs(String [] args)
 	    install_only = true;
 	  }
          else if (args[i].startsWith("-insnobed")) {            // -insnobed -- install w/o bedrock
-	    install_only = true;
             no_bedrock = true;
 	  }
 	 else if (args[i].startsWith("-pal") && i+1 < ln) {     // -palette <file>

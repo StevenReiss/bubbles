@@ -1376,7 +1376,6 @@ public boolean doSetup()
 	    System.exit(1);
 	  }
        }
-
     }
 
    if (!checkPalette()) {
@@ -2480,6 +2479,7 @@ private void updatePlugin()
 {
    if (plugin_running) return;
    
+   
    try {
       InputStream ins = null;
       if (install_jar) {
@@ -2494,7 +2494,7 @@ private void updatePlugin()
        }
       File pdf = getPluginDirectory();
       File bdf = new File(pdf,BOARD_BUBBLES_PLUGIN);
-
+      BoardLog.logI("BOARD","Updating plugin " + bdf);
       OutputStream ots = new FileOutputStream(bdf);
 
       copyFile(ins,ots);
@@ -2662,6 +2662,7 @@ private void restartBubbles()
 
       args.add(idx++,BOARD_RESTART_CLASS);
       args.add(idx++,"-nosetup");
+      if (plugin_running) args.add(idx++,"-insnobed");
       if (force_metrics) args.add(idx++,"-collect");
       if (course_name != null) {
 	 String cnm = course_name;

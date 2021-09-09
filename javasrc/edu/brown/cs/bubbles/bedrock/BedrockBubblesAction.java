@@ -287,7 +287,7 @@ private boolean installBubbles()
    if (!updateProperties()) return false;
  
    File f = new File(bubbles_dir,"bubbles.jar");
-   ProcessBuilder pb = new ProcessBuilder("java","-jar",f.getPath(),"-insnobed");
+   ProcessBuilder pb = new ProcessBuilder("java","-jar",f.getPath(),"-install","-insnobed");
    BedrockPlugin.logD("BUBBLES RUN " + pb.command());
    
    try {
@@ -397,12 +397,12 @@ private boolean startBubbles()
    if (bubbles_install) {
       File f1 = new File(bubbles_dir,"bin");
       File f2 = new File(f1,"codebb");
-      pb = new ProcessBuilder(f2.getAbsolutePath(),wspath,"-msg",mint);
+      pb = new ProcessBuilder(f2.getAbsolutePath(),wspath,"-msg",mint,"-noupdate","-insnobed");
     }
    else {
       File f = new File(bubbles_dir,"bubbles.jar");
       pb = new ProcessBuilder("java","-jar",f.getPath(),
-            wspath,"-msg",mint);
+            wspath,"-msg",mint,"-noupdate","-insnobed");
     }
    
    try {
