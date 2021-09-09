@@ -483,7 +483,7 @@ void startedBubbles(boolean hide)
       Shell sh = base_display.getActiveShell();
       if (sh != null) {
          // this makes eclipse unusable for some reason -- try to fix
-//       sh.setVisible(false);
+         sh.setVisible(false);
        }
     }
 }  
@@ -616,7 +616,6 @@ private class WbShellRemover extends ShellAdapter {
 
    @Override public void shellDeiconified(ShellEvent e) {
       BedrockPlugin.logD("BEDROCK: DEICON SHELL");
-      System.err.println("SHELL DEICON");
       Shell sh = (Shell) e.getSource();
       if (hide_display) sh.setVisible(false);
     }
