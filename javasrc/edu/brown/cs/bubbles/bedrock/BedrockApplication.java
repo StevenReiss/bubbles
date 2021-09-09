@@ -112,6 +112,7 @@ BedrockApplication(boolean ecl)
    base_display = null;
    is_setup = false;
    from_eclipse = ecl;
+   is_setup = true;
    
    the_app = this;
 }
@@ -134,7 +135,9 @@ static void stopApplication()
 {
    BedrockPlugin.logD("BEDROCK: STOP APP REQUEST " + the_app);
 
-   if (the_app == null || the_app.from_eclipse) return;
+   if (the_app == null || the_app.from_eclipse) {
+      System.exit(0);
+    }
 
    synchronized (the_app) {
       the_app.exit_ok = true;
@@ -465,7 +468,7 @@ private void forceLoads()
 
 void startedBubbles(boolean hide)
 {
-   BedrockPlugin.logI("APP START");
+   BedrockPlugin.logI("APP START INTERNAL");
    
    hide_display = hide;
    
@@ -474,12 +477,11 @@ void startedBubbles(boolean hide)
    
    if (base_display != null && hide_display) {
       for (Shell sh1 : base_display.getShells()) {
-         BedrockPlugin.logD("SHELL2 " + sh1.isVisible() + " " + sh1.getText());
-         sh1.setVisible(false);
+         BedrockPlugin.logD("SHELL4 " + sh1.isVisible() + " " + sh1.getText());
+//       sh1.setVisible(false);
        }
-      Shell sh = base_display.getActiveShell();
-      if (sh != null) sh.setVisible(false);
-      // might want to add an IWindowListener to wb to handle closing windows dynamically
+//    Shell sh = base_display.getActiveShell();
+//    if (sh != null) sh.setVisible(false);
     }
 }  
 

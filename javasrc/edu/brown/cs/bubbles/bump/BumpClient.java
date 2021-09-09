@@ -3725,6 +3725,8 @@ protected class IDEHandler implements MintHandler {
 	       break;
 	    case "STOP" :
 	       BoardLog.logI("BUMP","STOP received from eclipse");
+               BoardProperties sysprops = BoardProperties.getProperties("System");
+               if (sysprops.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND)) System.exit(0);
 	       JOptionPane.showMessageDialog(null,
 						"Eclipse exited -- Bubbles must exit as well",
 						"Bubbles Eclipse Problem",JOptionPane.ERROR_MESSAGE);

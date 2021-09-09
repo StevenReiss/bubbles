@@ -194,8 +194,8 @@ private void setupDirectories()
    String ehome = System.getProperty("eclipse.home.location");
    if (ehome.startsWith("file:")) ehome = ehome.substring(5);
    File edir = new File(ehome);
-   File drop = new File(edir,"dropins");
-   bubbles_dir = new File(drop,"bubbles");
+// File drop = new File(edir,"dropins");
+   bubbles_dir = new File(edir,"bubbles");
    
    system_props = null;
    prop_base = System.getProperty("edu.brown.cs.bubbles.BEDROCKBASE");

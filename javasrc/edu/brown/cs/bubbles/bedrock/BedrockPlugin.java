@@ -223,12 +223,14 @@ private synchronized void setupMint()
    if (mintname == null) {
       IWorkspace ws = ResourcesPlugin.getWorkspace();
       IWorkspaceRoot root = ws.getRoot();
-      IPath rootpath = root.getFullPath();
+      IPath rootpath = root.getRawLocation();
       String wsname = rootpath.toOSString();
+      if (wsname.endsWith(File.separator)) wsname = wsname.substring(0,wsname.length()-1);
       int idx = wsname.lastIndexOf(File.separator);
       if (idx > 0) wsname = wsname.substring(idx+1);
       if (wsname == null) wsname = "";
       else wsname = wsname.replace(" ","_");
+      BedrockPlugin.logI("Setting mint for " + wsname + " " + rootpath.toOSString());
       mintname = BEDROCK_MINT_ID;
       mintname = mintname.replace("@@@",wsname);
     }

@@ -1192,8 +1192,11 @@ private synchronized void setupMint()
    if (mint_name == null) {
       mint_name = BOARD_MINT_NAME;
       String wsname = default_workspace;
+      if (wsname.endsWith(File.separator)) wsname = wsname.substring(0,wsname.length()-1);
       int idx = wsname.lastIndexOf(File.separator);
-      if (idx > 0) wsname = wsname.substring(idx+1);
+      if (idx > 0) {
+         wsname = wsname.substring(idx+1);
+       }
       if (wsname == null) wsname = "";
       else wsname = wsname.replace(" ","_");
       mint_name = mint_name.replace("@@@",wsname);
@@ -3028,42 +3031,42 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if (cmd.equals("Eclipse Installation Directory")) {
-	 // will update in checkStatus()
+         // will update in checkStatus()
        }
       else if (cmd.equals("Bubbles Installation Directory")) {
-	 // will update in checkStatus()
+         // will update in checkStatus()
        }
       else if (cmd.equals("Automatically Update Bubbles")) {
-	 JCheckBox cbx = (JCheckBox) e.getSource();
-	 auto_update = cbx.isSelected();
-	 has_changed = true;
+         JCheckBox cbx = (JCheckBox) e.getSource();
+         auto_update = cbx.isSelected();
+         has_changed = true;
        }
       else if (cmd.equals("Run Eclipse in Foreground")) {
-	 JCheckBox cbx = (JCheckBox) e.getSource();
-	 run_foreground = cbx.isSelected();
-	 has_changed = true;
+         JCheckBox cbx = (JCheckBox) e.getSource();
+         run_foreground = cbx.isSelected();
+         has_changed = true;
        }
       else if (cmd.equals("INSTALL")) {
-	 updatePlugin();
-	 force_setup = false;
+         updatePlugin();
+         force_setup = false;
        }
       else if (cmd.equals("ECLIPSE")) {
-	 BoardEclipse eclip = new BoardEclipse(new File(jar_directory));
-	 String dir = eclip.installEclipse();
-	 if (dir != null) {
-	    eclipse_field.setText(dir);
-	  }
+         BoardEclipse eclip = new BoardEclipse(new File(jar_directory));
+         String dir = eclip.installEclipse();
+         if (dir != null) {
+            eclipse_field.setText(dir);
+          }
        }
       else if (cmd.equals("OK")) {
-	 result_status = true;
-	 working_dialog.setVisible(false);
+         result_status = true;
+         working_dialog.setVisible(false);
        }
       else if (cmd.equals("CANCEL")) {
-	 result_status = false;
-	 working_dialog.setVisible(false);
+         result_status = false;
+         working_dialog.setVisible(false);
        }
       else {
-	 BoardLog.logE("BOARD","Unknown SETUP DIALOG command: " + cmd);
+         BoardLog.logE("BOARD","Unknown SETUP DIALOG command: " + cmd);
        }
       checkStatus();
     }
