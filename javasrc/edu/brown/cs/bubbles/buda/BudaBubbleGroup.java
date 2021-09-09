@@ -235,7 +235,7 @@ int getSize()				{ return group_bubbles.size(); }
 
 
 public String getTitle()			{ return group_title; }
-void setTitle(String ttl)
+public void setTitle(String ttl)
 {
    if (ttl != null && ttl.length() == 0) ttl = null;
 

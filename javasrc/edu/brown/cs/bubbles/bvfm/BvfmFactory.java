@@ -26,12 +26,14 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import edu.brown.cs.bubbles.bass.BassFactory;
 import edu.brown.cs.bubbles.bass.BassName;
 import edu.brown.cs.bubbles.bass.BassConstants.BassPopupHandler;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaBubbleGroup;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaRoot;
@@ -115,8 +117,10 @@ private class ViewCallback implements BudaConstants.BubbleViewCallback {
    @Override public void addGroupButtons(BudaBubbleGroup grp,JPopupMenu menu) {
       if (grp == null || menu == null) return;
       String ttl = grp.getTitle();
-      if (ttl == null) return;
-      BvfmVirtualFile curf = vfm_library.getVirtualFileForName(ttl);
+      BvfmVirtualFile curf = null;
+      if (ttl != null) {
+         curf = vfm_library.getVirtualFileForName(ttl);
+       }
       if (curf == null) menu.add(new CreateAction(grp));
       else {
          menu.add(new UpdateAction(curf,grp));
@@ -144,6 +148,19 @@ private class CreateAction extends AbstractAction {
     }
    
    @Override public void actionPerformed(ActionEvent evt) {
+      if (bubble_group.getTitle() == null) {
+         BudaBubbleArea bba = bubble_group.getBudaBubbleArea();
+         String ttl = JOptionPane.showInputDialog(bba,"Enter name for virtual file",null);
+         if (ttl == null) return;
+         ttl = ttl.trim();
+         if (ttl.length() == 0) return;
+         bubble_group.setTitle(ttl);
+         BvfmVirtualFile vf = vfm_library.getVirtualFileForName(ttl);
+         if (vf != null) {
+            JOptionPane.showMessageDialog(bba,"Virtual file with that name already exists");
+            return;
+          }
+       }
       BvfmVirtualFile vf = new BvfmVirtualFile(bubble_group);
       vfm_library.addVirtualFile(vf);
     }

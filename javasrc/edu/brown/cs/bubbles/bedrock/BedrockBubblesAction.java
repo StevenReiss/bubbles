@@ -113,7 +113,6 @@ public BedrockBubblesAction()
 
 @Override public void init(IWorkbenchWindow window)
 {
-   System.err.println("BEDROCK ACTION INIT " + window);
    active_window = window;
    
    setupDirectories();
@@ -128,8 +127,6 @@ public BedrockBubblesAction()
 
 @Override public void dispose() 
 {
-   System.err.println("BEDROCK ACTION DISPOSE");
-   
    shutdownBubbles();
 }
 
@@ -137,9 +134,6 @@ public BedrockBubblesAction()
 @Override public void selectionChanged(IAction proxy,ISelection sel)
 {
    setupAction(proxy);
-   
-   System.err.println("BEDROCK SELECTION CHANGE " + proxy + " " + sel);
-   // nothing required
 }
 
 
@@ -155,16 +149,12 @@ public BedrockBubblesAction()
    
    setupAction(proxy);
    
-   System.err.println("BEDROCK ACTION RUN " + proxy);
    if (!installValid()) {
       installBubbles();
     }
    else {
       startBubbles();
     }
-   
-// Shell shell = active_window.getShell();
-// MessageDialog.openInformation(shell,"Hello world.","Hello world!");
 }
 
 
@@ -178,10 +168,6 @@ public BedrockBubblesAction()
 private void setupAction(IAction proxy)
 {
    if (our_action != null) return;
-   System.err.println("BEDROCK ACTION SETUP: " +
-         proxy.getStyle() + " " + proxy.getText() + " " + proxy.getToolTipText() +
-         " " + proxy.isChecked() + " " + proxy.isEnabled() + " " + proxy.isHandled() +
-         " " + proxy.getImageDescriptor() + " " + proxy.getId());
    bubbles_running = isBubblesRunning();
    
    our_action = proxy;
@@ -206,7 +192,6 @@ private void setupAction(IAction proxy)
 private void setupDirectories()
 {
    String ehome = System.getProperty("eclipse.home.location");
-   System.err.println("SETUP DIRECTORY " + ehome);
    if (ehome.startsWith("file:")) ehome = ehome.substring(5);
    File edir = new File(ehome);
    File drop = new File(edir,"dropins");
@@ -292,7 +277,7 @@ private boolean getBooleanProp(String name,boolean dflt)
 
 private boolean installBubbles()
 {
-   System.err.println("INSTALL BUBBLES");
+   System.err.println("INSTALLING CODE BUBBLES in " + bubbles_dir);
    bubbles_dir.mkdirs();
    Downloader dl = new Downloader(bubbles_dir);
    dl.start();
@@ -303,14 +288,16 @@ private boolean installBubbles()
  
    File f = new File(bubbles_dir,"bubbles.jar");
    ProcessBuilder pb = new ProcessBuilder("java","-jar",f.getPath(),"-insnobed");
-   System.err.println("BUBBLES RUN " + pb.command());
+   BedrockPlugin.logD("BUBBLES RUN " + pb.command());
    
    try {
       Process p = pb.start();
       try {
          int sts = p.waitFor();
-         System.err.println("BUBBLES SETUP STATUS " + sts);
-         if (sts > 0) return false;
+         if (sts > 0) {
+            System.err.println("BUBBLES: Bubbles setup failed: " + sts);
+            return false;
+          }
        }
       catch (InterruptedException e) { }
     }
@@ -334,14 +321,8 @@ private File getEclipseDirectory()
    File fehome = new File(ehome);
    boolean fnd = false;
    while (fehome != null) {
-      System.err.println("BUBBLES CHECK HOME: " + fehome);
       for (String s : ECLIPSE_START) {
          File f1 = new File(fehome,s);
-         System.err.println("CHECK " + f1 + " " + f1.exists() + " " + 
-               f1.canExecute() + " " + f1.canRead() + " " + f1.getName() + " " +
-               f1.getName().endsWith(".app") + " " +
-               f1.isDirectory());
-//       if (f1.exists() && f1.canExecute() && f1.canRead()) { 
          if (f1.exists() && f1.canExecute() && f1.canRead() && 
                (f1.getName().endsWith(".app") || !f1.isDirectory())) {
             fnd = true; 
@@ -374,7 +355,6 @@ private boolean updateProperties()
    IWorkspaceRoot root = ws.getRoot();
    IPath rootpath = root.getFullPath();
    system_props.setProperty("edu.brown.cs.bubbles.workspace",rootpath.toOSString());
-   
    system_props.setProperty("edu.brown.cs.bubbles.ask_workspace","false");
    
    try (FileOutputStream fos = new FileOutputStream(props_file)) {
@@ -403,27 +383,34 @@ private boolean startBubbles()
    if (bubbles_process != null) return true;
    
    if (!updateProperties()) return false;
-   // check if bubbles running -- ignore if so
+   if (isBubblesRunning()) return true;
    
-   System.err.println("START BUBBLES");
+   String mint = BedrockPlugin.getPlugin().getMintName();
+   IWorkspace ws = ResourcesPlugin.getWorkspace();
+   IWorkspaceRoot root = ws.getRoot();
+   IPath rootpath = root.getRawLocation();
+   String wspath = rootpath.toOSString();
+   
+   System.err.println("STARTING CODE BUBBLES");
+   
+   ProcessBuilder pb = null;
    if (bubbles_install) {
-      System.err.println("START BUBBLES FROM INSTALLATION");
+      File f1 = new File(bubbles_dir,"bin");
+      File f2 = new File(f1,"codebb");
+      pb = new ProcessBuilder(f2.getAbsolutePath(),wspath,"-msg",mint);
     }
    else {
-      String mint = BedrockPlugin.getPlugin().getMintName();
       File f = new File(bubbles_dir,"bubbles.jar");
-      IWorkspace ws = ResourcesPlugin.getWorkspace();
-      IWorkspaceRoot root = ws.getRoot();
-      IPath rootpath = root.getRawLocation();
-      ProcessBuilder pb = new ProcessBuilder("java","-jar",f.getPath(),
-            rootpath.toOSString(),"-msg",mint);
-      System.err.println("RUN: " + pb.command());
-      try {
-         bubbles_process = pb.start();
-       }
-      catch (IOException e) {
-         return false;
-       }
+      pb = new ProcessBuilder("java","-jar",f.getPath(),
+            wspath,"-msg",mint);
+    }
+   
+   try {
+      BedrockPlugin.logD("BUBBLES RUN " + pb.command());
+      bubbles_process = pb.start();
+    }
+   catch (IOException e) {
+      return false;
     }
    
    bubbles_running = true;
@@ -464,8 +451,6 @@ private boolean isBubblesRunning()
 /*      Download bubbles                                                        */
 /*                                                                              */
 /********************************************************************************/
-
-
 
 private class Downloader extends Thread {
 
@@ -520,7 +505,6 @@ private class Downloader extends Thread {
             f.delete();
           }
          synchronized (this) {
-            System.err.println("BUBBLES DOWNLOAD " + status);
             download_ok = status;
             notifyAll();
           }
