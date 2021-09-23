@@ -652,23 +652,27 @@ BumpStackFrame getFrameForBubble(BudaBubble bb)
 {
    BubbleData bd = bubble_map.get(bb);
    if (bd == null) return null;
-   if (bd.getFrame() == null || true) {                 // recompute as needed
+   if (bd.getFrame() == null || true) { 		// recompute as needed
       BumpStackFrame frm = launch_control.getActiveFrame();
       if (frm == null || bd.getBubble() == null) return null;
       if (bd.getBubble().getContentType() == BudaContentNameType.METHOD) {
 	 String s1 = bd.getBubble().getContentName();
 	 if (s1 != null) {
 	    int idx1 = s1.indexOf("(");
-	    String s1a = s1.substring(0,idx1);
-	    String s1b = s1.substring(idx1);
+	    String s1a = s1;
+	    String s1b = null;
+	    if (idx1 > 0) {
+	       s1a = s1.substring(0,idx1);
+	       s1b = s1.substring(idx1);
+	     }
 	    BumpThread bt = frm.getThread();
 	    BumpThreadStack stk = bt.getStack();
 	    if (stk != null) {
 	       BumpStackFrame xfrm = null;
 	       for (int i = 0; i < stk.getNumFrames(); ++i) {
 		  BumpStackFrame sfrm = stk.getFrame(i);
-		  if (sameMethod(s1a,sfrm.getMethod()) && 
-                        BumpLocation.compareParameters(s1b,sfrm.getSignature())) {
+		  if (sameMethod(s1a,sfrm.getMethod()) &&
+			(s1b == null || BumpLocation.compareParameters(s1b,sfrm.getSignature()))) {
 		     if (xfrm == null || sfrm == frm) xfrm = sfrm;
 		   }
 		}
@@ -718,20 +722,20 @@ private static boolean sameMethod(String m1,String m2)
 private void setupBubbleArea()
 {
    if (bubble_area != null) return;
-   
-   
+
+
    bubble_area = BudaRoot.findBudaBubbleArea(launch_control);
    if (bubble_area == null) return;
-   
+
    JComponent c2 = (JComponent) bubble_area.getParent().getParent().getParent();
    c2.addContainerListener(new ChannelListener());
-   
+
    for (BudaBubble bb : bubble_area.getBubbles()) {
       if (bubble_map.get(bb) == null) {
 	 bubble_map.put(bb,new BubbleData(bb));
        }
     }
-   
+
    BudaRoot.addBubbleViewCallback(new BubbleUpdater());
 }
 
@@ -803,8 +807,8 @@ private BubbleData findClosestBubble(BumpThread bt,BumpThreadStack stk,BumpStack
 	 Collection<BubbleData> bbls = new ArrayList<BubbleData>(bubble_map.values());
 	 for (BubbleData bd : bbls) {
 	    if (!isBubbleRelevant(bd)) continue;
-	    if (bd != best && bd.isBelow(best) && bd.canRemove() && 
-                  bd.getBubbleType() == BubbleType.EXEC) {
+	    if (bd != best && bd.isBelow(best) && bd.canRemove() &&
+		  bd.getBubbleType() == BubbleType.EXEC) {
 	       bubble_area.userRemoveBubble(bd.getBubble());
 	       BudaBubble sb = bd.getAssocBubble();
 	       if (sb != null) {
@@ -933,10 +937,10 @@ private class BubbleUpdater implements BubbleViewCallback {
       if (BudaRoot.findBudaBubbleArea(bb) != bubble_area) return;
       BudaWorkingSet ws = BddtFactory.getFactory().getActiveWorkingSet();
       if (ws != null) {
-         if (!ws.getRegion().intersects(bb.getBounds())) return;
+	 if (!ws.getRegion().intersects(bb.getBounds())) return;
        }
       if (bubble_map.get(bb) == null) {
-         bubble_map.put(bb,new BubbleData(bb));
+	 bubble_map.put(bb,new BubbleData(bb));
        }
     }
 
@@ -950,24 +954,24 @@ private class BubbleUpdater implements BubbleViewCallback {
 private class ChannelListener implements ContainerListener {
 
    @Override public void componentAdded(ContainerEvent e) { }
-   
+
    @Override public void componentRemoved(ContainerEvent e) {
       Component c = e.getChild();
       if (c == null) return;
       boolean fnd = false;
       for (Component c1 = bubble_area; c1 != null; c1 = c1.getParent()) {
-         if (c == c1) {
-            fnd = true;
-            break;
-          }
+	 if (c == c1) {
+	    fnd = true;
+	    break;
+	  }
        }
       if (!fnd) return;
       if (launch_control == null) return;
       BumpClient bc = BumpClient.getBump();
       bc.terminate(launch_control.getProcess());
     }
-   
-}       // end of inner class ChannelListener
+
+}	// end of inner class ChannelListener
 
 
 
@@ -1047,8 +1051,8 @@ private static class BubbleData {
       for_stack = stk;
       for_frame = sf;
       if (for_bubble instanceof BddtLibraryBubble) {
-         BddtLibraryBubble lbb = (BddtLibraryBubble) for_bubble;
-         lbb.resetFrame(sf);
+	 BddtLibraryBubble lbb = (BddtLibraryBubble) for_bubble;
+	 lbb.resetFrame(sf);
        }
     }
 
@@ -1057,18 +1061,18 @@ private static class BubbleData {
       if (bubble_type != BubbleType.EXEC && bubble_type != BubbleType.USER) return false;
       int lvl = -1;
       for (int i = 0; i < stk.getNumFrames(); ++i) {
-         if (stk.getFrame(i) == frm) {
-            lvl = i;
-            break;
-          }
-         else if (frm != null && stk.getFrame(i) != null && frm.getId() == stk.getFrame(i).getId()) {
-            lvl = i;
-            break;
-         }
+	 if (stk.getFrame(i) == frm) {
+	    lvl = i;
+	    break;
+	  }
+	 else if (frm != null && stk.getFrame(i) != null && frm.getId() == stk.getFrame(i).getId()) {
+	    lvl = i;
+	    break;
+	 }
        }
       if (lvl != frame_level || stk.getNumFrames() != stack_depth &&
-               bubble_type == BubbleType.EXEC)
-         return false;
+	       bubble_type == BubbleType.EXEC)
+	 return false;
       return matchFrameMethod(frm,for_frame);
     }
 
@@ -1083,13 +1087,13 @@ private static class BubbleData {
       String s1b = s1.substring(idx1);
       if (!sameMethod(s1a,frm.getMethod())) return false;
       if (!BumpLocation.compareParameters(s1b,frm.getSignature())) return false;
-   
+
       int lvl = -1;
       for (int i = 0; i < stk.getNumFrames(); ++i) {
-         if (stk.getFrame(i) == frm) {
-            lvl = i;
-            break;
-          }
+	 if (stk.getFrame(i) == frm) {
+	    lvl = i;
+	    break;
+	  }
        }
       // take over user bubble here
       for_stack = stk;
@@ -1107,15 +1111,15 @@ private static class BubbleData {
 
    int aboveLevel(BumpThread bt,BumpThreadStack stk,BumpStackFrame frm) {
       if (base_thread != bt || frame_level < 0) return -1;
-   
+
       int ct0 = for_stack.getNumFrames();
       int ct1 = stk.getNumFrames();
       for (int i = ct0-1; i >= frame_level; --i) {
-         int j = ct1 - (ct0 - i);
-         BumpStackFrame bsf0 = for_stack.getFrame(i);
-         BumpStackFrame bsf1 = stk.getFrame(j);
-         if (bsf1 == frm) return -1;
-         if (!matchFrameMethod(bsf0,bsf1)) return -1;
+	 int j = ct1 - (ct0 - i);
+	 BumpStackFrame bsf0 = for_stack.getFrame(i);
+	 BumpStackFrame bsf1 = stk.getFrame(j);
+	 if (bsf1 == frm) return -1;
+	 if (!matchFrameMethod(bsf0,bsf1)) return -1;
        }
       return ct0 - frame_level;
     }

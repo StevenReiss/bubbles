@@ -129,12 +129,20 @@ boolean checkMouse()
    else {
       cp = pi.getLocation();
       SwingUtilities.convertPointFromScreen(cp,buda_root);
+      if (cp.getX() < 0) {
+         Toolkit tk = Toolkit.getDefaultToolkit();
+         Dimension ssz = tk.getScreenSize();
+         if (Math.abs(cp.x + ssz.width - current_mouse.x) < 100) {
+            cp.x += ssz.width;
+          }
+       }
+      System.err.println("POINT " + pi.getLocation() + " " + cp);
       // BoardLog.logD("BHELP","MOUSE RESULT " + cp);
     }
 
    int diff = Math.abs(cp.x - current_mouse.x) + Math.abs(cp.y - current_mouse.y);
    // BoardLog.logD("BHELP","TEST MOUSE " + cp + " " + current_mouse + " " + diff);
-   if (diff > 10) {
+   if (diff > 100) {
       // BoardLog.logD("BHELP","CHECK MOUSE " + cp + " " + current_mouse);
       for_demo.stopDemonstration();
     }
@@ -187,11 +195,13 @@ private void convertPointToScreen(Point pt)
    PointerInfo pi = MouseInfo.getPointerInfo();
 
    if (pi != null) {
-      GraphicsDevice gd = pi.getDevice();
-      GraphicsConfiguration gc = gd.getDefaultConfiguration();
-      Rectangle r = gc.getBounds();
-      pt.x -= r.x;
-      pt.y -= r.y;
+//    GraphicsDevice gd = pi.getDevice();
+//    GraphicsConfiguration gc = gd.getDefaultConfiguration();
+//    Rectangle r = gc.getBounds();
+      // handle multiple displays
+      // this might be needed for linux, causes problems on mac
+//    pt.x -= r.x;
+//    pt.y -= r.y;
     }
 
    // BoardLog.logD("BHELP","Convert " + pt);

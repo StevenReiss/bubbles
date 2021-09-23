@@ -619,35 +619,35 @@ private static class MoveMouseAction extends BhelpAction {
    @Override void executeAction(BhelpContext ctx) throws BhelpException {
       Point st = ctx.getMouse();
       Point tg = ctx.getPoint(target_name);
-
+   
       Path2D.Float path = new Path2D.Float();
       path.moveTo(st.getX(),st.getY());
       if (point_list != null) {
-	 for (Point p : point_list) {
-	    path.lineTo(st.getX() + p.x, st.getY() + p.y);
-	 }
+         for (Point p : point_list) {
+            path.lineTo(st.getX() + p.x, st.getY() + p.y);
+         }
       }
       if (tg != null) path.lineTo(tg.getX(),tg.getY());
-
+   
       double x0 = 0;
       double y0 = 0;
       double [] coords = new double[6];
       for (PathIterator pi = path.getPathIterator(null,1); !pi.isDone(); pi.next()) {
-	 switch (pi.currentSegment(coords)) {
-	    case PathIterator.SEG_MOVETO :
-	       x0 = coords[0];
-	       y0 = coords[1];
-	       break;
-	    case PathIterator.SEG_LINETO :
-	       moveMouse(ctx,x0,y0,coords[0],coords[1]);
-	       x0 = coords[0];
-	       y0 = coords[1];
-	       break;
-	    case PathIterator.SEG_CLOSE :
-	       break;
-	    default :
-	       break;
-	  }
+         switch (pi.currentSegment(coords)) {
+            case PathIterator.SEG_MOVETO :
+               x0 = coords[0];
+               y0 = coords[1];
+               break;
+            case PathIterator.SEG_LINETO :
+               moveMouse(ctx,x0,y0,coords[0],coords[1]);
+               x0 = coords[0];
+               y0 = coords[1];
+               break;
+            case PathIterator.SEG_CLOSE :
+               break;
+            default :
+               break;
+          }
        }
     }
 
@@ -672,7 +672,7 @@ private static class MoveMouseAction extends BhelpAction {
          tottim = System.currentTimeMillis() - starttime;
          ctr++;
          double actual = delay_time * ctr - tottim;
-         System.err.println("DELAY " + tottim + " " + actual);
+   //    System.err.println("DELAY " + tottim + " " + actual);
          if (actual >= 20) {
             int di = (int) actual;
             ctx.delay(di);
