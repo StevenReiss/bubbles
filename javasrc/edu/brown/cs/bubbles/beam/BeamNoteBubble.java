@@ -657,7 +657,7 @@ private void loadNoteFromFile(File f,boolean force)
 
 
 
-q private synchronized void saveNote()
+private synchronized void saveNote()
 {
    if (note_name == null) createFileName();
 
