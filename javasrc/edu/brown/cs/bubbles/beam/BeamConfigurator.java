@@ -37,6 +37,8 @@ import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 
 import edu.brown.cs.ivy.xml.IvyXml;
 
+import java.awt.Color;
+
 import org.w3c.dom.Element;
 
 
@@ -68,7 +70,11 @@ class BeamConfigurator implements BeamConstants, BudaConstants.BubbleConfigurato
 	 annot = new BeamNoteAnnotation(anx);
 	 if (annot.getDocumentOffset() < 0) annot = null;
        }
-      bb = new BeamNoteBubble(name,cnts,annot);
+      BeamNoteBubble nbb = new BeamNoteBubble(name,cnts,annot);
+      bb = nbb;
+      Color tc = IvyXml.getAttrColor(cnt,"TOPCOLOR");
+      Color bc = IvyXml.getAttrColor(cnt,"BOTTOMCOLOR");
+      if (tc != null && bc != null) nbb.setNoteColor(tc,bc);
     }
    else if (typ.equals("FLAG")) {
       String path = IvyXml.getTextElement(cnt,"IMGPATH");

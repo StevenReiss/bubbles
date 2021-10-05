@@ -36,6 +36,7 @@ import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
@@ -43,6 +44,8 @@ import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.burp.BurpHistory;
 
 import edu.brown.cs.ivy.mint.MintControl;
+import edu.brown.cs.ivy.swing.SwingColorButton;
+import edu.brown.cs.ivy.swing.SwingColorRangeChooser;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 import edu.brown.cs.ivy.swing.SwingText;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
@@ -132,6 +135,8 @@ enum HtmlState {
 private NoteArea		note_area;
 private String			note_name;
 private BeamNoteAnnotation	note_annot;
+private Color                   top_color;
+private Color                   bottom_color;
 
 private static BoardProperties	beam_properties = BoardProperties.getProperties("Beam");
 
@@ -142,6 +147,15 @@ private static final String	MENU_KEY = "menu";
 private static final String	menu_keyname;
 private static SimpleDateFormat file_dateformat = new SimpleDateFormat("yyMMddHHmmss");
 
+private static final String COLOR_OUTPUT = "<!-- COLORS: TOP=%1 BOTTOM=%2 -->";
+private static final String COLOR_PATTERN_S = "^<!-- COLORS: TOP=(\\p{XDigit}+) BOTTOM=(\\p{XDigit}+) -->$";
+private static final Pattern COLOR_PATTERN = Pattern.compile(COLOR_PATTERN_S,Pattern.MULTILINE);
+
+
+private static Color            default_top_color;
+private static Color            default_bottom_color;
+
+
 static {
    int mask = SwingText.getMenuShortcutKeyMaskEx();
    if (mask == InputEvent.META_DOWN_MASK)
@@ -151,6 +165,11 @@ static {
    else menu_keyname = "ctrl";
 
    file_documents = new HashMap<String,Document>();
+   
+   default_top_color = BoardColors.getColor(NOTE_TOP_COLOR_PROP);
+   default_bottom_color = BoardColors.getColor(NOTE_BOTTOM_COLOR_PROP,default_top_color);
+   if (default_bottom_color.getRGB() == default_top_color.getRGB())
+      default_bottom_color = default_top_color;
 }
 
 
@@ -240,6 +259,10 @@ BeamNoteBubble()
 BeamNoteBubble(String name,String cnts,BeamNoteAnnotation annot)
 {
    super(null,BudaBorder.RECTANGLE);
+   
+   top_color = default_top_color;
+   bottom_color = default_bottom_color;
+   if (bottom_color.getRGB() == top_color.getRGB()) bottom_color = top_color;
 
    Document d = null;
    if (name != null) d = file_documents.get(name);
@@ -341,6 +364,52 @@ static BudaBubble createSavedNoteBubble()
 
 
 /********************************************************************************/
+/*                                                                              */
+/*      Set default note color                                                  */
+/*                                                                              */
+/********************************************************************************/
+
+static void setDefaultNoteColor(BudaBubbleArea bba)
+{
+   SwingGridPanel pnl = new SwingGridPanel();
+   SwingColorRangeChooser crc = null;
+   SwingColorButton cc = null;
+   if (default_top_color == default_bottom_color) {
+      cc = pnl.addColorField("Default Note Color",default_top_color,null);
+    }
+   else {
+      crc = pnl.addColorRangeField("Default Note Color",default_top_color,default_bottom_color,null);
+    }
+   JCheckBox cbx = pnl.addBoolean("Make this Permanent",false,null);
+   int sts = JOptionPane.showOptionDialog(bba,pnl,"Choose Note Default Color",JOptionPane.OK_CANCEL_OPTION,
+         JOptionPane.QUESTION_MESSAGE,null,null,null);
+   if (sts == JOptionPane.OK_OPTION) {
+      if (crc !=  null) {
+         default_top_color = crc.getFirstColor();
+         default_bottom_color = crc.getSecondColor();
+         if (default_bottom_color.getRGB() == default_top_color.getRGB())
+            default_bottom_color = default_top_color;
+       }
+      else {
+         default_top_color = cc.getColor();
+         default_bottom_color = default_top_color;
+       }
+      if (cbx.isSelected()) {
+         beam_properties.setProperty(NOTE_TOP_COLOR_PROP,default_top_color);
+         beam_properties.setProperty(NOTE_BOTTOM_COLOR_PROP,default_bottom_color);
+         try {
+            beam_properties.save();
+          }
+         catch (IOException e) {
+            BoardLog.logE("BEAM","Problem saving properties",e);
+          }
+       }
+    }
+}
+
+
+
+/********************************************************************************/
 /*										*/
 /*	Popup menu methods							*/
 /*										*/
@@ -351,11 +420,74 @@ static BudaBubble createSavedNoteBubble()
    JPopupMenu menu = new JPopupMenu();
 
    menu.add(new NameNote());
-
+   menu.add(new SetColorAction());
    menu.add(getFloatBubbleAction());
 
    menu.show(this,e.getX(),e.getY());
 }
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Color actions                                                           */
+/*                                                                              */
+/********************************************************************************/
+
+private class SetColorAction extends AbstractAction {
+   
+   SetColorAction() {
+      super("Set Note Color");
+    }
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+      SwingGridPanel pnl = new SwingGridPanel();
+      SwingColorRangeChooser crc = null;
+      SwingColorButton cc = null;
+      if (default_top_color == default_bottom_color) {
+         cc = pnl.addColorField("Note Color",top_color,null);
+       }
+      else {
+         crc = pnl.addColorRangeField("Note Color",top_color,bottom_color,null);
+       }
+      int sts = JOptionPane.showOptionDialog(BeamNoteBubble.this,pnl,"Choose Color for this Note",
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE,null,null,null);
+      if (sts == JOptionPane.OK_OPTION) {
+         Color tc, bc;
+         if (crc !=  null) {
+            tc = crc.getFirstColor();
+            bc = crc.getSecondColor();
+          }
+         else {
+            tc = cc.getColor();
+            bc = tc;
+          }
+         setNoteColor(tc,bc);
+       }
+    }
+   
+}       // end of inner class SetColorAction
+
+
+
+void setNoteColor(Color top,Color bot)
+{
+   top_color = top;
+   bottom_color = bot;
+   if (bottom_color.getRGB() == top_color.getRGB()) {
+      top_color = bottom_color;
+      note_area.setBackground(top_color);
+    }
+   else {
+      note_area.setBackground(BoardColors.transparent());
+    }
+   note_area.repaint();
+}
+
+Color getTopColor()                     { return top_color; }
+
+Color getBottomColor()                  { return bottom_color; }
+
 
 
 
@@ -503,16 +635,41 @@ private void loadNoteFromFile(File f,boolean force)
       if (force) BoardLog.logE("BEAM","Problem reading note file",e);
       else return;
     }
+   
+   Matcher matcher = COLOR_PATTERN.matcher(cnts);
+   if (matcher.find()) {
+      cnts = cnts.substring(0,matcher.start());
+      String c1s = matcher.group(1);
+      String c2s = matcher.group(2);
+      try {
+         int v1 = Integer.parseInt(c1s,16);
+         int v2 = Integer.parseInt(c2s,16);
+         boolean fg = (v1 & 0xff000000) != 0;
+         Color c1 = new Color(v1,fg);
+         Color c2 = new Color(v2,fg);
+         setNoteColor(c1,c2);
+       }
+      catch (NumberFormatException e) { }
+    }
+
    note_area.setText(cnts);
 }
 
 
-private synchronized void saveNote()
+
+q private synchronized void saveNote()
 {
    if (note_name == null) createFileName();
 
    String txt = note_area.getText();
    txt = fixupHtmlText(txt);
+   if (top_color != default_top_color || bottom_color != default_bottom_color) {
+      String cinfo = COLOR_OUTPUT;
+      cinfo = cinfo.replace("%1",Integer.toHexString(top_color.getRGB()));
+      cinfo = cinfo.replace("%2",Integer.toHexString(bottom_color.getRGB()));
+      if (!txt.endsWith("\n")) txt += "\n";
+      txt += cinfo + "\n";
+    }
 
    BoardSetup bs = BoardSetup.getSetup();
 
@@ -606,7 +763,7 @@ private String fixupHtmlText(String txt)
       if (c == '\n') pos = 0;
       else pos = pos+1;
     }
-
+   
    return buf.toString();
 }
 
@@ -737,6 +894,10 @@ private void setNoteName(String nm)
 {
    xw.field("TYPE","NOTE");
    if (note_name != null) xw.field("NAME",note_name);
+   if (top_color != default_top_color || bottom_color != default_bottom_color) {
+      xw.field("TOPCOLOR",top_color);
+      xw.field("BOTTOMCOLOR",bottom_color);
+    }
    xw.cdataElement("TEXT",note_area.getText());
    if (note_annot != null) note_annot.saveAnnotation(xw);
 }
@@ -749,10 +910,9 @@ private void setNoteName(String nm)
 /*										*/
 /********************************************************************************/
 
-private static class NoteArea extends JEditorPane
+private class NoteArea extends JEditorPane
 {
    private static final long serialVersionUID = 1;
-
 
    NoteArea(String cnts) {
       super("text/html",cnts);
@@ -791,10 +951,8 @@ private static class NoteArea extends JEditorPane
       addMouseListener(new LinkListener());
       addHyperlinkListener(new HyperListener());
    
-      Color tc = BoardColors.getColor(NOTE_TOP_COLOR_PROP);
-      Color bc = BoardColors.getColor(NOTE_BOTTOM_COLOR_PROP);
-      if (tc.getRGB() == bc.getRGB()) {
-         setBackground(tc);
+      if (top_color == bottom_color) {
+         setBackground(top_color);
        }
       else setBackground(BoardColors.transparent());
    
@@ -804,15 +962,13 @@ private static class NoteArea extends JEditorPane
 
 
    @Override protected void paintComponent(Graphics g0) {
-      Color tc = BoardColors.getColor(NOTE_TOP_COLOR_PROP);
-      Color bc = BoardColors.getColor(NOTE_BOTTOM_COLOR_PROP);
-      if (tc.getRGB() != bc.getRGB()) {
-	 Graphics2D g2 = (Graphics2D) g0.create();
-	 Dimension sz = getSize();
-	 Paint p = new GradientPaint(0f,0f,tc,0f,sz.height,bc);
-	 Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
-	 g2.setPaint(p);
-	 g2.fill(r);
+      if (top_color != bottom_color) {
+         Graphics2D g2 = (Graphics2D) g0.create();
+         Dimension sz = getSize();
+         Paint p = new GradientPaint(0f,0f,top_color,0f,sz.height,bottom_color);
+         Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
+         g2.setPaint(p);
+         g2.fill(r);
        }
       super.paintComponent(g0);
     }

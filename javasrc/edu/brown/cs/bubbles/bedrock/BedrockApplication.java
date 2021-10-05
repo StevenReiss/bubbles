@@ -511,7 +511,7 @@ private class WbAdvisor extends WorkbenchAdvisor {
     }
 
    @Override public boolean openWindows() {
-      System.err.println("OPEN WINDOWS");
+   // System.err.println("OPEN WINDOWS");
       if (hide_display) return true;
       return super.openWindows();
     }

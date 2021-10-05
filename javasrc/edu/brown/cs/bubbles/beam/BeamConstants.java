@@ -76,8 +76,9 @@ String NOTE_HEIGHT = "Beam.note.height";
 /**
  *	Name of the button on the top-level menu for creating note bubbles
  **/
-String NOTE_BUTTON = "Bubble.Create Note";
-String NOTE_SELECTOR = "Bubble.Load Named Note";
+String NOTE_BUTTON = "Bubble.Notes.Create Note";
+String NOTE_SELECTOR = "Bubble.Notes.Load Named Note";
+String NOTE_COLOR_SELECTOR = "Bubble.Notes.Set Default Color";
 
 
 /**

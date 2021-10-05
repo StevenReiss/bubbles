@@ -172,7 +172,7 @@ private class CloudDialog implements ActionListener, CaretListener, UndoableEdit
    CloudDialog() {
       result_status = false;
       server_checker = null;
-
+   
       BoardProperties bp = BoardProperties.getProperties("Bema");
       SwingGridPanel pnl = new SwingGridPanel();
       pnl.setBackground(BoardColors.getColor("Buda.Bubbles.Color"));
@@ -184,14 +184,14 @@ private class CloudDialog implements ActionListener, CaretListener, UndoableEdit
       actual_host = pnl.addTextField("Actual Host",bp.getProperty("Bema.cloud.actualhost"),24,this,this);
       web_relay = pnl.addTextField("Web Relay",bp.getProperty("Bema.web.url"),36,this,this);
       project_name = pnl.addTextField("Project",bp.getProperty("Bema.cloud.project"),48,this,this);
-
+   
       web_key = pnl.addTextField("Web Key",null,36,this,this);
-
+   
       pnl.addBottomButton("Cancel","CANCEL",this);
       accept_button = pnl.addBottomButton("Accept","ACCEPT",this);
       accept_button.setEnabled(false);
       pnl.addBottomButtons();
-
+   
       working_dialog = new JDialog((JFrame) null,"Cloud Bubbles Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();
@@ -208,13 +208,13 @@ private class CloudDialog implements ActionListener, CaretListener, UndoableEdit
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if (cmd.equals("ACCEPT")) {
-	 result_status = true;
-	 working_dialog.setVisible(false);
-	 setProperties();
+         result_status = true;
+         working_dialog.setVisible(false);
+         setProperties();
        }
       else if (cmd.equals("CANCEL")) {
-	 result_status = false;
-	 working_dialog.setVisible(false);
+         result_status = false;
+         working_dialog.setVisible(false);
        }
     }
 
@@ -228,32 +228,32 @@ private class CloudDialog implements ActionListener, CaretListener, UndoableEdit
 
    private void checkStatus() {
       boolean isokay = true;
-
+   
       if (web_key.getText() == null || web_key.getText().trim().length() == 0) {
-	 File f1 = BoardSetup.getPropertyBase();
-	 if (f1.exists()) {
-	    File f2 = new File(f1,"webkey");
-	    try {
-	       String s = IvyFile.loadFile(f2);
-	       if (s != null) {
-		  web_key.setText(s.trim());
-		}
-	     }
-	    catch (IOException e) { }
-	  }
+         File f1 = BoardSetup.getPropertyBase();
+         if (f1.exists()) {
+            File f2 = new File(f1,"webkey");
+            try {
+               String s = IvyFile.loadFile(f2);
+               if (s != null) {
+        	  web_key.setText(s.trim());
+        	}
+             }
+            catch (IOException e) { }
+          }
        }
       if (web_key.getText() == null || web_key.getText().trim().length() == 0) isokay = false;
-
+   
       String weburl = web_relay.getText();
       if (isokay) {
-	 if (!checkWebRelay(weburl)) isokay = false;
+         if (!checkWebRelay(weburl)) isokay = false;
        }
-
+   
       String ssh = host_field.getText().trim();
       String ahost = actual_host.getText().trim();
       String ws = project_name.getText().trim();
       if (isokay) {
-	 checkProject(ssh,ahost,ws);
+         checkProject(ssh,ahost,ws);
        }
       accept_button.setEnabled(false);
     }
@@ -273,26 +273,26 @@ private class CloudDialog implements ActionListener, CaretListener, UndoableEdit
       bp.setProperty("Bema.cloud.project",ws);
       BoardProperties sysbp = BoardProperties.getProperties("System");
       sysbp.setProperty("Cloud.workspace",ws);
-
+   
       String wr = web_relay.getText().trim();
       if (!wr.contains(":")) wr += ":8080";
       if (!wr.contains("/")) wr += "/mint/mint";
       if (!wr.startsWith("http")) wr = "http://" + wr;
       bp.setProperty("Bema.web.url",wr);
-
+   
       String wk = web_key.getText().trim();
       File f1 = BoardSetup.getPropertyBase();
       File f2 = new File(f1,"webkey");
       try {
-	 FileWriter fw = new FileWriter(f2);
-	 fw.write(wk + "\n");
-	 fw.close();
+         FileWriter fw = new FileWriter(f2);
+         fw.write(wk + "\n");
+         fw.close();
        }
       catch (IOException e) { }
-
+   
       try {
-	 bp.save();
-	 sysbp.save();
+         bp.save();
+         sysbp.save();
        }
       catch (IOException e) { }
     }
@@ -301,20 +301,20 @@ private class CloudDialog implements ActionListener, CaretListener, UndoableEdit
       if (ssh == null || ssh.trim().length() == 0) return;
       if (host != null && host.trim().length() == 0) host = null;
       if (path == null || path.trim().length() == 0) return;
-
+      
       synchronized (this) {
-	 if (server_checker != null) {
-	    server_checker.stopCheck();
-	    while (server_checker.isAlive()) {
-	       try {
-		  wait(10);
-		}
-	       catch (InterruptedException e) { }
-	     }
-	    server_checker = null;
-	  }
-	 server_checker = new ServerChecker(this,ssh,host,path);
-	 server_checker.start();
+         if (server_checker != null) {
+            server_checker.stopCheck();
+            while (server_checker.isAlive()) {
+               try {
+                  wait(10);
+                }
+               catch (InterruptedException e) { }
+             }
+            server_checker = null;
+          }
+         server_checker = new ServerChecker(this,ssh,host,path);
+         server_checker.start();
        }
     }
 
@@ -354,9 +354,9 @@ private class ServerChecker extends Thread {
 
    @Override public void run() {
       if (checkProject()) {
-	 if (!isInterrupted()) {
-	    for_dialog.setOkay();
-	  }
+         if (!isInterrupted()) {
+            for_dialog.setOkay();
+          }
        }
     }
 
@@ -367,14 +367,14 @@ private class ServerChecker extends Thread {
       else cmd += " @";
       cmd += " " + project_id;
       try {
-	 IvyExec exec = new IvyExec(cmd);
-	 our_process = exec;
-	 int sts = exec.waitFor();
-	 our_process = null;
-	 if (sts == 0) return true;
+         IvyExec exec = new IvyExec(cmd);
+         our_process = exec;
+         int sts = exec.waitFor();
+         our_process = null;
+         if (sts == 0) return true;
        }
       catch (IOException e) { }
-
+   
       return false;
     }
 

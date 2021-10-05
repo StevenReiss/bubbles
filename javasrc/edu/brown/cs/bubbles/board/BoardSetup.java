@@ -2484,6 +2484,8 @@ private void updatePlugin()
 {
    if (plugin_running) return;
    
+   File pdf = null;
+   File bdf = null;
    
    try {
       InputStream ins = null;
@@ -2497,8 +2499,8 @@ private void updatePlugin()
 	 File inf = new File(libb,BOARD_RESOURCE_PLUGIN);
 	 ins = new FileInputStream(inf);
        }
-      File pdf = getPluginDirectory();
-      File bdf = new File(pdf,BOARD_BUBBLES_PLUGIN);
+      pdf = getPluginDirectory();
+      bdf = new File(pdf,BOARD_BUBBLES_PLUGIN);
       BoardLog.logI("BOARD","Updating plugin " + bdf);
       OutputStream ots = new FileOutputStream(bdf);
 
@@ -2507,15 +2509,16 @@ private void updatePlugin()
       system_properties.setProperty(BOARD_PROP_ECLIPSE_CLEAN,true);
     }
    catch (IOException e) {
-      BoardLog.logE("BOARD","Problem updating bubble eclipse plugin: " + e,e);
-      File pdf = getPluginDirectory();
-      File bdf = new File(pdf,BOARD_BUBBLES_PLUGIN);
-      if (pdf != null && pdf.exists() && (!pdf.canWrite() || !bdf.canWrite())) {     // user lacks permissions
-	 if (bdf.exists()) return;	// leave things be if it is there already
-	 reportError("Can't add plugin to your Eclipse installation: " + pdf);
+      String msg = "Problem updating bubble eclipse plugin: ";
+      if (pdf  == null) msg += " no plugin directory";
+      else if (bdf == null) msg += " no plugin file";
+      else {
+         msg += pdf.canWrite() + " " + bdf.canWrite() + " " + pdf.exists();
        }
-      else reportError("Problem updating bubble eclipse plugin: " + e);
-
+      BoardLog.logE("BOARD",msg,e);
+      if (bdf != null && bdf.exists()) return;          // continue if it exists
+      // otherwise exit if we can't install the plugin
+      reportError("Problem updating bubble eclipse plugin: " + e);
       System.exit(3);
     }
 }

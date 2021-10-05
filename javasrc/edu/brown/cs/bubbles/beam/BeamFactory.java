@@ -155,6 +155,7 @@ public static void setup()
    BudaRoot.addBubbleConfigurator("BEAM",new BeamConfigurator());
    BudaRoot.registerMenuButton(NOTE_BUTTON,getFactory());
    BudaRoot.registerMenuButton(NOTE_SELECTOR,getFactory());
+   BudaRoot.registerMenuButton(NOTE_COLOR_SELECTOR,getFactory());
    BudaRoot.registerMenuButton(FLAG_BUTTON,getFactory(), imageToFlagIcon(FLAG_IMAGE));
    BudaRoot.registerMenuButton(FLAG_FIXED_BUTTON,getFactory(), imageToFlagIcon(FLAG_FIXED_IMAGE));
    BudaRoot.registerMenuButton(FLAG_WARNING_BUTTON,getFactory(), imageToFlagIcon(FLAG_WARNING_IMAGE));
@@ -358,6 +359,9 @@ static void sendMailDirect(String to,String subj,String body,List<File> add,Stri
     }
    else if (id.equals(NOTE_SELECTOR)) {
       bb = BeamNoteBubble.createSavedNoteBubble();
+    }
+   else if (id.equals(NOTE_COLOR_SELECTOR)) {
+      BeamNoteBubble.setDefaultNoteColor(bba);
     }
    else if (id.equals(WEB_BUTTON)) {
       // bb = new BeamWebBubble();

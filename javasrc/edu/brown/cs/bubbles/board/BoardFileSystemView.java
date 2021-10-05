@@ -210,7 +210,12 @@ private static void startServer()
 
 @Override public File getChild(File parent,String nm)
 {
-   return new RemoteFile((RemoteFile) parent,nm);
+   if (parent instanceof RemoteFile) {
+      return new RemoteFile((RemoteFile) parent,nm);
+    }
+   else {
+      return new File(parent,nm);
+    }
 }
 
 
