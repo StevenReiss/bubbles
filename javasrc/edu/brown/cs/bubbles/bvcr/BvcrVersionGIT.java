@@ -382,8 +382,8 @@ private void findGitRoot()
 	    xw.end("ALTERNATIVE");
 	  }
 	 if (alts != null && alts.length() > 0) {
-	    for (StringTokenizer ltok = new StringTokenizer(alts,"(, )"); ltok.hasMoreTokens(); ) {
-	       String nm = ltok.nextToken();
+	    for (StringTokenizer ltok = new StringTokenizer(alts,"(,)"); ltok.hasMoreTokens(); ) {
+	       String nm = ltok.nextToken().trim();
 	       xw.begin("ALTERNATIVE");
 	       xw.field("NAME",nm);
 	       xw.end("ALTERNATIVE");

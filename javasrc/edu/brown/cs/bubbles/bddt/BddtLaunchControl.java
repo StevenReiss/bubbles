@@ -107,6 +107,7 @@ private SwingEventListenerList<BddtFrameListener> frame_listeners;
 private Action			stepinto_action;
 private Action			stepuser_action;
 private FileSystemView		file_system;
+private BddtPerfViewTable       perf_data;
 
 private JPanel			launch_panel;
 
@@ -152,6 +153,8 @@ BddtLaunchControl(BumpLaunchConfig blc)
 
    String log = launch_config.getLogFile();
    if (log != null) BddtFactory.getFactory().getConsoleControl().setLogFile(this,log);
+   
+   perf_data = new BddtPerfViewTable(this);
 }
 
 
@@ -160,6 +163,7 @@ BddtLaunchControl(BumpLaunchConfig blc)
 {
    bump_client.getRunModel().removeRunEventHandler(event_handler);
    BaleFactory.getFactory().removeContextListener(editor_handler);
+   perf_data.removeLaunch();
 }
 
 
@@ -173,6 +177,14 @@ BddtLaunchControl(BumpLaunchConfig blc)
 BumpProcess getProcess()			{ return cur_process; }
 String getProject()				{ return launch_config.getProject(); }
 BddtBubbleManager getBubbleManager()		{ return bubble_manager; }
+
+BudaBubble createPerfBubble()
+{
+   if (perf_data == null) return null;
+   
+   return perf_data.createBubble();
+}
+
 
 @Override public boolean isRemovable()		{ return false; }
 
@@ -1023,6 +1035,7 @@ private class RunEventHandler implements BumpRunEventHandler {
                last_stopped = null;
                BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
                BddtFactory.getFactory().getHistoryControl().clearHistory(cur_process);
+               if (perf_data != null) perf_data.clear();
              }
             break;
          case PROCESS_REMOVE :

@@ -545,7 +545,7 @@ BudaBubble createPerformanceBubble()
     }
 
    if (bubble_area == null) return null;
-   BudaBubble bb = new BddtPerfViewTable(launch_control);
+   BudaBubble bb = launch_control.createPerfBubble();
 
    Rectangle r = launch_control.getBounds();
    int x = r.x + BDDT_HISTORY_WIDTH + 20;
@@ -1006,7 +1006,7 @@ private static class BubbleData {
       else if (bb instanceof BddtThreadView) bubble_type = BubbleType.THREADS;
       else if (bb instanceof BddtHistoryBubble) bubble_type = BubbleType.HISTORY;
       else if (bb instanceof BddtSwingPanel) bubble_type = BubbleType.SWING;
-      else if (bb instanceof BddtPerfViewTable) bubble_type = BubbleType.PERF;
+      else if (bb instanceof BddtPerfViewTable.PerfBubble) bubble_type = BubbleType.PERF;
       else if (bb instanceof BddtStopTraceBubble) bubble_type = BubbleType.STOP_TRACE;
       else if (bb instanceof BddtEvaluationBubble) bubble_type = BubbleType.EVAL;
       else if (bb instanceof BddtInteractionBubble) bubble_type = BubbleType.INTERACT;

@@ -376,7 +376,7 @@ Bvcr.ControlFileModified :	150,240,150
 Bvcr.DiffFileNone	:	0x80ffffff
 Bvcr.DiffFileInsert	:	0x8000ff00
 Bvcr.DiffFileDelete	:	0x80ff0000
-Bvcr.DiffFileChange	:	0x800000ff
+Bvcr.DiffFileChange	:	0x808080ff
 Bvcr.DiffBubbleBackground  :	0xffffc0
 Bvcr.DiffCenterBackground :	white
 Bvcr.DiffRevisionBackground :	white

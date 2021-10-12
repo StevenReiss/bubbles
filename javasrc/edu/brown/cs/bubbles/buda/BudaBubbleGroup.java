@@ -43,6 +43,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GradientPaint;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Point;
@@ -210,7 +211,7 @@ void setColor(Color lc,Color rc)
 {
    left_color = lc;
    right_color = rc;
-   label_color = BoardColors.getPaleColor(right_color,0.625);
+   label_color = BoardColors.getPaleColor(right_color,0.5);
 }
 
 
@@ -826,6 +827,8 @@ private class GroupTitle extends SwingTextField implements ActionListener, Focus
    @Override public void focusGained(FocusEvent e) {
       checkColors();
       setBackground(label_color);
+      Color c = BoardColors.getTextColor(label_color);
+      setForeground(c);
       setOpaque(true);
       orig_size = getSize();
       Dimension sz = getSize();
@@ -839,8 +842,18 @@ private class GroupTitle extends SwingTextField implements ActionListener, Focus
    @Override public void focusLost(FocusEvent e) {
       checkColors();
       setBackground(label_color);
+      Color c = BoardColors.getTextColor(label_color);
+      setForeground(c);
       setOpaque(false);
       setGroupName();
+    }
+   
+   @Override public void paint(Graphics g) {
+      if (label_color != null) {
+         Color c = BoardColors.getTextColor(label_color);
+         setForeground(c);
+       }
+      super.paint(g);
     }
    
    private void setGroupName() {

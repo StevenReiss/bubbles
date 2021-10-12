@@ -500,50 +500,50 @@ private static class ControlPanelBubble extends BudaBubble implements BvcrProjec
       String id = "HEAD";
       version_button.setEnabled(false);
       if (ctrl.getVersionMap() != null) {
-	 version_button.setEnabled(true);
-	 BvcrControlVersion vv = ctrl.getVersionMap().get("HEAD");
-	 if (vv != null) {
-	    id = vv.getName();
-	    for (String s : vv.getAlternativeIds()) {
-	       if (s.length() < id.length()) id = s;
-	    }
-	    boolean havename = false;
-	    for (String  s : vv.getAlternativeNames()) {
-	       if (!s.equals("HEAD")) {
-		  if (!havename || s.length() < id.length()) {
-		     id = s;
-		     havename = true;
-		  }
-		}
-	     }
-	  }
+         version_button.setEnabled(true);
+         BvcrControlVersion vv = ctrl.getVersionMap().get("HEAD");
+         if (vv != null) {
+            id = vv.getName();
+            for (String s : vv.getAlternativeIds()) {
+               if (s.length() < id.length()) id = s;
+            }
+            boolean havename = false;
+            for (String  s : vv.getAlternativeNames()) {
+               if (!s.equals("HEAD")) {
+                  if (!havename || s.length() < id.length()) {
+                     id = s;
+                     havename = true;
+                   }
+                }
+             }
+          }
        }
       version_label.setText(id);
-
+   
       int mct = 0;
       int dct = 0;
       int nct = 0;
       int uct = 0;
       if (ctrl.getFileMap() != null) {
-	 for (BvcrControlFileStatus fsts : ctrl.getFileMap().values()) {
-	    switch (fsts.getFileState()) {
-	       case ADDED :
-		  nct++;
-		  break;
-	       case COPIED :
-	       case MODIFIED :
-		  mct++;
-		  break;
-	       case DELETED :
-		  dct++;
-		  break;
-	       case UNTRACKED :
-		  uct++;
-		  break;
-	       default :
-		  break;
-	     }
-	  }
+         for (BvcrControlFileStatus fsts : ctrl.getFileMap().values()) {
+            switch (fsts.getFileState()) {
+               case ADDED :
+        	  nct++;
+        	  break;
+               case COPIED :
+               case MODIFIED :
+        	  mct++;
+        	  break;
+               case DELETED :
+        	  dct++;
+        	  break;
+               case UNTRACKED :
+        	  uct++;
+        	  break;
+               default :
+        	  break;
+             }
+          }
        }
       String cts = "" + mct + "/" + nct + "/" + dct + "/" + uct;
       files_label.setText(cts);

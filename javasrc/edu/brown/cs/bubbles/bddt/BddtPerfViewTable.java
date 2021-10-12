@@ -84,7 +84,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 
-class BddtPerfViewTable extends BudaBubble implements BddtConstants, BumpConstants, BudaConstants {
+class BddtPerfViewTable implements BddtConstants, BumpConstants, BudaConstants {
 
 
 /********************************************************************************/
@@ -94,7 +94,6 @@ class BddtPerfViewTable extends BudaBubble implements BddtConstants, BumpConstan
 /********************************************************************************/
 
 private BddtLaunchControl	launch_control;
-private PerfTable		perf_table;
 private PerfModel		perf_model;
 private PerfEventHandler	event_handler;
 private double			base_samples;
@@ -135,12 +134,35 @@ BddtPerfViewTable(BddtLaunchControl ctrl)
    reset_time = 0;
    node_map = new HashMap<String,PerfNode>();
 
-   setupBubble();
+   setupEvents();
 }
 
 
 
-@Override protected void localDispose()
+/********************************************************************************/
+/*										*/
+/*	Setup methods								*/
+/*										*/
+/********************************************************************************/
+
+BudaBubble createBubble()
+{
+   return new PerfBubble();
+}
+
+
+
+private void setupEvents()
+{
+   perf_model = new PerfModel();
+   BumpClient bc = BumpClient.getBump();
+   BumpRunModel rm = bc.getRunModel();
+   event_handler = new PerfEventHandler();
+   rm.addRunEventHandler(event_handler);
+}
+
+
+void removeLaunch()
 {
    if (event_handler != null) {
       BumpClient bc = BumpClient.getBump();
@@ -152,35 +174,17 @@ BddtPerfViewTable(BddtLaunchControl ctrl)
 
 
 
-/********************************************************************************/
-/*										*/
-/*	Setup methods								*/
-/*										*/
-/********************************************************************************/
-
-private void setupBubble()
+void clear()
 {
-   BumpClient bc = BumpClient.getBump();
-   BumpRunModel rm = bc.getRunModel();
-   event_handler = new PerfEventHandler();
-   rm.addRunEventHandler(event_handler);
-
-   perf_model = new PerfModel();
-   perf_table = new PerfTable(perf_model);
-
-   perf_table.addMouseListener(new ClickHandler());
-
-   JScrollPane sp = new JScrollPane(perf_table);
-   sp.setPreferredSize(new Dimension(BDDT_PERF_WIDTH,BDDT_PERF_HEIGHT));
-
-   JPanel pnl = new JPanel(new BorderLayout());
-   pnl.add(sp,BorderLayout.CENTER);
-
-   setContentPane(pnl,null);
-   perf_table.addMouseListener(new FocusOnEntry());
+   perf_model.clear();
+   base_samples = 1;
+   total_samples = 1;
+   base_time = 0;
+   reset_samples = 0;
+   reset_totals = 0;
+   reset_time = 0;
+   node_map.clear();
 }
-
-
 
 /********************************************************************************/
 /*                                                                              */
@@ -212,25 +216,60 @@ private double getTotalSamples()
 
 
 /********************************************************************************/
+/*                                                                              */
+/*      Actual bubble                                                           */
+/*                                                                              */
+/********************************************************************************/
+
+class PerfBubble extends BudaBubble {
+   
+   private PerfTable perf_table;
+   
+   PerfBubble() {
+      perf_table = new PerfTable(perf_model);
+      
+      perf_table.addMouseListener(new ClickHandler(perf_table));
+      
+      JScrollPane sp = new JScrollPane(perf_table);
+      sp.setPreferredSize(new Dimension(BDDT_PERF_WIDTH,BDDT_PERF_HEIGHT));
+      
+      JPanel pnl = new JPanel(new BorderLayout());
+      pnl.add(sp,BorderLayout.CENTER);
+      
+      setContentPane(pnl,null);
+      perf_table.addMouseListener(new FocusOnEntry());
+    }
+   
+   @Override public void handlePopupMenu(MouseEvent e) {
+      JPopupMenu popup = new JPopupMenu();
+      
+      popup.add(new ResetAction());
+      popup.add(getFloatBubbleAction());
+      
+      popup.show(this,e.getX(),e.getY());
+    }
+   
+   
+   
+   
+}       // end of inner class PerfBubble
+
+
+
+/********************************************************************************/
 /*										*/
 /*	Popup menu and mouse handlers						*/
 /*										*/
 /********************************************************************************/
 
-@Override public void handlePopupMenu(MouseEvent e)
-{
-   JPopupMenu popup = new JPopupMenu();
-
-   popup.add(new ResetAction());
-   popup.add(getFloatBubbleAction());
-
-   popup.show(this,e.getX(),e.getY());
-}
-
-
-
 private class ClickHandler extends BoardMouser {
 
+   private PerfTable perf_table;
+   
+   ClickHandler(PerfTable pt) {
+      perf_table = pt;
+    }
+   
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2) {
          int r = perf_table.rowAtPoint(e.getPoint());
@@ -268,7 +307,7 @@ private class ClickHandler extends BoardMouser {
          if (bb == null) return;
          BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(perf_table);
          if (bba != null) {
-            bba.addBubble(bb,BddtPerfViewTable.this,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+            bba.addBubble(bb,perf_table,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
           }
        }
     }
@@ -286,9 +325,8 @@ private class ClickHandler extends BoardMouser {
 
 private class PerfEventHandler implements BumpRunEventHandler {
 
-   @Override public void handleLaunchEvent(BumpRunEvent evt)		{ }
-
    @Override public void handleProcessEvent(BumpRunEvent evt) {
+//    System.err.println("PEVT " + evt.getEventType() + " " + evt.getProcess() + " " + launch_control.getProcess());
       if (evt.getProcess() != null &&
              evt.getProcess() != launch_control.getProcess())
          return;
@@ -320,10 +358,6 @@ private class PerfEventHandler implements BumpRunEventHandler {
        }
     }
 
-   @Override public void handleThreadEvent(BumpRunEvent evt)		{ }
-
-   @Override public void handleConsoleMessage(BumpProcess bp,boolean err,boolean eof,String msg)	{ }
-
 }	// end of inner class PerfEventHandler
 
 
@@ -344,12 +378,13 @@ private class PerfTable extends JTable implements BudaConstants.BudaBubbleOutput
       setOpaque(false);
       BudaCursorManager.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
       for (Enumeration<TableColumn> e = getColumnModel().getColumns(); e.hasMoreElements(); ) {
-	 TableColumn tc = e.nextElement();
-	 tc.setHeaderRenderer(new HeaderDrawer(getTableHeader().getDefaultRenderer()));
+         TableColumn tc = e.nextElement();
+         tc.setHeaderRenderer(new HeaderDrawer(getTableHeader().getDefaultRenderer()));
        }
       cell_drawer = new CellDrawer[getColumnModel().getColumnCount()];
       setToolTipText("");
       setAutoCreateRowSorter(true);
+//    System.err.println("ADD TABLE FOR MODEL " + mdl);
     }
 
    @Override public TableCellRenderer getCellRenderer(int r,int c) {
@@ -360,22 +395,23 @@ private class PerfTable extends JTable implements BudaConstants.BudaBubbleOutput
     }
 
    @Override protected void paintComponent(Graphics g) {
+//    System.err.println("PERF PAINT REQUEST");
       Dimension sz = getSize();
       Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
       Graphics2D g2 = (Graphics2D) g.create();
       Color top = BoardColors.getColor(BDDT_PERF_TOP_COLOR_PROP);
       Color bot = BoardColors.getColor(BDDT_PERF_BOTTOM_COLOR_PROP);
       if (top.getRGB() != bot.getRGB()) {
-	 Paint p = new GradientPaint(0f,0f,top,0f,sz.height,bot);
-	 g2.setPaint(p);
+         Paint p = new GradientPaint(0f,0f,top,0f,sz.height,bot);
+         g2.setPaint(p);
        }
       else {
-	 g2.setColor(top);
+         g2.setColor(top);
        }
       g2.fill(r);
       perf_model.lock();
       try {
-	 super.paintComponent(g);
+         super.paintComponent(g);
        }
       finally { perf_model.unlock(); }
     }
@@ -472,7 +508,6 @@ private class PerfModel extends AbstractTableModel {
    private List<PerfNode> node_set;
    private Map<PerfNode,Integer> index_set;
 
-
    PerfModel() {
       model_lock = new ReentrantLock();
       node_set = new ArrayList<PerfNode>();
@@ -519,7 +554,7 @@ private class PerfModel extends AbstractTableModel {
          case 3 :			// line
             return pn.getLineNumber();
          case 4 :
-            if (row == 1) System.err.println("BASE: " + pn.getBaseCount());
+   //       if (row == 1) System.err.println("BASE: " + pn.getBaseCount());
             return pn.getBaseCount()* getBaseTime()/getBaseSamples();
          case 5 :
             return 100 * pn.getBaseCount() / getBaseSamples();
@@ -543,11 +578,13 @@ private class PerfModel extends AbstractTableModel {
       index_set.put(pn,ln);
       unlock();
       fireTableRowsInserted(ln,ln);
+   // System.err.println("ADD NODE " +ln);
     }
 
    void handleChange(PerfNode pn) {
       Integer iv = index_set.get(pn);
       if (iv != null) fireTableRowsUpdated(iv,iv);
+   // System.err.println("HANDLE UPDATE " + iv);
     }
 
 }	// end of inner class PerfModel
@@ -569,7 +606,6 @@ private PerfNode findNode(String nm)
 	 pn = new PerfNode(nm);
 	 node_map.put(nm,pn);
 	 SwingUtilities.invokeLater(new NodeAdder(pn));
-	 // perf_model.addNode(pn);
        }
       return pn;
     }
@@ -645,7 +681,6 @@ private class PerfNode implements Comparable<PerfNode> {
          if (tc > total_count) total_count = tc;
        }
       SwingUtilities.invokeLater(new ChangeHandler(this));
-      // perf_model.handleChange(this);
     }
    
    void reset() {

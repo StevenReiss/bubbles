@@ -678,10 +678,12 @@ enum BumpLaunchConfigType {
 
 interface BumpRunEventHandler extends EventListener {
 
-   void handleLaunchEvent(BumpRunEvent evt);
-   void handleProcessEvent(BumpRunEvent evt);
-   void handleThreadEvent(BumpRunEvent evt);
-   void handleConsoleMessage(BumpProcess proc,boolean isstderr,boolean iseof,String msg);
+   default void handleLaunchEvent(BumpRunEvent evt)                     { }
+   default void handleProcessEvent(BumpRunEvent evt)                    { }
+   default void handleThreadEvent(BumpRunEvent evt)                     { }
+   
+   default void handleConsoleMessage(BumpProcess proc,
+         boolean isstderr,boolean iseof,String msg)                     { }
 
 }	// end of inner interface BumpRunEventHandler
 

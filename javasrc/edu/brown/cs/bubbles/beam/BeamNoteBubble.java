@@ -135,8 +135,8 @@ enum HtmlState {
 private NoteArea		note_area;
 private String			note_name;
 private BeamNoteAnnotation	note_annot;
-private Color                   top_color;
-private Color                   bottom_color;
+private Color			top_color;
+private Color			bottom_color;
 
 private static BoardProperties	beam_properties = BoardProperties.getProperties("Beam");
 
@@ -152,8 +152,8 @@ private static final String COLOR_PATTERN_S = "^<!-- COLORS: TOP=(\\p{XDigit}+) 
 private static final Pattern COLOR_PATTERN = Pattern.compile(COLOR_PATTERN_S,Pattern.MULTILINE);
 
 
-private static Color            default_top_color;
-private static Color            default_bottom_color;
+private static Color		default_top_color;
+private static Color		default_bottom_color;
 
 
 static {
@@ -165,7 +165,7 @@ static {
    else menu_keyname = "ctrl";
 
    file_documents = new HashMap<String,Document>();
-   
+
    default_top_color = BoardColors.getColor(NOTE_TOP_COLOR_PROP);
    default_bottom_color = BoardColors.getColor(NOTE_BOTTOM_COLOR_PROP,default_top_color);
    if (default_bottom_color.getRGB() == default_top_color.getRGB())
@@ -190,7 +190,7 @@ private static final Pattern temp_name = Pattern.compile("Note_\\d{12}_\\d{1,4}.
 private static Keymap		note_keymap;
 
 private static final KeyItem [] key_defs = new KeyItem[] {
-   
+
    new KeyItem("ctrl B","font-bold"),
       new KeyItem("meta I","font-italic"),
       new KeyItem("meta U","font-underline"),
@@ -218,8 +218,8 @@ private static Action [] default_actions = new Action [] {
       new StrikeThruAction(),
       new NoteEditorKit.NoteColorAction("foreground-black",Color.BLACK),
       new NoteEditorKit.NoteColorAction("foreground-red",Color.RED),
-      new NoteEditorKit.NoteColorAction("foreground-green",Color.GREEN), 
-      new NoteEditorKit.NoteColorAction("foreground-blue",Color.BLUE),  
+      new NoteEditorKit.NoteColorAction("foreground-green",Color.GREEN),
+      new NoteEditorKit.NoteColorAction("foreground-blue",Color.BLUE),
       new NoteEditorKit.NoteFontSizeAction("font-size-10",10),
       new NoteEditorKit.NoteFontSizeAction("font-size-12",12),
       new NoteEditorKit.NoteFontSizeAction("font-size-14",14),
@@ -259,7 +259,7 @@ BeamNoteBubble()
 BeamNoteBubble(String name,String cnts,BeamNoteAnnotation annot)
 {
    super(null,BudaBorder.RECTANGLE);
-   
+
    top_color = default_top_color;
    bottom_color = default_bottom_color;
    if (bottom_color.getRGB() == top_color.getRGB()) bottom_color = top_color;
@@ -314,9 +314,9 @@ BeamNoteBubble(String name,String cnts,BeamNoteAnnotation annot)
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Access methods                                                          */
-/*                                                                              */
+/*										*/
+/*	Access methods								*/
+/*										*/
 /********************************************************************************/
 
 @Override public BudaContentNameType getContentType()
@@ -364,9 +364,9 @@ static BudaBubble createSavedNoteBubble()
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Set default note color                                                  */
-/*                                                                              */
+/*										*/
+/*	Set default note color							*/
+/*										*/
 /********************************************************************************/
 
 static void setDefaultNoteColor(BudaBubbleArea bba)
@@ -382,27 +382,27 @@ static void setDefaultNoteColor(BudaBubbleArea bba)
     }
    JCheckBox cbx = pnl.addBoolean("Make this Permanent",false,null);
    int sts = JOptionPane.showOptionDialog(bba,pnl,"Choose Note Default Color",JOptionPane.OK_CANCEL_OPTION,
-         JOptionPane.QUESTION_MESSAGE,null,null,null);
+	 JOptionPane.QUESTION_MESSAGE,null,null,null);
    if (sts == JOptionPane.OK_OPTION) {
       if (crc !=  null) {
-         default_top_color = crc.getFirstColor();
-         default_bottom_color = crc.getSecondColor();
-         if (default_bottom_color.getRGB() == default_top_color.getRGB())
-            default_bottom_color = default_top_color;
+	 default_top_color = crc.getFirstColor();
+	 default_bottom_color = crc.getSecondColor();
+	 if (default_bottom_color.getRGB() == default_top_color.getRGB())
+	    default_bottom_color = default_top_color;
        }
       else {
-         default_top_color = cc.getColor();
-         default_bottom_color = default_top_color;
+	 default_top_color = cc.getColor();
+	 default_bottom_color = default_top_color;
        }
       if (cbx.isSelected()) {
-         beam_properties.setProperty(NOTE_TOP_COLOR_PROP,default_top_color);
-         beam_properties.setProperty(NOTE_BOTTOM_COLOR_PROP,default_bottom_color);
-         try {
-            beam_properties.save();
-          }
-         catch (IOException e) {
-            BoardLog.logE("BEAM","Problem saving properties",e);
-          }
+	 beam_properties.setProperty(NOTE_TOP_COLOR_PROP,default_top_color);
+	 beam_properties.setProperty(NOTE_BOTTOM_COLOR_PROP,default_bottom_color);
+	 try {
+	    beam_properties.save();
+	  }
+	 catch (IOException e) {
+	    BoardLog.logE("BEAM","Problem saving properties",e);
+	  }
        }
     }
 }
@@ -428,45 +428,47 @@ static void setDefaultNoteColor(BudaBubbleArea bba)
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Color actions                                                           */
-/*                                                                              */
+/*										*/
+/*	Color actions								*/
+/*										*/
 /********************************************************************************/
 
 private class SetColorAction extends AbstractAction {
-   
+
+   private static final long serialVersionUID = 1;
+
    SetColorAction() {
       super("Set Note Color");
     }
-   
+
    @Override public void actionPerformed(ActionEvent evt) {
       SwingGridPanel pnl = new SwingGridPanel();
       SwingColorRangeChooser crc = null;
       SwingColorButton cc = null;
       if (default_top_color == default_bottom_color) {
-         cc = pnl.addColorField("Note Color",top_color,null);
+	 cc = pnl.addColorField("Note Color",top_color,null);
        }
       else {
-         crc = pnl.addColorRangeField("Note Color",top_color,bottom_color,null);
+	 crc = pnl.addColorRangeField("Note Color",top_color,bottom_color,null);
        }
       int sts = JOptionPane.showOptionDialog(BeamNoteBubble.this,pnl,"Choose Color for this Note",
-            JOptionPane.OK_CANCEL_OPTION,
-            JOptionPane.QUESTION_MESSAGE,null,null,null);
+	    JOptionPane.OK_CANCEL_OPTION,
+	    JOptionPane.QUESTION_MESSAGE,null,null,null);
       if (sts == JOptionPane.OK_OPTION) {
-         Color tc, bc;
-         if (crc !=  null) {
-            tc = crc.getFirstColor();
-            bc = crc.getSecondColor();
-          }
-         else {
-            tc = cc.getColor();
-            bc = tc;
-          }
-         setNoteColor(tc,bc);
+	 Color tc, bc;
+	 if (crc !=  null) {
+	    tc = crc.getFirstColor();
+	    bc = crc.getSecondColor();
+	  }
+	 else {
+	    tc = cc.getColor();
+	    bc = tc;
+	  }
+	 setNoteColor(tc,bc);
        }
     }
-   
-}       // end of inner class SetColorAction
+
+}	// end of inner class SetColorAction
 
 
 
@@ -484,9 +486,9 @@ void setNoteColor(Color top,Color bot)
    note_area.repaint();
 }
 
-Color getTopColor()                     { return top_color; }
+Color getTopColor()			{ return top_color; }
 
-Color getBottomColor()                  { return bottom_color; }
+Color getBottomColor()			{ return bottom_color; }
 
 
 
@@ -635,19 +637,19 @@ private void loadNoteFromFile(File f,boolean force)
       if (force) BoardLog.logE("BEAM","Problem reading note file",e);
       else return;
     }
-   
+
    Matcher matcher = COLOR_PATTERN.matcher(cnts);
    if (matcher.find()) {
       cnts = cnts.substring(0,matcher.start());
       String c1s = matcher.group(1);
       String c2s = matcher.group(2);
       try {
-         int v1 = Integer.parseInt(c1s,16);
-         int v2 = Integer.parseInt(c2s,16);
-         boolean fg = (v1 & 0xff000000) != 0;
-         Color c1 = new Color(v1,fg);
-         Color c2 = new Color(v2,fg);
-         setNoteColor(c1,c2);
+	 int v1 = Integer.parseInt(c1s,16);
+	 int v2 = Integer.parseInt(c2s,16);
+	 boolean fg = (v1 & 0xff000000) != 0;
+	 Color c1 = new Color(v1,fg);
+	 Color c2 = new Color(v2,fg);
+	 setNoteColor(c1,c2);
        }
       catch (NumberFormatException e) { }
     }
@@ -763,7 +765,7 @@ private String fixupHtmlText(String txt)
       if (c == '\n') pos = 0;
       else pos = pos+1;
     }
-   
+
    return buf.toString();
 }
 
@@ -936,12 +938,12 @@ private class NoteArea extends JEditorPane
       setKeymap(km);
       Dimension d = new Dimension(beam_properties.getInt(NOTE_WIDTH),beam_properties.getInt(NOTE_HEIGHT));
       if (cnts != null) {
-         JLabel lbl = new JLabel(cnts);
-         Dimension d1 = lbl.getPreferredSize();
-         d1.width = Math.min(d1.width,900);
-         d1.height = Math.min(d1.height,400);
-         d.width = Math.max(d.width, d1.width);
-         d.height = Math.max(d1.height, d1.height);
+	 JLabel lbl = new JLabel(cnts);
+	 Dimension d1 = lbl.getPreferredSize();
+	 d1.width = Math.min(d1.width,900);
+	 d1.height = Math.min(d1.height,400);
+	 d.width = Math.max(d.width, d1.width);
+	 d.height = Math.max(d1.height, d1.height);
       }
       setPreferredSize(d);
       setSize(d);
@@ -950,12 +952,12 @@ private class NoteArea extends JEditorPane
       addMouseListener(new BudaConstants.FocusOnEntry());
       addMouseListener(new LinkListener());
       addHyperlinkListener(new HyperListener());
-   
+
       if (top_color == bottom_color) {
-         setBackground(top_color);
+	 setBackground(top_color);
        }
       else setBackground(BoardColors.transparent());
-   
+
       BurpHistory.getHistory().addEditor(this);
     }
 
@@ -963,12 +965,12 @@ private class NoteArea extends JEditorPane
 
    @Override protected void paintComponent(Graphics g0) {
       if (top_color != bottom_color) {
-         Graphics2D g2 = (Graphics2D) g0.create();
-         Dimension sz = getSize();
-         Paint p = new GradientPaint(0f,0f,top_color,0f,sz.height,bottom_color);
-         Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
-         g2.setPaint(p);
-         g2.fill(r);
+	 Graphics2D g2 = (Graphics2D) g0.create();
+	 Dimension sz = getSize();
+	 Paint p = new GradientPaint(0f,0f,top_color,0f,sz.height,bottom_color);
+	 Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
+	 g2.setPaint(p);
+	 g2.fill(r);
        }
       super.paintComponent(g0);
     }
@@ -1066,30 +1068,30 @@ private static class NoteEditorKit extends HTMLEditorKit
    NoteEditorKit() {
       setDefaultCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
     }
-   
+
   @Override public Action [] getActions() {
      return TextAction.augmentList(super.getActions(),default_actions);
    }
-  
+
   private static class NoteFontSizeAction extends FontSizeAction {
-     
+
      private static final long serialVersionUID = 1;
-     
+
      NoteFontSizeAction(String nm,int sz) {
-        super(nm,sz);
-        putValue(ACTION_COMMAND_KEY,nm);
+	super(nm,sz);
+	putValue(ACTION_COMMAND_KEY,nm);
       }
-     
+
    }	// end of inner class NoteFontSizeAction
-  
-  
+
+
    private static class NoteColorAction extends ForegroundAction {
 
       private static final long serialVersionUID = 1;
 
       NoteColorAction(String nm,Color c) {
-         super(nm,c);
-         putValue(ACTION_COMMAND_KEY,nm);
+	 super(nm,c);
+	 putValue(ACTION_COMMAND_KEY,nm);
        }
 
     }	// end of inner class NoteColorAction
@@ -1109,13 +1111,13 @@ private static class StrikeThruAction extends StyledEditorKit.StyledTextAction {
    @Override public void actionPerformed(ActionEvent e) {
       JEditorPane editor = getEditor(e);
       if (editor != null) {
-         StyledEditorKit kit = getStyledEditorKit(editor);
-         MutableAttributeSet attr = kit.getInputAttributes();
-         boolean on = (StyleConstants.isStrikeThrough(attr));
-         boolean val = (on ? false : true);
-         SimpleAttributeSet sas = new SimpleAttributeSet();
-         StyleConstants.setStrikeThrough(sas,val);
-         setCharacterAttributes(editor,sas,false);
+	 StyledEditorKit kit = getStyledEditorKit(editor);
+	 MutableAttributeSet attr = kit.getInputAttributes();
+	 boolean on = (StyleConstants.isStrikeThrough(attr));
+	 boolean val = (on ? false : true);
+	 SimpleAttributeSet sas = new SimpleAttributeSet();
+	 StyleConstants.setStrikeThrough(sas,val);
+	 setCharacterAttributes(editor,sas,false);
        }
     }
 
@@ -1130,7 +1132,7 @@ private static class SaveAction extends AbstractAction {
    SaveAction() {
       super("Save");
     }
-   
+
    @Override public void actionPerformed(ActionEvent e) {
       Component c = (Component) e.getSource();
       BeamNoteBubble bb = (BeamNoteBubble) BudaRoot.findBudaBubble(c);
@@ -1159,17 +1161,17 @@ private static class KeyItem {
       if (key_stroke == null) BoardLog.logE("BEAM","Bad key definition: " + key);
       key_action = a;
     }
-   
+
    void addToKeyMap(Keymap kmp,Action[] acts) {
       if (key_stroke != null && key_action != null) {
-         for (Action a : acts) {
-            Object nm = a.getValue(Action.NAME);
-            if (nm.toString().equals(key_action)) {
-               kmp.addActionForKeyStroke(key_stroke,a);
-               return;
-             }
-          }
-         BoardLog.logE("BEAM","Action " + key_action + " not found");
+	 for (Action a : acts) {
+	    Object nm = a.getValue(Action.NAME);
+	    if (nm.toString().equals(key_action)) {
+	       kmp.addActionForKeyStroke(key_stroke,a);
+	       return;
+	     }
+	  }
+	 BoardLog.logE("BEAM","Action " + key_action + " not found");
        }
     }
 

@@ -42,6 +42,7 @@ import javax.swing.Icon;
 import javax.swing.filechooser.FileSystemView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -174,7 +175,8 @@ private static void startServer()
 
 @Override public File createFileObject(File dir,String nm)
 {
-   if (dir instanceof RemoteFile)
+   if (dir == null) return createFileObject(nm);
+   else if (dir instanceof RemoteFile)
       return new RemoteFile((RemoteFile) dir,nm);
    else
       return new RemoteFile(dir.getPath(),nm);
@@ -302,6 +304,32 @@ File getRemoteLibraryDirectory()
 }
 
 
+@Override public File [] getChooserComboBoxFiles()
+{
+   Element xml = getSystemInfo();
+   int rct = IvyXml.getAttrInt(xml,"CBXCT");
+   File [] rslt = new File[rct];
+   
+   int i = 0;
+   for (Element re : IvyXml.children(xml,"COMBO")) {
+      rslt[i++] = new RemoteFile(IvyXml.getAttrString(re,"NAME"));
+    }
+   
+   return rslt;
+}
+
+
+@Override public File getLinkLocation(File f)
+{
+   if (f == null) throw new NullPointerException();
+   Element e = getFileInfo(f);
+   String linkloc = IvyXml.getAttrString(e,"LINKLOC");
+   if (linkloc == null) return null;
+   
+   return createFileObject(linkloc);
+}
+
+
 @Override public Icon getSystemIcon(File f)
 {
    return null;
@@ -359,6 +387,13 @@ File getRemoteLibraryDirectory()
 @Override public boolean isHiddenFile(File f)
 {
    return f.isHidden();
+}
+
+
+@Override public boolean isLink(File f)
+{
+   Element e = getFileInfo(f);
+   return IvyXml.getAttrBool(e,"ISLINK");
 }
 
 
@@ -816,6 +851,15 @@ private static void handleFileInfo(File f,IvyXmlWriter xw)
    xw.field("ISCOMP",default_view.isComputerNode(f));
    xw.field("DESC",default_view.getSystemTypeDescription(f));
    xw.field("DISP",default_view.getSystemDisplayName(f));
+   xw.field("ISLINK",default_view.isLink(f));
+   
+   try {
+      File flink = default_view.getLinkLocation(f);
+      if (flink != null) {
+         xw.field("LINKLOC",flink.getAbsolutePath());
+       }
+    }
+   catch (FileNotFoundException e) { }
 
    xw.end();
 }
@@ -829,11 +873,18 @@ private static void handleSysInfo(IvyXmlWriter xw)
    File f1 = BoardSetup.getSetup().getLibraryDirectory();
    xw.field("BUBBLESLIB",f1.getAbsolutePath());
    File [] rts = default_view.getRoots();
+   File [] cbx = default_view.getChooserComboBoxFiles();
    xw.field("ROOTCT",rts.length);
+   xw.field("CBXCT",cbx.length);
    for (File f : rts) {
       xw.begin("ROOT");
       xw.field("NAME",f.getAbsolutePath());
       xw.end("ROOT");
+    }
+   for (File f : cbx) {
+      xw.begin("COMBO");
+      xw.field("NAME",f.getAbsolutePath());
+      xw.end("COMBO");
     }
 
    xw.end();

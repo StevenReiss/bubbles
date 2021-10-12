@@ -2183,7 +2183,7 @@ private class BandaidHandler implements MintHandler {
       long now = args.getLongArgument(1);
       Element xml = args.getXmlArgument(2);
       ProcessData pd = named_processes.get(pid);
-
+   
       if (pd == null) return;
       pd.handleBandaidData(now,xml);
     }
