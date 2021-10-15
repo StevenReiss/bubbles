@@ -769,8 +769,18 @@ private boolean runOneTest(BattTestCase testcase)
       args.add(fnm);
 
       run = new HashSet<String>();
-      run.add(testclss);
-      args.add("@" + testclss);
+      for (String s : bp.getClassNames()) {
+	 if (testclss != null && testclss.contains(s)) {
+	    run.add(s);
+	    s = "@" + s;
+	  }
+	 else if (testclss == null) {
+	    run.add(s);
+	  }
+	 args.add(s);
+       }
+//    run.add(testclss);
+//    args.add("@" + testclss);
 
       synchronized (this) {
 	 testcase.setStatus(TestStatus.UNKNOWN);
@@ -1090,9 +1100,9 @@ private class BattThread extends Thread {
 
    @Override public void run() {
       try {
-	 for ( ; ; ) {
-	    processTests();
-	  }
+         for ( ; ; ) {
+            processTests();
+          }
        }
       catch (InterruptedException e) { }
       doneProcessing();

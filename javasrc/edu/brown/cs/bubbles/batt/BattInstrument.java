@@ -103,6 +103,10 @@ BattInstrument(BattAgent agt)
 
 void setClasses(String [] clsset)
 {
+   if (do_debug) {
+      System.err.println("BATTAGENT: Set user classes ");
+      for (String s : clsset) System.err.println("\tADD: " + s);
+    }
    if (user_classes == null) user_classes = new TreeSet<String>();
    // this is sorted to ensure a class is loaded before its inner classes
 
@@ -154,7 +158,12 @@ void setClasses(String [] clsset)
    if (cls != null && Modifier.isAbstract(cls.getModifiers())) return null;
 
    if (user_classes == null) {
-      if (isBattClass(name) || isSystemClass(name)) return null;
+      if (isBattClass(name) || isSystemClass(name)) {
+         if (do_debug) {
+            System.err.println("BATTAGENT: SKIP " + isBattClass(name) + " " + isSystemClass(name));
+          }
+         return null;
+       }
     }
    else if (!user_classes.contains(name)) return null;
 
@@ -172,7 +181,7 @@ void setClasses(String [] clsset)
 
 private byte [] instrument(String name,byte [] buf)
 {
-   // System.err.println("BATTAGENT: INSTRUMENT " + name + " " + buf.length);
+// System.err.println("BATTAGENT: INSTRUMENT " + name + " " + buf.length);
 
    byte [] rsltcode;
    try {
@@ -188,7 +197,7 @@ private byte [] instrument(String name,byte [] buf)
       return null;
     }
 
-   // System.err.println("BATTAGENT: INSTRUMENT RETURN " + name + " " + rsltcode.length);
+// System.err.println("BATTAGENT: INSTRUMENT RETURN " + name + " " + rsltcode.length);
 
    return rsltcode;
 }
@@ -249,26 +258,26 @@ private class BattTransformer extends ClassVisitor {
    boolean isAbstract() 		{ return is_abstract; }
 
    @Override public MethodVisitor visitMethod(int acc,String name,String desc,String sgn,
-						 String [] exc) {
+        					 String [] exc) {
       method_id = for_agent.getMethodId(class_name,name,desc);
-
+   
       MethodVisitor mv = super.visitMethod(acc,name,desc,sgn,exc);
       if (name.equals("<clinit>")) return mv;
-
+   
       if (do_debug) {
-	 Textifier output = new Textifier();
-	 mv = new TraceMethodVisitor(mv,output);
-	 mv = new Tracer(mv,name,output);
+         Textifier output = new Textifier();
+         mv = new TraceMethodVisitor(mv,output);
+         mv = new Tracer(mv,name,output);
        }
-
+   
       String sup = null;
       if (name.equals("<init>")) sup = super_name;
-
+   
       mv = new CoverageSetup(mv,sup);
-
+   
       size_eval = new CodeSizeEvaluator(mv);
       mv = size_eval;
-
+   
       return mv;
     }
 
