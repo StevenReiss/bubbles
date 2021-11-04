@@ -24,7 +24,8 @@
 
 package edu.brown.cs.bubbles.nobase;
 
-import org.eclipse.wst.jsdt.core.dom.*;
+import org.eclipse.wst.jsdt.core.dom.ASTNode;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 
 
 

@@ -25,11 +25,12 @@
 package edu.brown.cs.bubbles.nobase;
 
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
-
 import java.util.HashSet;
 import java.util.Set;
-
-import org.eclipse.wst.jsdt.core.dom.*;
+import org.eclipse.wst.jsdt.core.dom.ASTNode;
+import org.eclipse.wst.jsdt.core.dom.DefaultASTVisitor;
+import org.eclipse.wst.jsdt.core.dom.QualifiedName;
+import org.eclipse.wst.jsdt.core.dom.SimpleName;
 
 
 

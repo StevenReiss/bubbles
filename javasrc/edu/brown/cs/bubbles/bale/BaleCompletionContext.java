@@ -318,9 +318,13 @@ private void handleCompletion(CompletionItem ci)
 
    if (ci.getStartIndex() >= 0) {
       int i = be.getBaleDocument().mapOffsetToJava(ci.getStartIndex());
+      int j = be.getCaretPosition();
+      if (ci.getEndIndex() >= 0) {
+         j = be.getBaleDocument().mapOffsetToJava(ci.getEndIndex());
+       }
       try {
-	 d.remove(i,be.getCaretPosition()-i);
-	 d.insertString(be.getBaleDocument().mapOffsetToJava(ci.getStartIndex()),s,null);
+	 d.remove(i,j-i);
+	 d.insertString(i,s,null);
        }
       catch (BadLocationException e) { }
     }
@@ -824,6 +828,7 @@ private static abstract class CompletionItem {
 
    abstract String getCompletionText();
    abstract int getStartIndex();
+   abstract int getEndIndex();
    abstract boolean canStartWith(String text);
    abstract int getRelevance();
    Icon getIcon()					{ return null; }
@@ -887,6 +892,8 @@ private static class CompletionItemNewMethod extends CompletionItem implements
    @Override String getCompletionText() 	{ return "("; }
 
    @Override int getStartIndex()                { return -1; }
+   
+   @Override int getEndIndex()                  { return -1; }
    
    @Override int getRelevance()                 { return 1; }
 
@@ -962,6 +969,10 @@ private static class CompletionItemBump extends CompletionItem {
       return bump_completion.getReplaceStart();
     }
    
+   @Override int getEndIndex() {
+      return bump_completion.getReplaceEnd();
+   }
+   
    @Override int getRelevance() {
       return bump_completion.getRelevance();
     }
@@ -1022,6 +1033,10 @@ private static class CompletionItemBumpCall extends CompletionItem {
    @Override int getStartIndex() {
       return bump_completion.getReplaceStart();
     }
+   
+   @Override int getEndIndex() {
+      return bump_completion.getReplaceEnd();
+   }
    
    @Override int getRelevance() {
       return bump_completion.getRelevance();

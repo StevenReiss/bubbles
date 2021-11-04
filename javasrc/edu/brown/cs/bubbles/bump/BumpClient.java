@@ -2258,7 +2258,8 @@ public Element fixImports(String proj,File file,String order,int demand,int stat
 {
    waitForIDE();
 
-   String rq = "FILE='" + file.getPath() + "'";
+   String rq = "";
+   rq += "FILE='" + file.getPath() + "'";
    if (order != null) rq += " ORDER='" + IvyXml.xmlSanitize(order,true) + "'";
    if (demand >= 0) rq += " DEMAND='" + demand + "'";
    if (staticdemand >= 0) rq += " STATICDEMAND='" + staticdemand + "'";

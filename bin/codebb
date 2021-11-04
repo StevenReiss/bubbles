@@ -19,7 +19,7 @@ set CP5 = $LIB/derby.jar:$LIB/derbyclient.jar:$LIB/derbynet.jar:$LIB/postgresql.
 set CP6 = $LIB/pydev.jar:$LIB/wikitextcore.jar:$LIB/wikitexttrac.jar
 
 set CP7 = ""
-foreach i ($ECLLIB/org.eclipse.*.jar)
+foreach i ($ECLLIB/org.eclipse.*.jar $ECLLIB/com.google.*.jar)
    set CP7 = ${CP7}:$i
 end
 

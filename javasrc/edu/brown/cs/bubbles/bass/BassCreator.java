@@ -65,6 +65,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -141,10 +142,13 @@ private void addJavaButtons(BudaBubble bb,Point where,JPopupMenu menu,String ful
    // TODO: if forname == null and it represents an inner class, create alternatives for before/after the inner class
 
    if (forname != null && forname.getNameType() == BassNameType.PROJECT) {
-      forname = null;
       BuenoLocation dfltloc = BuenoFactory.getFactory().createLocation(fullname,null,null,true);
       menu.add(new NewPackageAction(dfltloc));
       delact = new DeleteProjectAction(fullname,bb);
+      if (bass_properties.getBoolean("Bass.fix.imports") && forname.getProject() != null) {
+         importact = new FixImportsAction("Project " + forname.getProject(),forname.getProject(),fullname,bb);
+       } 
+      forname = null;
     }
    else if (forname == null) {
       String proj = null;
@@ -208,6 +212,9 @@ private void addJavaButtons(BudaBubble bb,Point where,JPopupMenu menu,String ful
 	 if (bass_properties.getBoolean("Bass.delete.project")) {
 	    delact1 = new DeleteProjectAction(proj,bb);
 	  }
+         if (bass_properties.getBoolean("Bass.fix.imports")) {
+            importact = new FixImportsAction("Package " + fullname,proj,fullname,bb);
+          }
        }
       if (loc.getPackage() != null && clsloc == null) clsloc = loc;
     }
@@ -698,11 +705,11 @@ private static class DeleteFileAction extends AbstractAction implements Runnable
 
 
 
-private static class FixImportsAction extends AbstractAction implements Runnable {
+private static class FixImportsAction extends AbstractAction {
 
    private String project_name;
    private File file_name;
-   private Element edit_result;
+   private String name_prefix;
 
    private static final long serialVersionUID = 1;
 
@@ -710,14 +717,48 @@ private static class FixImportsAction extends AbstractAction implements Runnable
       super("Fix Imports for " + fil.getName());
       project_name = proj;
       file_name = fil;
-      edit_result = null;
+      name_prefix = null;
     }
-
+   
+   FixImportsAction(String desc,String proj,String pfx,BudaBubble bb) {
+      super("Fix Imports for " + desc);
+      project_name = proj;
+      name_prefix = pfx;
+      file_name = null;
+    }
+   
+   
    @Override public void actionPerformed(ActionEvent e) {
       // dialog with options???
-      BoardThreadPool.start(this);
+      if (file_name != null) {
+         ImportFixer fixer = new ImportFixer(project_name,file_name);
+         BoardThreadPool.start(fixer);
+       }
+      else if (name_prefix != null) {
+         BassFactory bf = BassFactory.getFactory();
+         Collection<File> files = bf.findAssociatedFiles(project_name,name_prefix);
+         for (File f : files) {
+            ImportFixer fixer = new ImportFixer(project_name,f);
+            BoardThreadPool.start(fixer);
+          }
+       }
    }
 
+}	// end of inner class FixImportsAction
+
+
+private static class ImportFixer implements Runnable  {
+   
+   private String project_name;
+   private File file_name;
+   private Element edit_result;
+   
+   ImportFixer(String proj,File file) {
+      project_name = proj;
+      file_name = file;
+      edit_result = null;
+    }
+   
    @Override public void run() {
       if (edit_result == null) {
          String order = bass_properties.getString("Bass.import.order");
@@ -732,9 +773,10 @@ private static class FixImportsAction extends AbstractAction implements Runnable
        }
       else {
          BaleFactory.getFactory().applyEdits(file_name,edit_result);
+         edit_result = null;
        }
     }
-}	// end of inner class DeletePackageAction
+}
 
 
 

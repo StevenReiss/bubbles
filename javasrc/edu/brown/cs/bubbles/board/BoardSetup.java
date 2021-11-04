@@ -2458,7 +2458,7 @@ private class PaletteDialog implements ActionListener {
 	 use_palette = "inverse_" + DEFAULT_PALETTE;
        }
       else if (nm.contains("Remember")) {
-	 JButton btn = (JButton) evt.getSource();
+	 JCheckBox btn = (JCheckBox) evt.getSource();
 	 save_palette = btn.isSelected();
        }
       else if (nm.equals("CANCEL")) {
@@ -3213,12 +3213,12 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
 
    private void checkStatus() {
       if (checkWorkspace()) {
-	 accept_button.setEnabled(true);
-	 workspace_warning.setVisible(false);
+         accept_button.setEnabled(true);
+         workspace_warning.setVisible(false);
        }
       else {
-	 accept_button.setEnabled(false);
-	 workspace_warning.setVisible(true);
+         accept_button.setEnabled(false);
+         workspace_warning.setVisible(true);
        }
     }
 

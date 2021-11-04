@@ -259,6 +259,39 @@ File findActualFile(File f)
 }
 
 
+Set<File> findAssociatedFiles(String proj,String pfx)
+{
+   Set<File> rslt = new HashSet<>();
+   
+   waitForNames();
+   
+   synchronized (this) {
+      for (BassName b : all_names) {
+         String pnm = b.getProject();
+         if (b.getFullName().startsWith(pfx) && pnm.equals(proj)) {
+            switch (b.getNameType()) {
+               case FILE :
+               case CLASS :
+               case ENUM :
+               case INTERFACE :
+               case ANNOTATION :
+                  break;
+               default :
+                  continue;
+             }
+            BumpLocation bloc = b.getLocation();
+            if (bloc == null) continue;
+            File f = bloc.getFile();
+            if (f != null) rslt.add(f);
+          }
+      
+       }
+    }
+   
+   return rslt;
+}
+
+
 
 /********************************************************************************/
 /*										*/

@@ -23,8 +23,11 @@
 package edu.brown.cs.bubbles.nobase;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTParser;
 import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
@@ -65,7 +68,12 @@ NobaseJsdt()
    parser.setSource(fd.getContents().toCharArray());
    parser.setResolveBindings(false);
    parser.setStatementsRecovery(true);
-
+   parser.setKind(ASTParser.K_COMPILATION_UNIT);
+  
+   Map<String,String> opts = new Hashtable<>();
+   opts.put(JavaScriptCore.COMPILER_COMPLIANCE,"1.7");
+   parser.setCompilerOptions(opts);
+      
    JavaScriptUnit cu = (JavaScriptUnit) parser.createAST(null);
    ParseData rslt = new ParseData(proj,fd,cu,lib);
 

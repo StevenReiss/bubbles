@@ -433,6 +433,13 @@ public File findActualFile(File f)
 }
 
 
+Set<File> findAssociatedFiles(String proj,String pfx)
+{
+   return bass_repository.findAssociatedFiles(proj,pfx);
+}
+
+
+
 
 /********************************************************************************/
 /*										*/
