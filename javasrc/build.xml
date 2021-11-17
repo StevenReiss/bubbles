@@ -13,8 +13,8 @@
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/nobase" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/board" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bnote" />
-      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/buda" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bump" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/buda" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bueno" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bowi" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/banal" />

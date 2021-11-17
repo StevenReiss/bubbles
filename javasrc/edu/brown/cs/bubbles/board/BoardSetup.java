@@ -46,6 +46,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileFilter;
@@ -78,8 +79,10 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -165,6 +168,8 @@ private BoardLanguage	board_language;
 private List<String>	recent_workspaces;
 private boolean 	palette_set;
 private boolean         plugin_running;
+
+private static Map<String,HyperlinkListener>    hyperlink_config = new HashMap<>();
 
 
 private static BoardSetup	board_setup = null;
@@ -1210,6 +1215,26 @@ private synchronized void setupMint()
    mint_control = MintControl.create(mint_name,MintSyncMode.ONLY_REPLIES);
 }
 
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Hyperlink methods                                                       */
+/*                                                                              */
+/********************************************************************************/
+
+public static void addHyperlinkListener(String protocol,HyperlinkListener hl)
+{
+   hyperlink_config.put(protocol,hl);
+}
+
+
+
+public static HyperlinkListener getListenerForProtocol(String protocol)
+{
+   return hyperlink_config.get(protocol);
+}
 
 
 

@@ -324,25 +324,25 @@ private class HyperListener implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-	 URL u = e.getURL();
-	 if (u == null) {
-	    endHover(null);
-	    String d = e.getDescription();
-	    int idx = d.indexOf(":");
-	    if (idx < 0) return;
-	    String proto = d.substring(0,idx);
-	    HyperlinkListener hl = BudaRoot.getListenerForProtocol(proto);
-	    if (hl != null) {
-	       hl.hyperlinkUpdate(e);
-	    }
-	   return;
-	 }
-
-	 try {
-	    Desktop.getDesktop().browse(u.toURI());
-	 }
-	 catch (IOException ex) { }
-	 catch (URISyntaxException ex) { }
+         URL u = e.getURL();
+         if (u == null) {
+            endHover(null);
+            String d = e.getDescription();
+            int idx = d.indexOf(":");
+            if (idx < 0) return;
+            String proto = d.substring(0,idx);
+            HyperlinkListener hl = BoardSetup.getListenerForProtocol(proto);
+            if (hl != null) {
+               hl.hyperlinkUpdate(e);
+            }
+           return;
+         }
+   
+         try {
+            Desktop.getDesktop().browse(u.toURI());
+         }
+         catch (IOException ex) { }
+         catch (URISyntaxException ex) { }
        }
     }
 

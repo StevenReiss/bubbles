@@ -26,6 +26,7 @@
 package edu.brown.cs.bubbles.bhelp;
 
 import edu.brown.cs.bubbles.board.BoardProperties;
+import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 
@@ -89,8 +90,8 @@ private BhelpFactory(BudaRoot br)
 	 demo_map.put(bd.getName(),bd); 		// save that name for bhelp
        }
     }
-   BudaRoot.addHyperlinkListener("showme",new Hyperlinker("showme"));
-   BudaRoot.addHyperlinkListener("gotodemo",new Hyperlinker("gotodemo"));
+   BoardSetup.addHyperlinkListener("showme",new Hyperlinker("showme"));
+   BoardSetup.addHyperlinkListener("gotodemo",new Hyperlinker("gotodemo"));
 
    try {
       web_server = new BhelpWebServer();

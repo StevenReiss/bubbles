@@ -174,13 +174,17 @@ private class ImportFinder extends ASTVisitor {
 
    private void noteType(ITypeBinding t) {
       if (t == null) return;
-      BedrockPlugin.logD("Check import type: " + t.getQualifiedName());
+      String tnm = t.getQualifiedName(); 
+      
+      BedrockPlugin.logD("Check import type: " + tnm);
       if (t.isArray()) {
          t = t.getElementType();
        }
       if (t.getErasure() != null) t = t.getErasure();
-   
-      BedrockPlugin.logD("Check erasure type: " + t.getQualifiedName());
+      
+      tnm = t.getQualifiedName();
+      
+      BedrockPlugin.logD("Check erasure type: " + tnm);
    
       if (t.isTypeVariable()) return;
       else if (t.isLocal()) return;
@@ -188,12 +192,21 @@ private class ImportFinder extends ASTVisitor {
       else if (t.isPrimitive()) return;
       else if (t.isRawType()) return;
       else if (t.isWildcardType()) return;
-      else if (t.getPackage().equals(package_name)) return;
-      else if (t.getPackage().getName().equals("java.lang")) return;
-      else {
-         BedrockPlugin.logD("Add import type: " + t.getQualifiedName());
-         import_types.add(t);
+      else if (t.getPackage().equals(package_name)) {
+         // need to import inner classes even if in same package
+         String p1 = t.getPackage().getName();
+         if (!tnm.startsWith(p1)) {
+            BedrockPlugin.logD("Bad type name " + tnm + " " + p1);
+          }
+         else {
+            String tnm1 = tnm.substring(p1.length()+1);
+            if (!tnm1.contains(".") && !tnm1.contains("$")) return;
+          }
        }
+      else if (t.getPackage().getName().equals("java.lang")) return;
+      
+      BedrockPlugin.logD("Add import type: " + tnm);
+      import_types.add(t);
     }
 
 }	// end of inner class ImportFinder

@@ -63,7 +63,6 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.HyperlinkListener;
 
 import java.awt.AWTEvent;
 import java.awt.Color;
@@ -169,7 +168,6 @@ private static BudaMenu 	bubble_menu = null;
 
 private static Map<String,BubbleConfigurator>	bubble_config;
 private static Map<String,PortConfigurator>	port_config;
-private static Map<String,HyperlinkListener>	hyperlink_config;
 
 private static DocBoxCreator	doc_creator = null;
 
@@ -197,7 +195,6 @@ static {
    port_config = new HashMap<>();
    bubble_flavor = new DataFlavor(BudaDragBubble.class,"Bubble");
    bubble_group_flavor = new DataFlavor(BudaDragBubbleGroup.class,"BubbleGroup");
-   hyperlink_config = new HashMap<>();
 
    port_config.put("BUDA",new DefaultPortConfigurator());
    List<Color> cols = new ArrayList<>();
@@ -1575,15 +1572,9 @@ public void handleCheckpointAllRequest()
 }
 
 
-public static void addHyperlinkListener(String protocol,HyperlinkListener hl)
-{
-   hyperlink_config.put(protocol,hl);
-}
 
-public static HyperlinkListener getListenerForProtocol(String protocol)
-{
-   return hyperlink_config.get(protocol);
-}
+
+
 
 
 
