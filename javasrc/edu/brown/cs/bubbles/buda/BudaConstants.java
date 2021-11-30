@@ -107,7 +107,7 @@ int BUBBLE_DISPLAY_WIDTH = 48000;		// width of the virtual bubble area
 /**
  *	Height of the virtual bubble area.  Currently this is not expandable
  **/
-int BUBBLE_DISPLAY_HEIGHT = 2560;		// height of the virtual bubble area
+int BUBBLE_DISPLAY_HEIGHT = 10240;		// height of the virtual bubble area
 
 /**
  *	X location for the initial viewport

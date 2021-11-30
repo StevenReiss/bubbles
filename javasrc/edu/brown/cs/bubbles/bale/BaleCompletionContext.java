@@ -320,8 +320,10 @@ private void handleCompletion(CompletionItem ci)
       int i = be.getBaleDocument().mapOffsetToJava(ci.getStartIndex());
       int j = be.getCaretPosition();
       if (ci.getEndIndex() >= 0) {
-         j = be.getBaleDocument().mapOffsetToJava(ci.getEndIndex());
+         int j0 = be.getBaleDocument().mapOffsetToJava(ci.getEndIndex());
+         if (j0 >= j) j = j0;
        }
+      System.err.println("CHECK COMPLETE " + i + " " + j + " " + be.getCaretPosition() + " " + s);
       try {
 	 d.remove(i,j-i);
 	 d.insertString(i,s,null);
