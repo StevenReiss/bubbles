@@ -112,7 +112,7 @@ BedrockApplication(boolean ecl)
    base_display = null;
    is_setup = false;
    from_eclipse = ecl;
-   is_setup = true;
+// is_setup = true;
    
    the_app = this;
 }
@@ -274,6 +274,7 @@ private synchronized void noteSetup()
 {
    exit_ok = false;
    ++exit_ctr;
+   is_setup = false;
 
    base_location = Platform.getInstanceLocation();
    if (base_location != null) {
@@ -379,6 +380,7 @@ private synchronized void noteSetup()
     }
    else {
       base_display = null;
+      noteSetup();
     }
 
    for ( ; ; ) {
@@ -486,6 +488,8 @@ void startedBubbles(boolean hide)
          sh.setVisible(false);
        }
     }
+   
+   noteSetup();
 }  
 
 
@@ -624,13 +628,13 @@ private class WbShellRemover extends ShellAdapter {
       Shell sh = (Shell) e.getSource();
       String what = sh.toString();
       BedrockPlugin.logD("BEDROCK: ACTIVE SHELL " + what + " " + sh.getClass().getName() + " " +
-	sh.getMinimumSize() + " " + sh.isVisible());
+        sh.getMinimumSize() + " " + sh.isVisible());
       if (hide_display) {
-	 if (!is_setup) sh.setVisible(false);
-	 else if (what.contains("{Eclipse}")) sh.setVisible(false);
-	 else {
-	    sh.setVisible(false);
-	  }
+         if (!is_setup) sh.setVisible(false);
+         else if (what.contains("{Eclipse}")) sh.setVisible(false);
+         else {
+            sh.setVisible(false);
+          }
        }
       BedrockPlugin.logD("BEDROCK: ACTIVE SHELL RESULT " + sh.isVisible());
     }
