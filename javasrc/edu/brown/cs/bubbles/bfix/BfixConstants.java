@@ -24,9 +24,11 @@
 
 package edu.brown.cs.bubbles.bfix;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
 
 import java.util.Comparator;
+import java.util.concurrent.Callable;
 
 
 
@@ -139,9 +141,19 @@ interface FixAdapter {
 }
 
 
-interface RunnableFix extends Runnable {
+interface RunnableFix extends Callable<Boolean>, Runnable {
 
    double getPriority();
+   
+   default public void run() {
+      // only called when result isn't needed
+      try {
+         call();
+       }
+      catch (Exception e) {
+         BoardLog.logE("BFIX","Problem with fixer",e);
+       }
+    }
    
 }
 

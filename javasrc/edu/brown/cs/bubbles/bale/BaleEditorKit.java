@@ -2948,18 +2948,24 @@ private static class FixErrorsAction extends TextAction {
       if (!checkEditor(be)) return;
       int soff = be.getSelectionStart();
       int eoff = be.getSelectionEnd();
+      if (soff == eoff) {
+         BaleDocument bd = be.getBaleDocument();
+         int lno = bd.findLineNumber(soff);
+         soff = bd.findLineOffset(lno);
+         eoff = bd.findLineOffset(lno+1);
+       }
       BoardMetrics.noteCommand("BALE",String.valueOf(getValue(Action.NAME)));
       if (fix_method != null) {
-	 BowiFactory.startTask();
-	 try {
-	    fix_method.invoke(null,be.getBaleDocument(),soff,eoff);
-	  }
-	 catch (Throwable t) {
-	    BoardLog.logE("BALE","Problem invoking fix errors",t);
-	  }
-	 finally {
-	    BowiFactory.stopTask();
-	  }
+         BowiFactory.startTask();
+         try {
+            fix_method.invoke(null,be.getBaleDocument(),soff,eoff);
+          }
+         catch (Throwable t) {
+            BoardLog.logE("BALE","Problem invoking fix errors",t);
+          }
+         finally {
+            BowiFactory.stopTask();
+          }
       }
     }
 

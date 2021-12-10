@@ -47,7 +47,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -289,6 +288,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
       List<BumpProblem> totry = new ArrayList<BumpProblem>();
       BumpClient bc = BumpClient.getBump();
       List<BumpProblem> probs = bc.getProblems(for_document.getFile());
+      BoardLog.logD("BFIX","Found " + probs.size() + " problems");
       if (probs.isEmpty()) return;
       for (Iterator<BumpProblem> it = probs.iterator(); it.hasNext(); ) {
 	 BumpProblem bp = it.next();
@@ -306,27 +306,21 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
 
       boolean fnd = false;
       for (BumpProblem bp : totry) {
+         BoardLog.logD("BFIX","Work on problem " + bp);
 	 RegionFixer fx = new RegionFixer(bp);
 	 checkProblemFixable(fx);
-	 Runnable rslt = fx.waitForDone();
+	 RunnableFix rslt = fx.waitForDone();
+         
 	 if (rslt != null) {
 	    BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
 	    RunAndWait rw = new RunAndWait(rslt);
-	    if (SwingUtilities.isEventDispatchThread()) {
-	       rw.run();
-	    }
-	    else {
-	       try {
-		  SwingUtilities.invokeAndWait(rslt);
-	       }
-	       catch (InterruptedException e) { }
-	       catch (InvocationTargetException e) { }
-	    }
-	    fnd = true;
+            rw.runFix();
 	    done.add(bp);
-	    if (!rw.waitForDone()) return;
-	    break;
-	 }
+	    if (rw.waitForDone()) {
+               fnd = true;
+               break;
+             }	
+          }
       }
       if (!fnd) return;
       // need to wait for errors to change here
@@ -354,30 +348,47 @@ void checkProblemFixable(FixAdapter subfix)
 
 
 
-private class RunAndWait implements Runnable, BumpProblemHandler {
+private class RunAndWait implements BumpProblemHandler {
 
-   private Runnable fixer_run;
+   private RunnableFix fixer_run;
    private boolean  is_done;
+   private boolean  done_status;
 
-   RunAndWait(Runnable r) {
+   RunAndWait(RunnableFix r) {
       fixer_run = r;
       is_done = false;
-   }
+      done_status = false;
+    }
 
-   @Override public void run() {
-      BumpClient.getBump().addProblemHandler(for_document.getFile(),this);
-      fixer_run.run();
+  void runFix() {
+     is_done = false;
+     done_status = false;
+     BumpClient.getBump().addProblemHandler(for_document.getFile(),this);
+     try {
+        if (SwingUtilities.isEventDispatchThread()) {
+           done_status = fixer_run.call();
+         }
+        else {
+           SwingRunner sr = new SwingRunner(fixer_run);
+           SwingUtilities.invokeAndWait(sr);
+           done_status = sr.getResult();
+         }
+      }
+     catch (Exception e) {
+        done_status = false;
+      }
+     
+     if (!done_status) handleProblemsDone();
    }
 
    synchronized boolean waitForDone() {
-      while (!is_done) {
+      if (!is_done) {
          try {
-            wait(10000);
-         }
+            wait(20000);
+          }
          catch (InterruptedException e) { }
-         return false;
-      }
-      return true;
+       }
+      return done_status;
    }
 
    @Override public void handleProblemRemoved(BumpProblem bp)	{ }
@@ -386,13 +397,36 @@ private class RunAndWait implements Runnable, BumpProblemHandler {
 
    @Override public void handleProblemsDone() {
       synchronized (this) {
-	 is_done = true;
-	 notifyAll();
+         is_done = true;
+         notifyAll();
       }
       BumpClient.getBump().removeProblemHandler(this);
    }
 
 }	// end of inner class RunAndWait
+
+private class SwingRunner implements Runnable {
+
+   private RunnableFix fixer_run;
+   private boolean fixer_result;
+   
+   SwingRunner(RunnableFix rf) {
+      fixer_run = rf;
+      fixer_result = false;
+    }
+   
+   boolean getResult()                  { return fixer_result; }
+   
+   @Override public void run() {
+      try {
+         fixer_result = fixer_run.call();
+       }
+      catch (Exception e) {
+         fixer_result = false;
+       }
+    }
+   
+}       // end of inner class SwingRunner
 
 
 
@@ -799,7 +833,7 @@ private static class RegionFixer implements FixAdapter {
       noteStatus(fix != null);
     }
 
-   synchronized Runnable waitForDone() {
+   synchronized RunnableFix waitForDone() {
       while (!is_done && fix_found == null) {
          try {
             wait(5000);

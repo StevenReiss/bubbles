@@ -239,11 +239,11 @@ private static class ReturnDoer implements RunnableFix {
       initial_time = time;
     }
    
-   @Override public void run() {
+   @Override public Boolean call() {
       BumpClient bc = BumpClient.getBump();
       List<BumpProblem> probs = bc.getProblems(for_document.getFile());
-      if (!checkProblemPresent(for_problem,probs)) return;
-      if (for_corrector.getStartTime() != initial_time) return;
+      if (!checkProblemPresent(for_problem,probs)) return false;
+      if (for_corrector.getStartTime() != initial_time) return false;
       int soff = for_document.mapOffsetToJava(for_problem.getStart());
       BaleWindowElement elt = for_document.getCharacterElement(soff);
       
@@ -252,19 +252,21 @@ private static class ReturnDoer implements RunnableFix {
          if (pelt.getName().equals("Method")) break;
          pelt = pelt.getBaleParent();
        }
-      if (pelt == null) return;
+      if (pelt == null) return false;
       int foff = pelt.getStartOffset();
       int eoff = pelt.getEndOffset();
       String text = for_document.getWindowText(foff,eoff-foff);
-      if (text.contains("return ")) return;
+      if (text.contains("return ")) return false;
       int xpos = text.lastIndexOf("}");
       int inspos = foff+xpos;   
-      if (!checkSafePosition(for_corrector,inspos-1,inspos+1)) return;
+      if (!checkSafePosition(for_corrector,inspos-1,inspos+1)) return false;
       
       BoardMetrics.noteCommand("BFIX","AddReturn_" + for_corrector.getBubbleId());
       // int eoff0 = for_document.mapOffsetToJava(for_problem.getEnd());
       for_document.replace(inspos,0,insert_stmt,true,true);
-      BoardMetrics.noteCommand("BFIX", "DoneAddReturn_" + for_corrector.getBubbleId());     
+      BoardMetrics.noteCommand("BFIX", "DoneAddReturn_" + for_corrector.getBubbleId()); 
+      
+      return true;
     }
    
    @Override public double getPriority()                { return 0; }

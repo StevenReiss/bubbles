@@ -443,15 +443,15 @@ private static class SpellDoer implements RunnableFix {
       initial_time = time;
     }
 
-   @Override public void run() {
+   @Override public Boolean call() {
       BumpClient bc = BumpClient.getBump();
       List<BumpProblem> probs = bc.getProblems(for_document.getFile());
-      if (!checkProblemPresent(for_problem,probs)) return;
-      if (for_corrector.getStartTime() != initial_time) return;
+      if (!checkProblemPresent(for_problem,probs)) return false;
+      if (for_corrector.getStartTime() != initial_time) return false;
    
       int soff = for_document.mapOffsetToJava(for_problem.getStart());
       int eoff0 = for_document.mapOffsetToJava(for_problem.getEnd());
-      if (!checkSafePosition(for_corrector,soff,eoff0)) return;
+      if (!checkSafePosition(for_corrector,soff,eoff0)) return false;
    
       BoardMetrics.noteCommand("BFIX","SpellingCorrection_" + for_corrector.getBubbleId());
       BoardLog.logD("BFIX","SPELL Making correction " + for_fix.getText() + " for " + for_fix.getOriginalText());
@@ -473,6 +473,8 @@ private static class SpellDoer implements RunnableFix {
       finally {
          if (edcmp != null) bh.endEditAction(edcmp);
        }
+      
+      return true;
     }
 
    @Override public double getPriority()		{ return 0; }

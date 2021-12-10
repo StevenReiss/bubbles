@@ -426,18 +426,18 @@ private static class ImportDoer implements RunnableFix {
       initial_time = time0;
     }
 
-   @Override public void run() {
+   @Override public Boolean call() {
       BumpClient bc = BumpClient.getBump();
       List<BumpProblem> probs = bc.getProblems(for_document.getFile());
-      if (!checkProblemPresent(for_problem,probs)) return;
-      if (for_corrector.getStartTime() != initial_time) return;
+      if (!checkProblemPresent(for_problem,probs)) return false;
+      if (for_corrector.getStartTime() != initial_time) return false;
       synchronized (imports_added) {
          Set<String> impset = imports_added.get(for_corrector);
          if (impset == null) {
             impset = new HashSet<String>();
             imports_added.put(for_corrector,impset);
           }
-         if (!impset.add(import_type)) return;
+         if (!impset.add(import_type)) return false;
        }
    
       BoardMetrics.noteCommand("BFIX","AddImport");
@@ -447,6 +447,7 @@ private static class ImportDoer implements RunnableFix {
          BaleFactory.getFactory().applyEdits(for_document.getFile(),edits);
        }
       BoardMetrics.noteCommand("BFIX","DoneAddImport");
+      return true;
     }
 
    @Override public double getPriority()                { return 0; }

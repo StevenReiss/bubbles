@@ -295,19 +295,20 @@ private class QuoteDoer implements RunnableFix {
       initial_time = t0;
     }
 
-   @Override public void run() {
+   @Override public Boolean call() {
       BumpClient bc = BumpClient.getBump();
       BaleWindow win = for_corrector.getEditor();
       BaleWindowDocument doc = win.getWindowDocument();
       List<BumpProblem> probs = bc.getProblems(doc.getFile());
-      if (!checkProblemPresent(for_problem,probs)) return;
-      if (for_corrector.getStartTime() != initial_time) return;
-      if (!checkSafePosition(for_corrector,using_fix.getStart(),using_fix.getEnd())) return;
+      if (!checkProblemPresent(for_problem,probs)) return false;
+      if (for_corrector.getStartTime() != initial_time) return false;
+      if (!checkSafePosition(for_corrector,using_fix.getStart(),using_fix.getEnd())) return false;
       
       BoardMetrics.noteCommand("BFIX","QuoteCorrection");
       
       using_fix.makeEdit(doc);
       BoardMetrics.noteCommand("BFIX","DoneQuoteCorrection");
+      return true;
     }
 
    @Override public double getPriority()                { return 0; }

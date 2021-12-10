@@ -261,22 +261,24 @@ private class SyntaxDoer implements RunnableFix {
       initial_time = t0;
     }
 
-   @Override public void run() {
+   @Override public Boolean call() {
       BumpClient bc = BumpClient.getBump();
       BaleWindow win = for_corrector.getEditor();
       BaleWindowDocument doc = win.getWindowDocument();
       List<BumpProblem> probs = bc.getProblems(doc.getFile());
-      if (!checkProblemPresent(for_problem,probs)) return;
-      if (for_corrector.getStartTime() != initial_time) return;
+      if (!checkProblemPresent(for_problem,probs)) return false;
+      if (for_corrector.getStartTime() != initial_time) return false;
       int soff = doc.mapOffsetToJava(edit_start);
       int eoff = doc.mapOffsetToJava(edit_end);
-      if (!checkSafePosition(for_corrector,edit_start,edit_end)) return;
+      if (!checkSafePosition(for_corrector,edit_start,edit_end)) return false;
 
       BoardLog.logD("BFIX","SYNTAX: make fix using " + insert_text);
 
       BoardMetrics.noteCommand("BFIX","SyntaxCorrection_" + for_corrector.getBubbleId());
       doc.replace(soff,eoff-soff,insert_text,false,false);
       BoardMetrics.noteCommand("BFIX","DoneSyntaxCorrection_" + for_corrector.getBubbleId());
+      
+      return true;
     }
 
    @Override public double getPriority()                { return 0; }

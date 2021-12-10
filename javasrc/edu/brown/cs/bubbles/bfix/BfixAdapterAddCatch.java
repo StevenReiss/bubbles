@@ -267,22 +267,23 @@ private static class CatchDoer implements RunnableFix {
       initial_time = time;
     }
 
-   @Override public void run() {
+   @Override public Boolean call() {
       BumpClient bc = BumpClient.getBump();
       List<BumpProblem> probs = bc.getProblems(for_document.getFile());
-      if (!checkProblemPresent(for_problem,probs)) return;
-      if (for_corrector.getStartTime() != initial_time) return;
+      if (!checkProblemPresent(for_problem,probs)) return false;
+      if (for_corrector.getStartTime() != initial_time) return false;
       int soff = for_document.mapOffsetToJava(for_problem.getStart());
       BaleWindowElement trystmt = findTryStatement(for_document,soff);
-      if (trystmt == null) return;
+      if (trystmt == null) return false;
       int eoff = trystmt.getEndOffset();
-      if (!checkSafePosition(for_corrector,eoff-1,eoff+1)) return;
+      if (!checkSafePosition(for_corrector,eoff-1,eoff+1)) return false;
       
       // might want to find better insertion point here
       String insert = "catch (" + catch_class + " _ex) {\n}\n";
       BoardMetrics.noteCommand("BFIX","AddCatch_" + for_corrector.getBubbleId());
       for_document.replace(eoff,0,insert,true,true);
       BoardMetrics.noteCommand("BFIX","DoneAddCatch_" + for_corrector.getBubbleId());
+      return true;
     }
 
    @Override public double getPriority()                        { return 0; }

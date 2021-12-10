@@ -271,14 +271,14 @@ private static class VisibilityDoer implements RunnableFix {
       initial_time = time;
     }
 
-   @Override public void run() {
+   @Override public Boolean call() {
       BumpClient bc = BumpClient.getBump();
       BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
       File f = doc.getFile();
       List<BumpProblem> probs = bc.getProblems(f);
-      if (!checkProblemPresent(for_problem,probs)) return;
-      if (for_corrector.getStartTime() != initial_time) return;
-      if (!checkSafePosition(for_corrector,start_offset,end_offset+1)) return;
+      if (!checkProblemPresent(for_problem,probs)) return false;
+      if (for_corrector.getStartTime() != initial_time) return false;
+      if (!checkSafePosition(for_corrector,start_offset,end_offset+1)) return false;
 
       int inspos = doc.mapOffsetToEclipse(start_offset);
       int epos = doc.mapOffsetToEclipse(end_offset);
@@ -288,6 +288,8 @@ private static class VisibilityDoer implements RunnableFix {
       BoardMetrics.noteCommand("BFIX","ChangeVisibility_" + for_corrector.getBubbleId());
       doc.replace(inspos,epos-inspos,new_token,true,true);
       BoardMetrics.noteCommand("BFIX","DoneChangeVisibility_" + for_corrector.getBubbleId());
+      
+      return true;
     }
 
    @Override public double getPriority()                { return 0; }
