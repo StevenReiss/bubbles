@@ -501,13 +501,14 @@ void waitForAst()
    synchronized (this) {
       int ctr = 0;
       while (be.getAstNode() == null && ctr < 4) {
-	 BoardLog.logE("BALE","AST not found for " + be);
+	 BoardLog.logI("BALE","AST timeout " + ctr);
 	 try {
 	    ++ctr;
 	    wait(1000*ctr);
 	  }
 	 catch (InterruptedException e) { }
        }
+      BoardLog.logE("BALE","AST not found for " + be);
     }
 }
 
