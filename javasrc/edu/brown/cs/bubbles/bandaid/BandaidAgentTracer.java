@@ -26,6 +26,7 @@ package edu.brown.cs.bubbles.bandaid;
 
 import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.*;
 import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.commons.CodeSizeEvaluator;
+import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.util.CheckMethodAdapter;
 import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.util.Textifier;
 import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.util.TraceMethodVisitor;
 
@@ -62,7 +63,7 @@ private static BandaidAgentTracer the_tracer = null;
 
 private static boolean	get_cpu_time = true;
 
-private static boolean	do_debug = false;
+private static boolean	do_debug = true;
 
 private static final int	NUM_SETS = 3;
 private static final int	ENTRY_COUNT = 10240;
@@ -237,9 +238,10 @@ private class ClassTransformer extends ClassVisitor {
        }
       // System.err.println("TRACE CHECK1 " + class_name + " " + key + " " + td);
       if (td != null) {
-         if (do_debug) mv = new Tracer(mv,key);
-         mv = new TracePatcher(mv,td,super_name);
+         if (do_debug) mv = new Tracer(mv,class_name + "." + key);
+         mv = new CheckMethodAdapter(mv);
          mv = new CodeSizeEvaluator(mv);
+         mv = new TracePatcher(mv,td,super_name);
        }
       return mv;
     }
@@ -442,7 +444,7 @@ private static class Tracer extends MethodVisitor {
       List<?> tx = tmv.p.getText();
       System.err.println("TRACE METHOD " + method_name);
       for (Object o : tx) {
-	 System.err.print(o.toString());
+         System.err.print(o.toString());
        }
     }
 

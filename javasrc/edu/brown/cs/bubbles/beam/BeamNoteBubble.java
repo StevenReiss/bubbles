@@ -190,8 +190,10 @@ private static final Pattern temp_name = Pattern.compile("Note_\\d{12}_\\d{1,4}.
 private static Keymap		note_keymap;
 
 private static final KeyItem [] key_defs = new KeyItem[] {
-
-   new KeyItem("ctrl B","font-bold"),
+   new KeyItem("menu C","copy-to-clipboard"),
+      new KeyItem("menu X","cut-to-clipboard"),
+      new KeyItem("menu V","paste-from-clipboard"),
+      new KeyItem("ctrl B","font-bold"),
       new KeyItem("meta I","font-italic"),
       new KeyItem("meta U","font-underline"),
       new KeyItem("meta MINUS","font-strikethrough"),
@@ -210,7 +212,8 @@ private static final KeyItem [] key_defs = new KeyItem[] {
       new KeyItem("ctrl shift 8","text-justify"),
       new KeyItem("menu Z","Undo"),
       new KeyItem("menu Y","Redo"),
-      new KeyItem("menu S","Save")
+      new KeyItem("menu S","Save"),
+      
 };
 
 
@@ -927,8 +930,8 @@ private class NoteArea extends JEditorPane
 
    NoteArea(Document d) {
       setContentType("text/html");
-      initialize(null);
       setDocument(d);
+      initialize(null);
     }
 
    private void initialize(String cnts) {
@@ -938,12 +941,12 @@ private class NoteArea extends JEditorPane
       setKeymap(km);
       Dimension d = new Dimension(beam_properties.getInt(NOTE_WIDTH),beam_properties.getInt(NOTE_HEIGHT));
       if (cnts != null) {
-	 JLabel lbl = new JLabel(cnts);
-	 Dimension d1 = lbl.getPreferredSize();
-	 d1.width = Math.min(d1.width,900);
-	 d1.height = Math.min(d1.height,400);
-	 d.width = Math.max(d.width, d1.width);
-	 d.height = Math.max(d1.height, d1.height);
+         JLabel lbl = new JLabel(cnts);
+         Dimension d1 = lbl.getPreferredSize();
+         d1.width = Math.min(d1.width,900);
+         d1.height = Math.min(d1.height,400);
+         d.width = Math.max(d.width, d1.width);
+         d.height = Math.max(d1.height, d1.height);
       }
       setPreferredSize(d);
       setSize(d);
@@ -952,12 +955,12 @@ private class NoteArea extends JEditorPane
       addMouseListener(new BudaConstants.FocusOnEntry());
       addMouseListener(new LinkListener());
       addHyperlinkListener(new HyperListener());
-
+   
       if (top_color == bottom_color) {
-	 setBackground(top_color);
+         setBackground(top_color);
        }
       else setBackground(BoardColors.transparent());
-
+   
       BurpHistory.getHistory().addEditor(this);
     }
 
@@ -965,12 +968,12 @@ private class NoteArea extends JEditorPane
 
    @Override protected void paintComponent(Graphics g0) {
       if (top_color != bottom_color) {
-	 Graphics2D g2 = (Graphics2D) g0.create();
-	 Dimension sz = getSize();
-	 Paint p = new GradientPaint(0f,0f,top_color,0f,sz.height,bottom_color);
-	 Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
-	 g2.setPaint(p);
-	 g2.fill(r);
+         Graphics2D g2 = (Graphics2D) g0.create();
+         Dimension sz = getSize();
+         Paint p = new GradientPaint(0f,0f,top_color,0f,sz.height,bottom_color);
+         Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
+         g2.setPaint(p);
+         g2.fill(r);
        }
       super.paintComponent(g0);
     }
@@ -1164,14 +1167,14 @@ private static class KeyItem {
 
    void addToKeyMap(Keymap kmp,Action[] acts) {
       if (key_stroke != null && key_action != null) {
-	 for (Action a : acts) {
-	    Object nm = a.getValue(Action.NAME);
-	    if (nm.toString().equals(key_action)) {
-	       kmp.addActionForKeyStroke(key_stroke,a);
-	       return;
-	     }
-	  }
-	 BoardLog.logE("BEAM","Action " + key_action + " not found");
+         for (Action a : acts) {
+            Object nm = a.getValue(Action.NAME);
+            if (nm.toString().equals(key_action)) {
+               kmp.addActionForKeyStroke(key_stroke,a);
+               return;
+             }
+          }
+         BoardLog.logE("BEAM","Action " + key_action + " not found");
        }
     }
 

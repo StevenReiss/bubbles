@@ -372,6 +372,9 @@ void playUndo(BurpRange rng)
       else bpe.playUndo(getBaseEditDocument());
       BoardLog.logD("BURP","Finished UNDO " + this);
     }
+   else if (base_edit.canUndo()) {
+      base_edit.undo();
+    }
    else BoardLog.logD("BURP","Can't UNDO " + this);
 }
 

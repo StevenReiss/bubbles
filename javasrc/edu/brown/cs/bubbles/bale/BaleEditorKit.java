@@ -652,58 +652,58 @@ private static class DefaultKeyAction extends TextAction {
       BaleDocument bd = target.getBaleDocument();
       bd.baleWriteLock();
       try {
-	 Dimension d0 = target.getSize();
-	 if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
-	 else d0 = target.getPreferredSize();
-
-	 String content = e.getActionCommand();
-	 int mod = e.getModifiers();
-	 if ((content != null) && (content.length() > 0) &&
-	       ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
-	    char c = content.charAt(0);
-
-	    if ((c >= 0x20) && (c != 0x7F)) {
-	       int sel = target.getSelectionStart();
-	       if (target.getOverwriteMode()) {
-		  if (sel == target.getSelectionEnd()) {
-		     String prev = null;
-		     try {
-			prev = target.getText(sel,1);
-		      }
-		     catch (BadLocationException ex) { }
-		     if (prev == null || prev.equals("\n"));
-		     else if (prev.equals("\t")) {
-			int cpos = bd.getColumnPosition(sel);
-			int npos = bd.getNextTabPosition(cpos);
-			StringBuilder buf = new StringBuilder();
-			for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
-			target.setSelectionEnd(sel+1);
-			target.replaceSelection(buf.toString());
-			target.setSelectionStart(sel);
-			target.setSelectionEnd(sel+1);
-		      }
-		     else target.setSelectionEnd(sel+1);
-		   }
-		}
-
-	       target.replaceSelection(content);
-	       if (content != null && shouldAutoIndent(target,content,sel)) {
-		  // TODO: check that this is the only thing on the line
-		  indent_lines_action.actionPerformed(e);
-		}
-	       BaleCompletionContext ctx = target.getCompletionContext();
-	       if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
-		  new BaleCompletionContext(target,sel,c);
-		}
-
-	       if (d0 != null) {
-		  Dimension d1 = target.getPreferredSize();
-		  if (d1.height > d0.height) {
-		     target.increaseSize(1);
-		   }
-		}
-	     }
-	  }
+         Dimension d0 = target.getSize();
+         if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
+         else d0 = target.getPreferredSize();
+   
+         String content = e.getActionCommand();
+         int mod = e.getModifiers();
+         if ((content != null) && (content.length() > 0) &&
+               ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
+            char c = content.charAt(0);
+   
+            if ((c >= 0x20) && (c != 0x7F)) {
+               int sel = target.getSelectionStart();
+               if (target.getOverwriteMode()) {
+        	  if (sel == target.getSelectionEnd()) {
+        	     String prev = null;
+        	     try {
+        		prev = target.getText(sel,1);
+        	      }
+        	     catch (BadLocationException ex) { }
+        	     if (prev == null || prev.equals("\n"));
+        	     else if (prev.equals("\t")) {
+        		int cpos = bd.getColumnPosition(sel);
+        		int npos = bd.getNextTabPosition(cpos);
+        		StringBuilder buf = new StringBuilder();
+        		for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
+        		target.setSelectionEnd(sel+1);
+        		target.replaceSelection(buf.toString());
+        		target.setSelectionStart(sel);
+        		target.setSelectionEnd(sel+1);
+        	      }
+        	     else target.setSelectionEnd(sel+1);
+        	   }
+        	}
+   
+               target.replaceSelection(content);
+               if (content != null && shouldAutoIndent(target,content,sel)) {
+        	  // TODO: check that this is the only thing on the line
+        	  indent_lines_action.actionPerformed(e);
+        	}
+               BaleCompletionContext ctx = target.getCompletionContext();
+               if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
+        	  new BaleCompletionContext(target,sel,c);
+        	}
+   
+               if (d0 != null) {
+        	  Dimension d1 = target.getPreferredSize();
+        	  if (d1.height > d0.height) {
+        	     target.increaseSize(1);
+        	   }
+        	}
+             }
+          }
        }
       finally { bd.baleWriteUnlock(); }
    }

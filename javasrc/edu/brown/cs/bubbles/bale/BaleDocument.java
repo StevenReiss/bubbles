@@ -508,7 +508,9 @@ void waitForAst()
 	  }
 	 catch (InterruptedException e) { }
        }
-      BoardLog.logE("BALE","AST not found for " + be);
+      if (be.getAstNode() == null) {
+         BoardLog.logE("BALE","AST not found for " + be);
+       }
     }
 }
 
