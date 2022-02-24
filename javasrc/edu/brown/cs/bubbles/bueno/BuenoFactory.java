@@ -466,6 +466,7 @@ public BudaBubble getCreateProjectBubble()
 {
    switch (BoardSetup.getSetup().getLanguage()) {
       case JAVA :
+      case JAVA_IDEA :
 	 BuenoProjectCreator bpc = new BuenoProjectCreator();
 	 return bpc.createProjectCreationBubble();
       case PYTHON :

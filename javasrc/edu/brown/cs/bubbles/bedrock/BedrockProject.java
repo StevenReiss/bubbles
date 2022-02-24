@@ -36,7 +36,6 @@ package edu.brown.cs.bubbles.bedrock;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
-import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -283,15 +282,15 @@ void listProjects(IvyXmlWriter xw)
       for (int j = 0; j < up.length; ++j) {
 	 xw.textElement("USEDBY",up[j].getName());
        }
-      try {
-	 for (IBuildConfiguration ibcfg : projs[i].getBuildConfigs()) {
-	    xw.begin("BUILDCONFIG");
-	    xw.field("NAME",ibcfg.getName());
-	    xw.field("CLASS",ibcfg.getClass().getName());
-	    xw.end("BUILDCONFIG");
-	  }
-       }
-      catch (CoreException e) { }
+//    try {
+//      for (IBuildConfiguration ibcfg : projs[i].getBuildConfigs()) {
+//         xw.begin("BUILDCONFIG");
+//         xw.field("NAME",ibcfg.getName());
+//         xw.field("CLASS",ibcfg.getClass().getName());
+//         xw.end("BUILDCONFIG");
+//       }
+//     }
+//    catch (CoreException e) { }
       xw.end("PROJECT");
     }
 }
@@ -1325,7 +1324,7 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
    xw.field("NAME",p.getName());
    xw.field("PATH",p.getLocation().toOSString());
    xw.field("WORKSPACE",p.getWorkspace().getRoot().getLocation().toOSString());
-   xw.field("BEDROCKDIR",p.getWorkingLocation(BEDROCK_PLUGIN).toOSString());
+// xw.field("BEDROCKDIR",p.getWorkingLocation(BEDROCK_PLUGIN).toOSString());
    try {
       if (p.hasNature("org.eclipse.jdt.core.javanature"))
 	 xw.field("ISJAVA",true);

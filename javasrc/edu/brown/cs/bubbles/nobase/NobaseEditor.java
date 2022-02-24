@@ -483,10 +483,10 @@ private class AutoCompile implements Runnable {
       int delay = ep.getDelayTime();
       if (delay < 0) return;
       if (delay > 0) {
-	 try {
-	    Thread.sleep(delay);
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            Thread.sleep(delay);
+          }
+         catch (InterruptedException e) { }
        }
       if (!edit_data.getEditId().equals(edit_id)) return;
       ISemanticData isd = for_project.reparseFile(for_file);
@@ -495,35 +495,35 @@ private class AutoCompile implements Runnable {
       if (!edit_data.getEditId().equals(edit_id)) return;
       IvyXmlWriter xw = NobaseMain.getNobaseMain().beginMessage("EDITERROR");
       if (isd.getProject() != null) {
-	 xw.field("PROJECT",isd.getProject().getName());
+         xw.field("PROJECT",isd.getProject().getName());
        }
       xw.field("FILE",for_file.getFile().getPath());
       xw.field("ID",edit_id);
       xw.begin("MESSAGES");
       if (msgs != null && msgs.size() > 0) {
-	 for (NobaseMessage pm : msgs) {
-	    NobaseUtil.outputProblem(pm,isd,xw);
-	  }
+         for (NobaseMessage pm : msgs) {
+            NobaseUtil.outputProblem(pm,isd,xw);
+          }
        }
       xw.end("MESSAGES");
-
+   
       if (!edit_data.getEditId().equals(edit_id)) return;
       NobaseMain.getNobaseMain().finishMessage(xw);
       if (ep.getAutoElide()) {
-	 if (!edit_data.getEditId().equals(edit_id)) return;
-	 NobaseElider pe = edit_data.checkElider();
-	 if (pe != null) {
-	    xw = NobaseMain.getNobaseMain().beginMessage("ELISION",edit_data.getBaseId());
-	    xw.field("FILE",for_file.getFile().getPath());
-	    xw.field("ID",edit_id);
-	    xw.begin("ELISION");
-	    if (pe.computeElision(isd,xw)) {
-	       if (edit_data.getEditId().equals(edit_id)) {
-		  xw.end("ELISION");
-		  NobaseMain.getNobaseMain().finishMessage(xw);
-		}
-	     }
-	  }
+         if (!edit_data.getEditId().equals(edit_id)) return;
+         NobaseElider pe = edit_data.checkElider();
+         if (pe != null) {
+            xw = NobaseMain.getNobaseMain().beginMessage("ELISION",edit_data.getBaseId());
+            xw.field("FILE",for_file.getFile().getPath());
+            xw.field("ID",edit_id);
+            xw.begin("ELISION");
+            if (pe.computeElision(isd,xw)) {
+               if (edit_data.getEditId().equals(edit_id)) {
+        	  xw.end("ELISION");
+        	  NobaseMain.getNobaseMain().finishMessage(xw);
+        	}
+             }
+          }
        }
     }
 

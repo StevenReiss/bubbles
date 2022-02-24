@@ -1026,6 +1026,7 @@ BaleIndenter getIndenter()
    if (our_indenter == null) {
       switch (getLanguage()) {
 	 case JAVA :
+         case JAVA_IDEA : 
 	 case REBUS :
 	 default :
 	    our_indenter = new BaleIndenterJava(this);

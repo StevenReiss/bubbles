@@ -79,6 +79,7 @@ BconRepository()
 
    switch (BoardSetup.getSetup().getLanguage()) {
       case JAVA :
+      case JAVA_IDEA :
       case REBUS :
 	 BassRepository br = BassFactory.getRepository(BudaConstants.SearchType.SEARCH_CODE);
 	 BassUpdatingRepository bur = (BassUpdatingRepository) br;

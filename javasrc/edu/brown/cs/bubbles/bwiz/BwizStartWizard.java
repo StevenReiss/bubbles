@@ -107,6 +107,7 @@ private void setup()
    GroupLayout.ParallelGroup pg = layout.createParallelGroup();
    switch (BoardSetup.getSetup().getLanguage()) {
       case JAVA :
+      case JAVA_IDEA :
          pg.addComponent(classpanel);
          pg.addComponent(interfacepanel);
          pg.addComponent(enumpanel);   
@@ -125,6 +126,7 @@ private void setup()
    sg = layout.createSequentialGroup();
    switch (BoardSetup.getSetup().getLanguage()) {
       case JAVA :
+      case JAVA_IDEA :
          sg.addGroup(layout.createParallelGroup().addComponent(classpanel));
          sg.addGroup(layout.createParallelGroup().addComponent(interfacepanel));
          sg.addGroup(layout.createParallelGroup().addComponent(enumpanel));

@@ -107,6 +107,7 @@ private void setupCallbacks()
 
    switch (BoardSetup.getSetup().getLanguage()) {
       case JAVA :
+      case JAVA_IDEA :
 	 BaleFactory.getFactory().addContextListener(new BucsContexter());
 	 break;
       case REBUS :

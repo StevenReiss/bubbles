@@ -717,10 +717,12 @@ private class TestListener extends RunListener {
       outputSingleTest(jt);
     }
 
+   @SuppressWarnings("removal")
    @Override public void testRunStarted(Description d) {
       System.setSecurityManager(new NoExitManager());
     }
 
+   @SuppressWarnings("removal")
    @Override public void testRunFinished(Result r) {
       System.setSecurityManager(null);
       noteDone();
@@ -769,6 +771,7 @@ private static class ExitException extends SecurityException {
 
 
 
+@SuppressWarnings("removal")
 private static class NoExitManager extends SecurityManager {
 
    @Override public void checkPermission(Permission p)			{ }

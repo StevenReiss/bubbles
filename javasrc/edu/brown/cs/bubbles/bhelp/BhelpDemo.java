@@ -46,13 +46,14 @@ class BhelpDemo implements BhelpConstants, BudaConstants.BudaDemonstration
 /*										*/
 /********************************************************************************/
 
-private String		demo_name;
-private List<BhelpAction> help_actions;
-private boolean 	demo_stopped;
-private BhelpContext	demo_context;
-private boolean 	allow_hovers;
+private String		        demo_name;
+private List<BhelpAction>       help_actions;
+private boolean 	        demo_stopped;
+private BhelpContext	        demo_context;
+private boolean 	        allow_hovers;
 
-private static Boolean	doing_demo = Boolean.FALSE;
+
+private static CurrentDemo      current_demo = new CurrentDemo();
 
 
 
@@ -89,8 +90,8 @@ String getName()			{ return demo_name; }
 
 @Override public void stopDemonstration()
 {
-   synchronized (doing_demo) {
-      if (doing_demo && !demo_stopped) {
+   synchronized (current_demo) {
+      if (current_demo.getDemo() != null && !demo_stopped) {
 	 BoardLog.logD("BHELP","STOPPING DEMO");
 	 demo_stopped = true;
 	 demo_context.setStopped();
@@ -111,9 +112,9 @@ void executeDemo(BudaBubbleArea bba,boolean silent)
     demo_context = new BhelpContext(bba,this);
     demo_stopped = false;
 
-    synchronized (doing_demo) {
-       if (doing_demo) return;		// can't do more than one
-       doing_demo = true;
+    synchronized (current_demo) {
+       if (current_demo.getDemo() != null) return;	// can't do more than one\
+       current_demo.setDemo(this);
      }
     BudaRoot br = demo_context.getBudaRoot();
     br.setVisible(true);
@@ -166,8 +167,8 @@ private class DemoRun implements Runnable {
       finally {
          br.setDemonstration(null,null);
          if (!allow_hovers) BudaHover.enableHovers(true);
-         synchronized (doing_demo) {
-            doing_demo = false;
+         synchronized (current_demo) {
+            current_demo.clearDemo();
             demo_context = null;
             demo_stopped = false;
           }
@@ -177,6 +178,28 @@ private class DemoRun implements Runnable {
 }	// end of inner class DemoRun
 
 
+
+private static class CurrentDemo {
+   
+   private BhelpDemo cur_demo;
+   
+   CurrentDemo() {
+      cur_demo = null;
+    }
+   
+   BhelpDemo getDemo() {
+      return cur_demo;
+    }
+   
+   void setDemo(BhelpDemo bd) {
+      cur_demo = bd;
+    }
+   
+   void clearDemo() {
+      setDemo(null);
+    }
+   
+}       // end of CurrentDemo
 
 }	// end of class BhelpDemo
 

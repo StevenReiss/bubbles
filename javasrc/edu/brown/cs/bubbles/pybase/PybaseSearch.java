@@ -761,8 +761,8 @@ private static class SearchPattern {
       int idx = pattern_string.indexOf("(");
       if (idx >= 0) pattern_string = pattern_string.substring(0,idx);
       if (pattern_string.contains("*")) {
-	 String rstr = PybaseUtil.convertWildcardToRegex(pattern_string);
-	 regex_pattern = Pattern.compile(rstr);
+         String rstr = PybaseUtil.convertWildcardToRegex(pattern_string);
+         regex_pattern = Pattern.compile(rstr);
        }
       search_for = sf;
       do_defs = defs;

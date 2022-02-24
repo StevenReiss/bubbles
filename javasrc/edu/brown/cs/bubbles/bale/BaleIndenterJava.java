@@ -273,8 +273,6 @@ private int findReferencePosition(int offset)
    BaleElement elt = bale_document.getActualCharacterElement(offset);
    setCurrent(elt);
 
-   //TODO: handle case where elt is a comment of some sort
-
    BaleElement pelt = getPreviousElement(elt);
    BaleTokenType ptyp = getToken(pelt);
    boolean bracelessblockstart = false;
@@ -298,6 +296,13 @@ private int findReferencePosition(int offset)
 	     }
 	  }
 	 break;
+//    case OP :
+//    case CHARLITERAL :
+//    case STRING :
+//    case NUMBER :
+//    case IDENTIFIER :
+//       indent = true;
+//       break;
       default:
 	 break;
     }
@@ -364,7 +369,7 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
       boolean matchparen,boolean matchcase)
 {
    cur_indent = 0; // the indentation modification type filter text
-   cur_align = -1;
+   cur_align = -1; // base line alignment
    BaleElement start = cur_element;
 
    // forward cases
@@ -502,6 +507,7 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
 	 // inside whatever we don't know about: similar to the list case:
 	 // if we are inside a continued expression,then either align with a previous line that has indentation
 	 // or indent from the expression start line (either a scope introducer or the start of the expr).
+         setCurrent(start);
 	 return skipToPreviousListItemOrListStart();
     }
 }
@@ -705,6 +711,8 @@ private int skipToPreviousListItemOrListStart()
       // if any line item comes with its own indentation,adapt to it
       if (cur_line < startline-1) {
 	 int ind = getLineIndent(startline);
+         // handle starting at empty line
+         if (ind == 0) ind = getLineIndent(startline-1);       
 	 if (ind >= 0) cur_align = ind;
          // cur_indent = pref_continuation_indent;
 	 return startposition;

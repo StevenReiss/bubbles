@@ -138,8 +138,11 @@ public synchronized static BumpClient getBump()
       switch (bl) {
 	 default :
 	 case JAVA :
-	    default_client = new BumpClientJava();
+	    default_client = new BumpClientEclipse();
 	    break;
+         case JAVA_IDEA :
+            default_client = new BumpClientIdea();
+            break;
 	 case PYTHON :
 	    default_client = new BumpClientPython();
 	    break;
@@ -275,7 +278,7 @@ private void startIDE(BoardSetup bs)
    if (!IvyXml.isElement(pxml,"RESULT")) {
       if (BoardSetup.getSetup().getRunMode() != RunMode.SERVER) {
 	 JOptionPane.showMessageDialog(null,
-	       "<html><p>Eclipse was not started correctly.<p>Perhaps it hadn't terminated yet." +
+	       "<html><p>" + getName() + " was not started correctly.<p>Perhaps it hadn't terminated yet." +
 	       "<p>Please try starting again.",
 	       "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
        }
@@ -305,6 +308,7 @@ private void createInitialProject()
    BoardSetup bs = BoardSetup.getSetup();
    switch (bs.getLanguage()) {
       case JAVA :
+      case JAVA_IDEA :
 	 // Right now we ignore name/dir of project for eclipse
 	 sendMessage("CREATEPROJECT",null,null,null);
 	 return;
@@ -330,7 +334,7 @@ private void createInitialProject()
       q += " DIR='" + f2.getPath() + "'";
     }
 
-   sendMessage("CREATEPROJECT",null,q,null);
+   sendMessage("CREATEPROJECT",null,addWorkspace(q),null);
 }
 
 
@@ -1108,7 +1112,7 @@ public Element openProject(String name)
 
    String q = "CLASSES='true'";
 
-   Element xml = getXmlReply("OPENPROJECT",name,q,null,0);
+   Element xml = getXmlReply("OPENPROJECT",name,addWorkspace(q),null,0);
 
    if (!IvyXml.isElement(xml,"RESULT")) return null;
 
@@ -1160,7 +1164,7 @@ public BumpContractType getContractType(String proj)
 
    String qy = "OPTIONS='true'";
 
-   Element xml = getXmlReply("OPENPROJECT",proj,qy,null,0);
+   Element xml = getXmlReply("OPENPROJECT",proj,addWorkspace(qy),null,0);
 
    if (!IvyXml.isElement(xml,"RESULT")) return new ContractData(null);
 
@@ -1222,7 +1226,7 @@ public Element getAllProjects(long delay)
 {
    waitForIDE();
 
-   Element e = getXmlReply("PROJECTS",null,null,null,delay);
+   Element e = getXmlReply("PROJECTS",null,addWorkspace(null),null,delay);
 
    if (!IvyXml.isElement(e,"RESULT"))
       return null;
@@ -1272,7 +1276,7 @@ public boolean createProject(String nm,File dir)
       q += " DIR='" + dir.getPath() + "'";
     }
 
-   return getStatusReply("CREATEPROJECT",null,q,null,0);
+   return getStatusReply("CREATEPROJECT",null,addWorkspace(q),null,0);
 }
 
 
@@ -1280,7 +1284,7 @@ public void importProject(String name)
 {
    waitForIDE();
 
-   sendMessage("IMPORTPROJECT", name, null, null);
+   sendMessage("IMPORTPROJECT", name, addWorkspace(null), null);
 }
 
 
@@ -1536,6 +1540,7 @@ public List<BumpLocation> findClassDefinition(String proj,String clsn)
  *	matching the given pattern
  **/
 
+// NOT USED
 public List<BumpLocation> findPackages(String proj,String nm)
 {
    waitForIDE();
@@ -1616,6 +1621,7 @@ public List<BumpLocation> findAllClasses(String nm)
 
 
 
+// NOT USED
 public List<BumpLocation> findAllImplements(String nm)
 {
    // this doesn't work
@@ -1671,13 +1677,13 @@ public List<BumpLocation> findAllTypes(String nm)
 
 /**
  *	Return a list of BumpLocations containing the definitions of all annotations
- *	matching the given pattern.								 JI
+ *	matching the given pattern.								 
  *	@param proj the project to search in, null implies all projects
  *	@param nm the search pattern
  *	@param def if true, include definitions in the output set
  *	@param ref if true, include references in the output set
  **/
-
+// NOT USED?
 public List<BumpLocation> findAnnotations(String proj,String nm,boolean def,boolean ref)
 {
    waitForIDE();
@@ -3261,6 +3267,16 @@ protected Element getXmlReply(String cmd,String proj,String flds,String cnts,lon
 }
 
 
+private String addWorkspace(String flds)
+{
+   String ws = BoardSetup.getSetup().getDefaultWorkspace();
+   if (ws == null) return flds;
+   String fld = "WS='" + ws + "'";
+   if (flds == null) return fld;
+   else return flds + " " + fld;
+}
+
+
 
 protected boolean getStatusReply(String cmd,String proj,String flds,String cnts,long delay)
 {
@@ -3541,17 +3557,18 @@ public int getOptionInt(String nm,int dflt)
 
 private void buildAllProjects(boolean clean,boolean full,boolean refresh,boolean nosave)
 {
-   Element e = getXmlReply("PROJECTS",null,null,null,0);
+   Element e = getXmlReply("PROJECTS",null,addWorkspace(null),null,0);
    String q = "REFRESH='" + Boolean.toString(refresh) + "'";
    q += " CLEAN='" + Boolean.toString(clean) + "'";
    q += " FULL='" + Boolean.toString(full) + "'";
+   q = addWorkspace(q);
 
    problem_set.clearProblems(null);
 
    for (Element p : IvyXml.children(e,"PROJECT")) {
       String pnm = IvyXml.getAttrString(p,"NAME");
       if (!IvyXml.getAttrBool(p,"OPEN")) {
-	 getStringReply("OPENPROJECT",pnm,null,null,0);
+	 getStringReply("OPENPROJECT",pnm,addWorkspace(null),null,0);
        }
       Element probs = getXmlReply("BUILDPROJECT",pnm,q,null,BUILD_DELAY);
       problem_set.handleErrors(pnm,null,0,probs);
@@ -3609,6 +3626,8 @@ protected class IDEHandler implements MintHandler {
 		     IvyXml.getAttrBool(e,"FAILURE"),
 		     IvyXml.getChild(e,"MESSAGES"));
 	       break;
+            case "AUTOBUILDDONE" :
+               break;
 	    case "EDIT" :
 	       String bid = IvyXml.getAttrString(e,"BID");
 	       if (bid != null && !bid.equals(source_id)) {
@@ -3796,12 +3815,12 @@ protected static class NameCollector {
 
    synchronized Collection<BumpLocation> getNames() {
       while (!is_done) {
-	 try {
-	    wait();
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait();
+          }
+         catch (InterruptedException e) { }
        }
-
+   
       return result_names;
     }
 

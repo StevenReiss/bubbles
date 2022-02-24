@@ -163,7 +163,7 @@ private class NameThread extends Thread {
       super("Bedrock_GetNames");
       bump_id = bid;
       name_id = nid;
-      separate_elements = new HashMap<IJavaElement,Boolean>();
+      separate_elements = new HashMap<>();
       file_set = fset;
     }
 
@@ -489,13 +489,13 @@ private static class ImplementFilter implements FindFilter {
    ImplementFilter(IJavaElement [] elts) {
       base_types = new HashSet<String>();
       for (IJavaElement je : elts) {
-         if (je instanceof IMember) {
-            IMember im = (IMember) je;
-            IType ty = im.getDeclaringType();
-            String nm = ty.getFullyQualifiedName().replace('$','.');
-            // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
-            base_types.add(nm);
-          }
+	 if (je instanceof IMember) {
+	    IMember im = (IMember) je;
+	    IType ty = im.getDeclaringType();
+	    String nm = ty.getFullyQualifiedName().replace('$','.');
+	    // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
+	    base_types.add(nm);
+	  }
        }
     }
 
@@ -509,15 +509,15 @@ private static class ImplementFilter implements FindFilter {
       // BedrockPlugin.logD("CHECK FILTER " + ty + " " + nm);
       if (base_types.contains(nm)) return true;
       try {
-         ITypeHierarchy th = ty.newTypeHierarchy(null);
-         for (IType st : th.getAllSupertypes(ty)) {
-            String snm = st.getFullyQualifiedName().replace('$','.');
-            // BedrockPlugin.logD("CHECK SUPERTYPE " + snm);
-            if (base_types.contains(snm)) return true;
-          }
+	 ITypeHierarchy th = ty.newTypeHierarchy(null);
+	 for (IType st : th.getAllSupertypes(ty)) {
+	    String snm = st.getFullyQualifiedName().replace('$','.');
+	    // BedrockPlugin.logD("CHECK SUPERTYPE " + snm);
+	    if (base_types.contains(snm)) return true;
+	  }
        }
       catch (JavaModelException e) {
-         BedrockPlugin.logE("Problem building type hierarchy: " + e);
+	 BedrockPlugin.logE("Problem building type hierarchy: " + e);
        }
       return false;
     }
@@ -533,13 +533,13 @@ private static class ClassFilter implements FindFilter {
    ClassFilter(IJavaElement [] elts) {
       base_types = new HashSet<>();
       for (IJavaElement je : elts) {
-	 if (je instanceof IMember) {
-	    IMember im = (IMember) je;
-	    IType ty = im.getDeclaringType();
-	    String nm = ty.getFullyQualifiedName().replace('$','.');
-	    // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
-	    base_types.add(nm);
-	  }
+         if (je instanceof IMember) {
+            IMember im = (IMember) je;
+            IType ty = im.getDeclaringType();
+            String nm = ty.getFullyQualifiedName().replace('$','.');
+            // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
+            base_types.add(nm);
+          }
        }
     }
 
@@ -838,7 +838,7 @@ private class SearchHandler extends TextSearchRequestor {
       xml_writer.field("STARTOFFSET",acc.getMatchOffset());
       xml_writer.field("LENGTH",acc.getMatchLength());
       File f = acc.getFile().getLocation().toFile();
-     xml_writer.textElement("FILE",f.toString());
+      xml_writer.textElement("FILE",f.toString());
       IJavaElement elt = getElement(acc.getFile(),acc.getMatchOffset(),acc.getMatchLength());
       if (elt != null) BedrockUtil.outputJavaElement(elt,false,xml_writer);
       xml_writer.end("MATCH");
@@ -847,11 +847,11 @@ private class SearchHandler extends TextSearchRequestor {
 
    private IJavaElement getElement(IFile r,int off,int len) {
       for (ICompilationUnit icu : base_units) {
-	 IResource ir = icu.getResource();
-	 if (ir == null) return null;
-	 if (ir.equals(r)) {
-	    return findInnerElement(icu,off,len);
-	  }
+         IResource ir = icu.getResource();
+         if (ir == null) return null;
+         if (ir.equals(r)) {
+            return findInnerElement(icu,off,len);
+          }
        }
       return null;
     }
@@ -860,27 +860,27 @@ private class SearchHandler extends TextSearchRequestor {
       if (!(elt instanceof ISourceReference)) return null;
       ISourceReference sref = (ISourceReference) elt;
       try {
-	 ISourceRange rng = sref.getSourceRange();
-	 if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
+         ISourceRange rng = sref.getSourceRange();
+         if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
        }
       catch (JavaModelException ex) {
-	 BedrockPlugin.logE("Problem getting range: " + ex);
-	 return null;
+         BedrockPlugin.logE("Problem getting range: " + ex);
+         return null;
        }
-
+   
       if (!(elt instanceof IParent)) return elt;
-
+   
       IParent par = (IParent) elt;
       try {
-	 for (IJavaElement je : par.getChildren()) {
-	    IJavaElement fe = findInnerElement(je,off,len);
-	    if (fe != null) return fe;
-	  }
+         for (IJavaElement je : par.getChildren()) {
+            IJavaElement fe = findInnerElement(je,off,len);
+            if (fe != null) return fe;
+          }
        }
       catch (JavaModelException ex) {
-	 BedrockPlugin.logE("Problem getting children: " + ex);
+         BedrockPlugin.logE("Problem getting children: " + ex);
        }
-
+   
       return elt;
     }
 
@@ -1128,15 +1128,15 @@ void handleFindHierarchy(String proj,String pkg,String cls,boolean all,IvyXmlWri
 	 BedrockPlugin.logD("FIND TYPE HIERARCHY FOR " + fortype + " " + addct + " " + havejp);
 
 	 ITypeHierarchy ith;
-         if (fortype != null && !havejp) {
-            ith = fortype.newTypeHierarchy(null);
-          }
+	 if (fortype != null && !havejp) {
+	    ith = fortype.newTypeHierarchy(null);
+	  }
 	 if (fortype != null) {
-            ith = ijp.newTypeHierarchy(fortype,rgn,null);
-          }
+	    ith = ijp.newTypeHierarchy(fortype,rgn,null);
+	  }
 	 else {
-            ith = ijp.newTypeHierarchy(rgn,null);
-          }
+	    ith = ijp.newTypeHierarchy(rgn,null);
+	  }
 	 BedrockUtil.outputTypeHierarchy(ith,xw);
        }
       catch (JavaModelException e) {

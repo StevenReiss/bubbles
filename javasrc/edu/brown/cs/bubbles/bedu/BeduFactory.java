@@ -383,7 +383,7 @@ static File getInstallDirectory()
    }
 
    if (f == null) {
-      URL url = BeduFactory.class.getClassLoader().getResource(BOARD_RESOURCE_PLUGIN);
+      URL url = BeduFactory.class.getClassLoader().getResource(BOARD_RESOURCE_PLUGIN_ECLIPSE);
       if (url != null) {
 	 String file = url.toString();
 	 if (file.startsWith("jar:file:/")) file = file.substring(9);

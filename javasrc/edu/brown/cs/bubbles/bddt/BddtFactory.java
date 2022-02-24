@@ -668,6 +668,7 @@ void addNewConfigurationActions(JPopupMenu menu)
 {
    switch (BoardSetup.getSetup().getLanguage()) {
       case JAVA :
+      case JAVA_IDEA :
 	 menu.add(new CreateConfigAction(BumpLaunchConfigType.JAVA_APP));
 	 menu.add(new CreateConfigAction(BumpLaunchConfigType.REMOTE_JAVA));
 	 menu.add(new CreateConfigAction(BumpLaunchConfigType.JUNIT_TEST));

@@ -112,6 +112,10 @@ private void setupLogger()
 	 logname = "bubbles";
 	 lgnm = "bedrock";
 	 break;
+      case JAVA_IDEA :
+         logname = "bibbles";
+         lgnm = "bubjet";
+         break;
       case PYTHON :
 	 logname = "pybles";
 	 lgnm = "pybase";
@@ -136,7 +140,7 @@ private void setupLogger()
 	 break;
       case NORMAL :
       case SERVER :
-	 String wsn = bp.getProperty(BOARD_PROP_ECLIPSE_WS);
+	 String wsn = bp.getProperty(BOARD_PROP_WORKSPACE);
 	 if (wsn != null) wsd = new File(wsn);
 	 if (wsd != null && !wsd.exists()) {
 	    f1 = BoardSetup.getPropertyBase();

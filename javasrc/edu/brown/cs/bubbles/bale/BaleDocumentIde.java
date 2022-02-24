@@ -610,6 +610,8 @@ private void fixupElision()
    if (!f.equals(file_name)) return;
 
    if (id != getEditCounter()) return;
+   
+// System.err.println("ELISION: " + IvyXml.convertXmlToString(d));
 
    // BoardLog.logD("BALE","ELISION ID = " + id + " " + getEditCounter() + " " + IvyXml.convertXmlToString(d));
 

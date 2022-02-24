@@ -344,6 +344,7 @@ private class ParseCheck implements Runnable {
                case NEW_PACKAGE :
                   switch (BoardSetup.getSetup().getLanguage()) {
                      case JAVA :
+                     case JAVA_IDEA :
                      case REBUS :
                         fg = checkPackageParsing();
                         break;

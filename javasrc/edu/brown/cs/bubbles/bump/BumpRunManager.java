@@ -190,6 +190,7 @@ BumpRunManager()
 
    switch (BoardSetup.getSetup().getLanguage()) {
       case JAVA :
+      case JAVA_IDEA :
 	 break;
       case PYTHON :
       case JS :
@@ -1101,6 +1102,7 @@ private class LaunchConfig implements BumpLaunchConfig {
     }
 
    void update(Element xml) {
+      config_type = IvyXml.getAttrEnum(xml,"TYPE",BumpLaunchConfigType.UNKNOWN);
       Element type = IvyXml.getChild(xml,"TYPE");
       if (type != null) {
          String ctyp = IvyXml.getAttrString(type,"NAME");
@@ -1121,8 +1123,8 @@ private class LaunchConfig implements BumpLaunchConfig {
       use_contracts = getBoolean(xml,"CONTRACTS",true);
       use_assertions = getBoolean(xml,"ASSERTIONS",true);
       working_directory = getAttribute(xml,"WORKING_DIRECTORY");
-      remote_host = "localhost";
-      remote_port = 8000;
+      remote_host = IvyXml.getAttrString(xml,"HOST","localhost");
+      remote_port = IvyXml.getAttrInt(xml,"PORT",8000);
       String hmap = getAttribute(xml,"CONNECT_MAP");
       if (hmap != null) {
          Matcher m1 = HOST_PATTERN.matcher(hmap);
@@ -1258,10 +1260,10 @@ private class LaunchConfig implements BumpLaunchConfig {
 
    private String getAttribute(Element xml,String id) {
       for (Element ae : IvyXml.children(xml,"ATTRIBUTE")) {
-	 String anm = IvyXml.getAttrString(ae,"NAME");
-	 if (id.equals(anm)) {
-	    return IvyXml.getText(ae);
-	  }
+         String anm = IvyXml.getAttrString(ae,"NAME");
+         if (id.equals(anm)) {
+            return IvyXml.getText(ae);
+          }
        }
       return null;
     }
@@ -1632,13 +1634,14 @@ private class ThreadData implements BumpThread {
       if (val != null) thread_name = val;
       val = IvyXml.getAttrString(xml,"GROUP");
       if (val != null) thread_group = val;
-
+   
       if (IvyXml.getAttrBool(xml,"SYSTEM")) thread_type = BumpThreadType.SYSTEM;
       else {
-	 thread_type = known_threads.get(thread_name);
-	 if (thread_type == null) thread_type = BumpThreadType.USER;
+         BumpThreadType btt = known_threads.get(thread_name);
+         if (btt == null) btt = BumpThreadType.USER;
+         thread_type = btt;             // don't allow thread_type to be null, even temporarily
        }
-
+   
       is_daemon = IvyXml.getAttrBool(xml,"DAEMON");
       if (IvyXml.getAttrBool(xml,"STACK")) num_frames = IvyXml.getAttrInt(xml,"FRAMES",1);
       else num_frames = -1;
@@ -1647,7 +1650,7 @@ private class ThreadData implements BumpThread {
       for_launch = findLaunch(IvyXml.getChild(xml,"LAUNCH"));
       for_process = findProcess(xml);
       if (for_process == null && !IvyXml.getAttrPresent(xml,"PID") && for_launch != null) {
-	 for_process = for_launch.getDefaultProcess();
+         for_process = for_launch.getDefaultProcess();
        }
       exception_type = null;
       current_breakpoint = null;

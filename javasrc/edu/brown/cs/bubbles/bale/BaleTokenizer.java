@@ -83,6 +83,7 @@ static BaleTokenizer create(String text,BaleTokenState start,BoardLanguage bl)
       default :
       case REBUS :
       case JAVA :
+      case JAVA_IDEA :
 	 return new JavaTokenizer(text,start);
       case PYTHON :
 	 return new PythonTokenizer(text,start);
@@ -125,6 +126,7 @@ static Collection<String> getKeywords(BoardLanguage bl)
    switch (bl) {
       default :
       case JAVA :
+      case JAVA_IDEA :
       case REBUS :
 	 return java_keyword_map.keySet();
       case PYTHON :

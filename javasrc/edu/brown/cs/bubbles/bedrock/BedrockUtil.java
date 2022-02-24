@@ -452,21 +452,16 @@ static void outputBreakpoint(IBreakpoint xbp,IvyXmlWriter xw)
    try {
       xw.field("ID",bp.hashCode());
       xw.field("ENABLED",bp.isEnabled());
-      xw.field("PERSISTED",bp.isPersisted());
-      xw.field("REGISTERED",bp.isRegistered());
 
       if (mk != null && mk.exists()) {
 	 if (bp.getHitCount() >= 0) xw.field("HITCOUNT",bp.getHitCount());
 	 if (bp.getSuspendPolicy() == IJavaBreakpoint.SUSPEND_THREAD) xw.field("SUSPEND","THREAD");
 	 else xw.field("SUSPEND","VM");
-	 xw.field("INSTALLED",bp.isInstalled());
 	 if (bp.getTypeName() != null) {
 	    xw.field("CLASS",bp.getTypeName());
 	    String fnm = findFileForClass(bp.getTypeName());
 	    if (fnm != null) xw.field("FILE",fnm);
 	  }
-	 xw.field("MODEL",bp.getModelIdentifier());
-
 	 if (bp instanceof IJavaLineBreakpoint) {
 	    IJavaLineBreakpoint lb = (IJavaLineBreakpoint) bp;
 	    xw.field("LINE",lb.getLineNumber());
@@ -945,7 +940,7 @@ static void outputCompletion(CompletionProposal cp,IvyXmlWriter xw)
     }
    xw.field("RCVR",cp.getReceiverSignature());
 
-   xw.cdataElement("DESCRIPTION",cp.toString());
+// xw.cdataElement("DESCRIPTION",cp.toString());
 
    CompletionProposal [] rq = cp.getRequiredProposals();
    if (rq != null) {
@@ -1170,33 +1165,37 @@ private static void outputJavaElementImpl(IJavaElement elt,Set<String> files,boo
 private static void outputNameDetails(IType typ,IvyXmlWriter xw) throws JavaModelException
 {
    String tnm = "Class";
-
-   if (typ.isInterface()) tnm = "Interface";
-   else if (typ.isEnum()) tnm = "Enum";
-   else {
-      boolean check = false;
-      String supnm = typ.getFullyQualifiedName();
-      if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
-	 check = true;
+   try {
+      if (typ.isInterface()) tnm = "Interface";
+      else if (typ.isEnum()) tnm = "Enum";
       else {
-	 supnm = typ.getSuperclassName();
-	 if (supnm != null) {
-	    if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
-	       check = true;
-	  }
+         boolean check = false;
+         String supnm = typ.getFullyQualifiedName();
+         if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
+            check = true;
+         else {
+            supnm = typ.getSuperclassName();
+            if (supnm != null) {
+               if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
+                  check = true;
+             }
+          }
+         if (check) {
+            try {
+               ITypeHierarchy ith = typ.newSupertypeHierarchy(null);
+               for (IType xtyp = typ; xtyp != null; xtyp = ith.getSuperclass(xtyp)) {
+                  if (xtyp.getFullyQualifiedName().equals("java.lang.Throwable")) {
+                     tnm = "Throwable";
+                     break;
+                   }
+                }
+             }
+            catch (JavaModelException ex) { }
+          }
        }
-      if (check) {
-	 try {
-	    ITypeHierarchy ith = typ.newSupertypeHierarchy(null);
-	    for (IType xtyp = typ; xtyp != null; xtyp = ith.getSuperclass(xtyp)) {
-	       if (xtyp.getFullyQualifiedName().equals("java.lang.Throwable")) {
-		  tnm = "Throwable";
-		  break;
-		}
-	     }
-	  }
-	 catch (JavaModelException ex) { }
-       }
+    }
+   catch (Throwable t) {
+      BedrockPlugin.logE("Problem looking up type " + typ + " " + typ.getClass());
     }
 
    outputSymbol(typ,tnm,typ.getFullyQualifiedParameterizedName(),typ.getKey(),xw);
@@ -1362,6 +1361,14 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
        }
     }
 
+   if (elt instanceof IField) {
+      IField ifld = (IField) elt;
+      try {
+         xw.field("RETURNTYPE",ifld.getTypeSignature());
+       }
+      catch (JavaModelException e) { }
+    }
+   
    if (elt instanceof IMethod) {
       IMethod m = (IMethod) elt;
       try {
@@ -1372,20 +1379,14 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
 	    xw.field("NAMELENGTH",rng.getLength());
 	  }
 	 xw.field("RETURNTYPE",m.getReturnType());
-	 xw.field("NUMPARAM",m.getNumberOfParameters());
-	 String [] pnms = m.getParameterNames();
+         StringBuffer pbuf = new StringBuffer();
+         pbuf.append("(");
 	 String [] ptys = m.getParameterTypes();
 	 for (int i = 0; i < ptys.length; ++i) {
-	    xw.begin("PARAMETER");
-	    if (i < pnms.length) xw.field("NAME",pnms[i]);
-	    xw.field("TYPE",ptys[i]);
-	    xw.end();
+            pbuf.append(ptys[i]);
 	  }
-	 for (String ex : m.getExceptionTypes()) {
-	    xw.begin("EXCEPTION");
-	    xw.field("TYPE",ex);
-	    xw.end();
-	  }
+         pbuf.append(")");
+         xw.field("PARAMETERS",pbuf.toString());
        }
       catch (JavaModelException e) { }
     }

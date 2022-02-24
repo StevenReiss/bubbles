@@ -29,21 +29,15 @@
       </path>
    </target>
 
-   <available file='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' type='file' property='j8'
-       value='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' />
-   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar'
-	type='file' property = 'j8' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar' />
-
-
    <target name='compile' depends='init'>
       <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
-		target='1.8' source='1.8' bootclasspath='${j8}'
+		target='10' source='10'
 		excludes='BattAgent.java BattInstrument.java'
 		includeantruntime='false' >
 	 <classpath refid='bubbles.classpath' />
       </javac>
       <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
-		target='1.8' source='1.8' bootclasspath='${j8}'
+		target='10' source='10'
 		includes='BattAgent.java BattInstrument.java BattConstants.java'
 		includeantruntime='false' >
 	 <classpath refid='bubbles.classpath' />

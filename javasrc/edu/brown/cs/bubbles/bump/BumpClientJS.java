@@ -132,7 +132,7 @@ private void ensureRunning()
       System.exit(1);
     }
 
-   String ws = board_properties.getProperty(BOARD_PROP_ECLIPSE_WS);
+   String ws = board_properties.getProperty(BOARD_PROP_WORKSPACE);
 
    String cls = "edu.brown.cs.bubbles.nobase.NobaseMain";
 

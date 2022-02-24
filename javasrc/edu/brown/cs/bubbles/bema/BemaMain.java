@@ -148,7 +148,7 @@ private String		course_name;
 private BoardLanguage	for_language;
 private String		palette_name;
 private boolean 	install_only;
-private boolean         no_bedrock;
+private boolean 	no_bedrock;
 private Map<String,ClassLoader> class_loaders;
 
 
@@ -239,6 +239,9 @@ private void scanArgs(String [] args)
 	       ask_workspace = false;
 	     }
 	  }
+         else if (args[i].startsWith("-idea")) {                // -idea
+            useJavaIdea();
+          }
 	 else if (args[i].startsWith("-course") && i+1 < ln) {  // -course <course>
 	    course_name = args[++i];
 	    File fa = new File(System.getProperty("user.home"));
@@ -296,8 +299,8 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-install")) {             // -install - force installation
 	    install_only = true;
 	  }
-         else if (args[i].startsWith("-insnobed")) {            // -insnobed -- install w/o bedrock
-            no_bedrock = true;
+	 else if (args[i].startsWith("-insnobed")) {            // -insnobed -- install w/o bedrock
+	    no_bedrock = true;
 	  }
 	 else if (args[i].startsWith("-pal") && i+1 < ln) {     // -palette <file>
 	    palette_name = args[++i];
@@ -369,6 +372,8 @@ private void start()
    if (bs.getCourseName() != null) {
       BeduFactory.getFactory();
     }
+
+   BoardLog.logI("BEMA","Start setup");
 
    bs.doSetup();
 
@@ -841,6 +846,10 @@ private void checkDefaultLanguage()
 	 useCloud();
 	 break;
        }
+      else if (elt.equals("bibbles.jar")) {
+         useJavaIdea();
+         break;
+       }
     }
 }
 
@@ -860,6 +869,15 @@ private void useJavaScript()
    for_language = BoardLanguage.JS;
    File fa = new File(System.getProperty("user.home"));
    fa = new File(fa,".nobbles");
+   BoardProperties.setPropertyDirectory(fa.getPath());
+}
+
+
+private void useJavaIdea()
+{
+   for_language = BoardLanguage.JAVA_IDEA;
+   File fa = new File(System.getProperty("user.home"));
+   fa = new File(fa,".bibbles");
    BoardProperties.setPropertyDirectory(fa.getPath());
 }
 

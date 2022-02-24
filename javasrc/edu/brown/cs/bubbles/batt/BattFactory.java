@@ -516,39 +516,39 @@ private static class BattContexter implements BaleContextListener {
       List<BattTestCase> direct = new ArrayList<BattTestCase>();
       List<BattTestCase> all = new ArrayList<BattTestCase>();
       for (BattTestCase btc : batt_model.getAllTests()) {
-	 UseMode um = btc.usesMethod(mthd);
-	 switch (um) {
-	    case DIRECT :
-	       direct.add(btc);
-	       all.add(btc);
-	       break;
-	    case INDIRECT :
-	       all.add(btc);
-	       break;
-	    default:
-	       break;
-	  }
-	}
-
+         UseMode um = btc.usesMethod(mthd);
+         switch (um) {
+            case DIRECT :
+               direct.add(btc);
+               all.add(btc);
+               break;
+            case INDIRECT :
+               all.add(btc);
+               break;
+            default:
+               break;
+          }
+        }
+   
        if (all.size() > 0) {
-	  if (direct.size() > 0) {
-	     TestDisplayAction tda = new TestDisplayAction("Show Test Cases",direct,cfg.getEditor());
-	     menu.add(tda);
-	   }
-	  if (all.size() != direct.size()) {
-	     TestDisplayAction tda = new TestDisplayAction("Show Tests Using Method",all,cfg.getEditor());
-	     menu.add(tda);
-	   }
-	}
-
+          if (direct.size() > 0) {
+             TestDisplayAction tda = new TestDisplayAction("Show Test Cases",direct,cfg.getEditor());
+             menu.add(tda);
+           }
+          if (all.size() != direct.size()) {
+             TestDisplayAction tda = new TestDisplayAction("Show Tests Using Method",all,cfg.getEditor());
+             menu.add(tda);
+           }
+        }
+   
        Set<String> classes = new TreeSet<String>();
        if (direct.size() > 0) {
-	  for (BattTestCase bct : direct) {
-	     String cnm = bct.getClassName();
-	     classes.add(cnm);
-	   }
-	}
-
+          for (BattTestCase bct : direct) {
+             String cnm = bct.getClassName();
+             classes.add(cnm);
+           }
+        }
+   
        String cnm = mthd;
        int idx1= cnm.indexOf("(");
        if (idx1 > 0) cnm = cnm.substring(0,idx1);
@@ -557,52 +557,52 @@ private static class BattContexter implements BaleContextListener {
        int idx3 = cnm.lastIndexOf(".");
        boolean isinner = false;
        for ( ; ; ) {
-	  int idx4 = cnm.lastIndexOf("$");
-	  if (idx4 > 0 && idx4 > idx3) cnm = cnm.substring(0,idx4);
-	  else break;
-	  isinner = true;
-	}
+          int idx4 = cnm.lastIndexOf("$");
+          if (idx4 > 0 && idx4 > idx3) cnm = cnm.substring(0,idx4);
+          else break;
+          isinner = true;
+        }
        String tcnm = cnm + "Test";
        String pnm = cfg.getEditor().getContentProject();
        List<BumpLocation> locs = BumpClient.getBump().findTypes(pnm,cnm);
        if (locs != null) {
-	  for (BumpLocation loc : locs) {
-	     String nm = loc.getSymbolName();
-	     if (nm.equals(cnm) && Modifier.isPublic(loc.getModifiers())) {
-		List<BumpLocation> cntrs = BumpClient.getBump().findMethods(pnm,cnm,false,true,true,false);
-		boolean cok = false;
-		if (cntrs.size() == 0) cok = true;
-		for (BumpLocation cloc : cntrs) {
-		   String prms = cloc.getParameters();
-		   if (Modifier.isPublic(loc.getModifiers()) &&  prms != null && prms.equals("()")) cok = true;
-		 }
-		if (cok) classes.add(cnm);
-	      }
-	     else if (nm.equals(tcnm) && Modifier.isPublic(loc.getModifiers()) && !isinner) {
-		List<BumpLocation> mthds = BumpClient.getBump().findMethod(pnm,mthd,false);
-		boolean fok = false;
-		for (BumpLocation bl : mthds) {
-		   if (Modifier.isPrivate(bl.getModifiers())) fok = false;
-		   else fok = true;
-		}
-
-		if (fok) classes.add(cnm);
-	      }
-	   }
-	}
-
+          for (BumpLocation loc : locs) {
+             String nm = loc.getSymbolName();
+             if (nm.equals(cnm) && Modifier.isPublic(loc.getModifiers())) {
+        	List<BumpLocation> cntrs = BumpClient.getBump().findMethods(pnm,cnm,false,true,true,false);
+        	boolean cok = false;
+        	if (cntrs.size() == 0) cok = true;
+        	for (BumpLocation cloc : cntrs) {
+        	   String prms = cloc.getParameters();
+        	   if (Modifier.isPublic(loc.getModifiers()) &&  prms != null && prms.equals("()")) cok = true;
+        	 }
+        	if (cok) classes.add(cnm);
+              }
+             else if (nm.equals(tcnm) && Modifier.isPublic(loc.getModifiers()) && !isinner) {
+        	List<BumpLocation> mthds = BumpClient.getBump().findMethod(pnm,mthd,false);
+        	boolean fok = false;
+        	for (BumpLocation bl : mthds) {
+        	   if (Modifier.isPrivate(bl.getModifiers())) fok = false;
+        	   else fok = true;
+        	}
+   
+        	if (fok) classes.add(cnm);
+              }
+           }
+        }
+   
        String mnm = mthd;
        int idx = mnm.indexOf("(");
        if (idx >= 0) mnm = mnm.substring(0,idx);
        idx = mnm.lastIndexOf(".");
        if (idx >= 0) mnm = mnm.substring(idx+1);
-
+   
        for (String c : classes) {
-	  menu.add(new NewTestAction(mthd,NewTestMode.USER_CODE,mnm,pnm,c,false,cfg.getEditor()));
-	}
+          menu.add(new NewTestAction(mthd,NewTestMode.USER_CODE,mnm,pnm,c,false,cfg.getEditor()));
+        }
        if (!classes.contains(tcnm)) {
-	  menu.add(new NewTestAction(mthd,NewTestMode.USER_CODE,mnm,pnm,tcnm,true,cfg.getEditor()));
-	}
+          menu.add(new NewTestAction(mthd,NewTestMode.USER_CODE,mnm,pnm,tcnm,true,cfg.getEditor()));
+        }
     }
 
    @Override public void noteEditorAdded(BaleWindow cfg)	{ }
@@ -798,12 +798,12 @@ private class ErrorStatus implements BumpConstants.BumpProblemHandler {
 
    @Override public void handleProblemsDone() {
       for (File f : check_files) {
-	 int ct = 0;
-	 for (BumpProblem bp : BumpClient.getBump().getProblems(f)) {
-	    if (isError(bp)) ++ct;
-	  }
-	 if (ct > 0) error_files.add(f);
-	 else error_files.remove(f);
+         int ct = 0;
+         for (BumpProblem bp : BumpClient.getBump().getProblems(f)) {
+            if (isError(bp)) ++ct;
+          }
+         if (ct > 0) error_files.add(f);
+         else error_files.remove(f);
        }
       check_files.clear();
       sendErrorFiles(error_files);

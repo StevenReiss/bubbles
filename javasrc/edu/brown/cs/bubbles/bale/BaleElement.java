@@ -961,26 +961,26 @@ static class Leaf extends BaleElement {
    void setPosition(int off0,int off1) {
       BaleDocument bd = getBaleDocument();
       try {
-	 start_pos = bd.createPosition(off0);
-	 end_pos = bd.createPosition(off1);
-	 if (start_pos.getOffset() > end_pos.getOffset()) {
-	    BoardLog.logE("BALE","Bad token: end is less than start");
-	    start_pos = bd.createPosition(off0);
-	    end_pos = bd.createPosition(off1);
-	    int p0 = start_pos.getOffset();
-	    int p1 = end_pos.getOffset();
-	    BoardLog.logX("BALE","Bad token: end less than start: " + p0 + " " + p1 + " " +
-			     token_type + " " +
-			     getName() + " " + bd.getFragmentName() + " " + bd.getFile() + " " +
-			     off0 + " " + off1);
-
-	    end_pos = start_pos;
-	  }
-	 if (getBaleParent() != null) getBaleParent().setChildPosition(start_pos,end_pos,this);
+         start_pos = bd.createPosition(off0);
+         end_pos = bd.createPosition(off1);
+         if (start_pos.getOffset() > end_pos.getOffset()) {
+            BoardLog.logE("BALE","Bad token: end is less than start");
+            start_pos = bd.createPosition(off0);
+            end_pos = bd.createPosition(off1);
+            int p0 = start_pos.getOffset();
+            int p1 = end_pos.getOffset();
+            BoardLog.logX("BALE","Bad token: end less than start: " + p0 + " " + p1 + " " +
+        		     token_type + " " +
+        		     getName() + " " + bd.getFragmentName() + " " + bd.getFile() + " " +
+        		     off0 + " " + off1);
+   
+            end_pos = start_pos;
+          }
+         if (getBaleParent() != null) getBaleParent().setChildPosition(start_pos,end_pos,this);
        }
       catch (BadLocationException e) {
-	 start_pos = end_pos = null;
-	 throw new Error("Can't create position references for leaf element " + start_pos + " " + end_pos);
+         start_pos = end_pos = null;
+         throw new Error("Can't create position references for leaf element " + start_pos + " " + end_pos);
        }
     }
 

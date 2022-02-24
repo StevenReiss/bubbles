@@ -356,6 +356,7 @@ List<BumpBreakpoint> getBreakpoints(File f)
 void handleUpdate(Element ep)
 {
    String reason = IvyXml.getAttrString(ep,"REASON");
+   if (reason == null) reason = "LIST";
 
    List<BumpBreakImpl> rem = new ArrayList<BumpBreakImpl>();
    List<BumpBreakImpl> add = new ArrayList<BumpBreakImpl>();

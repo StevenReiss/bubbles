@@ -62,8 +62,9 @@ private Image		splash_image;
 private Image		brown_image;
 private Image		bubbles_image;
 
-private boolean 	show_bubbles = true;
-private boolean 	construct_image = true;
+private boolean 	show_bubbles;
+
+private static final boolean 	construct_image = true;
 
 private static final Color  first_color = new Color(0,0,255);
 private static final Color  second_color = new Color(128,128,255);
@@ -153,7 +154,7 @@ private void setup()
    splash_frame.setContentPane(pnl);
    splash_frame.setUndecorated(true);
    splash_frame.setResizable(false);
-   splash_frame.setAlwaysOnTop(false); //amc6 switched from true to flase
+   splash_frame.setAlwaysOnTop(false); //amc6 switched from true to false
 
    splash_frame.pack();
 

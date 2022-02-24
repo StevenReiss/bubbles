@@ -340,8 +340,8 @@ private class OutputVisitor extends ASTVisitor {
       JcompSymbol js = null;
       
       if (it.getParent() != null) {
-	 // find class for the initializer
-	 js = JcompAst.getDefinition(it.getParent());
+         // find class for the initializer
+         js = JcompAst.getDefinition(it.getParent());
        }
       
       if (js == null) return;

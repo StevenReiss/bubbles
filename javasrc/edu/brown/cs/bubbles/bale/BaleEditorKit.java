@@ -160,6 +160,8 @@ private static final Action marquis_comment_action = new CommentAction("MarquisC
 private static final Action block_comment_action = new CommentAction("BlockComment",BuenoType.NEW_BLOCK_COMMENT);
 private static final Action javadoc_comment_action = new CommentAction("JavadocComment",BuenoType.NEW_JAVADOC_COMMENT);
 private static final Action fix_errors_action = new FixErrorsAction();
+private static final Action finish_action = new FinishAction();
+
 
 
 
@@ -213,6 +215,7 @@ private static final Action [] local_actions = {
    move_lines_up_action,
    move_lines_down_action,
    autocomplete_action,
+   finish_action,
    rename_action,
    extract_method_action,
    format_action,
@@ -239,27 +242,30 @@ private static final Action [] local_actions = {
 
 private static final String	MENU_KEY = "menu";
 private static final String	XALT_KEY = "xalt";
+private static final String     YALT_KEY = "yalt";
 
 private static final String	menu_keyname;
 private static final String	xalt_keyname;
-
+private static final String     yalt_keyname; 
 
 static {
    int mask = SwingText.getMenuShortcutKeyMaskEx();
    if (mask == InputEvent.META_DOWN_MASK) {
       menu_keyname = "meta";
       xalt_keyname = "ctrl";
+      yalt_keyname = "alt";
     }
    else if (mask == InputEvent.CTRL_DOWN_MASK) {
       menu_keyname = "ctrl";
       xalt_keyname = "alt";
+      yalt_keyname = "meta";
     }
    else {
       menu_keyname = "ctrl";
       xalt_keyname = "alt";
+      yalt_keyname = "meta";
     }
 }
-
 
 
 
@@ -320,6 +326,7 @@ private static final KeyItem [] key_defs = new KeyItem[] {
    
    // new KeyItem("menu SPACE",autocomplete_action),
    new KeyItem("ctrl SPACE",autocomplete_action),
+   new KeyItem("yalt SPACE",finish_action),
 
    new KeyItem("F3",goto_implementation_action),
    new KeyItem("menu F3",goto_type_action),
@@ -376,6 +383,7 @@ BaleEditorKit(BoardLanguage lang)
    else {
       switch (lang) {
 	 case JAVA :
+         case JAVA_IDEA :
 	 case REBUS :
 	    language_kit = new BaleEditorKitJava();
 	    break;
@@ -463,6 +471,7 @@ static Action findAction(String name,BoardLanguage lang)
       switch (lang) {
 	 case REBUS :
 	 case JAVA :
+         case JAVA_IDEA :
 	    lkit = new BaleEditorKitJava();
 	    break;
 	 case PYTHON :
@@ -904,110 +913,110 @@ private static class NewlineAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane target = getBaleEditor(e);
       if (!checkEditor(target)) return;
-
+      
       BaleDocument bd = target.getBaleDocument();
       bd.baleWriteLock();
       try {
-	 String text = "\n";
-	 String posttext = null;
-	 int postdelta = 0;
-	 int size = 1;
-	 int postsize = 0;
-	 int soff = target.getSelectionStart();
-	 int eoff = target.getSelectionEnd();
-	 BaleElement elt = bd.getCharacterElement(eoff);
-	 if (elt != null && elt.isComment()) {
-	    switch (elt.getEndTokenState()) {
-	       case IN_COMMENT :
-	       case IN_FORMAL_COMMENT :
-		  String ind = " ";
-		  BaleElement be1 = elt.getPreviousCharacterElement();
-		  if (be1 != null) {
-		     BaleElement.Indent bin = be1.getIndent();
-		     if (bin != null) {
-			int col = bin.getFirstColumn();
-			StringBuffer buf = new StringBuffer();
-			for (int i = 0; i < col; ++i) buf.append(" ");
-			ind = buf.toString();
-		      }
-		     else if (be1.isComment()) {
-			try {
-			   String ctxt = target.getText(elt.getStartOffset(),elt.getEndOffset()-elt.getStartOffset()+1);
-			   int ct = 0;
-			   while (ctxt.charAt(ct) == ' ') ++ct;
-			   ind = ctxt.substring(0,ct);
-			 }
-			catch (BadLocationException ex) { }
-		      }
-		   }
-		  text += ind + "*";
-		  break;
-	       default:
-		  break;
-	     }
-	  }
-
-	 if (doAutoClose(bd,elt,soff,eoff)) {
-	    posttext= "\n}";
-	    postsize = 1;
-	    try {
-	       String txt = target.getText(eoff,100);
-	       boolean havetxt = false;
-	       for (int i = 0; i < txt.length(); ++i) {
-		  if (txt.charAt(i) == '\n') {
-		     if (havetxt) postdelta = i;
-		     break;
-		   }
-		  else if (!Character.isWhitespace(txt.charAt(i))) havetxt = true;
-		}
-	     }
-	    catch (BadLocationException ex) { }
-	  }
-
-	 boolean grow = true;
-	 boolean rep = true;
-	 boolean ind = true;
-
-	 if (soff != eoff) {
-	    int slno = bd.findLineNumber(soff);
-	    int elno = bd.findLineNumber(eoff);
-	    if (elno != slno) grow = false;
-	  }
-	 else {
-	    if (target.getOverwriteMode()) {
-	       rep = false;
-	       grow = false;
-	       int nlno = bd.findLineNumber(soff) + 1;
-	       int pos = bd.getFirstNonspace(nlno);
-	       if (pos >= 0) ind = false;
-	       else pos = -pos;
-	       if (pos < bd.getEndPosition().getOffset()) target.setCaretPosition(pos);
-	       soff = pos-1;
-	     }
-	  }
-
-	 if (rep) target.replaceSelection(text);
-	 if (ind) {
-	    int lno = bd.findLineNumber(soff+1);
-	    bd.fixLineIndent(lno);
-	  }
-	 if (posttext != null) {
-	    int noff = target.getSelectionStart();
-	    try {
-	       bd.insertString(noff+postdelta, posttext, null);
-	       int nlno = bd.findLineNumber(noff+1+postdelta);
-	       for (int i = 0; i < postsize; ++i) {
-		  bd.fixLineIndent(nlno+i);
-		}
-	       size += postsize;
-	     }
-	    catch (BadLocationException ex) { }
-	    target.setSelectionStart(noff);
-	    target.setSelectionEnd(noff);
-	  }
-	 if (grow) {
-	    target.increaseSize(size);
-	  }
+         String text = "\n";
+         String posttext = null;
+         int postdelta = 0;
+         int size = 1;
+         int postsize = 0;
+         int soff = target.getSelectionStart();
+         int eoff = target.getSelectionEnd();
+         BaleElement elt = bd.getCharacterElement(eoff);
+         if (elt != null && elt.isComment()) {
+            switch (elt.getEndTokenState()) {
+               case IN_COMMENT :
+               case IN_FORMAL_COMMENT :
+                  String ind = " ";
+                  BaleElement be1 = elt.getPreviousCharacterElement();
+                  if (be1 != null) {
+                     BaleElement.Indent bin = be1.getIndent();
+                     if (bin != null) {
+                        int col = bin.getFirstColumn();
+                        StringBuffer buf = new StringBuffer();
+                        for (int i = 0; i < col; ++i) buf.append(" ");
+                        ind = buf.toString();
+                      }
+                     else if (be1.isComment()) {
+                        try {
+                           String ctxt = target.getText(elt.getStartOffset(),elt.getEndOffset()-elt.getStartOffset()+1);
+                           int ct = 0;
+                           while (ctxt.charAt(ct) == ' ') ++ct;
+                           ind = ctxt.substring(0,ct);
+                         }
+                        catch (BadLocationException ex) { }
+                      }
+                   }
+                  text += ind + "*";
+                  break;
+               default:
+                  break;
+             }
+          }
+         
+         if (doAutoClose(bd,elt,soff,eoff)) {
+            posttext= "\n}";
+            postsize = 1;
+            try {
+               String txt = target.getText(eoff,100);
+               boolean havetxt = false;
+               for (int i = 0; i < txt.length(); ++i) {
+                  if (txt.charAt(i) == '\n') {
+                     if (havetxt) postdelta = i;
+                     break;
+                   }
+                  else if (!Character.isWhitespace(txt.charAt(i))) havetxt = true;
+                }
+             }
+            catch (BadLocationException ex) { }
+          }
+         
+         boolean grow = true;
+         boolean rep = true;
+         boolean ind = true;
+         
+         if (soff != eoff) {
+            int slno = bd.findLineNumber(soff);
+            int elno = bd.findLineNumber(eoff);
+            if (elno != slno) grow = false;
+          }
+         else {
+            if (target.getOverwriteMode()) {
+               rep = false;
+               grow = false;
+               int nlno = bd.findLineNumber(soff) + 1;
+               int pos = bd.getFirstNonspace(nlno);
+               if (pos >= 0) ind = false;
+               else pos = -pos;
+               if (pos < bd.getEndPosition().getOffset()) target.setCaretPosition(pos);
+               soff = pos-1;
+             }
+          }
+         
+         if (rep) target.replaceSelection(text);
+         if (ind) {
+            int lno = bd.findLineNumber(soff+1);
+            bd.fixLineIndent(lno);
+          }
+         if (posttext != null) {
+            int noff = target.getSelectionStart();
+            try {
+               bd.insertString(noff+postdelta, posttext, null);
+               int nlno = bd.findLineNumber(noff+1+postdelta);
+               for (int i = 0; i < postsize; ++i) {
+                  bd.fixLineIndent(nlno+i);
+                }
+               size += postsize;
+             }
+            catch (BadLocationException ex) { }
+            target.setSelectionStart(noff);
+            target.setSelectionEnd(noff);
+          }
+         if (grow) {
+            target.increaseSize(size);
+          }
        }
       finally { bd.baleWriteUnlock(); }
    }
@@ -1424,7 +1433,18 @@ private static class CommentLinesAction extends TextAction {
                 }
                else if (!remcmmt) {
                   if (ind != null && ind.getFirstColumn() >= 3) {
-                     bd.replace(loff,2,"//",null);
+                     int sto = ind.getStartOffset();
+                     int eno = ind.getEndOffset();
+                     String txt = bd.getText(sto,eno-sto);
+                     if (txt.charAt(0) == '\t') {
+                        bd.insertString(loff,"// ",null);
+                      }
+                     else if (txt.charAt(1) == '\t') {
+                        bd.replace(loff,1,"//",null);
+                      }
+                     else {
+                        bd.replace(loff,2,"//",null);
+                      }
                    }
                   else {
                      bd.insertString(loff,"// ",null);
@@ -2033,16 +2053,163 @@ private static class AutoCompleteAction extends TextAction  {
       if (!checkEditor(target)) return;
       BaleCompletionContext ctx = target.getCompletionContext();
       if (ctx == null) {
-	 int sel = target.getSelectionStart();
-	 new BaleCompletionContext(target,sel-1,'1');
-	 BoardMetrics.noteCommand("BALE","AutoCompleteIt");
+         int sel = target.getSelectionStart();
+         new BaleCompletionContext(target,sel-1,'1');
+         BoardMetrics.noteCommand("BALE","AutoCompleteIt");
        }
       else {
-	 ctx.handleSelected();
-	 BoardMetrics.noteCommand("BALE","AutoComplete");
+         ctx.handleSelected();
+         BoardMetrics.noteCommand("BALE","AutoComplete");
        }
    }
 }
+
+
+private static class FinishAction extends TextAction {
+   
+   private static final long serialVersionUID = 1;
+   
+   FinishAction() {
+      super("FinishAction");
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      BaleEditorPane target = getBaleEditor(e);
+      if (!checkEditor(target)) return;
+      BaleDocument bd = target.getBaleDocument();
+      bd.baleWriteLock();
+      // consider maintaining a stack of characters to add
+      // for example '(' with parenct >= 0, adds ')'
+      // 
+      try {
+         int eoff = target.getSelectionEnd();
+         BaleElement elt = bd.getCharacterElement(eoff);
+         int parenct = 0;
+         int bracect = 0;
+         int bracketct = 0;
+         int semict = 0;
+         int colonct = 0;
+         List<BaleTokenType> totype = new ArrayList<>();
+         loop: for (BaleElement e4 = elt.getPreviousCharacterElement();
+            e4 != null;
+            e4 = e4.getPreviousCharacterElement()) {
+            switch (e4.getTokenType()) {
+               case LBRACE :
+                  if (!totype.isEmpty()) break loop;
+                  if (bracect >= 0) totype.add(BaleTokenType.RBRACE);
+                  ++bracect;
+                  break;
+               case RBRACE :
+                  --bracect;
+                  break;
+               case LPAREN :
+                  if (parenct >= 0) totype.add(BaleTokenType.RPAREN);
+                  ++parenct;
+                  break;
+               case RPAREN :
+                  --parenct;
+                  break;
+               case LBRACKET :
+                  if (bracketct >= 0) totype.add(BaleTokenType.RBRACKET);
+                  ++bracketct;
+                  break;
+               case RBRACKET :
+                  --bracketct;
+                  break;
+               case FOR :
+                  if (!totype.isEmpty()) break loop;
+                  if (colonct == 0 && semict == 1) {
+                     totype.add(BaleTokenType.SEMICOLON);
+                     break loop;
+                   }
+                  break;
+               case WHILE :
+               case DO :
+               case CASE :
+               case CATCH :
+               case KEYWORD :
+               case FINALLY :
+               case IF :
+               case ELSE :
+               case IMPORT :
+               case PACKAGE :
+               case RETURN :
+               case SWITCH :
+               case SYNCHRONIZED :
+               case TRY :
+               case BREAK :
+               case CONTINUE :
+                  if (!totype.isEmpty()) break loop;
+                  break;
+               case SEMICOLON :
+                  ++semict;
+                  if (!totype.isEmpty()) break loop;
+                  break;
+               case COLON :
+                  ++colonct;
+                  break;
+               case EOL :
+                  break;
+               default :
+                  break;
+             }
+          }
+         BoardLog.logD("BALE","FINISH " + parenct + " " + bracect + " " + bracketct + " " + totype);
+         BaleElement e3 = elt;
+         BaleElement start = elt;
+         boolean haveeol = false;
+         while (!totype.isEmpty()) {
+            while (e3 != null) {
+               if (e3.isEndOfLine()) haveeol = true;
+               if (e3.isComment() || e3.isEmpty()) ;
+               else break;
+               e3 = e3.getNextCharacterElement();
+             }
+            if (e3 != null && e3.getTokenType() == totype.get(0)) {
+               if (!haveeol || e3.getTokenType() == BaleTokenType.RBRACE) {
+                  totype.remove(0);
+                  start = e3;
+                }
+               else break;
+             }
+            else break;
+          }
+         if (totype.isEmpty()) {
+            if (e3 != null && e3.getTokenType() != BaleTokenType.SEMICOLON && !haveeol) {
+               totype.add(BaleTokenType.SEMICOLON);
+             }
+          }
+         else haveeol = true;
+         if (!totype.isEmpty()) {
+            String add = "";
+            for (BaleTokenType tt : totype) {
+               switch (tt) {
+                  case RBRACE :
+                     add += "}";
+                     break;
+                  case RPAREN :
+                     add += ")";
+                     break;
+                  case RBRACKET :
+                     add += "]";
+                     break;
+                  case SEMICOLON :
+                     add += ";";
+                     if (!haveeol) add += " ";
+                     break;
+                }
+             }
+            eoff = start.getStartOffset();
+            int noff = eoff + add.length();
+            bd.insertString(eoff,add,null);
+            target.setSelectionStart(noff);
+            target.setSelectionEnd(noff);
+          }
+       }
+      catch (BadLocationException ex) { }
+      finally { bd.baleWriteUnlock(); }
+    }
+}       // end of inner class FinishAction
 
 
 
@@ -3012,6 +3179,7 @@ static class KeyItem {
    private String fixKey(String key) {
       key = key.replace(MENU_KEY,menu_keyname);
       key = key.replace(XALT_KEY,xalt_keyname);
+      key = key.replace(YALT_KEY,yalt_keyname);
       return key;
     }
 

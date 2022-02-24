@@ -1418,6 +1418,7 @@ String getEvaluationString(BumpStackFrame frm,BumpRunValue rv,String id)
    BoardLanguage bl = BoardSetup.getSetup().getLanguage();
    switch (bl) {
       case JAVA :
+      case JAVA_IDEA :
       default :
 	 return getEvaluationStringJava(frm,rv,id);
       case JS :

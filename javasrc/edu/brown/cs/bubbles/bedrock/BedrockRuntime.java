@@ -191,12 +191,6 @@ void getRunConfigurations(IvyXmlWriter xw) throws BedrockException
    ILaunchManager lm = debug_plugin.getLaunchManager();
 
    try {
-      ILaunchConfigurationType [] ctyps = lm.getLaunchConfigurationTypes();
-      if (ctyps != null) {
-	 for (ILaunchConfigurationType ctyp : ctyps) {
-	    BedrockPlugin.logD("LaunchConfigType " + ctyp.getName());
-	  }
-       }
       ILaunchConfiguration [] cnfg = lm.getLaunchConfigurations();
 
       for (int i = 0; i < cnfg.length; ++i) {

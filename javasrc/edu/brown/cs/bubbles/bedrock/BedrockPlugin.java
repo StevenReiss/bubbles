@@ -167,6 +167,8 @@ public BedrockPlugin()
    BedrockPlugin.logI("STARTING");
    BedrockPlugin.logI("MEMORY " + Runtime.getRuntime().maxMemory() + " " +
 			 Runtime.getRuntime().totalMemory());
+   
+   System.setProperty("org.eclipse.jdt.ui.codeAssistTimeout","30000");
 
    mint_control = null;
    send_sema = new Object();
@@ -981,7 +983,7 @@ private List<Element> getElements(Element xml,String key)
    List<Element> elts = null;
 
    for (Element c : IvyXml.children(xml,key)) {
-      if (elts == null) elts = new ArrayList<Element>();
+      if (elts == null) elts = new ArrayList<>();
       elts.add(c);
     }
 

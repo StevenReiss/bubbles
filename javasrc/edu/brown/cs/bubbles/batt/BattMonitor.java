@@ -382,8 +382,8 @@ private class EclipseHandler implements MintHandler {
             Element msgs = IvyXml.getChild(e,"MESSAGES");
             if (msgs != null) {
                for (Element pm : IvyXml.children(msgs,"PROBLEM")) {
-        	  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
-        	}
+                  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
+                }
              }
             if (fs != null) {
                setFileState(IvyXml.getAttrString(e,"FILE"),fs);
@@ -395,8 +395,8 @@ private class EclipseHandler implements MintHandler {
             Element msgs = IvyXml.getChild(e,"MESSAGES");
             if (msgs != null) {
                for (Element pm : IvyXml.children(msgs,"PROBLEM")) {
-        	  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
-        	}
+                  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
+                }
              }
             setFileState(IvyXml.getAttrString(e,"FILE"),fs);
             updateTestState();
@@ -406,16 +406,16 @@ private class EclipseHandler implements MintHandler {
                Element re = IvyXml.getChild(de,"RESOURCE");
                String rtyp = IvyXml.getAttrString(re,"TYPE");
                if (rtyp != null && rtyp.equals("FILE")) {
-        	  String fp = IvyXml.getAttrString(re,"LOCATION");
-        	  FileState fs = FileState.STABLE;
-        	  for (Element me : IvyXml.children(de,"MARKER")) {
-        	     for (Element pe : IvyXml.children(me,"PROBLEM")) {
-        		if (IvyXml.getAttrBool(pe,"ERROR")) fs = FileState.ERRORS;
-        	      }
-        	   }
-        	  System.err.println("BATT: Note " + fp + " BUILT " + fs);
-        	  setFileState(fp,fs);
-        	}
+                  String fp = IvyXml.getAttrString(re,"LOCATION");
+                  FileState fs = FileState.STABLE;
+                  for (Element me : IvyXml.children(de,"MARKER")) {
+                     for (Element pe : IvyXml.children(me,"PROBLEM")) {
+                        if (IvyXml.getAttrBool(pe,"ERROR")) fs = FileState.ERRORS;
+                      }
+                   }
+                  System.err.println("BATT: Note " + fp + " BUILT " + fs);
+                  setFileState(fp,fs);
+                }
              }
             updateTestState();
           }

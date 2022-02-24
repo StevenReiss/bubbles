@@ -134,17 +134,6 @@
       </path>
    </target>
 
-   <available file='/pro/java/linux/jdk1.6/jre/lib/rt.jar' type='file' property='j6'
-       value='/pro/java/linux/jdk1.6/jre/lib/rt.jar' />
-   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Classes/classes.jar'
-	type='file' property = 'j6' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Classes/classes.jar' />
-
-   <available file='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' type='file' property='j8'
-       value='/pro/java/linux/jdk1.8.0/jre/lib/rt.jar' />
-   <available file='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar'
-	type='file' property = 'j8' value='/System/Library/Frameworks/JavaVM.framework/Versions/1.8/Classes/classes.jar' />
-
-
    <path id='pybles1'>
       <fileset dir='${BUBBLES}/pybles' includes='**/*' />
    </path>
@@ -155,7 +144,7 @@
 
    <target name='compile' depends='init'>
       <javac srcdir='.' destdir='${BUBBLES}/java' debug='on'
-		target='1.8' source='1.8' bootclasspath='${j8}'
+		target='10' source='10'
 		deprecation='on' includeantruntime='false' >
 	 <classpath refid='bubbles.classpath' />
       </javac>

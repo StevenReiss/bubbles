@@ -356,13 +356,13 @@ private class Runner extends Thread {
 
    @Override public void run() {
       try {
-	 NobaseMain.main(new String [] { "-m", "NOBBLESTEST", "-ws", "/home/spr/Nobbles/test",
-	       "-log", "/pro/bubbles/nobase/src/test.log"});
-	 NobaseMain.logI("NOBASETEST: Start run");
+         NobaseMain.main(new String [] { "-m", "NOBBLESTEST", "-ws", "/home/spr/Nobbles/test",
+               "-log", "/pro/bubbles/nobase/src/test.log"});
+         NobaseMain.logI("NOBASETEST: Start run");
        }
       catch (Throwable t) {
-	 NobaseMain.logE("NOBASETEST: Error running: " + t);
-	 t.printStackTrace();
+         NobaseMain.logE("NOBASETEST: Error running: " + t);
+         t.printStackTrace();
        }
       NobaseMain.logI("NOBASETEST: Finish run");
     }

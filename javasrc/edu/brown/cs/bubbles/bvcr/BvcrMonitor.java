@@ -388,54 +388,54 @@ private class EclipseHandler implements MintHandler {
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
       Element e = msg.getXml();
-
+   
       try {
-	 if (cmd == null) return;
-	 else if (cmd.equals("EDIT")) {
-	    msg.replyTo();
-	  }
-	 else if (cmd.equals("FILEERROR")) {
-	    boolean haserrs = false;
-	    Element msgs = IvyXml.getChild(e,"MESSAGES");
-	    if (msgs != null) {
-	       for (Element pm : IvyXml.children(msgs,"PROBLEM")) {
-		  if (IvyXml.getAttrBool(pm,"ERROR")) haserrs = true;
-		}
-	     }
-	    String proj = IvyXml.getAttrString(e,"PROJECT");
-	    synchronized (this) {
-	       handleFileError(proj,IvyXml.getAttrString(e,"FILE"),haserrs);
-	     }
-	  }
-	 else if (cmd.equals("LAUNCHCONFIGEVENT")) {
-	    // handle changes to saved launch configurations
-	  }
-	 else if (cmd.equals("RESOURCE")) {
-	    synchronized (this) {
-	       for (Element re : IvyXml.children(e,"DELTA")) {
-		  String rtyp = IvyXml.getAttrString(re,"TYPE");
-		  if (rtyp != null && rtyp.equals("FILE")) {
-		     String fp = IvyXml.getAttrString(re,"LOCATION");
-		     String proj = IvyXml.getAttrString(re,"PROJECT");
-		     handleFileChanged(proj,fp);
-		   }
-		}
-	       handleEndUpdate();
-	     }
-	  }
-	 else if (cmd.equals("PING")) {
-	    msg.replyTo();			// we don't count for eclipse
-	  }
-	 else if (cmd.equals("STOP")) {
-	    serverDone();
-	  }
-	 else {
-	    msg.replyTo();
-	  }
+         if (cmd == null) return;
+         else if (cmd.equals("EDIT")) {
+            msg.replyTo();
+          }
+         else if (cmd.equals("FILEERROR")) {
+            boolean haserrs = false;
+            Element msgs = IvyXml.getChild(e,"MESSAGES");
+            if (msgs != null) {
+               for (Element pm : IvyXml.children(msgs,"PROBLEM")) {
+        	  if (IvyXml.getAttrBool(pm,"ERROR")) haserrs = true;
+        	}
+             }
+            String proj = IvyXml.getAttrString(e,"PROJECT");
+            synchronized (this) {
+               handleFileError(proj,IvyXml.getAttrString(e,"FILE"),haserrs);
+             }
+          }
+         else if (cmd.equals("LAUNCHCONFIGEVENT")) {
+            // handle changes to saved launch configurations
+          }
+         else if (cmd.equals("RESOURCE")) {
+            synchronized (this) {
+               for (Element re : IvyXml.children(e,"DELTA")) {
+        	  String rtyp = IvyXml.getAttrString(re,"TYPE");
+        	  if (rtyp != null && rtyp.equals("FILE")) {
+        	     String fp = IvyXml.getAttrString(re,"LOCATION");
+        	     String proj = IvyXml.getAttrString(re,"PROJECT");
+        	     handleFileChanged(proj,fp);
+        	   }
+        	}
+               handleEndUpdate();
+             }
+          }
+         else if (cmd.equals("PING")) {
+            msg.replyTo();			// we don't count for eclipse
+          }
+         else if (cmd.equals("STOP")) {
+            serverDone();
+          }
+         else {
+            msg.replyTo();
+          }
        }
       catch (Throwable t) {
-	 System.err.println("BVCR: Problem processing Eclipse command: " + t);
-	 t.printStackTrace();
+         System.err.println("BVCR: Problem processing Eclipse command: " + t);
+         t.printStackTrace();
        }
     }
 

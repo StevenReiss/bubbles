@@ -29,6 +29,7 @@
 
    <target name='compile' depends='init'>
       <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
+		source='10' target='10'
 		includeantruntime='false' >
 	 <classpath refid='bubbles.classpath' />
       </javac>

@@ -29,14 +29,9 @@ import edu.brown.cs.bubbles.board.BoardConstants;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardSetup;
 
-import edu.brown.cs.ivy.exec.IvyExec;
+import java.util.List;
 
 import javax.swing.JOptionPane;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.Socket;
-import java.util.List;
 
 
 
@@ -49,7 +44,7 @@ import java.util.List;
  *
  **/
 
-public class BumpClientJava extends BumpClient
+abstract class BumpClientJava extends BumpClient
 {
 
 
@@ -59,14 +54,6 @@ public class BumpClientJava extends BumpClient
 /*										*/
 /********************************************************************************/
 
-private boolean 	eclipse_starting;
-
-private String [] MAC_BINARY = new String [] {
-      "Contents/MacOS/eclipse", "Contents/Eclispe/eclipse"
-};
-
-
-
 
 /********************************************************************************/
 /*										*/
@@ -75,48 +62,17 @@ private String [] MAC_BINARY = new String [] {
 /********************************************************************************/
 
 BumpClientJava()
-{
-   eclipse_starting = false;
-
-   mint_control.register("<BEDROCK SOURCE='ECLIPSE' TYPE='_VAR_0' />",new IDEHandler());
-}
+{ }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Eclipse interaction methods						*/
-/*										*/
+/*                                                                              */
+/*      Backend startup helper methods                                          */
+/*                                                                              */
 /********************************************************************************/
 
-/**
- *	Return the name of the back end.
- **/
-
-@Override public String getName()		{ return "Eclipse"; }
-@Override public String getServerName() 	{ return "BEDROCK"; }
-
-
-
-/**
- *	Start the back end running.  This routine will return immediately.  If the user
- *	actually needs to use the backend, they should use waitForIDE.
- **/
-
-@Override void localStartIDE()
-{
-   synchronized (this) {
-      if (eclipse_starting) return;
-      eclipse_starting = true;
-    }
-
-   ensureRunning();
-}
-
-
-
-
-private void ensureRunning()
+protected boolean checkIfRunning()
 {
    for ( ; ; ) {
       String r = getStringReply("PING",null,null,null,60000);
@@ -124,7 +80,7 @@ private void ensureRunning()
 	 r = r.substring(8);
 	 int idx = r.indexOf("<");
 	 if (idx >= 0) r = r.substring(0,idx);
-      }
+       }
       if (r == null) break;		// nothing there
       if (r.equals("EXIT") || r.equals("UNSET")) {
 	 BoardLog.logX("BUMP","Eclipse caught during exit " + r);
@@ -134,154 +90,19 @@ private void ensureRunning()
 	  }
 	 catch (InterruptedException e) { }
        }
-      else return;			// eclipse already running
+      else return true;
     }
-
+   
    if (BoardSetup.getSetup().getRunMode() == BoardConstants.RunMode.CLIENT) {
-      BoardLog.logE("BUMP","Client mode with no eclipse found");
+      BoardLog.logE("BUMP","Client mode with no backend IDE found");
       JOptionPane.showMessageDialog(null,
-				       "Server must be running and accessible before client can be run",
+            "Server must be running and accessible before client can be run",
 				       "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
       System.exit(1);
     }
-
-   String eclipsedir = board_properties.getProperty(BOARD_PROP_ECLIPSE_DIR);
-   String ws = board_properties.getProperty(BOARD_PROP_ECLIPSE_WS);
-
-   File ef = new File(eclipsedir);
-   File ef1 = null;
-   for (String s : BOARD_ECLIPSE_START) {
-      ef1 = new File(ef,s);
-      if (ef1.exists() && ef1.canExecute()) break;
-    }
-   if (ef1 != null && ef1.isDirectory()) {
-      for (String s : MAC_BINARY) {
-	 File ef2 = new File(ef1,s);
-	 if (ef2.exists() && ef2.canExecute()) {
-	    ef1 = ef2;
-	    break;
-	  }
-       }
-    }
-
-   if (ef1 == null || !ef1.exists() || !ef1.canExecute()) ef1 = new File(ef,"eclipse");
-   String efp = ef1.getPath();
-   if (efp.endsWith(".app") || efp.endsWith(".exe")) efp = efp.substring(0,efp.length()-4);
-   String cmd = "'" + efp + "'";
-
-   cmd += " -application edu.brown.cs.bubbles.bedrock.application";
    
-   cmd += " -nosplash";
-   if (ws != null) cmd += " -data '" + ws + "'";
-
-   String eopt = board_properties.getProperty(BOARD_PROP_ECLIPSE_OPTIONS);
-   if (eopt != null) cmd += " " + eopt;
-   if (board_properties.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND,false)) {
-      cmd += " -bdisplay";
-    }
-   
-   boolean clean = board_properties.getBoolean(BOARD_PROP_ECLIPSE_CLEAN);
-   if (ws != null) {
-      File wf = new File(ws);
-      File cf = new File(wf,".clean");
-      if (cf.exists()) {
-	 clean = true;
-	 cf.delete();
-       }
-    }
-
-   if (clean) {
-      if (!cmd.contains("-clean")) cmd += " -clean";
-      board_properties.remove(BOARD_PROP_ECLIPSE_CLEAN);
-      try {
-	 board_properties.save();
-       }
-      catch (IOException e) { }
-    }
-
-   cmd += " -vmargs '-Dedu.brown.cs.bubbles.MINT=" + mint_name + "'";
-   eopt = board_properties.getProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS);
-   if (eopt != null) {
-      int idx = eopt.indexOf("-Xrunjdwp");
-      if (idx >= 0) {
-	 int idx1 = eopt.indexOf("address=",idx);
-	 if (idx1 >= 0) {
-	    int idx2 = idx1+8;
-	    int idx3 = idx2;
-	    while (idx3 < eopt.length()) {
-	       char c = eopt.charAt(idx3);
-	       if (!Character.isDigit(c)) break;
-	       ++idx3;
-	     }
-	    String port = eopt.substring(idx2,idx3);
-	    try {
-	       int portno = Integer.parseInt(port);
-	       for ( ; ; ) {
-		  try {
-		     Socket s = new Socket((String) null,portno);
-		     s.close();
-		     ++portno;
-		     continue;
-		   }
-		  catch (IOException e) {
-		     break;
-		   }
-		}
-	       eopt = eopt.substring(0,idx2) + (portno) + eopt.substring(idx3);
-	     }
-	    catch (NumberFormatException e) { }
-	  }
-       }
-      cmd += " " + eopt;
-    }
-
-   BoardLog.logD("BUMP","Start Eclipse: " + cmd);
-
-   // remove snapshots because we are going to refresh anyway
-   File f1 = new File(ws);
-   File f2 = new File(f1,".metadata");
-   File f3 = new File(f2,".plugins");
-   File f4 = new File(f3,"org.eclipse.core.resources");
-   File f5 = new File(f4,".snap");
-   if (f5.exists()) f5.delete();
-
-   try {
-      IvyExec ex = new IvyExec(cmd);
-      boolean eok = false;
-      for (int i = 0; i < 700; ++i) {
-	 synchronized (this) {
-	    try {
-	       wait(1000);
-	     }
-	    catch (InterruptedException e) { }
-	  }
-	 if (tryPing()) {
-	    BoardLog.logI("BUMP","Eclipse started successfully");
-	    eok = true;
-	    break;
-	  }
-	 if (!ex.isRunning()) {
-	    BoardLog.logE("BUMP","Problem starting eclipse");
-	    if (BoardSetup.getSetup().getRunMode() != RunMode.SERVER) {
-	       JOptionPane.showMessageDialog(null,
-		     "Eclipse could not be started. Check the eclipse log",
-		     "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
-	     }
-	    System.exit(1);
-	  }
-       }
-      if (!eok) {
-	 BoardLog.logE("BUMP","Eclipse doesn't seem to start");
-	 System.exit(1);
-       }
-    }
-   catch (IOException e) {
-      BoardLog.logE("BUMP","Problem running eclipse: " + e);
-      System.exit(1);
-    }
+   return false;
 }
-
-
 
 
 

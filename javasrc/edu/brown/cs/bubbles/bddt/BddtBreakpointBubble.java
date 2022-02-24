@@ -553,12 +553,12 @@ private class BreakpointTableModel extends AbstractTableModel {
 
    private void toggleEnablement(BumpBreakpoint bp) {
       if (bp.getBoolProperty("ENABLED")) {
-	 break_model.disableBreakpoint(bp.getFile(), bp.getLineNumber());
+         break_model.disableBreakpoint(bp.getFile(), bp.getLineNumber());
        }
       else {
-	 break_model.enableBreakpoint(bp.getFile(), bp.getLineNumber());
+         break_model.enableBreakpoint(bp.getFile(), bp.getLineNumber());
        }
-
+   
     }
 
 }	// end of inner class BreakpointTableModel

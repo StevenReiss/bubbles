@@ -1361,7 +1361,7 @@ private List<BaleRegion> getRegionsFromLocations(List<BumpLocation> locs)
 	     }
 	    else if (havecmmt) ;
 	    else if (Character.isWhitespace(s.charAt(eoffset))) ;
-	    else if (lang == BoardLanguage.JAVA &&
+	    else if ((lang == BoardLanguage.JAVA || lang == BoardLanguage.JAVA_IDEA) &&
 		  s.charAt(eoffset) == '/' && s.charAt(eoffset+1) == '/') {
 	       havecmmt = true;
 	     }

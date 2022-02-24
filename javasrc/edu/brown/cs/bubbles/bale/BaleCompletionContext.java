@@ -168,9 +168,6 @@ BaleCompletionContext(BaleEditorPane edt,int soff,char ch)
       return;
     }
 
-   getter_thread = new CompletionGetter();
-   BoardThreadPool.start(getter_thread);
-
    synchronized (this) {
       for_editor.addCaretListener(this);
       edit_mouser = new EditMouser();
@@ -181,6 +178,9 @@ BaleCompletionContext(BaleEditorPane edt,int soff,char ch)
       for_editor.addFocusListener(edit_focus);
       for_editor.setCompletionContext(this);
     }
+   
+   getter_thread = new CompletionGetter();
+   BoardThreadPool.start(getter_thread);
 }
 
 
@@ -648,16 +648,16 @@ private static class CompletionComparator implements Comparator<BumpCompletion> 
       
       if (v != 0) return v;
       if (c1.getSignature() != null && c2.getSignature() != null) {
-	 v = c1.getSignature().compareTo(c2.getSignature());
-	 if (v != 0) return v;
+         v = c1.getSignature().compareTo(c2.getSignature());
+         if (v != 0) return v;
        }
       String t1 = c1.getDeclaringType();
       String t2 = c2.getDeclaringType();
       if (t1 != null && t2 != null) {
-	 v = t1.compareTo(t2);
-	 if (v != 0) return v;
+         v = t1.compareTo(t2);
+         if (v != 0) return v;
       }
-
+   
       return 0;
     }
 
@@ -915,14 +915,14 @@ private static class CompletionItemNewMethod extends CompletionItem implements
       link_editor = editor;
       BaleDocument doc = editor.getBaleDocument();
       try {
-	 link_point = doc.createPosition(editor.getCaretPosition());
+         link_point = doc.createPosition(editor.getCaretPosition());
        }
       catch (BadLocationException e) { return; }
-
+   
       String proj = doc.getProjectName();
-
+   
       BaleFactory.getFactory().createNewMethod(proj,class_name + "." + method_name,null,null,0,true,null,
-						  editor,link_point,true,true);
+        					  editor,link_point,true,true);
     }
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {

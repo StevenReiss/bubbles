@@ -111,6 +111,7 @@ BassCreator()
 {
    switch (BoardSetup.getSetup().getLanguage()) {
       case JAVA :
+      case JAVA_IDEA :
       case REBUS :
 	 addJavaButtons(bb,where,menu,fullname,forname);
 	 break;

@@ -77,6 +77,7 @@ private int		symbol_flags;
 private String		symbol_project;
 private BumpSymbolType	source_type;
 private String		symbol_return;
+private String          symbol_parameters;
 private String		s6_source;
 
 private static FileSystemView file_system = null;
@@ -185,9 +186,13 @@ BumpLocation(String proj,String file,int off,int len,String srctyp,Element itm)
       symbol_key = IvyXml.getAttrString(itm,"KEY");
       symbol_handle = IvyXml.getAttrString(itm,"HANDLE");
       if (symbol_key == null) symbol_key = symbol_handle;
+      else if (symbol_handle == null) symbol_handle = symbol_key;
       symbol_flags = IvyXml.getAttrInt(itm,"FLAGS");
       symbol_project = IvyXml.getAttrString(itm,"PROJECT");
       symbol_return = IvyXml.getAttrString(itm,"RETURNTYPE");
+      symbol_return = IvyFormat.formatTypeName(symbol_return);
+      symbol_parameters = IvyXml.getAttrString(itm,"PARAMETERS");
+      symbol_parameters = IvyFormat.formatTypeName(symbol_parameters);
       if (file_location == null) {
 	 String fnm = IvyXml.getAttrString(itm,"PATH");
 	 if (fnm != null) file_location = file_system.createFileObject(fnm);
@@ -312,21 +317,7 @@ public BumpSymbolType getSourceType()		{ return source_type; }
 
 public String getParameters()
 {
-   switch (symbol_type) {
-      default :
-	 break;
-      case CONSTRUCTOR :
-      case FUNCTION :
-	 String knm = symbol_key;
-	 int idx2 = knm.indexOf("#");   // go past project prefix
-	 int idx = knm.indexOf("(",idx2+1);
-	 if (idx < 0) return null;
-	 int idx1 = knm.lastIndexOf(")");
-	 String args = knm.substring(idx,idx1+1);
-	 return IvyFormat.formatTypeName(args);
-    }
-
-   return null;
+   return symbol_parameters;
 }
 
 
@@ -336,23 +327,7 @@ public String getParameters()
 
 public String getReturnType()
 {
-   switch (symbol_type) {
-      case CONSTRUCTOR :
-      case FUNCTION :
-      case FIELD :
-	 String rtyp = symbol_return;
-	 if (rtyp == null) {
-	    String knm = symbol_key;
-	    int idx1 = knm.lastIndexOf(")");
-	    rtyp = knm.substring(idx1+1);
-	    symbol_return = rtyp;
-	  }
-	 return IvyFormat.formatTypeName(rtyp);
-      default:
-	 break;
-    }
-
-   return null;
+   return symbol_return;
 }
 
 

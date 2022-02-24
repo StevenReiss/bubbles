@@ -63,7 +63,7 @@ private static BandaidAgentTracer the_tracer = null;
 
 private static boolean	get_cpu_time = true;
 
-private static boolean	do_debug = true;
+private static boolean	do_debug = false;
 
 private static final int	NUM_SETS = 3;
 private static final int	ENTRY_COUNT = 10240;

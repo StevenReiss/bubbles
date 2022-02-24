@@ -69,6 +69,7 @@ enum BoardHighlightStyle {
 
 enum BoardLanguage {
    JAVA,
+   JAVA_IDEA,
    PYTHON,
    JS,
    REBUS
@@ -91,6 +92,7 @@ String BOARD_SUDS_PROP_BASE = System.getProperty("user.home") + File.separator +
 String BOARD_PYTHON_PROP_BASE = System.getProperty("user.home") + File.separator + ".pybles";
 String BOARD_NODEJS_PROP_BASE = System.getProperty("user.home") + File.separator + ".nobbles";
 String BOARD_REBUS_PROP_BASE = System.getProperty("user.home") + File.separator + ".rebus";
+String BOARD_IDEA_PROP_BASE = System.getProperty("user.home") + File.separator + ".bibbles";
 
 
 
@@ -113,14 +115,14 @@ String BOARD_ARCH = System.getProperty("os.arch");
  **/
 
 String BOARD_PROP_ECLIPSE_DIR = "edu.brown.cs.bubbles.eclipse." + BOARD_ARCH;
-
+String BOARD_PROP_BASE_IDE_DIR = "edu.brown.cs.bubbles.baseide." + BOARD_ARCH;
 
 
 /**
  *	Eclipse workspace name system property
  **/
 
-String BOARD_PROP_ECLIPSE_WS = "edu.brown.cs.bubbles.workspace";
+String BOARD_PROP_WORKSPACE = "edu.brown.cs.bubbles.workspace";
 
 
 /**
@@ -184,6 +186,8 @@ String BOARD_PROP_JAR_DIR = "edu.brown.cs.bubbles.jar";
  **/
 
 String BOARD_PROP_ECLIPSE_OPTIONS = "edu.brown.cs.bubbles.eclipse.options";
+String BOARD_PROP_IDEA_OPTIONS = "edu.brown.cs.bubbles.idea.options";
+String BOARD_PROP_BASE_IDE_OPTIONS = "edu.brown.cs.bubbles.baseide.options";
 
 
 
@@ -192,6 +196,7 @@ String BOARD_PROP_ECLIPSE_OPTIONS = "edu.brown.cs.bubbles.eclipse.options";
  **/
 
 String BOARD_PROP_ECLIPSE_VM_OPTIONS = "edu.brown.cs.bubbles.eclipse.vm.options";
+String BOARD_PROP_IDEA_VM_OPTIONS = "edu.brown.cs.bubbles.idea.vm.options";
 
 
 
@@ -293,6 +298,10 @@ String [] BOARD_ECLIPSE_START = new String [] {
    "myeclipse", "myeclipse.exe", "myeclipse.app",
    "Eclipse JEE.app", "eclipse JEE.app",
 };
+String [] BOARD_IDEA_START = new String [] {
+      "idea", "idea.exe", "IntelliJ IDEA CE.app",
+      "MacOS/idea"
+};
 
 
 /**
@@ -302,6 +311,7 @@ String [] BOARD_ECLIPSE_START = new String [] {
 String BOARD_ECLIPSE_PLUGINS = "plugins";
 String BOARD_ECLIPSE_DROPINS = "dropins";
 String BOARD_ECLIPSE_MAC_DROPIN = "Eclipse.app/Contents/Eclipse";
+String BOARD_INTELLIJ_MAC_PLUGIN = "IntelliJ IDEA CE.app/Contents";
 
 interface BoardPluginFilter {
 
@@ -314,14 +324,15 @@ interface BoardPluginFilter {
  *	The name of our plugin
  **/
 
-String BOARD_BUBBLES_PLUGIN = "edu.brown.cs.bubbles.bedrock_1.0.0.jar";
-
+String BOARD_BUBBLES_PLUGIN_ECLIPSE = "edu.brown.cs.bubbles.bedrock_1.0.0.jar";
+String BOARD_BUBBLES_PLUGIN_IDEA = "bubjet-0.0.1.jar";
 
 /**
  *	Metadata directory for checking on eclipse workspace
  **/
 
 String BOARD_ECLIPSE_WS_DATA = ".metadata";
+String BOARD_IDEA_WS_DATA = ".idea";
 
 
 /**
@@ -379,8 +390,8 @@ String BOARD_RESTART_CLASS = "edu.brown.cs.bubbles.bema.BemaMain";
  *	The jar name of the eclipse plugin
  **/
 
-String BOARD_RESOURCE_PLUGIN = "bedrock.jar";
-
+String BOARD_RESOURCE_PLUGIN_ECLIPSE = "bedrock.jar";
+String BOARD_RESOURCE_PLUGIN_IDEA = "bubjet.jar";
 /**
  *	The jar name of a file to determine if the jar is a valid bubble build
  **/

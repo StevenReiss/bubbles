@@ -1903,69 +1903,69 @@ private class EditTask implements Runnable {
 
    @Override public void run() {
       try {
-	 performEdit();
+         performEdit();
        }
       finally {
-	 doneEdit();
+         doneEdit();
        }
     }
 
    private void performEdit() {
       BedrockPlugin.logD("Start perform edit " + for_id + " " + bedrock_id + " " +
-			    file_data.getCurrentId(bedrock_id));
+        		    file_data.getCurrentId(bedrock_id));
       if (file_data.getCurrentId(bedrock_id) != null &&
-	     !file_data.getCurrentId(bedrock_id).equals(for_id))
-	 return;
-
+             !file_data.getCurrentId(bedrock_id).equals(for_id))
+         return;
+   
       long delay = getElideDelay(bedrock_id);
-
+   
       if (delay > 0) {
-	 synchronized (this) {
-	    try { wait(delay); }
-	    catch (InterruptedException e) { }
-	  }
+         synchronized (this) {
+            try { wait(delay); }
+            catch (InterruptedException e) { }
+          }
        }
-
+   
       CompilationUnit cu = null;
       synchronized (file_data) {
-	 if (file_data.getCurrentId(bedrock_id) != null &&
-	       !file_data.getCurrentId(bedrock_id).equals(for_id))
-	    return;
-
-	 BedrockPlugin.logD("BUILD AST " + for_id + " " + bedrock_id);
-	 cu = file_data.getAstRoot(bedrock_id);
+         if (file_data.getCurrentId(bedrock_id) != null &&
+               !file_data.getCurrentId(bedrock_id).equals(for_id))
+            return;
+   
+         BedrockPlugin.logD("BUILD AST " + for_id + " " + bedrock_id);
+         cu = file_data.getAstRoot(bedrock_id);
        }
-
+   
       if (cu == null && for_id.startsWith("PID_")) {
-	 IvyXmlWriter xw = our_plugin.beginMessage("PRIVATEERROR",bedrock_id);
-	 xw.field("FILE",file_data.getFileName());
-	 xw.field("ID",for_id);
-	 xw.field("FAILURE",true);
-	 our_plugin.finishMessage(xw);
+         IvyXmlWriter xw = our_plugin.beginMessage("PRIVATEERROR",bedrock_id);
+         xw.field("FILE",file_data.getFileName());
+         xw.field("ID",for_id);
+         xw.field("FAILURE",true);
+         our_plugin.finishMessage(xw);
        }
-
+   
       if (file_data.getCurrentId(bedrock_id) != null &&
-	     !file_data.getCurrentId(bedrock_id).equals(for_id)) {
-	 BedrockPlugin.logD("Discarding AST " + file_data.getCurrentId(bedrock_id) + " " + for_id);
-	 return;
+             !file_data.getCurrentId(bedrock_id).equals(for_id)) {
+         BedrockPlugin.logD("Discarding AST " + file_data.getCurrentId(bedrock_id) + " " + for_id);
+         return;
        }
-
+   
       if (getAutoElide(bedrock_id) && cu != null) {
-	 // System.err.println("BEDROCK: ELIDE " + for_id);
-	 BedrockElider be = file_data.checkElider(bedrock_id);
-	 if (be != null) {
-	    IvyXmlWriter xw = our_plugin.beginMessage("ELISION",bedrock_id);
-	    xw.field("FILE",file_data.getFileName());
-	    xw.field("ID",for_id);
-	    xw.begin("ELISION");
-	    if (be.computeElision(cu,xw)) {
-	       if (file_data.getCurrentId(bedrock_id) == null ||
-		      file_data.getCurrentId(bedrock_id).equals(for_id)) {
-		  xw.end("ELISION");
-		  our_plugin.finishMessage(xw);
-		}
-	     }
-	  }
+         // System.err.println("BEDROCK: ELIDE " + for_id);
+         BedrockElider be = file_data.checkElider(bedrock_id);
+         if (be != null) {
+            IvyXmlWriter xw = our_plugin.beginMessage("ELISION",bedrock_id);
+            xw.field("FILE",file_data.getFileName());
+            xw.field("ID",for_id);
+            xw.begin("ELISION");
+            if (be.computeElision(cu,xw)) {
+               if (file_data.getCurrentId(bedrock_id) == null ||
+        	      file_data.getCurrentId(bedrock_id).equals(for_id)) {
+        	  xw.end("ELISION");
+        	  our_plugin.finishMessage(xw);
+        	}
+             }
+          }
        }
     }
 
@@ -2096,22 +2096,22 @@ private class FileData implements IBufferChangedListener {
 
    CompilationUnit getDefaultRoot(String bid) {
       if (last_ast != null) return last_ast;
-
+   
       try {
-	 CompilationUnit cu = null;
-	 cu = working_unit.reconcile(java_version,true,true,copy_owner,null);
-	 if (cu != null && bid != null) {
-	    last_ast = cu;
-	  }
-	 return cu;
+         CompilationUnit cu = null;
+         cu = working_unit.reconcile(java_version,true,true,copy_owner,null);
+         if (cu != null && bid != null) {
+            last_ast = cu;
+          }
+         return cu;
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem reconsiling working unit: " + e,e);
+         BedrockPlugin.logE("Problem reconsiling working unit: " + e,e);
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Problem reconsiling working unit: " + t,t);
+         BedrockPlugin.logE("Problem reconsiling working unit: " + t,t);
        }
-
+   
       return null;
     }
 
@@ -2263,7 +2263,7 @@ private class FileData implements IBufferChangedListener {
    {
       if (sid == null) return;
       synchronized (buffer_users) {
-	 buffer_users.remove(sid);
+         buffer_users.remove(sid);
        }
       BedrockPlugin.logD("REMOVE USER " + sid + " for " + file_name);
    }
@@ -2381,83 +2381,83 @@ private class FileData implements IBufferChangedListener {
    private void checkLineSeparator() {
       line_separator = null;
       if (default_buffer != null) {
-	 int ln = default_buffer.getLength();
-	 boolean havecr = false;
-	 for (int i = 0; i < ln; ++i) {
-	    char c = default_buffer.getChar(i);
-	    if (c == '\r') havecr = true;
-	    else if (c == '\n') {
-	       if (havecr) line_separator = "\r\n";
-	       else line_separator = "\n";
-	       break;
-	     }
-	    else {
-	       if (havecr) {
-		  line_separator = "\r";
-		  break;
-		}
-	     }
-	  }
+         int ln = default_buffer.getLength();
+         boolean havecr = false;
+         for (int i = 0; i < ln; ++i) {
+            char c = default_buffer.getChar(i);
+            if (c == '\r') havecr = true;
+            else if (c == '\n') {
+               if (havecr) line_separator = "\r\n";
+               else line_separator = "\n";
+               break;
+             }
+            else {
+               if (havecr) {
+        	  line_separator = "\r";
+        	  break;
+        	}
+             }
+          }
        }
-
+   
       if (line_separator == null && comp_unit != null) {
-	 try {
-	    line_separator = comp_unit.findRecommendedLineSeparator();
-	  }
-	 catch (JavaModelException e) { }
+         try {
+            line_separator = comp_unit.findRecommendedLineSeparator();
+          }
+         catch (JavaModelException e) { }
        }
-
+   
       if (line_separator == null) {
-	 QualifiedName qn0 = new QualifiedName("line","separator");
-	 for (IResource ir = default_buffer.getUnderlyingResource(); ir != null; ir = ir.getParent()) {
-	    String ls = null;
-	    try {
-	       ls = ir.getPersistentProperty(qn0);
-	     }
-	    catch (CoreException e) {
-	       BedrockPlugin.logE("EXCEPTION ON LINE SEPARATOR: " + e,e);
-	     }
-	    if (ls != null) {
-	       BedrockPlugin.logD("LINE SEPARATOR STRING = '" + ls + "'");
-	       if (ls.equals("\\n")) line_separator = "\n";
-	       else if (ls.equals("\\r\\n")) line_separator = "\r\n";
-	       else if (ls.equals("\\r")) line_separator = "\r";
-	       else line_separator = ls;
-	       break;
-	     }
-	  }
+         QualifiedName qn0 = new QualifiedName("line","separator");
+         for (IResource ir = default_buffer.getUnderlyingResource(); ir != null; ir = ir.getParent()) {
+            String ls = null;
+            try {
+               ls = ir.getPersistentProperty(qn0);
+             }
+            catch (CoreException e) {
+               BedrockPlugin.logE("EXCEPTION ON LINE SEPARATOR: " + e,e);
+             }
+            if (ls != null) {
+               BedrockPlugin.logD("LINE SEPARATOR STRING = '" + ls + "'");
+               if (ls.equals("\\n")) line_separator = "\n";
+               else if (ls.equals("\\r\\n")) line_separator = "\r\n";
+               else if (ls.equals("\\r")) line_separator = "\r";
+               else line_separator = ls;
+               break;
+             }
+          }
        }
       if (line_separator == null) line_separator = System.getProperty("line.separator");
     }
 
    private synchronized IBuffer setupDefaultBuffer() {
       if (default_buffer != null) {
-	 if (!default_buffer.isClosed()) return default_buffer;
-	 default_buffer = null;
+         if (!default_buffer.isClosed()) return default_buffer;
+         default_buffer = null;
        }
-
+   
       BedrockPlugin.logD("Set up default buffer for " + file_name);
-
+   
       copy_owner.suppressErrors(true);
       try {
-	 if (working_unit != null) working_unit.discardWorkingCopy();
-	 working_unit = comp_unit.getWorkingCopy(copy_owner,null);
-	 default_buffer = working_unit.getBuffer();
-	 default_buffer.addBufferChangedListener(this);
+         if (working_unit != null) working_unit.discardWorkingCopy();
+         working_unit = comp_unit.getWorkingCopy(copy_owner,null);
+         default_buffer = working_unit.getBuffer();
+         default_buffer.addBufferChangedListener(this);
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem creating working copy: " + e,e);
+         BedrockPlugin.logE("Problem creating working copy: " + e,e);
        }
       catch (Throwable t) {
-	 throw new Error("Problem getting editable unit: " + t,t);
+         throw new Error("Problem getting editable unit: " + t,t);
        }
       finally {
-	 copy_owner.suppressErrors(false);
+         copy_owner.suppressErrors(false);
        }
-
+   
       if (update_on_open) updateOnOpen();
       if (line_separator == null) checkLineSeparator();
-
+   
       return default_buffer;
     }
 
@@ -2597,11 +2597,11 @@ private class PrivateBufferData {
    synchronized void applyEdit(TextEdit xe) throws BedrockException {
       ICompilationUnit icu = getEditableUnit();
       try {
-	 icu.applyTextEdit(xe,null);
+         icu.applyTextEdit(xe,null);
        }
       catch (JavaModelException e) {
-	 throw new BedrockException("Problem editing source file " + file_data.getFileName() +
-				       " " + xe,e);
+         throw new BedrockException("Problem editing source file " + file_data.getFileName() +
+        			       " " + xe,e);
        }
       last_ast = null;
     }
@@ -2766,35 +2766,35 @@ private class ProblemHandler implements IProblemRequestor {
    @Override public void endReporting() {
       BedrockPlugin.logD("End error reporting for " + is_private);
       if (suppress_errors) return;
-
+   
       IvyXmlWriter xw;
       if (is_private) {
-	 if (bedrock_id != null) {
-	    xw = our_plugin.beginMessage("PRIVATEERROR",bedrock_id);
-	    xw.field("FILE",file_data.getFileName());
-	    xw.field("ID",bedrock_id);
-	  }
-	 else return;
+         if (bedrock_id != null) {
+            xw = our_plugin.beginMessage("PRIVATEERROR",bedrock_id);
+            xw.field("FILE",file_data.getFileName());
+            xw.field("ID",bedrock_id);
+          }
+         else return;
        }
       else if (file_data != null) {
-	 xw = our_plugin.beginMessage("FILEERROR",bedrock_id);
-	 xw.field("FILE",file_data.getFileName());
+         xw = our_plugin.beginMessage("FILEERROR",bedrock_id);
+         xw.field("FILE",file_data.getFileName());
        }
       else return;
-
+   
       if (file_data != null && file_data.getProject() != null) {
-	 xw.field("PROJECT",file_data.getProject().getName());
+         xw.field("PROJECT",file_data.getProject().getName());
        }
       xw.begin("MESSAGES");
       if (problem_set != null) {
-	 for (IProblem ip : problem_set) {
-	    BedrockUtil.outputProblem(file_data.getProject(),ip,xw);
-	  }
+         for (IProblem ip : problem_set) {
+            BedrockUtil.outputProblem(file_data.getProject(),ip,xw);
+          }
        }
       xw.end("MESSAGES");
-
+   
       our_plugin.finishMessage(xw);
-
+   
       BedrockPlugin.logD("ERROR REPORT: " + xw.toString());
       xw.close();
     }

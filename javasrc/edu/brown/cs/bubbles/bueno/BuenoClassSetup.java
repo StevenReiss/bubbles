@@ -148,6 +148,10 @@ private void addTypeReference(String typ)
 	 for (BumpLocation mbl : mthds) {
 	    int mods = mbl.getModifiers();
 	    if (Modifier.isAbstract(mods)) {
+               String m = mbl.getSymbolName();
+               int idx0 = m.lastIndexOf(".");
+               if (idx0 > 0) m = m.substring(idx+1);
+               if (m.startsWith("<") || m.contains("$")) continue;
 	       String mtxt = getMethodCode(mbl);
 	       if (mtxt != null) {
 		  if (abstract_methods == null) {
