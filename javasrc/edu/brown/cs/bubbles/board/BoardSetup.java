@@ -31,6 +31,7 @@ import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.swing.SwingSetup;
 
 import javax.swing.ButtonGroup;
@@ -1452,6 +1453,8 @@ public boolean doSetup()
       BoardLog.logE("BOARD","BUBBLES: Setup aborted by palette dialog");
       System.exit(1);
     }
+   
+   checkKeyDefs();
 
    switch (board_language) {
       case JAVA :
@@ -2563,6 +2566,22 @@ private boolean checkPalette()
     }
 
    return true;
+}
+
+
+
+private void checkKeyDefs() 
+{
+   if (getRunMode() == RunMode.SERVER) return;
+   
+   File props = getPropertyBase();
+   File keys = new File(props,KEY_DEFINITIONS);
+   try {
+      SwingKey.loadKeyDefinitions(keys);
+    }
+   catch (IOException e) {
+      BoardLog.logE("BOARD","Problem loading key definitions",e);
+    }
 }
 
 

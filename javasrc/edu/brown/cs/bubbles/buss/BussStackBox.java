@@ -36,16 +36,15 @@ import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaConstants.BubbleViewCallback;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.bubbles.buda.BudaConstraint;
 import edu.brown.cs.bubbles.buda.BudaCursorManager;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JTree;
-import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -69,7 +68,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -129,9 +127,9 @@ BussStackBox(BussTreeModel mdl, int contentWidth, BussBubble bussbubble)
 
    addTreeSelectionListener(new Selector());
 
-   registerKeyAction(new ShowAllAction(),"SHOW_ALL",KeyStroke.getKeyStroke(KeyEvent.VK_F4,0));
-   registerKeyAction(new ShowSelectedAction(),"SHOW_SELECTED",KeyStroke.getKeyStroke(KeyEvent.VK_F3,0));
-   registerKeyAction(new DeleteSelectedAction(),"DELETE_SELECTED",KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0));
+   SwingKey.registerKeyAction("BUSS",this,new ShowAllAction(),"F4");
+   SwingKey.registerKeyAction("BUSS",this,new ShowSelectedAction(),"F3");
+   SwingKey.registerKeyAction("BUSS",this,new DeleteSelectedAction(),"DELETE");
    
    BasicTreeUI tui = (BasicTreeUI) getUI();
    tui.setCollapsedIcon(null);
@@ -324,11 +322,6 @@ private class Selector implements TreeSelectionListener
 /*										*/
 /********************************************************************************/
 
-private void registerKeyAction(Action act,String cmd,KeyStroke k)
-{
-   getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(k,cmd);
-   getActionMap().put(cmd,act);
-}
 
 
 
@@ -435,6 +428,10 @@ private class ShowAllAction extends AbstractAction implements ActionListener {
 
    private static final long serialVersionUID = 1;
 
+   ShowAllAction() {
+      super("Show All");
+    }
+   
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BUSS","ShowAll");
       createAllBubbles();
@@ -449,6 +446,10 @@ private class ShowSelectedAction extends AbstractAction implements ActionListene
 
    private static final long serialVersionUID = 1;
 
+   ShowSelectedAction() {
+      super("Show selected");
+    }
+   
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BUSS","ShowSelected");
       createSelectedBubble();
@@ -462,6 +463,10 @@ private class ShowSelectedAction extends AbstractAction implements ActionListene
 private class DeleteSelectedAction extends AbstractAction implements ActionListener {
    
    private static final long serialVersionUID = 1;
+   
+   DeleteSelectedAction() {
+      super("Delete selected");
+    }
    
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BUSS","DeleteSelected");

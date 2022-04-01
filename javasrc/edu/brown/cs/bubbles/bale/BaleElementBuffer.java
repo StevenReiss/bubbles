@@ -32,6 +32,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Segment;
 
+import org.w3c.dom.Element;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -472,6 +474,7 @@ synchronized private BaleElementEvent replaceParent(BaleElement.Branch par,boole
     }
 
    fixupElisions(reps);
+   fixupHints(reps,par);
 
    BaleElementEvent ee = null;
 
@@ -689,6 +692,56 @@ private void fixupElisions(List<BaleElement> lelts)
 	 eelt.fixParents();	// identifiers inside old elided region might have new parents -- restore
        }
     }
+}
+
+
+
+private void fixupHints(List<BaleElement> nelts,BaleElement.Branch par)
+{
+   List<BaleElement> newflat = flatten(nelts,null);
+   List<BaleElement> oldflat = flatten(par,null);
+   int chk = Math.min(newflat.size(),oldflat.size());
+   
+   for (int i = 0; i < chk; ++i) {
+      BaleElement oelt = oldflat.get(i);
+      BaleElement nelt = newflat.get(i);
+      if (oelt.getTokenType() != nelt.getTokenType()) break;
+      if (!oelt.getName().equals(nelt.getName())) break;
+      if (nelt.isEmpty()) continue;
+      Element ohint = null;
+      if (oelt.getAstNode() != null) ohint = oelt.getAstNode().getHintData();
+      else ohint = oelt.getOldHintData();
+      if (ohint != null) {
+         nelt.setOldHintData(ohint);
+       }
+    }
+   
+}
+
+
+private List<BaleElement> flatten(List<BaleElement> elts,List<BaleElement> rslt)
+{
+   for (BaleElement be : elts) {
+      rslt = flatten(be,rslt);
+    }
+   
+   return rslt;
+}
+
+
+private List<BaleElement> flatten(BaleElement be,List<BaleElement> rslt)
+{
+   if (rslt == null) rslt = new ArrayList<>();
+   if (be == null) return rslt;
+   
+   if (be.isLeaf()) rslt.add(be);
+   else {
+      for (int i = 0; i < be.getElementCount(); ++i) {
+         flatten(be.getBaleElement(i),rslt);
+       }
+    }
+   
+   return rslt;
 }
 
 

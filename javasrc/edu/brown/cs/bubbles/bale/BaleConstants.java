@@ -251,7 +251,9 @@ enum BaleAstNodeType {
    INITIALIZER,
    METHOD,
    FILE,
-   IMPORT
+   IMPORT,
+   CALL,
+   CALL_EXPR,
 }
 
 
@@ -350,7 +352,8 @@ enum BaleViewType {
    LINE,		// line element
    CODE,		// inside line element
    TEXT,		// use a BaleViewText
-   ORPHAN		// orphan display
+   ORPHAN,	// orphan display
+   HINT,           // hint display
 }
 
 
@@ -1340,9 +1343,15 @@ interface BaleLanguageKit {
 
    Action [] getActions();
    Keymap getKeymap(Keymap base);
-
+   default BaleHinter getHinter()               { return null; }
 
 }	// end of inner class BaleLanguageKit
+
+
+interface BaleHinter {
+   default String getPreHint(BaleElement be)    { return null; }
+   default String getPostHint(BaleElement be)   { return null; }
+}
 
 
 

@@ -388,11 +388,15 @@ public static boolean compareParameters(String s0,String s1)
       if (idx > 0) {
 	 p1 = p1.substring(0,idx);
       }
-      if (p1.equals("java.lang.Object") && p0.length() == 1) continue;  // handle generics
-      if (!p1.endsWith(p0)) return false;
-      int p0len = p0.length();
-      int p1len = p1.length();
-      if (p1.charAt(p1len-p0len-1) != '.') return false;
+      if (p1.equals("java.lang.Object") && p0.length() <= 2) continue;  // handle generics
+      if (!p0.endsWith(p1)) return false;
+//    int p0len = p0.length();
+//    int p1len = p1.length();
+//    if (p1len <= p0len) {
+//       BoardLog.logD("BUMP","Problem comparing signatures " + s0 + " " + s1 + " " + p0 + " " + p1);
+//       return false;
+//     }
+//    if (p1.charAt(p1len-p0len-1) != '.') return false;
     }
    return true;
 }

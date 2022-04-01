@@ -131,8 +131,6 @@ private void process()
 
 
 
-
-
 }	// end of class BanalMain
 
 

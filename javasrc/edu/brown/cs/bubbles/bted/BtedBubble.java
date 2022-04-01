@@ -39,12 +39,10 @@ import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 import edu.brown.cs.bubbles.burp.BurpHistory;
 
 import edu.brown.cs.ivy.swing.SwingEditorPane;
-import edu.brown.cs.ivy.swing.SwingText;
+import edu.brown.cs.ivy.swing.SwingKey;
 
 import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
 import javax.swing.ImageIcon;
-import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -53,7 +51,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
@@ -70,7 +67,6 @@ import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedOutputStream;
@@ -262,33 +258,13 @@ private void setupGui()
    search_bar = new BtedFindBar(text_editor);
    search_bar.setVisible(false);
 
-   InputMap inputMap = main_panel.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-   ActionMap actionMap = main_panel.getActionMap();
-
-   int mask = SwingText.getMenuShortcutKeyMaskEx();
-
-   KeyStroke newFile = KeyStroke.getKeyStroke(KeyEvent.VK_N, mask);
-   KeyStroke openFile = KeyStroke.getKeyStroke(KeyEvent.VK_O, mask);
-   KeyStroke saveFile = KeyStroke.getKeyStroke(KeyEvent.VK_S, mask);
-   KeyStroke undo = KeyStroke.getKeyStroke(KeyEvent.VK_Z, mask);
-   KeyStroke redo = KeyStroke.getKeyStroke(KeyEvent.VK_Y, mask);
-   KeyStroke find = KeyStroke.getKeyStroke(KeyEvent.VK_F, mask);
-   KeyStroke next = KeyStroke.getKeyStroke("ENTER");
-
-   inputMap.put(newFile, "New File");
-   actionMap.put("New File", newFileAction);
-   inputMap.put(openFile, "Open File");
-   actionMap.put("Open File", openFileAction);
-   inputMap.put(saveFile, "Save File");
-   actionMap.put("Save File", saveFileAction);
-   inputMap.put(undo, "Undo");
-   actionMap.put("Undo", undo_action);
-   inputMap.put(redo, "Redo");
-   actionMap.put("Redo", redo_action);
-   inputMap.put(find, "Find");
-   actionMap.put("Find", new FindAction());
-   search_bar.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(next, "Next");
-   search_bar.getActionMap().put("Next", new NextFindAction());
+   SwingKey.registerKeyAction("TEXTEDIT",main_panel,newFileAction,"menu N");
+   SwingKey.registerKeyAction("TEXTEDIT",main_panel,openFileAction,"menu O");
+   SwingKey.registerKeyAction("TEXTEDIT",main_panel,saveFileAction,"menu S");
+   SwingKey.registerKeyAction("TEXTEDIT",main_panel,undo_action,"menu Z");
+   SwingKey.registerKeyAction("TEXTEDIT",main_panel,redo_action,"menu Y");
+   SwingKey.registerKeyAction("TEXTEDIT",main_panel,new FindAction(),"menu F");
+   SwingKey.registerKeyAction("SEARCHBAR",search_bar,new NextFindAction(),"ENTER");
 
    JPanel topPanel = new JPanel(new BorderLayout());
    topPanel.add(name_label, BorderLayout.NORTH);

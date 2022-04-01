@@ -981,10 +981,10 @@ private class ContractPanel extends SwingGridPanel implements ActionListener {
       setup_annot = false;
       beginLayout();
       addBannerLabel("Contract Checking");
-      cofoja_button = new JButton("Enable Contracts For Java");
-      cofoja_button.setEnabled(!option_elements.containsKey(COFOJA_OPTION));
-      cofoja_button.addActionListener(this);
-      addLabellessRawComponent("COFOJA",cofoja_button,true,false);
+//    cofoja_button = new JButton("Enable Contracts For Java");
+//    cofoja_button.setEnabled(!option_elements.containsKey(COFOJA_OPTION));
+//    cofoja_button.addActionListener(this);
+//    addLabellessRawComponent("COFOJA",cofoja_button,true,false);
    
       junit_button = new JButton("Enable JUNIT Testing");
       junit_button.setEnabled(!option_elements.containsKey(JUNIT_OPTION));

@@ -375,7 +375,7 @@ public void stopIDE()
 
 public void saveWorkspace()
 {
-   getXmlReply("SAVEWORKSPACE",null,null,null,0);
+   getXmlReply("SAVEWORKSPACE",null,addWorkspace(null),null,0);
 }
 
 
@@ -2853,10 +2853,10 @@ public BumpProcess startDebug(BumpLaunchConfig cfg,String id)
 
    BumpProcess bp = run_manager.findProcess(lnch);
    if (bp == null) {
-      bp  = run_manager.findDefaultProcess(lnch);
+      bp = run_manager.findDefaultProcess(lnch);
     }
 
-   if (id != null) run_manager.setProcessName(bp,id);
+   if (id != null && bp != null) run_manager.setProcessName(bp,id);
 
    return bp;
 }

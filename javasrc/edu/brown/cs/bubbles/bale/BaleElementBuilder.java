@@ -314,6 +314,7 @@ private BaleElement.Branch createOuterBranch(BaleAstNode sn)
       case STATEMENT :
 	 return new BaleElement.SplitStatementNode(for_document,cur_parent);
       case EXPRESSION :
+      case CALL_EXPR :
 	 return new BaleElement.SplitExpressionNode(for_document,cur_parent);
       case BLOCK :
 	 return new BaleElement.BlockNode(for_document,cur_parent);
@@ -341,6 +342,7 @@ private BaleElement.Branch createInnerBranch(BaleAstNode sn)
 	 case STATEMENT :
 	    return new BaleElement.StatementNode(for_document,cur_parent);
 	 case EXPRESSION :
+         case CALL_EXPR :
 	    return new BaleElement.ExpressionNode(for_document,cur_parent);
 	 case BLOCK :
 	 case SWITCH_BLOCK :

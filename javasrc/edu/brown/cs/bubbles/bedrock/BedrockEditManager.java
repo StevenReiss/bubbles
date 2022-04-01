@@ -2270,26 +2270,26 @@ private class FileData implements IBufferChangedListener {
 
    private PrivateBufferData createPrivateBuffer(String sid,String opid) throws BedrockException {
       synchronized (buffer_map) {
-	 PrivateBufferData bd = buffer_map.get(sid);
-	 if (bd != null) return null;
-	 ICompilationUnit cu = null;
-	 if (opid == null) cu = comp_unit;
-	 else {
-	    PrivateBufferData obd = buffer_map.get(opid);
-	    if (obd == null) return null;
-	    cu = obd.getEditableUnit();
-	  }
-	 bd = new PrivateBufferData(this,sid,cu);
-	 buffer_map.put(sid,bd);
-	 return bd;
+         PrivateBufferData bd = buffer_map.get(sid);
+         if (bd != null) return null;
+         ICompilationUnit cu = null;
+         if (opid == null) cu = comp_unit;
+         else {
+            PrivateBufferData obd = buffer_map.get(opid);
+            if (obd == null) return null;
+            cu = obd.getEditableUnit();
+          }
+         bd = new PrivateBufferData(this,sid,cu);
+         buffer_map.put(sid,bd);
+         return bd;
        }
     }
 
    private void removePrivateBuffer(String sid) {
       BedrockPlugin.logD("Remove private buffer " + sid);
       synchronized (buffer_map) {
-	 PrivateBufferData bd = buffer_map.remove(sid);
-	 if (bd != null) bd.free();
+         PrivateBufferData bd = buffer_map.remove(sid);
+         if (bd != null) bd.free();
        }
     }
 
@@ -2524,13 +2524,13 @@ private class PrivateBufferData {
 
    void free() {
       if (is_setup) {
-	 if (comp_unit.isWorkingCopy()) {
-	    try {
-	       comp_unit.discardWorkingCopy();
-	     }
-	    catch (JavaModelException e) { }
-	  }
-	 comp_unit = null;
+         if (comp_unit.isWorkingCopy()) {
+            try {
+               comp_unit.discardWorkingCopy();
+             }
+            catch (JavaModelException e) { }
+          }
+         comp_unit = null;
        }
     }
 

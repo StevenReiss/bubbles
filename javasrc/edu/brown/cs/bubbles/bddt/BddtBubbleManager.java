@@ -193,8 +193,9 @@ private BudaBubble createSourceBubble(BumpThreadStack stk,int frm,BubbleType typ
 
    BubbleData bd = findClosestBubble(bt,stk,frame,godown);
    if (bd != null && bd.match(bt,stk,frame)) {
-      if (bd.getBubbleType() == BubbleType.USER)
+      if (bd.getBubbleType() == BubbleType.USER) {
 	 createUserStackBubble(bd,godown);
+       }
       bd.update(stk,frame);
       showBubble(bd.getBubble());
       return null;
@@ -285,7 +286,8 @@ private BudaBubble createSourceBubble(BumpThreadStack stk,int frm,BubbleType typ
       if (mthd != null && mthd.length() > 0) {
 	 String mid = mthd + frame.getSignature();
 	 if (frame.isSystem() && launch_control.frameFileExists(frame)) {
-	    bb = BaleFactory.getFactory().createSystemMethodBubble(proj,mid,frame.getFile(),frame.getLineNumber());
+	    bb = BaleFactory.getFactory().createSystemMethodBubble(proj,mid,
+                  frame.getFile(),frame.getLineNumber());
 	    if (bb == null) {
 	       if (libbbl) {
 		  bb = new BddtLibraryBubble(frame);
@@ -314,6 +316,13 @@ private BudaBubble createSourceBubble(BumpThreadStack stk,int frm,BubbleType typ
     }
 
    if (bb != null) {
+      int ht = Math.max(bb.getHeight(),BDDT_STACK_HEIGHT);
+      int wd = bb.getWidth() + BDDT_STACK_WIDTH + BudaConstants.BUBBLE_CREATION_NEAR_SPACE;
+      Point xpt = findSpaceForBubble(xpos,ypos,ht,wd,godown);
+      if (xpt != null) {
+         xpos = xpt.x;
+         ypos = xpt.y;
+       }
       // TODO: want to ensure space available here -- if not move the point
       BubbleData nbd = new BubbleData(bb,bt,stk,frame,typ);
       bubble_map.put(bb,nbd);
@@ -723,7 +732,6 @@ private void setupBubbleArea()
 {
    if (bubble_area != null) return;
 
-
    bubble_area = BudaRoot.findBudaBubbleArea(launch_control);
    if (bubble_area == null) return;
 
@@ -923,6 +931,34 @@ private static boolean matchFrameMethod(BumpStackFrame sf1,BumpStackFrame sf2)
 
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Find space for bubble                                                   */
+/*                                                                              */
+/********************************************************************************/
+
+private Point findSpaceForBubble(int xpos,int ypos,int ht,int wd,boolean godown)
+{ 
+   Point rslt = null;
+   for ( ; ; ) {
+      Rectangle r = new Rectangle(xpos-5,ypos-5, wd+10,ht+10);
+      int ct = 0;
+      int maxx = -1;
+      int maxy = -1;
+      for (BudaBubble bb : bubble_area.getBubblesInRegion(r)) {
+         if (bb.isFixed() || bb.isTransient() || !bb.isShowing()) continue;
+         maxx = Math.max(maxx,bb.getX() + bb.getWidth() + BudaConstants.BUBBLE_CREATION_SPACE);
+         maxy = Math.max(maxy,bb.getY() + bb.getHeight() + BudaConstants.BUBBLE_CREATION_SPACE);
+         ++ct;
+       }
+      if (ct == 0) return rslt;
+      if (godown) ypos = maxy;
+      else xpos = maxx;
+      if (rslt == null) rslt = new Point(xpos,ypos);
+      else rslt.setLocation(xpos,ypos);
+    }
+}
+
 
 /********************************************************************************/
 /*										*/
@@ -937,10 +973,10 @@ private class BubbleUpdater implements BubbleViewCallback {
       if (BudaRoot.findBudaBubbleArea(bb) != bubble_area) return;
       BudaWorkingSet ws = BddtFactory.getFactory().getActiveWorkingSet();
       if (ws != null) {
-	 if (!ws.getRegion().intersects(bb.getBounds())) return;
+         if (!ws.getRegion().intersects(bb.getBounds())) return;
        }
       if (bubble_map.get(bb) == null) {
-	 bubble_map.put(bb,new BubbleData(bb));
+         bubble_map.put(bb,new BubbleData(bb));
        }
     }
 

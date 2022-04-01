@@ -330,12 +330,12 @@ private class EvaluationTable extends JTable {
       if (r < 0) return null;
       EvalExpr ee = getActualExpr(r);
       if (ee != null) {
-	 StringBuffer buf = new StringBuffer();
-	 buf.append("<html>");
-	 buf.append(ee.getExpr());
-	 buf.append(" = ");
-	 buf.append(ee.getValue());
-	 return buf.toString();
+         StringBuffer buf = new StringBuffer();
+         buf.append("<html>");
+         buf.append(ee.getExpr());
+         buf.append(" = ");
+         buf.append(ee.getValue());
+         return buf.toString();
        }
       return null;
     }

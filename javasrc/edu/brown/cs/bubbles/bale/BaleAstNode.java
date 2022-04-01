@@ -64,6 +64,7 @@ private int	end_position;
 private List<BaleAstNode> child_nodes;
 private BaleAstNode parent_node;
 private String	full_name;
+private Element hint_data;
 
 
 private static Map<String,BaleAstNodeType> ast_types;
@@ -90,6 +91,8 @@ static {
    ast_types.put("FUNCTION",BaleAstNodeType.METHOD);
    ast_types.put("MODULE", BaleAstNodeType.FILE);
    ast_types.put("IMPORT",BaleAstNodeType.IMPORT);
+   ast_types.put("CALL",BaleAstNodeType.CALL);
+   ast_types.put("CALLEXPR",BaleAstNodeType.CALL_EXPR);
 
    id_types = new HashMap<String,BaleAstIdType>();
    id_types.put("CALL",BaleAstIdType.CALL);
@@ -163,7 +166,7 @@ BaleAstNode(Element d,BaleDocumentIde doc)
    is_error = IvyXml.getAttrBool(d,"ERROR");
 
    full_name = IvyXml.getAttrString(d,"FULLNAME");
-
+   hint_data = IvyXml.getChild(d,"HINT");
    child_nodes = null;
    for (Element e : IvyXml.children(d,"ELIDE")) {
       if (child_nodes == null) child_nodes = new ArrayList<>(4);
@@ -210,6 +213,7 @@ int getEnd()					{ return end_position; }
 double getElidePriority()			{ return elide_priority; }
 BaleAstNode getParent() 			{ return parent_node; }
 String getFullName()				{ return full_name; }
+Element getHintData()                           { return hint_data; }
 
 boolean isLastChild(BaleAstNode n) {
    if (child_nodes == null) return false;
@@ -308,7 +312,6 @@ int countImports()
 /*										*/
 /********************************************************************************/
 
-
 @Override public String toString()
 {
    StringBuffer buf = new StringBuffer();
@@ -332,6 +335,11 @@ private void addToBuffer(StringBuffer buf,int indent)
        }
     }
 }
+
+
+
+
+
 
 
 

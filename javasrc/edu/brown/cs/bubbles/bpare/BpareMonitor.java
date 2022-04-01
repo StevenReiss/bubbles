@@ -227,7 +227,9 @@ private static class LocationFinder extends ASTVisitor {
 
 void server()
 {
-   mint_control.register("<BEDROCK SOURCE='ECLIPSE' TYPE='_VAR_0' />",new EclipseHandler());
+   EclipseHandler hdlr = new EclipseHandler();
+   mint_control.register("<BEDROCK SOURCE='ECLIPSE' TYPE='_VAR_0' />",hdlr);
+   mint_control.register("<BUBJET SOURCE='IDEA' TYPE='_VAR_0' />",hdlr);
    mint_control.register("<BUBBLES DO='EXIT' />",new ExitHandler());
    mint_control.register("<BPARE DO='_VAR_0' />",new CommandHandler());
 

@@ -29,8 +29,8 @@ import edu.brown.cs.bubbles.board.BoardAttributes;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
+import edu.brown.cs.bubbles.bump.BumpConstants.BumpConsoleMode;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProcess;
-import edu.brown.cs.bubbles.bump.BumpConstants.BumpRunEvent;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpRunModel;
 
 import javax.swing.SwingUtilities;
@@ -66,10 +66,11 @@ private Map<String,ConsoleDocument> process_consoles;
 private AttributeSet stdout_attrs;
 private AttributeSet stderr_attrs;
 private AttributeSet stdin_attrs;
+private AttributeSet sysout_attrs;
 private LinkedList<ConsoleMessage> message_queue;
 
 
-enum TextMode { STDOUT, STDERR, STDIN, EOF };
+enum TextMode { STDOUT, STDERR, STDIN, SYSTEM, EOF };
 
 
 
@@ -98,6 +99,7 @@ BddtConsoleController()
    stdout_attrs = atts.getAttributes("StdOut");
    stderr_attrs = atts.getAttributes("StdErr");
    stdin_attrs = atts.getAttributes("StdIn");
+   sysout_attrs = atts.getAttributes("SysOut");
 }
 
 
@@ -148,7 +150,7 @@ private void queueConsoleMessage(BumpProcess bp,TextMode mode,boolean eof,String
    synchronized (message_queue) {
       last = message_queue.peekLast();
       if (last != null && last.getProcess() == bp && last.getTextMode() == mode &&
-	    last.isEof() == eof) {
+	    last.isEof() == eof && last.getNumLines() < BDDT_CONSOLE_MAX_LINES/2) {
 	 last.merge(msg);
 	 return;
        }
@@ -365,14 +367,10 @@ BddtConsoleBubble createConsole(BumpProcess bp)
 
 private class ConsoleHandler implements BumpConstants.BumpRunEventHandler {
 
-   @Override public void handleLaunchEvent(BumpRunEvent evt)	{ }
-
-   @Override public void handleProcessEvent(BumpRunEvent evt)	{ }
-
-   @Override public void handleThreadEvent(BumpRunEvent evt)	{ }
-
-   @Override public void handleConsoleMessage(BumpProcess bp,boolean err,boolean eof,String msg) {
-      TextMode md = (err ? TextMode.STDERR : TextMode.STDOUT);
+   @Override public void handleConsoleMessage(BumpProcess bp,BumpConsoleMode mode,boolean eof,String msg) {
+      TextMode md = TextMode.STDOUT;
+      if (mode == BumpConsoleMode.STDERR) md = TextMode.STDERR;
+      else if (mode == BumpConsoleMode.SYSTEM) md = TextMode.SYSTEM;
       BoardLog.logD("BDDT","CONSOLE: " + md + " " + msg);
       queueConsoleMessage(bp,md,eof,msg);
    }
@@ -468,21 +466,24 @@ private class ConsoleDocument extends DefaultStyledDocument {
                BoardLog.logE("BDDT","Problem remove line from console",e);
              }
           }
-   
+         
          try {
             AttributeSet attrs = null;
             switch (mode) {
                case STDERR :
-        	  attrs = stderr_attrs;
-        	  break;
+                  attrs = stderr_attrs;
+                  break;
                default :
                case EOF :
+               case SYSTEM :
+                  attrs = sysout_attrs;
+                  break;
                case STDOUT :
-        	  attrs = stdout_attrs;
-        	  break;
+                  attrs = stdout_attrs;
+                  break;
                case STDIN :
-        	  attrs = stdin_attrs;
-        	  break;
+                  attrs = stdin_attrs;
+                  break;
              }
             insertString(getLength(),txt,attrs);
             line_count += lns;
@@ -493,7 +494,7 @@ private class ConsoleDocument extends DefaultStyledDocument {
           }
        }
       finally { writeUnlock(); }
-   
+      
       if (mode == TextMode.EOF) finish();
     }
 

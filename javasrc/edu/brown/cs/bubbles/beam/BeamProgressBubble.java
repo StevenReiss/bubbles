@@ -254,13 +254,13 @@ private class ProgressDisplay extends JLabel {
    void set(String text,double done,long sid) {
       if (sid < last_serial) return;
       last_serial = sid;
-
+   
       if (text != null && !text.equals(getText())) {
-	 setText(text);
-	 Dimension sz = getPreferredSize();
-	 BudaBubble bb = BudaRoot.findBudaBubble(this);
-	 if (bb != null) bb.setSize(sz);
-	 else setSize(sz);
+         setText(text);
+         Dimension sz = getPreferredSize();
+         BudaBubble bb = BudaRoot.findBudaBubble(this);
+         if (bb != null) bb.setSize(sz);
+         else setSize(sz);
        }
       part_done = done;
       repaint();
@@ -269,14 +269,14 @@ private class ProgressDisplay extends JLabel {
    @Override public void paintComponent(Graphics g) {
       Dimension sz = getSize();
       int w = (int)(sz.width * part_done / 100.0);
-
+   
       g.setColor(todo_color);
       // g.fillRect(0,w,sz.width-w,sz.height);
       g.fillRect(0,0,sz.width,sz.height);
-
+   
       g.setColor(done_color);
       g.fillRect(0,0,w,sz.height);
-
+   
       super.paintComponent(g);
     }
 

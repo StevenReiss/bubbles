@@ -34,6 +34,7 @@ import edu.brown.cs.bubbles.board.BoardLog;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
@@ -830,17 +831,29 @@ private void handleEvent(DocumentEvent e,BaleElementEvent ee)
 
 private BaleElementEvent setupOrphanElement()
 {
-   BaleElement.Branch p = (BaleElement.Branch) getDefaultRootElement();
-
    BaleElement oe = new BaleElement.OrphanElement(this,null,fragment_name);
-   List<BaleElement> rl = new ArrayList<>();
-   rl.add(oe);
-   BaleElementEvent ee = new BaleElementEvent(p,rl);
-
-   p.clear();
-   p.add(oe);
-
-   return ee;
+   BaleElement be = null;
+   if (getDefaultRootElement() instanceof BaleElement.Branch) {
+      be = (BaleElement) getDefaultRootElement();
+      BaleElement.Branch p = (BaleElement.Branch) be;
+      List<BaleElement> rl = new ArrayList<>();
+      rl.add(oe);
+      BaleElementEvent ee = new BaleElementEvent(p,rl);
+      p.clear();
+      p.add(oe);
+      return ee;
+    }
+   else if (getDefaultRootElement() instanceof AbstractDocument.BranchElement) {
+      AbstractDocument.BranchElement b = (AbstractDocument.BranchElement) getDefaultRootElement();
+      b.replace(0,b.getChildCount(),new Element [] { oe });
+      BoardLog.logD("BALE","Attempt to set up orphan for dummy " + getDefaultRootElement());
+      return null;
+    }
+   else {
+      BoardLog.logD("BALE","Attempt to set up orphan for unknown " + getDefaultRootElement());
+      return null;
+    }
+   
 }
 
 

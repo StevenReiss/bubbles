@@ -43,6 +43,7 @@ import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.swing.SwingTextField;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -55,10 +56,8 @@ import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.text.Keymap;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -140,10 +139,8 @@ BassTextSearch(String proj)
    input_field.setActionCommand("INPUT");
    input_field.addActionListener(this);
    input_field.selectAll();
-   Keymap kmp = input_field.getKeymap();
-   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("ESCAPE"),new AbortAction());
-   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("F12"),new SearchAction());
-   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("FIND"),new SearchAction());
+   SwingKey.registerKeyAction("SEARCHBOX",input_field,new AbortAction(),"ESCAPE");
+   SwingKey.registerKeyAction("SEARCHBOX",input_field,new SearchAction(),"F12","FIND");
    addGBComponent(input_field,0,y++,0,1,1,0);
    addGBComponent(new JSeparator(),0,y++,0,1,0,0);
 

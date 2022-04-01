@@ -898,22 +898,22 @@ private static class MoveClassAction extends AbstractAction implements Runnable 
 
    @Override public void run() {
       if (to_package == null && combo_box != null) {
-	 combo_box.setContents(getPackages());
+         combo_box.setContents(getPackages());
       }
       else {
-	 BumpClient bc = BumpClient.getBump();
-	 List<BumpLocation> locs = bc.findClassDefinition(project_name,class_name);
-	 if (locs == null || locs.size() == 0) return;
-	 BumpLocation bloc = null;
-	 for (BumpLocation bl1 : locs) {
-	    if (bl1.getFile() != null && bl1.getFile().exists()) {
-	       bloc = bl1;
-	       break;
-	     }
-	  }
-
-	 Element edits = bc.moveClass(project_name,class_name,bloc,to_package);
-	 BaleFactory.getFactory().applyEdits(edits);
+         BumpClient bc = BumpClient.getBump();
+         List<BumpLocation> locs = bc.findClassDefinition(project_name,class_name);
+         if (locs == null || locs.size() == 0) return;
+         BumpLocation bloc = null;
+         for (BumpLocation bl1 : locs) {
+            if (bl1.getFile() != null && bl1.getFile().exists()) {
+               bloc = bl1;
+               break;
+             }
+          }
+   
+         Element edits = bc.moveClass(project_name,class_name,bloc,to_package);
+         BaleFactory.getFactory().applyEdits(edits);
       }
    }
 

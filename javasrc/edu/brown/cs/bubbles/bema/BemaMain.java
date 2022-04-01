@@ -48,6 +48,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.ivy.file.IvyFile;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
@@ -525,6 +526,8 @@ private void start()
       Runtime.getRuntime().addShutdownHook(new SaveConfiguration(root));
     }
 
+   SwingKey.saveKeyDefinitions();
+   
    BumpClient nbc = BumpClient.getBump();
    Element xe = nbc.getAllProjects(300000);
    if (IvyXml.getChild(xe,"PROJECT") == null) {

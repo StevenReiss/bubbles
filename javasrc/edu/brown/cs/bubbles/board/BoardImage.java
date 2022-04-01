@@ -181,7 +181,7 @@ private static synchronized ImageIcon findIcon(String id,Class<?> base)
    if (dir0.exists()) {
       File dir1 = new File(dir0,"images");
       if (dir1.exists()) {
-	 BoardLog.logD("BOARD", "Look for image " + id + " in " + dir1);
+// 	 BoardLog.logD("BOARD", "Look for image " + id + " in " + dir1);
 	 File f3 = new File(dir1,id + ".png");
 	 if (f3.exists() && f3.canRead()) {
 	    ii = new ImageIcon(f3.getAbsolutePath());
@@ -197,7 +197,7 @@ private static synchronized ImageIcon findIcon(String id,Class<?> base)
       else use_jar = false;
     }
 
-   BoardLog.logI("BOARD","Find image " + id + " " + use_jar);
+// BoardLog.logI("BOARD","Find image " + id + " " + use_jar);
 
    if (use_jar.booleanValue()) {
       ii = getJarIcon(id,base);
@@ -209,7 +209,7 @@ private static synchronized ImageIcon findIcon(String id,Class<?> base)
       File f1 = new File(root);
       File f2 = new File(f1,"images");
       File f3 = new File(f2,id + ".png");
-      BoardLog.logD("BOARD", "Look for image " + id + " as " + f3);
+//    BoardLog.logD("BOARD", "Look for image " + id + " as " + f3);
       if (f3.exists()) {
 	 ii = new ImageIcon(f3.getAbsolutePath());
        }

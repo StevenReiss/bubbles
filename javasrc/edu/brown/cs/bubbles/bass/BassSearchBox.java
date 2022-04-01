@@ -50,10 +50,10 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.swing.SwingTextField;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -62,7 +62,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.CaretEvent;
@@ -95,8 +94,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -184,20 +181,18 @@ BassSearchBox(BassTreeModel mdl,boolean common)
    Color ifc = new Color(bptc.getRGB(),false);
    BoardColors.setColors(input_field,ifc);
    input_field.setBorder(null);
-
+   
    Keymap kmp1 = input_field.getKeymap();
    Keymap kmp = JTextField.addKeymap("BASS",kmp1);
    input_field.setKeymap(kmp);
-   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("ESCAPE"),new AbortAction());
-   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("F4"),new ExpandAllAction());
-   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("shift F4"),new CompactAction());
-   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("UP"),new UpSelectionAction());
-   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("DOWN"),new DownSelectionAction());
-
-   registerKeyAction(new ExpandAllAction(),"EXPAND_ALL",KeyStroke.getKeyStroke(KeyEvent.VK_F4,0));
-   registerKeyAction(new TextSearchAction(),"TEXT_SEARCH",
-	 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK));
-
+   SwingKey.registerKeyAction("SEARCHBOX",input_field,new AbortAction(),"ESCAPE");
+   SwingKey.registerKeyAction("SEARCHBOX",input_field,new ExpandAllAction(),"F4");
+   SwingKey.registerKeyAction("SEARCHBOX",input_field,new CompactAction(),"shift F4");
+   SwingKey.registerKeyAction("SEARCHBOX",input_field,new UpSelectionAction(),"UP");
+   SwingKey.registerKeyAction("SEARCHBOX",input_field,new DownSelectionAction(),"DOWN");
+   SwingKey.registerKeyAction("SEARCHBOX",this,new ExpandAllAction(),"F4");
+   SwingKey.registerKeyAction("SEARCHBOX",this,new TextSearchAction(),"shift ENTER");
+  
    old_text = null;
    addGBComponent(input_field,0,0,1,1,1,0);
 
@@ -746,15 +741,7 @@ boolean handlePopupMenu(MouseEvent e)
 /*										*/
 /*	Tree actions								*/
 /*										*/
-/********************************************************************************/
-
-private void registerKeyAction(Action act,String cmd,KeyStroke k)
-{
-   getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(k,cmd);
-   getActionMap().put(cmd,act);
-}
-
-
+/********************************************************************************/ 
 
 private void expandAll()
 {

@@ -328,7 +328,7 @@ public void removeCurrentBubble(MouseEvent e)
       Rectangle r = focus_bubble.getBounds();
       if (r.contains(pt)) bb = focus_bubble;
     }
-
+   if (bb != null) bb.unfreeze();
    if (bb != null) userRemoveBubble(bb);
    else if (grp != null) userRemoveGroup(grp);
 }

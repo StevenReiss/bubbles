@@ -120,8 +120,7 @@ public static void initialize(BudaRoot br)
    the_factory = new BhelpFactory(br);
 
    br.registerKeyAction(new TestAction(),"Test Help Sequence",
-	 KeyStroke.getKeyStroke(KeyEvent.VK_SLASH,
-	       InputEvent.SHIFT_DOWN_MASK|InputEvent.ALT_DOWN_MASK));
+         "alt shift SLASH");
 }
 
 

@@ -142,13 +142,6 @@ static BdynOptions getOptions() 		{ return bdyn_options; }
 
 private class ProcessHandler implements BumpRunEventHandler {
 
-   @Override public void handleLaunchEvent(BumpRunEvent evt)		{ }
-
-   @Override public void handleThreadEvent(BumpRunEvent evt)		{ }
-
-   @Override public void handleConsoleMessage(BumpProcess p,boolean err,boolean eof,String msg)
-   { }
-
    @Override public synchronized void handleProcessEvent(BumpRunEvent evt) {
       BumpProcess proc = evt.getProcess();
       if (proc == null) return;

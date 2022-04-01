@@ -137,7 +137,7 @@ private void ensureRunning()
    if (efp.endsWith(".app") || efp.endsWith(".exe")) efp = efp.substring(0,efp.length()-4);
    String cmd = "'" + efp + "'";
    
-// cmd += " nosplash";
+   cmd += " nosplash";
    if (ws != null) cmd += " '" + ws + "'";
    
    String eopt = board_properties.getProperty(BOARD_PROP_BASE_IDE_OPTIONS);
@@ -145,7 +145,7 @@ private void ensureRunning()
    if (eopt != null) cmd += " " + eopt;
    
    // mint and other options
-   String optfile = setupOptions();
+   String optfile = setupOptions(ws);
    String [] env = null;
    if (optfile != null) {
       Map<String,String> oenv = new LinkedHashMap<>(System.getenv());
@@ -198,10 +198,19 @@ private void ensureRunning()
 
 
 
-private String setupOptions()
+private String setupOptions(String wsname)
 {
    String ideadir = board_properties.getProperty(BOARD_PROP_BASE_IDE_DIR);
    File f1 = new File(ideadir);
+   
+   if (wsname != null) {
+      if (wsname.endsWith(File.separator)) {
+         wsname = wsname.substring(0,wsname.length()-1);
+       }
+      int idx = wsname.lastIndexOf(File.separator);
+      if (idx > 0) wsname = wsname.substring(idx+1);
+      wsname = wsname.replace(" ","_");
+    }
    
    File opts = null;
    for (String s : OPTIONS_FILE) {
@@ -229,7 +238,14 @@ private String setupOptions()
      BoardLog.logE("BOARD","Can't read option file",e); 
     }
    
-   addOption("-Dedu.brown.cs.bubbles.MINT=" + mint_name,optmap);
+   if (wsname == null) {
+      addOption("-Dedu.brown.cs.bubbles.MINT=" + mint_name,optmap);
+    }
+   else {
+      String opt = "-Dedu.brown.cs.bubbles.MINT." + wsname;
+      addOption(opt + "=" + mint_name,optmap);
+    }
+   
    if (run_headless) {
       addOption("-Djava.awt.headless=true",optmap);
     }
@@ -247,7 +263,8 @@ private String setupOptions()
       ft.deleteOnExit();
       PrintWriter pw = new PrintWriter(ft);
       for (String opt : optmap.values()) {
-          pw.println(opt);
+         BoardLog.logD("BUMP","Add idea option: " + opt);
+         pw.println(opt);
        }
       pw.close();
       rslt = ft.getAbsolutePath();

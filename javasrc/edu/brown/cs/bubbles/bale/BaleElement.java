@@ -74,6 +74,7 @@ private MutableAttributeSet element_attrs;
 private Map<Object,Object> attr_cache;
 private int num_overlap;
 private BaleAstNode	ast_node;
+private org.w3c.dom.Element old_hint;
 private boolean 	is_elided;
 
 private static boolean	elide_statement = BALE_PROPERTIES.getBoolean("Bale.elide.statement");
@@ -110,6 +111,7 @@ BaleElement(BaleDocument d,BaleElement.Branch parent,AttributeSet a)
    ast_node = null;
    is_elided = false;
    attr_cache = null;
+   old_hint = null;
 
    if (a == null && getName() != null) {
       default_attrs = BaleFactory.getFactory().getAttributes(getName());
@@ -128,7 +130,11 @@ BaleElement(BaleDocument d,BaleElement.Branch parent,AttributeSet a)
 BaleDocument getBaleDocument()			{ return for_document; }
 
 BaleAstNode getAstNode()			{ return ast_node; }
-void setAstNode(BaleAstNode bn) 		{ ast_node = bn; }
+void setAstNode(BaleAstNode bn) {
+   ast_node = bn; 
+   old_hint = null;
+}
+
 
 boolean isEndOfLine()				{ return false; }
 
@@ -146,6 +152,10 @@ BaleFragmentType getBubbleType()		{ return BaleFragmentType.NONE; }
 boolean isDeclSet()				{ return false; }
 boolean isStatement()				{ return false; }
 boolean isOrphan()				{ return false; }
+boolean isHint()                                { return false; }
+String getHintText()                                { return null; }
+org.w3c.dom.Element getOldHintData()            { return old_hint; }
+void setOldHintData(org.w3c.dom.Element hint)    { old_hint = hint; }
 
 @Override public BaleElement.Branch getBaleParent()	{ return parent_element; }
 
@@ -250,6 +260,7 @@ BaleViewType getViewType()
 {
    if (isLeaf()) {
       if (isOrphan()) return BaleViewType.ORPHAN;
+      else if (isHint()) return BaleViewType.HINT;
       return BaleViewType.TEXT;
     }
 
@@ -722,22 +733,22 @@ static class Branch extends BaleElement {
       int nsz = children_elts.length;
       while (sz - 1 + num_children >= nsz) nsz *= 2;
       if (nsz != children_elts.length) {
-	 children_elts = Arrays.copyOf(children_elts,nsz);
+         children_elts = Arrays.copyOf(children_elts,nsz);
        }
       int idx = -1;
       for (int i = 0; i < num_children; ++i) {
-	 if (children_elts[i] == old) {
-	    idx = i;
-	    break;
-	  }
+         if (children_elts[i] == old) {
+            idx = i;
+            break;
+          }
        }
       if (idx < 0) return;
       System.arraycopy(children_elts,idx,children_elts,idx+sz-1,num_children-idx);
       for (BaleElement be : rep) {
-	 checkCycle(be);
-	 children_elts[idx++] = be;
-	 be.parent_element = this;
-	 be.clearCache();
+         checkCycle(be);
+         children_elts[idx++] = be;
+         be.parent_element = this;
+         be.clearCache();
        }
       old.parent_element = null;
       num_children += sz-1;
@@ -773,8 +784,8 @@ static class Branch extends BaleElement {
    @Override protected Position getStartPosition() {
       if (num_children == 0) return null;
       if (start_pos == null) {
-	 BaleElement c = children_elts[0];
-	 start_pos = c.getStartPosition();
+         BaleElement c = children_elts[0];
+         start_pos = c.getStartPosition();
        }
       return start_pos;
     }
@@ -954,7 +965,7 @@ static class Leaf extends BaleElement {
    @Override public Enumeration<? extends TreeNode> children()	{ return null; }
 
    @Override BaleElement.Leaf getBaleChildAtPosition(int off)	{ return this; }
-   @Override public  BaleTokenType getTokenType()		{ return token_type; }
+   @Override public BaleTokenType getTokenType()		{ return token_type; }
    @Override BaleElement.Leaf getFirstChild()			{ return this; }
    @Override BaleElement.Leaf getLastChild()			{ return this; }
 
@@ -1675,7 +1686,7 @@ static class LineComment extends Leaf {
 static class OrphanElement extends Leaf {
 
    // private String fragment_name;
-
+   
    OrphanElement(BaleDocument d,BaleElement.Branch p,String nm) {
       super(d,p,null,0,1);
       // fragment_name = nm;
@@ -1685,6 +1696,25 @@ static class OrphanElement extends Leaf {
    @Override boolean isOrphan() 		{ return true; }
 
 }	// end of inner class OrphanElement
+
+
+
+
+static class HintElement extends Leaf {
+   
+   private String hint_text;
+   
+   HintElement(BaleElement base,String hint,int off) {
+      super(base.getBaleDocument(),base.getBaleParent(),null,off,off);
+      hint_text = hint;
+    }
+   
+   @Override public String getName()            { return "Hint"; }
+   @Override boolean isComment()                { return true; }
+   @Override boolean isHint()                   { return true; }
+   @Override String getHintText()                   { return hint_text; }
+
+}
 
 
 

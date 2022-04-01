@@ -188,10 +188,10 @@ private static class Toolbar extends BudaBubble implements NoFreeze
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
       Rectangle r;
       if (bba != null) {
-	 r = bba.getViewport();
-	 if (getSize().getWidth()>r.width) {
-	    setSize(new Dimension(r.width,getSize().height));
-	  }
+         r = bba.getViewport();
+         if (getSize().getWidth()>r.width) {
+            setSize(new Dimension(r.width,getSize().height));
+          }
        }
       super.paintComponent(g);
     }
@@ -232,7 +232,7 @@ private static class MenuPanel extends JPanel {
  * Gets the action that shows a menu bar
  */
 
-static Action getMenuBarAction(BudaRoot r)
+static Action getToolBarAction(BudaRoot r)
 {
    return new MenuListener(r);
 }
@@ -252,7 +252,7 @@ private static class MenuListener extends AbstractAction implements ActionListen
    private static final long serialVersionUID = 1;
 
    MenuListener(BudaRoot r) {
-      super("Toggle Menu Bar");
+      super("Toggle Tool Bar");
       for_root = r;
    }
 

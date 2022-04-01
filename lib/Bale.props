@@ -72,6 +72,9 @@
 <entry key="JavaDocComment.foreground">^</entry>
 <entry key="LineComment.parent">Bale</entry>
 <entry key="LineComment.foreground">^</entry>
+<entry key="Hint.parent">Bale</entry>
+<entry key="Hint.foreground">^</entry>
+<entry key="Hint.size">9</entry>
 <entry key="Bale.identifier.highlight.color">#96c0c0c0</entry>
 <entry key="Bale.identifier.write.highlight.color">96ffff00</entry>
 <entry key="Bale.identifier.define.highlight.color">64ffc800</entry>
@@ -123,7 +126,7 @@
 <entry key="visualization.gradient.colors">0xcdcbfc 0xaef6f5 0x92f5d7 0xedfec6 0xf1faad 0xfafaad 0xd1d1d2 0xcffe73 0xedd0fd 0xbbfeff 0xf8fadd</entry>
 <entry key="Bale.annot.font">LucindaSansRegular.ttf/0/11</entry>
 <entry key="Bale.show.line.numbers">false</entry>
-
+<entry key="Bale.show.hints">true</entry>
 </properties>
 
 

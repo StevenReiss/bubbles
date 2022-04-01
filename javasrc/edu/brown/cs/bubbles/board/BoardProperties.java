@@ -806,6 +806,8 @@ private void loadProperties(String id)
       if (id.equals("System") || id.equals("Board")) return;       // these need to be inited before we can use them
 
       String s = BoardSetup.getSetup().getLanguage().toString().toLowerCase();
+      int idx = s.indexOf("_");
+      if (idx > 0) s = s.substring(0,idx);
       loadIfPossible(id + "." + s);
       loadIfPossible(id + "." + s + "." + BOARD_ARCH);
 

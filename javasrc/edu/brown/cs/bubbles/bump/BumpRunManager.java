@@ -663,12 +663,14 @@ void handleConsoleEvent(Element xml)
    if (bp == null) return;
 
    String message = IvyXml.getTextElement(xml,"TEXT");
-   boolean iserr = IvyXml.getAttrBool(xml,"STDERR");
+   BumpConsoleMode mode = BumpConsoleMode.STDOUT;
+   if (IvyXml.getAttrBool(xml,"STDERR")) mode = BumpConsoleMode.STDERR;
+   else if (IvyXml.getAttrBool(xml,"SYSTEM")) mode = BumpConsoleMode.SYSTEM;
    boolean iseof = IvyXml.getAttrBool(xml,"EOF");
 
    for (BumpRunEventHandler reh : event_handlers) {
       try {
-	 reh.handleConsoleMessage(bp,iserr,iseof,message);
+	 reh.handleConsoleMessage(bp,mode,iseof,message);
        }
       catch (Throwable t) {
 	 BoardLog.logE("BUMP","Problem handling console event",t);
@@ -864,10 +866,11 @@ private void handleThreadEvent(Element xml,long when)
    td.setBreakpoint(null);
    if (revt != null && td.getThreadState().isStopped() &&
 	 td.getThreadDetails() == BumpThreadStateDetail.BREAKPOINT) {
+      BumpBreakModel bbm = bump_client.getBreakModel();
+      BumpBreakpoint bbpt = null;
       Element bpt = IvyXml.getChild(thrd,"BREAKPOINT");
       if (bpt != null) {
-	 BumpBreakModel bbm = bump_client.getBreakModel();
-	 BumpBreakpoint bbpt = bbm.findBreakpoint(bpt);
+	 bbpt = bbm.findBreakpoint(bpt);
 	 if (bbpt != null && bbpt.getBoolProperty("TRACEPOINT")) {
 	    BoardLog.logD("BUMP","Trace point reached");
 	    revt = new ThreadEvent(BumpRunEventType.THREAD_TRACE,td,revt.getWhen());
@@ -875,6 +878,19 @@ private void handleThreadEvent(Element xml,long when)
 	  }
 	 else td.setBreakpoint(bbpt);
        }
+      else {
+         String file = IvyXml.getAttrString(thrd,"LOCFILE");
+         if (file != null) {
+            int lno = IvyXml.getAttrInt(thrd,"LOCLINE");
+            bbpt = bbm.findBreakpoint(new File(file),lno);
+          }
+       }
+      if (bbpt != null && bbpt.getBoolProperty("TRACEPOINT")) {
+         BoardLog.logD("BUMP","Trace point reached");
+         revt = new ThreadEvent(BumpRunEventType.THREAD_TRACE,td,revt.getWhen());
+         bump_client.resume(td);
+       }
+      else td.setBreakpoint(bbpt);
     }
 
    if (revt != null) {
@@ -895,7 +911,13 @@ private boolean checkException(ThreadData td,Element thrd)
 {
    boolean fnd = false;
    td.setException(null);
-
+   
+   String exc = IvyXml.getAttrString(thrd,"EXCEPTION");
+   if (exc != null) {
+      td.setException(exc);
+      return true;
+    }
+   
    for (Element bpt : IvyXml.children(thrd,"BREAKPOINT")) {
       String btyp = IvyXml.getAttrString(bpt,"TYPE");
       if (btyp != null && btyp.equals("EXCEPTION")) {
@@ -1303,6 +1325,7 @@ LaunchData findLaunch(Element xml)
 BumpProcess findDefaultProcess(Element xml)
 {
    LaunchData ld = findLaunch(xml);
+   if (ld == null) return null;
    return ld.getDefaultProcess();
 }
 
@@ -1349,7 +1372,7 @@ private class LaunchData implements BumpLaunch {
 
    synchronized ProcessData getDefaultProcess() {
       if (default_process == null) {
-	 default_process = createDefaultProcess(this);
+         default_process = createDefaultProcess(this);
        }
       return default_process;
     }
@@ -1448,8 +1471,8 @@ private class ProcessData implements BumpProcess {
       if (is_running && IvyXml.getAttrBool(xml,"TERMINATED")) is_running = false;
       for_launch = findLaunch(IvyXml.getChild(xml,"LAUNCH"));
       if (process_name == null) {
-	 String nm = IvyXml.getAttrString(xml,"NAME");
-	 if (nm != null) setProcessName(nm);
+         String nm = IvyXml.getAttrString(xml,"NAME");
+         if (nm != null) setProcessName(nm);
        }
     }
 
@@ -1689,12 +1712,12 @@ private class ThreadData implements BumpThread {
    void resetStack() {
       Element xml = bump_client.getThreadStack(this);
       if (xml == null) {
-	 stack_data = null;
-	 num_frames = -1;
+         stack_data = null;
+         num_frames = -1;
        }
       else {
-	 stack_data = new StackData(xml,thread_id);
-	 num_frames = stack_data.getNumFrames();
+         stack_data = new StackData(xml,thread_id);
+         num_frames = stack_data.getNumFrames();
        }
       current_breakpoint = null;
     }
@@ -1702,13 +1725,13 @@ private class ThreadData implements BumpThread {
    @Override public BumpThreadStack getStack() {
       if (num_frames <= 0) return null;
       if (stack_data == null) {
-	 Element xml = bump_client.getThreadStack(this);
-	 if (xml != null) {
-	    stack_data = new StackData(xml,thread_id);
-	    num_frames = stack_data.getNumFrames();
-	  }
+         Element xml = bump_client.getThreadStack(this);
+         if (xml != null) {
+            stack_data = new StackData(xml,thread_id);
+            num_frames = stack_data.getNumFrames();
+          }
        }
-
+   
       return stack_data;
     }
 

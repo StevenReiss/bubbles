@@ -168,6 +168,7 @@ Bale.attr.comment.foreground : #3f7f5f
 Bale.attr.javadoccomment.foreground : #3f7f5f
 Bale.attr.linecomment.foreground : #3f7f5f
 Bale.attr.bale.foreground : black
+Bale.attr.hint.foreground : #808080
 
 Bale.compact.hilite : #ffff88
 
@@ -304,6 +305,7 @@ Bddt.attr.stdout.foreground : #ffffff
 Bddt.attr.stderr.foreground : #ffff00
 Bddt.attr.stdin.foreground : #00ffff
 Bddt.attr.console.foreground : #ffffff
+Bddt.attr.sysout.foreground : 204,204,255
 
 
 

@@ -38,6 +38,7 @@ import edu.brown.cs.ivy.mint.MintMessage;
 import edu.brown.cs.ivy.swing.SwingDebugGraphics;
 import edu.brown.cs.ivy.swing.SwingEventListenerList;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.swing.SwingText;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -55,7 +56,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIDefaults;
@@ -87,7 +87,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
@@ -280,6 +279,23 @@ void setBudaTitle()
    String title = "Code Bubbles";
    if (!version.startsWith("Build")) {
       title += " - " + version;
+    }
+   switch (BoardSetup.getSetup().getLanguage()) {
+      case JAVA :
+         title += " (Eclipse)";
+         break;
+      case JAVA_IDEA : 
+         title += " (IDEA)";
+         break;
+      case JS :
+         title += " (JavaScript)";
+         break;
+      case PYTHON :
+         title += " (Python)";
+         break;
+      case REBUS :
+         title += " (Code Search)";
+         break;
     }
    String ws = BoardSetup.getSetup().getDefaultWorkspace();
    if (ws != null) {
@@ -1411,91 +1427,59 @@ public Point convertPoint(Component src,Point pt,Component dst)
 
 private void setupGlobalActions()
 {
-   int menumask = SwingText.getMenuShortcutKeyMaskEx();
-   int menudown = 0;
-   int altdown = 0;
-   if (menumask == InputEvent.CTRL_DOWN_MASK) {
-      menudown = InputEvent.CTRL_DOWN_MASK;
-      altdown = InputEvent.ALT_DOWN_MASK;
-    }
-   else if (menumask == InputEvent.META_DOWN_MASK) {
-      menudown = InputEvent.META_DOWN_MASK;
-      altdown = InputEvent.CTRL_DOWN_MASK;
-    }
-   else {
-      menudown = InputEvent.CTRL_DOWN_MASK;
-      altdown = InputEvent.ALT_DOWN_MASK;
-    }
-
-   registerKeyAction(BudaToolbar.getMenuBarAction(this),"Show menu bar",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F1,0));
-   // registerKeyAction(new BudaExpose(this,bubble_area),"EXPOSE",
-			// KeyStroke.getKeyStroke(KeyEvent.VK_F9,0));
-   registerKeyAction(new EscapeHandler(),"REMOVE_BUBBLE_ESCAPE",
-			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0));
-   registerKeyAction(new RemoveHandler(),"REMOVE_BUBBLE",
-			KeyStroke.getKeyStroke(KeyEvent.VK_W,menudown));
-   registerKeyAction(new SearchKeyHandler(true, true, true), "Group Adjacent Search",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F10, menudown));
-   registerKeyAction(new SearchKeyHandler(true, true, true, true), "Nongroup Adjacent Search",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F10, menudown|InputEvent.SHIFT_DOWN_MASK));
-   registerKeyAction(new SearchKeyHandler(true,false,false),"Search in Project",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F10,0));
-   registerKeyAction(new SearchKeyHandler(true,false,false),"Search in Project",
-			KeyStroke.getKeyStroke(KeyEvent.VK_O,menudown));
-   registerKeyAction(new SearchKeyHandler(true,true,false),"Search",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F11,0));
-   registerKeyAction(new SearchKeyHandler(false,true,false),"Search for Documentation",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F12,0));
+   JComponent jc = (JComponent) getContentPane();
+   SwingKey.registerKeyAction("ROOT",jc,BudaToolbar.getToolBarAction(this),"F1");
+   SwingKey.registerKeyAction("ROOT",jc,new RemoveHandler(),"menu W");
+   SwingKey.registerKeyAction("ROOT",jc,new EscapeHandler(),"ESCAPE");
+   SwingKey.registerKeyAction("ROOT",jc,"Group Adjacent Search",
+         new SearchKeyHandler(true,true,true),"menu F10");
+   SwingKey.registerKeyAction("ROOT",jc,"Nongroup Adjacent Search",
+         new SearchKeyHandler(true,true,true,true),"menu shift F10");
+   SwingKey.registerKeyAction("ROOT",jc,"Search in Project",
+         new SearchKeyHandler(true,false,false),"F10","menu O");
+   SwingKey.registerKeyAction("ROOT",jc,"Search",
+         new SearchKeyHandler(true,true,false),"F11");
+   SwingKey.registerKeyAction("ROOT",jc,"Search for Documentation",
+         new SearchKeyHandler(false,true,false),"F12");
+   SwingKey.registerKeyAction("ROOT",jc,new FloaterHandler(),"menu F12");
+   SwingKey.registerKeyAction("ROOT",jc,"Move focus left",
+         new FocusDirectionHandler(FocusDirectionHandler.LEFT,0.5f),"alt menu LEFT");
+   SwingKey.registerKeyAction("ROOT",jc,"Move focus right",
+         new FocusDirectionHandler(FocusDirectionHandler.RIGHT,0.5f),"alt menu RIGHT"); 
+   SwingKey.registerKeyAction("ROOT",jc,"Move focus up",
+         new FocusDirectionHandler(FocusDirectionHandler.UP,0.5f),"alt menu UP");
+   SwingKey.registerKeyAction("ROOT",jc,"Move focus down",
+         new FocusDirectionHandler(FocusDirectionHandler.DOWN,0.5f),"alt menu DOWN");
+   SwingKey.registerKeyAction("ROOT",jc,"Pan left",
+         new PanHandler(-1,0),"menu LEFT");
+   SwingKey.registerKeyAction("ROOT",jc,"Pan right",
+         new PanHandler(1,0),"menu RIGHT");
+   SwingKey.registerKeyAction("ROOT",jc,"Pan up",
+         new PanHandler(0,-1),"menu UP");
+   SwingKey.registerKeyAction("ROOT",jc,"Pan down",
+         new PanHandler(0,1),"menu DOWN");
+   SwingKey.registerKeyAction("ROOT",jc,new SaveHandler(),"menu S");
+   SwingKey.registerKeyAction("ROOT",jc,new CommitHandler(),"F5");
+   SwingKey.registerKeyAction("ROOT",jc,new MetricsHandler(),"ctrl shift PRINTSCREEN");
+   SwingKey.registerKeyAction("ROOT",jc,new HelpHandler(),"HELP","menu shift SLASH","menu shift F1");
+   SwingKey.registerKeyAction("ROOT",jc,new PrintHandler(),"menu P");
+   
+// registerKeyAction(new BudaExpose(this,bubble_area),"EXPOSE",
+// KeyStroke.getKeyStroke(KeyEvent.VK_F9,0));
 // registerKeyAction(new ZoomHandler(1),"Zoom in",
 //	        KeyStroke.getKeyStroke(KeyEvent.VK_PLUS,menudown));
 // registerKeyAction(new ZoomHandler(1),"Zoom in",
 //              KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,menudown|InputEvent.SHIFT_DOWN_MASK));
 // registerKeyAction(new ZoomHandler(-1),"Zoom out",
 //	        KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,menudown));
-   registerKeyAction(new ZoomHandler(0),"Reset zoom",
-			KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,menudown));
-   registerKeyAction(new FloaterHandler(),"Toggle Bubble Floating",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F12, menudown));
-   registerKeyAction(new FocusDirectionHandler(FocusDirectionHandler.LEFT, 0.5f),"Move focus to closest bubble on left",
-			KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, menudown|altdown));
-   registerKeyAction(new FocusDirectionHandler(FocusDirectionHandler.RIGHT, 0.5f),"Move focus to closest bubble on right",
-			KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, menudown|altdown));
-   registerKeyAction(new FocusDirectionHandler(FocusDirectionHandler.UP, 0.5f),"Move focus to closest bubble above",
-			KeyStroke.getKeyStroke(KeyEvent.VK_UP, menudown|altdown));
-   registerKeyAction(new FocusDirectionHandler(FocusDirectionHandler.DOWN, 0.5f),"Move focus to closest bubble below",
-			KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, menudown|altdown));
-   registerKeyAction(new PanHandler(-1,0),"pan left",
-			KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, menudown));
-   registerKeyAction(new PanHandler(1,0),"pan right",
-			KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, menudown));
-   registerKeyAction(new PanHandler(0,-1),"pan up",
-			KeyStroke.getKeyStroke(KeyEvent.VK_UP, menudown));
-   registerKeyAction(new PanHandler(0,1),"pan down",
-			KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, menudown));
-   registerKeyAction(new SaveHandler(),"save all",
-			KeyStroke.getKeyStroke(KeyEvent.VK_S,menudown));
-   registerKeyAction(new CommitHandler(),"commit all",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F5,0));
-   registerKeyAction(new MetricsHandler(),"force metrics dump",
-			KeyStroke.getKeyStroke(KeyEvent.VK_PRINTSCREEN, InputEvent.CTRL_DOWN_MASK|InputEvent.SHIFT_DOWN_MASK));
-   registerKeyAction(new HelpHandler(),"show help information",
-			KeyStroke.getKeyStroke(KeyEvent.VK_HELP,0));
-   registerKeyAction(new HelpHandler(),"show help information",
-			KeyStroke.getKeyStroke(KeyEvent.VK_SLASH,menudown|InputEvent.SHIFT_DOWN_MASK));
-   registerKeyAction(new HelpHandler(),"show help information",
-		KeyStroke.getKeyStroke(KeyEvent.VK_F1, menudown|InputEvent.SHIFT_DOWN_MASK));
-   registerKeyAction(new PrintHandler(),"print bubble",
-	 KeyStroke.getKeyStroke(KeyEvent.VK_P,menudown));
 }
 
 
 
-public void registerKeyAction(Action act,String cmd,KeyStroke k)
+public void registerKeyAction(Action act,String cmd,String k)
 {
    JPanel cnt = (JPanel) getContentPane();
-   cnt.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(k,cmd);
-   cnt.getActionMap().put(cmd,act);
+   SwingKey.registerKeyAction("ROOT",cnt,cmd,act,k);
 }
 
 
@@ -1540,6 +1524,8 @@ public void handleSaveAllRequest()
    for (BudaFileHandler bfh : file_handlers) {
       bfh.handleSaveDone();
     }
+   
+   SwingKey.saveKeyDefinitions();
 }
 
 
@@ -1701,31 +1687,31 @@ private class ShadeUpdater implements ActionListener {
       long now = System.currentTimeMillis();
       long delta = now-last_time;
       int move = (int)(move_delta * delta * shade_delta);
-
+   
       boolean done = false;
       int curht = bubble_overview.getHeight() + bubble_topbar.getHeight();
       int startht = curht;
       curht += move;
       if (curht < 1) {
-	 curht = 1;
-	 move = curht - startht;
-	 done = true;
+         curht = 1;
+         move = curht - startht;
+         done = true;
        }
       else if (curht > BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT) {
-	 curht = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
-	 move = curht - startht;
-	 done = true;
+         curht = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
+         move = curht - startht;
+         done = true;
        }
-
+   
       for (Component c : button_panels) {
-	 Dimension csz = c.getSize();
-	 csz.height = curht;
-	 c.setSize(csz);
-	 c.setMinimumSize(csz);
-	 c.setMaximumSize(csz);
-	 c.setPreferredSize(csz);
+         Dimension csz = c.getSize();
+         csz.height = curht;
+         c.setSize(csz);
+         c.setMinimumSize(csz);
+         c.setMaximumSize(csz);
+         c.setPreferredSize(csz);
        }
-
+   
       Dimension topsz = bubble_topbar.getSize();
       if (curht < BUBBLE_TOP_BAR_HEIGHT) topsz.height = curht;
       else topsz.height = BUBBLE_TOP_BAR_HEIGHT;
@@ -1733,7 +1719,7 @@ private class ShadeUpdater implements ActionListener {
       bubble_topbar.setPreferredSize(topsz);
       bubble_topbar.setMaximumSize(topsz);
       bubble_topbar.setSize(topsz);
-
+   
       Dimension ovrsz = bubble_overview.getSize();
       if (curht <= BUBBLE_TOP_BAR_HEIGHT) ovrsz.height = 0;
       else ovrsz.height = curht - BUBBLE_TOP_BAR_HEIGHT;
@@ -1741,43 +1727,43 @@ private class ShadeUpdater implements ActionListener {
       bubble_overview.setPreferredSize(ovrsz);
       bubble_overview.setMaximumSize(ovrsz);
       bubble_overview.setSize(ovrsz);
-
+   
       shade_safe = false;
       Point rv = bubble_view.getViewPosition();
       rv.y += move;
       bubble_view.setViewPosition(rv);
-
+   
       Rectangle r = bubble_view.getBounds();
       Rectangle rtop = bubble_view.getParent().getBounds();
       r.height = rtop.height - curht;
       r.y = curht;
       bubble_view.setBounds(r);
       shade_safe = done;
-
+   
       BudaBubble toolbar = BudaToolbar.getToolbar(bubble_area);
       for (BudaBubble bbl : bubble_area.getBubbles()) {
-	 if (bbl.isFloating() && bbl != toolbar) {
-	    Rectangle rbbl = bbl.getBounds();
-	    rbbl.y -= move;
-	    bbl.setBounds(rbbl);
-	  }
+         if (bbl.isFloating() && bbl != toolbar) {
+            Rectangle rbbl = bbl.getBounds();
+            rbbl.y -= move;
+            bbl.setBounds(rbbl);
+          }
        }
       if (toolbar.isVisible()) {
-	 Rectangle rbbl = toolbar.getBounds();
-	 rbbl.y -= move;
-	 // System.err.println("TOOL BOUNDS " + rbbl + " " + move);
-	 toolbar.setBounds(rbbl);
+         Rectangle rbbl = toolbar.getBounds();
+         rbbl.y -= move;
+         // System.err.println("TOOL BOUNDS " + rbbl + " " + move);
+         toolbar.setBounds(rbbl);
        }
-
+   
       // revalidate();
-
+   
       synchronized (BudaRoot.this) {
-	 if (shade_delta == 0 || done) {
-	    shade_delta = 0;
-	    Timer nt = (Timer) e.getSource();
-	    nt.stop();
-	    return;
-	  }
+         if (shade_delta == 0 || done) {
+            shade_delta = 0;
+            Timer nt = (Timer) e.getSource();
+            nt.stop();
+            return;
+          }
        }
     }
 
@@ -1796,6 +1782,10 @@ private class EscapeHandler extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
+   EscapeHandler() {
+      super("Remove Bubble or Stop Help");
+    }
+   
    @Override public void actionPerformed(ActionEvent e) {
       if (demo_thread != null) {
          demo_thread.stopDemonstration();
@@ -1813,6 +1803,10 @@ private class RemoveHandler extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
+   RemoveHandler() {
+      super("Remove Bubble");
+    }
+   
    @Override public void actionPerformed(ActionEvent e) {
       removeCurrentBubble();
     }
@@ -1873,7 +1867,11 @@ private class SearchKeyHandler extends AbstractAction {
 private static class MetricsHandler extends AbstractAction {
 
    private static final long serialVersionUID = 1;
-
+   
+   MetricsHandler() {
+      super("Force metrics dump");
+    }
+  
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.forceDump();
     }
@@ -1939,6 +1937,7 @@ private class CommitHandler extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
+@SuppressWarnings("unused")
 private class ZoomHandler extends AbstractAction implements ActionListener {
 
    private int zoom_direction;
@@ -1965,6 +1964,10 @@ private class ZoomHandler extends AbstractAction implements ActionListener {
 private class FloaterHandler extends AbstractAction implements ActionListener {
    private static final long serialVersionUID = 1L;
 
+   FloaterHandler() {
+      super("Toggle Bubble Floating");
+    }
+   
    @Override public void actionPerformed(ActionEvent e) {
       Point pt = bubble_area.getCurrentMouse();
       if (pt == null) return;
@@ -2078,6 +2081,10 @@ private class PrintHandler extends AbstractAction  {
 
    private static final long serialVersionUID = 1;
 
+   PrintHandler() {
+      super("Print bubble");
+    }
+   
    @Override public void actionPerformed(ActionEvent e) {
       BudaBubbleArea bba = getCurrentBubbleArea();
       BudaBubble bbl = bba.getFocusBubble();
@@ -2411,7 +2418,7 @@ private synchronized void doneSetup()
    view_setup = true;
 
    if (BUDA_PROPERTIES.getBoolean("Buda.show.tool.menu")) {
-      Action act = BudaToolbar.getMenuBarAction(this);
+      Action act = BudaToolbar.getToolBarAction(this);
       act.actionPerformed(null);
     }
 

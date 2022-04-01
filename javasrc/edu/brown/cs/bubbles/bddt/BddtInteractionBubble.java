@@ -35,6 +35,7 @@ import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.ivy.swing.SwingEditorPane;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.swing.SwingText;
 import edu.brown.cs.ivy.swing.SwingTextField;
 
@@ -44,12 +45,10 @@ import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
-import javax.swing.text.Keymap;
 import javax.swing.text.html.HTMLDocument;
 
 import java.awt.Color;
@@ -139,12 +138,12 @@ BddtInteractionBubble(BddtLaunchControl ctrl)
    input_field = new SwingTextField();
    ExprTypein typein = new ExprTypein();
    input_field.addActionListener(typein);
-   Keymap kmp = JTextField.addKeymap("BDDTINTERACTION",input_field.getKeymap());
-   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("END"),new HistoryAction(0));
-   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("UP"),new HistoryAction(1));
-   kmp.addActionForKeyStroke(KeyStroke.getKeyStroke("DOWN"),new HistoryAction(-1));
-   input_field.setKeymap(kmp);
-   
+   SwingKey.registerKeyAction("Debug Interaction",input_field,new HistoryAction(0),
+         "END");
+   SwingKey.registerKeyAction("Debug Interaction",input_field,new HistoryAction(1),
+         "UP"); SwingKey.registerKeyAction("Debug Interaction",input_field,new HistoryAction(-1),
+         "DOWN"); 
+         
    JScrollPane scrl = new JScrollPane(display_area);
    scrl.setPreferredSize(BDDT_INTERACTION_INITIAL_SIZE);
 
@@ -383,6 +382,9 @@ private class HistoryAction extends AbstractAction {
    private static final long serialVersionUID = 1;
    
    HistoryAction(int dir) {
+      super("Go to debug history " + 
+            (dir == 0 ? "end" : (dir < 0? "previous" :
+               "next")));
       history_direction = dir;
     }
    

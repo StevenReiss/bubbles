@@ -165,10 +165,6 @@ private void setupPanel()
 /*										*/
 /********************************************************************************/
 
-@Override public void handleLaunchEvent(BumpRunEvent evt)		{ }
-@Override public void handleProcessEvent(BumpRunEvent evt)		{ }
-@Override public void handleConsoleMessage(BumpProcess proc,boolean err,boolean eof,String msg)	{ }
-
 @Override public void handleThreadEvent(BumpRunEvent evt)
 {
    if (evt.getEventType() == BumpRunEventType.THREAD_HISTORY) {
@@ -186,8 +182,6 @@ private void setupPanel()
        }
     }
 }
-
-
 
 
 /********************************************************************************/

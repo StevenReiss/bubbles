@@ -707,7 +707,7 @@ private static class BaleTextUI extends TextUI {
    public int viewToModel2D(JTextComponent t,Point2D pt,Position.Bias [] bret) {
       readLock(t);
       try {
-	 return SwingText.viewToModel2D(base_ui,t,pt,bret);
+         return SwingText.viewToModel2D(base_ui,t,pt,bret);
        }
       finally { readUnlock(t); }
     }

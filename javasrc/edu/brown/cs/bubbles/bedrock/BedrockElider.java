@@ -32,6 +32,9 @@ package edu.brown.cs.bubbles.bedrock;
 
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
@@ -39,7 +42,9 @@ import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
 import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CatchClause;
+import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.Expression;
@@ -59,6 +64,7 @@ import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
+import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
 import org.eclipse.jdt.core.dom.SwitchCase;
 import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.Type;
@@ -418,6 +424,11 @@ private String getNodeType(ASTNode n)
       typ = "CATCH";
     }
    else if (n instanceof SimpleName) ;
+   else if (n instanceof MethodInvocation) {
+      typ = "CALL";
+      ASTNode p = n.getParent();
+      if (!(p instanceof Expression) && !(p instanceof Type)) typ = "CALLEXPR";
+    }
    else if (n instanceof Expression) {
       ASTNode p = n.getParent();
       if (!(p instanceof Expression) && !(p instanceof Type)) typ = "EXPR";
@@ -459,6 +470,66 @@ private String getNodeType(ASTNode n)
    return typ;
 }
 
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Output information for hints                                            */
+/*                                                                              */
+/********************************************************************************/
+
+private void outputHintData(ASTNode n,IvyXmlWriter xw)
+{
+   IMethodBinding imb = null;
+   if (n instanceof MethodInvocation) {
+      MethodInvocation mi = (MethodInvocation) n;
+      imb = mi.resolveMethodBinding();
+    }
+   else if (n instanceof ClassInstanceCreation) {
+      ClassInstanceCreation cic = (ClassInstanceCreation) n;
+      imb = cic.resolveConstructorBinding();
+      BedrockPlugin.logD("HINT FOR CIC " + n + " " + imb);
+    }
+   else if (n instanceof SuperConstructorInvocation) {
+      SuperConstructorInvocation sci = (SuperConstructorInvocation) n;
+      imb = sci.resolveConstructorBinding();
+      BedrockPlugin.logD("HINT FOR SUPER " + n + " " + imb);
+    }
+   else if (n instanceof ConstructorInvocation) {
+      ConstructorInvocation cci = (ConstructorInvocation) n;
+      imb = cci.resolveConstructorBinding();
+      BedrockPlugin.logD("HINT FOR THIS " + n + " " + imb);
+    }
+   
+   if (imb != null) {
+      IJavaElement ije = imb.getJavaElement();
+      if (ije == null || !(ije instanceof IMethod)) return;
+      IMethod mthd = (IMethod) ije;
+      String rettyp;
+      String [] pnames;
+      String [] ptypes;
+      try {
+         rettyp = mthd.getReturnType();
+         pnames = mthd.getParameterNames();
+         ptypes = mthd.getParameterTypes();
+       }
+      catch (JavaModelException e) {
+         return;
+       }
+      xw.begin("HINT");
+      xw.field("KIND","METHOD");
+      if (n instanceof ClassInstanceCreation) xw.field("CONSTRUCTOR",true);
+      else xw.field("RETURNS",rettyp);
+      xw.field("NUMPARAM",mthd.getNumberOfParameters());
+      for (int i = 0; i < mthd.getNumberOfParameters(); ++i) {
+         xw.begin("PARAMETER");
+         xw.field("NAME",pnames[i]);
+         xw.field("TYPE",ptypes[i]);
+         xw.end("PARAMETER");
+       }
+      xw.end("HINT");
+    }
+}
 
 
 /********************************************************************************/
@@ -600,6 +671,7 @@ private class ElidePass2 extends ASTVisitor {
    @Override public void postVisit(ASTNode n) {
       if (active_node == n) active_node = null;
       if (xml_writer != null && result_value.get(n) != null && result_value.get(n) > 0) {
+         outputHintData(n,xml_writer);
          xml_writer.end("ELIDE");
        }
       checkEndSwitchBlock(n);
@@ -653,54 +725,54 @@ private class ElidePass2 extends ASTVisitor {
    private void outputDeclInfo(Name name) {
       IBinding bnd = name.resolveBinding();
       if (bnd == null) return;
-
+   
       StringBuffer buf;
-
+   
       switch (bnd.getKind()) {
-	 case IBinding.ANNOTATION :
-	    buf = new StringBuffer();
-	    IAnnotationBinding iab = (IAnnotationBinding) bnd;
-	    buf.append(iab.getAnnotationType().getQualifiedName());
-	    buf.append(".");
-	    buf.append(iab.getName());
-	    xml_writer.field("FULLNAME",buf.toString());
-	    break;
-	 case IBinding.MEMBER_VALUE_PAIR :
-	 case IBinding.PACKAGE :
-	    break;
-	 case IBinding.METHOD :
-	    buf = new StringBuffer();
-	    IMethodBinding imb = (IMethodBinding) bnd;
-	    buf.append(imb.getDeclaringClass().getQualifiedName());
-	    buf.append(".");
-	    buf.append(imb.getName());
-	    buf.append("(");
-	    int ct = 0;
-	    for (ITypeBinding tb : imb.getParameterTypes()) {
-	       if (ct++ > 0) buf.append(",");
-	       buf.append(tb.getName());
-	     }
-	    buf.append(")");
-	    xml_writer.field("FULLNAME",buf.toString());
-	    break;
-	 case IBinding.VARIABLE :
-	    buf = new StringBuffer();
-	    IVariableBinding ivb = (IVariableBinding) bnd;
-	    if (ivb.isField()) {
-	       if (ivb.getDeclaringClass() != null) {
-		  buf.append(ivb.getDeclaringClass().getQualifiedName());
-		  buf.append(".");
-		  buf.append(ivb.getName());
-		  xml_writer.field("FULLNAME",buf.toString());
-		}
-	     }
-	    break;
-	 case IBinding.TYPE :
-	    ITypeBinding itb = (ITypeBinding) bnd;
-	    xml_writer.field("FULLNAME",itb.getQualifiedName());
-	    xml_writer.field("LOCAL",itb.isLocal());
-	    xml_writer.field("MEMBER",itb.isMember());
-	    break;
+         case IBinding.ANNOTATION :
+            buf = new StringBuffer();
+            IAnnotationBinding iab = (IAnnotationBinding) bnd;
+            buf.append(iab.getAnnotationType().getQualifiedName());
+            buf.append(".");
+            buf.append(iab.getName());
+            xml_writer.field("FULLNAME",buf.toString());
+            break;
+         case IBinding.MEMBER_VALUE_PAIR :
+         case IBinding.PACKAGE :
+            break;
+         case IBinding.METHOD :
+            buf = new StringBuffer();
+            IMethodBinding imb = (IMethodBinding) bnd;
+            buf.append(imb.getDeclaringClass().getQualifiedName());
+            buf.append(".");
+            buf.append(imb.getName());
+            buf.append("(");
+            int ct = 0;
+            for (ITypeBinding tb : imb.getParameterTypes()) {
+               if (ct++ > 0) buf.append(",");
+               buf.append(tb.getName());
+             }
+            buf.append(")");
+            xml_writer.field("FULLNAME",buf.toString());
+            break;
+         case IBinding.VARIABLE :
+            buf = new StringBuffer();
+            IVariableBinding ivb = (IVariableBinding) bnd;
+            if (ivb.isField()) {
+               if (ivb.getDeclaringClass() != null) {
+        	  buf.append(ivb.getDeclaringClass().getQualifiedName());
+        	  buf.append(".");
+        	  buf.append(ivb.getName());
+        	  xml_writer.field("FULLNAME",buf.toString());
+        	}
+             }
+            break;
+         case IBinding.TYPE :
+            ITypeBinding itb = (ITypeBinding) bnd;
+            xml_writer.field("FULLNAME",itb.getQualifiedName());
+            xml_writer.field("LOCAL",itb.isLocal());
+            xml_writer.field("MEMBER",itb.isMember());
+            break;
        }
     }
 

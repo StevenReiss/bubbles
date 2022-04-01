@@ -30,6 +30,7 @@
 
 package edu.brown.cs.bubbles.bale;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.bump.BumpClient;
 
 import javax.swing.text.StyleContext;
@@ -175,6 +176,10 @@ private int localNextTabPosition(int pos)
 private void setFont()
 {
    StyleContext ctx = BaleFactory.getFactory().getStyleContext();
+   if (ctx == null) {
+      BoardLog.logD("BALE","Not sylte context for tab handler");
+      return;
+    }
    Font fn = ctx.getFont(cur_element.getAttributes());
    if (fn != last_font) {
       FontRenderContext frc = new FontRenderContext(null,false,false);

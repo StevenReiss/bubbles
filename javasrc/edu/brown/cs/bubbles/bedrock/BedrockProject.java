@@ -248,37 +248,36 @@ void listProjects(IvyXmlWriter xw)
 
    IWorkspace ws = ResourcesPlugin.getWorkspace();
    IWorkspaceRoot wr = ws.getRoot();
-   IProject[] projs = wr.getProjects();
 
-   for (int i = 0; i < projs.length; ++i) {
-      if (ignore_projects.contains(projs[i].getName())) continue;
-      if (projs[i].getLocation() == null) continue;
+   for (IProject ip : open_projects) {
+      if (ignore_projects.contains(ip.getName())) continue;
+      if (ip.getLocation() == null) continue;
       xw.begin("PROJECT");
-      xw.field("NAME",projs[i].getName());
-      xw.field("OPEN",projs[i].isOpen());
+      xw.field("NAME",ip.getName());
+      xw.field("OPEN",ip.isOpen());
       xw.field("WORKSPACE",wr.getLocation().toOSString());
       boolean isjava = false;
       boolean isandroid = false;
       try {
-	 isjava = projs[i].hasNature(JavaCore.NATURE_ID);
-	 isandroid = projs[i].hasNature("com.android.ide.eclipse.adt.AndroidNature");
+	 isjava = ip.hasNature(JavaCore.NATURE_ID);
+	 isandroid = ip.hasNature("com.android.ide.eclipse.adt.AndroidNature");
        }
       catch (CoreException e) { }
       xw.field("ISJAVA",isjava);
       xw.field("ISANDROID",isandroid);
       try {
-	 xw.cdataElement("DESCRIPTION",projs[i].getDescription().getComment());
+	 xw.cdataElement("DESCRIPTION",ip.getDescription().getComment());
        }
       catch (CoreException e) { }
-      xw.textElement("BASE",projs[i].getFullPath().toOSString());
+      xw.textElement("BASE",ip.getFullPath().toOSString());
       try {
-	 IProject[] rp = projs[i].getReferencedProjects();
+	 IProject[] rp = ip.getReferencedProjects();
 	 for (int j = 0; j < rp.length; ++j) {
 	    xw.textElement("REFERENCES",rp[j].getName());
 	  }
        }
       catch (Exception e) { }
-      IProject[] up = projs[i].getReferencingProjects();
+      IProject[] up = ip.getReferencingProjects();
       for (int j = 0; j < up.length; ++j) {
 	 xw.textElement("USEDBY",up[j].getName());
        }
@@ -302,16 +301,19 @@ void openProject(String name,boolean fil,boolean pat,boolean cls,boolean opt,boo
 	throws BedrockException
 {
    setupProjects();
-
+   
    IProject p = findProject(name);
    if (p == null) return;
-
-   attachProject(p,false);
-
-   if (bkg != null) {
+   
+   boolean fg = attachProject(p,false);
+   
+   if (!fg) {
+      xw.emptyElement("FAIL");
+    }
+   else if (bkg != null) {
       ProjectThread pt = new ProjectThread(bkg,p,fil,pat,cls,opt);
       pt.start();
-      if (xw != null) outputProject(p,false,false,false,false,false,xw);
+      outputProject(p,false,false,false,false,false,xw);
     }
    else if (xw != null) {
       outputProject(p,fil,pat,cls,opt,imps,xw);
@@ -751,13 +753,9 @@ static boolean useProject(String name)
 /*										*/
 /********************************************************************************/
 
-private void attachProject(IProject p,boolean setup)
+private boolean attachProject(IProject p,boolean setup)
 {
-   if (p == null) return;
-
-   if (!open_projects.contains(p)) {
-      open_projects.add(p);
-    }
+   if (p == null) return false;
 
    try {
       p.open(null);
@@ -766,18 +764,23 @@ private void attachProject(IProject p,boolean setup)
       if (setup) setupDefaults(ijp);
     }
    catch (JavaModelException e) {
-      BedrockPlugin.logE("Error resolving project: " + e,e);
-      return;
+      BedrockPlugin.logI("Error resolving project: " + e);
+      return false;
     }
    catch (CoreException e) {
       BedrockPlugin.logE("Error opening project: " + e,e);
-      return;
+      return false;
     }
    catch (Throwable e) {
       BedrockPlugin.logE("Error with project attach: " + e,e);
-      return;
+      return false;
     }
-
+   
+   if (!open_projects.contains(p)) {
+      open_projects.add(p);
+    }
+   
+   return true;
 }
 
 
@@ -1032,11 +1035,8 @@ void handlePreferences(String proj,IvyXmlWriter xw)
 void handleSetPreferences(String proj,Element xml,IvyXmlWriter xw)
 {
    if (proj == null) {
-      IWorkspace ws = ResourcesPlugin.getWorkspace();
-      IWorkspaceRoot wr = ws.getRoot();
-      IProject[] projs = wr.getProjects();
-      for (int i = 0; i < projs.length; ++i) {
-	 setProjectPreferences(projs[i],xml);
+      for (IProject ip : open_projects) {
+	 setProjectPreferences(ip,xml);
        }
       setProjectPreferences(null,xml);
     }

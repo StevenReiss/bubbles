@@ -7,15 +7,15 @@
 /********************************************************************************/
 /*	Copyright 2009 Brown University -- Steven P. Reiss		      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.                            *
- *                                                                               *
- *                        All Rights Reserved                                    *
- *                                                                               *
- * This program and the accompanying materials are made available under the      *
+ *  Copyright 2011, Brown University, Providence, RI.				 *
+ *										 *
+ *			  All Rights Reserved					 *
+ *										 *
+ * This program and the accompanying materials are made available under the	 *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at                                                           *
- *      http://www.eclipse.org/legal/epl-v10.html                                *
- *                                                                               *
+ * and is available at								 *
+ *	http://www.eclipse.org/legal/epl-v10.html				 *
+ *										 *
  ********************************************************************************/
 
 
@@ -34,27 +34,23 @@ import edu.brown.cs.bubbles.board.BoardLog;
 
 import edu.brown.cs.ivy.xml.IvyXml;
 
-import javax.swing.text.BadLocationException;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.parser.ParserDelegator;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
-abstract class BdocDocItem extends HTMLEditorKit.ParserCallback implements BdocConstants
+
+
+abstract class BdocDocItem implements BdocConstants
 {
 
 
@@ -69,7 +65,32 @@ private   String		description_text;
 protected List<SubItemImpl>	sub_items;
 protected URL			ref_url;
 
-private static ParserDelegator	parser_delegator = new ParserDelegator();
+private static Map<String,ItemRelation> sub_types;
+
+private static final String [] HTML_REMOVALS = new String [] { "<P>", "<DL>", "<DD>", "</DD>", "</P>", "<HR>", " ", "\n" };
+
+
+static {
+   sub_types = new HashMap<>();
+   sub_types.put("All Implemented Interfaces:",ItemRelation.IMPLEMENTS);
+   sub_types.put("Type Parameters:",ItemRelation.TYPE_PARAMETERS);
+   sub_types.put("See Also:",ItemRelation.SEE_ALSO);
+   sub_types.put("All Known Subinterfaces:",ItemRelation.SUBINTERFACES);
+   sub_types.put("All Known Implementing Classes:",ItemRelation.IMPLEMENTING_CLASS);
+   sub_types.put("Direct Known Subclasses:",ItemRelation.SUBCLASS);
+   sub_types.put("nested_class_summary",ItemRelation.NESTED_CLASS);
+   sub_types.put("field_summary",ItemRelation.FIELD);
+   sub_types.put("constructor_summary",ItemRelation.CONSTRUCTOR);
+   sub_types.put("method_summary",ItemRelation.METHOD);
+   sub_types.put("nested_classes_inherited_from_",ItemRelation.INHERITED_CLASS);
+   sub_types.put("fields_inherited_from_",ItemRelation.INHERITED_FIELD);
+   sub_types.put("methods_inherited_from_",ItemRelation.INHERITED_METHOD);
+   sub_types.put("Parameters:",ItemRelation.PARAMETER);
+   sub_types.put("Returns:",ItemRelation.RETURN);
+   sub_types.put("Overrides:",ItemRelation.OVERRIDE);
+   sub_types.put("Throws:",ItemRelation.THROW);
+   sub_types.put("Specified by:",ItemRelation.SPECIFIED_BY);
+}
 
 
 
@@ -94,10 +115,6 @@ protected BdocDocItem(URL u)
 /*	Access methods								*/
 /*										*/
 /********************************************************************************/
-
-private static final String [] HTML_REMOVALS = new String [] { "<P>", "<DL>", "<DD>", "</DD>", "</P>", "<HR>", " ", "\n" };
-
-
 
 String getDescription()
 {
@@ -145,30 +162,38 @@ List<SubItem> getItems(ItemRelation r)
 
 void loadUrl(URL u) throws IOException
 {
-   URLConnection c = u.openConnection();
-   InputStream ins = c.getInputStream();
-   Reader inr = new BufferedReader(new InputStreamReader(ins));
-   handleStartDocument();
-   
    BoardLog.logD("BDOC","Work on " + u + " " + u.getRef());
-   
-   String id = u.getRef();
-   if (id == null) {
-      parser_delegator.parse(inr,this,true);
-    }
-   else {
-      FragmentHandler fh = new FragmentHandler(id,this);
-      parser_delegator.parse(inr,fh,true);
-    }
-
-   handleEndDocument();
-   ins.close();
+   scanItem(u);
 }
 
 
+void scanItem(URL u)
+{
+   Document doc = null;
+   try {
+      doc = Jsoup.parse(u,10000);
+    }
+   catch (IOException e) { }
+   if (doc == null) return;
+   String id = u.getRef();
+   Element start = null;
+   if (id != null) {
+      id = id.replace("%3C","<");
+      id = id.replace("%3E",">");
+      start = doc.getElementById(id);
+      if (start != null && start.tagName().equals("a")) {
+         start = start.nextElementSibling();
+       }
+    }
+   else {
+      start = doc.getElementsByTag("main").first();
+    }
+   extractItem(start);
+}
 
-protected void handleStartDocument()			{ }
-protected void handleEndDocument()			{ }
+
+void extractItem(Element elt)	    { }
+
 
 
 
@@ -178,29 +203,92 @@ protected void handleEndDocument()			{ }
 /*										*/
 /********************************************************************************/
 
-protected void addDescription(String txt)
+protected void addRawHtmlDivToDescription(Element e0,boolean br)
 {
-   addText(item_description,txt);
+   if (item_description != null && e0 != null) {
+      String html = e0.html();
+      if (html != null) {
+	 item_description.append("<div>");
+	 item_description.append(html);
+	 item_description.append("</div>");
+         if (br) item_description.append("<br/>");
+       }
+    }
 }
 
 
-protected void addDescriptionComment(String txt)
+
+/********************************************************************************/
+/*										*/
+/*	General subitm handling 						*/
+/*										*/
+/********************************************************************************/
+
+protected void scanSubitems(Element e0)
 {
-   addComment(item_description,txt);
+   if (e0 == null) return;
+   
+   for (Element dtitm : e0.select(".notes > dt")) {
+      scanSubItem(dtitm);
+    }
+   for (Element dtitm : e0.select(".blockList dt")) {
+      scanSubItem(dtitm);
+    }
+}
+
+protected void scanSignature(Element e0,String typ)
+{
+   Element sign = e0.select(typ).first();
+   if (sign == null) sign = e0.select("pre").first();
+   addRawHtmlDivToDescription(sign,true);
 }
 
 
-protected void addDescriptionTag(HTML.Tag t,MutableAttributeSet a)
+protected void scanBody(Element e0)
 {
-   addTag(item_description,t,a);
+   Element body = e0.select(".block").first();
+   addRawHtmlDivToDescription(body,false);
 }
 
 
-protected void addDescriptionEndTag(HTML.Tag t)
+
+protected void scanSubItem(Element dt)
 {
-   addEndTag(item_description,t);
+   if (dt == null) return;
+
+   String typ = dt.text();
+   ItemRelation lr = getListTypeFromName(typ);
+   if (lr == ItemRelation.NONE) return;
+   for (Element nitm = dt.nextElementSibling(); nitm != null; nitm = nitm.nextElementSibling()) {
+      if (nitm.tagName().equals("dt")) break;
+      if (nitm.tagName().equals("dd")) {
+         Element sitmlnk = nitm.select("a").first();
+         if (sitmlnk == null) continue;
+         String hr = sitmlnk.attr("href");
+         if (hr == null) continue;
+         SubItemImpl curitm = new SubItemImpl(lr);
+         curitm.setName(sitmlnk.text());
+         curitm.setUrl(ref_url,hr);
+         addSubitem(curitm);
+       }
+    }
 }
 
+
+
+protected ItemRelation getListTypeFromName(String nm)
+{
+   ItemRelation it = sub_types.get(nm);
+   if (it == null) {
+      int idx = nm.indexOf("_class_");
+      if (idx < 0) idx = nm.indexOf("_interface_");
+      if (idx >= 0) nm = nm.substring(0,idx+1);
+      it = sub_types.get(nm);
+    }
+   if (it == null) it = ItemRelation.NONE;
+
+   return it;
+}
 
 
 
@@ -216,19 +304,11 @@ void addSubitem(SubItemImpl itm)
 }
 
 
-
-
 /********************************************************************************/
 /*										*/
 /*	Parsing helper methods							*/
 /*										*/
 /********************************************************************************/
-
-protected static String getAttribute(HTML.Attribute k,MutableAttributeSet a)
-{
-   return (String) a.getAttribute(k);
-}
-
 
 protected static String getHtmlString(String s)
 {
@@ -247,114 +327,6 @@ protected static void addText(StringBuffer buf,String txt)
 
    buf.append(getHtmlString(txt));
 }
-
-
-
-protected static void addComment(StringBuffer buf,String txt)
-{
-   if (buf == null) return;
-
-   buf.append("<!-- ");
-   buf.append(txt);
-   buf.append(" -->");
-}
-
-
-protected static void addTag(StringBuffer buf,HTML.Tag t,MutableAttributeSet a)
-{
-   if (buf == null) return;
-
-   buf.append("<");
-   buf.append(t.toString());
-   if (a != null) {
-      for (Enumeration<?> e = a.getAttributeNames(); e.hasMoreElements(); ) {
-	 Object nm = e.nextElement();
-	 Object vl = a.getAttribute(nm);
-	 buf.append(" ");
-	 buf.append(nm.toString());
-	 buf.append("='");
-	 buf.append(vl.toString());
-	 buf.append("'");
-       }
-    }
-   buf.append(">");
-}
-
-
-protected static void addEndTag(StringBuffer buf,HTML.Tag t)
-{
-   if (buf == null) return;
-
-   buf.append("</");
-   buf.append(t.toString());
-   buf.append(">");
-}
-
-
-
-/********************************************************************************/
-/*										*/
-/*	Representation for a dummy HTML callback to handle fragments		*/
-/*										*/
-/********************************************************************************/
-
-private static class FragmentHandler extends HTMLEditorKit.ParserCallback {
-
-   private String fragment_name;
-   private HTMLEditorKit.ParserCallback real_callback;
-   private boolean is_active;
-
-   FragmentHandler(String id,HTMLEditorKit.ParserCallback cb) {
-      fragment_name = id;
-      real_callback = cb;
-      is_active = false;
-    }
-
-   @Override public void flush() throws BadLocationException	{ real_callback.flush(); }
-
-   @Override public void handleComment(char [] data,int pos) {
-      if (is_active) real_callback.handleComment(data,pos);
-    }
-
-   @Override public void handleEndOfLineString(String eol)	{ real_callback.handleEndOfLineString(eol); }
-
-   @Override public void handleEndTag(HTML.Tag t,int pos) {
-      if (is_active) real_callback.handleEndTag(t,pos);
-    }
-
-   @Override public void handleError(String msg,int pos) {
-      if (is_active) real_callback.handleError(msg,pos);
-    }
-
-   @Override public void handleSimpleTag(HTML.Tag t,MutableAttributeSet a,int pos) {
-      if (is_active) real_callback.handleSimpleTag(t,a,pos);
-    }
-
-   @Override public void handleText(char [] data,int pos) {
-      if (is_active) real_callback.handleText(data,pos);
-    }
-
-   @Override public void handleStartTag(HTML.Tag t,MutableAttributeSet a,int pos) {
-      if (t == HTML.Tag.A) {
-         String nm = getAttribute(HTML.Attribute.NAME,a);
-         if (nm != null) {
-            nm = nm.replace(" ","+");
-            if (is_active) {
-               if (nm.contains("_") || nm.contains("(") || nm.endsWith("-")) {
-                  is_active = false;
-                }
-             }
-            else {
-               is_active = nm.equals(fragment_name);
-               return;
-             }
-          }
-       }
-      if (is_active) real_callback.handleStartTag(t,a,pos);
-    }
-
-}	// end of inner class FragmentHandler
-
 
 
 
@@ -395,27 +367,9 @@ protected static class SubItemImpl implements SubItem {
       addText(item_name,s);
     }
 
-   void addNameTag(HTML.Tag t,MutableAttributeSet a) {
-      if (item_name == null) item_name = new StringBuffer();
-      addTag(item_name,t,a);
-    }
-
-   void addNameEndTag(HTML.Tag t) {
-      if (item_name != null) addEndTag(item_name,t);
-    }
-
    void setDescription(String s) {
       if (item_desc == null) item_desc = new StringBuffer();
       addText(item_desc,s);
-    }
-
-   void addDescriptionTag(HTML.Tag t,MutableAttributeSet a) {
-      if (item_desc == null) item_desc = new StringBuffer();
-      addTag(item_desc,t,a);
-    }
-
-   void addDescriptionEndTag(HTML.Tag t) {
-      if (item_desc != null) addEndTag(item_desc,t);
     }
 
    ItemRelation getRelation()			{ return item_relation; }
@@ -439,11 +393,8 @@ protected static class SubItemImpl implements SubItem {
       if (item_name != null) buf.append(item_name.toString());
       if (item_url != null) buf.append("</a>");
       if (item_desc != null) buf.append(item_desc.toString());
-   
-   
       return buf.toString();
     }
-
 
 }	// end of inner class SubItemImpl
 

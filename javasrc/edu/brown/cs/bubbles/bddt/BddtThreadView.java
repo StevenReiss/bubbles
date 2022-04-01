@@ -486,18 +486,12 @@ private class HistoryAction extends AbstractAction {
 
 private class ThreadHandler implements BumpRunEventHandler
 {
-   @Override public void handleLaunchEvent(BumpRunEvent evt)	{ }
-
-   @Override public void handleProcessEvent(BumpRunEvent evt)	{ }
-
    @Override public void handleThreadEvent(BumpRunEvent evt) {
       BumpProcess bp = evt.getProcess();
       if (launch_control != null && launch_control.getProcess() != bp) return;
       TableUpdater tup = new TableUpdater(evt);
       SwingUtilities.invokeLater(tup);
     }
-
-   @Override public void handleConsoleMessage(BumpProcess bp,boolean err,boolean eof,String msg)	{ }
 
 }	// end of inner class ThreadHandler
 

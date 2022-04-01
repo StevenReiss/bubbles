@@ -26,6 +26,7 @@ Bdoc.NameColor	:	0xffffffff
 Beam.problem.top.color	:	0xff282020
 Bale.CrumbArrowColor	:	0xffffffff
 Bddt.control.background	:	0xff101010
+Bddt.attr.sysout.foreground	:	0xff2d402d
 Bdoc.ContextColor	:	0xffff1eff
 Bcon.code.color	:	0x80b4b4ff
 Buda.BubbleNewColor	:	0x805a4300
@@ -280,6 +281,7 @@ Bucs.SolutionBottomColor	:	0xff000000
 Buda.MenuColor	:	0xffffffff
 Bcon.class.field.color	:	0xffff0aff
 Board.SplashFillColor	:	0xffa2a2a2
+Bale.attr.hint.foreground	:	0xff7b7b7b
 Buda.RootDemoPointColor	:	0x40ff0000
 Beam.ProblemWarningColor	:	0xffffffff
 Bbook.TaskOverviewColor	:	0xff006969

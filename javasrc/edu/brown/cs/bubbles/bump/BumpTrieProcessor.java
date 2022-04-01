@@ -109,13 +109,6 @@ private synchronized TrieDataImpl setupProcess(BumpProcess bp)
 /*										*/
 /********************************************************************************/
 
-@Override public void handleLaunchEvent(BumpRunEvent evt)		{ }
-
-@Override public void handleThreadEvent(BumpRunEvent evt)		{ }
-
-@Override public void handleConsoleMessage(BumpProcess p,boolean err,boolean eof,String msg)
-{ }
-
 @Override public synchronized void handleProcessEvent(BumpRunEvent evt)
 {
    BumpProcess proc = evt.getProcess();

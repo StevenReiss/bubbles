@@ -68,43 +68,63 @@ private BdocRepository for_repository;
 
 private static DescriptionData [] prefix_set = new DescriptionData [] {
    new DescriptionData("Variable in class ",BassNameType.FIELDS),
+   new DescriptionData("Variable in record class ",BassNameType.FIELDS),
+   new DescriptionData("Variable in enum class ",BassNameType.FIELDS),
    new DescriptionData("Variable in enum ",BassNameType.FIELDS),
    new DescriptionData("Variable in interface ",BassNameType.FIELDS),
    new DescriptionData("Variable in exception ",BassNameType.FIELDS),
    new DescriptionData("Variable in error ",BassNameType.FIELDS),
    new DescriptionData("Variable in annotation type ",BassNameType.FIELDS),
    new DescriptionData("Static variable in class ",BassNameType.FIELDS),
+   new DescriptionData("Static variable in record class ",BassNameType.FIELDS),
+   new DescriptionData("Static variable in enum class ",BassNameType.FIELDS),
    new DescriptionData("Static variable in enum ",BassNameType.FIELDS),
    new DescriptionData("Static variable in interface ",BassNameType.FIELDS),
    new DescriptionData("Static variable in exception ",BassNameType.FIELDS),
    new DescriptionData("Static variable in error ",BassNameType.FIELDS),
    new DescriptionData("Static variable in annotation type ",BassNameType.FIELDS),
+   new DescriptionData("Static variable in annotation interface ",BassNameType.FIELDS),
+   new DescriptionData("Element in annotation interface ",BassNameType.FIELDS),
    new DescriptionData("Method in class ",BassNameType.METHOD),
+   new DescriptionData("Method in record class ",BassNameType.METHOD),
+   new DescriptionData("Method in enum class ",BassNameType.METHOD),
    new DescriptionData("Method in enum ",BassNameType.METHOD),
    new DescriptionData("Method in interface ",BassNameType.METHOD),
    new DescriptionData("Method in exception ",BassNameType.METHOD),
    new DescriptionData("Method in error ",BassNameType.METHOD),
    new DescriptionData("Method in annotation type ",BassNameType.METHOD),
    new DescriptionData("Static method in class ",BassNameType.METHOD),
+   new DescriptionData("Static method in record class ",BassNameType.METHOD),
+   new DescriptionData("Static method in enum class ",BassNameType.METHOD),
    new DescriptionData("Static method in enum ",BassNameType.METHOD),
    new DescriptionData("Static method in interface ",BassNameType.METHOD),
    new DescriptionData("Static method in exception ",BassNameType.METHOD),
    new DescriptionData("Static method in error ",BassNameType.METHOD),
    new DescriptionData("Static method in annotation type ",BassNameType.METHOD),
    new DescriptionData("Constructor for class ",BassNameType.CONSTRUCTOR),
+   new DescriptionData("Constructor for record class ",BassNameType.CONSTRUCTOR),
+   new DescriptionData("Constructor for enum class ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Constructor for enum ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Constructor for exception ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Constructor for error ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Constructor for annotation type ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Class in ",BassNameType.CLASS),
+   new DescriptionData("Record Class in ",BassNameType.CLASS),
    new DescriptionData("Interface in ",BassNameType.INTERFACE),
    new DescriptionData("Exception in ",BassNameType.THROWABLE),
    new DescriptionData("Error in ",BassNameType.THROWABLE),
    new DescriptionData("Enum in ",BassNameType.ENUM),
+   new DescriptionData("Enum Class in ",BassNameType.ENUM),
+   new DescriptionData("Enum constant in enum class ",BassNameType.FIELDS),
    new DescriptionData("Annotation Type in ",BassNameType.ANNOTATION),
-   new DescriptionData("package ",BassNameType.PACKAGE),
+   new DescriptionData("Annotation Interface in ",BassNameType.ANNOTATION),
+   new DescriptionData("package ",BassNameType.NONE),
    new DescriptionData("class ",BassNameType.CLASS),
-   new DescriptionData("interface ",BassNameType.CLASS)
+   new DescriptionData("interface ",BassNameType.CLASS),
+   new DescriptionData("module ",BassNameType.MODULE),
+   new DescriptionData("Search tag in class ",BassNameType.NONE),
+   new DescriptionData("Search tag in enum class ",BassNameType.NONE),
+   new DescriptionData("Search tag in record class ",BassNameType.NONE),
 };
 
 
@@ -141,7 +161,16 @@ BdocReference(BdocRepository br,String proj,URL base,String ref,String desc) thr
 	 break;
        }
     }
-
+   if (inside == null && !desc.contains(" ")) {
+      // enum constants show up this way in some versions
+      inside = desc;
+    }
+   if (inside == null && desc.contains("Search tag in ")) {
+      name_type = BassNameType.NONE;
+      int idx1 = desc.indexOf("Search tag in ") + "Search tag in ".length();
+      inside = desc.substring(idx1).trim();
+    }
+   
    if (inside == null) {
       throw new BdocException("Unknown javadoc index element " + desc);
     }
@@ -178,6 +207,7 @@ BdocReference(BdocRepository br,String nt,String nm,String p,String d,String pro
 {
    for_repository = br;
    if (nt == null) name_type = BassNameType.NONE;
+   else if (nt == "MODULE") name_type = BassNameType.NONE;
    else {
       try {
 	 name_type = Enum.valueOf(BassNameType.class,nt);
@@ -185,6 +215,9 @@ BdocReference(BdocRepository br,String nt,String nm,String p,String d,String pro
       catch (IllegalArgumentException e) {
 	 name_type = BassNameType.NONE;
        }
+    }
+   if (nm.contains("class ") || nm.contains(".base") || nm.contains("base.")) {
+      System.err.println("CHECK HERE");
     }
    bdoc_name = nm;
    name_parameters = p;
@@ -261,9 +294,8 @@ void addDescription(String s)
 private void setName(String lcl,String inside,String ref) throws BdocException
 {
    int idx;
-
+   
    key_name = null;
-
    name_parameters = null;
    idx = lcl.indexOf("(");
    if (idx >= 0) {

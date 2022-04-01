@@ -47,27 +47,18 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.parser.ParserDelegator;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -91,12 +82,12 @@ class BdocRepository implements BassRepository, BdocConstants
 /********************************************************************************/
 
 private Map<String,BdocReference> all_items;
+private Set<String>             ref_names;
 private Collection<BdocInheritedReference> inherited_items;
 private int			ready_count;
 private boolean 		cache_repository;
 private List<String>		bdoc_props;
-
-private static ParserDelegator	parser_delegator = new ParserDelegator();
+private boolean                 have_javase;
 
 
 
@@ -111,6 +102,8 @@ BdocRepository()
    all_items = new HashMap<String,BdocReference>();
    inherited_items = new ArrayList<BdocInheritedReference>();
    cache_repository = true;
+   have_javase = false;
+   ref_names = new HashSet<>();
 
    bdoc_props = new ArrayList<String>();
    Set<String> libdocs = new HashSet<String>();
@@ -197,6 +190,8 @@ BdocRepository()
    noteSearcherDone();
 
    noteSearcherDone();
+   
+   ref_names = null;
 }
 
 
@@ -212,6 +207,11 @@ void addJavadoc(String url,boolean optional)
 {
    if (url == null) return;
 
+   if (url.contains("/javase/")) {
+      if (have_javase) return;
+      have_javase = true;
+    }
+   
    try {
       URL u = new URL(url);
       addJavadoc(u,null,optional);
@@ -226,6 +226,8 @@ void addJavadoc(URL u)			{ addJavadoc(u,null,false); }
 
 synchronized void addJavadoc(URL u,String proj,boolean optional)
 {
+   BoardLog.logD("BDOC","Add javadoc for " + u);
+   
    Searcher s = new Searcher(u,proj,optional);
 
    ++ready_count;
@@ -245,6 +247,7 @@ private synchronized void noteSearcherDone()
       notifyAll();
       File f = BoardSetup.getDocumentationFile();
       if (f != null && cache_repository) outputXml(f);
+      ref_names = null;
     }
    else if (ready_count == 2) notifyAll();
 }
@@ -358,17 +361,10 @@ private void loadJavadoc(URL u,String p,boolean optional)
 private boolean loadJavadocFile(URL u,String p,boolean optional)
 {
    BoardLog.logD("BDOC","Load documentation from " + u);
-   Boolean ignore = (optional ? null : false);
-
-   try {
-      URLConnection c = u.openConnection();
-      InputStream ins = c.getInputStream();
-      Reader inr = new BufferedReader(new InputStreamReader(ins));
-      parser_delegator.parse(inr,new HtmlHandler(u,p,ignore),true);
-      ins.close();
-    }
-   catch (IOException e) {
-      return false;
+   List<BdocReference> refs = BdocHtmlScanner.scanIndex(u,this,p);
+   if (refs.isEmpty()) return false;
+   for (BdocReference br : refs) {
+      if (checkReference(br)) addReference(br);
     }
 
    return true;
@@ -379,113 +375,38 @@ private boolean loadJavadocFile(URL u,String p,boolean optional)
 private synchronized void addReference(BdocReference br)
 {
    all_items.put(br.getReferenceUrl().toExternalForm(),br);
+   if (ref_names != null) ref_names.add(br.toString());
 }
 
 
 private synchronized boolean checkReference(BdocReference br)
 {
-   String nm = br.toString();
-   for (BdocReference sr : all_items.values()) {
-      if (sr.toString().equals(nm)) return true;
-   }
-   return false;
+   switch (br.getNameType()) {
+      case CLASS :
+      case INTERFACE :
+      case ENUM :
+      case ANNOTATION :
+      case THROWABLE :
+      case OTHER_CLASS :
+      case CONSTRUCTOR :
+      case METHOD :
+      case MAIN_PROGRAM :
+      case FIELDS :
+      case PACKAGE :
+      case STATICS :
+         break;
+      case NONE :
+         return false;
+      case MODULE :
+         return false;
+      default :
+         BoardLog.logE("BDOC","Unexpected name type " + br.getNameType() + " " + br);
+         return false;
+    }
+   
+   if (ref_names == null) return true;
+   return !ref_names.contains(br.toString());
 }
-
-
-
-
-/********************************************************************************/
-/*										*/
-/*	HTML parser class							*/
-/*										*/
-/********************************************************************************/
-
-enum HtmlState {
-   NONE,
-   ENTRY,
-   DESCRIPTION
-}
-
-private class HtmlHandler extends HTMLEditorKit.ParserCallback
-{
-   private URL base_url;
-   private String base_project;
-   private BdocReference cur_reference;
-   private HtmlState cur_state;
-   private String ref_url;
-   private String ref_title;
-   private Boolean can_ignore;
-
-
-
-   HtmlHandler(URL u,String p,Boolean ignore) {
-      base_url = u;
-      base_project = p;
-      cur_reference = null;
-      cur_state = HtmlState.NONE;
-      can_ignore = ignore;
-    }
-
-   @Override public void handleSimpleTag(HTML.Tag tag,MutableAttributeSet a,int pos) {
-      handleStartTag(tag,a,pos);
-    }
-
-   @Override public void handleStartTag(HTML.Tag tag,MutableAttributeSet a,int pos) {
-      if (can_ignore == Boolean.TRUE) return;
-      if (tag == HTML.Tag.DT) {
-	 cur_state = HtmlState.ENTRY;
-	 cur_reference = null;
-	 ref_url = null;
-	 ref_title = null;
-       }
-      else if (tag == HTML.Tag.A && cur_state == HtmlState.ENTRY && ref_url == null) {
-	 String href = getAttribute(HTML.Attribute.HREF,a);
-	 if (href == null) cur_state = HtmlState.NONE;
-	 else {
-	    href = href.replace(" ","+");
-	    ref_url = href;
-	  }
-	 ref_title = null;
-       }
-      else if (tag == HTML.Tag.DD && cur_state == HtmlState.ENTRY && ref_url != null) {
-	 try {
-	    cur_reference = new BdocReference(BdocRepository.this,base_project,base_url,ref_url,ref_title);
-	    if (can_ignore == null) {
-	       if (!checkReference(cur_reference)) can_ignore = false;
-	       else {
-		  can_ignore = true;
-		  return;
-		}
-	     }
-	    addReference(cur_reference);
-	    cur_state = HtmlState.DESCRIPTION;
-	  }
-	 catch (BdocException e) {
-	    BoardLog.logE("BDOC","Problem with javadoc reference: " + e);
-	    cur_state = HtmlState.NONE;
-	  }
-       }
-    }
-
-   @Override public void handleEndTag(HTML.Tag tag,int pos)	{ }
-
-   @Override public void handleText(char [] data,int pos) {
-      if (can_ignore == Boolean.TRUE) return;
-      if (cur_state == HtmlState.ENTRY) {
-	 String s = new String(data);
-	 if (ref_title == null) ref_title = s;
-	 else ref_title += s;
-       }
-      else if (cur_state == HtmlState.DESCRIPTION) {
-	 cur_reference.addDescription(new String(data));
-       }
-    }
-
-   private String getAttribute(HTML.Attribute k,MutableAttributeSet a) {
-      return (String) a.getAttribute(k);
-    }
-
-}	// end of inner class HtmlHandler
 
 
 
@@ -565,24 +486,24 @@ private static class Hierarchy {
 
    void loadRelations(Element xml) {
       for (Element ce : IvyXml.children(xml,"TYPE")) {
-	 String nm = IvyXml.getAttrString(ce,"NAME");
-
-	 Set<String> sups = class_hierarchy.get(nm);
-	 if (sups == null) {
-	    sups = new LinkedHashSet<String>();
-	    class_hierarchy.put(nm,sups);
-	  }
-
-	 // String k = IvyXml.getAttrString(ce,"KIND");
-	 // might want to restrict to classes
-	 for (Element se : IvyXml.children(ce,"SUPERTYPE")) {
-	    String sn = IvyXml.getAttrString(se,"NAME");
-	    sups.add(sn);
-	  }
-	 for (Element se : IvyXml.children(ce,"EXTENDIFACE")) {
-	    String sn = IvyXml.getAttrString(se,"NAME");
-	    sups.add(sn);
-	  }
+         String nm = IvyXml.getAttrString(ce,"NAME");
+   
+         Set<String> sups = class_hierarchy.get(nm);
+         if (sups == null) {
+            sups = new LinkedHashSet<String>();
+            class_hierarchy.put(nm,sups);
+          }
+   
+         // String k = IvyXml.getAttrString(ce,"KIND");
+         // might want to restrict to classes
+         for (Element se : IvyXml.children(ce,"SUPERTYPE")) {
+            String sn = IvyXml.getAttrString(se,"NAME");
+            sups.add(sn);
+          }
+         for (Element se : IvyXml.children(ce,"EXTENDIFACE")) {
+            String sn = IvyXml.getAttrString(se,"NAME");
+            sups.add(sn);
+          }
        }
     }
 
@@ -949,7 +870,6 @@ private class BdocLoader extends DefaultHandler {
     }
 
 }	// end of inner class BdocLoader
-
 
 
 

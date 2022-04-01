@@ -237,10 +237,6 @@ BdynEventTrace getEventTrace()			{ return event_trace; }
 
 private class RunHandler implements BumpConstants.BumpRunEventHandler {
 
-   @Override public void handleLaunchEvent(BumpRunEvent evt)		{ }
-   @Override public void handleThreadEvent(BumpRunEvent evt)		{ }
-   @Override public void handleConsoleMessage(BumpProcess bp,boolean e,boolean f,String msg) { }
-
    @Override public void handleProcessEvent(BumpRunEvent evt) {
       BumpProcess blp;
       switch (evt.getEventType()) {

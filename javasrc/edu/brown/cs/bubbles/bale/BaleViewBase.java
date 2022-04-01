@@ -383,12 +383,12 @@ protected static class ViewData {
    void setSizes(View v) {
       if (v == null) return;
       try {
-	 min_x = v.getMinimumSpan(X_AXIS);
-	 min_y = v.getMinimumSpan(Y_AXIS);
-	 pref_x = v.getPreferredSpan(X_AXIS);
-	 pref_y = v.getPreferredSpan(Y_AXIS);
-	 max_x = v.getMaximumSpan(X_AXIS);
-	 max_y = v.getMaximumSpan(Y_AXIS);
+         min_x = v.getMinimumSpan(X_AXIS);
+         min_y = v.getMinimumSpan(Y_AXIS);
+         pref_x = v.getPreferredSpan(X_AXIS);
+         pref_y = v.getPreferredSpan(Y_AXIS);
+         max_x = v.getMaximumSpan(X_AXIS);
+         max_y = v.getMaximumSpan(Y_AXIS);
        }
       catch (Throwable t) { }
     }

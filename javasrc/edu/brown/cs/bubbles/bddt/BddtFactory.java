@@ -50,7 +50,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
 import java.awt.Color;
@@ -65,7 +64,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -418,9 +416,7 @@ private void setupDebuggingPanel()
    pnl.addGBComponent(launch_label,0,3,0,0,1,1);
 
    buda_root.addPanel(pnl,true);
-
-   buda_root.registerKeyAction(hdlr,"DEBUG",
-	 KeyStroke.getKeyStroke(KeyEvent.VK_F2,0));
+   buda_root.registerKeyAction(hdlr,"DEBUG","F2");
 }
 
 

@@ -43,20 +43,19 @@ import edu.brown.cs.bubbles.bump.BumpConstants;
 
 import edu.brown.cs.ivy.swing.SwingEventListenerList;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.text.BadLocationException;
@@ -68,8 +67,6 @@ import java.awt.Container;
 import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Collection;
@@ -312,8 +309,7 @@ private void setupPanel()
 
 
 
-/*****************************************fgrep SOLUTIONS ../tests.out/samples/sampletest*.debug
-***************************************/
+/********************************************************************************/
 /*										*/
 /*	Keystroke handling							*/
 /*										*/
@@ -324,22 +320,16 @@ void setupKeys()
    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
    if (bba == null) return;
 
-   registerKey(bba,new StepUserAction(),KeyStroke.getKeyStroke(KeyEvent.VK_F5,0));
-   registerKey(bba,new StepUserAction(),KeyStroke.getKeyStroke(KeyEvent.VK_F5,InputEvent.CTRL_DOWN_MASK));
-   registerKey(bba,new StepIntoAction(),KeyStroke.getKeyStroke(KeyEvent.VK_F5,InputEvent.SHIFT_DOWN_MASK));
-   registerKey(bba,new StepOverAction(),KeyStroke.getKeyStroke(KeyEvent.VK_F6,0));
-   registerKey(bba,new StepReturnAction(),KeyStroke.getKeyStroke(KeyEvent.VK_F7,0));
-   registerKey(bba,new PlayAction(),KeyStroke.getKeyStroke(KeyEvent.VK_F8,0));
-   registerKey(bba,new PauseAction(),KeyStroke.getKeyStroke(KeyEvent.VK_F8,InputEvent.SHIFT_DOWN_MASK));
+   SwingKey.registerKeyAction("DEBUG",bba,new StepUserAction(),"F5","ctrl F5");
+   SwingKey.registerKeyAction("DEBUG",bba,new StepIntoAction(),"shift F5");
+   SwingKey.registerKeyAction("DEBUG",bba,new StepOverAction(),"F6");
+   SwingKey.registerKeyAction("DEBUG",bba,new StepReturnAction(),"F7");
+   SwingKey.registerKeyAction("DEBUG",bba,new PlayAction(),"F8");
+   SwingKey.registerKeyAction("DEBUG",bba,new PauseAction(),"shift F8");
 }
 
 
-private void registerKey(BudaBubbleArea bba,Action act,KeyStroke k)
-{
-   String cmd = (String) act.getValue(Action.NAME);
-   bba.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(k,cmd);
-   bba.getActionMap().put(cmd,act);
-}
+
 
 
 
@@ -470,25 +460,25 @@ private class PlayAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    BoardMetrics.noteCommand("BDDT","StartDebug");
-	    setProcess(null);
-	    setLaunchState(LaunchState.STARTING);
-	    bubble_manager.restart();
-	    BoardThreadPool.start(new StartDebug());
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	    break;
-	 case PAUSED :
-	 case PARTIAL_PAUSE :
-	    if (cur_process != null) {
-	       BoardMetrics.noteCommand("BDDT","ResumeDebug");
-	       waitForFreeze();
-	       bump_client.resume(cur_process);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            BoardMetrics.noteCommand("BDDT","StartDebug");
+            setProcess(null);
+            setLaunchState(LaunchState.STARTING);
+            bubble_manager.restart();
+            BoardThreadPool.start(new StartDebug());
+            break;
+         case STARTING :
+         case RUNNING :
+            break;
+         case PAUSED :
+         case PARTIAL_PAUSE :
+            if (cur_process != null) {
+               BoardMetrics.noteCommand("BDDT","ResumeDebug");
+               waitForFreeze();
+               bump_client.resume(cur_process);
+             }
+            break;
        }
     }
 
@@ -637,28 +627,28 @@ private class StepUserAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       if ((evt.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
-	 stepinto_action.actionPerformed(evt);
-	 return;
+         stepinto_action.actionPerformed(evt);
+         return;
        }
-
+   
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    PlayAction pa = new PlayAction();
-	    pa.actionPerformed(evt);
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	    break;
-	 case PARTIAL_PAUSE :
-	 case PAUSED :
-	    BumpThread bt = event_handler.getLastStoppedThread();
-	    if (bt != null) {
-	       BoardMetrics.noteCommand("BDDT","StepUserDebug");
-	       waitForFreeze();
-	       bump_client.stepUser(bt);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            PlayAction pa = new PlayAction();
+            pa.actionPerformed(evt);
+            break;
+         case STARTING :
+         case RUNNING :
+            break;
+         case PARTIAL_PAUSE :
+         case PAUSED :
+            BumpThread bt = event_handler.getLastStoppedThread();
+            if (bt != null) {
+               BoardMetrics.noteCommand("BDDT","StepUserDebug");
+               waitForFreeze();
+               bump_client.stepUser(bt);
+             }
+            break;
       }
    }
 
@@ -749,34 +739,34 @@ private class DropToFrameAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    PlayAction pa = new PlayAction();
-	    pa.actionPerformed(evt);
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	    break;
-	 case PARTIAL_PAUSE :
-	 case PAUSED :
-	    BumpThread bt = event_handler.getLastStoppedThread();
-	    if (bt != null) {
-	       if ((evt.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
-		  waitForFreeze();
-		  BumpThreadStack stk = bt.getStack();
-		  BumpStackFrame frm = stk.getFrame(1);
-		  if (frm != null) {
-		     BoardMetrics.noteCommand("BDDT","DropToPriorFrameDebug");
-		     bump_client.dropToFrame(frm);
-		   }
-		}
-	       else {
-		  BoardMetrics.noteCommand("BDDT","DropToFrameDebug");
-		  waitForFreeze();
-		  bump_client.dropToFrame(bt);
-		}
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            PlayAction pa = new PlayAction();
+            pa.actionPerformed(evt);
+            break;
+         case STARTING :
+         case RUNNING :
+            break;
+         case PARTIAL_PAUSE :
+         case PAUSED :
+            BumpThread bt = event_handler.getLastStoppedThread();
+            if (bt != null) {
+               if ((evt.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
+        	  waitForFreeze();
+        	  BumpThreadStack stk = bt.getStack();
+        	  BumpStackFrame frm = stk.getFrame(1);
+        	  if (frm != null) {
+        	     BoardMetrics.noteCommand("BDDT","DropToPriorFrameDebug");
+        	     bump_client.dropToFrame(frm);
+        	   }
+        	}
+               else {
+        	  BoardMetrics.noteCommand("BDDT","DropToFrameDebug");
+        	  waitForFreeze();
+        	  bump_client.dropToFrame(bt);
+        	}
+             }
+            break;
        }
     }
 
@@ -792,24 +782,24 @@ private class StartDebug implements Runnable {
       BudaRoot br = BudaRoot.findBudaRoot(BddtLaunchControl.this);
       if (br == null) return;
       br.handleSaveAllRequest();
-
+   
       BumpErrorType etyp = bump_client.getErrorType();
-
+   
       if (etyp == BumpErrorType.ERROR) {
-	 int sts = JOptionPane.showConfirmDialog(BddtLaunchControl.this,
-	       "Start debugging with compiler errors?",
-	       "Error Check for Run",JOptionPane.YES_NO_OPTION,
-	       JOptionPane.QUESTION_MESSAGE);
-	 if (sts == JOptionPane.YES_OPTION) etyp = BumpErrorType.WARNING;
+         int sts = JOptionPane.showConfirmDialog(BddtLaunchControl.this,
+               "Start debugging with compiler errors?",
+               "Error Check for Run",JOptionPane.YES_NO_OPTION,
+               JOptionPane.QUESTION_MESSAGE);
+         if (sts == JOptionPane.YES_OPTION) etyp = BumpErrorType.WARNING;
        }
       if (etyp == BumpErrorType.ERROR || etyp == BumpErrorType.FATAL) {
-	 setLaunchState(LaunchState.READY);
-	 return;
+         setLaunchState(LaunchState.READY);
+         return;
        }
-
+   
       String id = "B_" + Integer.toString(((int)(Math.random() * 100000)));
       BumpProcess bp = bump_client.startDebug(launch_config,id);
-      setProcess(bp);
+      if (bp != null && cur_process == null) setProcess(bp);
       if (bp != null) setLaunchState(LaunchState.RUNNING);
       else setLaunchState(LaunchState.READY);
     }
@@ -1069,10 +1059,13 @@ private class RunEventHandler implements BumpRunEventHandler {
             //$FALL-THROUGH$
          case THREAD_CHANGE :
             thread_states.put(bt,nst);
-            if (bt.getThreadState() != ost) {
+            if (nst != ost) {
                handleThreadStateChange(bt,ost);
-               if (bt.getThreadState().isStopped()) last_stopped = bt;
+               if (nst.isStopped()) last_stopped = bt;
                else if (last_stopped == bt) last_stopped = null;
+             }
+            else if (nst.isStopped()) {
+               addExecutionAnnot(bt);
              }
             break;
          case THREAD_REMOVE :
@@ -1099,8 +1092,6 @@ private class RunEventHandler implements BumpRunEventHandler {
       else if (rct == tct) setLaunchState(LaunchState.RUNNING);
       else setLaunchState(LaunchState.PARTIAL_PAUSE,rct,tct);
     }
-
-   @Override public void handleConsoleMessage(BumpProcess proc,boolean err,boolean eof,String msg) { }
 
 }	// end of inner class RunEventHandler
 
@@ -1217,6 +1208,8 @@ private void addExecutionAnnot(BumpThread bt)
        }
     }
 }
+
+
 
 
 private void removeExecutionAnnot(BumpThread bt)

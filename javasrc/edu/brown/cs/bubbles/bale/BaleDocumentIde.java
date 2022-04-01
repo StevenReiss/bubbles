@@ -733,10 +733,10 @@ private class RemoteEditor implements Runnable {
 
    @Override public void run() {
       synchronized (remote_edits) {
-	 while (!remote_edits.isEmpty()) {
-	    RemoteEdit re = remote_edits.remove();
-	    re.run();
-	  }
+         while (!remote_edits.isEmpty()) {
+            RemoteEdit re = remote_edits.remove();
+            re.run();
+          }
        }
       fixupElision();
     }
@@ -761,9 +761,9 @@ private class RemoteEdit implements Runnable {
    @Override public void run() {
       BoardLog.logD("BALE","Remote edit update " + edit_offset + " " + edit_len);
       if (edit_offset == 0 && edit_len < 0)
-	 reload();
+         reload();
       else
-	 doEdit();
+         doEdit();
       BoardLog.logD("BALE","Done remote edit");
     }
 
@@ -771,7 +771,6 @@ private class RemoteEdit implements Runnable {
       writeLock();
       try {
 	 doing_remote = true;	     // prevent edit from going back to eclipse
-
 	 try {
 	    if (edit_len != 0) {
 	       if (edit_offset+edit_len >= getLength()) {

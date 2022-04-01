@@ -1170,15 +1170,11 @@ IJavaProject getJavaProject(String p) throws BedrockException
 
 static IJavaElement [] getAllProjects()
 {
-   IWorkspace ws = ResourcesPlugin.getWorkspace();
-   IWorkspaceRoot wr = ws.getRoot();
-   IProject[] projs = wr.getProjects();
-
+   BedrockProject pm = BedrockPlugin.getPlugin().getProjectManager();
    List<IJavaElement> trslt = new ArrayList<IJavaElement>();
-
-   for (int i = 0; i < projs.length; ++i) {
-      if (!BedrockProject.useProject(projs[i].getName())) continue;
-      IJavaProject jp = JavaCore.create(projs[i]);
+   for (IProject ip : pm.getOpenProjects()) {
+      if (!BedrockProject.useProject(ip.getName())) continue;
+      IJavaProject jp = JavaCore.create(ip);
       try {
 	 jp.open(null);
        }

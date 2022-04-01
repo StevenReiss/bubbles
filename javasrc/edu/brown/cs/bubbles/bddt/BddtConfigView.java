@@ -328,7 +328,7 @@ private class ModelHandler implements BumpConstants.BumpRunEventHandler {
 
    @Override public void handleThreadEvent(BumpRunEvent evt)	{ }
 
-   @Override public void handleConsoleMessage(BumpProcess bp,boolean err,boolean eof,String msg)	{ }
+   
 
 }	// end of inner class ModelHandler
 

@@ -36,10 +36,10 @@ import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
 import edu.brown.cs.ivy.mint.MintDefaultReply;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.swing.SwingTreeTable;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -47,7 +47,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.JTree;
-import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -62,7 +61,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -133,9 +131,8 @@ BvcrControlFilePanel(BvcrControlPanel pnl)
    fpnl.addBottomButton("Add All","ADDALL",updater);
    fpnl.addBottomButtons();
 
-   registerKeyAction(new ExpandAllAction(),"EXPAND_ALL",
-	 KeyStroke.getKeyStroke(KeyEvent.VK_F4,0));
-
+   SwingKey.registerKeyAction("BVCR",this,new ExpandAllAction(),"F4");
+   
    setContentPane(fpnl);
 
    pnl.addUpdateListener(this);
@@ -207,11 +204,6 @@ private void updateAll()
 /*										*/
 /********************************************************************************/
 
-private void registerKeyAction(Action act,String cmd,KeyStroke k)
-{
-   getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(k,cmd);
-   getActionMap().put(cmd,act);
-}
 
 
 

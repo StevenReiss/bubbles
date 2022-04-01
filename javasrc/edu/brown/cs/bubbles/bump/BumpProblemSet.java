@@ -151,6 +151,7 @@ BumpErrorType getErrorType()
 
 void handleErrors(String proj,File forfile,int eid,Element ep)
 {
+   BoardLog.logD("BUMP","Handle errors " + forfile);
    Set<BumpProblemImpl> found = new HashSet<BumpProblemImpl>();
    List<BumpProblemImpl> added = null;
    List<BumpProblemImpl> deled = null;
@@ -223,6 +224,7 @@ void handleErrors(String proj,File forfile,int eid,Element ep)
 
 void clearProblems(String proj)
 {
+   BoardLog.logD("BUMP","Clear Problems");
    List<BumpProblemImpl> clear;
    synchronized (current_problems) {
       if (proj == null) {

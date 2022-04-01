@@ -238,12 +238,12 @@ private class EndScroll implements DocumentListener, Runnable {
 
    @Override public void insertUpdate(DocumentEvent e) {
       if (!auto_scroll) return;
-
+   
       synchronized (this) {
-	 if (!is_queued) {
-	    SwingUtilities.invokeLater(this);
-	    is_queued = true;
-	  }
+         if (!is_queued) {
+            SwingUtilities.invokeLater(this);
+            is_queued = true;
+          }
        }
     }
 
@@ -265,7 +265,7 @@ private class EndScroll implements DocumentListener, Runnable {
                r.x = 0;
                r.y += 20;
                if (r.y + r.height > sz.height) r.y = sz.height;
-               text_pane.scrollRectToVisible(r);
+               if (auto_scroll) text_pane.scrollRectToVisible(r);
              }
          }
          catch (BadLocationException ex) {
@@ -293,6 +293,7 @@ private class AutoScrollAction implements ActionListener {
    @Override public void actionPerformed(ActionEvent evt) {
       JCheckBoxMenuItem itm = (JCheckBoxMenuItem) evt.getSource();
       auto_scroll = itm.getState();
+      BoardLog.logD("BDDT","Auto scroll set to " + auto_scroll);
     }
 
 }	// end of inner class AutoScrollAction

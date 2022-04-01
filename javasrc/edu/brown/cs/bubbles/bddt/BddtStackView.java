@@ -525,10 +525,6 @@ private class SourceAction extends AbstractAction {
 
 private class RunEventHandler implements BumpRunEventHandler {
 
-   @Override public void handleLaunchEvent(BumpRunEvent evt)		{ }
-
-   @Override public void handleProcessEvent(BumpRunEvent evt)		{ }
-
    @Override public void handleThreadEvent(BumpRunEvent evt) {
       if (evt.getThread() != for_thread) return;
       switch (evt.getEventType()) {
@@ -539,8 +535,6 @@ private class RunEventHandler implements BumpRunEventHandler {
 	    break;
        }
     }
-
-   @Override public void handleConsoleMessage(BumpProcess bp,boolean err,boolean eof,String msg)	{ }
 
 }	// end of inner class RunEventHandler
 
@@ -634,22 +628,22 @@ private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBub
       ValueTreeNode tn = null;
       if (v0 instanceof ValueTreeNode) tn = (ValueTreeNode) v0;
       if (tn != null) {
-	 StringBuffer buf = new StringBuffer();
-	 buf.append("<html>");
-	 Object vobj = tn.getValue();
-	 String what = tn.getKey();
-	 if (what == null) return null;
-	 if (vobj == null) return what;
-	 buf.append(what);
-	 buf.append(" = ");
-	 buf.append(IvyXml.htmlSanitize(vobj.toString()));
-	 String evl = launch_control.getEvaluationString(tn.getFrame(),tn.getRunValue(),what);
-	 if (evl != null) {
-	    buf.append("<hr>");
-	    // buf.append(IvyXml.htmlSanitize(evl));
-	    buf.append(evl);
-	  }
-	 return buf.toString();
+         StringBuffer buf = new StringBuffer();
+         buf.append("<html>");
+         Object vobj = tn.getValue();
+         String what = tn.getKey();
+         if (what == null) return null;
+         if (vobj == null) return what;
+         buf.append(what);
+         buf.append(" = ");
+         buf.append(IvyXml.htmlSanitize(vobj.toString()));
+         String evl = launch_control.getEvaluationString(tn.getFrame(),tn.getRunValue(),what);
+         if (evl != null) {
+            buf.append("<hr>");
+            // buf.append(IvyXml.htmlSanitize(evl));
+            buf.append(evl);
+          }
+         return buf.toString();
        }
       return null;
     }

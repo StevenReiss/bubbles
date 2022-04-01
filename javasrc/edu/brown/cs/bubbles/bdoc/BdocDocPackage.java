@@ -30,40 +30,18 @@
 
 package edu.brown.cs.bubbles.bdoc;
 
+import org.jsoup.nodes.Element;
 
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.html.HTML;
+import edu.brown.cs.bubbles.board.BoardLog;
 
 import java.io.IOException;
 import java.net.URL;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 class BdocDocPackage extends BdocDocItem implements BdocConstants
 {
-
-
-/********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
-/********************************************************************************/
-
-private ParseState	parse_state;
-private SubItemImpl	cur_item;
-private ItemRelation	item_relation;
-
-enum ParseState {
-   NONE,
-   HEADER,
-   ITEM_TYPE,
-   ITEM_TYPENAME,
-   CLASS_BEGIN,
-   CLASS_TAG,
-   CLASS_DESC,
-   DESCRIPTION
-}
-
 
 
 /********************************************************************************/
@@ -82,159 +60,111 @@ BdocDocPackage(URL u) throws IOException
 
 
 /********************************************************************************/
-/*										*/
-/*	Parsing methods 							*/
-/*										*/
+/*                                                                              */
+/*      JSoup extraction methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
-@Override protected void handleStartDocument()
+@Override void extractItem(Element e0)
 {
-   parse_state = ParseState.HEADER;
-   item_relation = ItemRelation.NONE;
-   cur_item = null;
-}
-
-
-@Override public void handleComment(char [] text,int pos)
-{
-   String s = new String(text);
-   switch (parse_state) {
-      case DESCRIPTION :
-	 addDescriptionComment(s);
-	 break;
-      default:
-	 break;
+   Element desc = e0.select(".package-description").first();
+   if (desc == null) desc = e0.select(".description").first();
+   if (desc == null) desc = e0.select(".contentContainer section").first();
+   scanSubitems(desc);
+   scanSignature(e0,".package-signature");
+   scanBody(e0);  
+  // handle Java17 code
+   List<ItemRelation> typs = new ArrayList<>();
+   for (Element belt : e0.select(".table-tabs < button")) {
+      String typ = belt.text();
+      switch (typ) {
+         case "All Classes and Interfaces" :
+            typs.add(ItemRelation.NONE);
+            break;
+         case "Interfaces" :
+            typs.add(ItemRelation.PACKAGE_INTERFACE);
+            break;
+         case "Classes" :
+            typs.add(ItemRelation.PACKAGE_CLASS);
+            break;
+         case "Enum Classes" :
+            typs.add(ItemRelation.PACKAGE_ENUM);
+            break;
+         case "Exceptions" :
+            typs.add(ItemRelation.PACKAGE_EXCEPTION);
+            break;
+         case "Errors" :
+            typs.add(ItemRelation.PACKAGE_ERROR);
+            break;
+         default :
+            BoardLog.logE("BDOC","Unknown tab button " + typ);
+            typs.add(ItemRelation.NONE);
+            break;
+       }
+    }
+   for (Element celt : e0.select(".col-first > a")) {
+      String hr = celt.attr("href");
+      if (hr == null) continue;
+      ItemRelation ir = ItemRelation.NONE;
+      String nm = celt.text();
+      Element div = celt.parent();
+      for (int i = 1; i < typs.size(); ++i) {
+         String key = ".class-summary-tab" + i;
+         if (div.classNames().contains(key)) {
+            ir = typs.get(i);
+          }
+       }
+      if (ir == ItemRelation.NONE) continue;
+      Element ddiv = div.nextElementSibling();
+      SubItemImpl curitm = new SubItemImpl(ir);
+      curitm.setName(nm);
+      curitm.setUrl(ref_url,hr);
+      curitm.setDescription(ddiv.html());
+      addSubitem(curitm);
+    }
+   
+   if (typs.size() == 0) {
+      // handle Java10 description
+      for (Element tbl : e0.select(".typeSummary")) {
+         String what = tbl.select("span").first().text();
+         ItemRelation ir = ItemRelation.NONE;
+         switch (what) {
+            case "Class Summary" :
+               ir = ItemRelation.PACKAGE_CLASS;
+               break;
+            case "Interface Summary" :
+               ir = ItemRelation.PACKAGE_INTERFACE;
+               break;
+            case "Enum Summary" :
+               ir = ItemRelation.PACKAGE_ENUM;
+               break;
+            case "Exception Summary" :
+               ir = ItemRelation.PACKAGE_EXCEPTION;
+               break;
+            case "Error Summary" :
+               ir = ItemRelation.PACKAGE_ERROR;
+               break;
+            default :
+               BoardLog.logE("BDOC","Unknown table caption " + what);
+               break;
+          }
+         if (ir == ItemRelation.NONE) continue;
+         for (Element telt : tbl.select("tr")) {
+            Element pfx = telt.select("th > a").first();
+            Element sfx = telt.select("td > div").first();
+            String nm = pfx.text();
+            String hr = pfx.attr("href");
+            if (hr == null) continue;
+            SubItemImpl curitm = new SubItemImpl(ir);
+            curitm.setName(nm);
+            curitm.setUrl(ref_url,hr);
+            curitm.setDescription(sfx.html());
+            addSubitem(curitm);
+          }
+       }
     }
 }
 
-
-
-@Override public void handleSimpleTag(HTML.Tag tag,MutableAttributeSet a,int pos)
-{
-   handleStartTag(tag,a,pos);
-}
-
-
-@Override public void handleStartTag(HTML.Tag tv,MutableAttributeSet a,int pos)
-{
-   switch (parse_state) {
-      case HEADER :
-	 if (tv == HTML.Tag.H2) parse_state = ParseState.NONE;
-	 break;
-      case NONE :
-	 if (tv == HTML.Tag.TD) parse_state = ParseState.CLASS_BEGIN;
-	 else if (tv == HTML.Tag.TH) parse_state = ParseState.ITEM_TYPE;
-	 else if (tv == HTML.Tag.A) {
-	    String nm = getAttribute(HTML.Attribute.NAME,a);
-	    if (nm != null && nm.equals("package_description"))
-	       parse_state = ParseState.DESCRIPTION;
-	  }
-	 break;
-      case CLASS_BEGIN :
-	 if (tv == HTML.Tag.A) {
-	    parse_state = ParseState.CLASS_TAG;
-	    if (item_relation != ItemRelation.NONE) {
-	       cur_item = new SubItemImpl(item_relation);
-	       cur_item.setUrl(ref_url,getAttribute(HTML.Attribute.HREF,a));
-	     }
-	  }
-	 break;
-      case DESCRIPTION :
-	 if (tv == HTML.Tag.DL) parse_state = ParseState.NONE;
-	 else addDescriptionTag(tv,a);
-	 break;
-      case ITEM_TYPE :
-	 if (tv == HTML.Tag.B) parse_state = ParseState.ITEM_TYPENAME;
-	 break;
-      default:
-	 break;
-    }
-}
-
-
-
-@Override public void handleEndTag(HTML.Tag tv,int pos)
-{
-   switch (parse_state) {
-      case CLASS_BEGIN :
-	 if (tv == HTML.Tag.TD) parse_state = ParseState.NONE;
-	 break;
-      case CLASS_TAG :
-	 if (tv == HTML.Tag.TR) parse_state = ParseState.NONE;
-	 else if (tv == HTML.Tag.A) parse_state = ParseState.CLASS_DESC;
-	 break;
-      case CLASS_DESC :
-	 if (tv == HTML.Tag.TR) parse_state = ParseState.NONE;
-	 break;
-      case ITEM_TYPE :
-	 if (tv == HTML.Tag.TH) parse_state = ParseState.NONE;
-	 break;
-      case ITEM_TYPENAME :
-	 if (tv == HTML.Tag.B) parse_state = ParseState.ITEM_TYPE;
-	 break;
-      case NONE :
-	 if (tv == HTML.Tag.TABLE) item_relation = ItemRelation.NONE;
-	 break;
-      case DESCRIPTION :
-	 addDescriptionEndTag(tv);
-	 break;
-      default:
-	 break;
-    }
-}
-
-
-@Override public void handleText(char [] data,int pos)
-{
-   String s;
-
-   switch (parse_state) {
-      case CLASS_TAG :
-	 if (cur_item != null) {
-	    s = new String(data).trim();
-	    cur_item.setName(s);
-	    addSubitem(cur_item);
-	  }
-	 break;
-      case CLASS_DESC :
-	 if (cur_item != null) {
-	    s = new String(data).trim();
-	    cur_item.setDescription(s);
-	  }
-	 break;
-      case ITEM_TYPE :
-	 s = new String(data).trim();
-	 if (s.startsWith("Exception")) {
-	    item_relation = ItemRelation.PACKAGE_EXCEPTION;
-	  }
-	 else if (s.startsWith("Enum")) {
-	    item_relation = ItemRelation.PACKAGE_ENUM;
-	  }
-	 else if (s.startsWith("Class")) {
-	    item_relation = ItemRelation.PACKAGE_CLASS;
-	  }
-	 else if (s.startsWith("Interface")) {
-	    item_relation = ItemRelation.PACKAGE_INTERFACE;
-	  }
-	 else if (s.startsWith("Error")) {
-	    item_relation = ItemRelation.PACKAGE_ERROR;
-	  }
-	 else {
-	    item_relation = ItemRelation.NONE;
-	  }
-	 break;
-      case DESCRIPTION :
-	 addDescription(new String(data));
-	 break;
-      default:
-	 break;
-    }
-}
-
-
-
-@Override protected void handleEndDocument()
-{ }
 
 
 

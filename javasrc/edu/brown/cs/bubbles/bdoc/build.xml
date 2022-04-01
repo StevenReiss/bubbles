@@ -17,10 +17,12 @@
    <target name='init' depends='init1,init2' >
       <path id='bubbles.classpath'>
 	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${BUBBLES}/lib/jsoup.jar' />
 	 <pathelement location='${IVYBIN}' />
       </path>
       <path id='test.classpath'>
 	 <pathelement location='${BUBBLES}/java' />
+	 <pathelement location='${BUBBLES}/lib/jsoup.jar' />
 	 <pathelement location='${IVYBIN}' />
       </path>
    </target>

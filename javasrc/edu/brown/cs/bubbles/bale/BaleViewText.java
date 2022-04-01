@@ -66,7 +66,6 @@ private int		saved_start;
 private int		saved_end;
 private int		saved_counter;
 
-
 private static Map<Color,Paint> squiggle_paints = new HashMap<>();
 
 

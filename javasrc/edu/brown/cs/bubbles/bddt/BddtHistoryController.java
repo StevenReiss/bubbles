@@ -173,8 +173,6 @@ void clearHistory(BumpProcess bp)
 
 private class HistoryHandler implements BumpConstants.BumpRunEventHandler {
 
-   @Override public void handleLaunchEvent(BumpRunEvent evt)	{ }
-
    @Override public void handleProcessEvent(BumpRunEvent evt) {
       switch (evt.getEventType()) {
 	 case PROCESS_REMOVE :
@@ -215,7 +213,6 @@ private class HistoryHandler implements BumpConstants.BumpRunEventHandler {
        }
     }
 
-   @Override public void handleConsoleMessage(BumpProcess bp,boolean err,boolean eof,String msg) { }
 
 }	// end of inner class HistoryHandler
 

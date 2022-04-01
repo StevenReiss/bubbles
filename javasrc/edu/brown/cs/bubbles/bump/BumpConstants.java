@@ -454,29 +454,29 @@ enum BumpThreadState {
 
    public BumpThreadState getStopState() {
       switch (this) {
-	 case DEAD :
-	 default :
-	    return this;
-	 case NONE :
-	 case NEW :
-	 case RUNNING :
-	    return STOPPED;
-	 case RUNNING_SYNC :
-	    return STOPPED_SYNC;
-	 case RUNNING_IO :
-	    return STOPPED_IO;
-	 case RUNNING_SYSTEM :
-	    return STOPPED_SYSTEM;
-	 case BLOCKED :
-	    return STOPPED_BLOCKED;
-	 case DEADLOCKED :
-	    return STOPPED_DEADLOCK;
-	 case WAITING :
-	    return STOPPED_WAITING;
-	 case TIMED_WAITING :
-	    return STOPPED_TIMED;
-	 case IDLE :
-	    return STOPPED_IDLE;
+         case DEAD :
+         default :
+            return this;
+         case NONE :
+         case NEW :
+         case RUNNING :
+            return STOPPED;
+         case RUNNING_SYNC :
+            return STOPPED_SYNC;
+         case RUNNING_IO :
+            return STOPPED_IO;
+         case RUNNING_SYSTEM :
+            return STOPPED_SYSTEM;
+         case BLOCKED :
+            return STOPPED_BLOCKED;
+         case DEADLOCKED :
+            return STOPPED_DEADLOCK;
+         case WAITING :
+            return STOPPED_WAITING;
+         case TIMED_WAITING :
+            return STOPPED_TIMED;
+         case IDLE :
+            return STOPPED_IDLE;
        }
     }
 
@@ -491,30 +491,30 @@ enum BumpThreadState {
 
    public BumpThreadState getRunState() {
       switch (this) {
-	 case DEAD :
-	 default :
-	    return this;
-	 case NONE :
-	 case NEW :
-	 case STOPPED :
-	 case EXCEPTION :
-	    return RUNNING;
-	 case STOPPED_SYNC :
-	    return RUNNING_SYNC;
-	 case STOPPED_IO :
-	    return RUNNING_IO;
-	 case STOPPED_SYSTEM :
-	    return RUNNING_SYSTEM;
-	 case STOPPED_BLOCKED :
-	    return BLOCKED;
-	 case STOPPED_WAITING :
-	    return WAITING;
-	 case STOPPED_TIMED :
-	    return TIMED_WAITING;
-	 case STOPPED_DEADLOCK :
-	    return DEADLOCKED;
-	 case STOPPED_IDLE :
-	    return IDLE;
+         case DEAD :
+         default :
+            return this;
+         case NONE :
+         case NEW :
+         case STOPPED :
+         case EXCEPTION :
+            return RUNNING;
+         case STOPPED_SYNC :
+            return RUNNING_SYNC;
+         case STOPPED_IO :
+            return RUNNING_IO;
+         case STOPPED_SYSTEM :
+            return RUNNING_SYSTEM;
+         case STOPPED_BLOCKED :
+            return BLOCKED;
+         case STOPPED_WAITING :
+            return WAITING;
+         case STOPPED_TIMED :
+            return TIMED_WAITING;
+         case STOPPED_DEADLOCK :
+            return DEADLOCKED;
+         case STOPPED_IDLE :
+            return IDLE;
        }
     }
 
@@ -539,18 +539,18 @@ enum BumpThreadState {
 
    public boolean isStopped() {
       switch (this) {
-	 case STOPPED :
-	 case STOPPED_SYNC :
-	 case STOPPED_IO :
-	 case STOPPED_WAITING :
-	 case STOPPED_SYSTEM :
-	 case STOPPED_BLOCKED :
-	 case STOPPED_TIMED :
-	 case STOPPED_IDLE :
-	 case EXCEPTION :
-	    return true;
-	 default :
-	    break;
+         case STOPPED :
+         case STOPPED_SYNC :
+         case STOPPED_IO :
+         case STOPPED_WAITING :
+         case STOPPED_SYSTEM :
+         case STOPPED_BLOCKED :
+         case STOPPED_TIMED :
+         case STOPPED_IDLE :
+         case EXCEPTION :
+            return true;
+         default :
+            break;
        }
       return false;
     }
@@ -676,6 +676,10 @@ enum BumpLaunchConfigType {
 }
 
 
+enum BumpConsoleMode {
+   STDOUT, STDERR, SYSTEM
+}
+
 interface BumpRunEventHandler extends EventListener {
 
    default void handleLaunchEvent(BumpRunEvent evt)                     { }
@@ -683,7 +687,7 @@ interface BumpRunEventHandler extends EventListener {
    default void handleThreadEvent(BumpRunEvent evt)                     { }
    
    default void handleConsoleMessage(BumpProcess proc,
-         boolean isstderr,boolean iseof,String msg)                     { }
+         BumpConsoleMode mode,boolean iseof,String msg)                 { }
 
 }	// end of inner interface BumpRunEventHandler
 
@@ -865,8 +869,6 @@ interface BumpThreadFilter extends EventListener {
    BumpRunEvent handleThreadEvent(BumpThread bt,BumpRunEvent evt);
 
 }
-
-
 
 String	BUMP_BANDAID_TRAILER = BandaidConstants.BANDAID_TRAILER;
 

@@ -808,7 +808,7 @@ int	METRICS_UPLOAD_TIMEOUT = 5*1000;
 String	PALETTE_PROP = "edu.brown.cs.bubbles.palette";
 
 String	DEFAULT_PALETTE = "bubbles.palette";
-
+String  KEY_DEFINITIONS = "bubbles.keys";
 
 /********************************************************************************/
 /*										*/

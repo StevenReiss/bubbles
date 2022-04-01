@@ -47,6 +47,7 @@ import edu.brown.cs.ivy.mint.MintControl;
 import edu.brown.cs.ivy.swing.SwingColorButton;
 import edu.brown.cs.ivy.swing.SwingColorRangeChooser;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.swing.SwingText;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -59,7 +60,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -142,9 +142,6 @@ private static BoardProperties	beam_properties = BoardProperties.getProperties("
 
 private static Map<String,Document> file_documents;
 
-
-private static final String	MENU_KEY = "menu";
-private static final String	menu_keyname;
 private static SimpleDateFormat file_dateformat = new SimpleDateFormat("yyMMddHHmmss");
 
 private static final String COLOR_OUTPUT = "<!-- COLORS: TOP=%1 BOTTOM=%2 -->";
@@ -157,13 +154,6 @@ private static Color		default_bottom_color;
 
 
 static {
-   int mask = SwingText.getMenuShortcutKeyMaskEx();
-   if (mask == InputEvent.META_DOWN_MASK)
-      menu_keyname = "meta";
-   else if (mask == InputEvent.CTRL_DOWN_MASK)
-      menu_keyname = "ctrl";
-   else menu_keyname = "ctrl";
-
    file_documents = new HashMap<String,Document>();
 
    default_top_color = BoardColors.getColor(NOTE_TOP_COLOR_PROP);
@@ -189,62 +179,89 @@ private static final Pattern temp_name = Pattern.compile("Note_\\d{12}_\\d{1,4}.
 
 private static Keymap		note_keymap;
 
-private static final KeyItem [] key_defs = new KeyItem[] {
-   new KeyItem("menu C","copy-to-clipboard"),
-      new KeyItem("menu X","cut-to-clipboard"),
-      new KeyItem("menu V","paste-from-clipboard"),
-      new KeyItem("ctrl B","font-bold"),
-      new KeyItem("meta I","font-italic"),
-      new KeyItem("meta U","font-underline"),
-      new KeyItem("meta MINUS","font-strikethrough"),
-      new KeyItem("ctrl 1","font-size-10"),
-      new KeyItem("ctrl 2","font-size-12"),
-      new KeyItem("ctrl 3","font-size-14"),
-      new KeyItem("ctrl 4","font-size-18"),
-      new KeyItem("ctrl 5","font-size-24"),
-      new KeyItem("ctrl shift 1","foreground-black"),
-      new KeyItem("ctrl shift 2","foreground-red"),
-      new KeyItem("ctrl shift 3","foreground-green"),
-      new KeyItem("ctrl shift 4","foreground-blue"),
-      new KeyItem("ctrl shift 5","left-justify"),
-      new KeyItem("ctrl shift 6","center-justify"),
-      new KeyItem("ctrl shift 7","right-justify"),
-      new KeyItem("ctrl shift 8","text-justify"),
-      new KeyItem("menu Z","Undo"),
-      new KeyItem("menu Y","Redo"),
-      new KeyItem("menu S","Save"),
-      
-};
-
+private static Action strike_thru_action = new StrikeThruAction();
+private static Action fg_black_action = new NoteEditorKit.NoteColorAction("foreground-black",Color.BLACK);
+private static Action fg_red_action = new NoteEditorKit.NoteColorAction("foreground-red",Color.RED);
+private static Action fg_green_action = new NoteEditorKit.NoteColorAction("foreground-green",Color.GREEN);
+private static Action fg_blue_action = new NoteEditorKit.NoteColorAction("foreground-blue",Color.BLUE);
+private static Action font_10_action = new NoteEditorKit.NoteFontSizeAction("font-size-10",10);
+private static Action font_12_action = new NoteEditorKit.NoteFontSizeAction("font-size-12",12);
+private static Action font_14_action = new NoteEditorKit.NoteFontSizeAction("font-size-14",14);
+private static Action font_18_action = new NoteEditorKit.NoteFontSizeAction("font-size-18",18);
+private static Action font_24_action = new NoteEditorKit.NoteFontSizeAction("font-size-24",24);
+private static Action justify_action = new NoteEditorKit.AlignmentAction("text-justify",StyleConstants.ALIGN_JUSTIFIED);
+private static Action undo_action = BurpHistory.getUndoAction();
+private static Action redo_action = BurpHistory.getRedoAction();
+private static Action save_action = new SaveAction();
 
 private static Action [] default_actions = new Action [] {
-      new StrikeThruAction(),
-      new NoteEditorKit.NoteColorAction("foreground-black",Color.BLACK),
-      new NoteEditorKit.NoteColorAction("foreground-red",Color.RED),
-      new NoteEditorKit.NoteColorAction("foreground-green",Color.GREEN),
-      new NoteEditorKit.NoteColorAction("foreground-blue",Color.BLUE),
-      new NoteEditorKit.NoteFontSizeAction("font-size-10",10),
-      new NoteEditorKit.NoteFontSizeAction("font-size-12",12),
-      new NoteEditorKit.NoteFontSizeAction("font-size-14",14),
-      new NoteEditorKit.NoteFontSizeAction("font-size-18",18),
-      new NoteEditorKit.NoteFontSizeAction("font-size-24",24),
-      new NoteEditorKit.AlignmentAction("text-justify",StyleConstants.ALIGN_JUSTIFIED),
-      BurpHistory.getUndoAction(),
-      BurpHistory.getRedoAction(),
-      new SaveAction(),
+   strike_thru_action,
+   fg_black_action,
+   fg_red_action,
+   fg_green_action,
+   fg_blue_action,
+   font_10_action,
+   font_12_action,
+   font_14_action,
+   font_18_action,
+   font_24_action,
+   justify_action,
+   undo_action,
+   redo_action,
+   save_action,
 };
+ 
+
 
 
 static {
+   NoteEditorKit nek = new NoteEditorKit();
+   Action [] acts = nek.getActions();
+   SwingKey [] skey_defs = new SwingKey [] {
+      new SwingKey("NOTE",findAction(acts,NoteEditorKit.copyAction),"menu C"),
+      new SwingKey("NOTE",findAction(acts,NoteEditorKit.cutAction),"menu X"),
+      new SwingKey("NOTE",findAction(acts,NoteEditorKit.pasteAction),"menu V"),
+      new SwingKey("NOTE",findAction(acts,"font-bold"),"ctrl B"),  
+      new SwingKey("NOTE",findAction(acts,"font-italic"),"meta I"),  
+      new SwingKey("NOTE",findAction(acts,"font-underline"),"meta U"),  
+      new SwingKey("NOTE",findAction(acts,"font-strikethrough"),"meta MINUS"),
+      new SwingKey("NOTE",font_10_action,"ctrl 1"),
+      new SwingKey("NOTE",font_12_action,"ctrl 2"),
+      new SwingKey("NOTE",font_14_action,"ctrl 3"),
+      new SwingKey("NOTE",font_18_action,"ctrl 4"),
+      new SwingKey("NOTE",font_24_action,"ctrl 5"),
+      new SwingKey("NOTE",fg_black_action,"ctrl shift 1"),
+      new SwingKey("NOTE",fg_red_action,"ctrl shift 2"),
+      new SwingKey("NOTE",fg_green_action,"ctrl shift 3"),
+      new SwingKey("NOTE",fg_blue_action,"ctrl shift 4"),
+      new SwingKey("NOTE",findAction(acts,"left-justify"),"ctrl shift 5"),
+      new SwingKey("NOTE",findAction(acts,"center-justify"),"ctrl shift 6"),
+      new SwingKey("NOTE",findAction(acts,"right-justify"),"ctrl shift 7"),
+      new SwingKey("NOTE",justify_action,"ctrl shift 8"),
+      new SwingKey("NOTE",undo_action,"menu Z"),
+      new SwingKey("NOTE",redo_action,"menu Y"),
+      new SwingKey("NOTE",save_action,"menu S"),
+    };
+   
    Keymap dflt = JTextComponent.getKeymap(JTextComponent.DEFAULT_KEYMAP);
    SwingText.fixKeyBindings(dflt);
    note_keymap = JTextComponent.addKeymap("NOTE",dflt);
-   NoteEditorKit nek = new NoteEditorKit();
-   Action [] noteacts = nek.getActions();
-   for (KeyItem ka : key_defs) {
-      ka.addToKeyMap(note_keymap,noteacts);
+   for (SwingKey sk : skey_defs) {
+      sk.addToKeyMap(note_keymap);
     }
 }
+
+
+private static Action findAction(Action [] noteacts,String name) 
+{
+   for (Action a : noteacts) {
+      String nm = (String) a.getValue(Action.NAME);
+      if (nm != null && nm.equals(name)) return a;
+    }
+   return null;
+}
+
+
 
 
 /********************************************************************************/
@@ -1071,7 +1088,7 @@ private static class NoteEditorKit extends HTMLEditorKit
    NoteEditorKit() {
       setDefaultCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
     }
-
+   
   @Override public Action [] getActions() {
      return TextAction.augmentList(super.getActions(),default_actions);
    }
@@ -1153,36 +1170,7 @@ private static class SaveAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private static class KeyItem {
 
-   private KeyStroke key_stroke;
-   private String key_action;
-
-   KeyItem(String key,String a) {
-      key = fixKey(key);
-      key_stroke = KeyStroke.getKeyStroke(key);
-      if (key_stroke == null) BoardLog.logE("BEAM","Bad key definition: " + key);
-      key_action = a;
-    }
-
-   void addToKeyMap(Keymap kmp,Action[] acts) {
-      if (key_stroke != null && key_action != null) {
-         for (Action a : acts) {
-            Object nm = a.getValue(Action.NAME);
-            if (nm.toString().equals(key_action)) {
-               kmp.addActionForKeyStroke(key_stroke,a);
-               return;
-             }
-          }
-         BoardLog.logE("BEAM","Action " + key_action + " not found");
-       }
-    }
-
-   private String fixKey(String key) {
-      return key.replace(MENU_KEY,menu_keyname);
-    }
-
-}	// end of inner class KeyItem
 
 
 
@@ -1196,7 +1184,7 @@ private class ComponentHandler extends ComponentAdapter {
 
    @Override public void componentHidden(ComponentEvent e) {
       if (note_name != null && note_area != null) {
-	 if (note_area.getText().length() > 0) saveNote();
+         if (note_area.getText().length() > 0) saveNote();
        }
     }
 

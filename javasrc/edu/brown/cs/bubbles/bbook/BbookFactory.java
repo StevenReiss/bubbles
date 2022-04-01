@@ -52,13 +52,11 @@ import edu.brown.cs.ivy.xml.IvyXml;
 import org.w3c.dom.Element;
 
 import javax.swing.AbstractAction;
-import javax.swing.KeyStroke;
 
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -132,8 +130,7 @@ public static void initialize(BudaRoot br)
    the_factory.buda_root = br;
 
    if (isEnabled()) {
-      br.registerKeyAction(new BbookAction(br),"Programmer's Log",
-			      KeyStroke.getKeyStroke(KeyEvent.VK_F2,KeyEvent.SHIFT_DOWN_MASK));
+      br.registerKeyAction(new BbookAction(br),"Programmer's Log","shift F2");
     }
 }
 

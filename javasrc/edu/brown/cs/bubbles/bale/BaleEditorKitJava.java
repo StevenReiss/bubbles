@@ -43,6 +43,8 @@ class BaleEditorKitJava implements BaleConstants, BaleConstants.BaleLanguageKit
 /*										*/
 /********************************************************************************/
 
+private BaleJavaHinter java_hinter;
+
 private static final Action [] local_actions = {
 };
 
@@ -57,6 +59,7 @@ private static final Action [] local_actions = {
 
 BaleEditorKitJava()
 {
+   java_hinter = new BaleJavaHinter();
 }
 
 
@@ -76,6 +79,12 @@ BaleEditorKitJava()
 @Override public Keymap getKeymap(Keymap base)
 {
    return base;
+}
+
+
+@Override public BaleHinter getHinter()
+{
+   return java_hinter;
 }
 
 

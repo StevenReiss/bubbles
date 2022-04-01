@@ -489,13 +489,13 @@ static void outputBreakpoint(IBreakpoint xbp,IvyXmlWriter xw)
 	    xw.field("ISCHECKED",eb.isChecked());
 	    xw.field("ISUNCAUGHT",eb.isUncaught());
 	    xw.field("EXCEPTION",eb.getExceptionTypeName());
-            Object val = eb.getMarker().getAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses");
-            if (val != null) xw.field("ISSUBCLASSES",val);
-            else {
-               eb.getMarker().setAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",true);
-               xw.field("ISSUBCLASSES",true);
-             }
-            for (String ef : eb.getExclusionFilters()) {
+	    Object val = eb.getMarker().getAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses");
+	    if (val != null) xw.field("ISSUBCLASSES",val);
+	    else {
+	       eb.getMarker().setAttribute("org.eclipse.jdt.debug.core.suspend_on_subclasses",true);
+	       xw.field("ISSUBCLASSES",true);
+	     }
+	    for (String ef : eb.getExclusionFilters()) {
 	       xw.textElement("EXCLUDE",ef);
 	     }
 	    for (String ef : eb.getInclusionFilters()) {
@@ -606,19 +606,19 @@ static String findFileForClass(String cls)
 	    IPath pt = ity.getPath();
 	    File f = getFileForPath(pt,ip);
 	    if (f.exists()) {
-               if (result == null) result = f;
-               else if (f.getName().endsWith(".java") &&
-                     result.getName().endsWith(".class")) {
-                  result = f;
-                }
-             }
+	       if (result == null) result = f;
+	       else if (f.getName().endsWith(".java") &&
+		     result.getName().endsWith(".class")) {
+		  result = f;
+		}
+	     }
 	  }
        }
       catch (JavaModelException e) { }
     }
 
    if (result != null) return result.getAbsolutePath();
-   
+
    return null;
 }
 
@@ -703,7 +703,6 @@ static int outputResource(IResourceDelta rd,IvyXmlWriter xw)
 
    return ctr;
 }
-
 
 
 
@@ -1169,29 +1168,29 @@ private static void outputNameDetails(IType typ,IvyXmlWriter xw) throws JavaMode
       if (typ.isInterface()) tnm = "Interface";
       else if (typ.isEnum()) tnm = "Enum";
       else {
-         boolean check = false;
-         String supnm = typ.getFullyQualifiedName();
-         if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
-            check = true;
-         else {
-            supnm = typ.getSuperclassName();
-            if (supnm != null) {
-               if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
-                  check = true;
-             }
-          }
-         if (check) {
-            try {
-               ITypeHierarchy ith = typ.newSupertypeHierarchy(null);
-               for (IType xtyp = typ; xtyp != null; xtyp = ith.getSuperclass(xtyp)) {
-                  if (xtyp.getFullyQualifiedName().equals("java.lang.Throwable")) {
-                     tnm = "Throwable";
-                     break;
-                   }
-                }
-             }
-            catch (JavaModelException ex) { }
-          }
+	 boolean check = false;
+	 String supnm = typ.getFullyQualifiedName();
+	 if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
+	    check = true;
+	 else {
+	    supnm = typ.getSuperclassName();
+	    if (supnm != null) {
+	       if (supnm.contains("Error") || supnm.contains("Exception") || supnm.contains("Throw"))
+		  check = true;
+	     }
+	  }
+	 if (check) {
+	    try {
+	       ITypeHierarchy ith = typ.newSupertypeHierarchy(null);
+	       for (IType xtyp = typ; xtyp != null; xtyp = ith.getSuperclass(xtyp)) {
+		  if (xtyp.getFullyQualifiedName().equals("java.lang.Throwable")) {
+		     tnm = "Throwable";
+		     break;
+		   }
+		}
+	     }
+	    catch (JavaModelException ex) { }
+	  }
        }
     }
    catch (Throwable t) {
@@ -1364,11 +1363,11 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
    if (elt instanceof IField) {
       IField ifld = (IField) elt;
       try {
-         xw.field("RETURNTYPE",ifld.getTypeSignature());
+	 xw.field("RETURNTYPE",ifld.getTypeSignature());
        }
       catch (JavaModelException e) { }
     }
-   
+
    if (elt instanceof IMethod) {
       IMethod m = (IMethod) elt;
       try {
@@ -1379,14 +1378,14 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
 	    xw.field("NAMELENGTH",rng.getLength());
 	  }
 	 xw.field("RETURNTYPE",m.getReturnType());
-         StringBuffer pbuf = new StringBuffer();
-         pbuf.append("(");
+	 StringBuffer pbuf = new StringBuffer();
+	 pbuf.append("(");
 	 String [] ptys = m.getParameterTypes();
 	 for (int i = 0; i < ptys.length; ++i) {
-            pbuf.append(ptys[i]);
+	    pbuf.append(ptys[i]);
 	  }
-         pbuf.append(")");
-         xw.field("PARAMETERS",pbuf.toString());
+	 pbuf.append(")");
+	 xw.field("PARAMETERS",pbuf.toString());
        }
       catch (JavaModelException e) { }
     }
@@ -1819,7 +1818,10 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
        }
       if (var != null) lcl = var.isLocal();
 
-      if (dtyp != null && donestatics.contains(dtyp) && stat) return;
+      if (dtyp != null && donestatics.contains(dtyp) && stat) {
+	 BedrockPlugin.logD("SKIP STATIC " + var);
+	 return;
+       }
 
       xw.begin("VALUE");
       if (name != null) xw.field("NAME",name);
@@ -1867,10 +1869,10 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 	  }
 	 else if (typ.equals("Ljava/lang/String;") || typ.equals("java.lang.String")) {
 	    xw.field("KIND","STRING");
-            // txt is not quite right here if the string is complex
-            // e.g \UD83D\UDE30" gets mapped to "\u07D8\u00B0"
-          }
-         
+	    // txt is not quite right here if the string is complex
+	    // e.g \UD83D\UDE30" gets mapped to "\u07D8\u00B0"
+	  }
+	
 	 else if (val instanceof IJavaObject) {
 	    IJavaObject obj = (IJavaObject) val;
 	    IVariable [] vars = obj.getVariables();
@@ -2068,14 +2070,14 @@ static void outputChange(Change chng,IvyXmlWriter xw)
 static File getFileForPath(IPath p,IProject proj)
 {
    if (p == null) return null;
-   
+
    if (!p.isAbsolute()) {
       String seg0 = p.segment(0);
       IPath pfx = JavaCore.getClasspathVariable(seg0);
       if (pfx != null) {
-         IPath p1 = pfx.append(p.removeFirstSegments(1));
-         File f1 = getFileForPath(p1.toFile(),proj);
-         if (f1.exists()) return f1;
+	 IPath p1 = pfx.append(p.removeFirstSegments(1));
+	 File f1 = getFileForPath(p1.toFile(),proj);
+	 if (f1.exists()) return f1;
        }
     }
 

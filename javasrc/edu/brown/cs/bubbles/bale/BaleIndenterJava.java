@@ -381,7 +381,7 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
       if (skipScope(BaleTokenType.LBRACE,BaleTokenType.RBRACE)) {
 	 // if cur_element is first token on the line, return the indent of the line
 	 // if the opening brace is not on the start of the line,skip to the start
-	 int pos = skipToStatementStart(true,true);
+	 int pos = skipToStatementStart(true,true,false);
 	 cur_indent = 0; // indent is aligned with reference position
 	 if (pref_rbrace_indent > 0 && pos > 0) {
 	    int wp = getLeadingWhitespaceLength(pos);
@@ -398,7 +398,7 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
        }
     }
 
-   // align parenthesis'
+   // align parenthesis
    if (matchparen) {
       if (skipScope(BaleTokenType.LPAREN,BaleTokenType.RPAREN)) return cur_offset;
       else {
@@ -417,20 +417,24 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
     }
 
    previousToken();
+   boolean eos = false;
 
    switch (cur_token) {
-      case RANGLE :
       case RBRACE:
+         eos = true;
+      // fall through
+      case RANGLE :
 	 // skip the block and fall through
 	 // if we can't complete the scope,reset the scan position
 	 BaleElement ce = cur_element;
 	 if (!skipScope()) setCurrent(ce);
       // fall through
       case SEMICOLON:
+         eos = true;
 	 // this is the 90% case: after a statement block
 	 // the end of the previous statement / block previous.end
 	 // search to the end of the statement / block before the previous; the token just after that is previous.start
-	 return skipToStatementStart(danglingelse,false);
+	 return skipToStatementStart(danglingelse,false,eos);
 
 	 // scope introduction: special treat who special is
       case LPAREN:
@@ -470,7 +474,7 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
 	 return cur_offset;
 
       case TRY :
-	 return skipToStatementStart(danglingelse,false);
+	 return skipToStatementStart(danglingelse,false,false);
 
       case RPAREN:
 	 if (skipScope(BaleTokenType.LPAREN,BaleTokenType.RPAREN)) {
@@ -483,14 +487,14 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
 	     }
 	    setCurrent(scope);
 	    if (looksLikeMethodDecl()) {
-	       return skipToStatementStart(danglingelse,false);
+	       return skipToStatementStart(danglingelse,false,false);
 	     }
 	    if (cur_token == BaleTokenType.CATCH) {
-	       return skipToStatementStart(danglingelse,false);
+	       return skipToStatementStart(danglingelse,false,false);
 	     }
 	    setCurrent(scope);
 	    if (looksLikeAnonymousTypeDecl()) {
-	       return skipToStatementStart(danglingelse,false);
+	       return skipToStatementStart(danglingelse,false,false);
 	     }
 	  }
 	 // restore
@@ -651,16 +655,16 @@ private int handleScopeIntroduction(BaleElement bound)
 	    else cur_indent = pref_array_indent;
 	  }
 	 else cur_indent = pref_block_indent;
-
+         
 	 // normal: skip to the statement start before the scope introducer
 	 // opening braces are often on differently ending indents than e.g. a method definition
 	 if (looksLikeArrayInitializerIntro() && !pref_indent_braces_for_arrays
-		|| !pref_indent_braces_for_blocks) {
+               || !pref_indent_braces_for_blocks) {
 	    setCurrent(celt);
-	    return skipToStatementStart(true,true); // set to true to match the first if
+	    return skipToStatementStart(true,true,false); // set to true to match the first if
 	  }
 	 else return pos;
-
+         
       case LBRACKET :
 	 celt = cur_element;
 	 pos = cur_offset; // store
@@ -710,7 +714,8 @@ private int skipToPreviousListItemOrListStart()
 
       // if any line item comes with its own indentation,adapt to it
       if (cur_line < startline-1) {
-	 int ind = getLineIndent(startline);
+         int ind = 0;
+// 	 ind = getLineIndent(startline);
          // handle starting at empty line
          if (ind == 0) ind = getLineIndent(startline-1);       
 	 if (ind >= 0) cur_align = ind;
@@ -855,7 +860,7 @@ private boolean skipNextIF()
 
 
 @SuppressWarnings("fallthrough")
-private int skipToStatementStart(boolean danglingelse,boolean isinblock)
+private int skipToStatementStart(boolean danglingelse,boolean isinblock,boolean ateos)
 {
    final int NOTHING = 0;
    final int READ_PARENS = 1;
@@ -912,6 +917,9 @@ private int skipToStatementStart(boolean danglingelse,boolean isinblock)
 	    if (isinblock) cur_indent = getBlockIndent(maybemethodbody == READ_IDENT, istypebody, innerclass);
 	    else if (cur_indent == 0 && cur_token == BaleTokenType.LPAREN) cur_indent = 1;	// handle for
 	    // else: cur_indent set by previous calls
+            else if (cur_token == BaleTokenType.NONE && !ateos) {
+               cur_indent = 1;
+             }
 	    return previous_offset;
 	 case COLON:
 	    int pos = previous_offset;
@@ -1054,7 +1062,7 @@ private boolean hasMatchingDo()
 	 skipScope();
 	 // fall through
       case SEMICOLON :
-	 skipToStatementStart(false,false);
+	 skipToStatementStart(false,false,false);
 	 return cur_token == BaleTokenType.DO;
       default:
 	 break;

@@ -25,6 +25,7 @@
 
 package edu.brown.cs.bubbles.bale;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 
@@ -178,8 +179,13 @@ BaleViewLineRegion(BaleElement elem)
 					  DocumentEvent e, Shape a, ViewFactory f)
 {
    boolean wasvalid = layout_valid;
-
-   super.forwardUpdate(ec, e, a, f);
+   
+   try {
+      super.forwardUpdate(ec, e, a, f);
+    }
+   catch (Throwable t) {
+      BoardLog.logE("BALE","Problem with update",t);
+    }
 
    // determine if a repaint is needed
    if (wasvalid && !layout_valid) {

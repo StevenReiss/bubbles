@@ -141,7 +141,7 @@ BdocPanel(BdocReference r) throws BdocException
 	    doc_item = new BdocDocClass(r.getReferenceUrl());
 	    break;
 	 default :
-	    throw new BdocException("No java doc available for " + r);
+	    throw new BdocException("No java doc available for " + r.getNameType() + " " + r);
        }
     }
    catch (IOException e) {

@@ -31,6 +31,8 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Keymap;
 import javax.swing.text.TextAction;
 
+import edu.brown.cs.ivy.swing.SwingKey;
+
 import java.awt.event.ActionEvent;
 
 
@@ -85,13 +87,12 @@ BaleEditorKitPython()
 {
    // this should only be called once, but it is called for each editor
    // control-tab doesn't work for some reason
-   BaleEditorKit.KeyItem ki;
-
-   ki = new BaleEditorKit.KeyItem("ctrl Q",python_unindent_action);
-   ki.addToKeyMap(base);
-   ki = new BaleEditorKit.KeyItem("BACK_SPACE",python_backspace_action);
-   ki.addToKeyMap(base);
-
+   SwingKey sk;
+   
+   sk = new SwingKey("PYTHONEDIT",null,python_unindent_action,"ctrl Q");
+   sk.addToKeyMap(base);
+   sk = new SwingKey("PYTHONEDIT",null,python_backspace_action,"BACK_SPACE");
+   sk.addToKeyMap(base);
    return base;
 }
 

@@ -1070,8 +1070,7 @@ boolean isOrphan()			{ return false; }
 private class DummyElement extends AbstractDocument.LeafElement
 {
    private static final long serialVersionUID = 1;
-
-
+ 
    DummyElement(Element par,AttributeSet a,int soff,int eoff) {
       super(par,a,soff,eoff);
     }

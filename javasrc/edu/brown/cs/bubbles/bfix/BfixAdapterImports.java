@@ -418,7 +418,7 @@ private static class ImportDoer implements RunnableFix {
    private long initial_time;
 
    ImportDoer(BfixCorrector cor,BaleWindowDocument doc,
-	 BumpProblem bp,String type,long time0) {
+         BumpProblem bp,String type,long time0) {
       for_corrector = cor;
       for_document = doc;
       for_problem = bp;

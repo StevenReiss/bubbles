@@ -241,8 +241,6 @@ private class ConsoleAction extends AbstractAction {
 
 private class ProcessHandler implements BumpRunEventHandler
 {
-   @Override public void handleLaunchEvent(BumpRunEvent evt)				{ }
-
    @Override public void handleProcessEvent(BumpRunEvent evt) {
       BumpProcess blp;
       switch (evt.getEventType()) {
@@ -271,9 +269,6 @@ private class ProcessHandler implements BumpRunEventHandler
        }
       process_model.fireTableDataChanged();
    }
-
-   @Override public void handleThreadEvent(BumpRunEvent evt)				{ }
-   @Override public void handleConsoleMessage(BumpProcess bp,boolean e,boolean f,String msg)	{ }
 
 }	// end of inner class ProcessHandler
 
