@@ -65,9 +65,10 @@ class BaleCompactFragment extends JLabel implements BaleConstants, BussConstants
 
 private BaleDocument base_document;
 private String	item_name;
-private Map<Integer,LineData> line_data;
+private transient Map<Integer,LineData> line_data;
 private int title_width;
 private int content_width;
+private transient List<ContentData> content_data_list;
 
 private SwingRoundedCornerLabel rounded_corner_label = null;
 
@@ -76,8 +77,6 @@ private final static long serialVersionUID = 1;
 private final static String HIGHLIGHT_START = "<span style='background:$(HILITE)'>";
 private final static String HIGHLIGHT_END = "</span>";
 private final static Font COMPACT_FONT = BoardFont.getFont(Font.MONOSPACED,Font.PLAIN,9);
-
-private List<ContentData> content_data_list;
 
 private static int INIT_HEIGHT = 22;
 

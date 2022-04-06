@@ -119,11 +119,11 @@ class BassSearchBox extends SwingGridPanel implements BassConstants, CaretListen
 
 private JTextField	input_field;
 private JTree		active_options;
-private BassTreeModel	tree_model;
+private transient BassTreeModel tree_model;
 private boolean 	is_static;
 private boolean 	is_common;
-private Reseter 	cur_reseter;
-private Set<String>	local_expands;
+private transient Reseter cur_reseter;
+private transient Set<String> local_expands;
 
 private JScrollPane scroll_pane;
 private BassSearchBox self;

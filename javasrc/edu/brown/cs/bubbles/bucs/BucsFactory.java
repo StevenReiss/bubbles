@@ -245,7 +245,7 @@ private class BucsRebusContext implements BassConstants.BassPopupHandler {
 
 private static class BucsUIAction extends AbstractAction {
 
-   private BumpLocation for_location;
+   private transient BumpLocation for_location;
    private BudaBubble source_bubble;
 
    private static final long serialVersionUID = 1;
@@ -277,7 +277,7 @@ private static class BucsUIAction extends AbstractAction {
 
 private class BucsAction extends AbstractAction {
 
-   private BaleContextConfig start_config;
+   private transient BaleContextConfig start_config;
 
    private static final long serialVersionUID = 1;
 

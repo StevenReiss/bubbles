@@ -98,11 +98,11 @@ private JLabel number_label; // shows how many occurences of the search text hav
 
 private String	search_for;
 private String searched_for; // stores the most recent search text. used to determine whether it is necessary to run a new search
-private List<Position> occurrences_set; // stores the locations of occurrences of the search text.
+private transient List<Position> occurrences_set; // stores the locations of occurrences of the search text.
 private int current_index; // stores which occurrence was last highlighted - used to facilitate the arrow functions
 private int current_caret_position;
-private Highlighter my_highlighter;
-private Object my_highlight_tag;
+private transient Highlighter my_highlighter;
+private transient Object my_highlight_tag;
 private int last_dir;
 
 private JPanel replace_panel;

@@ -105,7 +105,7 @@ private boolean 	ide_active;
 private boolean 	doing_exit;
 private boolean 	same_host;
 
-protected static BoardProperties board_properties = null;
+protected static BoardProperties system_properties = null;
 private static BumpClient default_client = null;
 
 private static final int MAX_DELAY = 75000;
@@ -3358,7 +3358,7 @@ private static void loadProperties()
    BoardSetup bs = BoardSetup.getSetup();
    bs.doSetup();
 
-   board_properties = BoardProperties.getProperties("System");
+   system_properties = BoardProperties.getProperties("System");
 }
 
 

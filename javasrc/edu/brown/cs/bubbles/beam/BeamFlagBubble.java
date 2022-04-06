@@ -66,23 +66,23 @@ class BeamFlagBubble extends BudaBubble implements BeamConstants,
 /*										*/
 /********************************************************************************/
 
-private JLabel _FlagLabel = null;
-private ImageIcon _Icon = null;
-private Image _OverviewImage;
+private JLabel flag_label = null;
+private ImageIcon flag_icon = null;
+private transient Image overview_image;
 private int     flag_size;
 
-private JLabel _ChevronLabel = null;
+private JLabel chevron_label = null;
 
-private JPanel _Panel = null;
+private JPanel flag_panel = null;
 
-private Hashtable<JMenuItem, String> _ContextMenuHash = null;
+private Hashtable<JMenuItem, String> context_menu_hash = null;
 
-private static String [] _DefaultIcons = {"Fixed", "Flag", "Warning"};
-private static String [] _AdditionalIcons = {"Action", "Bomb", "Bug", "Clock",
+private static final String [] DEFAULT_ICONS = {"Fixed", "Flag", "Warning"};
+private static final String [] ADDITIONAL_ICONS = {"Action", "Bomb", "Bug", "Clock",
 						"Database", "Fish", "Idea", "Investigate",
 						"Link", "Star"};
 
-private String _ImagePath = "";
+private String image_path = "";
 
 private static final double OVERVIEW_SCALE_X = 0.03;
 private static final long serialVersionUID = 1;
@@ -103,48 +103,48 @@ BeamFlagBubble(String imagePath)
    BoardProperties bp = BoardProperties.getProperties("Beam");
    flag_size = bp.getInt("Beam.flag.size",128);
    
-   _ImagePath = imagePath;
+   image_path = imagePath;
 
    this.setResizable(false);
 
    // Setup image label
 
    Image img = BoardImage.getImage(imagePath);
-   _OverviewImage = img;
-   _Icon = new ImageIcon(img);	//new ImageIcon(imagePath);
-   _FlagLabel = new JLabel(_Icon);
-   _FlagLabel.setSize(flag_size, flag_size);
+   overview_image = img;
+   flag_icon = new ImageIcon(img);	//new ImageIcon(imagePath);
+   flag_label = new JLabel(flag_icon);
+   flag_label.setSize(flag_size, flag_size);
 
-   _Panel = new JPanel();
-   _Panel.setSize(flag_size, flag_size);
-   BudaCursorManager.setCursor(_Panel,Cursor.getDefaultCursor());
+   flag_panel = new JPanel();
+   flag_panel.setSize(flag_size, flag_size);
+   BudaCursorManager.setCursor(flag_panel,Cursor.getDefaultCursor());
 
-   _Panel.setLayout(null);
+   flag_panel.setLayout(null);
 
-   _Panel.setBackground(BoardColors.transparent());
-   _Panel.setBorder(null);
-   _FlagLabel.setBorder(null);
+   flag_panel.setBackground(BoardColors.transparent());
+   flag_panel.setBorder(null);
+   flag_label.setBorder(null);
 
    setBorderColor(BoardColors.transparent(), BoardColors.transparent());
 
    // Setup chevron label
 
-   _ChevronLabel = new JLabel(new ImageIcon(BoardImage.getImage("dropdown_chevron.png")));
-   _ChevronLabel.setSize(16, 16);
-   _Panel.add(_ChevronLabel);
-   _ChevronLabel.setVisible(false);
-   _ChevronLabel.setLocation(flag_size - 17, flag_size - 17);
+   chevron_label = new JLabel(new ImageIcon(BoardImage.getImage("dropdown_chevron.png")));
+   chevron_label.setSize(16, 16);
+   flag_panel.add(chevron_label);
+   chevron_label.setVisible(false);
+   chevron_label.setLocation(flag_size - 17, flag_size - 17);
 
    // Add flag label
 
-   _Panel.add(_FlagLabel);
+   flag_panel.add(flag_label);
 
    // Setup events
 
-   _Panel.addMouseListener(new FlagMouseEvents());
-   _ChevronLabel.addMouseListener(new ChevronMouseEvents());
+   flag_panel.addMouseListener(new FlagMouseEvents());
+   chevron_label.addMouseListener(new ChevronMouseEvents());
 
-   setContentPane(_Panel);
+   setContentPane(flag_panel);
 
    setShouldFreeze(false);
 }
@@ -161,11 +161,11 @@ BeamFlagBubble(String imagePath)
 
 @Override public void outputXml(BudaXmlWriter xw) {
    xw.field("TYPE","FLAG");
-   xw.cdataElement("IMGPATH", _ImagePath);
+   xw.cdataElement("IMGPATH", image_path);
 }
 
 
-String getImagePath()			{ return _ImagePath; }
+String getImagePath()			{ return image_path; }
 
 
 /********************************************************************************/
@@ -177,11 +177,11 @@ String getImagePath()			{ return _ImagePath; }
 private void changeIcon(String iconPath)
 {
    Image img = BoardImage.getImage(iconPath);
-   _Icon = new ImageIcon(img);	//new ImageIcon(imagePath);
-   _OverviewImage = _Icon.getImage();
-   _FlagLabel.setIcon(_Icon);
+   flag_icon = new ImageIcon(img);	//new ImageIcon(imagePath);
+   overview_image = flag_icon.getImage();
+   flag_label.setIcon(flag_icon);
 
-   _ImagePath = iconPath;
+   image_path = iconPath;
 
    BudaRoot br = BudaRoot.findBudaRoot(this);
    if (br != null) br.repaint();
@@ -199,8 +199,8 @@ protected void paintContentOverview(Graphics2D g)
 {
    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
 
-   if (_OverviewImage == _Icon.getImage() && bba != null) {
-      _OverviewImage = _OverviewImage.getScaledInstance(bba.getHeight()/6,bba.getHeight()/6, Image.SCALE_SMOOTH);
+   if (overview_image == flag_icon.getImage() && bba != null) {
+      overview_image = overview_image.getScaledInstance(bba.getHeight()/6,bba.getHeight()/6, Image.SCALE_SMOOTH);
     }
 
    AffineTransform gtrans = g.getTransform();
@@ -208,7 +208,7 @@ protected void paintContentOverview(Graphics2D g)
    AffineTransform sc = AffineTransform.getScaleInstance(OVERVIEW_SCALE_X/gtrans.getScaleX(), 1);
    AffineTransform tr = AffineTransform.getTranslateInstance(-getSize().width/1.5, -getSize().height/1.5);
    sc.concatenate(tr);
-   g.drawImage(_OverviewImage, sc, null);
+   g.drawImage(overview_image, sc, null);
 
 
    /***************
@@ -238,39 +238,39 @@ private class ChevronMouseEvents extends MouseAdapter
 {
 
    @Override public void mouseClicked(MouseEvent arg0) {
-
+   
       JPopupMenu menu = new JPopupMenu();
-      _ContextMenuHash = new Hashtable<JMenuItem, String>();
-
-      for (int i = 0; i < _DefaultIcons.length; i++) {
-	 JMenuItem item = menu.add(_DefaultIcons[i]);
-
-	 String path = "flags/default/" + _DefaultIcons[i] + ".png";
-
-	 Icon icon = BoardImage.getIcon(path,22,22);
-	 item.setIcon(icon);
-
-	 item.addActionListener(new FlagContextMenuEvents());
-
-	 _ContextMenuHash.put(item, path);
+      context_menu_hash = new Hashtable<JMenuItem, String>();
+   
+      for (int i = 0; i < DEFAULT_ICONS.length; i++) {
+         JMenuItem item = menu.add(DEFAULT_ICONS[i]);
+   
+         String path = "flags/default/" + DEFAULT_ICONS[i] + ".png";
+   
+         Icon icon = BoardImage.getIcon(path,22,22);
+         item.setIcon(icon);
+   
+         item.addActionListener(new FlagContextMenuEvents());
+   
+         context_menu_hash.put(item, path);
        }
-
+   
       menu.addSeparator();
-
-      for (int i = 0; i < _AdditionalIcons.length; i++) {
-	 JMenuItem item = menu.add(_AdditionalIcons[i]);
-
-	 String path = "flags/additional/" + _AdditionalIcons[i] + ".png";
-
-	 Icon icon = BoardImage.getIcon(path,22,22);
-	 item.setIcon(icon);
-
-	 item.addActionListener(new FlagContextMenuEvents());
-
-	 _ContextMenuHash.put(item, path);
+   
+      for (int i = 0; i < ADDITIONAL_ICONS.length; i++) {
+         JMenuItem item = menu.add(ADDITIONAL_ICONS[i]);
+   
+         String path = "flags/additional/" + ADDITIONAL_ICONS[i] + ".png";
+   
+         Icon icon = BoardImage.getIcon(path,22,22);
+         item.setIcon(icon);
+   
+         item.addActionListener(new FlagContextMenuEvents());
+   
+         context_menu_hash.put(item, path);
        }
-
-      menu.show(_ChevronLabel, 0, 0);
+   
+      menu.show(chevron_label, 0, 0);
     }
 
 }	// end of inner calss ChevronMouseEvents
@@ -282,8 +282,8 @@ private class FlagContextMenuEvents implements ActionListener
 
    @Override public void actionPerformed(ActionEvent arg0) {
       JMenuItem item = (JMenuItem) arg0.getSource();
-      if (_ContextMenuHash.containsKey(item)) {
-	 changeIcon(_ContextMenuHash.get(item));
+      if (context_menu_hash.containsKey(item)) {
+	 changeIcon(context_menu_hash.get(item));
        }
     }
 
@@ -295,7 +295,7 @@ private class FlagMouseEvents extends MouseAdapter
 {
 
    @Override public void mouseEntered(MouseEvent arg0) {
-      _ChevronLabel.setVisible(true);
+      chevron_label.setVisible(true);
 
       repaint();
     }
@@ -304,7 +304,7 @@ private class FlagMouseEvents extends MouseAdapter
       if ((0 <= arg0.getX()) && (arg0.getX() < flag_size) &&
             (0 <= arg0.getY()) && (arg0.getY() < flag_size)) { }
       else {
-	 _ChevronLabel.setVisible(false);
+	 chevron_label.setVisible(false);
 	 repaint();
        }
     }

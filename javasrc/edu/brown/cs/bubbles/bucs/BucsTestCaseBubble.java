@@ -99,17 +99,17 @@ class BucsTestCaseBubble extends BudaBubble implements BucsConstants
 /*										*/
 /********************************************************************************/
 
-private BumpLocation	bump_location;
+private transient BumpLocation bump_location;
 private JPanel		test_panel;
 private JButton 	search_button;
 private JTextField	keyword_field;
 private JComboBox<TestChoice> type_field;
 private JButton 	data_button;
 private TestChoice	test_type;
-private TestAction	iotest_action;
-private UserCodePanel	user_panel;
-private BattNewTestPanel iotest_panel;
-private TestCasePanel	case_panel;
+private transient TestAction iotest_action;
+private transient UserCodePanel user_panel;
+private transient BattNewTestPanel iotest_panel;
+private transient TestCasePanel case_panel;
 private JCheckBox	context_field;
 private JLabel		status_field;
 private BudaBubble	source_bubble;

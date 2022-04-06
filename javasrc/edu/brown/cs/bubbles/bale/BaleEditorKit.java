@@ -96,8 +96,8 @@ class BaleEditorKit extends DefaultEditorKit implements BaleConstants, ViewFacto
 
 private final static long serialVersionUID = 1;
 
-private BaleLanguageKit language_kit;
-private Action []	bale_actions;
+private transient BaleLanguageKit language_kit;
+private transient Action []	  bale_actions;
 
 private static final Action undo_action = BurpHistory.getUndoAction();
 private static final Action redo_action = BurpHistory.getRedoAction();
@@ -555,7 +555,7 @@ static class FragmentKit extends BaleEditorKit {
 
    private BaleDocumentIde base_document;
    private BaleFragmentType fragment_type;
-   private List<BaleRegion> fragment_regions;
+   private transient List<BaleRegion> fragment_regions;
 
    private final static long serialVersionUID = 1;
 
@@ -789,8 +789,8 @@ private static boolean isCompletionTrigger(char c)
 
 private static class BackspaceAction extends TextAction {
 
-   private Action delete_prev_action;
-   private Action backward_action;
+   private transient Action delete_prev_action;
+   private transient Action backward_action;
 
    private static final long serialVersionUID = 1;
 
@@ -3137,8 +3137,9 @@ private static class CommentLocation extends BuenoLocation {
 
 private static class FixErrorsAction extends TextAction {
 
+   private transient Method fix_method;
+   
    private static final long serialVersionUID = 1;
-   private Method fix_method;
 
    FixErrorsAction() {
       super("FixErrorsInRegion");

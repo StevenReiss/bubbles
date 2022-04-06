@@ -107,7 +107,7 @@ private static class PythonBackspaceAction extends TextAction {
 
    private static final long serialVersionUID = 1;
 
-   private Action backspace_action;
+   private transient Action backspace_action;
 
    PythonBackspaceAction() {
       super("PythonBackspaceAction");
@@ -169,7 +169,7 @@ private static class PythonUnindentAction extends TextAction {
 
    private static final long serialVersionUID = 1;
 
-   private Action forward_action;
+   private transient Action forward_action;
 
    PythonUnindentAction() {
       super("PythonUnindentAction");

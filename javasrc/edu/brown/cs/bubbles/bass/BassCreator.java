@@ -353,7 +353,7 @@ private void addPythonButtons(BudaBubble bb,Point where,JPopupMenu menu,String f
 
 private abstract class NewAction extends AbstractAction implements Runnable {
 
-   protected BuenoLocation for_location;
+   protected transient BuenoLocation for_location;
    protected BuenoProperties property_set;
    protected BuenoType create_type;
    private BudaBubble result_bubble;
@@ -818,7 +818,7 @@ private static class DeleteClassAction extends AbstractAction implements Runnabl
 
 private static class DeleteMethodAction extends AbstractAction {
 
-   private BassName method_location;
+   private transient BassName method_location;
 
    private static final long serialVersionUID = 1;
 

@@ -100,8 +100,8 @@ private void ensureRunning()
 {
    if (checkIfRunning()) return;
    
-   String eclipsedir = board_properties.getProperty(BOARD_PROP_BASE_IDE_DIR);
-   String ws = board_properties.getProperty(BOARD_PROP_WORKSPACE);
+   String eclipsedir = system_properties.getProperty(BOARD_PROP_BASE_IDE_DIR);
+   String ws = system_properties.getProperty(BOARD_PROP_WORKSPACE);
    
    File ef = new File(eclipsedir);
    File ef1 = null;
@@ -129,15 +129,15 @@ private void ensureRunning()
    cmd += " -nosplash";
    if (ws != null) cmd += " -data '" + ws + "'";
    
-   String eopt = board_properties.getProperty(BOARD_PROP_BASE_IDE_OPTIONS);
-   eopt = board_properties.getProperty(BOARD_PROP_ECLIPSE_OPTIONS,eopt);
+   String eopt = system_properties.getProperty(BOARD_PROP_BASE_IDE_OPTIONS);
+   eopt = system_properties.getProperty(BOARD_PROP_ECLIPSE_OPTIONS,eopt);
    if (eopt != null) cmd += " " + eopt;
    
-   if (board_properties.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND,false)) {
+   if (system_properties.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND,false)) {
       cmd += " -bdisplay";
     }
    
-   boolean clean = board_properties.getBoolean(BOARD_PROP_ECLIPSE_CLEAN);
+   boolean clean = system_properties.getBoolean(BOARD_PROP_ECLIPSE_CLEAN);
    if (ws != null) {
       File wf = new File(ws);
       File cf = new File(wf,".clean");
@@ -149,9 +149,9 @@ private void ensureRunning()
    
    if (clean) {
       if (!cmd.contains("-clean")) cmd += " -clean";
-      board_properties.remove(BOARD_PROP_ECLIPSE_CLEAN);
+      system_properties.remove(BOARD_PROP_ECLIPSE_CLEAN);
       try {
-	 board_properties.save();
+	 system_properties.save();
        }
       catch (IOException e) { }
     }
@@ -159,7 +159,7 @@ private void ensureRunning()
    cmd += " -vmargs '-Dedu.brown.cs.bubbles.MINT=" + mint_name + "'";
    cmd += " -Dorg.eclipse.jdt.ui.codeAssistTimeout=30000";
    
-   eopt = board_properties.getProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS);
+   eopt = system_properties.getProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS);
    if (eopt != null) {
       int idx = eopt.indexOf("-Xrunjdwp");
       if (idx >= 0) {

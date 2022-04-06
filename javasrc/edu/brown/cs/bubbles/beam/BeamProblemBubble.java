@@ -85,10 +85,10 @@ class BeamProblemBubble extends BudaBubble implements BeamConstants, BumpConstan
 /*										*/
 /********************************************************************************/
 
-private BumpClient		bump_client;
-private List<BumpProblem>	active_problems;
+private transient BumpClient	bump_client;
+private transient List<BumpProblem> active_problems;
 private ProblemTable		problem_table;
-private Set<BumpErrorType>	allow_types;
+private transient Set<BumpErrorType> allow_types;
 private boolean 		for_tasks;
 private Color			top_color;
 private Color			bottom_color;
@@ -414,9 +414,9 @@ private class BubbleShower implements Runnable {
 private class ProblemTable extends JTable implements MouseListener,
 		BudaConstants.BudaBubbleOutputer
 {
-   private ErrorRenderer [] error_renderer;
-   private WarningRenderer [] warning_renderer;
-   private NoticeRenderer [] notice_renderer;
+   private transient ErrorRenderer [] error_renderer;
+   private transient WarningRenderer [] warning_renderer;
+   private transient NoticeRenderer [] notice_renderer;
 
    private static final long serialVersionUID = 1;
 

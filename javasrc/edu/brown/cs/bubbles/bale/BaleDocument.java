@@ -65,12 +65,12 @@ abstract class BaleDocument extends AbstractDocument
 /*										*/
 /********************************************************************************/
 
-private BaleElementBuffer	element_buffer;
+private transient BaleElementBuffer element_buffer;
 private DummyElement		dummy_element;
 private BaleElideMode		elide_mode;
 private BaleSplitMode		split_mode;
-private BaleTabHandler		tab_handler;
-private BaleIndenter		our_indenter;
+private transient BaleTabHandler tab_handler;
+private transient BaleIndenter	our_indenter;
 
 private int			id_counter;		// count # of edits
 private long			last_edit;

@@ -56,8 +56,7 @@ private String [] MAC_BINARY = new String [] {
 private String [] OPTIONS_FILE = new String [] {
    "idea.vmoptions", "bin/idea.vmoptions", "Contents/bin/idea.vmoptions"   
 };
-private static 
-boolean run_headless = false;
+
 
 
 /********************************************************************************/
@@ -111,8 +110,8 @@ private void ensureRunning()
 {
    if (checkIfRunning()) return;
    
-   String ideadir = board_properties.getProperty(BOARD_PROP_BASE_IDE_DIR);
-   String ws = board_properties.getProperty(BOARD_PROP_WORKSPACE);
+   String ideadir = system_properties.getProperty(BOARD_PROP_BASE_IDE_DIR);
+   String ws = system_properties.getProperty(BOARD_PROP_WORKSPACE);
    
    File ef = new File(ideadir);
    File ef1 = null;
@@ -140,8 +139,8 @@ private void ensureRunning()
    cmd += " nosplash";
    if (ws != null) cmd += " '" + ws + "'";
    
-   String eopt = board_properties.getProperty(BOARD_PROP_BASE_IDE_OPTIONS);
-   eopt = board_properties.getProperty(BOARD_PROP_IDEA_OPTIONS,eopt);
+   String eopt = system_properties.getProperty(BOARD_PROP_BASE_IDE_OPTIONS);
+   eopt = system_properties.getProperty(BOARD_PROP_IDEA_OPTIONS,eopt);
    if (eopt != null) cmd += " " + eopt;
    
    // mint and other options
@@ -200,7 +199,7 @@ private void ensureRunning()
 
 private String setupOptions(String wsname)
 {
-   String ideadir = board_properties.getProperty(BOARD_PROP_BASE_IDE_DIR);
+   String ideadir = system_properties.getProperty(BOARD_PROP_BASE_IDE_DIR);
    File f1 = new File(ideadir);
    
    if (wsname != null) {
@@ -246,10 +245,15 @@ private String setupOptions(String wsname)
       addOption(opt + "=" + mint_name,optmap);
     }
    
-   if (run_headless) {
-      addOption("-Djava.awt.headless=true",optmap);
+   boolean hideidea = false;            // hide doesn't work yet
+   if (system_properties.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND,false)) {
+     hideidea = false;
     }
-   String s = board_properties.getProperty(BOARD_PROP_IDEA_VM_OPTIONS);
+   if (hideidea) {
+      addOption("-Dedu.brown.cs.bubbles.hideidea=true",optmap);
+    }
+   
+   String s = system_properties.getProperty(BOARD_PROP_IDEA_VM_OPTIONS);
    if (s != null) {
       StringTokenizer tok = new StringTokenizer(s);
       while (tok.hasMoreTokens()) {

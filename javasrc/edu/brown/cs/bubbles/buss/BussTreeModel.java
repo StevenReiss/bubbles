@@ -51,8 +51,8 @@ class BussTreeModel extends DefaultTreeModel implements TreeModel, BussConstants
 /*										*/
 /********************************************************************************/
 
-private Branch			root_node;
-private BussTreeImpl		cur_selection;
+private transient Branch	root_node;
+private transient BussTreeImpl	cur_selection;
 
 private static final long serialVersionUID = 1;
 

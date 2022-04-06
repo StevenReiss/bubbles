@@ -72,8 +72,8 @@ interface Fixup {
 /*										*/
 /********************************************************************************/
 
-private BumpProblem	for_problem;
-private Fixup		using_code;
+private transient BumpProblem   for_problem;
+private transient Fixup         using_code;
 
 private static BaleFactory bale_factory = BaleFactory.getFactory();
 

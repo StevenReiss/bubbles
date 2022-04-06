@@ -482,7 +482,7 @@ private static class NoteHandler implements BaleContextListener {
 
 private static class NoteAction extends AbstractAction {
 
-   private BaleContextConfig context_config;
+   private transient BaleContextConfig context_config;
 
    private static final long serialVersionUID = 1;
 

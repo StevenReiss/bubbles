@@ -57,11 +57,11 @@ class BassBubble extends BudaBubble implements BassConstants
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
-private BassTreeModel my_tree_model;
+private transient BassTreeModel my_tree_model;
 private BassSearchBox my_search_box;
 
 
-private Stroke overview_stroke = new BasicStroke(1f,BasicStroke.CAP_ROUND,BasicStroke.JOIN_BEVEL);
+private static Stroke overview_stroke = new BasicStroke(1f,BasicStroke.CAP_ROUND,BasicStroke.JOIN_BEVEL);
 
 
 

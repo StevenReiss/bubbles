@@ -58,8 +58,8 @@ public class BtedFindBar extends JPanel implements ActionListener, DocumentListe
 /********************************************************************************/
 
 private JTextField		   search_field;
-private Highlighter		   search_highlighter;
-private Highlighter.HighlightPainter highlight_paint;
+private transient Highlighter      search_highlighter;
+private transient Highlighter.HighlightPainter highlight_paint;
 private JEditorPane		  for_editor;
 private JButton 		  exit_button;
 private JButton 		  prev_button;

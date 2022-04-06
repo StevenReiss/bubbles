@@ -69,14 +69,6 @@ private static final char [] empty = new char[0];
 
 
 
-
-/********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
-/********************************************************************************/
-
-
 /********************************************************************************/
 /*										*/
 /*	Implementation of our content class					*/
@@ -131,7 +123,7 @@ static class BaleIdeContent extends GapContent {
 static private abstract class BaleGenericUndo extends AbstractUndoableEdit
 	implements BurpPlayableEdit {
 
-   private Map<Object,Integer>	special_delta;
+   private transient Map<Object,Integer> special_delta;
 
    private static final long serialVersionUID = 1;
 

@@ -68,7 +68,7 @@ abstract class BaleDocumentBase extends BaleHistory.BaleAbstractDocument
 /********************************************************************************/
 
 
-private WeakHashMap<BalePosition,Object> known_positions;
+private transient WeakHashMap<BalePosition,Object> known_positions;
 
 private static final long serialVersionUID = 1;
 

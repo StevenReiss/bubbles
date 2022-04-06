@@ -13,6 +13,7 @@ package edu.brown.cs.bubbles.bhelp;
 import edu.brown.cs.bubbles.board.*;
 import edu.brown.cs.bubbles.buda.*;
 import edu.brown.cs.bubbles.buda.BudaConstants.BudaHelpRegion;
+import edu.brown.cs.ivy.exec.IvyExec;
 import edu.brown.cs.ivy.swing.SwingText;
 import edu.brown.cs.ivy.xml.IvyXml;
 import marytts.LocalMaryInterface;
@@ -28,6 +29,7 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.*;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.List;
@@ -132,13 +134,21 @@ static PauseAction speechToPause(BhelpAction ba)
 /********************************************************************************/
 
 private static double	speed_delta = 1.0;
+private static String   native_command = null;
 
 private final static double	MAC_DELTA = 2.0;
 
 static {
-   String osv = System.getProperty("java.vm.vendor");
-   if (osv.contains("Apple")) speed_delta = MAC_DELTA;
-   speed_delta = BoardProperties.getProperties("Bhelp").getDouble("Bhelp.speed.delta",speed_delta);
+   BoardProperties props = BoardProperties.getProperties("Bhelp");
+   String osv = System.getProperty("os.name");
+   if (osv.startsWith("Mac")) {
+      speed_delta = MAC_DELTA;
+      native_command = props.getString("Bhelp.say.command","/usr/bin/say \"@@@\"");
+    }  
+   else {
+      native_command = props.getString("Bhelp.say.command");
+    }
+   speed_delta = props.getDouble("Bhelp.speed.delta",speed_delta);
 }
 
 
@@ -917,129 +927,47 @@ private static class PauseAction extends BhelpAction {
 /********************************************************************************/
 
 
-/*******************
- *      Remove freetts code; use marytts in its place
- *      Marytts is under active development
- *******************
- 
-private static final String VOICE_NAME = "kevin16";
-
-private static class SpeechAction extends BhelpAction {
-
-   private boolean wait_for;
-   private int	equiv_pause;
-   private String speech_text;
-   private static Synthesizer speech_synth = null;
-
-   SpeechAction(Element xml) {
-      super(xml);
-      wait_for = IvyXml.getAttrBool(xml,"WAIT");
-      speech_text = IvyXml.getTextElement(xml,"TEXT");
-      equiv_pause = IvyXml.getAttrInt(xml,"PAUSEFOR",1);
-
-      File f = new File(System.getProperty("user.home"));
-      File f1 = new File(f,"speech.properties");
-      if (!f1.exists()) {
-	 File f2 = new File(BoardSetup.getSetup().getLibraryPath("speech.properties"));
-	 try {
-	    IvyFile.copyFile(f2,f1);
-	  }
-	 catch (IOException e) {
-	    BoardLog.logE("BHELP","Problem setting up speech.properties",e);
-	  }
-       }
-      try {
-	 if (speech_synth == null) {
-	    SynthesizerModeDesc desc = new SynthesizerModeDesc(null,"general",Locale.US,null,null);
-	    speech_synth = Central.createSynthesizer(desc);
-	    if (speech_synth == null) throw new BhelpException("Speech not available");
-	    speech_synth.allocate();
-	    speech_synth.resume();
-	    setVoice();
-	  }
-       }
-      catch (Exception e) {
-	 BoardLog.logE("BHELP","Problem setting up speech synthesizer",e);
-       }
-    }
-
-   @Override int getEquivalentPause()		{ return equiv_pause; }
-
-   @Override void executeAction(BhelpContext ctx) throws BhelpException {
-      if (speech_synth == null) return;
-      try {
-	 waitFor();
-	 if (!ctx.checkMouse()) return;
-	 if (speech_text != null) {
-	    speech_synth.speakPlainText(speech_text,null);
-	  }
-	 if (wait_for) waitFor();
-       }
-      catch (Exception e) {
-	 throw new BhelpException("Problem with speech",e);
-       }
-    }
-
-   private void setVoice() throws Exception {
-      SynthesizerModeDesc desc = (SynthesizerModeDesc) speech_synth.getEngineModeDesc();
-      Voice [] voices = desc.getVoices();
-      Voice voice = null;
-      for (int i = 0; i < voices.length; ++i) {
-	 if (voices[i].getName().equals(VOICE_NAME)) {
-	    voice = voices[i];
-	    break;
-	  }
-       }
-      if (voice == null) return;
-      speech_synth.getSynthesizerProperties().setVoice(voice);
-    }
-
-   private void waitFor() throws Exception {
-      if (speech_synth.testEngineState(Engine.DEALLOCATED)) {
-	 return;
-       }
-      speech_synth.waitEngineState(Synthesizer.QUEUE_EMPTY);
-    }
-
-}	// end of inner class SpeechAction
-
-**************************************************/
-
-
-
 private static class MarySpeechAction extends BhelpAction {
 
    private boolean wait_for;
    private int	equiv_pause;
    private String speech_text;
    private AudioPlayer audio_player = null;
+   
    private static LocalMaryInterface speech_synth = null;
 
    MarySpeechAction(Element xml) {
       super(xml);
       wait_for = IvyXml.getAttrBool(xml,"WAIT");
-      speech_text = IvyXml.getTextElement(xml,"TEXT");
       equiv_pause = IvyXml.getAttrInt(xml,"PAUSEFOR",1);
-
+      speech_text = IvyXml.getTextElement(xml,"TEXT");
+      if (speech_text != null) {
+         speech_text = speech_text.replace("\n"," ");
+         speech_text = speech_text.replace("\t"," ");
+         while (speech_text.contains("  ")) {
+            speech_text = speech_text.replace("  "," ");
+          }
+       }
+   
       try {  
-	 if (speech_synth == null) {
-	    BoardSetup bs = BoardSetup.getSetup();
-	    String marybase = bs.getLibraryPath("marytts");
+         if (speech_synth == null) {
+            BoardSetup bs = BoardSetup.getSetup();
+            String marybase = bs.getLibraryPath("marytts");
             String jver = System.getProperty("java.version");
-            if (jver.startsWith("9")) { 
+            if (!jver.startsWith("1.")) { 
                // this gets around a bug in mary checking for java version
                System.setProperty("java.version","1.9");
              }
             else jver = null;
-	    System.setProperty("mary.base",marybase);
-	    System.setProperty("de.phonemiser.logunknown","false");
-	    speech_synth = new LocalMaryInterface();
+            System.setProperty("mary.base",marybase);
+            System.setProperty("de.phonemiser.logunknown","false");
+            speech_synth = new LocalMaryInterface();
             if (jver != null) System.setProperty("java.version",jver);
-	  } 
+          } 
        }
       catch (Exception e) {
-	 BoardLog.logE("BHELP","Problem setting up speech synthesizer",e);
-	 speech_synth = null;
+         BoardLog.logE("BHELP","Problem setting up speech synthesizer",e);
+         speech_synth = null;
        }
     }
 
@@ -1051,25 +979,52 @@ private static class MarySpeechAction extends BhelpAction {
          waitFor();
          if (!ctx.checkMouse()) return;
          if (speech_text != null) {
-            AudioInputStream audio = speech_synth.generateAudio(speech_text);
-            audio_player = new AudioPlayer(audio);
-            audio_player.start();
+            if (!speakNative()) {
+               AudioInputStream audio = speech_synth.generateAudio(speech_text);
+               audio_player = new AudioPlayer(audio);
+               audio_player.start();
+               if (wait_for) waitFor();
+             }
           }
-         if (wait_for) waitFor();
        }
       catch (Exception e) {
          throw new BhelpException("Problem with speech",e);
        }
     }
+   
+   private boolean speakNative() {
+      if (native_command == null) return false;
+      String txt = speech_text;
+   // txt = speech_text.replace(".",", ");
+      
+      txt = txt.replace("\n"," ");
+      txt = txt.replace("\t"," ");
+      for (int i = 0; i < 10;  ++i) {
+         txt = txt.replace("  "," ");
+       }
+      String cmd = native_command.replace("@@@",txt);
+      BoardLog.logD("BHELP","Speak command: " + cmd);
+      try {
+         IvyExec exec = new IvyExec(cmd);
+         if (wait_for) {
+            int sts = exec.waitFor();
+            if (sts != 0) return false;
+          }
+       }
+      catch (IOException e) {
+         return false;
+       }
+      return true; 
+    }
 
    private void waitFor() throws Exception {
       AudioPlayer ap = audio_player;
       if (ap != null) {
-	 try {
-	    audio_player.join();
-	  }
-	 catch (InterruptedException e) { }
-	 audio_player = null;
+         try {
+            audio_player.join();
+          }
+         catch (InterruptedException e) { }
+         audio_player = null;
        }
     }
 

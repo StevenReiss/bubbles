@@ -134,7 +134,7 @@ enum HtmlState {
 
 private NoteArea		note_area;
 private String			note_name;
-private BeamNoteAnnotation	note_annot;
+private transient BeamNoteAnnotation note_annot;
 private Color			top_color;
 private Color			bottom_color;
 

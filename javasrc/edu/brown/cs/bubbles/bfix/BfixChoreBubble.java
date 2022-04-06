@@ -61,11 +61,11 @@ class BfixChoreBubble extends BudaBubble implements BfixConstants
 /*										*/
 /********************************************************************************/
 
-private BfixChoreManager 	chore_manager;
+private transient BfixChoreManager chore_manager;
 private TableButton		chore_buttons;
 private ChoreTable		chore_table;
 private ChoreList		chore_list;
-private ChoreUpdater		chore_updater;
+private transient ChoreUpdater  chore_updater;
 
 
 static private Icon yesicon = BoardImage.getIcon("accept",12,12);
@@ -242,8 +242,8 @@ private class TableButton extends AbstractCellEditor
 {
    private static final long serialVersionUID = 5647725208335645741L;
 
-   private Map<Integer,JButton> action_map;
-   private Map<Integer,JButton> delete_map;
+   private transient Map<Integer,JButton> action_map;
+   private transient Map<Integer,JButton> delete_map;
 
    TableButton() {
       action_map = new HashMap<Integer,JButton>();

@@ -57,13 +57,13 @@ class BucsUserInterfaceBubble extends BudaBubble implements BucsConstants, Actio
 /*										*/
 /********************************************************************************/
 
-private BumpLocation	bump_location;
+private transient BumpLocation bump_location;
 private JLabel		status_label;
 private JButton 	left_button;
 private JButton 	right_button;
 private ImageViewer	image_viewer;
 
-private List<UIImage>	image_list;
+private transient List<UIImage> image_list;
 private int		image_index;
 
 

@@ -132,7 +132,7 @@ private void ensureRunning()
       System.exit(1);
     }
 
-   String ws = board_properties.getProperty(BOARD_PROP_WORKSPACE);
+   String ws = system_properties.getProperty(BOARD_PROP_WORKSPACE);
 
    String cls = "edu.brown.cs.bubbles.nobase.NobaseMain";
 
@@ -153,7 +153,7 @@ private void ensureRunning()
    File f1 = BoardSetup.getSetup().getRootDirectory();
    argl.add("-Dedu.brown.cs.bubbles.nobase.ROOT=" + f1.getAbsolutePath());
 
-   String eopt = board_properties.getProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS);
+   String eopt = system_properties.getProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS);
    if (eopt != null) {
       StringTokenizer tok = new StringTokenizer(eopt," ");
       while (tok.hasMoreTokens()) argl.add(tok.nextToken());

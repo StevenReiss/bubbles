@@ -89,15 +89,15 @@ class BaleAnnotationArea extends JPanel implements DocumentListener, BaleConstan
 /*										*/
 /********************************************************************************/
 
-private BaleEditor	for_editor;
+private transient BaleEditor	for_editor;
 private BaleDocument	for_document;
-private Set<BaleAnnotation> annot_set;
-private LineData []	line_data;
+private transient Set<BaleAnnotation> annot_set;
+private transient LineData []	line_data;
 private int		start_line;
-private Map<Integer,Collection<BaleAnnotation>> annot_map;
+private transient Map<Integer,Collection<BaleAnnotation>> annot_map;
 private boolean 	update_needed;
 private boolean 	show_line_numbers;
-private BumpBreakModel	break_model;
+private transient BumpBreakModel break_model;
 
 private static final long serialVersionUID = 1;
 

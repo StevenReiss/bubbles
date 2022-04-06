@@ -103,20 +103,20 @@ private boolean 	doing_eload;
 private boolean 	is_dirty;
 private int		checkpoint_counter;
 private boolean 	is_readonly;
-private Element 	elision_data;	// for readonly files
+private transient Element elision_data;	// for readonly files
 private int		num_import;
 private BaleFragmentEditor dummy_editor;
 
-private Map<BaleFragment,FragmentData> fragment_map;
+private transient Map<BaleFragment,FragmentData> fragment_map;
 
 private String			newline_string;
 private int			newline_adjust;
-private BaleLineOffsetsNew	line_offsets;
+private transient BaleLineOffsetsNew line_offsets;
 
-private Set<BumpProblem>	problem_set;
+private transient Set<BumpProblem> problem_set;
 
-private List<BaleAstNode>	ast_nodes;
-private Queue<RemoteEdit>	remote_edits;
+private transient List<BaleAstNode> ast_nodes;
+private transient Queue<RemoteEdit> remote_edits;
 
 private static final long serialVersionUID = 1;
 

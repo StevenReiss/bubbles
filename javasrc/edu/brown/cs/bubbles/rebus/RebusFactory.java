@@ -372,7 +372,7 @@ private static class RebusContexter implements BaleContextListener {
 
 private static class RebusFindItem extends AbstractAction {
 
-   private BaleContextConfig context_config;
+   private transient BaleContextConfig context_config;
 
    private static final long serialVersionUID = 1;
 
@@ -470,7 +470,7 @@ private static class Acceptor implements BassConstants.BassPopupHandler {
 private static class AcceptanceToggle extends AbstractAction {
 
    private String	for_name;
-   private BassName	bass_name;
+   private transient BassName	bass_name;
 
    private static final long serialVersionUID = 1;
 

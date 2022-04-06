@@ -52,9 +52,9 @@ class BaleElementEvent extends AbstractUndoableEdit implements DocumentEvent.Ele
 /*										*/
 /********************************************************************************/
 
-private Element base_element;
-private Element [] children_added;
-private Element [] children_removed;
+private transient Element base_element;
+private transient Element [] children_added;
+private transient Element [] children_removed;
 private int element_index;
 
 private static final long serialVersionUID = 1;

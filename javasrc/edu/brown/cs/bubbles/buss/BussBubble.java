@@ -80,15 +80,15 @@ private BussTreeModel	tree_model;
 
 private BussBubble self;
 private BudaBubble source_bubble;
-private BudaConstants.LinkPort source_linkport;
+private transient BudaConstants.LinkPort source_linkport;
 
-private BussEntry selected_entry;
+private transient BussEntry selected_entry;
 private BudaBubble editor_bubble;
 private JViewport view_port;
 private JLayeredPane layered_pane;
 private BudaConstants.BudaLinkStyle link_style;
 private SwingEventListenerList<BussListener> buss_listeners;
-private Hoverer buss_hover;
+private transient Hoverer buss_hover;
 
 private Dimension default_dim;
 

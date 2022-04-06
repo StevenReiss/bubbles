@@ -116,7 +116,6 @@ private static boolean		is_setup = false;
 
 
 
-
 /********************************************************************************/
 /*										*/
 /*	Constructors								*/
@@ -1606,7 +1605,7 @@ private static class ProblemHover implements BaleContextListener {
 static class QuickFix extends AbstractAction {
 
    private Component for_editor;
-   private BumpProblem for_problem;
+   private transient BumpProblem for_problem;
 
    private static final long serialVersionUID = 1;
 
@@ -1667,7 +1666,7 @@ private static class FormatImporter implements BudaConstants.ButtonListener {
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
       JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
       fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-      fc.setDialogTitle("Select Saved Eclipse XML Formats");
+      fc.setDialogTitle("Select Saved Eclipse/Idea XML Formats");
       int sts = fc.showOpenDialog(BudaRoot.findBudaRoot(bba));
       if (sts != JFileChooser.APPROVE_OPTION) return;
       File f = fc.getSelectedFile();
@@ -1678,14 +1677,25 @@ private static class FormatImporter implements BudaConstants.ButtonListener {
       xw.begin("OPTIONS");
       Element n1 = xml;
       if (!IvyXml.isElement(xml,"profiles")) n1 = IvyXml.getChild(xml,"profiles");
-      Element n2 = IvyXml.getChild(n1,"profile");
-      for (Element n3 : IvyXml.children(n2,"setting")) {
-         xw.begin("OPTION");
-         xw.field("NAME",IvyXml.getAttrString(n3,"id"));
-         xw.field("VALUE",IvyXml.getAttrString(n3,"value"));
-         xw.end("OPTION");
+      if (n1 != null) {
+         Element n2 = IvyXml.getChild(n1,"profile");
+         for (Element n3 : IvyXml.children(n2,"setting")) {
+            xw.begin("OPTION");
+            xw.field("NAME",IvyXml.getAttrString(n3,"id"));
+            xw.field("VALUE",IvyXml.getAttrString(n3,"value"));
+            xw.end("OPTION");
+          }
+       }
+      else if (IvyXml.isElement(xml,"code_scheme")) {
+         for (Element n4 : IvyXml.elementsByTag(xml,"option")) {
+            xw.begin("IDEAOPTION");
+            xw.field("NAME",IvyXml.getAttrString(n4,"name"));
+            xw.field("VALUE",IvyXml.getAttrString(n4,"value"));
+            xw.end("IDEAOPTION");
+          }
        }
       xw.end("OPTIONS");
+      
       bump_client.loadPreferences(null,xw.toString());
       String v = BALE_PROPERTIES.getProperty("indent.tabulation.size");
       if (v == null) {

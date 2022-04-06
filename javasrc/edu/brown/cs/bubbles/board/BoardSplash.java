@@ -235,7 +235,7 @@ private void drawSplash(Graphics g,JPanel obs)
 
 private class BubblePanel extends JPanel implements Runnable {
 
-   private Thread	drawing_thread;
+   private transient Thread drawing_thread;
    private int		bubble_count;
    private int		this_bubble;
    private int		bubble_stepper;

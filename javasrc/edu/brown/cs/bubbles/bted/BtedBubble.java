@@ -91,7 +91,7 @@ class BtedBubble extends BudaBubble implements BtedConstants, BudaBubbleOutputer
 /********************************************************************************/
 
 private BtedEditorPane		 text_editor;
-private BtedFactory		 the_factory;
+private transient  BtedFactory  the_factory;
 private File			 current_file;
 private RedoAction		 redo_action;
 private UndoAction		 undo_action;
@@ -99,8 +99,8 @@ private JLabel			 name_label;
 private BtedFindBar		 search_bar;
 private JScrollPane		 scroll_pane;
 private JPanel			 main_panel;
-private BurpHistory		 burp_history;
-private BtedUndoableEditListener edit_listener;
+private transient BurpHistory    burp_history;
+private transient BtedUndoableEditListener edit_listener;
 private StartMode                start_mode;
 
 private static BoardProperties	 bted_props	  = BoardProperties.getProperties("Bted");

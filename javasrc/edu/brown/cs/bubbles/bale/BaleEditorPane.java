@@ -106,15 +106,15 @@ abstract class BaleEditorPane extends SwingEditorPane implements BaleConstants.B
 /********************************************************************************/
 
 private boolean 	      overwrite_mode;
-private BaleCompletionContext completion_context;
-private BaleRenameContext     rename_context;
-private BaleHighlightContext  highlight_context;
+private transient BaleCompletionContext completion_context;
+private transient BaleRenameContext rename_context;
+private transient BaleHighlightContext highlight_context;
 private boolean 	      fixed_size;
-private BaleVisualizationKit  visual_kit = BaleVisualizationKit.getVisualizationKit();
+private transient BaleVisualizationKit  visual_kit = BaleVisualizationKit.getVisualizationKit();
 
-private Map<BaleHighlightType,HighlightData> hilite_map;
+private transient Map<BaleHighlightType,HighlightData> hilite_map;
 
-private Collection<ActiveRegion>	active_regions;
+private transient Collection<ActiveRegion> active_regions;
 
 private static final long serialVersionUID = 1;
 

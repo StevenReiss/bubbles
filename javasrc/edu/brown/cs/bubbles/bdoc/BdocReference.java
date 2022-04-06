@@ -216,9 +216,6 @@ BdocReference(BdocRepository br,String nt,String nm,String p,String d,String pro
 	 name_type = BassNameType.NONE;
        }
     }
-   if (nm.contains("class ") || nm.contains(".base") || nm.contains("base.")) {
-      System.err.println("CHECK HERE");
-    }
    bdoc_name = nm;
    name_parameters = p;
    ref_description = d;

@@ -68,7 +68,7 @@ private BaleDocumentIde 	base_document;
 private BaleFragmentType	fragment_type;
 private StyleContext		style_context;
 private String			fragment_name;
-private BaleRegion		cursor_region;
+private transient BaleRegion	cursor_region;
 private boolean 		is_orphan;
 private double			scale_factor;
 

@@ -131,13 +131,13 @@ private void ensureRunning()
       System.exit(1);
     }
 
-   String ws = board_properties.getProperty(BOARD_PROP_WORKSPACE);
+   String ws = system_properties.getProperty(BOARD_PROP_WORKSPACE);
    String cls = "edu.brown.cs.bubbles.rebase.RebaseMain";
 
    List<String> argl = new ArrayList<String>();
    argl.add(IvyExecQuery.getJavaPath());
 
-   String opts = board_properties.getProperty("edu.brown.cs.bubbles.rebase.options");
+   String opts = system_properties.getProperty("edu.brown.cs.bubbles.rebase.options");
    if (opts != null) {
       StringTokenizer tok = new StringTokenizer(opts);
       while (tok.hasMoreTokens()) {
