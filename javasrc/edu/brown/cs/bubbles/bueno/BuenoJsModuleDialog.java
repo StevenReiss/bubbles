@@ -1,8 +1,8 @@
 /********************************************************************************/
 /*                                                                              */
-/*              BuenoPythonModuleDialog.java                                    */
+/*              BuenoJsModuleDialog.java                                        */
 /*                                                                              */
-/*      Dialog to create a new python module                                    */
+/*      Dialog for creating a JavaScript file/module                            */
 /*                                                                              */
 /********************************************************************************/
 /*      Copyright 2011 Brown University -- Steven P. Reiss                    */
@@ -18,24 +18,20 @@
  *                                                                               *
  ********************************************************************************/
 
-/* SVN: $Id$ */
-
 
 
 package edu.brown.cs.bubbles.bueno;
 
-import edu.brown.cs.bubbles.buda.BudaBubble;
-import edu.brown.cs.bubbles.buda.BudaBubbleArea;
-
-import edu.brown.cs.ivy.swing.SwingGridPanel;
-
 import java.awt.Point;
 import java.io.File;
 
+import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.bubbles.buda.BudaBubbleArea;
+import edu.brown.cs.ivy.swing.SwingGridPanel;
 
-
-public class BuenoPythonModuleDialog extends BuenoAbstractDialog implements BuenoConstants
+public class BuenoJsModuleDialog extends BuenoAbstractDialog implements BuenoConstants
 {
+
 
 
 /********************************************************************************/
@@ -44,37 +40,35 @@ public class BuenoPythonModuleDialog extends BuenoAbstractDialog implements Buen
 /*                                                                              */
 /********************************************************************************/
 
-public BuenoPythonModuleDialog(BudaBubble source,Point locale,
+public BuenoJsModuleDialog(BudaBubble source,Point locale,
       BuenoProperties known,BuenoLocation insert,
       BuenoBubbleCreator newer)
-{
-   super(source,locale,known,insert,newer,BuenoType.NEW_MODULE);
+      {
+   super(source,locale,known,insert,newer,BuenoType.NEW_FILE);
 }
 
 
 
+
 /********************************************************************************/
-/*										*/
-/*	Class dialog panel setup						*/
-/*										*/
+/*                                                                              */
+/*      Abstract Method Implementations                                         */
+/*                                                                              */
 /********************************************************************************/
 
-@Override protected void setupPanel(SwingGridPanel pnl)
+@Override void setupPanel(SwingGridPanel pnl)
 {
    StringField sfld = new StringField(BuenoKey.KEY_NAME);
-   pnl.addRawComponent("Module Name",sfld);
+   pnl.addRawComponent("File/Module Name",sfld);
    sfld.addActionListener(this);
 }
 
 
 
-/********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
-/********************************************************************************/
 
-@Override protected void doCreate(BudaBubbleArea bba,Point p)
+
+
+@Override void doCreate(BudaBubbleArea bba,Point p)
 {
    BuenoFactory bf = BuenoFactory.getFactory();
    bf.createNew(create_type,insertion_point,property_set);
@@ -82,12 +76,9 @@ public BuenoPythonModuleDialog(BudaBubble source,Point locale,
    String proj = insertion_point.getProject();
    File f = insertion_point.getInsertionFile();
    if (f == null) return;
-
-   String pkg = property_set.getStringProperty(BuenoKey.KEY_PACKAGE);
-   String mod = pkg + "." + property_set.getStringProperty(BuenoKey.KEY_NAME);   
    
    if (bubble_creator != null) {
-      bubble_creator.createBubble(proj,mod,bba,p);
+      bubble_creator.createBubble(proj,f.getPath(),bba,p);
     }
 }
 
@@ -96,11 +87,10 @@ public BuenoPythonModuleDialog(BudaBubble source,Point locale,
 
 
 
-
-}       // end of class BuenoPythonModuleDialog
-
+}       // end of class BuenoJsModuleDialog
 
 
 
-/* end of BuenoPythonModuleDialog.java */
+
+/* end of BuenoJsModuleDialog.java */
 

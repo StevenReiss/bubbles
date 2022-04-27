@@ -209,7 +209,7 @@ private boolean createProject()
     }
 
 
-   if (!bc.createProject(project_name,project_dir)) return false;
+   if (!bc.createProject(project_name,project_dir,project_type.toString(),null)) return false;
 
    try {
       loadProject();
@@ -333,17 +333,17 @@ private class ProjectCreator extends SwingGridPanel implements ActionListener, U
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if (cmd.equals("CANCEL")) {
-	 removeBubble();
+         removeBubble();
        }
       else if (cmd.equals("CREATE")) {
-	 removeBubble();
-	 project_name = name_field.getText().trim();
-	 project_file = getProjectFile();
-	 project_type = (ProjectType) type_field.getSelectedItem();
-	 project_includes = subdirs_field.getText();
-	 if (createProject()) {
-	    updateFiles();
-	  }
+         removeBubble();
+         project_name = name_field.getText().trim();
+         project_file = getProjectFile();
+         project_type = (ProjectType) type_field.getSelectedItem();
+         project_includes = subdirs_field.getText();
+         if (createProject()) {
+            updateFiles();
+          }
        }
       else checkStatus();
     }

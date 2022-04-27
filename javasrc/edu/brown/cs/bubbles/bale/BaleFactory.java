@@ -182,6 +182,11 @@ public static void initialize(BudaRoot br)
 
    bump_client.addOpenEditorBubbleHandler(new BaleOpenEditorHandler(br));
    getFactory().buda_root = br;
+   
+   // force key definitions
+   new BaleEditorKit(BoardLanguage.JAVA);
+   new BaleEditorKit(BoardLanguage.PYTHON);
+   new BaleEditorKit(BoardLanguage.JS);
 }
 
 

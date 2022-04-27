@@ -52,6 +52,7 @@ public interface BuenoConstants {
 enum BuenoType {
    NEW_PACKAGE,
    NEW_MODULE,			// python module
+   NEW_FILE,                    // JS file/module
    
    NEW_CLASS,
    NEW_INTERFACE,

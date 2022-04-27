@@ -31,6 +31,7 @@ import edu.brown.cs.bubbles.batt.BattConstants.BattNewTestPanel;
 import edu.brown.cs.bubbles.batt.BattConstants.BattTest;
 import edu.brown.cs.bubbles.batt.BattFactory;
 import edu.brown.cs.bubbles.board.BoardColors;
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
@@ -659,12 +660,12 @@ private class TestAction implements BattConstants.BattTestBubbleCallback {
     }
 
    @Override public boolean handleTestCases(List<BattConstants.BattCallTest> cts) {
-      System.err.println("START SEARCH WITH " + cts);
+      BoardLog.logD("BUCS","START SEARCH WITH " + cts);
       return true;
     }
 
    @Override public void handleTestCases(String code) {
-      System.err.println("START SEARCH WITH " + code);
+      BoardLog.logD("BUCS","START SEARCH WITH " + code);
     }
 
 }	// end of inner class TestAction

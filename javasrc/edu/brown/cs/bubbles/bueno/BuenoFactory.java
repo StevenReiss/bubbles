@@ -323,8 +323,11 @@ public void createNew(BuenoType what,BuenoLocation where,BuenoProperties props)
 	 cur_creator.createPackage(where,props);
 	 break;
       case NEW_MODULE :
-	 cur_creator.createModule(where,props);
+ 	 cur_creator.createModule(where,props);
 	 break;
+      case NEW_FILE :
+         cur_creator.createFile(where,props);
+         break;
       case NEW_TYPE :
       case NEW_CLASS :
       case NEW_INTERFACE :
@@ -373,6 +376,7 @@ public CharSequence setupNew(BuenoType what,BuenoLocation where,BuenoProperties 
       case NEW_INTERFACE :
       case NEW_ENUM :
       case NEW_ANNOTATION :
+      case NEW_FILE :
 	 throw new IllegalArgumentException("Can only setup internal items");
 	
       case NEW_INNER_TYPE :
@@ -424,6 +428,7 @@ private void fixupProps(BuenoType what,BuenoLocation where,BuenoProperties props
 	 case NEW_ENUM :
 	 case NEW_ANNOTATION :
 	 case NEW_MODULE :
+         case NEW_FILE :
 	    break;
 	 default :
 	    props.put(BuenoKey.KEY_FILE,where.getFile().getPath());

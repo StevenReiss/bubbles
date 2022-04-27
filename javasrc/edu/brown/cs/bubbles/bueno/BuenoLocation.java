@@ -87,7 +87,10 @@ public String getInsertAtEnd()			{ return null; }
 /*										*/
 /********************************************************************************/
 
-public void setFile(File f)			{ insert_file = f; }
+public void setFile(File f)		
+{
+   insert_file = f;
+}
 
 public void setLocation(int offset,int len)
 {
@@ -139,6 +142,9 @@ public String getTitle(BuenoType typ)
 	 break;
       case NEW_MODULE :
 	 ttl = "Create New Module in Project " + getProject();
+	 break;
+      case NEW_FILE :
+	 ttl = "Create New File/Module in Project " + getProject();
 	 break;
       default:
 	 break;

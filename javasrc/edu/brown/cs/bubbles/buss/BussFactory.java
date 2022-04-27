@@ -92,6 +92,7 @@ private BussFactory()				{ }
 public static void setup()
 {
    BudaRoot.addBubbleConfigurator("BUSS",new BussConfigurator());
+   BussStackBox.registerKeys();
 }
 
 

@@ -56,19 +56,7 @@ private static String [] nobase_libs = new String [] {
    "json.jar",
    "asm.jar",
    "jsoup.jar",
-   "org.eclipse.jface.text.jar",
-   "org.eclispe.jface.jar",
-   "org.eclipse.equinox.common.jar",
-   "org.eclipse.core.resource.jar",
-   "org.eclipse.core.runtime.jar",
-   "org.eclipse.core.jobs.jar",
-   "org.eclipse.text.jar",
-   "org.eclipse.wst.jsdt.core.jar",
-   "org.eclipse.wst.jsdt.debug.core.jar",
-   "org.eclipse.osgi.jar",
-   "org.eclipse.osgi.util.jar",
-   "com.google.guava.jar",
-   "com.google.javascript.jar",
+   "eclipsejar",
 };
 
 
@@ -142,6 +130,10 @@ private void ensureRunning()
 
    String cp = System.getProperty("java.class.path");
    for (String s : nobase_libs) {
+      if (s.equals("eclipsejar")) {
+         cp += File.pathSeparator + BoardSetup.getSetup().getEclipsePath();
+         continue;
+       }
       String lib = BoardSetup.getSetup().getLibraryPath(s);
       if (lib == null) continue;
       File f = new File(lib);

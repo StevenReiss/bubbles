@@ -263,10 +263,10 @@ private class CreationActions implements ActionListener, UndoableEditListener {
 
    @Override public void undoableEditHappened(UndoableEditEvent evt) {
       if (name_field != null && name_field.getDocument() == evt.getSource()) {
-	 project_props.put(PROJ_PROP_NAME,name_field.getText());
-	 setProjectDirectory();
+         project_props.put(PROJ_PROP_NAME,name_field.getText());
+         setProjectDirectory();
        }
-
+   
       checkStatus();
     }
 
@@ -292,10 +292,11 @@ private class CreationActions implements ActionListener, UndoableEditListener {
 /*										*/
 /********************************************************************************/
 
-private boolean createProject()
+private boolean createProject() 
 {
    String pnm = project_props.getString(PROJ_PROP_NAME);
    File pdir = project_props.getFile(PROJ_PROP_DIRECTORY);
+   
    if (!pdir.mkdir()) return false;
    File bdir = new File(pdir,"bin");
    if (!bdir.mkdir()) return false;
@@ -309,7 +310,8 @@ private boolean createProject()
    }
 
    checkFileProperties();
-
+   
+   // These need to handle IDEA as well as Eclipse
    if (!generateClassPathFile()) return false;
    if (!generateProjectFile()) return false;
    if (!generateSettingsFile()) return false;

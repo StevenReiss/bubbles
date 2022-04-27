@@ -44,6 +44,7 @@ import edu.brown.cs.bubbles.bueno.BuenoConstants;
 import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bueno.BuenoFieldDialog;
 import edu.brown.cs.bubbles.bueno.BuenoInnerClassDialog;
+import edu.brown.cs.bubbles.bueno.BuenoJsModuleDialog;
 import edu.brown.cs.bubbles.bueno.BuenoLocation;
 import edu.brown.cs.bubbles.bueno.BuenoProperties;
 import edu.brown.cs.bubbles.bueno.BuenoPythonModuleDialog;
@@ -118,6 +119,9 @@ BassCreator()
       case PYTHON :
 	 addPythonButtons(bb,where,menu,fullname,forname);
 	 break;
+      case JS :
+         addJSButtons(bb,where,menu,fullname,forname);
+         break;
       default :
 	 break;
     }
@@ -335,10 +339,71 @@ private void addPythonButtons(BudaBubble bb,Point where,JPopupMenu menu,String f
        }
     }
    if (clsloc != null) {
-      menu.add(new NewModuleAction(clsloc));
+      menu.add(new NewPythonModuleAction(clsloc));
       if (clsloc.getPackage() != null) {
 	 menu.add(new NewPackageAction(clsloc));
        }
+    }
+}
+
+
+
+
+private void addJSButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname)
+{
+   search_bubble = bb;
+   access_point = where;
+   
+   if (fullname.startsWith("@")) return;
+   if (forname != null && !(forname instanceof BassNameLocation)) return;
+   
+   List<BuenoLocation> memblocs = new ArrayList<BuenoLocation>();
+   BuenoLocation clsloc = null;
+   BuenoLocation projloc = null;
+   
+   if (forname != null && forname.getNameType() == BassNameType.PROJECT) {
+      forname = null;
+    }
+   if (forname == null) {
+      String proj = null;
+      int idx = fullname.indexOf(":");
+      if (idx > 0) {
+	 proj = fullname.substring(0,idx);
+	 fullname = fullname.substring(idx+1);
+       }
+      BuenoLocation loc = BuenoFactory.getFactory().createLocation(proj,fullname,null,true);	// this needs to be python-specialized
+      if (loc.getClassName() != null) memblocs.add(loc);
+      if (loc.getPackage() != null) clsloc = loc;
+      projloc = loc;
+    }
+   else {
+      BuenoLocation loc = new BassNewLocation(forname,false,false);
+      memblocs.add(new BassNewLocation(forname,false,true));
+      memblocs.add(new BassNewLocation(forname,true,false));
+      memblocs.add(loc);
+      if (loc.getPackage() != null) clsloc = loc;
+      projloc = loc;
+    }
+   
+   if (memblocs.size() > 0) {
+      JMenu m1 = (JMenu) menu.add(new JMenu("New Function ..."));
+      for (BuenoLocation bl : memblocs) {
+	 m1.add(new NewMethodAction(bl));
+       }
+      m1 = (JMenu) menu.add(new JMenu("New Variable ..."));
+      for (BuenoLocation bl : memblocs) {
+	 m1.add(new NewFieldAction(bl));
+       }
+      m1 = (JMenu) menu.add(new JMenu("New Class ..."));
+      for (BuenoLocation bl : memblocs) {
+	 m1.add(new NewInnerTypeAction(bl));
+       }
+    }
+   if (clsloc != null) {
+      // add class related items
+    }
+   if (projloc != null) {
+      menu.add(new NewJSModuleAction(projloc));
     }
 }
 
@@ -533,11 +598,11 @@ private class NewPackageAction extends NewAction implements BuenoConstants.Bueno
 
 
 
-private class NewModuleAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
+private class NewPythonModuleAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
 
    private final static long serialVersionUID = 1;
 
-   NewModuleAction(BuenoLocation loc) {
+   NewPythonModuleAction(BuenoLocation loc) {
       super(BuenoType.NEW_MODULE,loc);
     }
 
@@ -545,7 +610,7 @@ private class NewModuleAction extends NewAction implements BuenoConstants.BuenoB
       BoardMetrics.noteCommand("BASS","NewModule");
       BudaRoot.hideSearchBubble(e);
       BuenoPythonModuleDialog bpd = new BuenoPythonModuleDialog(search_bubble,access_point,
-						 property_set,for_location,this);
+        					 property_set,for_location,this);
       bpd.showDialog();
     }
 
@@ -554,7 +619,33 @@ private class NewModuleAction extends NewAction implements BuenoConstants.BuenoB
       addNewBubble(bb,bba,p);
    }
 
-}	// end of inner class NewModuleAction
+}	// end of inner class NewPythonModuleAction
+
+
+
+private class NewJSModuleAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
+
+   private final static long serialVersionUID = 1;
+   
+   NewJSModuleAction(BuenoLocation loc) {
+      super(BuenoType.NEW_FILE,loc);
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      BoardMetrics.noteCommand("BASS","NewModule");
+      BudaRoot.hideSearchBubble(e);
+      BuenoJsModuleDialog bpd = new BuenoJsModuleDialog(search_bubble,access_point,
+            property_set,for_location,this);
+      bpd.showDialog();
+    }
+   
+   @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
+      File f = new File(name);
+      BudaBubble bb = BaleFactory.getFactory().createFileBubble(proj,f,null);
+      addNewBubble(bb,bba,p);
+    }
+   
+}	// end of inner class NewJSModuleAction
 
 
 

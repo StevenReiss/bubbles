@@ -289,7 +289,16 @@ private void setupGui()
 StartMode getMode()                     { return start_mode; }
 
 
-
+static void registerDefaultKeys()
+{
+   SwingKey.registerKeyAction("TEXTEDIT","New File","menu N");
+   SwingKey.registerKeyAction("TEXTEDIT","Open File","menu O");
+   SwingKey.registerKeyAction("TEXTEDIT","Save File","menu S");
+   SwingKey.registerKeyAction("TEXTEDIT","Undo","menu Z");
+   SwingKey.registerKeyAction("TEXTEDIT","Redo","menu Y");
+   SwingKey.registerKeyAction("TEXTEDIT","Find","menu F");
+   SwingKey.registerKeyAction("SEARCHBAR","Find Next","ENTER");
+}
 
 
 /********************************************************************************/
@@ -534,6 +543,7 @@ private class UndoAction extends AbstractAction {
    private static final long serialVersionUID = 1;
 
    public UndoAction() {
+      super("Undo");
       this.setEnabled(false);
     }
 
@@ -564,6 +574,7 @@ private class RedoAction extends AbstractAction {
    private static final long serialVersionUID = 1;
 
    public RedoAction() {
+      super("Redo");
       this.setEnabled(false);
     }
 
@@ -591,6 +602,10 @@ private class OpenFileAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
+   OpenFileAction() {
+      super("Open File");
+    }
+   
    @Override public void actionPerformed(ActionEvent e) {
       openFileFromMenu();
     }
@@ -621,6 +636,10 @@ private class NewFileAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
+   NewFileAction() {
+      super("New File");
+    }
+   
    @Override public void actionPerformed(ActionEvent e) {
       newFile();
     }
@@ -651,6 +670,10 @@ private class SaveFileAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
+   SaveFileAction() {
+      super("Save File");
+    }
+   
    @Override public void actionPerformed(ActionEvent e) {
       saveFile();
     }

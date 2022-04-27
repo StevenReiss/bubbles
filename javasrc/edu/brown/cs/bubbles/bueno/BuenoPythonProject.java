@@ -170,7 +170,7 @@ private boolean createProject()
       project_dir = new File(f1,project_name);
     }
 
-   if (!bc.createProject(project_name,project_dir)) return false;
+   if (!bc.createProject(project_name,project_dir,null,null)) return false;
 
    try {
       loadProject();

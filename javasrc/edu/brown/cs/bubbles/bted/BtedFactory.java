@@ -137,6 +137,7 @@ public static void setup()
    if (BoardSetup.getSetup().getRunMode() == BoardConstants.RunMode.CLIENT) {
       BudaRoot.registerMenuButton(REMOTE_FILE_BUTTON,the_factory);
     }
+   BtedBubble.registerDefaultKeys();
 }
 
 

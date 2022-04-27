@@ -143,6 +143,13 @@ BussStackBox(BussTreeModel mdl, int contentWidth, BussBubble bussbubble)
 }
 
 
+static void registerKeys()
+{
+   SwingKey.registerKeyAction("BUSS","Show All","F4");
+   SwingKey.registerKeyAction("BUSS","Show Selected","F3");
+   SwingKey.registerKeyAction("BUSS","Delete Selected","DELETE");
+}
+
 
 
 /********************************************************************************/

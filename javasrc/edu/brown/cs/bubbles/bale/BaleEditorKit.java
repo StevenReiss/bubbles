@@ -721,6 +721,7 @@ private static boolean shouldAutoIndent(BaleEditorPane target, String content, i
    if (content.equals("}")) return isFirstCharacter(target,pos);
    if (content.equals("e")) return matchesText(target,pos,"case");
    if (content.equals("t")) return matchesText(target,pos,"default");
+   if (content.equals("s")) return matchesText(target,pos,"throws");
 
    return false;
 }

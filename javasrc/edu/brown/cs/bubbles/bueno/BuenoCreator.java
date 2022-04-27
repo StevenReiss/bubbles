@@ -206,11 +206,39 @@ protected void createModule(BuenoLocation where,BuenoProperties props)
 
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Create JS file                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+protected void createFile(BuenoLocation where,BuenoProperties props)
+{
+   StringBuffer buf = new StringBuffer();
+   
+   setupJSModule(buf,props);
+   
+   String nm = props.getStringProperty(BuenoKey.KEY_NAME);
+   
+   BumpClient bc = BumpClient.getBump();
+   bc.saveAll();
+   File cf = bc.createNewClass(where.getProject(),nm,false,buf.toString());
+   where.setFile(cf);
+   // bc.compile(false,false,true);
+}
+
+
+
 protected void setupModule(StringBuffer buf,BuenoProperties props)
 {
    moduleText(buf,props);
 }
 
+
+protected void setupJSModule(StringBuffer buf,BuenoProperties props)
+{
+   moduleJSText(buf,props);
+}
 
 
 
@@ -672,6 +700,23 @@ protected void moduleText(StringBuffer buf,BuenoProperties props)
       setupBlockComment(buf,props,cmmt);
     }
 
+   String [] imps = props.getImports();
+   if (imps != null && imps.length > 0) {
+      for (String s : imps) {
+	 buf.append(s + "\n");
+       }
+    }
+   buf.append("\n");
+}
+
+
+protected void moduleJSText(StringBuffer buf,BuenoProperties props)
+{
+   String cmmt = props.getStringProperty(BuenoKey.KEY_COMMENT);
+   if (props.getBooleanProperty(BuenoKey.KEY_ADD_COMMENT)) {
+      setupBlockComment(buf,props,cmmt);
+    }
+   
    String [] imps = props.getImports();
    if (imps != null && imps.length > 0) {
       for (String s : imps) {

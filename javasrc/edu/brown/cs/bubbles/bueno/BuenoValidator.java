@@ -381,6 +381,9 @@ private class ParseCheck implements Runnable {
                case NEW_MODULE :
                   fg = checkPythonModuleParsing();
                   break;
+               case NEW_FILE :
+                  fg = checkJSModuleParsing();
+                  break;
              }
           }
          catch (Throwable t) {
@@ -570,6 +573,24 @@ private boolean checkPythonPackageParsing()
    return true;
 }
 
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Parse checking methods :: JS                                            */
+/*                                                                              */
+/********************************************************************************/
+
+private boolean checkJSModuleParsing()
+{
+   String mod = property_set.getStringProperty(BuenoKey.KEY_NAME);
+   if (mod == null || mod.length() == 0) return false;
+   Matcher m = module_pattern.matcher(mod);
+   if (!m.matches()) return false;
+   
+   return true;
+}
 
 
 

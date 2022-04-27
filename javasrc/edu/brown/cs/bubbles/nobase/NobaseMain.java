@@ -311,7 +311,8 @@ public File getRootDirectory()				{ return root_directory; }
 private String handleCommand(String cmd,String proj,Element xml) throws NobaseException
 {
    logI("Handle command " + cmd + " for " + proj);
-
+   logD("Full command " + IvyXml.convertXmlToString(xml));
+   
    IvyXmlWriter xw = new IvyXmlWriter();
    xw.begin("RESULT");
 
@@ -564,6 +565,9 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
       case "PRIVATEEDIT" :
       case "REMOVEPRIVATE" :
 	 break;
+      case "SAVEWORKSPACE" :
+         xw.text("SAVED");
+         break;
       default :
 	 xw.close();
 	 throw new NobaseException("Unknown NOBASE command " + cmd);

@@ -1267,7 +1267,7 @@ public boolean createProject()
 
 
 
-public boolean createProject(String nm,File dir)
+public boolean createProject(String nm,File dir,String typ,Map<String,Object> props)
 {
    waitForIDE();
 
@@ -1275,8 +1275,63 @@ public boolean createProject(String nm,File dir)
    if (dir != null) {
       q += " DIR='" + dir.getPath() + "'";
     }
+   if (typ != null) q += " TYPE='" + typ + "'";
+   
+   String cnts = null;
+   if (props != null && !props.isEmpty()) {
+      IvyXmlWriter xw = new IvyXmlWriter();
+      xw.begin("PROPS");
+      for (Map.Entry<String,Object> ent : props.entrySet()) {
+         outputPropertyValue(ent.getKey(),ent.getValue(),xw);
+       }
+      xw.end("PROPS");
+      cnts = xw.toString();
+      xw.close();
+    }
 
-   return getStatusReply("CREATEPROJECT",null,addWorkspace(q),null,0);
+   return getStatusReply("CREATEPROJECT",null,addWorkspace(q),cnts,0);
+}
+
+
+private void outputPropertyValue(String nm,Object val,IvyXmlWriter xw)
+{
+   if (val == null) return;
+   
+   xw.begin("PROP");
+   if (nm != null) xw.field("NAME",nm);
+   if (val.getClass() == Integer.class) {
+      xw.field("TYPE","int");
+      xw.field("VALUE",val.toString());
+    }
+   else if (val.getClass() == String.class) {
+      xw.field("TYPE","String");
+      xw.cdataElement("VALUE",val.toString());
+    }       
+   else if (val.getClass() == Boolean.class) {
+      xw.field("TYPE","boolean");
+      xw.cdataElement("VALUE",val.toString());
+    }
+   else if (val.getClass() == File.class) {
+      xw.field("TYPE","File");
+      xw.textElement("VALUE",((File) val).getPath());
+    }     
+   else if (val instanceof List<?>) {
+      xw.field("TYPE","List");
+      List<?> lval = (List<?>) val;
+      for (Object o : lval) {
+         outputPropertyValue(null,o,xw);
+       }
+    }
+   else if (val instanceof Map<?,?>) {
+      xw.field("TYPE","Map");
+      Map<?,?> mval = (Map<?,?>) val;
+      for (Map.Entry<?,?> ent1 : mval.entrySet()) {
+         String nm1 = ent1.getKey().toString();
+         Object val1 = ent1.getValue();
+         outputPropertyValue(nm1,val1,xw);
+       }
+    }
+   xw.end("PROP");
 }
 
 

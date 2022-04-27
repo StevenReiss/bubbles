@@ -84,7 +84,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.NewProjectAction;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.osgi.framework.Bundle;
 import org.osgi.service.prefs.Preferences;
@@ -528,7 +527,7 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 
    if (IvyXml.getAttrString(xml,"TYPE").equals("LIBRARY")) {
       if (IvyXml.getAttrBool(xml,"DELETE")) {
-	 ents.remove(oent);
+	 if (oent != null) ents.remove(oent);
        }
       else if (IvyXml.getAttrBool(xml,"MODIFIED") || IvyXml.getAttrBool(xml,"NEW")) {
 	 String f = IvyXml.getTextElement(xml,"BINARY");
@@ -639,25 +638,12 @@ private static final class RunPropDialog implements Runnable {
 /*										*/
 /********************************************************************************/
 
-void createProject()
+void createProject(String pnm,File pdir,Element props,IvyXmlWriter xw)
+   throws BedrockException
 {
-   IWorkbenchWindow ww = null;
-
-   try {
-      IWorkbench wb = PlatformUI.getWorkbench();
-      ww = wb.getActiveWorkbenchWindow();
-      if (ww == null) {
-	 IWorkbenchWindow [] wins = wb.getWorkbenchWindows();
-	 if (wins != null && wins.length > 0) ww = wins[0];
-       }
-      if (ww == null) ww = wb.openWorkbenchWindow(wb);
-    }
-   catch (Throwable t) {
-      BedrockPlugin.logE("BEDROCK: problem finding window: " + t,t);
-    }
-
-   Display.getDefault().asyncExec(new RunNewDialog(ww));
 }
+
+
 
 
 
@@ -677,27 +663,6 @@ void importExistingProject(String name) throws Exception
    JavaCore.create(p);
    p.refreshLocal(IResource.DEPTH_INFINITE, null);
 }
-
-
-private static final class RunNewDialog implements Runnable {
-
-   private IWorkbenchWindow work_window;
-
-   RunNewDialog(IWorkbenchWindow ww) {
-      work_window = ww;
-    }
-
-   @Override public void run() {
-      NewProjectAction act = new NewProjectAction(work_window);
-      try {
-	 act.run();
-       }
-      catch (Throwable t) {
-	 BedrockPlugin.logE("BEDROCK: Problem with new project: " + t,t);
-       }
-    }
-
-}	// end of inner class RunNewDialog
 
 
 
@@ -1895,9 +1860,7 @@ void setProjectDescription(String proj,Element desc)
 }
 
 
-void createProject(String proj,Element desc)
-{
-}
+
 
 
 

@@ -889,10 +889,12 @@ public String getEclipsePath()
    File ejr = new File(ejp);
    if (ejr.exists() && ejr.isDirectory()) {
       for (File nfil : ejr.listFiles()) {
-	 if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {
-	    if (fnd > 0) buf.append(File.pathSeparator);
-	    buf.append(nfil.getPath());
-	    ++fnd;
+	 if (nfil.getName().startsWith("org.eclipse.") || nfil.getName().startsWith("com.google.")) {
+            if (nfil.getName().endsWith(".jar")) {
+               if (fnd > 0) buf.append(File.pathSeparator);
+               buf.append(nfil.getPath());
+               ++fnd;
+             }
 	  }
        }
     }
@@ -903,10 +905,12 @@ public String getEclipsePath()
       File f4 = new File(f3,"eclipsejar");
       if (f4.exists() && f4.isDirectory()) {
 	 for (File nfil : f4.listFiles()) {
-	    if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {
-	       if (fnd > 0) buf.append(File.pathSeparator);
-	       buf.append(nfil.getPath());
-	       ++fnd;
+            if (nfil.getName().startsWith("org.eclipse.") || nfil.getName().startsWith("com.google.")) {
+               if (nfil.getName().endsWith(".jar")) {
+                  if (fnd > 0) buf.append(File.pathSeparator);
+                  buf.append(nfil.getPath());
+                  ++fnd;
+                }
 	     }
 	  }
        }
@@ -919,10 +923,12 @@ public String getEclipsePath()
       File f4 = new File(f3,"eclipsejar");
       if (f4.exists() && f4.isDirectory()) {
 	 for (File nfil : f4.listFiles()) {
-	    if (nfil.getName().startsWith("org.eclipse.") && nfil.getName().endsWith(".jar")) {
-	       if (fnd > 0) buf.append(File.pathSeparator);
-	       buf.append(nfil.getPath());
-	       ++fnd;
+            if (nfil.getName().startsWith("org.eclipse.") || nfil.getName().startsWith("com.google.")) {
+               if (nfil.getName().endsWith(".jar")) {
+                  if (fnd > 0) buf.append(File.pathSeparator);
+                  buf.append(nfil.getPath());
+                  ++fnd;
+                }
 	     }
 	  }
        }

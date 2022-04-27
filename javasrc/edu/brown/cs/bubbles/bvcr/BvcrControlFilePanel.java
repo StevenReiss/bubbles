@@ -148,6 +148,13 @@ BvcrControlFilePanel(BvcrControlPanel pnl)
 
 
 
+static void registerKeys()
+{
+   SwingKey.registerKeyAction("BVCR","Expand All","F4");
+}
+
+
+
 /********************************************************************************/
 /*										*/
 /*	Updating methods							*/
@@ -233,7 +240,7 @@ private class ExpandAllAction extends AbstractAction {
    private static final long serialVersionUID = 1;
 
    ExpandAllAction() {
-      super("ExpandAllAction");
+      super("Expand All");
     }
 
    @Override public void actionPerformed(ActionEvent e) {

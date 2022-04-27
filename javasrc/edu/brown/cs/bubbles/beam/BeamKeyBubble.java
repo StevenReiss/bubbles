@@ -32,6 +32,7 @@ package edu.brown.cs.bubbles.beam;
 
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.swing.SwingText;
 
 import javax.swing.JScrollPane;
@@ -44,6 +45,9 @@ import java.awt.event.InputEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 
@@ -60,8 +64,26 @@ class BeamKeyBubble extends BudaBubble implements BeamConstants
 
 private static TableModel	table_model = null;
 
+private static Map<String,String> where_labels;
+
+private static boolean  use_swing = true;
+
 private static final long serialVersionUID = 1;
 
+static {
+   where_labels = new HashMap<>();
+   where_labels.put("ROOT","General");
+   where_labels.put("CODEEDIT","Code Editors");
+   where_labels.put("PYTHONEDIT","Python Code Editors");
+   where_labels.put("NOTE","Note Bubbles");
+   where_labels.put("BUSS","Bubble Stacks");
+   where_labels.put("DEBUG","Debug Area");
+   where_labels.put("Debug Interaction","Read-Eval-Print Bubble");
+   where_labels.put("SEARCHBOX","Search Bubbles");
+   where_labels.put("TEXTEDIT","Text Editors");
+   where_labels.put("SEARCHBAR","Text Editor Search Bars");
+   where_labels.put("BVCR","Version Control Bubbles");
+}
 
 
 /********************************************************************************/
@@ -95,7 +117,6 @@ private synchronized static void setupTableModel()
    if (table_model != null) return;
 
    String kfilnm = BoardSetup.getSetup().getLibraryPath("keybindings.csv");
-   BufferedReader br = null;
    
    String menu = "control";
    String xalt = "alt";
@@ -105,9 +126,61 @@ private synchronized static void setupTableModel()
       xalt = "control";   
     }
 
-   try {
-      br = new BufferedReader(new FileReader(kfilnm));
+   if (use_swing) table_model = loadFromSwingKey(menu,xalt);
+   else table_model = loadFromCSVFile(kfilnm,menu,xalt);
+}
 
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Load from SwingKey                                                      */
+/*                                                                              */
+/********************************************************************************/
+
+private static TableModel loadFromSwingKey(String menu,String xalt)
+{
+   Vector<String> hdrs = vector("Where","Key","Command");
+   DefaultTableModel mdl = new DefaultTableModel(hdrs,0);
+   Map<String,Map<String,Set<String>>> keys = SwingKey.getKeyMappings();
+   for (String where : keys.keySet()) {
+      Map<String,Set<String>> ckeys = keys.get(where);
+      String w1 = where_labels.get(where);
+      if (w1 != null) where = w1;
+      for (String cmd : ckeys.keySet()) {
+         Set<String> kkeys = ckeys.get(cmd);
+         for (String key : kkeys) {
+            String k1 = key.replace("menu",menu);
+            k1 = k1.replace("xalt",xalt);
+            Vector<String> data = vector(where,k1,cmd);
+            mdl.addRow(data);
+          }
+       }
+    }
+   
+   return mdl;
+}
+
+
+
+private static Vector<String> vector(String ... data)
+{
+   Vector<String> rslt = new Vector<>();
+   for (String s : data) rslt.add(s);
+   return rslt;
+}
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Load from old key file                                                  */
+/*                                                                              */
+/********************************************************************************/
+
+private static TableModel loadFromCSVFile(String fnm,String menu,String xalt)
+{
+   try (BufferedReader br = new BufferedReader(new FileReader(fnm)))  {
       DefaultTableModel mdl = null;
       for ( ; ; ) {
 	 String ln = br.readLine();
@@ -125,12 +198,12 @@ private synchronized static void setupTableModel()
 	  }
 	 mdl.addRow(strs);
        }
-      table_model = mdl;
-      br.close();
+      return mdl;
     }
    catch (IOException e) { }
+   
+   return null;
 }
-
 
 
 

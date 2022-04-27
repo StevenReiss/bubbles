@@ -238,9 +238,10 @@ public static void initialize(BudaRoot br)
 	 new BeamProgressBubble(br);
 	 break;
     }
+   
+   // force key definitions
+   new BeamNoteBubble();
 }
-
-
 
 private static Icon imageToFlagIcon(String path)
 {

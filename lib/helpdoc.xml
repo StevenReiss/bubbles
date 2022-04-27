@@ -221,7 +221,7 @@
 	<p>
 		To <b>scroll the bubble area</b>, drag with the <em>right</em> mouse button.  Alternatively,
 		you can use the arrow keys while pressing the Control (Command on the Mac) key.
-		[<a class='tbutton' href='showme:dragarea_silent'> Show Me </a>] [<a class='tbutton' href='showme:dragarea'> Tell Me </a>]
+		[<a class='tbutton' href='showme:dragarea'> Tell Me </a>] [<a class='tbutton' href='showme:dragarea_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -231,7 +231,7 @@
 	<p>
 		To <b>resize a bubble</b>, press the <em>left</em> mouse button on the proper border and then
 		drag to make the bubble the desired size.
-		[<a class='tbutton' href='showme:resizebubble_silent'> Show Me </a>] [<a class='tbutton' href='showme:resizebubble'> Tell Me </a>]
+		[<a class='tbutton' href='showme:resizebubble'> Tell Me </a>] [<a class='tbutton' href='showme:resizebubble_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -241,7 +241,7 @@
 	<p>
 		To <b>move a bubble</b>, press the <em>right</em> mouse button and move
 		the bubble to its desired location.
-		[<a class='tbutton' href='showme:movebubble_silent'> Show Me </a>] [<a class='tbutton' href='showme:movebubble'> Tell Me </a>]
+		[<a class='tbutton' href='showme:movebubble'> Tell Me </a>] [<a class='tbutton' href='showme:movebubble_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -252,7 +252,7 @@
 		To <b>remove a bubble</b>, click with the <em>middle</em> mouse button on the bubble or its border.
 		Note that a remove bubble will replace this bubble and will slowly fade to nothingness. You can click
 		on this remove bubble to restore the original bubble.
-		[<a class='tbutton' href='showme:removebubble_silent'> Show Me </a>] [<a class='tbutton' href='showme:removebubble'> Tell Me </a>]
+		[<a class='tbutton' href='showme:removebubble'> Tell Me </a>] [<a class='tbutton' href='showme:removebubble_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -263,7 +263,7 @@
 		To <b>search over project code</b>, click with the <em>right</em> mouse button or
 		use the control-O (command-O on the mac) key or the F10 key.  Using the right click will bring up the
 		default menu; the others will not.
-		[<a class='tbutton' href='showme:searchcode_silent'> Show Me </a>] [<a class='tbutton' href='showme:searchcode'> Tell Me </a>]
+		[<a class='tbutton' href='showme:searchcode'> Tell Me </a>] [<a class='tbutton' href='showme:searchcode_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -273,7 +273,7 @@
 	<p>
 		To <b>search over documentation</b>, <em>control</em> click with the <em>right</em>
 		mouse button or use the F12 key.
-		[<a class='tbutton' href='showme:searchdocs_silent'> Show Me </a>] [<a class='tbutton' href='showme:searchdocs'> Tell Me </a>]
+		[<a class='tbutton' href='showme:searchdocs'> Tell Me </a>] [<a class='tbutton' href='showme:searchdocs_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -285,7 +285,7 @@
 		mouse button or use the F11 key.  This also brings up the default menu.
 		this can be made the default by selecting the appropriate
 		option.
-		[<a class='tbutton' href='showme:searchboth_silent'> Show Me </a>] [<a class='tbutton' href='showme:searchboth'> Tell Me </a>]
+		[<a class='tbutton' href='showme:searchboth'> Tell Me </a>] [<a class='tbutton' href='showme:searchboth_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -295,7 +295,7 @@
 	<p>
 		To <b>put up the simple tool bar</b>, use F1.  The tool bar will appear in the upper left
 		or upper right of the display (depending on where the package explorer is located).
-		[<a class='tbutton' href='showme:toolbar_silent'> Show Me </a>] [<a class='tbutton' href='showme:toolbar'> Tell Me </a>]
+		[<a class='tbutton' href='showme:toolbar'> Tell Me </a>] [<a class='tbutton' href='showme:toolbar_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -305,7 +305,7 @@
 	<p>
 		To <b>show the current area in context</b> use F9.  Hitting F9 again will go back to a
 		normal display.
-		[<a class='tbutton' href='showme:currcontext_silent'> Show Me </a>] [<a class='tbutton' href='showme:currcontext'> Tell Me </a>]
+		[<a class='tbutton' href='showme:currcontext'> Tell Me </a>] [<a class='tbutton' href='showme:currcontext_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -333,7 +333,7 @@
 	<p>
 		To <b>get a context menu for this bubble</b>, <em>right</em> click inside the bubble.  Note the actual context
 		menu might depend on where in the bubble you click since it can represent the local context.
-		[<a class='tbutton' href='showme:contextmenu_silent'> Show Me </a>] [<a class='tbutton' href='showme:contextmenu'> Tell Me </a>]
+		[<a class='tbutton' href='showme:contextmenu'> Tell Me </a>] [<a class='tbutton' href='showme:contextmenu_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -354,7 +354,7 @@
 		To <b>link this bubble to another</b>, press the <em>control</em> key and then drag a line from the
 		starting bubble to the ending bubble using the <em>right</em> mouse button.  This will unlink the
 		bubbles if they are already linked.
-		[<a class='tbutton' href='showme:linkbubble_silent'> Show Me </a>] [<a class='tbutton' href='showme:linkbubble'> Tell Me </a>]
+		[<a class='tbutton' href='showme:linkbubble'> Tell Me </a>] [<a class='tbutton' href='showme:linkbubble_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -364,7 +364,7 @@
 	<p>
 		To <b>aove all bubbles in this group</b>, press down in the group border drag
 		with the <em>right</em> mouse button and drag to its desired location.
-		[<a class='tbutton' href='showme:movebubblegroup_silent'> Show Me </a>] [<a class='tbutton' href='showme:movebubblegroup'> Tell Me </a>]
+		[<a class='tbutton' href='showme:movebubblegroup'> Tell Me </a>] [<a class='tbutton' href='showme:movebubblegroup_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -374,7 +374,7 @@
 	<p>
 		To <b>remove all bubbles in this group</b>, <em>double</em> click with the <em>middle</em> mouse
 		button on the group area.  The remove bubble that remains will restore all bubbles in the group.
-		[<a class='tbutton' href='showme:removebubblegroup_silent'> Show Me </a>] [<a class='tbutton' href='showme:removebubblegroup'> Tell Me </a>]
+		[<a class='tbutton' href='showme:removebubblegroup'> Tell Me </a>] [<a class='tbutton' href='showme:removebubblegroup_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -384,7 +384,7 @@
 	<p>
 		To <b>title this group</b>, <em>left</em> click on the title area at the top of the group
 		and type in (or edit) the group name.
-		[<a class='tbutton' href='showme:titlegroup_silent'> Show Me </a>] [<a class='tbutton' href='showme:titlegroup'> Tell Me </a>]
+		[<a class='tbutton' href='showme:titlegroup'> Tell Me </a>] [<a class='tbutton' href='showme:titlegroup_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -412,7 +412,7 @@
 	<p>
 		To <b>remove this link</b>, either control-drag a line from the start bubble to the end bubble or
 		click with the <em>right</em> mouse button to get a context menu and choose <em?Remove</em>
-		[<a class='tbutton' href='showme:removelink_silent'> Show Me </a>] [<a class='tbutton' href='showme:removelink'> Tell Me </a>]
+		[<a class='tbutton' href='showme:removelink'> Tell Me </a>] [<a class='tbutton' href='showme:removelink_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -422,7 +422,7 @@
 	<p>
 		To <b>changke the link style</b>, <em>right</em> click on the link and choose the <em>Style</em>
 		option you want.
-		[<a class='tbutton' href='showme:changelink_silent'> Show Me </a>] [<a class='tbutton' href='showme:changelink'> Tell Me </a>]
+		[<a class='tbutton' href='showme:changelink'> Tell Me </a>] [<a class='tbutton' href='showme:changelink_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -432,7 +432,7 @@
 	<p>
 		To <b>collapse a linke</b>, <em>right</em> click on the link and choose the <em>Collapse</em>
 		option.  This will bring the target bubble close to the source bubble.
-		[<a class='tbutton' href='showme:collapselink_silent'> Show Me </a>] [<a class='tbutton' href='showme:collapselink'> Tell Me </a>]
+		[<a class='tbutton' href='showme:collapselink'> Tell Me </a>] [<a class='tbutton' href='showme:collapselink_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -442,7 +442,7 @@
 	<p>
 		To <b>move the viewport</b>, press the <em>right</em> mouse button in the current viewport in the
 		overview bar and drag it to its new location.
-		[<a class='tbutton' href='showme:moveviewport_silent'> Show Me </a>] [<a class='tbutton' href='showme:moveviewport'> Tell Me </a>]
+		[<a class='tbutton' href='showme:moveviewport'> Tell Me </a>] [<a class='tbutton' href='showme:moveviewport_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -452,7 +452,7 @@
 	<p>
 		To <b>change the viewport</b>, click with the <em>left</em> mouse button at the desired viewport
 		location.  You can also press down to move the location and then drag it to its target.
-		[<a class='tbutton' href='showme:changeviewport_silent'> Show Me </a>] [<a class='tbutton' href='showme:changeviewport'> Tell Me </a>]
+		[<a class='tbutton' href='showme:changeviewport'> Tell Me </a>] [<a class='tbutton' href='showme:changeviewport_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -463,7 +463,7 @@
 		To <b>create a working set</b>, click with the <em>left</em> mouse button in the area above the current view,
 		where "Create Task..." is displayed.  Alternatively, use the <em>right</em> mouse button to bring up a context
 		menu by clicking where there is no working set and choose "Create Working Set".
-		[<a class='tbutton' href='showme:createworkingset_silent'> Show Me </a>] [<a class='tbutton' href='showme:createworkingset'> Tell Me </a>]
+		[<a class='tbutton' href='showme:createworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:createworkingset_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -474,7 +474,7 @@
 		To <b>clear the display</b>, use the <em>right</em> mouse button to get a context menu and then choose either
 		"Clear Bubbles" to remove all bubbles visible in the current viewport or "Clear All Bubbles" to remove all the
 		bubbles in the workspace.
-		[<a class='tbutton' href='showme:cleardisplay_silent'> Show Me </a>] [<a class='tbutton' href='showme:cleardisplay'> Tell Me </a>]
+		[<a class='tbutton' href='showme:cleardisplay'> Tell Me </a>] [<a class='tbutton' href='showme:cleardisplay_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -485,7 +485,7 @@
 		To <b>load a saved working set</b>, use the <em>right</em> mouse button to get a context menu.	Then either choose
 		"Load Working Set" to load the working set from a file or choose a working set from the task shelf, which is the
 		selection to the right of the menu.
-		[<a class='tbutton' href='showme:loadworkingset_silent'> Show Me </a>] [<a class='tbutton' href='showme:loadworkingset'> Tell Me </a>]
+		[<a class='tbutton' href='showme:loadworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:loadworkingset_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -495,7 +495,7 @@
 	<p>
 		To <b>print the current display</b>, use the <em>right</em> mouse button to get a context menu and choose the "Print"
 		option.  Alternatively, you can choose "Export as PDF" to produce a image file for later use.
-		[<a class='tbutton' href='showme:printdisplay_silent'> Show Me </a>] [<a class='tbutton' href='showme:printdisplay'> Tell Me </a>]
+		[<a class='tbutton' href='showme:printdisplay'> Tell Me </a>] [<a class='tbutton' href='showme:printdisplay_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -505,7 +505,7 @@
 	<p>
 		To <b>change the name of a working set</b>, click on the current name with the <em>left</em> mouse button and then
 		use keyboard editing to enter a new name.
-		[<a class='tbutton' href='showme:renameworkingset_silent'> Show Me </a>] [<a class='tbutton' href='showme:renameworkingset'> Tell Me </a>]
+		[<a class='tbutton' href='showme:renameworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:renameworkingset_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -515,7 +515,7 @@
 	<p>
 		To <b>change the size of a working set</b>, press down with the <em>left</em> mouse button near the side to change
 		and drag the edge to the desired size.
-		[<a class='tbutton' href='showme:resizeworkingset_silent'> Show Me </a>] [<a class='tbutton' href='showme:resizeworkingset'> Tell Me </a>]
+		[<a class='tbutton' href='showme:resizeworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:resizeworkingset_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -527,7 +527,7 @@
 		following:  "Remove Working Set" will remove the working set but leave all the bubbles in place; "Clear and Remove Working
 		Set" will do this and remove all bubbles in the set; "Close and Save to Task Shelf" will save the
 		working set to the task shelf, close the working set and clear its bubbles.
-		[<a class='tbutton' href='showme:removeworkingset_silent'> Show Me </a>] [<a class='tbutton' href='showme:removeworkingset'> Tell Me </a>]
+		[<a class='tbutton' href='showme:removeworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:removeworkingset_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -539,7 +539,7 @@
 		following: "Save Working Set" to save the working set to a file; "Save Working Set To Task Shelf" to save the Working
 		set to the task shelf where it can be quickly reloaed later; or "Close and Save to Task Shelf" which will save the
 		current working set to the task shelf and will clear its bubbles and remove it.
-		[<a class='tbutton' href='showme:saveworkingset_silent'> Show Me </a>] [<a class='tbutton' href='showme:saveworkingset'> Tell Me </a>]
+		[<a class='tbutton' href='showme:saveworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:saveworkingset_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 
@@ -551,7 +551,7 @@
 		following: "EMail Working Set" to send the working set in a loadable from in an e-mail message to a colleague;
 		"Export as PDF" to create a saved image of the working set; "EMail as PDF" to send an image of the working set; or
 		"Save Working Set" to save the current working set to a file.
-		[<a class='tbutton' href='showme:exportworkingset_silent'> Show Me </a>] [<a class='tbutton' href='showme:exportworkingset'> Tell Me </a>]
+		[<a class='tbutton' href='showme:exportworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:exportworkingset_silent'> Show Me </a>]
 	]]></TEXT>
 </HELP>
 

@@ -328,6 +328,8 @@ private int findReferencePosition(int offset)
 	 else if ((ptyp == BaleTokenType.COLON || ptyp == BaleTokenType.EQUAL ||
 		      ptyp == BaleTokenType.RBRACKET) && !pref_indent_braces_for_arrays)
 	    unindent = true;
+         else if (looksLikeEndMethodDecl()) 
+            unindent = true;
 	 else if (!bracelessblockstart && pref_indent_braces_for_methods)
 	    indent = true;
 	 break;
@@ -713,7 +715,7 @@ private int skipToPreviousListItemOrListStart()
       previousToken();
 
       // if any line item comes with its own indentation,adapt to it
-      if (cur_line < startline-1) {
+      if (cur_line < startline-1 && cur_token != BaleTokenType.SEMICOLON) {
          int ind = 0;
 // 	 ind = getLineIndent(startline);
          // handle starting at empty line
@@ -743,7 +745,7 @@ private int skipToPreviousListItemOrListStart()
 	    return handleScopeIntroduction(start);
             
 	 case SEMICOLON :
-            if (cur_line == startline-1) cur_indent = pref_continuation_indent;
+            if (cur_line <= startline-1) cur_indent = pref_continuation_indent;
 	    return cur_offset;
 
 	 case QUESTIONMARK :
@@ -1089,9 +1091,47 @@ private boolean looksLikeMethodDecl()
 
       // return type name
       if (cur_token == BaleTokenType.IDENTIFIER || cur_token == BaleTokenType.TYPEKEY) return true;
+      if (cur_token == BaleTokenType.KEYWORD ||         // handle constructors
+            cur_token == null ||
+            cur_token == BaleTokenType.SEMICOLON) return true;
     }
 
    return false;
+}
+
+
+private boolean looksLikeEndMethodDecl()
+{
+   BaleElement start = cur_element;
+   try {
+      for ( ; ; ) {
+         BaleTokenType ctyp = previousToken();
+         switch (ctyp) {
+            case RPAREN :
+              if (!skipScope()) return false;
+              if (looksLikeMethodDecl()) return true;
+              break;
+            case RBRACKET :
+               if (!skipScope()) return false;
+               break;
+            case IF :
+            case WHILE :
+            case DO :
+            case FOR :
+            case SEMICOLON :
+            case RBRACE :
+               return false;
+            case NONE :
+               return false;
+            default : 
+               break;
+          }
+         
+       }
+    }
+   finally { 
+      setCurrent(start);
+    }
 }
 
 

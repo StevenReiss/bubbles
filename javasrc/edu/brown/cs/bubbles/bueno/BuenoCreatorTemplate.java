@@ -92,6 +92,21 @@ BuenoCreatorTemplate()
 }
 
 
+@Override protected void moduleJSText(StringBuffer buf,BuenoProperties props)
+{
+   Reader r = findTemplate("modulejs",props);
+   if (r != null) {
+      try {
+	 expand(r,props,buf);
+	 return;
+       }
+      catch (IOException e) { }
+    }
+   
+   super.moduleJSText(buf,props);
+}
+
+
 
 
 

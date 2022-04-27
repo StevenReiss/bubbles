@@ -516,7 +516,9 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getChild(xml,"PROJECT"),xw);
 	 break;
       case "CREATEPROJECT" :
-	 bedrock_project.createProject();
+	 bedrock_project.createProject(IvyXml.getAttrString(xml,"NAME"),
+               new File(IvyXml.getAttrString(xml,"DIR")),
+               IvyXml.getChild(xml,"PROPS"),xw);
 	 break;
       case "IMPORTPROJECT" :
 	 try {

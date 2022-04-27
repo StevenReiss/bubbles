@@ -569,24 +569,24 @@ private static class BattContexter implements BaleContextListener {
           for (BumpLocation loc : locs) {
              String nm = loc.getSymbolName();
              if (nm.equals(cnm) && Modifier.isPublic(loc.getModifiers())) {
-        	List<BumpLocation> cntrs = BumpClient.getBump().findMethods(pnm,cnm,false,true,true,false);
-        	boolean cok = false;
-        	if (cntrs.size() == 0) cok = true;
-        	for (BumpLocation cloc : cntrs) {
-        	   String prms = cloc.getParameters();
-        	   if (Modifier.isPublic(loc.getModifiers()) &&  prms != null && prms.equals("()")) cok = true;
-        	 }
-        	if (cok) classes.add(cnm);
+                List<BumpLocation> cntrs = BumpClient.getBump().findMethods(pnm,cnm,false,true,true,false);
+                boolean cok = false;
+                if (cntrs.size() == 0) cok = true;
+                for (BumpLocation cloc : cntrs) {
+                   String prms = cloc.getParameters();
+                   if (Modifier.isPublic(loc.getModifiers()) &&  prms != null && prms.equals("()")) cok = true;
+                 }
+                if (cok) classes.add(cnm);
               }
              else if (nm.equals(tcnm) && Modifier.isPublic(loc.getModifiers()) && !isinner) {
-        	List<BumpLocation> mthds = BumpClient.getBump().findMethod(pnm,mthd,false);
-        	boolean fok = false;
-        	for (BumpLocation bl : mthds) {
-        	   if (Modifier.isPrivate(bl.getModifiers())) fok = false;
-        	   else fok = true;
-        	}
-   
-        	if (fok) classes.add(cnm);
+                List<BumpLocation> mthds = BumpClient.getBump().findMethod(pnm,mthd,false);
+                boolean fok = false;
+                for (BumpLocation bl : mthds) {
+                   if (Modifier.isPrivate(bl.getModifiers())) fok = false;
+                   else fok = true;
+                 }
+                
+                if (fok) classes.add(cnm);
               }
            }
         }
@@ -670,7 +670,7 @@ private static class NewTestAction extends AbstractAction {
     }
 
    @Override public void actionPerformed(ActionEvent evt) {
-      BoardMetrics.noteCommand("BDDT","NewTest_" + test_mode);
+      BoardMetrics.noteCommand("BATT","NewTest_" + test_mode);
       BumpClient bc = BumpClient.getBump();
       List<BumpLocation> locs = bc.findMethod(in_project,method_name,false);
       if (locs == null || locs.size() == 0) return;
