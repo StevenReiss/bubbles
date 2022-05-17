@@ -66,6 +66,7 @@ class BaleApplyEdits implements BaleConstants
 
 private BaleDocument	for_document;
 private Map<String,Position> move_targets;
+private Map<String,String> source_strings;
 
 
 
@@ -79,6 +80,7 @@ BaleApplyEdits()
 {
    for_document = null;
    move_targets = null;
+   source_strings = null;
 }
 
 
@@ -106,8 +108,8 @@ void applyEdits(Element xml)
 
 private void applyLocalEdits(Element xml)
 {
-   if (IvyXml.isElement(xml,"EDITS") || IvyXml.isElement(xml,"RESULT") || 
-         IvyXml.isElement(xml,"REPAIREDIT")) {
+   if (IvyXml.isElement(xml,"EDITS") || IvyXml.isElement(xml,"RESULT") ||
+	 IvyXml.isElement(xml,"REPAIREDIT")) {
       for (Element c : IvyXml.children(xml)) applyLocalEdits(c);
     }
    else if (IvyXml.isElement(xml,"CHANGE")) {
@@ -129,7 +131,7 @@ private void applyLocalEdits(Element xml)
 	 extractEdits(xml,edits);
 	 for (Element ed : edits) {
 	    applyEdit(ed);
-	  }
+	  } 
        }
     }
    else if (IvyXml.isElement(xml,"EDIT")) {
@@ -140,22 +142,22 @@ private void applyLocalEdits(Element xml)
       BoardLog.logD("BALE","Found text component for apply: " + tc);
       bh.beginEditAction(tc);
       try {
-         if (typ.equals("MULTI")) {
-            List<Element> edits = new ArrayList<>();
-            extractEdits(xml,edits);
-            Set<Element> edits1 = new TreeSet<>(new EditSorter());
-            edits1.addAll(edits);
-            for (Element ed : edits1) {
-               addTargets(ed);
-             }
-            for (Element ed : edits1) {
-               applyEdit(ed);
-             }
-          }
-         else applyEdit(xml);
+	 if (typ.equals("MULTI")) {
+	    List<Element> edits = new ArrayList<>();
+	    extractEdits(xml,edits);
+	    Set<Element> edits1 = new TreeSet<>(new EditSorter());
+	    edits1.addAll(edits);
+	    for (Element ed : edits1) {
+	       addTargets(ed);
+	     }
+	    for (Element ed : edits1) {
+	       applyEdit(ed);
+	     }
+	  }
+	 else applyEdit(xml);
        }
       finally {
-         bh.endEditAction(tc);
+	 bh.endEditAction(tc);
        }
     }
 }
@@ -165,14 +167,20 @@ private void extractEdits(Element xml,Collection<Element> edits)
 {
    String typ = IvyXml.getAttrString(xml,"TYPE");
    if (typ == null) return;
-   if (typ.equals("MULTI") || xml.getTagName().equals("CHANGE")) {
-      for (Element ed : IvyXml.children(xml,"EDIT")) {
-	 extractEdits(ed,edits);
-       }
+
+   for (Element ed : IvyXml.children(xml,"EDIT")) {
+      extractEdits(ed,edits);
     }
-   else if (typ.equals("RANGEMARKER")) ;
-   else {
-      edits.add(xml);
+
+   switch (typ) {
+      case "MULTI" :
+      case "RANGEMARKER" :
+      case "CHANGE" :
+      case "EDIT" :
+	 break;
+      default :
+	 edits.add(xml);
+	 break;
    }
 }
 
@@ -278,7 +286,7 @@ private static class EditSorter implements Comparator<Element> {
 private void applyEdit(Element ed)
 {
    if (for_document == null) return;
-   
+
    int off = IvyXml.getAttrInt(ed,"OFFSET");
    int len = IvyXml.getAttrInt(ed,"LENGTH");
    int eoff = off+len;
@@ -292,62 +300,88 @@ private void applyEdit(Element ed)
       case "INSERT" :
       case "REPLACE" :
       case "DELETE" :
-         for_document.nextEditCounter();
-         String txt = IvyXml.getTextElement(ed,"TEXT");
-         try {
-            for_document.replace(off1,len1,txt,null);
-          }
-         catch (BadLocationException e) {
-            BoardLog.logE("BALE","Problem applying Eclipse text edit",e);
-          }  
-         break;
+	 for_document.nextEditCounter();
+	 String txt = IvyXml.getTextElement(ed,"TEXT");
+	 try {
+	    for_document.replace(off1,len1,txt,null);
+	  }
+	 catch (BadLocationException e) {
+	    BoardLog.logE("BALE","Problem applying Eclipse text edit",e);
+	  } 
+	 break;
       case "MOVETARGET" :
-         break;
+	 break;
       case "MOVESOURCE" :
+	 try {
+	    String mtxt = for_document.getText(off1,len1);
+	    Position tgt = move_targets.get(IvyXml.getAttrString(ed,"TARGET"));
+	    int tgt1 = for_document.mapOffsetToJava(tgt.getOffset());
+	    for_document.replace(tgt1,0,mtxt,null);
+	    for_document.replace(off1,len1,null,null);
+	    String rslt = for_document.getText(0,for_document.getLength());
+	    System.err.println("EDIT RESULT: " + off1 + " " + len1 + " " + tgt1 + " " +
+		  mtxt + " " + rslt);
+	  }
+	 catch (BadLocationException e) {
+	    BoardLog.logE("BALE","Problem applying Eclipse text edit",e);
+	  }
+	 break;
+      case "COPYSOURCE" :
+	 break;
+      case "COPYTARGET" :
+         String tgt = source_strings.get(IvyXml.getAttrString(ed,"SOURCE"));
          try {
-            String mtxt = for_document.getText(off1,len1);
-            Position tgt = move_targets.get(IvyXml.getAttrString(ed,"TARGET"));
-            int tgt1 = for_document.mapOffsetToJava(tgt.getOffset());
-            for_document.replace(tgt1,0,mtxt,null);
-            for_document.replace(off1,len1,null,null);
-            String rslt = for_document.getText(0,for_document.getLength());
-            System.err.println("EDIT RESULT: " + off1 + " " + len1 + " " + tgt1 + " " + 
-                  mtxt + " " + rslt);
+            for_document.replace(off1,len1,tgt,null);
           }
          catch (BadLocationException e) {
             BoardLog.logE("BALE","Problem applying Eclipse text edit",e);
           }
-         break;
+	 break;
       case "MULTI" :
+      case "RANGEMARKER" :
       default :
-         for (Element ce : IvyXml.children(ed,"EDIT")) {
-            applyEdit(ce);
-          }
-         break;
+	 for (Element ce : IvyXml.children(ed,"EDIT")) {
+	    applyEdit(ce);
+	  }
+	 break;
     }
 }
 
 
-private void addTargets(Element xml) 
+private void addTargets(Element xml)
 {
    switch (IvyXml.getAttrString(xml,"TYPE")) {
       case "INSERT" :
       case "REPLACE" :
       case "DELETE" :
-      case "MOVESOURCE" :
-         break;
+	 break;
       case "MULTI" :
       default :
-         for (Element ce : IvyXml.children(xml,"EDIT")) {
-            addTargets(ce);
-          }
-         break;
+	 for (Element ce : IvyXml.children(xml,"EDIT")) {
+	    addTargets(ce);
+	  }
+	 break;
       case "MOVETARGET" :
-         if (move_targets == null) move_targets = new HashMap<>();
-         int off = IvyXml.getAttrInt(xml,"OFFSET");
+	 if (move_targets == null) move_targets = new HashMap<>();
+	 int off = IvyXml.getAttrInt(xml,"OFFSET");
+	 try {
+	    Position pos = for_document.createPosition(off);
+	    move_targets.put(IvyXml.getAttrString(xml,"ID"),pos);
+	  }
+	 catch (BadLocationException e) {
+	    BoardLog.logE("BALE","Problem applying Eclipse text edit",e);
+	  } 
+	 break;
+      case "MOVESOURCE" :
+      case "COPYSOURCE" :
+         if (source_strings == null) source_strings = new HashMap<>();
+         int off0 = IvyXml.getAttrInt(xml,"OFFSET");
+         int off1 = for_document.mapOffsetToJava(off0);
+         int len = IvyXml.getAttrInt(xml,"LENGTH");
+         int off2 = for_document.mapOffsetToJava(off0+len);
          try {
-            Position pos = for_document.createPosition(off);
-            move_targets.put(IvyXml.getAttrString(xml,"ID"),pos);
+            String s = for_document.getText(off1,off2-off1);
+            source_strings.put(IvyXml.getAttrString(xml,"ID"),s);
           }
          catch (BadLocationException e) {
             BoardLog.logE("BALE","Problem applying Eclipse text edit",e);

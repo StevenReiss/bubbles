@@ -428,6 +428,11 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
 
 
 
+
+
+
+
+
 }	// end of class BassNameLocation
 
 

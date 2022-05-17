@@ -419,6 +419,12 @@ public BassName findBubbleName(File f,int eclipsepos)
 }
 
 
+public boolean checkMethodName(String proj,String fullname,String args)
+{
+   return bass_repository.checkMethodName(proj,fullname,args);
+}
+
+
 private static class MethodFinder implements BuenoConstants.BuenoClassMethodFinder {
 
    @Override public List<BumpLocation> findClassMethods(String cls) {

@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.bpare;
 
+import edu.brown.cs.ivy.jcomp.JcompAst;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -248,7 +249,7 @@ private static Class<?> [] ast_classes = new Class<?> [] {
 
 
 static {
-   dummy_ast = AST.newAST(AST.JLS11,false);
+   dummy_ast = JcompAst.createNewAst();
    astid_map = new HashMap<Class<?>,Integer>();
    Class<?> [] ocls = new Class<?>[ast_classes.length+1];
    for (int i = 0; i < ast_classes.length; ++i) {

@@ -265,7 +265,6 @@ public void addBubble(BudaBubble bb,Component rel,Point relpt,int placement,Buda
  *	the bubble as invisible or reset its parent.
  **/
 
-
 public void removeBubble(BudaBubble bb)
 {
    bb.setVisible(false);
@@ -1876,6 +1875,11 @@ void viewportMoved()
    for (BudaBubble bb : working_set_bubbles.keySet()) {
       bb.checkWorkingSet();
     }
+   
+   Rectangle r = getViewport();
+   for (BudaBubble bb : getBubblesInRegion(r)) {
+      bb.noteViewed();
+    }
 }
 
 /**
@@ -2027,26 +2031,26 @@ private class ScrollAnimator extends javax.swing.Timer implements ActionListener
       int dx = 0;
       int dy = 0;
       if (t0 > 1) {
-	 dx = target_x - cur_viewport.x;
-	 dy = target_y - cur_viewport.y;
-	 stop();
+         dx = target_x - cur_viewport.x;
+         dy = target_y - cur_viewport.y;
+         stop();
        }
       else {
-	 double t1 = -t0*t0 + 2 * t0;
-	 int x0 = (int)((target_x - start_x)*t1) + start_x;
-	 int y0 = (int)((target_y - start_y)*t1) + start_y;
-	 dx = x0 - cur_viewport.x;
-	 dy = y0 - cur_viewport.y;
+         double t1 = -t0*t0 + 2 * t0;
+         int x0 = (int)((target_x - start_x)*t1) + start_x;
+         int y0 = (int)((target_y - start_y)*t1) + start_y;
+         dx = x0 - cur_viewport.x;
+         dy = y0 - cur_viewport.y;
        }
       if (Math.abs(dx) < SCROLL_ANIM_DELTA && Math.abs(dy) < SCROLL_ANIM_DELTA) {
-	 dx = target_x - cur_viewport.x;
-	 dy = target_y - cur_viewport.y;
+         dx = target_x - cur_viewport.x;
+         dy = target_y - cur_viewport.y;
        }
       if (dx == 0 && dy == 0) {
-	 stop();
+         stop();
        }
       else {
-	 scrollViewport(dx,dy);
+         scrollViewport(dx,dy);
        }
     }
 

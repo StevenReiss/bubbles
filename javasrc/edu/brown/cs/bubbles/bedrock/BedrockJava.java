@@ -451,8 +451,7 @@ void handleFindAll(String proj,String file,int start,int end,boolean defs,boolea
 
     }
    catch (JavaModelException e) {
-      BedrockPlugin.logE("SEARCH PROBLEM: " + e);
-      e.printStackTrace();
+      BedrockPlugin.logE("SEARCH PROBLEM: " + e,e);
       throw new BedrockException("Can't find anything to search for",e);
     }
 

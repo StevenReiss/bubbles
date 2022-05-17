@@ -392,6 +392,7 @@ private void initialize(Element e)
 
    setupGlobalActions();
    new CheckpointTimer();		// start checkpointing
+   new BubbleRemover();                 // remove old bubbles if desired
 
    BoardMetrics.setRootWindow(this);
    share_manager = new BudaShareManager();
@@ -2207,6 +2208,9 @@ BudaBubble createBubble(BudaBubbleArea bba,Element e,Rectangle delta,int dx,bool
    bb.setBorderColor(IvyXml.getAttrColor(e,"BORDER"),IvyXml.getAttrColor(e,"FOCUS"));
    bb.setInteriorColor(IvyXml.getAttrColor(e,"INTERIOR"));
    bb.setCreationTime(IvyXml.getAttrLong(e,"CTIME"));
+   if (IvyXml.getAttrPresent(e,"LASTVIEWED")) {
+      bb.setLastViewed(IvyXml.getAttrLong(e,"LASTVIEWED"));
+    }
 
    Dimension size = new Dimension(IvyXml.getAttrInt(e,"W"),IvyXml.getAttrInt(e,"H"));
    bb.setSize(size);
@@ -3011,9 +3015,9 @@ private class CheckpointTimer implements ActionListener {
 
    CheckpointTimer() {
       if (BUBBLE_CHECKPOINT_TIME > 0) {
-	 javax.swing.Timer timer = new javax.swing.Timer(BUBBLE_CHECKPOINT_TIME,this);
-	 timer.setRepeats(true);
-	 timer.start();
+         javax.swing.Timer timer = new javax.swing.Timer(BUBBLE_CHECKPOINT_TIME,this);
+         timer.setRepeats(true);
+         timer.start();
        }
     }
 
@@ -3170,8 +3174,59 @@ private class ClientHandler implements MintHandler {
 
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Remove old bubbles                                                      */
+/*                                                                              */
+/********************************************************************************/
 
-
+private class BubbleRemover implements ActionListener {
+   
+   private long         remove_time;
+   private long         last_active;
+   
+   BubbleRemover() {
+      long delay = BUDA_PROPERTIES.getLong("Buda.remove.old.time",0);  // hours
+      remove_time = delay * 60*60*1000;                                          // in ms
+      if (delay <= 0) return;
+      int every = REMOVAL_CHECK_TIME;
+      javax.swing.Timer timer = new javax.swing.Timer(every,this);
+      timer.setRepeats(true);
+      timer.start();
+      if (BUDA_PROPERTIES.getBoolean("Buda.remove.old.active",false)) {
+         last_active = BoardMetrics.getLastActive();
+       }
+      else last_active = 0;
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      List<BudaBubble> remove = new ArrayList<>();
+      long now = System.currentTimeMillis();
+      long delta = 0;
+      if (last_active > 0) {
+         long when = BoardMetrics.getLastActive();
+         if (when > last_active) {
+            last_active = when;
+            delta = REMOVAL_CHECK_TIME;
+          }
+       }
+      for (BudaBubble bb : bubble_area.getBubbles()) {
+         long viewed = bb.getLastViewed();
+         if (viewed <= 0) continue;
+         long checktime = 0;
+         if (last_active > 0) checktime = bb.getUnviewedTime();
+         else checktime = now - viewed;
+         if (checktime > remove_time) remove.add(bb);
+         else if (last_active > 0 && delta > 0) {
+            if (!bb.isShowing()) bb.noteUnviewed(delta);
+          }
+       }
+      for (BudaBubble bb : remove) {
+         bubble_area.removeBubble(bb);
+       }
+    }
+   
+}       // end of inner class BubbleRemover
 
 
 

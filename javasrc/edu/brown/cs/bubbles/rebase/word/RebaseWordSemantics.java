@@ -24,7 +24,6 @@
 
 package edu.brown.cs.bubbles.rebase.word;
 
-
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -131,7 +130,7 @@ RebaseWordSemantics(String text)
 {
    ast_root = null;
    if (text != null) {
-      ASTParser parser = ASTParser.newParser(AST.JLS11);
+      ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
       Map<String,String> options = JavaCore.getOptions();
       JavaCore.setComplianceOptions(JavaCore.VERSION_1_8,options);
       parser.setCompilerOptions(options);

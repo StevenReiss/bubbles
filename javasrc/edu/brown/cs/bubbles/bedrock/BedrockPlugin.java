@@ -167,7 +167,7 @@ public BedrockPlugin()
    BedrockPlugin.logI("STARTING");
    BedrockPlugin.logI("MEMORY " + Runtime.getRuntime().maxMemory() + " " +
 			 Runtime.getRuntime().totalMemory());
-   
+
    System.setProperty("org.eclipse.jdt.ui.codeAssistTimeout","30000");
 
    mint_control = null;
@@ -207,7 +207,7 @@ private void initWorkbench() {
 /*										*/
 /********************************************************************************/
 
-String getMintName()    
+String getMintName()
 {
    return mint_control.getMintName();
 }
@@ -237,7 +237,7 @@ private synchronized void setupMint()
       mintname = mintname.replace("@@@",wsname);
     }
    if (mintname == null) mintname = BEDROCK_MESSAGE_ID;
-   
+
    mint_control = MintControl.create(mintname,MintSyncMode.SINGLE);
    mint_control.register("<BUBBLES DO='_VAR_1' />",new CommandHandler());
 }
@@ -285,6 +285,12 @@ void getCompilationElements(IJavaElement elt,List<ICompilationUnit> rslt)
 ICompilationUnit getCompilationUnit(String proj,String file) throws BedrockException
 {
    return bedrock_editor.getCompilationUnit(proj,file);
+}
+
+
+ICompilationUnit getBaseCompilationUnit(String proj,String file) throws BedrockException
+{
+   return bedrock_editor.getBaseCompilationUnit(proj,file);
 }
 
 
@@ -517,8 +523,8 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 break;
       case "CREATEPROJECT" :
 	 bedrock_project.createProject(IvyXml.getAttrString(xml,"NAME"),
-               new File(IvyXml.getAttrString(xml,"DIR")),
-               IvyXml.getChild(xml,"PROPS"),xw);
+	       new File(IvyXml.getAttrString(xml,"DIR")),
+	       IvyXml.getChild(xml,"PROPS"),xw);
 	 break;
       case "IMPORTPROJECT" :
 	 try {
@@ -720,7 +726,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrInt(xml,"LEVEL"),
 	       IvyXml.getAttrInt(xml,"ARRAY"),
 	       IvyXml.getAttrString(xml,"SAVEID"),
-               IvyXml.getAttrBool(xml,"ALLFRAMES"),xw);
+	       IvyXml.getAttrBool(xml,"ALLFRAMES"),xw);
 	 break;
       case "EDITPARAM" :
 	 bedrock_editor.handleParameter(IvyXml.getAttrString(xml,"BID","*"),
@@ -774,7 +780,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrString(xml,"PATH"));
 	 break;
       case "GETCOMPLETIONS" :
-	 bedrock_editor.getCompletions(proj,IvyXml.getAttrString(xml,"BID","*"),
+	 bedrock_editor.handleGetCompletions(proj,IvyXml.getAttrString(xml,"BID","*"),
 	       IvyXml.getAttrString(xml,"FILE"),
 	       IvyXml.getAttrInt(xml,"OFFSET"),xw);
 	 break;
@@ -861,7 +867,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrInt(xml,"LEVELS",0),xw);
 	 break;
       case "FIXIMPORTS" :
-	 bedrock_editor.fixImports(proj,
+	 bedrock_editor.handleFixImports(proj,
 	       IvyXml.getAttrString(xml,"BID","*"),
 	       IvyXml.getAttrString(xml,"FILE"),
 	       IvyXml.getAttrInt(xml,"DEMAND",0),
@@ -870,6 +876,12 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrString(xml,"ADD"),
 	       xw);;
 	       break;
+      case "GETEXPECTEDTYPE" :
+         bedrock_editor.handleGetExpectedType(proj,
+               IvyXml.getAttrString(xml,"BID","*"),
+               IvyXml.getAttrString(xml,"FILE"),
+               IvyXml.getAttrInt(xml,"LINE"),xw); 
+         break;
       case "PREFERENCES" :
 	 bedrock_project.handlePreferences(proj,xw);
 	 break;
@@ -1098,42 +1110,42 @@ private class CommandHandler implements MintHandler {
       String cmd = args.getArgument(1);
       Element xml = msg.getXml();
       String proj = IvyXml.getAttrString(xml,"PROJECT");
-   
+
       String rslt = null;
-   
+
       try {
-         rslt = handleCommand(cmd,proj,xml);
+	 rslt = handleCommand(cmd,proj,xml);
        }
       catch (BedrockException e) {
-         String xmsg = "BEDROCK: error in command " + cmd + ": " + e;
-         BedrockPlugin.logE(xmsg,e);
-         rslt = "<ERROR><![CDATA[" + xmsg + "]]></ERROR>";
+	 String xmsg = "BEDROCK: error in command " + cmd + ": " + e;
+	 BedrockPlugin.logE(xmsg,e);
+	 rslt = "<ERROR><![CDATA[" + xmsg + "]]></ERROR>";
        }
       catch (Throwable t) {
-         String xmsg = "BEDROCK: Problem processing command " + cmd + ": " + t + " " +
-            doing_exit + " " + shutdown_mint + " " +  num_clients;
-         BedrockPlugin.logE(xmsg);
-         System.err.println(xmsg);
-         t.printStackTrace();
-         StringWriter sw = new StringWriter();
-         PrintWriter pw = new PrintWriter(sw);
-         t.printStackTrace(pw);
-         Throwable xt = t;
-         for (	; xt.getCause() != null; xt = xt.getCause());
-         if (xt != null && xt != t) {
-            rslt += "\n";
-            xt.printStackTrace(pw);
-          }
-         BedrockPlugin.logE("TRACE: " + sw.toString());
-         rslt = "<ERROR>";
-         rslt += "<MESSAGE>" + xmsg + "</MESSAGE>";
-         rslt += "<EXCEPTION><![CDATA[" + t.toString() + "]]></EXCEPTION>";
-         rslt += "<STACK><![CDATA[" + sw.toString() + "]]></STACK>";
-         rslt += "</ERROR>";
+	 String xmsg = "BEDROCK: Problem processing command " + cmd + ": " + t + " " +
+	    doing_exit + " " + shutdown_mint + " " +  num_clients;
+	 BedrockPlugin.logE(xmsg);
+	 System.err.println(xmsg);
+	 t.printStackTrace();
+	 StringWriter sw = new StringWriter();
+	 PrintWriter pw = new PrintWriter(sw);
+	 t.printStackTrace(pw);
+	 Throwable xt = t;
+	 for (	; xt.getCause() != null; xt = xt.getCause());
+	 if (xt != null && xt != t) {
+	    rslt += "\n";
+	    xt.printStackTrace(pw);
+	  }
+	 BedrockPlugin.logE("TRACE: " + sw.toString());
+	 rslt = "<ERROR>";
+	 rslt += "<MESSAGE>" + xmsg + "</MESSAGE>";
+	 rslt += "<EXCEPTION><![CDATA[" + t.toString() + "]]></EXCEPTION>";
+	 rslt += "<STACK><![CDATA[" + sw.toString() + "]]></STACK>";
+	 rslt += "</ERROR>";
        }
-   
+
       msg.replyTo(rslt);
-   
+
       if (shutdown_mint) mint_control.shutDown();
     }
 

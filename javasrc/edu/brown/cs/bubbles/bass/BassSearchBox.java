@@ -183,7 +183,7 @@ BassSearchBox(BassTreeModel mdl,boolean common)
    input_field.setBorder(null);
    
    Keymap kmp1 = input_field.getKeymap();
-   Keymap kmp = JTextField.addKeymap("BASS",kmp1);
+   Keymap kmp = JTextField.addKeymap("BASS*",kmp1);
    input_field.setKeymap(kmp);
    SwingKey.registerKeyAction("SEARCHBOX",input_field,new AbortAction(),"ESCAPE");
    SwingKey.registerKeyAction("SEARCHBOX",input_field,new ExpandAllAction(),"F4");
@@ -191,7 +191,9 @@ BassSearchBox(BassTreeModel mdl,boolean common)
    SwingKey.registerKeyAction("SEARCHBOX",input_field,new UpSelectionAction(),"UP");
    SwingKey.registerKeyAction("SEARCHBOX",input_field,new DownSelectionAction(),"DOWN");
    SwingKey.registerKeyAction("SEARCHBOX",this,new ExpandAllAction(),"F4");
+   SwingKey.registerKeyAction("SEARCHBOX",this,new CompactAction(),"shift F4");
    SwingKey.registerKeyAction("SEARCHBOX",this,new TextSearchAction(),"shift ENTER");
+   SwingKey.registerKeyAction("SEARCHBOX",input_field,new ClearInputAction(),"meta X");
   
    old_text = null;
    addGBComponent(input_field,0,0,1,1,1,0);
@@ -942,6 +944,22 @@ private static class TextSearchAction extends AbstractAction {
 
 }	// end of inner class TextSearchAction
 
+
+
+private class ClearInputAction extends AbstractAction {
+   
+   private static final long serialVersionUID = 1L;
+   
+   ClearInputAction() {
+      super("Clear Input");
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      BoardMetrics.noteCommand("BASS","ClearInput");
+      input_field.setText("");
+    }
+   
+}       // end of inner class ClearInputAction
 
 
 /********************************************************************************/

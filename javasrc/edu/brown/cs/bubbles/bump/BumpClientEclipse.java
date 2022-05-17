@@ -125,7 +125,6 @@ private void ensureRunning()
    String cmd = "'" + efp + "'";
    
    cmd += " -application edu.brown.cs.bubbles.bedrock.application";
-   
    cmd += " -nosplash";
    if (ws != null) cmd += " -data '" + ws + "'";
    

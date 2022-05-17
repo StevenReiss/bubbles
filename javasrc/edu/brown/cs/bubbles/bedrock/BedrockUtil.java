@@ -979,7 +979,11 @@ static void outputTextEdit(TextEdit te,IvyXmlWriter xw)
       xw.field("TARGET",cse.getTargetEdit().hashCode());
     }
    else if (te instanceof CopyTargetEdit) {
+      CopyTargetEdit cte = (CopyTargetEdit) te;
       xw.field("TYPE","COPYTARGET");
+      xw.field("SOURCE",cte.getSourceEdit().hashCode());
+      xw.field("SOURCEOFF",cte.getSourceEdit().getOffset());
+      xw.field("SOURCELEN",cte.getSourceEdit().getLength());
     }
    else if (te instanceof DeleteEdit) {
       xw.field("TYPE","DELETE");
@@ -1872,7 +1876,7 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 	    // txt is not quite right here if the string is complex
 	    // e.g \UD83D\UDE30" gets mapped to "\u07D8\u00B0"
 	  }
-	
+
 	 else if (val instanceof IJavaObject) {
 	    IJavaObject obj = (IJavaObject) val;
 	    IVariable [] vars = obj.getVariables();

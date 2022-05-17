@@ -504,6 +504,8 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
    "org.eclipse.wst.jsdt.debug.core.jar",
    "org.python.pydev.core.core.jar",
    "org.python.pydev.parser.parser.jar",
+// "org.eclipse.pde.ui.jar",
+// "org.eclipse.pde.api.tools.ui.jar",
 
 // "seede.jar",
 // "poppy.jar",
@@ -808,7 +810,7 @@ int	METRICS_UPLOAD_TIMEOUT = 5*1000;
 String	PALETTE_PROP = "edu.brown.cs.bubbles.palette";
 
 String	DEFAULT_PALETTE = "bubbles.palette";
-String  KEY_DEFINITIONS = "bubbles.keys";
+String	KEY_DEFINITIONS = "bubbles.keys";
 
 /********************************************************************************/
 /*										*/

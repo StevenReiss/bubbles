@@ -128,6 +128,8 @@ private String		unique_id;
 private long		creation_time;
 private BudaBorder	border_type;
 private double		scale_factor;
+private long            last_viewed;
+private long            unviewed_time;
 
 private BudaWorkingSet	fixed_set;
 private Point		fixed_position;
@@ -256,6 +258,9 @@ protected BudaBubble(Component c,BudaBorder bdr)
 
    setBorderColor(BoardColors.getColor(BUBBLE_BORDER_COLOR_PROP),
 	 BoardColors.getColor(BUBBLE_FOCUS_COLOR_PROP));
+   
+   last_viewed = System.currentTimeMillis();
+   unviewed_time = 0;
 }
 
 
@@ -595,6 +600,35 @@ public int getMinimumResizeHeight()
 }
 
 
+
+public void noteViewed()
+{
+   setLastViewed(System.currentTimeMillis());
+}
+
+
+public void setLastViewed(long when)
+{
+   if (when > 0) last_viewed = when;
+   unviewed_time = 0;
+}
+
+
+public void noteUnviewed(long delta)
+{
+   unviewed_time += delta; 
+}
+
+
+public long getLastViewed()
+{
+   return last_viewed;
+}
+
+public long getUnviewedTime()
+{
+   return unviewed_time;
+}
 
 
 /********************************************************************************/
@@ -1156,17 +1190,17 @@ private class NewUpdater implements ActionListener {
       long now = System.currentTimeMillis();
       long delta = now - start_time;
       if (delta >= NEW_BUBBLE_SHOW_TIME || new_color == null) {
-	 setBubbleNew(false);
-	 Timer nt = (Timer) e.getSource();
-	 nt.stop();
-	 new_color = null;
+         setBubbleNew(false);
+         Timer nt = (Timer) e.getSource();
+         nt.stop();
+         new_color = null;
        }
       else {
-	 double f = 1.0 - ((double)(delta))/NEW_BUBBLE_SHOW_TIME;
-	 int alpha = (int)(f * new_color.getAlpha());
-	 new_color = BoardColors.transparent(new_color,alpha);
+         double f = 1.0 - ((double)(delta))/NEW_BUBBLE_SHOW_TIME;
+         int alpha = (int)(f * new_color.getAlpha());
+         new_color = BoardColors.transparent(new_color,alpha);
        }
-
+   
       repaint();
     }
 
@@ -1338,6 +1372,8 @@ final void outputBubbleXml(BudaXmlWriter xw,BudaBubbleScaler bs)
    xw.field("FOCUS",focus_color);
    xw.field("TRANSIENT",isTransient());
    xw.field("CTIME",creation_time);
+   xw.field("LASTVIEWED",last_viewed);
+   xw.field("UNVIEWED",unviewed_time);
    Rectangle r = getBounds();
    if (bs != null) r = bs.getScaledBounds(this);
    xw.field("X",r.x);

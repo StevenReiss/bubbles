@@ -777,6 +777,7 @@ private void setupProjects()
 private void setupDefaults(IJavaProject ijp)
 {
    try {
+      BedrockApplication.getDisplay();
       IPreferenceStore ps = DebugUITools.getPreferenceStore();
       String s = ps.getString("org.eclipse.debug.ui.switch_perspective_on_suspend");
       if (s == null || s.equals("prompt")) {

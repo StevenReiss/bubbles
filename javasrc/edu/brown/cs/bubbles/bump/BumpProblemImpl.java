@@ -30,6 +30,7 @@
 
 package edu.brown.cs.bubbles.bump;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
@@ -117,7 +118,8 @@ BumpProblemImpl(Element d,String id,int eid,String proj)
 @Override synchronized public List<BumpFix> getFixes()
 {
    if (!computed_fixes) {
-      Element r = BumpClient.getBump().computeQuickFix(this,-1,0);
+      Element r = BumpClient.getBump().computeQuickFix(this,-1,0,false);
+      BoardLog.logD("BUMP","FOUND FIXES: " + IvyXml.convertXmlToString(r));
       for (Element f : IvyXml.children(r,"FIX")) {
 	 EditFix ef = new EditFix(f);
 	 if (problem_fixes == null) problem_fixes = new ArrayList<BumpFix>();

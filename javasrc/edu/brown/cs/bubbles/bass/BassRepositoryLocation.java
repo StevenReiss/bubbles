@@ -30,12 +30,14 @@
 
 package edu.brown.cs.bubbles.bass;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 
+import java.lang.reflect.Modifier;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -239,6 +241,33 @@ List<BumpLocation> findClassMethods(String cls)
    if (!fndcls) return null;
 
    return rslt;
+}
+
+
+boolean checkMethodName(String proj,String nm,String args)
+{
+   waitForNames();
+   
+   synchronized (this) {
+      for (BassName bn : all_names) {
+         String pnm = bn.getProject();
+         if (proj != null && pnm != null) {
+            if (!proj.equals(pnm)) continue;
+          }
+         BassNameLocation bnl = (BassNameLocation) bn;
+         String fnm = bnl.getName();
+         if (fnm == null || !nm.equals(fnm)) continue;
+         int mods = bnl.getModifiers();
+         if (!Modifier.isPublic(mods) && !Modifier.isProtected(mods)) continue;
+         String prms = bnl.getParameters();
+         if (prms != null && args != null) {
+            BoardLog.logD("BASS","CHECK PARAMETERS " + prms + " :: " + args);
+          }
+         return true;
+       }
+    }
+   
+   return false;
 }
 
 

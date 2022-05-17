@@ -346,6 +346,10 @@ int   SCROLL_ANIM_TOTAL = 500;
 
 String USE_HELP_TOOLTIPS = "Buda.help.tooltips";
 
+/**
+ *      Check for removal delta time
+ **/
+int     REMOVAL_CHECK_TIME = 5*60*1000;
 
 
 /********************************************************************************/
@@ -807,6 +811,8 @@ int	EXPOSE_ANIMATE_INTERVAL = 25;
  *	10%.
  **/
 double	EXPOSE_ANIMATE_DELTA = 0.10;
+
+
 
 
 

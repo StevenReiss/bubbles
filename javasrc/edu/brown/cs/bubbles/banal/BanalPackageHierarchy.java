@@ -92,7 +92,7 @@ BanalPackageHierarchy(Element xml)
 
 /********************************************************************************/
 /*										*/
-/*	Access methods 								*/
+/*	Access methods 							*/
 /*										*/
 /********************************************************************************/
 
@@ -297,6 +297,7 @@ private void doAnalysis()
 	 DependNode nd = work.remove();
 	 todo.remove(nd);
 	 done.add(nd);
+         System.err.println("BANAL: Work on " + nd.getName());
 	 Collection<DependNode> next = nd.useNode();
 	 if (next != null) work.addAll(next);
        }
@@ -308,18 +309,25 @@ private void doAnalysis()
 private Collection<DependNode> removeCycle(Set<DependNode> nodes)
 {
    Collection<DependNode> best = null;
+   boolean bestadded = false;
 
    for (DependNode dn : nodes) {
-      Collection<DependNode> cyc = findCycle(dn,nodes);
-      if (cyc != null) {
-	 if (best == null || cyc.size() < best.size()) best = cyc;
+      Set<DependNode> cyc = new HashSet<>();
+      boolean added = findCycle(dn,nodes,cyc);
+      if (!cyc.isEmpty()) {
+	 if (best == null || (bestadded && !added) || 
+               cyc.size() < best.size()) {
+            best = cyc;
+            bestadded = added;
+          }
        }
     }
-
+  
    Collection<DependNode> rslt = new HashSet<DependNode>();
 
    if (best == null) {
-      System.err.println("RSTAT: Problem computing cycles");
+      System.err.println("BANAL: Problem computing cycles");
+      rslt.addAll(nodes);
     }
    else {
       int cct = ++cycle_counter;
@@ -331,22 +339,32 @@ private Collection<DependNode> removeCycle(Set<DependNode> nodes)
 
 
 
-private Collection<DependNode> findCycle(DependNode dn,Collection<DependNode> nodes)
+private boolean findCycle(DependNode dn,Collection<DependNode> nodes,
+      Set<DependNode> cycle)
 {
-   Set<DependNode> done = new HashSet<DependNode>();
-   Set<DependNode> cycle = new HashSet<DependNode>();
+   Set<DependNode> done = new HashSet<>();
+   cycle.clear();
+   boolean added = false;
 
    dn.cycleDfs(dn,done,cycle);
 
-   if (cycle.isEmpty()) return null;
-
-   for (DependNode on : nodes) {
-      if (!cycle.contains(on)) {
-	 if (!on.checkCycle(cycle)) return null;
+   if (cycle.isEmpty()) return false;
+   
+   boolean chng = true;
+   while (chng) {
+      chng = false;
+      for (DependNode on : nodes) {
+         if (!cycle.contains(on)) {
+            if (!on.checkCycle(cycle)) {
+               cycle.add(on);
+               chng = true;
+               added = true;
+             }
+          }
        }
     }
 
-   return cycle;
+   return added;
 }
 
 
@@ -408,20 +426,24 @@ private class DependNode implements BanalHierarchyNode {
 
    void addDepend(DependNode n) {
       if (depends_on.add(n)) {
-	 ++n.num_depend;
-	 System.err.println("BANAL: " + getName() + " <== " + n.getName());
+         ++n.num_depend;
+         System.err.println("BANAL: ADD " + getName() + " <== " + n.getName());
        }
     }
 
    Collection<DependNode> useNode() {
       Collection<DependNode> rslt = null;
       for (DependNode dn : depends_on) {
+         System.err.println("BANAL: USE " + getName() + " : " + dn.getName() + " " +
+               dn.node_level + " " + node_level + " " + dn.num_depend);
          dn.node_level = Math.max(dn.node_level,node_level+1);
+         if (dn.num_depend == 0) continue;
          if (--dn.num_depend == 0) {
             if (rslt == null) rslt = new ArrayList<>();
             rslt.add(dn);
           }
        }
+      depends_on.clear();
       return rslt;
     }
 
@@ -431,6 +453,7 @@ private class DependNode implements BanalHierarchyNode {
       for (DependNode dn : cyc) {
          node_level = Math.max(node_level,dn.node_level);
          if (depends_on.remove(dn)) {
+            System.err.println("BANAL: REMOVE " + dn.getName() + " FROM " + getName());
             if (--dn.num_depend == 0) rslt.add(dn);
           }
        }
@@ -442,21 +465,21 @@ private class DependNode implements BanalHierarchyNode {
       done.add(this);
       boolean cyc = false;
       for (DependNode dn : depends_on) {
-	 if (dn == start) {
-	    cyc = true;
-	  }
-	 else if (!done.contains(dn)) {
-	    cyc |= dn.cycleDfs(start,done,cycle);
-	  }
+         if (dn == start) {
+            cyc = true;
+          }
+         else if (!done.contains(dn)) {
+            cyc |= dn.cycleDfs(start,done,cycle);
+          }
        }
       if (cyc) cycle.add(this);
       return cyc;
     }
-
-
+   
+   
    boolean checkCycle(Set<DependNode> cycle) {
       for (DependNode dn : depends_on) {
-	 if (cycle.contains(dn)) return false;
+         if (cycle.contains(dn)) return false;
        }
       return true;
     }

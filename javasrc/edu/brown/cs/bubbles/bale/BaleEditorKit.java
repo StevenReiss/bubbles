@@ -48,6 +48,7 @@ import edu.brown.cs.bubbles.burp.BurpHistory;
 import edu.brown.cs.ivy.swing.SwingEditorPane;
 import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.swing.SwingText;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -162,7 +163,7 @@ private static final Action block_comment_action = new CommentAction("BlockComme
 private static final Action javadoc_comment_action = new CommentAction("JavadocComment",BuenoType.NEW_JAVADOC_COMMENT);
 private static final Action fix_errors_action = new FixErrorsAction();
 private static final Action finish_action = new FinishAction();
-
+private static final Action infer_decl_action = new InferDeclarationAction();
 
 
 
@@ -238,7 +239,8 @@ private static final Action [] local_actions = {
    marquis_comment_action,
    block_comment_action,
    javadoc_comment_action,
-   fix_errors_action
+   fix_errors_action,
+   infer_decl_action
 };
 
 
@@ -306,6 +308,8 @@ private static final SwingKey [] skey_defs = new SwingKey[] {
    new SwingKey("CODEEDIT",null,marquis_comment_action,"xalt shift Q"),
    new SwingKey("CODEEDIT",null,javadoc_comment_action,"xalt shift J"),
    new SwingKey("CODEEDIT",null,quick_fix_action,"menu 1","alt 1"),
+   new SwingKey("CODEEDIT",null,infer_decl_action,"menu shift I"),
+
 };
 
 
@@ -1060,23 +1064,23 @@ private static class DeleteLineAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
-
+   
       BaleDocument bd = be.getBaleDocument();
-
+   
       bd.baleWriteLock();
       try {
-	 int soff = be.getSelectionStart();
-	 int slno = bd.findLineNumber(soff);
-	 int sdel = bd.findLineOffset(slno);
-	 int eoff = be.getSelectionEnd();
-	 int elno = (eoff == soff ? slno : bd.findLineNumber(eoff));
-	 int edel = bd.findLineOffset(elno+1);
-
-	 if (edel != sdel) {
-	    be.setSelectionStart(sdel);
-	    be.setSelectionEnd(edel);
-	    be.cut();
-	  }
+         int soff = be.getSelectionStart();
+         int slno = bd.findLineNumber(soff);
+         int sdel = bd.findLineOffset(slno);
+         int eoff = be.getSelectionEnd();
+         int elno = (eoff == soff ? slno : bd.findLineNumber(eoff));
+         int edel = bd.findLineOffset(elno+1);
+   
+         if (edel != sdel) {
+            be.setSelectionStart(sdel);
+            be.setSelectionEnd(edel);
+            be.cut();
+          }
        }
       finally { bd.baleWriteUnlock(); }
     }
@@ -1134,13 +1138,13 @@ private static class InsertLineAboveAction extends TextAction {
       BaleDocument bd = be.getBaleDocument();
       bd.baleWriteLock();
       try {
-	 int soff = be.getSelectionStart();
-	 int slno = bd.findLineNumber(soff);
-	 int sins = bd.findLineOffset(slno);
-	 try {
-	    bd.insertString(sins,"\n",null);
-	  }
-	 catch (BadLocationException ex) { }
+         int soff = be.getSelectionStart();
+         int slno = bd.findLineNumber(soff);
+         int sins = bd.findLineOffset(slno);
+         try {
+            bd.insertString(sins,"\n",null);
+          }
+         catch (BadLocationException ex) { }
        }
       finally { bd.baleWriteUnlock(); }
     }
@@ -3041,29 +3045,29 @@ private static class QuickFixAction extends TextAction {
       int soff = target.getSelectionStart();
       List<BumpProblem> probs = bd.getProblemsAtLocation(soff);
       if (probs == null) return;
-
+   
       List<BaleFixer> fixes = new ArrayList<BaleFixer>();
       for (BumpProblem bp : probs) {
-	 if (bp.getFixes() != null) {
-	    for (BumpFix bf : bp.getFixes()) {
-	       BaleFixer fixer = new BaleFixer(bp,bf);
-	       if (fixer.isValid()) fixes.add(fixer);
-	     }
-	  }
+         if (bp.getFixes() != null) {
+            for (BumpFix bf : bp.getFixes()) {
+               BaleFixer fixer = new BaleFixer(bp,bf);
+               if (fixer.isValid()) fixes.add(fixer);
+             }
+          }
        }
       if (fixes.isEmpty()) return;
-
+   
       BaleFixer fix = null;
       if (fixes.size() == 1) fix = fixes.get(0);
       else {
-	 Collections.sort(fixes);
-	 Object [] fixalts = fixes.toArray();
-	 fix = (BaleFixer) JOptionPane.showInputDialog(target,"Select Quick Fix","Quick Fix Selector",
-							  JOptionPane.QUESTION_MESSAGE,
-							  null,fixalts,fixes.get(0));
+         Collections.sort(fixes);
+         Object [] fixalts = fixes.toArray();
+         fix = (BaleFixer) JOptionPane.showInputDialog(target,"Select Quick Fix","Quick Fix Selector",
+        						  JOptionPane.QUESTION_MESSAGE,
+        						  null,fixalts,fixes.get(0));
        }
       if (fix == null) return;
-
+   
       fix.actionPerformed(e);
       BoardMetrics.noteCommand("BALE","QuickFix");
    }
@@ -3183,6 +3187,42 @@ private static class FixErrorsAction extends TextAction {
 
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Infer declaration action                                                */
+/*                                                                              */
+/********************************************************************************/
+
+private static class InferDeclarationAction extends TextAction {
+   
+   private static final long serialVersionUID = 1;
+   
+   InferDeclarationAction() {
+      super("InferDeclaration");
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) { 
+      BaleEditorPane target = getBaleEditor(e);
+      if (!checkReadEditor(target)) return;
+      BoardMetrics.noteCommand("BALE","InferDeclaration");
+      BaleDocument bd = target.getBaleDocument();
+      int off = target.getCaretPosition();
+      int lno = bd.findLineNumber(off);
+      BumpClient bc = BumpClient.getBump();
+      org.w3c.dom.Element typ = bc.getExpectedType(bd.getProjectName(),bd.getFile(),lno);
+      if (typ == null) return;
+      String ins = IvyXml.getAttrString(typ,"NAME") + " ";
+      int insoff = IvyXml.getAttrInt(typ,"OFFSET");
+      int insoff1 = bd.mapOffsetToJava(insoff);
+      bd.baleWriteLock();
+      try {
+         bd.insertString(insoff1,ins,null);
+       }
+      catch (BadLocationException ex) { }
+      finally { bd.baleWriteUnlock(); }
+    }
+   
+}       // end of inner class InferDeclarationAction
 
 
 

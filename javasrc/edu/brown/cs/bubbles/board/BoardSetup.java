@@ -2053,7 +2053,7 @@ private static boolean checkInstallDirectory(File ind)
       inf = new File(elib,s);
       if (!inf.exists() || !inf.canRead()) inf = new File(libb,s);
       if (!inf.exists() || !inf.canRead()) {
-	 BoardLog.logX("BOARD","Missing library file " + inf);
+	 BoardLog.logX("BOARD","Missing extra library file " + inf);
        }
     }
    for (String s : BOARD_BINARY_FILES) {

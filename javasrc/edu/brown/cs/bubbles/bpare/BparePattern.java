@@ -25,6 +25,7 @@
 package edu.brown.cs.bubbles.bpare;
 
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
+import edu.brown.cs.ivy.jcomp.JcompAst;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTMatcher;
@@ -60,7 +61,7 @@ private static ASTNode	     empty_node;
 
 
 static {
-   AST ast = AST.newAST(AST.JLS11,false);
+   AST ast = JcompAst.createNewAst();
    empty_node = ast.newEmptyStatement();
 }
 

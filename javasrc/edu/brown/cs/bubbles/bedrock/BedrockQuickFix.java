@@ -51,11 +51,12 @@ import org.eclipse.jdt.ui.text.java.IQuickAssistProcessor;
 import org.eclipse.jdt.ui.text.java.IQuickFixProcessor;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.TextChange;
+import org.eclipse.jdt.ui.text.java.correction.CUCorrectionProposal;
+import org.eclipse.jdt.ui.text.java.correction.ChangeCorrectionProposal;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.progress.WorkbenchJob;
 import org.w3c.dom.Element;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,12 +102,11 @@ void handleQuickFix(String proj,String bid,String file,int off,int len,List<Elem
 	throws BedrockException
 {
    CompilationUnit cu = our_plugin.getAST(bid,proj,file);
-   BedrockPlugin.logD("QUICK FIX FOR " + bid + " " + proj + " AST: " + cu);
+   BedrockPlugin.logD("QUICK FIX FOR " + bid + " " + proj + " " + file + " " + off + " " + len);
 
-   ICompilationUnit icu = our_plugin.getCompilationUnit(proj,file);
-
+   ICompilationUnit icu = our_plugin.getBaseCompilationUnit(proj,file);
    List<CategorizedProblem> probs = getProblems(cu,problems);
-   if (probs == null || probs.size() == 0) throw new BedrockException("Problem not found");
+   if (probs == null || probs.size() == 0) return;		// problem went away
    if (off < 0) {
       CategorizedProblem p = probs.get(0);
       off = p.getSourceStart();
@@ -122,7 +122,7 @@ void handleQuickFix(String proj,String bid,String file,int off,int len,List<Elem
 
    if (BedrockApplication.getDisplay() == null) throw new BedrockException("No display");
    BedrockPlugin.logD("QUICK FIX PROBLEMS " + pcs.length);
-   
+
    try {
       WJob wj = new WJob(fc,pcs,xw);
       wj.schedule();
@@ -155,19 +155,18 @@ private class WJob extends WorkbenchJob {
     }
 
    @Override public IStatus runInUIThread(IProgressMonitor m) {
-
       try {
 	 for (IQuickFixProcessor qp : getFixers()) {
-	    BedrockPlugin.logD("Quick fix proecessor " + qp);
+	    BedrockPlugin.logD("Quick fix processor " + qp + " " + problem_contexts.length);
 	    try {
 	       IJavaCompletionProposal [] props = qp.getCorrections(fix_context,problem_contexts);
-               if (props == null) BedrockPlugin.logD("No completion proposals");
+	       if (props == null) BedrockPlugin.logD("No completion proposals");
 	       else BedrockPlugin.logD("Returned " + props.length + " completion proposals");
 	       outputProposals(props,xml_writer);
 	     }
-            catch (OperationCanceledException e) {
-               BedrockPlugin.logE("Operation completion canceled",e);
-             }
+	    catch (OperationCanceledException e) {
+	       BedrockPlugin.logE("Operation completion canceled",e);
+	     }
 	    catch (CoreException e) {
 	       BedrockPlugin.logE("Problem running completion proposal",e);
 	     }
@@ -175,13 +174,13 @@ private class WJob extends WorkbenchJob {
 	 for (IQuickAssistProcessor qp : getAssisters()) {
 	    try {
 	       IJavaCompletionProposal [] props = qp.getAssists(fix_context,problem_contexts);
-               if (props == null) BedrockPlugin.logD("No quick assist proposals");
+	       if (props == null) BedrockPlugin.logD("No quick assist proposals");
 	       else BedrockPlugin.logD("Returned " + props.length + " quick assist proposals");
 	       outputProposals(props,xml_writer);
 	     }
-            catch (OperationCanceledException e) {
-               BedrockPlugin.logD("Operation quick assist canceled " + e);
-             }
+	    catch (OperationCanceledException e) {
+	       BedrockPlugin.logD("Operation quick assist canceled " + e);
+	     }
 	    catch (CoreException e) {
 	       BedrockPlugin.logE("Problem running quick assist proposal",e);
 	     }
@@ -195,24 +194,31 @@ private class WJob extends WorkbenchJob {
 
       return Status.OK_STATUS;
     }
-   
+
    private List<IQuickFixProcessor> getFixers() {
       List<IQuickFixProcessor> rslt = new ArrayList<>();
       try {
 	 rslt.add(new org.eclipse.jdt.internal.ui.text.correction.QuickFixProcessor());
 	 rslt.add(new org.eclipse.jdt.internal.ui.text.spelling.WordQuickFixProcessor());
+   //	 rslt.add(new org.eclipse.pde.internal.ui.correction.java.QuickFixProcessor());
+   //	 rslt.add(new org.eclipse.pde.api.tools.ui.internal.markers.ApiQuickFixProcessor());
        }
       catch (NoClassDefFoundError e) {
-         BedrockPlugin.logE("Problem loading quick fixes",e);
+	 BedrockPlugin.logE("Problem loading quick fixes",e);
        }
       return rslt;
     }
-   
+
    private List<IQuickAssistProcessor> getAssisters() {
       List<IQuickAssistProcessor> rslt = new ArrayList<>();
       try {
 	 rslt.add(new org.eclipse.jdt.internal.ui.text.correction.QuickAssistProcessor());
 	 rslt.add(new org.eclipse.jdt.internal.ui.text.correction.QuickTemplateProcessor());
+   //	 rslt.add(new org.eclipse.ui.internal.genericeditor.markers.MarkerResoltionQuickAssistProcessor());
+   //	 rslt.add(new org.eclipse.ui.texteditor.spelling.SpellingCorrectionProcessor());
+   //	 rslt.add(new org.eclipse.pde.internal.ui.editor.text.PDEQuickAssistProcessor());
+   //	 rslt.add(new org.eclipse.jdt.internal.ui.text.correction.JavaCorrectionProcessor());
+   //	 rslt.add(new org.eclipse.jdt.internal.ui.text.correction.ExternalNullAnnotationQuickAssistProcessor());
        }
       catch (NoClassDefFoundError e) {
 	 BedrockPlugin.logE("Problem loading quick assists",e);
@@ -243,7 +249,8 @@ private List<CategorizedProblem> getProblems(CompilationUnit cu,List<Element> xm
       int sln = IvyXml.getAttrInt(e,"START");
       if (sln < 0) continue;
       for (IProblem ip : probs) {
-	 BedrockPlugin.logD("Consider problem " + ip.getID() + " " + ip.getSourceStart() + " " + ip.getClass());
+	 BedrockPlugin.logD("Consider problem " + ip.getID() + " " + ip.getSourceStart() + " "
+	       + ip.getArguments() + " " + mid);
 	 if (!(ip instanceof CategorizedProblem)) continue;
 	 if (ip.getID() != mid) continue;
 	 if (Math.abs(ip.getSourceStart() - sln) > 2) continue;
@@ -284,21 +291,21 @@ private boolean isUsable(IJavaCompletionProposal p)
 {
    if (p == null) return false;
 
-   if (p.getClass().getName().equals("org.eclipse.jdt.internal.ui.text.correction.proposals.LinkedNamesAssistProposal")) {
+// if (p.getClass().getName().equals("org.eclipse.jdt.internal.ui.text.correction.proposals.LinkedNamesAssistProposal")) {
+//
+//    return false;
+//  }
+//
+// try {
+//    Class<?> pcc = p.getClass();
+//    pcc.getMethod("getChange");
+//    return true;
+// }
+// catch (Throwable t) {
+//    BedrockPlugin.logD("UNKNOWN COMPLETION TYPE " + p.getClass() + " " + p.getClass().getSuperclass());
+// }
 
-      return false;
-    }
-
-   try {
-      Class<?> pcc = p.getClass();
-      pcc.getMethod("getChange");
-      return true;
-   }
-   catch (Throwable t) {
-      BedrockPlugin.logD("UNKNOWN COMPLETION TYPE " + p.getClass() + " " + p.getClass().getSuperclass());
-   }
-
-   return false;
+   return true;
 }
 
 
@@ -308,21 +315,29 @@ private void outputProposal(IJavaCompletionProposal p,IvyXmlWriter xw)
    TextEdit textedit = null;
 
    try {
-      Class<?> ccp = p.getClass();
-      Method ccm = ccp.getMethod("getChange");
-      Change c = (Change) ccm.invoke(p);
-      if (c == null) return;
-      if (c instanceof TextChange) {
-	 TextChange tc = (TextChange) c;
-	 textedit = tc.getEdit();
-      }
-   }
-   catch (Throwable e) {
-      BedrockPlugin.logE("Problem gettting completion",e);
-   }
+      if (p instanceof CUCorrectionProposal) {
+	 CUCorrectionProposal awcp = (CUCorrectionProposal) p;
+	 TextChange tc = awcp.getTextChange();
+	 if (tc != null) textedit = tc.getEdit();
+       }
+      else if (p instanceof ChangeCorrectionProposal) {
+	 ChangeCorrectionProposal ccp = (ChangeCorrectionProposal) p;
+	 Change c = ccp.getChange();
+	 if (c instanceof TextChange) {
+	    TextChange tc = (TextChange) c;
+	    textedit = tc.getEdit();
+	  }
+	 else {
+	    BedrockPlugin.logE("Change proposal lacks test change: " + p + " " + c);
+	  }
+       }
+    }
+   catch (Throwable t) {
+      BedrockPlugin.logE("Problem getting text edit for QuickFix " + p,t);
+    }
 
    if (textedit == null) {
-      BedrockPlugin.logD("COMPLETION w/o EDIT " + p.getClass() + " " + p.getClass().getSuperclass());
+      BedrockPlugin.logD("QUICK FIX w/o EDIT " + p.getClass() + " " + p.getClass().getSuperclass());
       return;
     }
 
@@ -337,7 +352,6 @@ private void outputProposal(IJavaCompletionProposal p,IvyXmlWriter xw)
 
    xw.end("FIX");
 }
-
 
 
 /********************************************************************************/
@@ -374,10 +388,10 @@ private static class FixContext implements IInvocationContext {
       BedrockPlugin.logD("Fix covered node " + n);
       return n;
     }
-   @Override public ASTNode getCoveringNode() { 
+   @Override public ASTNode getCoveringNode() {
       ASTNode n = node_finder.getCoveringNode();
       BedrockPlugin.logD("Fix covering node " + n);
-      return n; 
+      return n;
     }
 
 }	// end of inner class FixContext
@@ -405,11 +419,14 @@ private static class ProblemContext implements IProblemLocation {
       synchronized (finder_map) {
 	 nf = finder_map.get(cu);
 	 if (nf == null) {
+	    BedrockPlugin.logD("CREATE NODE FINDER " + for_problem.getSourceStart() + " " + getLength());
 	    nf = new NodeFinder(cu,for_problem.getSourceStart(),getLength());
 	    finder_map.put(cu,nf);
 	  }
        }
-      return nf.getCoveredNode();
+      ASTNode n = nf.getCoveredNode();
+      BedrockPlugin.logD("Fix covered node " + n);
+      return n;
     }
 
    @Override public ASTNode getCoveringNode(CompilationUnit cu) {
@@ -417,15 +434,18 @@ private static class ProblemContext implements IProblemLocation {
       synchronized (finder_map) {
 	 nf = finder_map.get(cu);
 	 if (nf == null) {
+	    BedrockPlugin.logD("CREATE NODE FINDER1 " + for_problem.getSourceStart() + " " + getLength());
 	    nf = new NodeFinder(cu,for_problem.getSourceStart(),getLength());
 	    finder_map.put(cu,nf);
 	  }
        }
-      return nf.getCoveringNode();
+      ASTNode n = nf.getCoveringNode();
+      BedrockPlugin.logD("Fix covering node " + n);
+      return n;
     }
 
    @Override public int getLength() {
-      return for_problem.getSourceEnd() - for_problem.getSourceStart();
+      return for_problem.getSourceEnd() - for_problem.getSourceStart() + 1;
     }
 
    @Override public String getMarkerType() {
@@ -441,6 +461,7 @@ private static class ProblemContext implements IProblemLocation {
     }
 
    @Override public int getProblemId() {
+      BedrockPlugin.logD("Quickfix Problem id: " + for_problem.getID());
       return for_problem.getID();
     }
 
@@ -452,15 +473,14 @@ private static class ProblemContext implements IProblemLocation {
 
 
 
-
-
+/********************************************************************************/
+/*										*/
+/*	<comment here>								*/
+/*										*/
+/********************************************************************************/
 
 
 
 
 }	// end of class BedrockQuickFix
 
-
-
-
-/* end of BedrockQuicFix.java */

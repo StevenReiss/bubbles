@@ -140,9 +140,9 @@ public synchronized static BumpClient getBump()
 	 case JAVA :
 	    default_client = new BumpClientEclipse();
 	    break;
-         case JAVA_IDEA :
-            default_client = new BumpClientIdea();
-            break;
+	 case JAVA_IDEA :
+	    default_client = new BumpClientIdea();
+	    break;
 	 case PYTHON :
 	    default_client = new BumpClientPython();
 	    break;
@@ -1276,13 +1276,13 @@ public boolean createProject(String nm,File dir,String typ,Map<String,Object> pr
       q += " DIR='" + dir.getPath() + "'";
     }
    if (typ != null) q += " TYPE='" + typ + "'";
-   
+
    String cnts = null;
    if (props != null && !props.isEmpty()) {
       IvyXmlWriter xw = new IvyXmlWriter();
       xw.begin("PROPS");
       for (Map.Entry<String,Object> ent : props.entrySet()) {
-         outputPropertyValue(ent.getKey(),ent.getValue(),xw);
+	 outputPropertyValue(ent.getKey(),ent.getValue(),xw);
        }
       xw.end("PROPS");
       cnts = xw.toString();
@@ -1296,7 +1296,7 @@ public boolean createProject(String nm,File dir,String typ,Map<String,Object> pr
 private void outputPropertyValue(String nm,Object val,IvyXmlWriter xw)
 {
    if (val == null) return;
-   
+
    xw.begin("PROP");
    if (nm != null) xw.field("NAME",nm);
    if (val.getClass() == Integer.class) {
@@ -1306,7 +1306,7 @@ private void outputPropertyValue(String nm,Object val,IvyXmlWriter xw)
    else if (val.getClass() == String.class) {
       xw.field("TYPE","String");
       xw.cdataElement("VALUE",val.toString());
-    }       
+    }	
    else if (val.getClass() == Boolean.class) {
       xw.field("TYPE","boolean");
       xw.cdataElement("VALUE",val.toString());
@@ -1314,21 +1314,21 @@ private void outputPropertyValue(String nm,Object val,IvyXmlWriter xw)
    else if (val.getClass() == File.class) {
       xw.field("TYPE","File");
       xw.textElement("VALUE",((File) val).getPath());
-    }     
+    }	
    else if (val instanceof List<?>) {
       xw.field("TYPE","List");
       List<?> lval = (List<?>) val;
       for (Object o : lval) {
-         outputPropertyValue(null,o,xw);
+	 outputPropertyValue(null,o,xw);
        }
     }
    else if (val instanceof Map<?,?>) {
       xw.field("TYPE","Map");
       Map<?,?> mval = (Map<?,?>) val;
       for (Map.Entry<?,?> ent1 : mval.entrySet()) {
-         String nm1 = ent1.getKey().toString();
-         Object val1 = ent1.getValue();
-         outputPropertyValue(nm1,val1,xw);
+	 String nm1 = ent1.getKey().toString();
+	 Object val1 = ent1.getValue();
+	 outputPropertyValue(nm1,val1,xw);
        }
     }
    xw.end("PROP");
@@ -1681,22 +1681,22 @@ public List<BumpLocation> findAllImplements(String nm)
 {
    // this doesn't work
    waitForIDE();
-   
+
    StringWriter sw = new StringWriter();
    sw.write("PATTERN='");
    IvyXml.outputXmlString(nm,sw);
    sw.write("' DEFS='true' REFS='false' SYSTEM='true' IMPLS='true'");
    sw.write(" FOR='CLASS'");
-   
+
    Element xml = getXmlReply("PATTERNSEARCH",null,sw.toString(),null,0);
-   
+
    return getSearchResults(null,xml,false);
 }
 
 
 
 public Set<String> findAllSubclasses(String base)
-{  
+{
    Set<String> etypes = new HashSet<String>();
 
    Element e = getTypeHierarchy(null,null,base,true);
@@ -1706,7 +1706,7 @@ public Set<String> findAllSubclasses(String base)
       if (nm == null) continue;
       etypes.add(nm);
     }
-   
+
    return etypes;
 }
 
@@ -1732,7 +1732,7 @@ public List<BumpLocation> findAllTypes(String nm)
 
 /**
  *	Return a list of BumpLocations containing the definitions of all annotations
- *	matching the given pattern.								 
+ *	matching the given pattern.								
  *	@param proj the project to search in, null implies all projects
  *	@param nm the search pattern
  *	@param def if true, include definitions in the output set
@@ -1901,7 +1901,7 @@ public Collection<BumpLocation> textSearch(String proj,String text,boolean liter
    if (multiline) fgs |= Pattern.MULTILINE;
 
    text = IvyXml.xmlSanitize(text);
-   
+
    if (max <= 0) max = 512;
 
    String q = "PATTERN='" + text + "' FLAGS='" + fgs + "' MAX='" + max + "'";
@@ -2190,6 +2190,32 @@ public Collection<BumpCompletion> getCompletions(String proj,File file,int id,in
 
    return rslt;
 }
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Find expected type so we can auto create declaration                    */
+/*                                                                              */
+/********************************************************************************/
+
+/**
+ *      This returns the expected type for an assignment so that the assignment
+ *      can be made into a declaration with an inferred type.
+ **/
+
+public Element getExpectedType(String proj,File file,int line)
+{
+   waitForIDE();
+   
+   String rq = "FILE='" + file.getPath() + "' LINE='" + line + "'";
+   Element xml = getXmlReply("GETEXPECTEDTYPE",proj,rq,null,0);
+   if (!IvyXml.isElement(xml,"RESULT")) return null;
+   Element typ = IvyXml.getChild(xml,"TYPE");
+   if (typ == null) return null;
+   if (IvyXml.getAttrBool(typ,"NULL")) return null;
+   return typ;
+}
+
 
 
 
@@ -2549,7 +2575,7 @@ public boolean editBreakpoint(String id,String prop,String ... args)
 /*										*/
 /********************************************************************************/
 
-public Element computeQuickFix(BumpProblem bp,int off,int len)
+public Element computeQuickFix(BumpProblem bp,int off,int len,boolean save)
 {
    // Element e = getXmlReply("COMMIT",null,null,null,0);
    // do we need to do a build here (i.e. call saveAll)
@@ -2557,7 +2583,7 @@ public Element computeQuickFix(BumpProblem bp,int off,int len)
       // BoardLog.logE("BUMP","Problem with commit for quick fix: " + e);
     // }
 
-   saveAll();
+   if (save) saveAll();
 
    String q = "FILE='" + bp.getFile().getPath() + "' OFFSET='" + off + "' LENGTH='" + len + "'";
    BumpProblemImpl bpi = (BumpProblemImpl) bp;
@@ -3681,8 +3707,8 @@ protected class IDEHandler implements MintHandler {
 		     IvyXml.getAttrBool(e,"FAILURE"),
 		     IvyXml.getChild(e,"MESSAGES"));
 	       break;
-            case "AUTOBUILDDONE" :
-               break;
+	    case "AUTOBUILDDONE" :
+	       break;
 	    case "EDIT" :
 	       String bid = IvyXml.getAttrString(e,"BID");
 	       if (bid != null && !bid.equals(source_id)) {
@@ -3727,7 +3753,7 @@ protected class IDEHandler implements MintHandler {
 	       break;
 	    case "NAMES" :
 	       if (name_collects != null) {
-                  BoardLog.logD("BUMP","NAMES RECEIVED");
+		  BoardLog.logD("BUMP","NAMES RECEIVED");
 		  String nid = IvyXml.getAttrString(e,"NID");
 		  NameCollector nc = name_collects.get(nid);
 		  if (nc != null) {
@@ -3800,8 +3826,8 @@ protected class IDEHandler implements MintHandler {
 	       break;
 	    case "STOP" :
 	       BoardLog.logI("BUMP","STOP received from eclipse");
-               BoardProperties sysprops = BoardProperties.getProperties("System");
-               if (sysprops.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND)) System.exit(0);
+	       BoardProperties sysprops = BoardProperties.getProperties("System");
+	       if (sysprops.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND)) System.exit(0);
 	       JOptionPane.showMessageDialog(null,
 						"Eclipse exited -- Bubbles must exit as well",
 						"Bubbles Eclipse Problem",JOptionPane.ERROR_MESSAGE);
@@ -3841,23 +3867,23 @@ protected static class NameCollector {
    synchronized void addNames(Element xml) {
       int ctr = 0;
       for (Element fe : IvyXml.children(xml,"FILE")) {
-         String path = IvyXml.getTextElement(fe,"PATH");
-         for (Element itm : IvyXml.children(fe,"ITEM")) {
-            int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
-            int length = IvyXml.getAttrInt(itm,"LENGTH");
-            String pnm = IvyXml.getAttrString(itm,"PROJECT");
-            BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
-            result_names.add(bl);
-            ++ctr;
-          }
+	 String path = IvyXml.getTextElement(fe,"PATH");
+	 for (Element itm : IvyXml.children(fe,"ITEM")) {
+	    int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
+	    int length = IvyXml.getAttrInt(itm,"LENGTH");
+	    String pnm = IvyXml.getAttrString(itm,"PROJECT");
+	    BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
+	    result_names.add(bl);
+	    ++ctr;
+	  }
        }
       BoardLog.logD("BUMP","Received " + ctr + " Names");
       for (Element itm : IvyXml.children(xml,"ITEM")) {
-         String pnm = IvyXml.getAttrString(itm,"PROJECT");
-         String pth = IvyXml.getAttrString(itm,"PATH");
-         BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
-         result_names.add(bl);
-         // BoardLog.logD("BUMP","Added project name " + bl);
+	 String pnm = IvyXml.getAttrString(itm,"PROJECT");
+	 String pth = IvyXml.getAttrString(itm,"PATH");
+	 BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
+	 result_names.add(bl);
+	 // BoardLog.logD("BUMP","Added project name " + bl);
        }
     }
 
@@ -3870,12 +3896,12 @@ protected static class NameCollector {
 
    synchronized Collection<BumpLocation> getNames() {
       while (!is_done) {
-         try {
-            wait();
-          }
-         catch (InterruptedException e) { }
+	 try {
+	    wait();
+	  }
+	 catch (InterruptedException e) { }
        }
-   
+
       return result_names;
     }
 

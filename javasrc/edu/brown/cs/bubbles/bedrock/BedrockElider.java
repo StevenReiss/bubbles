@@ -473,9 +473,9 @@ private String getNodeType(ASTNode n)
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Output information for hints                                            */
-/*                                                                              */
+/*										*/
+/*	Output information for hints						*/
+/*										*/
 /********************************************************************************/
 
 private void outputHintData(ASTNode n,IvyXmlWriter xw)
@@ -483,24 +483,29 @@ private void outputHintData(ASTNode n,IvyXmlWriter xw)
    IMethodBinding imb = null;
    if (n instanceof MethodInvocation) {
       MethodInvocation mi = (MethodInvocation) n;
-      imb = mi.resolveMethodBinding();
+      if (mi.arguments().size() >= 2) {
+	 imb = mi.resolveMethodBinding();
+       }
     }
    else if (n instanceof ClassInstanceCreation) {
       ClassInstanceCreation cic = (ClassInstanceCreation) n;
-      imb = cic.resolveConstructorBinding();
-      BedrockPlugin.logD("HINT FOR CIC " + n + " " + imb);
+      if (cic.arguments().size() >= 2) {
+	 imb = cic.resolveConstructorBinding();
+       }
     }
    else if (n instanceof SuperConstructorInvocation) {
       SuperConstructorInvocation sci = (SuperConstructorInvocation) n;
-      imb = sci.resolveConstructorBinding();
-      BedrockPlugin.logD("HINT FOR SUPER " + n + " " + imb);
+      if (sci.arguments().size() >= 2) {
+	 imb = sci.resolveConstructorBinding();
+       }
     }
    else if (n instanceof ConstructorInvocation) {
       ConstructorInvocation cci = (ConstructorInvocation) n;
-      imb = cci.resolveConstructorBinding();
-      BedrockPlugin.logD("HINT FOR THIS " + n + " " + imb);
+      if (cci.arguments().size() >= 2) {
+	 imb = cci.resolveConstructorBinding();
+       }
     }
-   
+
    if (imb != null) {
       IJavaElement ije = imb.getJavaElement();
       if (ije == null || !(ije instanceof IMethod)) return;
@@ -509,27 +514,33 @@ private void outputHintData(ASTNode n,IvyXmlWriter xw)
       String [] pnames;
       String [] ptypes;
       try {
-         rettyp = mthd.getReturnType();
-         pnames = mthd.getParameterNames();
-         ptypes = mthd.getParameterTypes();
+	 rettyp = mthd.getReturnType();
+	 pnames = mthd.getParameterNames();
+	 ptypes = mthd.getParameterTypes();
        }
       catch (JavaModelException e) {
-         return;
-       }
+	 return;
+       } 
       xw.begin("HINT");
       xw.field("KIND","METHOD");
       if (n instanceof ClassInstanceCreation) xw.field("CONSTRUCTOR",true);
       else xw.field("RETURNS",rettyp);
-      xw.field("NUMPARAM",mthd.getNumberOfParameters());
+      int nparam = mthd.getNumberOfParameters();
+      if (nparam != pnames.length) {
+	 BedrockPlugin.logE("Method mismatch: " + mthd + " " + n + " " + nparam + " " + pnames.length);
+       }
+      xw.field("NUMPARAM",nparam);
       for (int i = 0; i < mthd.getNumberOfParameters(); ++i) {
-         xw.begin("PARAMETER");
-         xw.field("NAME",pnames[i]);
-         xw.field("TYPE",ptypes[i]);
-         xw.end("PARAMETER");
+	 int j = Math.min(i,pnames.length);
+	 xw.begin("PARAMETER");
+	 xw.field("NAME",pnames[j]);
+	 xw.field("TYPE",ptypes[j]);
+	 xw.end("PARAMETER");
        }
       xw.end("HINT");
     }
 }
+
 
 
 /********************************************************************************/
@@ -553,41 +564,41 @@ private class ElidePass1 extends ASTVisitor {
    @Override public void preVisit(ASTNode n) {
       if (tree_root == null && n instanceof CompilationUnit) tree_root = (CompilationUnit) n;
       if (inside_count > 0) {
-         ++inside_count;
-         return;
+	 ++inside_count;
+	 return;
        }
-   
+
       double p = getElidePriority(n);
       if (p != 0) {
-         result_value.put(n,p);
-         ++inside_count;
+	 result_value.put(n,p);
+	 ++inside_count;
        }
     }
 
    @Override public void postVisit(ASTNode n) {
       if (inside_count > 0) {
-         --inside_count;
-         return;
+	 --inside_count;
+	 return;
        }
       List<?> l = n.structuralPropertiesForType();
       double p = 0;
       for (Iterator<?> it = l.iterator(); it.hasNext(); ) {
-         StructuralPropertyDescriptor sp = (StructuralPropertyDescriptor) it.next();
-         if (sp.isChildProperty()) {
-            ASTNode cn = (ASTNode) n.getStructuralProperty(sp);
-            p = merge(p,cn);
-          }
-         else if (sp.isChildListProperty()) {
-            List<?> cl = (List<?>) n.getStructuralProperty(sp);
-            for (Iterator<?> it1 = cl.iterator(); it1.hasNext(); ) {
-               ASTNode cn = (ASTNode) it1.next();
-               p = merge(p,cn);
-             }
-          }
+	 StructuralPropertyDescriptor sp = (StructuralPropertyDescriptor) it.next();
+	 if (sp.isChildProperty()) {
+	    ASTNode cn = (ASTNode) n.getStructuralProperty(sp);
+	    p = merge(p,cn);
+	  }
+	 else if (sp.isChildListProperty()) {
+	    List<?> cl = (List<?>) n.getStructuralProperty(sp);
+	    for (Iterator<?> it1 = cl.iterator(); it1.hasNext(); ) {
+	       ASTNode cn = (ASTNode) it1.next();
+	       p = merge(p,cn);
+	     }
+	  }
        }
       if (p > 0) {
-         p *= scaleUp(n);
-         result_value.put(n,p);
+	 p *= scaleUp(n);
+	 result_value.put(n,p);
        }
     }
 
@@ -648,13 +659,13 @@ private class ElidePass2 extends ASTVisitor {
    @Override public void preVisit(ASTNode n) {
       if (tree_root == null && n instanceof CompilationUnit) tree_root = (CompilationUnit) n;
       if (active_node == null) {
-         if (isRootRegion(n.getStartPosition(),n.getLength())) {
-            active_node = n;
-            result_value.put(n,1.0);
-            // BedrockPlugin.logD("PRIORITY TOP " + n.getStartPosition() + " " + getNodeType(n) + " : " + n);
-            outputXmlStart(n);
-          }
-         return;
+	 if (isRootRegion(n.getStartPosition(),n.getLength())) {
+	    active_node = n;
+	    result_value.put(n,1.0);
+	    // BedrockPlugin.logD("PRIORITY TOP " + n.getStartPosition() + " " + getNodeType(n) + " : " + n);
+	    outputXmlStart(n);
+	  }
+	 return;
        }
       double v = getPriority(n.getParent());
       double v0 = 0;
@@ -662,17 +673,17 @@ private class ElidePass2 extends ASTVisitor {
       double p = computePriority(v,n,v0);
       // BedrockPlugin.logD("PRIORITY " + p + " " + n.getStartPosition() + " " + getNodeType(n) + " : " + n);
       if (p != 0) {
-         result_value.put(n,p);
-         checkSwitchBlock(n);
-         outputXmlStart(n);
+	 result_value.put(n,p);
+	 checkSwitchBlock(n);
+	 outputXmlStart(n);
        }
     }
 
    @Override public void postVisit(ASTNode n) {
       if (active_node == n) active_node = null;
       if (xml_writer != null && result_value.get(n) != null && result_value.get(n) > 0) {
-         outputHintData(n,xml_writer);
-         xml_writer.end("ELIDE");
+	 outputHintData(n,xml_writer);
+	 xml_writer.end("ELIDE");
        }
       checkEndSwitchBlock(n);
     }
@@ -695,84 +706,84 @@ private class ElidePass2 extends ASTVisitor {
 
    private void outputXmlStart(ASTNode n) {
       if (xml_writer != null) {
-         xml_writer.begin("ELIDE");
-         int sp = n.getStartPosition();
-         int esp = tree_root.getExtendedStartPosition(n);
-         int ln = n.getLength();
-         int eln = tree_root.getExtendedLength(n);
-         xml_writer.field("START",sp);
-         if (esp != sp) xml_writer.field("ESTART",esp);
-         xml_writer.field("LENGTH",ln);
-         if (eln != ln) xml_writer.field("ELENGTH",eln);
-         double p = result_value.get(n);
-         for (int i = 0; i < switch_stack.size(); ++i) p *= SWITCH_BLOCK_SCALE;
-         xml_writer.field("PRIORITY",p);
-         String typ = getFormatType(n);
-         if (typ != null) {
-            xml_writer.field("TYPE",typ);
-            if (typ.startsWith("METHODDECL") || typ.startsWith("FIELDDECL") ||
-        	   typ.startsWith("CLASSDECL")) {
-               outputDeclInfo((Name) n);
-             }
-          }
-         String ttyp = getNodeType(n);
-         if (ttyp != null) xml_writer.field("NODE",ttyp);
-         if ((n.getFlags() & ASTNode.MALFORMED) != 0) xml_writer.field("ERROR",true);
-         if ((n.getFlags() & ASTNode.RECOVERED) != 0) xml_writer.field("RECOV",true);
+	 xml_writer.begin("ELIDE");
+	 int sp = n.getStartPosition();
+	 int esp = tree_root.getExtendedStartPosition(n);
+	 int ln = n.getLength();
+	 int eln = tree_root.getExtendedLength(n);
+	 xml_writer.field("START",sp);
+	 if (esp != sp) xml_writer.field("ESTART",esp);
+	 xml_writer.field("LENGTH",ln);
+	 if (eln != ln) xml_writer.field("ELENGTH",eln);
+	 double p = result_value.get(n);
+	 for (int i = 0; i < switch_stack.size(); ++i) p *= SWITCH_BLOCK_SCALE;
+	 xml_writer.field("PRIORITY",p);
+	 String typ = getFormatType(n);
+	 if (typ != null) {
+	    xml_writer.field("TYPE",typ);
+	    if (typ.startsWith("METHODDECL") || typ.startsWith("FIELDDECL") ||
+		   typ.startsWith("CLASSDECL")) {
+	       outputDeclInfo((Name) n);
+	     }
+	  }
+	 String ttyp = getNodeType(n);
+	 if (ttyp != null) xml_writer.field("NODE",ttyp);
+	 if ((n.getFlags() & ASTNode.MALFORMED) != 0) xml_writer.field("ERROR",true);
+	 if ((n.getFlags() & ASTNode.RECOVERED) != 0) xml_writer.field("RECOV",true);
        }
     }
 
    private void outputDeclInfo(Name name) {
       IBinding bnd = name.resolveBinding();
       if (bnd == null) return;
-   
+
       StringBuffer buf;
-   
+
       switch (bnd.getKind()) {
-         case IBinding.ANNOTATION :
-            buf = new StringBuffer();
-            IAnnotationBinding iab = (IAnnotationBinding) bnd;
-            buf.append(iab.getAnnotationType().getQualifiedName());
-            buf.append(".");
-            buf.append(iab.getName());
-            xml_writer.field("FULLNAME",buf.toString());
-            break;
-         case IBinding.MEMBER_VALUE_PAIR :
-         case IBinding.PACKAGE :
-            break;
-         case IBinding.METHOD :
-            buf = new StringBuffer();
-            IMethodBinding imb = (IMethodBinding) bnd;
-            buf.append(imb.getDeclaringClass().getQualifiedName());
-            buf.append(".");
-            buf.append(imb.getName());
-            buf.append("(");
-            int ct = 0;
-            for (ITypeBinding tb : imb.getParameterTypes()) {
-               if (ct++ > 0) buf.append(",");
-               buf.append(tb.getName());
-             }
-            buf.append(")");
-            xml_writer.field("FULLNAME",buf.toString());
-            break;
-         case IBinding.VARIABLE :
-            buf = new StringBuffer();
-            IVariableBinding ivb = (IVariableBinding) bnd;
-            if (ivb.isField()) {
-               if (ivb.getDeclaringClass() != null) {
-        	  buf.append(ivb.getDeclaringClass().getQualifiedName());
-        	  buf.append(".");
-        	  buf.append(ivb.getName());
-        	  xml_writer.field("FULLNAME",buf.toString());
-        	}
-             }
-            break;
-         case IBinding.TYPE :
-            ITypeBinding itb = (ITypeBinding) bnd;
-            xml_writer.field("FULLNAME",itb.getQualifiedName());
-            xml_writer.field("LOCAL",itb.isLocal());
-            xml_writer.field("MEMBER",itb.isMember());
-            break;
+	 case IBinding.ANNOTATION :
+	    buf = new StringBuffer();
+	    IAnnotationBinding iab = (IAnnotationBinding) bnd;
+	    buf.append(iab.getAnnotationType().getQualifiedName());
+	    buf.append(".");
+	    buf.append(iab.getName());
+	    xml_writer.field("FULLNAME",buf.toString());
+	    break;
+	 case IBinding.MEMBER_VALUE_PAIR :
+	 case IBinding.PACKAGE :
+	    break;
+	 case IBinding.METHOD :
+	    buf = new StringBuffer();
+	    IMethodBinding imb = (IMethodBinding) bnd;
+	    buf.append(imb.getDeclaringClass().getQualifiedName());
+	    buf.append(".");
+	    buf.append(imb.getName());
+	    buf.append("(");
+	    int ct = 0;
+	    for (ITypeBinding tb : imb.getParameterTypes()) {
+	       if (ct++ > 0) buf.append(",");
+	       buf.append(tb.getName());
+	     }
+	    buf.append(")");
+	    xml_writer.field("FULLNAME",buf.toString());
+	    break;
+	 case IBinding.VARIABLE :
+	    buf = new StringBuffer();
+	    IVariableBinding ivb = (IVariableBinding) bnd;
+	    if (ivb.isField()) {
+	       if (ivb.getDeclaringClass() != null) {
+		  buf.append(ivb.getDeclaringClass().getQualifiedName());
+		  buf.append(".");
+		  buf.append(ivb.getName());
+		  xml_writer.field("FULLNAME",buf.toString());
+		}
+	     }
+	    break;
+	 case IBinding.TYPE :
+	    ITypeBinding itb = (ITypeBinding) bnd;
+	    xml_writer.field("FULLNAME",itb.getQualifiedName());
+	    xml_writer.field("LOCAL",itb.isLocal());
+	    xml_writer.field("MEMBER",itb.isMember());
+	    break;
        }
     }
 
@@ -784,18 +795,18 @@ private class ElidePass2 extends ASTVisitor {
       if (n instanceof SwitchCase) return;
       ASTNode last = null;
       if (n instanceof Statement) {
-         ASTNode pn = n.getParent();
-         if (pn.getNodeType() != ASTNode.SWITCH_STATEMENT) return;
-         List<?> l = (List<?>) pn.getStructuralProperty(SwitchStatement.STATEMENTS_PROPERTY);
-         int idx = l.indexOf(n);
-         if (idx < 0) return;
-         int lidx = idx;
-         while (lidx+1 < l.size()) {
-            if (l.get(lidx+1) instanceof SwitchCase) break;
-            else if (l.get(lidx+1) instanceof Statement) ++lidx;
-            else return;
-          }
-         if (lidx - idx >= 2) last = (ASTNode) l.get(lidx);
+	 ASTNode pn = n.getParent();
+	 if (pn.getNodeType() != ASTNode.SWITCH_STATEMENT) return;
+	 List<?> l = (List<?>) pn.getStructuralProperty(SwitchStatement.STATEMENTS_PROPERTY);
+	 int idx = l.indexOf(n);
+	 if (idx < 0) return;
+	 int lidx = idx;
+	 while (lidx+1 < l.size()) {
+	    if (l.get(lidx+1) instanceof SwitchCase) break;
+	    else if (l.get(lidx+1) instanceof Statement) ++lidx;
+	    else return;
+	  }
+	 if (lidx - idx >= 2) last = (ASTNode) l.get(lidx);
        }
       if (last == null) return;
       xml_writer.begin("ELIDE");
@@ -818,8 +829,8 @@ private class ElidePass2 extends ASTVisitor {
 
    private void checkEndSwitchBlock(ASTNode n) {
       while (!switch_stack.isEmpty() && n == switch_stack.peek()) {
-         switch_stack.pop();
-         xml_writer.end("ELIDE");
+	 switch_stack.pop();
+	 xml_writer.end("ELIDE");
        }
       last_case = (n instanceof SwitchCase);
     }
@@ -845,7 +856,7 @@ private abstract class ElideData {
       end_offset = eoff;
     }
 
-   boolean contains(int soff,int len) { 							
+   boolean contains(int soff,int len) { 				
       return (start_offset <= soff && end_offset >= soff+len-1);
     }
 
@@ -954,29 +965,29 @@ private static class DefaultPrioritizer extends Prioritizer {
    @Override double getPriority(double ppar,ASTNode base) {
       StructuralPropertyDescriptor spd = base.getLocationInParent();
       double dv = base_value;
-   
+
       if (base.getParent() == null) return ppar * dv;
-   
+
       if (item_scale != 1) {
-         List<?> pl = base.getParent().structuralPropertiesForType();
-         int ct = pl.size();
-         for (int i = 0; i < ct; ++i) {
-            if (pl.get(i) == spd) break;
-            dv *= item_scale;
-          }
+	 List<?> pl = base.getParent().structuralPropertiesForType();
+	 int ct = pl.size();
+	 for (int i = 0; i < ct; ++i) {
+	    if (pl.get(i) == spd) break;
+	    dv *= item_scale;
+	  }
        }
-   
+
       if (count_scale != 1 && spd.isChildListProperty()) {
-         List<?> cl = (List<?>) base.getParent().getStructuralProperty(spd);
-         int ct = cl.size();
-         boolean fnd = false;
-         for (int i = 0; i < ct; ++i) {
-            if (cl.get(i) == base) fnd = true;
-            dv *= count_scale;
-            if (!fnd) dv *= item_scale;
-          }
+	 List<?> cl = (List<?>) base.getParent().getStructuralProperty(spd);
+	 int ct = cl.size();
+	 boolean fnd = false;
+	 for (int i = 0; i < ct; ++i) {
+	    if (cl.get(i) == base) fnd = true;
+	    dv *= count_scale;
+	    if (!fnd) dv *= item_scale;
+	  }
        }
-   
+
       return ppar * dv;
     }
 

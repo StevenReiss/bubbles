@@ -220,6 +220,12 @@ public static void noteActive(long when)
 }
 
 
+public static long getLastActive()
+{
+   return the_metrics.last_active;
+}
+
+
 
 /**
  *	Notes the issuance of a command from the given source. The command

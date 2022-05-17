@@ -26,6 +26,7 @@ package edu.brown.cs.bubbles.bdyn;
 
 import edu.brown.cs.bubbles.banal.BanalConstants;
 import edu.brown.cs.bubbles.banal.BanalFactory;
+import edu.brown.cs.bubbles.bass.BassFactory;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
@@ -367,11 +368,11 @@ private class CallbackUpdater implements Runnable {
 
    @Override public void run() {
       if (clear_flag) {
-	 clear_flag = false;
-	 callback_methods = new HashMap<String,CallbackMethod>();
-	 callback_index = new HashMap<Integer,CallbackMethod>();
-	 valid_methods = new HashMap<String,Boolean>();
-	 user_classes = new HashMap<String,Boolean>();
+         clear_flag = false;
+         callback_methods = new HashMap<String,CallbackMethod>();
+         callback_index = new HashMap<Integer,CallbackMethod>();
+         valid_methods = new HashMap<String,Boolean>();
+         user_classes = new HashMap<String,Boolean>();
        }
       package_hierarchy = BanalFactory.getFactory().computePackageHierarchy(null);
       root_node.computeTotals();
@@ -386,72 +387,72 @@ private class CallbackUpdater implements Runnable {
       boolean chld = true;
       CallbackType cbt = CallbackType.EVENT;
       if (par != null) {
-	 BanalHierarchyNode ppkg = getPackage(par);
-	 BanalHierarchyNode npkg = getPackage(tn);
-	 if (ppkg != null && npkg != null && ppkg != npkg) {
-	    if (ppkg.getLevel() > npkg.getLevel()) cb = true;
-	    else if (ppkg.getLevel() == npkg.getLevel() &&
-		  ppkg.getCycle() != npkg.getCycle()) cb = true;
-	  }
-	 if (par.getParent() == null && ppkg == null && npkg != null &&
-	       tn.getMethodName().equals("main")) {
-	    cb = true;
-	    cbt = CallbackType.MAIN;
-	  }
+         BanalHierarchyNode ppkg = getPackage(par);
+         BanalHierarchyNode npkg = getPackage(tn);
+         if (ppkg != null && npkg != null && ppkg != npkg) {
+            if (ppkg.getLevel() > npkg.getLevel()) cb = true;
+            else if (ppkg.getLevel() == npkg.getLevel() &&
+        	  ppkg.getCycle() != npkg.getCycle()) cb = true;
+          }
+         if (par.getParent() == null && ppkg == null && npkg != null &&
+               tn.getMethodName().equals("main")) {
+            cb = true;
+            cbt = CallbackType.MAIN;
+          }
        }
       if (cb) {
-	 CallbackMethod cm = new CallbackMethod(null,tn.getFileName(),tn.getClassName(),
-	       tn.getMethodName(),null,null,tn.getLineNumber(),cbt);
-	 synchronized (callback_methods) {
-	    CallbackMethod ocm = callback_methods.get(cm.getFullName());
-	    if (ocm == null) {
-	       if (validate(cm)) {
-		  ocm = cm;
-		  callback_methods.put(cm.getFullName(),cm);
-		  chld = false;
-		}
-	     }
-	    else chld = false;
-	    if (ocm != null) {
-	       double rtot = getCount(root_node.getTotals());
-	       if (rtot > 5000) {
-		  double thr = rtot * 0.05;
-		  Set<BumpTrieNode> keys = getKeyNodes(tn,0,thr);
-		  if (keys != null) {
-		     if (key_nodes == null) key_nodes = keys;
-		     else key_nodes.addAll(keys);
-		  }
-	       }
-	    }
-	 }
+         CallbackMethod cm = new CallbackMethod(null,tn.getFileName(),tn.getClassName(),
+               tn.getMethodName(),null,null,tn.getLineNumber(),cbt);
+         synchronized (callback_methods) {
+            CallbackMethod ocm = callback_methods.get(cm.getFullName());
+            if (ocm == null) {
+               if (validate(cm)) {
+        	  ocm = cm;
+        	  callback_methods.put(cm.getFullName(),cm);
+        	  chld = false;
+        	}
+             }
+            else chld = false;
+            if (ocm != null) {
+               double rtot = getCount(root_node.getTotals());
+               if (rtot > 5000) {
+        	  double thr = rtot * 0.05;
+        	  Set<BumpTrieNode> keys = getKeyNodes(tn,0,thr);
+        	  if (keys != null) {
+        	     if (key_nodes == null) key_nodes = keys;
+        	     else key_nodes.addAll(keys);
+        	  }
+               }
+            }
+         }
        }
       else {
-	 boolean usecur = false;
-	 if (par == null) usecur = true;
-	 else if (tn == null || tn.getMethodName() == null) usecur = false;
-	 else if (tn.getMethodName().equals("toString")) usecur = false;
-	 else if (tn.getClassName().startsWith("java.util")) usecur = true;
-	 else {
-	    BanalHierarchyNode ppkg = getPackage(par);
-	    BanalHierarchyNode npkg = getPackage(tn);
-	    if (ppkg == null) usecur = true;
-	    else if (npkg != null) {
-	       if (ppkg.getLevel() >= npkg.getLevel()) usecur = true;
-	     }
-	  }
-	 if (usecur) par = tn;
+         boolean usecur = false;
+         if (par == null) usecur = true;
+         else if (tn == null || tn.getMethodName() == null) usecur = false;
+         else if (tn.getMethodName().equals("toString")) usecur = false;
+         else if (tn.getClassName().startsWith("java.util")) usecur = true;
+         else {
+            BanalHierarchyNode ppkg = getPackage(par);
+            BanalHierarchyNode npkg = getPackage(tn);
+            if (ppkg == null) usecur = true;
+            else if (npkg != null) {
+               if (ppkg.getLevel() >= npkg.getLevel()) usecur = true;
+             }
+          }
+         if (usecur) par = tn;
        }
-
+   
       if (chld && tn != null) {
-	 for (BumpTrieNode cn : tn.getChildren()) {
-	    addNode(cn,par);
-	  }
+         for (BumpTrieNode cn : tn.getChildren()) {
+            addNode(cn,par);
+          }
        }
-
+   
     }
 
    private BanalHierarchyNode getPackage(BumpTrieNode tn) {
-
+   
       String cn = tn.getClassName();
       if (cn == null) return null;	// root node
       int idx = cn.lastIndexOf(".");
@@ -565,11 +566,9 @@ void loadCallbacks()
 
 private boolean validate(CallbackMethod cm)
 {
-   boolean cnst = false;
    if (cm.getMethodName().contains("$")) return false;
    String pat = cm.getClassName().replace("$",".") + "." + cm.getMethodName();
    if (cm.getCallbackType() == CallbackType.CONSTRUCTOR) {
-      cnst = true;
       pat = cm.getClassName().replace("$",".");
       int idx = pat.lastIndexOf(".");
       String mnm = pat;
@@ -577,10 +576,8 @@ private boolean validate(CallbackMethod cm)
       if (!cm.getMethodName().equals("<init>") && !cm.getMethodName().equals(mnm)) return false;
     }
    else if (cm.getMethodName().equals("<init>")) {
-      cnst = true;
       pat = cm.getClassName().replace("$", ".");
    }
-   // if (cm.getArgs() != null) pat += cm.getArgs();
 
    Boolean fg = valid_methods.get(pat);
    if (fg != null) return fg;
@@ -590,37 +587,9 @@ private boolean validate(CallbackMethod cm)
       return false;
     }
 
-   List<BumpLocation> locs = BumpClient.getBump().findMethods(cm.getProject(),pat,false,true,cnst,false);
-   if (locs == null || locs.isEmpty()) {
-      if (cnst && locs != null) {
-	 locs = BumpClient.getBump().findTypes(cm.getProject(),pat);
-	 if (locs != null && locs.size() > 0) return true;
-      }
-      valid_methods.put(pat,false);
-      return false;
-    }
-   for (BumpLocation bl : locs) {
-      if (bl.getDefinitionOffset() == 0) continue;
-      if (cm.getArgs() != null && bl.getParameters() != null && !cm.getArgs().equals(bl.getParameters()));
-      int acc = bl.getModifiers();
-      if (cnst) {
-	 if (!Modifier.isProtected(acc)) {
-	    cm.update(bl);
-	    valid_methods.put(pat,true);
-	    return true;
-	 }
-       }
-      else {
-	 if (Modifier.isPublic(acc) || Modifier.isProtected(acc)) {
-	    cm.update(bl);
-	    valid_methods.put(pat,true);
-	    return true;
-	 }
-      }
-    }
-
-   valid_methods.put(pat,false);
-   return false;
+   boolean ffg = BassFactory.getFactory().checkMethodName(cm.getProject(),pat,cm.getArgs());
+   valid_methods.put(pat,ffg);
+   return ffg;
 }
 
 
