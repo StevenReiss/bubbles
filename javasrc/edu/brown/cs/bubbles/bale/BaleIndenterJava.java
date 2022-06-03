@@ -715,9 +715,9 @@ private int skipToPreviousListItemOrListStart()
       previousToken();
 
       // if any line item comes with its own indentation,adapt to it
-      if (cur_line < startline-1 && cur_token != BaleTokenType.SEMICOLON) {
+      if (cur_line < startline-1 && cur_token != BaleTokenType.SEMICOLON &&
+            cur_token != BaleTokenType.LBRACE) {
          int ind = 0;
-// 	 ind = getLineIndent(startline);
          // handle starting at empty line
          if (ind == 0) ind = getLineIndent(startline-1);       
 	 if (ind >= 0) cur_align = ind;
@@ -738,7 +738,7 @@ private int skipToPreviousListItemOrListStart()
 	 case LPAREN :
 	 case LBRACE :
 	 case LBRACKET :
-            if (cur_line == startline-1) {
+            if (cur_line <= startline-1) {
                cur_indent = pref_continuation_indent;
                return cur_offset;
              }

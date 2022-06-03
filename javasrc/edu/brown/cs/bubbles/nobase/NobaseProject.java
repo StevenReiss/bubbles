@@ -354,7 +354,9 @@ void editProject(Element pxml)
    Set<NobasePathSpec> done = new HashSet<NobasePathSpec>();
    Set<NobasePathSpec> dels = new HashSet<NobasePathSpec>();
    for (Element pelt : IvyXml.children(pxml,"PATH")) {
-      File f1 = new File(IvyXml.getAttrString(pelt,"DIRECTORY"));
+      String dir = IvyXml.getAttrString(pelt,"DIRECTORY");
+      if (dir == null) continue;
+      File f1 = new File(dir);
       try {
 	 f1 = f1.getCanonicalFile();
        }
@@ -473,6 +475,9 @@ void findPackage(String name,IvyXmlWriter xw)
 
 void setupModule(NobaseFile file,NobaseScope scp)
 {
+   NobaseValue modval = NobaseValue.createObject();
+   scp.setValue(modval);
+   defineModuleSymbol(scp,"module",modval);
    defineModuleSymbol(scp,"id",file.getModuleName());
    defineModuleSymbol(scp,"filename",file.getFile().getPath());
    defineModuleSymbol(scp,"loaded",NobaseValue.createBoolean(true));
@@ -491,7 +496,6 @@ private void defineModuleSymbol(NobaseScope scp,String name,String val)
 {
    NobaseValue nval = NobaseValue.createString(val);
    defineModuleSymbol(scp,name,nval);
-
 }
 
 
@@ -501,6 +505,7 @@ private void defineModuleSymbol(NobaseScope scp,String name,NobaseValue nval)
    nsym.setValue(nval);
    nsym.setBubblesName("*." + name);
    scp.define(nsym);
+   scp.setProperty(name,nval);
 }
 
 
@@ -706,7 +711,7 @@ protected void findFiles(String pfx,File f,boolean reload)
 	 xw.begin("MESSAGES");
 	 for (NobaseMessage m : sd.getMessages()) {
 	    try {
-	       System.err.println("NOBASE: PARSE ERROR: " + m);
+	       NobaseMain.logI("PARSE ERROR: " + m);
 	       NobaseUtil.outputProblem(m,sd,xw);
 	     }
 	    catch (Throwable t) {
@@ -831,6 +836,8 @@ private void outputDelta(IvyXmlWriter xw,String act,NobaseFile ifd)
 
 synchronized void patternSearch(String pat,String typ,boolean defs,boolean refs,boolean sys,IvyXmlWriter xw)
 {
+   if (typ.equals("METHOD") && !pat.contains("()")) pat = pat + "()";
+   
    NobaseSearchInstance search = new NobaseSearchInstance(this);
    ASTVisitor nv = search.getFindSymbolsVisitor(pat,typ);
    for (NobaseFile ifd : all_files) {
@@ -1012,7 +1019,7 @@ void getCompletions(String file,int offset,IvyXmlWriter xw)
 
 private ISemanticData parseFile(NobaseFile fd)
 {
-   NobaseMain.logD("NOBASE: PARSE BEGIN " + fd.getFile());
+   NobaseMain.logD("PARSE BEGIN " + fd.getFile());
 
    IParser pp = nobase_main.getParser();
    ISemanticData sd = pp.parse(this,fd,false);
@@ -1022,7 +1029,7 @@ private ISemanticData parseFile(NobaseFile fd)
     }
    else parse_data.remove(fd);
 
-   NobaseMain.logD("NOBASE: PARSE END " + fd.getFile());
+   NobaseMain.logD("PARSE END " + fd.getFile());
 
    return sd;
 }
@@ -1088,6 +1095,9 @@ private NobaseFile getNobaseFile(File tgt)
       for (String s : new String [] { ".js", ".json", "node" } ) {
 	 File ntgt = new File(pth + s);
 	 if (ntgt.exists()) {
+            if (s.equals(".json")) {
+               NobaseMain.logI("Reading json file " + ntgt);
+             }
 	    tgt = ntgt;
 	    break;
 	  }

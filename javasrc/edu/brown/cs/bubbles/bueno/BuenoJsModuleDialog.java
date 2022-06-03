@@ -43,11 +43,9 @@ public class BuenoJsModuleDialog extends BuenoAbstractDialog implements BuenoCon
 public BuenoJsModuleDialog(BudaBubble source,Point locale,
       BuenoProperties known,BuenoLocation insert,
       BuenoBubbleCreator newer)
-      {
+{
    super(source,locale,known,insert,newer,BuenoType.NEW_FILE);
 }
-
-
 
 
 /********************************************************************************/
@@ -65,9 +63,6 @@ public BuenoJsModuleDialog(BudaBubble source,Point locale,
 
 
 
-
-
-
 @Override void doCreate(BudaBubbleArea bba,Point p)
 {
    BuenoFactory bf = BuenoFactory.getFactory();
@@ -81,9 +76,6 @@ public BuenoJsModuleDialog(BudaBubble source,Point locale,
       bubble_creator.createBubble(proj,f.getPath(),bba,p);
     }
 }
-
-
-
 
 
 

@@ -261,6 +261,9 @@ private String getFormatType(ASTNode n)
 	 case FUNCTION :
 	    typ = (isdef ? "METHODDECL" : "CALL");
 	    break;
+         case CLASS :
+            typ = "CLASSDECL";
+            break;
 	 case LOCAL :
 	    typ = (isdef ? "VARDECL" : null);
 	    break;
@@ -338,7 +341,10 @@ private String getNodeType(ASTNode n)
 	       break;
 	  }
        }
-   }
+    }
+   else if (n instanceof TypeDeclaration) {
+      typ = "CLASS";
+    }
    else if (n instanceof JavaScriptUnit) {
       typ = "MODULE";
     }
@@ -552,19 +558,20 @@ private class ElidePass2 extends ASTVisitor {
       NobaseSymbol nsp = NobaseAst.getDefinition(name);
       if (nsp == null) nsp = NobaseAst.getReference(name);
       if (nsp == null) return;
-
+   
       switch (nsp.getNameType()) {
-	 case MODULE :
-	    break;
-	 case FUNCTION :
-	    xml_writer.field("FULLNAME",nsp.getBubblesName());
-	    break;
-	 case VARIABLE :
-	    xml_writer.field("FULLNAME",nsp.getBubblesName());
-	    break;
-	 case LOCAL :
-	    xml_writer.field("FULLNAME",nsp.getBubblesName());
-	    break;
+         case MODULE :
+            break;
+         case FUNCTION :
+         case CLASS :
+            xml_writer.field("FULLNAME",nsp.getBubblesName());
+            break;
+         case VARIABLE :
+            xml_writer.field("FULLNAME",nsp.getBubblesName());
+            break;
+         case LOCAL :
+            xml_writer.field("FULLNAME",nsp.getBubblesName());
+            break;
        }
     }
 

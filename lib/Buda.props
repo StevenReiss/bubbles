@@ -36,8 +36,8 @@
 <entry key="Buda.help.border.color">ffa52a2a</entry>
 <entry key="Buda.tooltip.background">ffffffc0</entry>
 <entry key="Buda.tooltip.foreground">ff000000</entry>
-<entry key="Buda.remove.old.time">6</entry>
-<entry key="Buda.remove.old.active">true</entry>
+<entry key="Buda.remove.old.time">168</entry>
+<entry key="Buda.remove.old.active.time">6</entry>
 </properties>
 
 

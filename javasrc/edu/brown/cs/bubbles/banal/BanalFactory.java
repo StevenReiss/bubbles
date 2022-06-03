@@ -98,6 +98,16 @@ public static void setup()
 
 public static void initialize(BudaRoot br)
 {
+   switch (BoardSetup.getSetup().getLanguage()) {
+      case JAVA :
+      case JAVA_IDEA :
+      case REBUS : 
+         break;
+      case JS :
+      case PYTHON :
+         return;
+    }
+   
    switch (BoardSetup.getSetup().getRunMode()) {
       case NORMAL :
       case SERVER :

@@ -44,7 +44,7 @@ private NobaseProject		    for_project;
 private Map<NobaseFile,NobaseValue> export_map;
 private Set<NobaseFile> 	    active_files;
 
-private static boolean		    do_debug = false;
+private static boolean		    do_debug = true;
 
 
 
@@ -58,8 +58,8 @@ private static boolean		    do_debug = false;
 NobaseModule(NobaseProject proj)
 {
    for_project = proj;
-   export_map = new HashMap<NobaseFile,NobaseValue>();
-   active_files = new HashSet<NobaseFile>();
+   export_map = new HashMap<>();
+   active_files = new HashSet<>();
 }
 
 

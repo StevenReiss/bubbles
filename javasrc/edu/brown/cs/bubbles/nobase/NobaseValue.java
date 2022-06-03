@@ -64,6 +64,7 @@ private static NobaseValue false_value = new BooleanValue(false);
 private static NobaseValue number_value = new NumberValue();
 private static NobaseValue string_value = new StringValue();
 private static NobaseValue function_value = new FunctionValue(null);
+private static NobaseValue class_value = new ClassValue(null);
 
 private static NobaseValue unknown_value = new UnknownValue();
 
@@ -141,6 +142,17 @@ static NobaseValue createFunction(ASTNode fc)
    NobaseValue nv = value_map.get(fc);
    if (nv == null) {
       nv = new FunctionValue(fc);
+      value_map.put(fc,nv);
+    }
+   return nv;
+}
+
+static NobaseValue createClass(ASTNode fc)
+{
+   if (fc == null) return class_value;
+   NobaseValue nv = value_map.get(fc);
+   if (nv == null) {
+      nv = new ClassValue(fc);
       value_map.put(fc,nv);
     }
    return nv;
@@ -266,6 +278,9 @@ Object getKnownValue()					{ return known_value; }
 boolean isKnown()					{ return known_value != null; }
 boolean isAnyValue()					{ return false; }
 boolean isFunction()					{ return false; }
+boolean isClass()                                       { return false; }
+
+String toShortString()                                  { return toString(); }
 
 
 
@@ -283,6 +298,8 @@ private static class AnyValue extends NobaseValue {
     }
 
    @Override boolean isAnyValue()				{ return true; }
+   
+   @Override public String toString()                           { return "*ANY*"; }
 
 }	// end of inner class AnyValue
 
@@ -302,6 +319,8 @@ private static class UnknownValue extends NobaseValue {
       super(NobaseType.createAnyType());
       known_value = KnownValue.UNKNOWN;
     }
+   
+   @Override public String toString()                           { return "*UNKNOWN*"; }
 
 }	// end of inner class AnyValue
 
@@ -321,7 +340,9 @@ private static class UndefinedValue extends NobaseValue {
       super(NobaseType.createUndefined());
       known_value = KnownValue.UNDEFINED;
     }
-
+   
+   @Override public String toString()                           { return "*UNDEFINED*"; }
+   
 }	// end of inner class UndefinedValue
 
 
@@ -338,7 +359,9 @@ private static class NullValue extends NobaseValue {
       super(NobaseType.createNull());
       known_value = KnownValue.NULL;
     }
-
+   
+   @Override public String toString()                           { return "*NULL*"; }
+   
 }	// end of inner class NullValue
 
 
@@ -358,6 +381,11 @@ private static class BooleanValue extends NobaseValue {
    BooleanValue(boolean fg) {
       this();
       known_value = Boolean.valueOf(fg);
+    }
+   
+   @Override public String toString() {
+      if (known_value ==  null) return "*BOOLEAN*";
+      else return "*" + known_value.toString().toUpperCase() + "*";
     }
 
 }	// end of inner class BooleanValue
@@ -380,7 +408,12 @@ private static class StringValue extends NobaseValue {
       this();
       known_value = s;
     }
-
+   
+   @Override public String toString() {
+      if (known_value ==  null) return "*STRING*";
+      else return "*::" + known_value.toString() + "::*";
+    }
+   
 }	// end of inner class StringValue
 
 
@@ -401,7 +434,13 @@ private static class NumberValue extends NobaseValue {
       this();
       known_value = n;
     }
-
+   
+   @Override public String toString() {
+      if (known_value ==  null) return "*NUMBER*";
+      else return "*::" + known_value.toString() + "::*";
+    }
+   
+   
 }	// end of inner class NumberValue
 
 
@@ -442,7 +481,7 @@ private static class ObjectValue extends NobaseValue {
 
    @Override void setBaseValue(NobaseValue typ) {
       if (typ instanceof ObjectValue) {
-	 base_value = (ObjectValue) typ;
+         base_value = (ObjectValue) typ;
        }
     }
 
@@ -459,7 +498,14 @@ private static class ObjectValue extends NobaseValue {
        }
       else {
          NobaseValue oval = known_properties.get(name);
-         NobaseValue nval = mergeValues(val,oval);
+         NobaseValue nval = null;
+         NobaseValue modval = known_properties.get("module");
+         if (modval == this) {
+            nval = val;
+          }
+         else {
+           nval = mergeValues(val,oval);
+          }
          known_properties.put(name,nval);
          if (nval != oval) return true;
        }
@@ -520,10 +566,10 @@ private static class ObjectValue extends NobaseValue {
       NobaseValue oval = null;
       if (name != null) oval = known_properties.get(name);
       if (oval == null && lhs && set_properties != null && name != null) {
-	 oval = set_properties.get(name);
+         oval = set_properties.get(name);
        }
       if (oval == null && !lhs && get_properties != null && name != null) {
-	 oval = get_properties.get(name);
+         oval = get_properties.get(name);
        }
       if (oval != null) return oval;
       if (base_value != null) oval = base_value.getProperty(name,lhs);
@@ -536,21 +582,21 @@ private static class ObjectValue extends NobaseValue {
       if (nv == null || nv == this) return false;
       boolean chng = false;
       if (nv instanceof ObjectValue) {
-	 ObjectValue ov = (ObjectValue) nv;
-	 for (Map.Entry<Object,NobaseValue> ent : ov.known_properties.entrySet()) {
-	    chng |= addProperty(ent.getKey(),ent.getValue());
-	  }
-	 if (ov.get_properties != null) {
-	    for (Map.Entry<Object,NobaseValue> ent : ov.get_properties.entrySet()) {
-	       chng |= addGetterProperty(ent.getKey(),ent.getValue());
-	     }
-	  }
-	 if (ov.set_properties != null) {
-	    for (Map.Entry<Object,NobaseValue> ent : ov.set_properties.entrySet()) {
-	       chng |= addSetterProperty(ent.getKey(),ent.getValue());
-	     }
-	  }
-	 if (ov.has_other) setHasOtherProperties();
+         ObjectValue ov = (ObjectValue) nv;
+         for (Map.Entry<Object,NobaseValue> ent : ov.known_properties.entrySet()) {
+            chng |= addProperty(ent.getKey(),ent.getValue());
+          }
+         if (ov.get_properties != null) {
+            for (Map.Entry<Object,NobaseValue> ent : ov.get_properties.entrySet()) {
+               chng |= addGetterProperty(ent.getKey(),ent.getValue());
+             }
+          }
+         if (ov.set_properties != null) {
+            for (Map.Entry<Object,NobaseValue> ent : ov.set_properties.entrySet()) {
+               chng |= addSetterProperty(ent.getKey(),ent.getValue());
+             }
+          }
+         if (ov.has_other) setHasOtherProperties();
        }
       return chng;
     }
@@ -562,6 +608,30 @@ private static class ObjectValue extends NobaseValue {
       if (set_properties != null) vl += set_properties.hashCode();
       if (content_type != null) vl += content_type.hashCode();
       return vl;
+    }
+   
+   @Override public String toString() {
+      StringBuffer buf = new StringBuffer();
+      buf.append("*Object: ");
+      buf.append(hashCode());
+      buf.append(" {");
+      for (Map.Entry<Object,NobaseValue> ent : known_properties.entrySet()) {
+         buf.append(ent.getKey());
+         buf.append("=");
+         buf.append(ent.getValue().toShortString());
+         buf.append(", ");
+       }
+      buf.append("}*");
+   
+      return buf.toString();
+    }
+   
+   @Override String toShortString() {
+      StringBuffer buf = new StringBuffer();
+      buf.append("*Object: ");
+      buf.append(hashCode());
+      buf.append("*");
+      return buf.toString();
     }
 
 }	// end of inner class ObjectValue
@@ -579,6 +649,11 @@ private static class ArrayValue extends ObjectValue {
 
    ArrayValue() {
       super(NobaseType.createList());
+    }
+   
+   @Override public String toString() {
+      return "*ARRAY*";
+
     }
 
 }	// end of inner class ArrayValue
@@ -627,7 +702,7 @@ private static class FunctionValue extends ObjectValue {
     }
 
    @Override Collection<NobaseSymbol> getDefinitions() {
-      List<NobaseSymbol> rslt = new ArrayList<NobaseSymbol>();
+      List<NobaseSymbol> rslt = new ArrayList<>();
       if (function_defs != null) {
 	 for (ASTNode fc : function_defs) {
 	    NobaseSymbol ns = NobaseAst.getDefinition(fc);
@@ -685,8 +760,70 @@ private static class FunctionValue extends ObjectValue {
    @Override void setReturnValue(NobaseValue v) {
       return_value = mergeValues(return_value,v);
     }
+   
+   @Override public String toString() {
+      return "*FUNCTION*";
+    }
 
-}	// end of inner class CompletionValue
+}	// end of inner class FunctionValue
+
+
+
+/********************************************************************************/
+/*										*/
+/*	Class value								*/
+/*										*/
+/********************************************************************************/
+
+private static class ClassValue extends ObjectValue {
+   
+   private Set<ASTNode> class_defs;
+   
+   ClassValue() {
+      super(NobaseType.createClass());
+      class_defs = null;
+    }
+   
+   ClassValue(ASTNode fc) { 
+      this();
+      if (fc != null) {
+         addDefinition(fc);
+       }
+    }
+   
+   @Override boolean isClass()			{ return true; }
+   
+   @Override void addDefinition(ASTNode fc) {
+      if (class_defs == null) class_defs = new HashSet<>();
+      class_defs.add(fc);
+    }
+   
+   @Override Collection<NobaseSymbol> getDefinitions() {
+      List<NobaseSymbol> rslt = new ArrayList<>();
+      if (class_defs != null) {
+         for (ASTNode fc : class_defs) {
+            NobaseSymbol ns = NobaseAst.getDefinition(fc);
+            if (ns != null) rslt.add(ns);
+          }
+       }
+      return rslt;
+    }
+   
+   @Override NobaseScope getAssociatedScope() {
+      if (class_defs != null) {
+         for (ASTNode fc : class_defs) { 
+            NobaseScope scp = NobaseAst.getScope(fc);
+            if (scp != null) return scp;
+          }
+       }
+      return null;
+    }
+   
+   @Override public String toString() {
+      return "*CLASS*";
+    }
+   
+}	// end of inner class FunctionValue
 
 
 

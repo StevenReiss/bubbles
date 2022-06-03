@@ -20,7 +20,6 @@
 <entry key="Bfix.correct.spelling.problem.7">*,*,2D</entry>
 <entry key="Bfix.correct.spelling.problem.8">IOException</entry>
 <entry key="Bfix.correct.spelling.problem.9">JPanel,JLabel</entry>
-<entry key="Bfix.correct.spelling.problem.9">JLabel,JPanel</entry>
 <entry key="Bfix.correct.spelling.problem.10">tree,try</entry>
 <entry key="Bfix.correct.spelling.problem.11">next,new</entry>
 <entry key="Bfix.correct.spelling.problem.12">Paint,int</entry>
@@ -30,6 +29,7 @@
 <entry key="Bfix.correct.spelling.problem.16">File</entry>
 <entry key="Bfix.correct.spelling.problem.17">value,false</entry>
 <entry key="Bfix.correct.spelling.problem.18">*,null</entry>
+<entry key="Bfix.correct.spelling.problem.19">JLabel,JPanel</entry>
 <entry key="Bfix.enable.BfixAdapterSpelling">true</entry>
 <entry key="Bfix.enable.BfixAdapterImports">true</entry>
 <entry key="Bfix.enable.BfixAdapterSyntax">true</entry>

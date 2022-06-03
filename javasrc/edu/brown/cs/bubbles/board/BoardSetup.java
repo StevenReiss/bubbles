@@ -1170,6 +1170,22 @@ public void removeSplash()
 }
 
 
+public void noteNamesLoaded(int ct,int max)
+{
+   if (splash_screen != null) {
+      String s = splash_screen.getCurrentTask();
+      if (s != null && s.startsWith("Load Project Symbols")) {
+         String txt = "Load Project Symbols: " + ct;
+         if (max != 0) {
+            int val = (ct*100)/max;
+            txt = "Load Project Symbols: " + val + "%";
+          }
+         setSplashTask(txt);
+       }
+    }
+}
+
+
 
 /********************************************************************************/
 /*										*/

@@ -173,6 +173,7 @@ enum ScopeType {
    GLOBAL,
    FILE,
    FUNCTION,
+   CLASS,
    CATCH,
    MEMBER,
    OBJECT,
@@ -193,6 +194,7 @@ String AST_PROPERTY_VALUE = "Nobase.Value";
 
 enum NameType {
    FUNCTION,
+   CLASS,
    VARIABLE,
    LOCAL,
    MODULE,

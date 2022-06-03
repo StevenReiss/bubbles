@@ -323,6 +323,8 @@ private int findReferencePosition(int offset)
 	 else if ((ptyp == BaleTokenType.COLON || ptyp == BaleTokenType.EQUAL ||
 		      ptyp == BaleTokenType.RBRACKET) && !pref_indent_braces_for_arrays)
 	    unindent = true;
+         else if (looksLikeEndMethodDecl())
+            unindent = true;
 	 else if (!bracelessblockstart && pref_indent_braces_for_methods)
 	    indent = true;
 	 break;
@@ -501,6 +503,7 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
 	 // inside whatever we don't know about: similar to the list case:
 	 // if we are inside a continued expression,then either align with a previous line that has indentation
 	 // or indent from the expression start line (either a scope introducer or the start of the expr).
+         setCurrent(start);
 	 return skipToPreviousListItemOrListStart();
     }
 }
@@ -549,6 +552,7 @@ private boolean isConditional()
 	 case RAISE :
          case IMPORT :
          case PACKAGE :
+         case FUNCTION :
 	    continue;
 	 case CASE:
 	 case DEFAULT :
@@ -702,12 +706,16 @@ private int skipToPreviousListItemOrListStart()
       previousToken();
 
       // if any line item comes with its own indentation,adapt to it
-      if (cur_line < startline) {
-	 int ind = getLineIndent(startline);
+      if (cur_line < startline-1 && 
+            cur_token != BaleTokenType.SEMICOLON && cur_token != BaleTokenType.LBRACE) {
+         int ind = 0;
+         // handle starting at empty line
+         if (ind == 0) ind = getLineIndent(startline-1);       
 	 if (ind >= 0) cur_align = ind;
+         // cur_indent = pref_continuation_indent;
 	 return startposition;
        }
-
+      
       switch (cur_token) {
 	 // scopes: skip them
 	 case RPAREN :
@@ -721,9 +729,14 @@ private int skipToPreviousListItemOrListStart()
 	 case LPAREN :
 	 case LBRACE :
 	 case LBRACKET :
+            if (cur_line <= startline-1) {
+               cur_indent = pref_continuation_indent;
+               return cur_offset;
+             }
 	    return handleScopeIntroduction(start);
 
 	 case SEMICOLON :
+            if (cur_line <= startline-1) cur_indent = pref_continuation_indent;
 	    return cur_offset;
 
 	 case QUESTIONMARK :
@@ -958,6 +971,7 @@ private int skipToStatementStart(boolean danglingelse,boolean isinblock)
 	 case RAISE :
          case IMPORT :
          case PACKAGE :
+         case FUNCTION :
 	    if (maybemethodbody == READ_PARENS) maybemethodbody= READ_IDENT;
 	    if (cur_element != null && cur_element.getName().equals("ClassDeclMemberId"))
 	       innerclass = true;
@@ -1057,12 +1071,51 @@ private boolean looksLikeMethodDecl()
    if (cur_token == BaleTokenType.IDENTIFIER) { // method name
       do previousToken();
       while (skipBrackets()); // optional brackets for array valued return types
+      
+      if (cur_token == BaleTokenType.FUNCTION) return true;
+      if (cur_token == null || cur_token == BaleTokenType.RBRACE || 
+         cur_token == BaleTokenType.SEMICOLON) return true;
 
-      // return type name
+      // return type name -- add back in for TypeScript
       if (cur_token == BaleTokenType.IDENTIFIER || cur_token == BaleTokenType.TYPEKEY) return true;
     }
 
    return false;
+}
+
+
+private boolean looksLikeEndMethodDecl()
+{
+   BaleElement start = cur_element;
+   try {
+      for ( ; ; ) {
+         BaleTokenType ctyp = previousToken();
+         switch (ctyp) {
+            case RPAREN :
+               if (!skipScope()) return false;
+               if (looksLikeMethodDecl()) return true;
+               break;
+            case RBRACKET :
+               if (!skipScope()) return false;
+               break;
+            case IF :
+            case WHILE :
+            case DO :
+            case FOR :
+            case SEMICOLON :
+            case RBRACE :
+               return false;
+            case NONE :
+               return false;
+            default : 
+               break;
+          }
+         
+       }
+    }
+   finally { 
+      setCurrent(start);
+    }
 }
 
 

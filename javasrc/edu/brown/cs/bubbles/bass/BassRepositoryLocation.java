@@ -38,7 +38,11 @@ import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import java.lang.reflect.Modifier;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -247,26 +251,26 @@ List<BumpLocation> findClassMethods(String cls)
 boolean checkMethodName(String proj,String nm,String args)
 {
    waitForNames();
-   
+
    synchronized (this) {
       for (BassName bn : all_names) {
-         String pnm = bn.getProject();
-         if (proj != null && pnm != null) {
-            if (!proj.equals(pnm)) continue;
-          }
-         BassNameLocation bnl = (BassNameLocation) bn;
-         String fnm = bnl.getName();
-         if (fnm == null || !nm.equals(fnm)) continue;
-         int mods = bnl.getModifiers();
-         if (!Modifier.isPublic(mods) && !Modifier.isProtected(mods)) continue;
-         String prms = bnl.getParameters();
-         if (prms != null && args != null) {
-            BoardLog.logD("BASS","CHECK PARAMETERS " + prms + " :: " + args);
-          }
-         return true;
+	 String pnm = bn.getProject();
+	 if (proj != null && pnm != null) {
+	    if (!proj.equals(pnm)) continue;
+	  }
+	 BassNameLocation bnl = (BassNameLocation) bn;
+	 String fnm = bnl.getName();
+	 if (fnm == null || !nm.equals(fnm)) continue;
+	 int mods = bnl.getModifiers();
+	 if (!Modifier.isPublic(mods) && !Modifier.isProtected(mods)) continue;
+	 String prms = bnl.getParameters();
+	 if (prms != null && args != null) {
+	    BoardLog.logD("BASS","CHECK PARAMETERS " + prms + " :: " + args);
+	  }
+	 return true;
        }
     }
-   
+
    return false;
 }
 
@@ -291,32 +295,32 @@ File findActualFile(File f)
 Set<File> findAssociatedFiles(String proj,String pfx)
 {
    Set<File> rslt = new HashSet<>();
-   
+
    waitForNames();
-   
+
    synchronized (this) {
       for (BassName b : all_names) {
-         String pnm = b.getProject();
-         if (b.getFullName().startsWith(pfx) && pnm.equals(proj)) {
-            switch (b.getNameType()) {
-               case FILE :
-               case CLASS :
-               case ENUM :
-               case INTERFACE :
-               case ANNOTATION :
-                  break;
-               default :
-                  continue;
-             }
-            BumpLocation bloc = b.getLocation();
-            if (bloc == null) continue;
-            File f = bloc.getFile();
-            if (f != null) rslt.add(f);
-          }
-      
+	 String pnm = b.getProject();
+	 if (b.getFullName().startsWith(pfx) && pnm.equals(proj)) {
+	    switch (b.getNameType()) {
+	       case FILE :
+	       case CLASS :
+	       case ENUM :
+	       case INTERFACE :
+	       case ANNOTATION :
+		  break;
+	       default :
+		  continue;
+	     }
+	    BumpLocation bloc = b.getLocation();
+	    if (bloc == null) continue;
+	    File f = bloc.getFile();
+	    if (f != null) rslt.add(f);
+	  }
+
        }
     }
-   
+
    return rslt;
 }
 
@@ -344,10 +348,26 @@ private void initialize()
 
 private synchronized void loadNames()
 {
+   File f1 = BoardSetup.getBubblesWorkingDirectory();
+   File f2 = new File(f1,"bass.symbols");
+   int maxsym = 0;
+   try (BufferedReader br = new BufferedReader(new FileReader(f2))) {
+      for ( ; ; ) {
+	 String ln = br.readLine();
+	 if (ln == null) break;
+	 try {
+	    maxsym = Integer.parseInt(ln);
+	    break;
+	  }
+	 catch (NumberFormatException e) { }
+       }
+    }
+   catch (IOException e) { }
+
    Map<String,BassNameLocation> usedmap = new HashMap<>();
 
    BumpClient bc = BumpClient.getBump();
-   Collection<BumpLocation> locs = bc.findAllNames(null);
+   Collection<BumpLocation> locs = bc.findAllNames(null,null,true,maxsym);
 
    if (locs != null) checkBaseMap(locs);
 
@@ -356,6 +376,11 @@ private synchronized void loadNames()
 	 addLocation(bl,usedmap);
        }
     }
+
+   try (PrintWriter pw = new PrintWriter(f2)) {
+      if (locs != null) pw.print(locs.size());
+    }
+   catch (IOException e) { }
 
    is_ready = true;
    notifyAll();
@@ -695,7 +720,7 @@ private void addNamesForFile(String proj,String file,boolean rem)
       fls.add(file);
     }
 
-   Collection<BumpLocation> locs = BumpClient.getBump().findAllNames(proj,fls,true);
+   Collection<BumpLocation> locs = BumpClient.getBump().findAllNames(proj,fls,true,0);
 
    synchronized (this) {
       if (rem) removeNamesForFile(proj,file);

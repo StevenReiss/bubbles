@@ -191,6 +191,7 @@ enum BaleTokenType {
    BADCHARLIT,				// unclosed character literal
    BADNUMBER,				// 0x, ###e ###e+ ###e-
    ELIDED,				// elision image
+   FUNCTION,                            // the js keyword function
    OTHER				// illegal token or character
 }
 

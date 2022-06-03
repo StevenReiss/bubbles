@@ -2211,6 +2211,9 @@ BudaBubble createBubble(BudaBubbleArea bba,Element e,Rectangle delta,int dx,bool
    if (IvyXml.getAttrPresent(e,"LASTVIEWED")) {
       bb.setLastViewed(IvyXml.getAttrLong(e,"LASTVIEWED"));
     }
+   if (IvyXml.getAttrPresent(e,"UNVIEWED")) {
+      bb.setUnviewed(IvyXml.getAttrLong(e,"UNVIEWED"));
+    }
 
    Dimension size = new Dimension(IvyXml.getAttrInt(e,"W"),IvyXml.getAttrInt(e,"H"));
    bb.setSize(size);
@@ -3183,20 +3186,21 @@ private class ClientHandler implements MintHandler {
 private class BubbleRemover implements ActionListener {
    
    private long         remove_time;
+   private long         active_time;
    private long         last_active;
+   
    
    BubbleRemover() {
       long delay = BUDA_PROPERTIES.getLong("Buda.remove.old.time",0);  // hours
       remove_time = delay * 60*60*1000;                                          // in ms
-      if (delay <= 0) return;
+      long adelay = BUDA_PROPERTIES.getLong("Buda.remove.old.active.time",0);
+      active_time = adelay * 60*60*1000;
+      if (delay <= 0 && adelay <= 0) return;
       int every = REMOVAL_CHECK_TIME;
       javax.swing.Timer timer = new javax.swing.Timer(every,this);
       timer.setRepeats(true);
       timer.start();
-      if (BUDA_PROPERTIES.getBoolean("Buda.remove.old.active",false)) {
-         last_active = BoardMetrics.getLastActive();
-       }
-      else last_active = 0;
+      last_active = BoardMetrics.getLastActive();
     }
    
    @Override public void actionPerformed(ActionEvent e) {
@@ -3210,15 +3214,18 @@ private class BubbleRemover implements ActionListener {
             delta = REMOVAL_CHECK_TIME;
           }
        }
+      Rectangle cur = bubble_area.getVisibleRect();
       for (BudaBubble bb : bubble_area.getBubbles()) {
          long viewed = bb.getLastViewed();
          if (viewed <= 0) continue;
-         long checktime = 0;
+         long checktime = now - viewed;
+         long unviewedtime = bb.getUnviewedTime();
          if (last_active > 0) checktime = bb.getUnviewedTime();
-         else checktime = now - viewed;
-         if (checktime > remove_time) remove.add(bb);
-         else if (last_active > 0 && delta > 0) {
-            if (!bb.isShowing()) bb.noteUnviewed(delta);
+         if (remove_time > 0 && checktime > remove_time) remove.add(bb);
+         else if (active_time > 0 && unviewedtime > active_time) remove(bb);
+         else if (delta > 0) {
+            boolean show = bb.getBounds().intersects(cur);
+            if (!show) bb.noteUnviewed(delta);
           }
        }
       for (BudaBubble bb : remove) {

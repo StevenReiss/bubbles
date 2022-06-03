@@ -58,6 +58,8 @@ private int		end_offset;
 private BaleTokenState	token_state;
 private int		token_start;
 private boolean 	ignore_white;
+private char            cur_delim;
+private int             delim_count;
 
 private static Map<String,BaleTokenType> java_keyword_map;
 private static Set<String>	java_op_set;
@@ -101,6 +103,8 @@ private BaleTokenizer(String text,BaleTokenState start)
    end_offset = (text == null ? 0 : input_text.length());
    token_state = start;
    ignore_white = false;
+   cur_delim = 0;
+   delim_count = 0;
 }
 
 
@@ -116,10 +120,12 @@ void setIgnoreWhitespace(boolean fg)		{ ignore_white = fg; }
 
 abstract protected BaleTokenType getKeyword(String s);
 abstract protected boolean isOperator(String s);
-abstract protected boolean useSlashStarComments();
-abstract protected boolean useSlashSlashComments();
-abstract protected boolean useHashComments();
-abstract protected boolean useMultiLineString();
+protected boolean useSlashStarComments()                { return true; }
+protected boolean useSlashSlashComments()               { return true; }
+protected boolean useHashComments()                     { return false; }
+protected int useMultilineCount()                       { return 0; }
+protected boolean isStringStart(char c)                 { return c == '"'; }
+protected boolean isMultilineStringStart(char c)        { return false; }
 
 static Collection<String> getKeywords(BoardLanguage bl)
 {
@@ -211,13 +217,13 @@ BaleToken getNextToken()
       case IN_LINE_COMMENT :
 	 return scanLineComment();		// added by amc6
       case IN_MULTILINE_STRING :
-	 return scanMultiLineString();
+	 return scanMultiLineString(cur_delim,delim_count);
       case IN_FORMAL_COMMENT :
 	 return scanComment(true);
       case IN_COMMENT :
 	 return scanComment(false);
       case IN_STRING :
-	 return scanString();
+	 return scanString(cur_delim);
     }
 
    //TODO: keep a flag to identify unary operators
@@ -307,22 +313,24 @@ BaleToken getNextToken()
 	 return buildToken(BaleTokenType.NUMBER);
        }
     }
-   else if (ch == '"') {
-      if (useMultiLineString()) {
-	 char ch1 = nextChar();
-	 if (ch1 != '"') backup();
-	 else {
-	    char ch2 = nextChar();
-	    if (ch2 != '"') {
-	       backup();
-	       backup();
-	     }
-	    else {
-	       return scanMultiLineString();
-	     }
-	  }
+   else if (isStringStart(ch)) {
+      int ct = useMultilineCount();
+      if (ct > 0) {
+         int bup = 0;
+         for (int i = 0; i < ct; ++i) {
+            char ch1 = nextChar();
+            bup++;
+            if (ch1 != ch) break;
+            if (i == ct-1) {
+               return scanMultiLineString(ch,ct);
+             }
+          }
+         for (int i = 0; i < bup; ++i) backup();
        }
-      return scanString();
+      return scanString(ch);
+    }
+   else if (isMultilineStringStart(ch)) {
+      return scanMultiLineString(ch,1);
     }
    else if (ch == '\'') {
       for ( ; ; ) {
@@ -509,13 +517,15 @@ private Token scanComment(boolean formalstart)
 
 
 
-private Token scanString()
+private Token scanString(char delim)
 {
    int havetext = 0;
+   cur_delim = delim;
+   delim_count = 1;
 
    for ( ; ; ) {
       char ch = nextChar();
-      if (ch == '"') {
+      if (ch == delim) {
 	 token_state = BaleTokenState.NORMAL;
 	 return buildToken(BaleTokenType.STRING);
       }
@@ -547,15 +557,17 @@ private Token scanString()
 
 
 
-private Token scanMultiLineString()
+private Token scanMultiLineString(char delim,int ct)
 {
    int fnd = 0;
+   cur_delim = delim;
+   delim_count = ct;
 
    for ( ; ; ) {
       char ch = nextChar();
-      if (ch == '"') {
+      if (ch == cur_delim) {
 	 token_state = BaleTokenState.NORMAL;
-	 if (++fnd == 3) return buildToken(BaleTokenType.LONGSTRING);
+	 if (++fnd == delim_count) return buildToken(BaleTokenType.LONGSTRING);
        }
       else fnd = 0;
       if (ch < 0 || ch == 0xffff) {
@@ -663,10 +675,7 @@ private static class JavaTokenizer extends BaleTokenizer {
 
    @Override protected BaleTokenType getKeyword(String s) { return java_keyword_map.get(s); }
    @Override protected boolean isOperator(String s)	{ return java_op_set.contains(s); }
-   @Override protected boolean useSlashSlashComments()	{ return true; }
-   @Override protected boolean useSlashStarComments()	{ return true; }
-   @Override protected boolean useHashComments()		{ return false; }
-   @Override protected boolean useMultiLineString()	{ return false; }
+   @Override protected int useMultilineCount()          { return 3; }
 
 }	// end of inner class JavaTokenizer
 
@@ -788,9 +797,12 @@ private static class PythonTokenizer extends BaleTokenizer {
    @Override protected boolean isOperator(String s)	{ return python_op_set.contains(s); }
    @Override protected boolean useSlashSlashComments()	{ return false; }
    @Override protected boolean useSlashStarComments()	{ return false; }
-   @Override protected boolean useHashComments()		{ return true; }
-   @Override protected boolean useMultiLineString()	{ return true; }
-
+   @Override protected boolean useHashComments()	{ return true; }
+   @Override protected int useMultilineCount()          { return 3; }
+   @Override protected boolean isStringStart(char c) {
+      return c == '"' || c == '\'';
+    }
+   
 }	// end of inner class PythonTokenizer
 
 
@@ -886,10 +898,12 @@ private static class JSTokenizer extends BaleTokenizer {
 
    @Override protected BaleTokenType getKeyword(String s) { return js_keyword_map.get(s); }
    @Override protected boolean isOperator(String s)	{ return js_op_set.contains(s); }
-   @Override protected boolean useSlashSlashComments()	{ return true; }
-   @Override protected boolean useSlashStarComments()	{ return true; }
-   @Override protected boolean useHashComments()		{ return false; }
-   @Override protected boolean useMultiLineString()	{ return false; }
+   @Override protected boolean isStringStart(char c) {
+      return c == '"' || c == '\'';
+    }
+   @Override protected boolean isMultilineStringStart(char c) {
+      return c == '`';
+    }
 
 }	// end of inner class JSTokenizer
 
@@ -913,7 +927,7 @@ static {
    js_keyword_map.put("false",BaleTokenType.KEYWORD);
    js_keyword_map.put("finally",BaleTokenType.FINALLY);
    js_keyword_map.put("for",BaleTokenType.FOR);
-   js_keyword_map.put("function",BaleTokenType.KEYWORD);
+   js_keyword_map.put("function",BaleTokenType.FUNCTION);
    js_keyword_map.put("if",BaleTokenType.IF);
    js_keyword_map.put("in",BaleTokenType.KEYWORD);
    js_keyword_map.put("implements",BaleTokenType.KEYWORD);

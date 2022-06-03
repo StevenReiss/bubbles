@@ -1077,7 +1077,10 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 	       break;
 	     }
 	  }
-	 if (sfrm == null) throw new BedrockException("Stack frame " + frid + " doesn't exist");
+	 if (sfrm == null) {
+            BedrockPlugin.logD("Stack frame " + frid + " doesn't exist");
+            return;
+          }
 	 if (!(sfrm instanceof IJavaStackFrame))
 	    throw new BedrockException("Stack frame " + frid + " not java frame");
 	 IJavaStackFrame jsf = (IJavaStackFrame) sfrm;

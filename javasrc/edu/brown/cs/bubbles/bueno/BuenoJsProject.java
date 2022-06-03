@@ -75,7 +75,7 @@ private String		project_name;
 private File		project_dir;
 private File		project_file;
 private String		project_includes;
-private Vector<PathData>   project_paths;
+private Vector<BuenoPathEntry>   project_paths;
 private Map<String,OptionData> project_options;
 private ProjectType	project_type;
 
@@ -131,7 +131,7 @@ private BuenoJsProject()
 {
    project_name = null;
    project_dir = null;
-   project_paths = new Vector<PathData>();
+   project_paths = new Vector<BuenoPathEntry>();
    project_options = new HashMap<String,OptionData>();
 }
 
@@ -155,14 +155,14 @@ private BuenoJsProject(String nm) throws BuenoException
 private void loadProject() throws BuenoException
 {
    project_dir = null;
-   project_paths = new Vector<PathData>();
+   project_paths = new Vector<BuenoPathEntry>();
    project_options = new HashMap<String,OptionData>();
 
    Element xml = BumpClient.getBump().getProjectData(project_name);
    if (xml == null) throw new BuenoException("Project " + project_name + " not defined");
    project_dir = new File(IvyXml.getAttrString(xml,"PATH"));
    for (Element pelt : IvyXml.children(xml,"PATH")) {
-      PathData pd = new PathData(pelt);
+      BuenoPathEntry pd = new BuenoPathEntry(pelt);
       project_paths.add(pd);
     }
    Element prefs = IvyXml.getChild(xml,"PREFERENCES");
@@ -227,7 +227,7 @@ private boolean createProject()
 
 private void initialzeProject()
 {
-   PathData pd = new PathData(project_file,false,false);
+   BuenoPathEntry pd = new BuenoPathEntry(project_file,PathType.SOURCE,false);
    project_paths.add(pd);
 
    if (project_type == ProjectType.NODE_JS) {
@@ -240,14 +240,14 @@ private void initialzeProject()
 	       String pn = sdir.getPath();
 	       pn = pn.substring(sz+1);
 	       if (includeFile(pn)) {
-		  PathData spd = new PathData(sdir,false,false);
+		  BuenoPathEntry spd = new BuenoPathEntry(sdir,PathType.SOURCE,false);
 		  project_paths.add(spd);
 		}
 	     }
 	  }
        }
       File f1 = new File(project_file,"node_modules");
-      PathData lpd = new PathData(f1,true,true);
+      BuenoPathEntry lpd = new BuenoPathEntry(f1,PathType.LIBRARY,true);
       project_paths.add(lpd);
     }
 
@@ -281,15 +281,8 @@ private void updateProject()
       xw.field("VALUE",od.getValue());
       xw.end("OPTION");
     }
-   for (PathData pd : project_paths) {
-      xw.begin("PATH");
-      if (!pd.isLibrary()) {
-	 xw.field("USER",true);
-       }
-      if (pd.isRecursive()) xw.field("NEST",true);
-      if (pd.isExclude()) xw.field("EXCLUDE",true);
-      xw.field("DIRECTORY",pd.getDirectory().getPath());
-      xw.end("PATH");
+   for (BuenoPathEntry pd : project_paths) {
+      pd.outputXml(xw,false);
     }
    xw.end("PROJECT");
 
@@ -454,10 +447,10 @@ private class ProjectEditor extends SwingGridPanel implements ActionListener {
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if (cmd.equals("CANCEL")) {
-	 removeBubble();
+         removeBubble();
        }
       else if (cmd.equals("ACCEPT")) {
-	 updateProject();
+         updateProject();
        }
     }
 
@@ -481,7 +474,7 @@ private class PackagePanel extends SwingGridPanel implements ActionListener, Lis
 
    private JButton edit_button;
    private JButton delete_button;
-   private JList<PathData> path_display;
+   private JList<BuenoPathEntry> path_display;
 
    PackagePanel() {
       int y = 0;
@@ -494,8 +487,8 @@ private class PackagePanel extends SwingGridPanel implements ActionListener, Lis
       delete_button.addActionListener(this);
       addGBComponent(delete_button,1,y++,1,1,0,0);
       ++y;
-
-      path_display = new JList<PathData>(project_paths);
+   
+      path_display = new JList<BuenoPathEntry>(project_paths);
       path_display.setVisibleRowCount(5);
       addGBComponent(new JScrollPane(path_display),0,0,1,y++,1,1);
     }
@@ -518,9 +511,9 @@ private class PackagePanel extends SwingGridPanel implements ActionListener, Lis
     }
 
    private void updateButtons() {
-      List<PathData> sels = path_display.getSelectedValuesList();
+      List<BuenoPathEntry> sels = path_display.getSelectedValuesList();
       boolean edok = false;
-      for (PathData pe : sels) {
+      for (BuenoPathEntry pe : sels) {
 	 if (pe.isLibrary()) {
 	    if (edok) {
 	       edok = false;
@@ -588,19 +581,19 @@ private class OptionPanel extends SwingGridPanel implements ActionListener {
       String v = (String) op.getSelectedItem();
       v = error_values.get(v);
       for (Map.Entry<String,String> ent : error_descriptions.entrySet()) {
-	 if (ent.getValue().equals(what)) {
-	    BumpClient bc = BumpClient.getBump();
-	    IvyXmlWriter xw = new IvyXmlWriter();
-	    xw.begin("PROJECT");
-	    xw.field("NAME",project_name);
-	    xw.begin("OPTION");
-	    xw.field("KEY","ErrorType." + ent.getKey());
-	    xw.field("VALUE",v);
-	    xw.end("OPTION");
-	    xw.end("PROJECT");
-	    bc.editProject(project_name,xw.toString());
-	    xw.close();
-	  }
+         if (ent.getValue().equals(what)) {
+            BumpClient bc = BumpClient.getBump();
+            IvyXmlWriter xw = new IvyXmlWriter();
+            xw.begin("PROJECT");
+            xw.field("NAME",project_name);
+            xw.begin("OPTION");
+            xw.field("KEY","ErrorType." + ent.getKey());
+            xw.field("VALUE",v);
+            xw.end("OPTION");
+            xw.end("PROJECT");
+            bc.editProject(project_name,xw.toString());
+            xw.close();
+          }
        }
     }
 
@@ -622,45 +615,6 @@ private static class BuenoJsBubble extends BudaBubble {
     }
 
 }	// end of inner class BuenoJsBubble
-
-
-
-/********************************************************************************/
-/*										*/
-/*	Path Data								*/
-/*										*/
-/********************************************************************************/
-
-private static class PathData {
-
-   private File path_directory;
-   private boolean is_library;
-   private boolean is_recursive;
-   private boolean is_exclude;
-
-   PathData(Element xml) {
-      path_directory = new File(IvyXml.getAttrString(xml,"DIR"));
-      is_library = !IvyXml.getAttrBool(xml,"USER");
-      is_recursive = IvyXml.getAttrBool(xml,"NEST");
-      is_exclude = IvyXml.getAttrBool(xml,"EXCLUDE");
-    }
-
-   PathData(File dir,boolean lib,boolean recur) {
-      path_directory = dir;
-      is_library = lib;
-      is_recursive = recur;
-    }
-
-   boolean isLibrary()			{ return is_library; }
-   boolean isRecursive()		{ return is_recursive; }
-   boolean isExclude()			{ return is_exclude; }
-   File getDirectory()			{ return path_directory; }
-
-   @Override public String toString() {
-      return path_directory.toString();
-    }
-
-}	// end of inner class PathData
 
 
 

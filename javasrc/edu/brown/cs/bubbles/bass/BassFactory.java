@@ -827,7 +827,7 @@ private static class NewJSProjectAction extends AbstractAction {
       BudaBubble bb = null;
       bb = BuenoJsProject.createNewJsProjectBubble();
       if (bb != null) {
-	 BassFactory.getFactory().addNewBubble(rel_bubble,rel_point,bb);
+         BassFactory.getFactory().addNewBubble(rel_bubble,rel_point,bb);
        }
    }
 

@@ -30,6 +30,7 @@ import edu.brown.cs.bubbles.board.BoardFileSystemView;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
+import edu.brown.cs.bubbles.board.BoardConstants.BoardLanguage;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -92,9 +93,9 @@ private String			project_name;
 private File			project_dir;
 private List<String>		ref_projects;
 private Set<String>		refby_projects;
-private SwingListSet<PathEntry> library_paths;
-private Set<PathEntry>		source_paths;
-private Set<PathEntry>		initial_paths;
+private SwingListSet<BuenoPathEntry> library_paths;
+private Set<BuenoPathEntry>		source_paths;
+private Set<BuenoPathEntry>		initial_paths;
 private Map<String,String>	option_elements;
 private Map<String,String>	start_options;
 private Map<String,Map<String,String>> option_sets;
@@ -108,8 +109,6 @@ private boolean 		force_update;
 private Set<String>		other_projects;
 
 private static File		last_directory;
-
-private static final int PATH_LENGTH = 40;
 
 private static int	dialog_placement = BudaConstants.PLACEMENT_PREFER |
 						BudaConstants.PLACEMENT_LOGICAL|
@@ -141,15 +140,6 @@ static {
 
 
 
-
-enum PathType {
-   NONE,
-   SOURCE,
-   BINARY,
-   LIBRARY
-}
-
-
 /********************************************************************************/
 /*										*/
 /*	Constructors								*/
@@ -161,11 +151,11 @@ BuenoProjectDialog(String proj)
    project_name = proj;
    ref_projects = new ArrayList<String>();
    refby_projects = new HashSet<String>();
-   library_paths = new SwingListSet<PathEntry>(true);
-   source_paths = new HashSet<PathEntry>();
+   library_paths = new SwingListSet<BuenoPathEntry>(true);
+   source_paths = new HashSet<BuenoPathEntry>();
    option_elements = new HashMap<String,String>();
    option_sets = new HashMap<String,Map<String,String>>();
-   initial_paths = new HashSet<PathEntry>();
+   initial_paths = new HashSet<BuenoPathEntry>();
    pref_entries = new HashSet<PrefEntry>();
    force_update = false;
 
@@ -203,7 +193,7 @@ BuenoProjectDialog(String proj)
 
    Element cxml = IvyXml.getChild(xml,"RAWPATH");
    for (Element e : IvyXml.children(cxml,"PATH")) {
-      PathEntry pe = new PathEntry(e);
+      BuenoPathEntry pe = new BuenoPathEntry(e);
       if (!pe.isNested() && pe.getPathType() == PathType.LIBRARY) {
 	 library_paths.addElement(pe);
 	 initial_paths.add(pe);
@@ -317,7 +307,7 @@ private class PathPanel extends SwingGridPanel implements ActionListener, ListSe
 
    private JButton edit_button;
    private JButton delete_button;
-   private JList<PathEntry>   path_display;
+   private JList<BuenoPathEntry>   path_display;
 
    PathPanel() {
       int y = 0;
@@ -335,7 +325,7 @@ private class PathPanel extends SwingGridPanel implements ActionListener, ListSe
       addGBComponent(delete_button,1,y++,1,1,0,0);
       ++y;
 
-      path_display = new JList<PathEntry>(library_paths);
+      path_display = new JList<BuenoPathEntry>(library_paths);
       path_display.setVisibleRowCount(10);
       path_display.addListSelectionListener(this);
       addGBComponent(new JScrollPane(path_display),0,0,1,y++,1,1);
@@ -344,24 +334,30 @@ private class PathPanel extends SwingGridPanel implements ActionListener, ListSe
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
       if (cmd.equals("New Jar File")) {
-	 askForNew(new FileNameExtensionFilter("Jar Files","jar"),JFileChooser.FILES_ONLY);
+         askForNew(new FileNameExtensionFilter("Jar Files","jar"),JFileChooser.FILES_ONLY);
        }
       else if (cmd.equals("New Directory")) {
-	 askForNew(new BinaryFileFilter(),JFileChooser.DIRECTORIES_ONLY);
+         askForNew(new BinaryFileFilter(),JFileChooser.DIRECTORIES_ONLY);
        }
       else if (cmd.equals("Edit")) {
-	 PathEntry pe = path_display.getSelectedValue();
-	 if (pe == null) return;
-	 EditPathEntryBubble bb = new EditPathEntryBubble(pe);
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
-	 BudaBubble rbb = BudaRoot.findBudaBubble(this);
-	 if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement);
+         BuenoPathEntry pe = path_display.getSelectedValue();
+         if (pe == null) return;
+         BudaBubble bb = null;
+         if (BoardSetup.getSetup().getLanguage() == BoardLanguage.JS) {
+            bb = new EditJSPathEntryBubble(pe);
+          }
+         else {
+            bb = new EditPathEntryBubble(pe);
+          }
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
+         BudaBubble rbb = BudaRoot.findBudaBubble(this);
+         if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement);
        }
       else if (cmd.equals("Delete")) {
-	 for (PathEntry pe : path_display.getSelectedValuesList()) {
-	    library_paths.removeElement(pe);
-	  }
-	 force_update = true;
+         for (BuenoPathEntry pe : path_display.getSelectedValuesList()) {
+            library_paths.removeElement(pe);
+          }
+         force_update = true;
        }
       else BoardLog.logE("BUENO","Unknown path panel command " + cmd);
     }
@@ -379,9 +375,9 @@ private class PathPanel extends SwingGridPanel implements ActionListener, ListSe
     }
 
    private void updateButtons() {
-      List<PathEntry> sels = path_display.getSelectedValuesList();
+      List<BuenoPathEntry> sels = path_display.getSelectedValuesList();
       boolean edok = false;
-      for (PathEntry pe : sels) {
+      for (BuenoPathEntry pe : sels) {
 	 if (pe.getPathType() == PathType.LIBRARY) {
 	    if (edok) {
 	       edok = false;
@@ -435,7 +431,7 @@ private class NewPathEntryBubble extends BudaBubble implements ActionListener {
       if (cmd.equals(JFileChooser.APPROVE_SELECTION)) {
          closeWindow(this);
          for (File f : file_chooser.getSelectedFiles()) {
-            PathEntry pe = new PathEntry(f);
+            BuenoPathEntry pe = new BuenoPathEntry(f,PathType.LIBRARY,false);
             library_paths.addElement(pe);
           }
        }
@@ -475,9 +471,9 @@ private static class BinaryFileFilter extends FileFilter {
 
 private static class EditPathEntryBubble extends BudaBubble implements ActionListener {
 
-   private PathEntry	for_path;
+   private BuenoPathEntry	for_path;
 
-   EditPathEntryBubble(PathEntry pp) {
+   EditPathEntryBubble(BuenoPathEntry pp) {
       for_path = pp;
       SwingGridPanel pnl = new SwingGridPanel();
       pnl.beginLayout();
@@ -526,165 +522,57 @@ private static class EditPathEntryBubble extends BudaBubble implements ActionLis
        }
     }
 
-}	// end of inner class NewPathEntryBubble
+}	// end of inner class EditPathEntryBubble
 
 
 
-/********************************************************************************/
-/*										*/
-/*	Path Information							*/
-/*										*/
-/********************************************************************************/
 
-private static class PathEntry implements Comparable<PathEntry> {
+private static class EditJSPathEntryBubble extends BudaBubble implements ActionListener {
 
-   private PathType path_type;
-   private String source_path;
-   private String output_path;
-   private String binary_path;
-   private String javadoc_path;
-   private boolean is_exported;
-   private boolean is_optional;
-   private boolean is_nested;
-   private boolean is_new;
-   private boolean is_modified;
-   private int	   entry_id;
-
-   PathEntry(Element e) {
-      path_type = IvyXml.getAttrEnum(e,"TYPE",PathType.NONE);
-      source_path = IvyXml.getTextElement(e,"SOURCE");
-      output_path = IvyXml.getTextElement(e,"OUTPUT");
-      binary_path = IvyXml.getTextElement(e,"BINARY");
-      javadoc_path = IvyXml.getTextElement(e,"JAVADOC");
-      entry_id = IvyXml.getAttrInt(e,"ID");
-      is_exported = IvyXml.getAttrBool(e,"EXPORTED");
-      is_nested = IvyXml.getAttrBool(e,"NESTED");
-      is_optional = IvyXml.getAttrBool(e,"OPTIONAL");
-      is_new = false;
-      is_modified = false;
+   private BuenoPathEntry	for_path;
+   
+   EditJSPathEntryBubble(BuenoPathEntry pp) {
+      for_path = pp;
+      SwingGridPanel pnl = new SwingGridPanel();
+      pnl.beginLayout();
+      pnl.addBannerLabel("Edit Project Path Entry");
+      pnl.addFileField("Directory",for_path.getSourcePath(),JFileChooser.DIRECTORIES_ONLY,null,null);
+      pnl.addBoolean("Excluded",for_path.isExcluded(),this);
+      pnl.addBoolean("Nested",for_path.isNested(),this);
+      
+      pnl.addBottomButton("Close","Close",this);
+      pnl.addBottomButtons();
+      setContentPane(pnl);
     }
-
-   PathEntry(File f) {
-      path_type = PathType.LIBRARY;
-      source_path = null;
-      output_path = null;
-      binary_path = (f == null ? null : f.getPath());
-      is_exported = false;
-      is_optional = false;
-      is_nested = false;
-      is_new = true;
-      is_modified = true;
-      entry_id = 0;
-    }
-
-   boolean isNested()					{ return is_nested; }
-   PathType getPathType()				{ return path_type; }
-   String getBinaryPath()				{ return binary_path; }
-   String getSourcePath()				{ return source_path; }
-   String getJavadocPath()				{ return javadoc_path; }
-   boolean isExported() 				{ return is_exported; }
-   boolean isOptional() 				{ return is_optional; }
-   boolean hasChanged() 				{ return is_new || is_modified; }
-
-   void setBinaryPath(String p) {
-      if (p == null || p.length() == 0 || p.equals(binary_path)) return;
-      binary_path = p;
-      is_modified = true;
-    }
-
-   void setSourcePath(String p) {
-      if (p == null || p.length() == 0 || p.equals(source_path)) return;
-      source_path = p;
-      is_modified = true;
-    }
-
-   void setJavadocPath(String p) {
-       if (p == null || p.length() == 0 || p.equals(javadoc_path)) return;
-       javadoc_path = p;
-       is_modified = true;
-     }
-
-   void setExported(boolean fg) {
-      if (fg == is_exported) return;
-      is_exported = fg;
-      is_modified = true;
-    }
-
-   void setOptional(boolean fg) {
-      if (fg == is_optional) return;
-      is_optional = fg;
-      is_modified = true;
-    }
-
-   void outputXml(IvyXmlWriter xw,boolean del) {
-      xw.begin("PATH");
-      if (del) xw.field("DELETE",true);
-      if (entry_id != 0) xw.field("ID",entry_id);
-      xw.field("TYPE",path_type);
-      xw.field("NEW",is_new);
-      xw.field("MODIFIED",is_modified);
-      xw.field("EXPORTED",is_exported);
-      xw.field("OPTIONAL",is_optional);
-      if (source_path != null) xw.textElement("SOURCE",source_path);
-      if (output_path != null) xw.textElement("OUTPUT",output_path);
-      if (binary_path != null) xw.textElement("BINARY",binary_path);
-      if (javadoc_path != null) xw.textElement("JAVADOC",javadoc_path);
-      xw.end("PATH");
-    }
-
-   @Override public String toString() {
-      FileSystemView fsv = BoardFileSystemView.getFileSystemView();
-      switch (path_type) {
-         case LIBRARY :
-         case BINARY :
-            if (binary_path == null) break;
-            if (binary_path.length() <= PATH_LENGTH) return binary_path;
-            File f = fsv.createFileObject(binary_path);
-            String rslt = f.getName();
-            for ( ; ; ) {
-               File f1 = f.getParentFile();
-               if (f1 == null) {
-                  rslt = File.separator + rslt;
-                  break;
-                }
-               String pname = f1.getName();
-               String rslt1 = pname + File.separator + rslt;
-               if (rslt1.length() >= PATH_LENGTH) {
-                  rslt = "..." + File.separator + rslt;
-                  break;
-                }
-               rslt = rslt1;
-               f = f1;
-             }
-            return rslt;
-         case SOURCE :
-            if (source_path != null) {
-               File f2 = fsv.createFileObject(source_path);
-               return f2.getName() + " (SOURCE)";
-             }
-            break;
-         default:
-            break;
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+      String cmd = evt.getActionCommand();
+      if (cmd.equals("Directory")) {
+         JTextField tf = (JTextField) evt.getSource();
+         for_path.setSourcePath(tf.getText());
        }
-      return path_type.toString() + " " + source_path + " " + output_path + " " + binary_path;
-    }
-
-   @Override public int compareTo(PathEntry pe) {
-      int cmp = toString().compareTo(pe.toString());
-      if (cmp == 0) {
-         cmp = binary_path.compareTo(pe.binary_path);
+      else if (cmd.equals("Excluded")) {
+         JCheckBox cbx = (JCheckBox) evt.getSource();
+         if (cbx.isSelected()) for_path.setType(PathType.EXCLUDE);
+         else if (for_path.getPathType() != PathType.LIBRARY) for_path.setType(PathType.SOURCE);
        }
-      return cmp;
+      else if (cmd.equals("Nested")) {
+         JCheckBox cbx = (JCheckBox) evt.getSource();
+         for_path.setNested(cbx.isSelected());
+       }
+      else if (cmd.equals("Close")) {
+         setVisible(false);
+       }
     }
-
-}	// end of inner class PathEntry
+   
+}	// end of inner class EditJSPathEntryBubble
 
 
 
 
 /********************************************************************************/
 /*										*/
-/*	Handle preference setting request							   */
+/*	Handle preference setting request					*/
 /*										*/
 /********************************************************************************/
 
@@ -888,17 +776,17 @@ private void setupContractsForJava()
    String snm = null;
    boolean fnd = false;
    boolean sfnd = false;
-   for (PathEntry pe : initial_paths) {
+   for (BuenoPathEntry pe : initial_paths) {
       if (pe.getSourcePath() != null && !pe.isOptional() && snm == null) snm = pe.getSourcePath();
       if (pe.getBinaryPath() != null && pe.getBinaryPath().equals(path)) fnd = true;
       if (pe.getSourcePath() != null && pe.getSourcePath().equals(anm)) sfnd = true;
     }
    if (!fnd) {
-      PathEntry pe = new PathEntry(fsv.createFileObject(path));
+      BuenoPathEntry pe = new BuenoPathEntry(fsv.createFileObject(path),PathType.LIBRARY,false);
       library_paths.addElement(pe);
     }
    if (!sfnd) {
-      PathEntry pe = new PathEntry((File) null);
+      BuenoPathEntry pe = new BuenoPathEntry((File) null,PathType.SOURCE,false);
       pe.setSourcePath(anm);
       pe.setOptional(true);
       library_paths.addElement(pe);
@@ -928,12 +816,12 @@ private void setupJunit()
    String path = bs.getRemoteLibraryPath("junit.jar");
 
    boolean fnd = false;
-   for (PathEntry pe : initial_paths) {
+   for (BuenoPathEntry pe : initial_paths) {
       if (pe.getBinaryPath() != null && pe.getBinaryPath().contains("junit")) fnd = true;
     }
    if (!fnd) {
       FileSystemView fsv = BoardFileSystemView.getFileSystemView();
-      PathEntry pe = new PathEntry(fsv.createFileObject(path));
+      BuenoPathEntry pe = new BuenoPathEntry(fsv.createFileObject(path),PathType.LIBRARY,false);
       library_paths.addElement(pe);
     }
 
@@ -948,12 +836,12 @@ private void setupAnnotations()
    String path = bs.getRemoteLibraryPath("annotations.jar");
 
    boolean fnd = false;
-   for (PathEntry pe : initial_paths) {
+   for (BuenoPathEntry pe : initial_paths) {
       if (pe.getBinaryPath() != null && pe.getBinaryPath().contains("annotations")) fnd = true;
     }
    if (!fnd) {
       FileSystemView fsv = BoardFileSystemView.getFileSystemView();
-      PathEntry pe = new PathEntry(fsv.createFileObject(path));
+      BuenoPathEntry pe = new BuenoPathEntry(fsv.createFileObject(path),PathType.LIBRARY,false);
       library_paths.addElement(pe);
     }
 
@@ -1067,7 +955,7 @@ private boolean anythingChanged()
 {
    if (force_update) return true;
 
-   for (PathEntry pe : library_paths) {
+   for (BuenoPathEntry pe : library_paths) {
       if (pe.hasChanged()) return true;
     }
    if (problem_panel.needsUpdate()) return true;
@@ -1080,7 +968,7 @@ private boolean anythingChanged()
 private class ProjectEditor implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
-      Set<PathEntry> dels = new HashSet<PathEntry>(initial_paths);
+      Set<BuenoPathEntry> dels = new HashSet<BuenoPathEntry>(initial_paths);
       dels.removeAll(source_paths);
       boolean chng = false;
    
@@ -1098,11 +986,11 @@ private class ProjectEditor implements ActionListener {
       IvyXmlWriter xw = new IvyXmlWriter();
       xw.begin("PROJECT");
       xw.field("NAME",project_name);
-      for (PathEntry pe : library_paths) {
+      for (BuenoPathEntry pe : library_paths) {
          pe.outputXml(xw,false);
          dels.remove(pe);
        }
-      for (PathEntry pe : dels) {
+      for (BuenoPathEntry pe : dels) {
          pe.outputXml(xw,true);
        }
    

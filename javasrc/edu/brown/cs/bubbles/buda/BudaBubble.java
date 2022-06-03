@@ -613,6 +613,11 @@ public void setLastViewed(long when)
    unviewed_time = 0;
 }
 
+public void setUnviewed(long time)
+{
+   unviewed_time = time;
+}
+
 
 public void noteUnviewed(long delta)
 {

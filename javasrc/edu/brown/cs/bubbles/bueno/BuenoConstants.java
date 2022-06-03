@@ -279,6 +279,23 @@ interface BuenoValidatorCallback {
 }	// end of inner interface BuenoValidatorCallback
 
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      Path inforamtion                                                        */
+/*                                                                              */
+/********************************************************************************/
+
+enum PathType {
+   NONE,
+   SOURCE,
+   BINARY,
+   LIBRARY,
+   EXCLUDE,
+}
+
+
+
 }	// end of interface BuenoConstants
 
 

@@ -309,7 +309,7 @@ private void commitFile(NobaseProject pp,NobaseFile ifd,String bid,boolean refre
       unlockFile(ifd);
     }
 
-   if (upd && fed != null) {
+   if (upd && fed != null && pp != null) {
       AutoCompile ac = new AutoCompile(pp,ifd,null,fed);
       NobaseMain pm = NobaseMain.getNobaseMain();
       pm.startTask(ac);

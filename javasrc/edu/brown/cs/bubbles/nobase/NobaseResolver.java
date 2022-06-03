@@ -131,8 +131,8 @@ static boolean isGeneratedName(NobaseSymbol ns)
 static boolean isGeneratedName(String name)
 {
    if (name == null) return false;
-   Matcher m = INTERNAL_NAME.matcher(name);
-   return m.matches();
+   if (name.equals("MISSING")) return true;
+   Matcher m = INTERNAL_NAME.matcher(name);return m.matches();
 }
 
 

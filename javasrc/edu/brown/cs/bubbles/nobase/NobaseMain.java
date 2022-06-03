@@ -116,7 +116,7 @@ static private NobaseMain		nobase_main;
 
 private static PrintStream log_file = null;
 private static NobaseLogLevel log_level = NobaseLogLevel.DEBUG;
-private static boolean use_stderr = true;
+private static boolean use_stderr = false;
 
 
 
@@ -250,6 +250,9 @@ private void scanArgs(String [] args)
             catch (IOException e) {
                System.err.println("NOBASE: Can't open log file " + args[i]);
              }
+          }
+         else if (args[i].startsWith("-err")) {                         // -err
+            use_stderr = true;
           }
 	 else badArgs();
        }
@@ -681,27 +684,18 @@ private class CommandHandler implements MintHandler {
          rslt = handleCommand(cmd,proj,xml);
        }
       catch (NobaseException e) {
-         String xmsg = "NOBASE: error in command " + cmd + ": " + e;
+         String xmsg = "Error in command " + cmd + ": " + e;
          logE(xmsg,e);
-         rslt = "<ERROR><![CDATA[" + xmsg + "]]></ERROR>";
+         rslt = "<ERROR><![CDATA[NOBASE: " + xmsg + "]]></ERROR>";
        }
       catch (Throwable t) {
-         String xmsg = "NOBASE: Problem processing command " + cmd + ": " + t;
+         String xmsg = "Problem processing command " + cmd + ": " + t;
          logE(xmsg,t);
-         t.printStackTrace();
          StringWriter sw = new StringWriter();
          PrintWriter pw = new PrintWriter(sw);
          t.printStackTrace(pw);
-         logE("TRACE: " + sw.toString());
-         for (Throwable xt = t.getCause(); xt != null; xt = xt.getCause()) {
-            StringWriter xsw = new StringWriter();
-            PrintWriter xpw = new PrintWriter(xsw);
-            xt.printStackTrace(xpw);
-            logE("CAUSED BY: " + xsw.toString());
-          }
-   
          rslt = "<ERROR>";
-         rslt += "<MESSAGE>" + xmsg + "</MESSAGE>";
+         rslt += "<MESSAGE>NOBASE: " + xmsg + "</MESSAGE>";
          rslt += "<EXCEPTION><![CDATA[" + t.toString() + "]]></EXCEPTION>";
          rslt += "<STACK><![CDATA[" + sw.toString() + "]]></STACK>";
          rslt += "</ERROR>";

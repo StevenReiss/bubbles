@@ -43,6 +43,7 @@ class NobaseJsdt implements NobaseConstants, NobaseConstants.IParser
 /*										*/
 /********************************************************************************/
 
+private static boolean do_resolve = false;
 
 
 /********************************************************************************/
@@ -66,7 +67,15 @@ NobaseJsdt()
 {
    ASTParser parser = ASTParser.newParser(AST.JLS3);
    parser.setSource(fd.getContents().toCharArray());
-   parser.setResolveBindings(false);
+   if (do_resolve) {
+      NobaseMain.logD("Parse with bindings");
+      // need to call setProject() and setUnitName() here for this to work
+      parser.setResolveBindings(true);
+      parser.setBindingsRecovery(true);
+    }
+   else {
+      parser.setResolveBindings(false);
+    }
    parser.setStatementsRecovery(true);
    parser.setKind(ASTParser.K_COMPILATION_UNIT);
   

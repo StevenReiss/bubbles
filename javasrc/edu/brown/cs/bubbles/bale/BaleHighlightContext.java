@@ -298,7 +298,7 @@ private void startHighlight(CaretEvent start)
 
 	 if (split_identifier) {
 	    locsr = bump_client.findRWReferences(doc.getProjectName(),
-						    doc.getFile(),spos,epos,false,2000);
+						    doc.getFile(),spos,epos,false,4000);
 	    BumpSymbolType styp = BumpSymbolType.UNKNOWN;
 	    if (locsr != null && locsr.size() > 0) {
 	       BumpLocation loc = locsr.get(0);
@@ -308,13 +308,13 @@ private void startHighlight(CaretEvent start)
 	    if (locsr != null && styp != BumpSymbolType.FUNCTION) removeDefs(locsr);
 	    switch (styp) {
 	       case UNKNOWN :
-		  locsw = bump_client.findReferences(null,doc.getFile(),spos,epos,2000);
+		  locsw = bump_client.findReferences(null,doc.getFile(),spos,epos,4000);
 		  break;
 	       case FIELD :
 	       case LOCAL :
                case GLOBAL :
-		  locsw = bump_client.findRWReferences(null,doc.getFile(),spos,epos,true,1000);
-		  locsd = bump_client.findDefinition(null,doc.getFile(),spos,epos,1000);
+		  locsw = bump_client.findRWReferences(null,doc.getFile(),spos,epos,true,2000);
+		  locsd = bump_client.findDefinition(null,doc.getFile(),spos,epos,2000);
 		  break;
 	       case CLASS :
 	       case THROWABLE :

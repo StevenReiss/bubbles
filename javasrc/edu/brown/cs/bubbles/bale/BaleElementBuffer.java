@@ -576,6 +576,7 @@ private List<BaleElement> scanText(String text,int baseoffset,
 	 case RAISE :
 	 case IMPORT :
 	 case PACKAGE :
+         case FUNCTION :
 	    nelt = new BaleElement.Keyword(doc,cur,soff,eoff,bt.getType());
 	    break;
 	 case RETURN :

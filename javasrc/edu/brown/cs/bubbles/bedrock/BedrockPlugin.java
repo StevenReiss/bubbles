@@ -548,7 +548,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 bedrock_project.findPackage(proj,IvyXml.getAttrString(xml,"NAME"),xw);
 	 break;
       case "GETALLNAMES" :
-	 bedrock_java.getAllNames(proj,IvyXml.getAttrString(xml,"BID","*"),
+	 bedrock_java.handleGetAllNames(proj,IvyXml.getAttrString(xml,"BID","*"),
 	       getSet(xml,"FILE"),
 	       IvyXml.getAttrString(xml,"BACKGROUND"),xw);
 	 break;

@@ -61,6 +61,9 @@ private static Map<String,Evaluator>   operator_evaluator;
 static {
    operator_evaluator = new HashMap<String,Evaluator>();
    operator_evaluator.put("+",new EvalPlus());
+   operator_evaluator.put("-",new EvalNumeric("-"));
+   operator_evaluator.put("*",new EvalNumeric("*"));
+   operator_evaluator.put("/",new EvalNumeric("/"));
 }
 
 
@@ -104,6 +107,52 @@ boolean checkChanged()
 
 void setForceDefine()				{ force_define = true; }
 
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Error checking methods                                                  */
+/*                                                                              */
+/********************************************************************************/
+
+@Override public void preVisit(ASTNode n)
+{
+   if (force_define) return;                    // only consider first pass
+   NobaseMain.logD("Visit " + n.getClass().getName() + " " + n.properties() + " " + n.getFlags());
+// if (n instanceof Expression) {
+//    Expression en = (Expression) n;
+//    NobaseMain.logD("\tConstant value: " + en.resolveConstantExpressionValue());
+//    NobaseMain.logD("\tType value: " + en.resolveTypeBinding());
+//    if (n instanceof FunctionInvocation) {
+//       FunctionInvocation fi = (FunctionInvocation) n;
+//       NobaseMain.logD("\tFunction value: " + fi.resolveMethodBinding());
+//     }
+//    if (n instanceof Name) {
+//       Name nm = (Name) n;
+//       NobaseMain.logD("\tName value: " + nm.resolveBinding());
+//     }
+//  }
+// else if (n instanceof VariableDeclaration) {
+//    VariableDeclaration vd = (VariableDeclaration) n;
+//    NobaseMain.logD("\tBinding: " + vd.resolveBinding());
+//  }
+   
+   if ((n.getFlags() & ASTNode.MALFORMED) != 0) {
+      NobaseMain.logD("Malformed node: " + n + " " + n.properties());
+      NobaseMessage msg = new NobaseMessage(ErrorSeverity.ERROR,
+            "Syntax error",
+            NobaseAst.getLineNumber(n),NobaseAst.getColumn(n),
+            NobaseAst.getEndLine(n),NobaseAst.getEndColumn(n));
+      error_list.add(msg);
+    }
+}
+
+
+@Override public void postVisit(ASTNode n) 
+{
+   if (force_define) return;                    // only consider first pass
+   NobaseMain.logD("EndVisit " + n.getClass().getName() + " " + n.properties());
+}
 
 
 /********************************************************************************/
@@ -195,8 +244,17 @@ void setForceDefine()				{ force_define = true; }
 @Override public boolean visit(ObjectLiteralField n)
 {
    Expression ex = n.getInitializer();
-   ex.accept(this);
    NobaseValue nv = NobaseAst.getNobaseValue(ex);
+   
+   if (nv == null && ex instanceof SimpleName && ex.toString().equals("MISSING")) {
+      nv = NobaseValue.createUndefined();
+      NobaseAst.setNobaseValue(ex,nv);
+    }
+   else if (nv == null) {
+      ex.accept(this);
+      nv = NobaseAst.getNobaseValue(ex);
+    }
+   
    Object fnm = getIdentName(n.getFieldName(),ex);
    NobaseValue objv = cur_scope.getThisValue();
    if (objv != null && fnm != null) {
@@ -233,7 +291,13 @@ void setForceDefine()				{ force_define = true; }
 @Override public void endVisit(StringLiteral n)
 {
    set_lvalue = null;
-   setValue(n,NobaseValue.createString(n.getLiteralValue()));
+   try {
+      setValue(n,NobaseValue.createString(n.getLiteralValue()));
+    }
+   catch (IllegalArgumentException e) {
+      NobaseMain.logE("Problem with string value: " + n.getEscapedValue());
+      setValue(n,NobaseValue.createString(n.getEscapedValue()));
+    }
 }
 
 
@@ -262,12 +326,6 @@ void setForceDefine()				{ force_define = true; }
 {
    setValue(n,NobaseValue.createString(n.getRawValue()));
 }
-
-
-
-
-
-
 
 
 @Override public void endVisit(UndefinedLiteral n)
@@ -347,6 +405,7 @@ void setForceDefine()				{ force_define = true; }
    n.getRightHandSide().accept(this);
    if (n.getOperator() == Assignment.Operator.ASSIGN) {
       set_lvalue = NobaseAst.getNobaseValue(n.getRightHandSide());
+      NobaseMain.logD("Assignment " + n + " = " + set_lvalue);
     }
    n.getLeftHandSide().accept(this);
    set_lvalue = ovl;
@@ -456,6 +515,12 @@ void setForceDefine()				{ force_define = true; }
    if (fv != null) {
       NobaseValue nv = fv.evaluate(enclosing_file,args,thisval);
       setValue(n,nv);
+      if (nv.isKnown()) {
+         NobaseMain.logD("Function evaluation returned " + nv);
+       }
+    }
+   else {
+      NobaseMain.logD("Nothing to evaluate: " + n);
     }
 
    return false;
@@ -624,8 +689,17 @@ void setForceDefine()				{ force_define = true; }
 
 @Override public void endVisit(VariableDeclarationExpression n)
 {
+   NobaseValue v = NobaseValue.createUndefined();
+   for (Object o : n.fragments()) {
+      ASTNode n1 = (ASTNode) o;
+      NobaseValue v1 = NobaseAst.getNobaseValue(n1);
+      if (v1 != null) v = v1;
+    }
+      
    // var x = ...
-   setValue(n,NobaseValue.createUndefined());
+   if (NobaseAst.getNobaseValue(n) == null) {
+      setValue(n,v);
+    }
 }
 
 
@@ -690,19 +764,23 @@ private void handleName(String name,ASTNode id)
 	 // see if we should create implicit definition
 	 NobaseScope dscope = cur_scope.getDefaultScope();
          if (cur_scope.getScopeType() != ScopeType.FUNCTION) {
-            if (dscope.getScopeType() == ScopeType.FILE ||
-                  dscope.getScopeType() == ScopeType.GLOBAL) {
-               NobaseMessage msg = new NobaseMessage(ErrorSeverity.WARNING,
-                     "Implicit declaration of " + name,
-                     NobaseAst.getLineNumber(id),NobaseAst.getColumn(id),
-                     NobaseAst.getEndLine(id),NobaseAst.getEndColumn(id));
-               error_list.add(msg);
-               ref = new NobaseSymbol(for_project,enclosing_file,id,name,false);
-               setName(ref,name,dscope);
-               dscope.define(ref);
-             }
-            else {
-               dscope.setProperty(name,NobaseValue.createAnyValue());
+            switch (dscope.getScopeType()) {
+               case FILE :
+               case GLOBAL :
+               case FUNCTION :
+               case CLASS :
+                  NobaseMessage msg = new NobaseMessage(ErrorSeverity.WARNING,
+                        "Implicit declaration of " + name,
+                        NobaseAst.getLineNumber(id),NobaseAst.getColumn(id),
+                        NobaseAst.getEndLine(id),NobaseAst.getEndColumn(id));
+                  error_list.add(msg);
+                  ref = new NobaseSymbol(for_project,enclosing_file,id,name,false);
+                  setName(ref,name,dscope);
+                  dscope.define(ref);
+                  break;
+               default :
+                  dscope.setProperty(name,NobaseValue.createAnyValue());
+                  break;
              }
           }
        }
@@ -739,8 +817,10 @@ private void handleName(String name,ASTNode id)
    else {
       NobaseValue nv = cur_scope.lookupValue(name,(set_lvalue != null));
       if (nv == null && force_define) {
-	 NobaseMain.logD("NOBASE: no value found for " + name + " at " +
-	       NobaseAst.getLineNumber(id));
+         if (!NobaseResolver.isGeneratedName(name)) {
+            NobaseMain.logD("No value found for " + name + " at " +
+                  NobaseAst.getLineNumber(id));
+          }
 	 nv = NobaseValue.createUnknownValue();
        }
       NobaseAst.setNobaseValue(id,nv);
@@ -931,7 +1011,6 @@ private void handleName(String name,ASTNode id)
 
 @Override public void endVisit(VariableDeclarationStatement n)
 {
-   setValue(n,NobaseValue.createUndefined());
 }
 
 
@@ -980,6 +1059,7 @@ private void handleName(String name,ASTNode id)
       NobaseMain.logI("Inferred type: " + n.getType());
     }
 }
+
 @Override public void endVisit(Modifier n) { }
 @Override public void endVisit(PrimitiveType n) { }
 @Override public void endVisit(QualifiedType n) { }
@@ -1001,7 +1081,78 @@ private void handleName(String name,ASTNode id)
 
 @Override public void endVisit(AnonymousClassDeclaration n) { }
 @Override public void endVisit(FieldDeclaration n) { }
-@Override public void endVisit(TypeDeclaration n) { }
+@Override public boolean visit(TypeDeclaration n)
+{
+   NobaseScope defscope = cur_scope;
+   String clsname = n.getName().getIdentifier();
+   NobaseValue nv = NobaseAst.getNobaseValue(n);
+   if (nv == null) {
+      nv = NobaseValue.createClass(n);
+      setValue(n,nv);
+    }
+   function_stack.push(nv);
+   
+   NobaseSymbol osym = NobaseAst.getDefinition(n);
+   if (osym == null) {
+      NobaseSymbol nsym = new NobaseSymbol(for_project,
+            enclosing_file,n,clsname,true);
+      setName(nsym,clsname,defscope);
+      nsym.setValue(nv);
+      osym = defscope.define(nsym);
+      if (nsym != osym) {
+         duplicateDef(clsname,n);
+         nsym = osym;
+       }
+    }
+   NobaseAst.setDefinition(n,osym);
+   
+   NobaseScope nscp = NobaseAst.getScope(n);
+   if (nscp == null) {
+      NobaseValue othis = null;
+      NobaseSymbol othissym = cur_scope.lookup("this");
+      if (othissym != null) othis = othissym.getValue();
+      nscp = new NobaseScope(ScopeType.CLASS,cur_scope);
+      NobaseAst.setScope(n,nscp);
+      nscp.setValue(nv);
+      if (this != null) {
+         nv.mergeProperties(othis);
+       }
+      NobaseSymbol thissym = new NobaseSymbol(for_project,null,null,"this",true);
+      thissym.setValue(nv);
+      nscp.define(thissym);
+    }
+   ASTNode n1 = n.getSuperclassExpression();
+   if (n1 != null) {
+      NobaseMain.logD("SUPER CLASS: " + n1);
+      n1.accept(this);
+      NobaseSymbol suptyp = NobaseAst.getReference(n1);
+      NobaseSymbol supersym = new NobaseSymbol(for_project,null,null,"super",true);
+      supersym.setValue(nv);
+      nscp.define(supersym);
+      if (suptyp != null) {
+         NobaseScope sscp = suptyp.getDefScope();
+         if (sscp != null) nscp.setSuperScope(sscp);
+       }
+    }  
+   
+   cur_scope = nscp;
+   
+   name_stack.push(enclosing_function);
+   if (enclosing_function == null) enclosing_function = clsname;
+   else enclosing_function += "." + clsname;
+   
+   NobaseAst.setDefinition(n.getName(),osym);
+   
+   return true;
+}
+
+
+@Override public void endVisit(TypeDeclaration n) 
+{
+   cur_scope = cur_scope.getParent();
+   enclosing_function = name_stack.pop();
+   function_stack.pop();
+}
 @Override public void endVisit(Initializer n) { }
 
 
@@ -1048,6 +1199,36 @@ private boolean handleDeclaration(VariableDeclaration vd)
     }
 
    SimpleName fident = vd.getName();
+   List<SimpleName> names = new ArrayList<>();
+   if (fident == null) {
+      ASTNode apat = null;
+      if (vd instanceof VariableDeclarationFragment) {
+         VariableDeclarationFragment vdf = (VariableDeclarationFragment) vd;
+         apat = vdf.getPattern();
+       }
+      else if (vd instanceof SingleVariableDeclaration) {
+         SingleVariableDeclaration svd = (SingleVariableDeclaration) vd;
+         apat = svd.getPattern();
+       }
+      if (apat != null) {
+         if (apat instanceof ObjectName) {
+            ObjectName pat = (ObjectName) apat;
+            for (Object o : pat.objectProperties()) {
+               ObjectLiteralField olf = (ObjectLiteralField) o;
+               Expression ex = olf.getFieldName();
+               if (ex instanceof SimpleName) names.add((SimpleName) ex);
+               else NobaseMain.logE("Unknown object literal value for " + pat);
+             }
+          }
+         else NobaseMain.logE("Unknown pattern value for " + apat);
+       }
+     else NobaseMain.logI("NO NAME " + vd.getBodyChild() + " @@ " + vd);
+    }
+   else {
+      names.add(fident);
+      NobaseMain.logD("Declaration for " + fident + " " + vd.getBodyChild());
+    }
+   
    ASTNode par = vd.getParent();
    NobaseType decltype = null;
    if (par instanceof VariableDeclarationExpression) {
@@ -1108,39 +1289,59 @@ private boolean handleDeclaration(VariableDeclaration vd)
       return false;
     }
 
-   SimpleName vident = vd.getName();
+   NobaseValue initv = null;
+   if (vd.getInitializer() != null) {
+      initv = NobaseAst.getNobaseValue(vd.getInitializer());
+    }
+   
+   if (fident != null) {
+      defineName(fident,decltype,initv,vd,false);
+    }
+   else {
+      for (SimpleName sn : names) {
+         defineName(sn,decltype,initv,vd,true);
+       }
+    }
+   
+   return false;
+}
+
+
+
+private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,VariableDeclaration vd,boolean mult)
+{
    NobaseSymbol sym = NobaseAst.getDefinition(vd);
-   if (sym == null && vident != null) {
-      NobaseSymbol nsym = new NobaseSymbol(for_project,enclosing_file,vd,vident.getIdentifier(),true);
+   if (sym == null && fident != null) {
+      NobaseSymbol nsym = new NobaseSymbol(for_project,enclosing_file,vd,fident.getIdentifier(),true);
       if (enclosing_function != null) {
-	 setName(nsym,enclosing_function + "." + vident.getIdentifier(),cur_scope);
+	 setName(nsym,enclosing_function + "." + fident.getIdentifier(),cur_scope);
        }
       else {
-	 setName(nsym,vident.getIdentifier(),cur_scope);
+	 setName(nsym,fident.getIdentifier(),cur_scope);
        }
       if (decltype != null) {
 	 nsym.setDataType(decltype);
        }
-
+      if (initv != null) {
+         if (mult) {
+            NobaseValue nv1 = initv.getProperty(fident.getIdentifier(),false);
+            if (nv1 != null) nsym.setValue(nv1);
+            else NobaseMain.logD("No value found for " + fident + " in " + initv);
+          }
+         else nsym.setValue(initv);
+       }
+      
       sym = cur_scope.define(nsym);
       if (nsym != sym) {
 	 boolean dupok = false;
-	 if (vd.getInitializer() != null) {
-	    NobaseValue fval = NobaseAst.getNobaseValue(vd.getInitializer());
-	    if (fval != null && fval.isFunction() && fval == sym.getValue()) dupok = true;
-	  }
-	 if (!dupok) duplicateDef(vident.getIdentifier(),vd);
+         if (initv != null && initv.isFunction() && initv == sym.getValue()) dupok = true;
+	 if (!dupok) duplicateDef(fident.getIdentifier(),vd);
        }
+      
       NobaseAst.setDefinition(vd,sym);
-      NobaseAst.setDefinition(vident,sym);
+      NobaseAst.setDefinition(fident,sym);
     }
-   if (sym != null && vd.getInitializer() != null) {
-      NobaseValue nv = NobaseAst.getNobaseValue(vd.getInitializer());
-      sym.setValue(nv);
-    }
-   return false;
 }
-
 
 
 
@@ -1160,6 +1361,7 @@ private boolean handleDeclaration(VariableDeclaration vd)
       setValue(n,nv);
     }
    function_stack.push(nv);
+   
    if (fctname != null) {
       NobaseSymbol osym = NobaseAst.getDefinition(n);
       if (osym == null) {
@@ -1432,43 +1634,99 @@ private void localScopeEnd()
 private static class EvalPlus implements Evaluator {
 
    @Override public NobaseValue evaluate(NobaseFile forfile,List<NobaseValue> args,
-	 NobaseValue thisval) {
+         NobaseValue thisval) {
       if (args.size() == 0) return null;
       if (args.size() == 1) return args.get(0);
-
+   
       List<Object> vals = new ArrayList<Object>();
       boolean havestring = false;
       boolean allnumber = true;
       for (NobaseValue nv : args) {
-	 if (nv == null) return null;
-	 Object o = nv.getKnownValue();
-	 if (o == null) return null;
-	 if (o == KnownValue.UNKNOWN) return null;
-	 if (o == KnownValue.ANY) return null;
-	 if (o == KnownValue.UNDEFINED) return null;
-	 if (o == KnownValue.NULL) o = null;
-	 vals.add(o);
-	 if (!(o instanceof Number)) allnumber = false;
-	 if (o instanceof String) havestring = true;
+         if (nv == null) return null;
+         Object o = nv.getKnownValue();
+         if (o == null) return null;
+         if (o == KnownValue.UNKNOWN) return null;
+         if (o == KnownValue.ANY) return null;
+         if (o == KnownValue.UNDEFINED) return null;
+         if (o == KnownValue.NULL) o = null;
+         vals.add(o);
+         if (!(o instanceof Number)) allnumber = false;
+         if (o instanceof String) havestring = true;
        }
       if (havestring) {
-	 StringBuffer buf = new StringBuffer();
-	 for (Object o : vals) {
-	    buf.append(o);
-	  }
-	 return NobaseValue.createString(buf.toString());
+         StringBuffer buf = new StringBuffer();
+         for (Object o : vals) {
+            buf.append(o);
+          }
+         return NobaseValue.createString(buf.toString());
        }
       if (allnumber) {
-	 double v = 0;
-	 for (Object o : vals) {
-	    v += ((Number) o).doubleValue();
-	  }
-	 return NobaseValue.createNumber(v);
+         double v = 0;
+         for (Object o : vals) {
+            v += ((Number) o).doubleValue();
+          }
+         return NobaseValue.createNumber(v);
        }
       return null;
     }
 
 }	// end of inner class EvalPlus
+
+
+
+private static class EvalNumeric implements Evaluator {
+
+   private String eval_op;
+   
+   EvalNumeric(String op) {
+      eval_op = op;
+    }
+   
+   @Override public NobaseValue evaluate(NobaseFile forfile,List<NobaseValue> args,
+         NobaseValue thisval) {
+      if (args.size() == 0) return null;
+      
+      List<Number> vals = new ArrayList<>();
+      for (NobaseValue nv : args) {
+         if (nv == null) return null;
+         Object o = nv.getKnownValue();
+         if (o instanceof Number) vals.add(((Number)o));
+         else return null;
+       }
+      
+      double v = vals.get(0).doubleValue();
+      if (args.size() == 1) {
+         switch (eval_op) {
+            case "-" :
+               v = -v;
+               break;
+            default :
+               return null;
+          }
+       }
+      else {
+         for (int i = 1; i < vals.size(); ++i) {
+            double v1 = vals.get(i).doubleValue();
+            switch (eval_op) {
+               case "-" :
+                  v -= v1;
+                  break;
+               case "*" :
+                  v *= v1;
+                  break;
+               case "/" :
+                  v /= v1;
+                  break;
+               default :
+                  return null;
+             }
+            
+          }
+       }
+      return NobaseValue.createNumber(v);
+    }
+   
+}	// end of inner class EvalNumeric
 
 
 

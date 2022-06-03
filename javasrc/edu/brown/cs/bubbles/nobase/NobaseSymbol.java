@@ -101,6 +101,9 @@ NameType getNameType()
    if (symbol_value != null && symbol_value.isFunction()) {
      return NameType.FUNCTION;
     }
+   else if (symbol_value != null && symbol_value.isClass()) { 
+      return NameType.CLASS;
+    }
    else if (qnm == null) {
       if (!symbol_name.equals("this") && !symbol_name.equals("undefined")) {
 	 NobaseMain.logE("Name missing bubbles name: " + symbol_name + " " + def_node + " " + for_file);

@@ -47,6 +47,7 @@ private Map<String,NobaseSymbol>	defined_names;
 private Map<String,Set<NobaseSymbol>>	all_names;
 private ScopeType			scope_type;
 private NobaseScope			parent_scope;
+private NobaseScope                     super_scope;
 private NobaseValue			object_value;
 private int				temp_counter;
 
@@ -63,6 +64,7 @@ NobaseScope(ScopeType typ,NobaseScope par)
    defined_names = new ConcurrentHashMap<>();
    scope_type = typ;
    parent_scope = par;
+   super_scope = null;
    object_value = null;
    temp_counter = 0;
    all_names = null;
@@ -80,6 +82,8 @@ NobaseScope(ScopeType typ,NobaseScope par)
 ScopeType getScopeType()		{ return scope_type; }
 
 NobaseScope getParent() 		{ return parent_scope; }
+
+void setSuperScope(NobaseScope scp)     {super_scope = scp; }
 
 NobaseValue getThisValue()
 {
@@ -142,6 +146,7 @@ void defineAll(NobaseSymbol sym,String nm)
       switch (sym.getNameType()) {
 	 case FUNCTION :
 	 case VARIABLE :
+         case CLASS :
 	    break;
 	 case MODULE :
 	 case LOCAL :
@@ -172,17 +177,30 @@ void setProperty(Object name,NobaseValue nv)
 
 NobaseSymbol lookup(String name)
 {
+   return lookup(name,false);
+}
+
+
+NobaseSymbol lookup(String name,boolean suponly)
+{
    NobaseSymbol sym = defined_names.get(name);
    if (sym != null) return sym;
    if (parent_scope == null) return null;
    if (scope_type == ScopeType.MEMBER) return null;
-   return parent_scope.lookup(name);
+   
+   if (super_scope != null) {
+      sym = super_scope.lookup(name,true);
+      if (sym != null) return sym;
+    }
+   if (suponly) return null;
+   
+   return parent_scope.lookup(name,false);
 }
 
 
 NobaseValue lookupValue(String name,boolean lhs)
 {
-   NobaseSymbol ns = lookup(name);
+   NobaseSymbol ns = lookup(name,false);
 
    if (name.equals("this") && object_value != null) {
       if (ns == null) return getThisValue();
@@ -192,12 +210,11 @@ NobaseValue lookupValue(String name,boolean lhs)
    switch (scope_type) {
       case MEMBER :
       case WITH :
+      default :
 	 if (object_value != null) {
 	    NobaseValue nv = object_value.getProperty(name,lhs);
 	    if (nv != null) return nv;
 	  }
-	 break;
-      default :
 	 break;
     }
 
@@ -221,12 +238,28 @@ NobaseScope getDefaultScope()
       case FILE :
       case GLOBAL :
       case FUNCTION :
+      case CLASS : 
          break;
       case MEMBER :
       case WITH :
 	 break;
     }
    return this;
+}
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+@Override public String toString()
+{
+   String base = "SCOPE: " + hashCode() + " " + scope_type;
+   if (parent_scope != null) base += " inside " + parent_scope.hashCode();
+   return base;
 }
 
 }	// end of class NobaseScope

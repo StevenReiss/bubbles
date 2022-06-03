@@ -57,11 +57,32 @@ private boolean is_nested;
 
 NobasePathSpec(Element xml)
  {
-   directory_file = new File(IvyXml.getTextElement(xml,"DIR"));
-   is_user = IvyXml.getAttrBool(xml,"USER");
-   is_exclude = IvyXml.getAttrBool(xml,"EXCLUDE");
+   String fnm = IvyXml.getTextElement(xml,"SOURCE");
+   if (fnm == null) {
+      fnm = IvyXml.getTextElement(xml,"DIR") ;
+      is_user = IvyXml.getAttrBool(xml,"USER");
+      is_exclude = IvyXml.getAttrBool(xml,"EXCLUDE");
+    }
+   else {
+      is_user = true;
+      is_exclude = false;
+      String typ = IvyXml.getAttrString(xml,"TYPE");
+      switch (typ) {
+         case "LIBRARY" :
+            is_user = false;
+            break;
+         default :
+         case "INCLUDE" :
+            break;
+         case "EXCLUDE" :
+            is_exclude = true;
+            break;
+       }
+    }
+   directory_file = new File(fnm);
    is_nested = IvyXml.getAttrBool(xml,"NEST");
 }
+
 
 
 NobasePathSpec(File f,boolean u,boolean e,boolean n)
@@ -130,9 +151,11 @@ boolean match(File path)
 public void outputXml(IvyXmlWriter xw)
 {
    xw.begin("PATH");
-   xw.field("DIR",directory_file.getPath());
-   xw.field("USER",is_user);
-   xw.field("EXCLUDE",is_exclude);
+   xw.field("ID",hashCode());
+   xw.field("SOURCE",directory_file.getPath());
+   if (!is_user) xw.field("TYPE","LIBRARY");
+   else if (is_exclude) xw.field("TYPE","EXCLUDE");
+   else xw.field("TYPE","INCLUDE");
    xw.field("NEST",is_nested);
    xw.end("PATH");
 }

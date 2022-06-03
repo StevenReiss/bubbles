@@ -120,7 +120,7 @@ BedrockJava(BedrockPlugin bp)
 /*										*/
 /********************************************************************************/
 
-void getAllNames(String proj,String bid,Set<String> files,String bkg,IvyXmlWriter xw) throws BedrockException
+void handleGetAllNames(String proj,String bid,Set<String> files,String bkg,IvyXmlWriter xw) throws BedrockException
 {
    NameThread nt = null;
 
@@ -170,61 +170,61 @@ private class NameThread extends Thread {
    void addElement(IJavaElement je) {
       boolean dochld = false;
       boolean doelt = false;
-
+   
       switch (je.getElementType()) {
-	 case IJavaElement.CLASS_FILE :
-	    return;
-	 case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-	    IPackageFragmentRoot ipfr = (IPackageFragmentRoot) je;
-	    try {
-	       if (!ipfr.isArchive() && !ipfr.isExternal() &&
-		      ipfr.getKind() == IPackageFragmentRoot.K_SOURCE)
-		  dochld = true;
-	     }
-	    catch (JavaModelException e) { }
-	    break;
-	 case IJavaElement.PACKAGE_FRAGMENT :
-	 case IJavaElement.JAVA_PROJECT :
-	    dochld = true;
-	    doelt = true;
-	    break;
-	 case IJavaElement.JAVA_MODEL :
-	 case IJavaElement.IMPORT_CONTAINER :
-	 case IJavaElement.IMPORT_DECLARATION :
-	 case IJavaElement.TYPE_PARAMETER :
-	 case IJavaElement.PACKAGE_DECLARATION :
-	 default :
-	    dochld = true;
-	    break;
-	 case IJavaElement.COMPILATION_UNIT :
-	    dochld = false;
-	    doelt = true;
-	    break;
-	 case IJavaElement.FIELD :
-	 case IJavaElement.METHOD :
-	 case IJavaElement.INITIALIZER :
-	 case IJavaElement.TYPE :
-	 case IJavaElement.LOCAL_VARIABLE :
-	    dochld = false;
-	    break;
+         case IJavaElement.CLASS_FILE :
+            return;
+         case IJavaElement.PACKAGE_FRAGMENT_ROOT :
+            IPackageFragmentRoot ipfr = (IPackageFragmentRoot) je;
+            try {
+               if (!ipfr.isArchive() && !ipfr.isExternal() &&
+        	      ipfr.getKind() == IPackageFragmentRoot.K_SOURCE)
+        	  dochld = true;
+             }
+            catch (JavaModelException e) { }
+            break;
+         case IJavaElement.PACKAGE_FRAGMENT :
+         case IJavaElement.JAVA_PROJECT :
+            dochld = true;
+            doelt = true;
+            break;
+         case IJavaElement.JAVA_MODEL :
+         case IJavaElement.IMPORT_CONTAINER :
+         case IJavaElement.IMPORT_DECLARATION :
+         case IJavaElement.TYPE_PARAMETER :
+         case IJavaElement.PACKAGE_DECLARATION :
+         default :
+            dochld = true;
+            break;
+         case IJavaElement.COMPILATION_UNIT :
+            dochld = false;
+            doelt = true;
+            break;
+         case IJavaElement.FIELD :
+         case IJavaElement.METHOD :
+         case IJavaElement.INITIALIZER :
+         case IJavaElement.TYPE :
+         case IJavaElement.LOCAL_VARIABLE :
+            dochld = false;
+            break;
        }
-
+   
       if (dochld) {
-	 if (doelt) separate_elements.put(je,Boolean.FALSE);
-	 if (je instanceof IParent) {
-	    try {
-	       for (IJavaElement c : ((IParent) je).getChildren()) {
-		  addElement(c);
-		}
-	     }
-	    catch (JavaModelException e) { }
-	    catch (Throwable e) {
-	       BedrockPlugin.logE("Problem geting children for all names: " + e);
-	     }
-	  }
+         if (doelt) separate_elements.put(je,Boolean.FALSE);
+         if (je instanceof IParent) {
+            try {
+               for (IJavaElement c : ((IParent) je).getChildren()) {
+        	  addElement(c);
+        	}
+             }
+            catch (JavaModelException e) { }
+            catch (Throwable e) {
+               BedrockPlugin.logE("Problem geting children for all names: " + e);
+             }
+          }
        }
       else if (doelt) {
-	 separate_elements.put(je,Boolean.TRUE);
+         separate_elements.put(je,Boolean.TRUE);
        }
     }
 
@@ -310,6 +310,7 @@ void handleFindAll(String proj,String file,int start,int end,boolean defs,boolea
    IJavaElement cls = null;
    char [] packagename = null;
    char [] typename = null;
+   long begin = System.currentTimeMillis();
 
    try {
       BedrockPlugin.logD("Getting search scopes");
@@ -323,7 +324,7 @@ void handleFindAll(String proj,String file,int start,int end,boolean defs,boolea
       if (system) fg |= IJavaSearchScope.SYSTEM_LIBRARIES | IJavaSearchScope.APPLICATION_LIBRARIES;
       scp = SearchEngine.createJavaSearchScope(pelt,fg);
 
-      BedrockPlugin.logD("Locating item to search for");
+      BedrockPlugin.logD("Locating item to search for " + (System.currentTimeMillis()-begin));
       IJavaElement [] elts = icu.codeSelect(start,end-start);
 
       if (typeof) {
@@ -460,12 +461,12 @@ void handleFindAll(String proj,String file,int start,int end,boolean defs,boolea
       return;
     }
 
-   BedrockPlugin.logD("Setting up search");
+   BedrockPlugin.logD("Setting up search " + (System.currentTimeMillis()-begin));
    SearchEngine se = new SearchEngine(working);
    SearchParticipant [] parts = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
-   FindHandler fh = new FindHandler(xw,filter,false);
+   FindHandler fh = new FindHandler(xw,filter,false,begin);
 
-   BedrockPlugin.logD("BEGIN SEARCH " + pat + " " + parts.length + " " + " " + scp + " :: COPIES: " + working.length);
+   BedrockPlugin.logD("BEGIN SEARCH " + pat + " " + parts.length + " " + scp + " :: COPIES: " + working.length);
 
    try {
       se.search(pat,parts,scp,fh,null);
@@ -616,6 +617,7 @@ void handleJavaSearch(String proj,String bid,String patstr,String foritems,
    IJavaProject ijp = getJavaProject(proj);
 
    our_plugin.waitForEdits();
+   long begin = System.currentTimeMillis();
 
    int forflags = 0;
    if (foritems == null) forflags = IJavaSearchConstants.TYPE;
@@ -691,9 +693,9 @@ void handleJavaSearch(String proj,String bid,String patstr,String foritems,
 
    SearchEngine se = new SearchEngine(working);
    SearchParticipant [] parts = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
-   FindHandler fh = new FindHandler(xw,filter,system);
+   FindHandler fh = new FindHandler(xw,filter,system,begin);
 
-   BedrockPlugin.logD("BEGIN SEARCH " + pat);
+   BedrockPlugin.logD("BEGIN SEARCH " + pat + " " + (System.currentTimeMillis()-begin));
    BedrockPlugin.logD("SEARCH SCOPE " + system + " " + fg + " " + scp);
 
    try {
@@ -717,15 +719,17 @@ private static class FindHandler extends SearchRequestor {
    private boolean allow_system;
    private FindFilter find_filter;
    private IvyXmlWriter xml_writer;
+   private long begin_time;
 
-   FindHandler(IvyXmlWriter xw,FindFilter ff,boolean sys) {
+   FindHandler(IvyXmlWriter xw,FindFilter ff,boolean sys,long begin) {
       xml_writer = xw;
       find_filter = ff;
       allow_system = sys;
+      begin_time = begin;
     }
 
    @Override public void acceptSearchMatch(SearchMatch mat) {
-      BedrockPlugin.logD("FOUND MATCH " + mat);
+      BedrockPlugin.logD("FOUND MATCH " + mat + (System.currentTimeMillis()-begin_time));
       if (reportMatch(mat)) {
          BedrockUtil.outputSearchMatch(mat,xml_writer);
        }

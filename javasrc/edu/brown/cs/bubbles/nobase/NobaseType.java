@@ -134,6 +134,18 @@ NobaseType mergeWith(NobaseType t)
 
 
 /********************************************************************************/
+/*                                                                              */
+/*      Output methods                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+@Override public String toString()
+{
+   return "Type:" + type_name;
+}
+
+
+/********************************************************************************/
 /*										*/
 /*	Undefined type								*/
 /*										*/
@@ -255,7 +267,11 @@ private static class ClassType extends NobaseType {
    ClassType() {
       super("object");
     }
+   
+   @Override public String toString() {         
+      return "Type:class";
 
+    }
 }
 
 

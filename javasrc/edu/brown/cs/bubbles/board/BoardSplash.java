@@ -118,6 +118,14 @@ void setCurrentTask(String id)
    current_task.setText(id);
 }
 
+String getCurrentTask()
+{
+   if (current_task == null) return null;
+   
+   return current_task.getText();
+}
+
+
 
 void setPercentDone(int v)
 { }

@@ -198,8 +198,13 @@ private class FindSymbolVisitor extends ASTVisitor {
       String n1 = js.getHandle();
       int idx1 = n1.indexOf(":");
       if (idx1 >= 0) n1 = n1.substring(idx1+1);
-      if (!matchName(n1)) return false;
-      return true;
+      if (matchName(n1)) return true;
+   // int idx2 = n1.indexOf("()");
+   // if (idx2 > 0) {
+   //    String n2 = n1.substring(0,idx2);
+   //    if (matchName(n2)) return true;
+   //  }
+      return false;
     }
 
 
@@ -467,12 +472,16 @@ private class LocationVisitor extends ASTVisitor {
          else if (n instanceof VariableDeclaration) {
             NobaseSymbol js = NobaseAst.getDefinition(n);
             if (js != null && js.getNameType() == NameType.FUNCTION &&
-        	  !NobaseResolver.isGeneratedName(js)) return js;
+                  !NobaseResolver.isGeneratedName(js)) return js;
             else break;
           }
          else if (n instanceof FunctionDeclaration) {
             NobaseSymbol js = NobaseAst.getDefinition(n);
             if (js != null && !NobaseResolver.isGeneratedName(js)) return js;
+          }
+         else if (n instanceof TypeDeclaration) {
+            NobaseSymbol js = NobaseAst.getDefinition(n);
+            if (js != null && !NobaseResolver.isGeneratedName(js)) return js;  
           }
          n = n.getParent();
        }
@@ -632,16 +641,18 @@ private class RegionVisitor extends DefaultASTVisitor {
       if (nsym == null) return false;
       boolean output = false;
       switch (nsym.getNameType()) {
-	 case FUNCTION :
-	    output |= do_functions;
-	    break;
-	 case LOCAL :
-	    break;
-	 case MODULE :
-	    break;
-	 case VARIABLE :
-	    output = do_variables;
-	    break;
+         case FUNCTION :
+            output |= do_functions;
+            break;
+         case LOCAL :
+            break;
+         case MODULE :
+            break;
+         case CLASS :
+            break;
+         case VARIABLE :
+            output = do_variables;
+            break;
        }
       if (output) nsym.outputNameData(current_file,xml_writer);
       return false;
@@ -667,41 +678,44 @@ private class RegionVisitor extends DefaultASTVisitor {
       boolean doout = false;
       if (do_computations) doout = true;
       else {
-	 Expression exp = n.getExpression();
-	 if (exp instanceof Assignment) {
-	    Assignment aop = (Assignment) exp;
-	    if (aop.getOperator().equals(Assignment.Operator.ASSIGN)) {
-	       NobaseValue nv = NobaseAst.getNobaseValue(aop.getRightHandSide());
-	       if (nv != null && nv.isFunction()) {
-		  doout |= do_functions;
-		}
-	       Expression lhs = aop.getLeftHandSide();
-	       if (lhs instanceof FieldAccess) {
-		  Expression m1 = ((FieldAccess)lhs).getExpression();
-		  if (m1 instanceof SimpleName) {
-		     SimpleName r1 = (SimpleName) m1;
-		     if (r1.getIdentifier().equals("exports")) {
-			doout |= do_exports;
-		      }
-		   }
-		}
-	       Expression rhs = aop.getRightHandSide();
-	       if (rhs instanceof FunctionInvocation) {
-		  FunctionInvocation fc = (FunctionInvocation) rhs;
-		  Expression farg = fc.getExpression();
-		  if (farg instanceof SimpleName) {
-		     SimpleName id = (SimpleName) farg;
-		     if (id.getIdentifier().equals("require")) {
-			doout |= do_requires;
-		      }
-		   }
-		}
-	     }
-	  }
+         Expression exp = n.getExpression();
+         if (exp instanceof Assignment) {
+            Assignment aop = (Assignment) exp;
+            if (aop.getOperator().equals(Assignment.Operator.ASSIGN)) {
+               NobaseValue nv = NobaseAst.getNobaseValue(aop.getRightHandSide());
+               if (nv != null && nv.isFunction()) {
+                  doout |= do_functions;
+                }
+               Expression lhs = aop.getLeftHandSide();
+               if (lhs instanceof FieldAccess) {
+                  Expression m1 = ((FieldAccess)lhs).getExpression();
+                  if (m1 instanceof SimpleName) {
+                     SimpleName r1 = (SimpleName) m1;
+                     if (r1.getIdentifier().equals("exports")) {
+                        doout |= do_exports;
+                      }
+                     else if (lhs.toString().equals("module.exports")) {
+                        doout |= do_exports;
+                      }
+                   }
+                }
+               Expression rhs = aop.getRightHandSide();
+               if (rhs instanceof FunctionInvocation) {
+                  FunctionInvocation fc = (FunctionInvocation) rhs;
+                  Expression farg = fc.getExpression();
+                  if (farg instanceof SimpleName) {
+                     SimpleName id = (SimpleName) farg;
+                     if (id.getIdentifier().equals("require")) {
+                        doout |= do_requires;
+                      }
+                   }
+                }
+             }
+          }
        }
-
+   
       if (doout) outputRange(n);
-
+   
       return false;
     }
 

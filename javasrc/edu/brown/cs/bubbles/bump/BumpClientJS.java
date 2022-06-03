@@ -35,6 +35,7 @@ import javax.swing.JOptionPane;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -131,8 +132,8 @@ private void ensureRunning()
    String cp = System.getProperty("java.class.path");
    for (String s : nobase_libs) {
       if (s.equals("eclipsejar")) {
-         cp += File.pathSeparator + BoardSetup.getSetup().getEclipsePath();
-         continue;
+	 cp += File.pathSeparator + BoardSetup.getSetup().getEclipsePath();
+	 continue;
        }
       String lib = BoardSetup.getSetup().getLibraryPath(s);
       if (lib == null) continue;
@@ -162,10 +163,16 @@ private void ensureRunning()
       if (run == null) run = s;
       else run += " " + s;
     }
-   BoardLog.logE("BUMP","RUN: " + run);
+   BoardLog.logI("BUMP","RUN: " + run);
 
    try {
-      IvyExec ex = new IvyExec(argl,null,IvyExec.ERROR_OUTPUT);
+      IvyExec ex = null;
+      if (System.getProperty("Nobase.DEBUG") != null) {
+         runLocally(cls,argl);
+       }
+      else {
+         ex = new IvyExec(argl,null,IvyExec.ERROR_OUTPUT);
+       }
       boolean eok = false;
       for (int i = 0; i < 200; ++i) {
 	 synchronized (this) {
@@ -179,7 +186,7 @@ private void ensureRunning()
 	    eok = true;
 	    break;
 	  }
-	 if (!ex.isRunning()) {
+	 if (ex != null && !ex.isRunning()) {
 	    BoardLog.logE("BUMP","Problem starting javascript back end");
 	    JOptionPane.showMessageDialog(null,
 		  "Node/JS (Nobase) could not be started.",
@@ -197,6 +204,54 @@ private void ensureRunning()
       System.exit(1);
     }
 }
+
+
+private void runLocally(String cmd,List<String> args)
+{
+  NobaseThread nt = new NobaseThread(cmd,args);
+  nt.start();
+}
+
+
+private static class NobaseThread extends Thread {
+   
+   private String main_class;
+   private List<String> arg_list;
+   
+   NobaseThread(String cls,List<String> args) {
+      super("NobaseMain");
+      main_class = cls;
+      arg_list = args;
+    }
+   
+   @Override public void run() {
+      boolean fnd = false;
+      List<String> newargs = new ArrayList<>();
+      for (String s : arg_list) {
+         if (s.equals(main_class)) fnd = true;
+         else if (fnd) {
+            newargs.add(s);
+          }
+         else if (s.startsWith("-D")) {
+            String a = s.substring(2);
+            int idx = a.indexOf("=");
+            String var = a.substring(0,idx);
+            String val = a.substring(idx+1).trim();
+            System.setProperty(var,val);
+          }
+       }
+      String [] argarr = newargs.toArray(new String[newargs.size()]);
+      try {
+         Class<?> start = Class.forName(main_class);
+         Method m = start.getMethod("main",argarr.getClass());
+         m.invoke(null,(Object) argarr);
+       }
+      catch (Throwable t) {
+         BoardLog.logE("BUMP","Problem starting nobase locally",t);
+       }
+    }
+   
+}       // end of inner class BumpClientJS
 
 
 

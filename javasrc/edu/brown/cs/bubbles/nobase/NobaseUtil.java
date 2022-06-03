@@ -170,6 +170,9 @@ static void outputName(NobaseSymbol nm,IvyXmlWriter xw)
       case FUNCTION :
 	 xw.field("TYPE","Function");
 	 break;
+      case CLASS :
+         xw.field("TYPE","Class");
+         break;
       case LOCAL :
 	 xw.field("TYPE","Local");
 	 break;

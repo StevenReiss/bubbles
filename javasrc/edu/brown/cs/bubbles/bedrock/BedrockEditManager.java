@@ -1773,7 +1773,7 @@ void getWorkingElements(IJavaElement root,List<ICompilationUnit> rslt)
 	 File f = BedrockUtil.getFileForPath(cu.getPath(),ip);
 	 String fnm = f.getPath();
 	 FileData fd = file_map.get(fnm);
-	 if (fd != null) {
+	 if (fd != null && fd.hasChanged()) {
 	    rslt.add(fd.getEditableUnit(null));
 	  }
 	 break;
