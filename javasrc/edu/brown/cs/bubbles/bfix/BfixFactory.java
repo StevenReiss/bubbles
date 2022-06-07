@@ -163,7 +163,7 @@ private BfixFactory()
        }
     }
 
-   Element xml = IvyXml.loadXmlFromStream(BoardProperties.getLibraryFile(ORDER_FILE));
+   Element xml = IvyXml.loadXmlFromStream(BoardProperties.getResourceFile(ORDER_FILE));
    base_order = new BfixOrderBase(xml);
 
    chore_manager = new BfixChoreManager();

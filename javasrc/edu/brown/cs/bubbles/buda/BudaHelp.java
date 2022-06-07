@@ -134,7 +134,7 @@ BudaHelp(Component c,BudaHelpClient helper)
    mouse_inside = false;
    force_help = false;
 
-   String fn = BoardSetup.getSetup().getLibraryPath(HELP_RESOURCE);
+   String fn = BoardSetup.getSetup().getResourcePath(HELP_RESOURCE);
    if (fn == null) {
       help_file = null;
       help_xml = null;
@@ -240,7 +240,7 @@ private String getHelpText(MouseEvent e)
 	 help_xml = IvyXml.loadXmlFromFile(help_file);
        }
       else if (help_xml == null) {
-	 help_xml = IvyXml.loadXmlFromStream(BoardProperties.getLibraryFile(HELP_RESOURCE));
+	 help_xml = IvyXml.loadXmlFromStream(BoardProperties.getResourceFile(HELP_RESOURCE));
        }
 
       //Style the window
@@ -387,7 +387,7 @@ private class Mouser extends MouseAdapter implements KeyListener {
 
 public static void main(String [] args)
 {
-   Parser2 parser = new Parser2(BoardSetup.getSetup().getLibraryPath(HELP_RESOURCE),"helptext.html");
+   Parser2 parser = new Parser2(BoardSetup.getSetup().getResourcePath(HELP_RESOURCE),"helptext.html");
    parser.parse();
 }
 
@@ -565,44 +565,44 @@ private static class Parser2 {
    private void output() {
       PrintWriter pw = null;
       try {
-	 pw = new PrintWriter(new FileWriter(output_filename));
-
-	 pw.println("<html><head>");
-	 pw.println("<title>The CodeBubbles Help Page</title>");
-	 pw.println("<script type='text/javascript'>");
-	 pw.println("function demo(x) {");
-	 pw.println("var xmlhttp = new XMLHttpRequest();");
-	 pw.println("xmlhttp.open('GET', 'http://localhost:19888/' + x, false);");
-	 pw.println("xmlhttp.send(null); }");
-	 pw.println("</script>");
-	 pw.println("<link href='http://fonts.googleapis.com/css?family=Gudea' rel='stylesheet' type='text/css'>");
-	 pw.println("<link rel='stylesheet' type='text/css' href='style.css'>");
-	 pw.println("<style>");
-	 pw.println(".tbutton { ");
-	 pw.println("  background-color: lightgray;");
-	 pw.println("  border: black;");
-	 pw.println("  border-style: outset;");
-	 pw.println("  padding: 3px;");
-	 pw.println("}");
-	 pw.println("</style>");
-	 pw.println("</head>");
-	 pw.println("<body>");
-	 pw.println("<!-- Note that this page is generated automatically -->");
-	 pw.println("<div class='page'>");
-	 pw.println("<div class='title'>");
-	 pw.println("<h1>The <span id='codebubbles'>CodeBubbles</span> Help Page</h1>");
-	 pw.println("</div>");
-
-	 for(String line : when_block) {
-	    pw.println(line);
-	  }
-
-	 for(String line : demo_block) {
-	    pw.println(line);
-	  }
-
-	 pw.println("</div></body></html>");
-	 pw.close();
+         pw = new PrintWriter(new FileWriter(output_filename));
+   
+         pw.println("<html><head>");
+         pw.println("<title>The CodeBubbles Help Page</title>");
+         pw.println("<script type='text/javascript'>");
+         pw.println("function demo(x) {");
+         pw.println("var xmlhttp = new XMLHttpRequest();");
+         pw.println("xmlhttp.open('GET', 'http://localhost:19888/' + x, false);");
+         pw.println("xmlhttp.send(null); }");
+         pw.println("</script>");
+         pw.println("<link href='http://fonts.googleapis.com/css?family=Gudea' rel='stylesheet' type='text/css'>");
+         pw.println("<link rel='stylesheet' type='text/css' href='style.css'>");
+         pw.println("<style>");
+         pw.println(".tbutton { ");
+         pw.println("  background-color: lightgray;");
+         pw.println("  border: black;");
+         pw.println("  border-style: outset;");
+         pw.println("  padding: 3px;");
+         pw.println("}");
+         pw.println("</style>");
+         pw.println("</head>");
+         pw.println("<body>");
+         pw.println("<!-- Note that this page is generated automatically -->");
+         pw.println("<div class='page'>");
+         pw.println("<div class='title'>");
+         pw.println("<h1>The <span id='codebubbles'>CodeBubbles</span> Help Page</h1>");
+         pw.println("</div>");
+   
+         for(String line : when_block) {
+            pw.println(line);
+          }
+   
+         for(String line : demo_block) {
+            pw.println(line);
+          }
+   
+         pw.println("</div></body></html>");
+         pw.close();
        }
       catch (IOException e) {}
     }

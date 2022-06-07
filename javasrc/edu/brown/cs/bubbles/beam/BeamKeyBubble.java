@@ -30,7 +30,6 @@
 
 package edu.brown.cs.bubbles.beam;
 
-import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.swing.SwingText;
@@ -42,9 +41,6 @@ import javax.swing.table.TableModel;
 
 import java.awt.Dimension;
 import java.awt.event.InputEvent;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -65,8 +61,6 @@ class BeamKeyBubble extends BudaBubble implements BeamConstants
 private static TableModel	table_model = null;
 
 private static Map<String,String> where_labels;
-
-private static boolean  use_swing = true;
 
 private static final long serialVersionUID = 1;
 
@@ -116,8 +110,6 @@ private synchronized static void setupTableModel()
 {
    if (table_model != null) return;
 
-   String kfilnm = BoardSetup.getSetup().getLibraryPath("keybindings.csv");
-   
    String menu = "control";
    String xalt = "alt";
    int mask = SwingText.getMenuShortcutKeyMaskEx();
@@ -126,8 +118,7 @@ private synchronized static void setupTableModel()
       xalt = "control";   
     }
 
-   if (use_swing) table_model = loadFromSwingKey(menu,xalt);
-   else table_model = loadFromCSVFile(kfilnm,menu,xalt);
+   table_model = loadFromSwingKey(menu,xalt);
 }
 
 
@@ -169,76 +160,6 @@ private static Vector<String> vector(String ... data)
    for (String s : data) rslt.add(s);
    return rslt;
 }
-
-
-
-/********************************************************************************/
-/*                                                                              */
-/*      Load from old key file                                                  */
-/*                                                                              */
-/********************************************************************************/
-
-private static TableModel loadFromCSVFile(String fnm,String menu,String xalt)
-{
-   try (BufferedReader br = new BufferedReader(new FileReader(fnm)))  {
-      DefaultTableModel mdl = null;
-      for ( ; ; ) {
-	 String ln = br.readLine();
-	 if (ln == null || ln.length() == 0) break;
-	 Vector<String> strs = tokenize(ln);
-         if (strs.size() != 3) continue;
-         String s = strs.get(1);
-         s = s.replace("menu",menu);
-         s = s.replace("xalt",xalt);
-         strs.set(1,s);
-         
-	 if (mdl == null) {
-	    mdl = new DefaultTableModel(strs,0);
-	    continue;
-	  }
-	 mdl.addRow(strs);
-       }
-      return mdl;
-    }
-   catch (IOException e) { }
-   
-   return null;
-}
-
-
-
-
-private static Vector<String> tokenize(String cmd)
-{
-   Vector<String> argv = new Vector<String>();
-
-   char quote = 0;
-   StringBuffer buf = new StringBuffer();
-   for (int i = 0; i < cmd.length(); ++i) {
-      char c = cmd.charAt(i);
-      if (quote != 0 && c == quote) {
-	 quote = 0;
-	 continue;
-       }
-      else if (quote == 0 && (c == '"' || c == '\'')) {
-	 quote = c;
-	 continue;
-       }
-      else if (quote == 0 && (c == ',' || c == '\n')) {
-	 if (buf.length() > 0) {
-	    argv.add(buf.toString());
-	    buf = new StringBuffer();
-	  }
-       }
-      else buf.append(c);
-    }
-   if (buf.length() > 0) {
-      argv.add(buf.toString());
-    }
-
-   return argv;
-}
-
 
 
 

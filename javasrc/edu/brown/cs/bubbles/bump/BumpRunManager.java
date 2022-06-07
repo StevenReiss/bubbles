@@ -1179,20 +1179,20 @@ private class LaunchConfig implements BumpLaunchConfig {
 
    @Override public String getContractArgs() {
       String args = null;
-
+   
       BumpContractType bct = bump_client.getContractType(project_name);
       if (bct == null) return null;
-
+   
       if (use_contracts && bct.useContractsForJava()) {
-	 String libf = BoardSetup.getSetup().getLibraryPath("cofoja.jar");
-	 args = "-javaagent:" + libf;
+         String libf = BoardSetup.getSetup().getLibraryPath("cofoja.jar");
+         args = "-javaagent:" + libf;
        }
-
+   
       if (use_assertions && bct.enableAssertions()) {
-	 if (args == null) args = "-ea";
-	 else args += " -ea";
+         if (args == null) args = "-ea";
+         else args += " -ea";
        }
-
+   
       return null;
     }
 

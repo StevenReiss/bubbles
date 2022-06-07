@@ -485,29 +485,29 @@ private class ElidePass2 extends ASTVisitor {
    @Override public void preVisit(ASTNode n) {
       if (tree_root == null && n instanceof JavaScriptUnit) tree_root = (JavaScriptUnit) n;
       if (active_node == null) {
-	 int sp = n.getStartPosition();
-	 if (isRootRegion(sp,sp+n.getLength())) {
-	    active_node = n;
-	    result_value.put(n,1.0);
-	    outputXmlStart(n);
-	  }
-	 return;
+         int sp = n.getStartPosition();
+         if (isRootRegion(sp,sp+n.getLength())) {
+            active_node = n;
+            result_value.put(n,1.0);
+            outputXmlStart(n);
+          }
+         return;
        }
       double v = getPriority(n.getParent());
       double v0 = 0;
       if (up_values != null) v0 = up_values.getPriority(n);
       double p = computePriority(v,n,v0);
       if (p != 0) {
-	 result_value.put(n,p);
-	 checkSwitchBlock(n);
-	 outputXmlStart(n);
+         result_value.put(n,p);
+         checkSwitchBlock(n);
+         outputXmlStart(n);
        }
     }
 
    @Override public void postVisit(ASTNode n) {
       if (active_node == n) active_node = null;
       if (xml_writer != null && result_value.get(n) != null && result_value.get(n) > 0) {
-	 xml_writer.end("ELIDE");
+         xml_writer.end("ELIDE");
        }
       checkEndSwitchBlock(n);
     }

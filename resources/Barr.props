@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Barr.bubble.priority.existtime">0.1</entry>
+<entry key="Barr.bubble.priority.newtime">1.0</entry>
+<entry key="Barr.bubble.priority.edittime">5.0</entry>
+<entry key="Barr.bubble.priority.focustime">3.0</entry>
+<entry key="Barr.bubble.priority.numedit">1.0</entry>
+<entry key="Barr.bubble.priority.maxedit">50</entry>
+<entry key="Barr.bubble.priority.count">3.0</entry>
+<entry key="Barr.bubble.priority.numfocus">1.0</entry>
+<entry key="Barr.bubble.priority.maxfocus">50</entry>
+<entry key="Barr.bubble.priority.maxcount">2</entry>
+<entry key="Barr.link.priority.user">1.0</entry>
+<entry key="Barr.link.priority.time">0.2</entry>
+<entry key="Barr.link.priority.semantic">0.1</entry>
+<entry key="Barr.link.priority.class.method">0.5</entry>
+<entry key="Barr.link.priority.file.class">0.5</entry>
+<entry key="Barr.link.priority.prefix.class">0.75</entry>
+<entry key="Barr.link.priority.field.method">1.0</entry>
+<entry key="Barr.link.priority.file.method">0.5</entry>
+<entry key="Barr.link.priority.prefix.method">1.0</entry>
+<entry key="Barr.link.priority.file.field">0.5</entry>
+<entry key="Barr.link.priority.field.class">0.5</entry>
+<entry key="Barr.near.priority.user">2.0</entry>
+<entry key="Barr.near.priority.time">0.5</entry>
+<entry key="Barr.near.priority.semantic">0.1</entry>
+<entry key="Barr.near.priority.file">0.4</entry>
+</properties>
+
+
+
+
+
+
+
+
+
+
+
+

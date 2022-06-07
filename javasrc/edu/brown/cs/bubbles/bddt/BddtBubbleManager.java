@@ -1097,18 +1097,18 @@ private static class BubbleData {
       if (bubble_type != BubbleType.EXEC && bubble_type != BubbleType.USER) return false;
       int lvl = -1;
       for (int i = 0; i < stk.getNumFrames(); ++i) {
-	 if (stk.getFrame(i) == frm) {
-	    lvl = i;
-	    break;
-	  }
-	 else if (frm != null && stk.getFrame(i) != null && frm.getId() == stk.getFrame(i).getId()) {
-	    lvl = i;
-	    break;
-	 }
+         if (stk.getFrame(i) == frm) {
+            lvl = i;
+            break;
+          }
+         else if (frm != null && stk.getFrame(i) != null && frm.getId() == stk.getFrame(i).getId()) {
+            lvl = i;
+            break;
+         }
        }
       if (lvl != frame_level || stk.getNumFrames() != stack_depth &&
-	       bubble_type == BubbleType.EXEC)
-	 return false;
+               bubble_type == BubbleType.EXEC)
+         return false;
       return matchFrameMethod(frm,for_frame);
     }
 
@@ -1122,14 +1122,14 @@ private static class BubbleData {
       String s1a = s1.substring(0,idx1);
       String s1b = s1.substring(idx1);
       if (!sameMethod(s1a,frm.getMethod())) return false;
-      if (!BumpLocation.compareParameters(s1b,frm.getSignature())) return false;
-
+      if (!BumpLocation.compareParameters(frm.getSignature(),s1b)) return false;
+   
       int lvl = -1;
       for (int i = 0; i < stk.getNumFrames(); ++i) {
-	 if (stk.getFrame(i) == frm) {
-	    lvl = i;
-	    break;
-	  }
+         if (stk.getFrame(i) == frm) {
+            lvl = i;
+            break;
+          }
        }
       // take over user bubble here
       for_stack = stk;

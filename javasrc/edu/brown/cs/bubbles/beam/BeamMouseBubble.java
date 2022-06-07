@@ -74,7 +74,7 @@ BeamMouseBubble()
    BufferedReader br = null;
 
    try {
-      InputStream ins = BoardProperties.getLibraryFile("mouseusage.html");
+      InputStream ins = BoardProperties.getResourceFile("mouseusage.html");
       if (ins == null) return;
       br = new BufferedReader(new InputStreamReader(ins));
       for ( ; ; ) {

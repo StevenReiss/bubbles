@@ -271,6 +271,17 @@ File getRemoteLibraryDirectory()
 }
 
 
+File getRemoteResourceDirectory()
+{
+   Element xml = getSystemInfo();
+   
+   String file = IvyXml.getAttrString(xml,"BUBBLESRES");
+   if (file == null) return null;
+   
+   return new RemoteFile(file);
+}
+
+
 @Override public File getParentDirectory(File f)
 {
    File f1 = f.getParentFile();
@@ -872,6 +883,8 @@ private static void handleSysInfo(IvyXmlWriter xw)
    xw.field("DEFAULT",default_view.getDefaultDirectory().getPath());
    File f1 = BoardSetup.getSetup().getLibraryDirectory();
    xw.field("BUBBLESLIB",f1.getAbsolutePath());
+   File f2 = BoardSetup.getSetup().getResourceDirectory();
+   xw.field("BUBBLESRES",f2.getAbsolutePath());
    File [] rts = default_view.getRoots();
    File [] cbx = default_view.getChooserComboBoxFiles();
    xw.field("ROOTCT",rts.length);

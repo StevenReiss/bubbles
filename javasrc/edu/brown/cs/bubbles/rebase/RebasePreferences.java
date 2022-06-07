@@ -65,7 +65,7 @@ RebasePreferences(File propfile)
    
    String root = System.getProperty("edu.brown.cs.bubbles.rebase.ROOT");
    File f1 = new File(root);
-   File f2 = new File(f1,"lib");
+   File f2 = new File(f1,"resources");
    File f3 = new File(f2,"rebusprops.xml");
    loadProperties(f3);
    loadProperties(property_file);

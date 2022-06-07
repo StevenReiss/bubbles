@@ -166,6 +166,7 @@ private MintControl	mint_control;
 private String		course_name;
 private String		course_assignment;
 private File		library_dir;
+private File            resource_dir;
 private BoardLanguage	board_language;
 private List<String>	recent_workspaces;
 private boolean 	palette_set;
@@ -241,6 +242,7 @@ private BoardSetup()
    course_name = null;
    course_assignment = null;
    library_dir = null;
+   resource_dir = null;
    board_language = BoardLanguage.JAVA;
    palette_set = false;
    plugin_running = false;
@@ -846,6 +848,17 @@ public String getLibraryPath(String item)
 }
 
 
+public String getResourcePath(String item)
+{
+   File f = getResourceDirectory();
+   if (f == null) return null;
+   
+   f = new File(f,item);
+   
+   return f.getPath();
+}
+
+
 
 public String getRemoteLibraryPath(String item)
 {
@@ -861,6 +874,25 @@ public String getRemoteLibraryPath(String item)
       if (item.equals("eclipsejar")) return getRemoteLibraryDirectory().getPath();
     }
 
+   return f.getPath();
+}
+
+
+
+public String getRemoteResourcePath(String item)
+{
+   FileSystemView fsv = BoardFileSystemView.getFileSystemView();
+   
+   File f = getRemoteResourceDirectory();
+   
+   if (f == null) return null;
+   f = fsv.createFileObject(f,item);
+   // f = new File(f,item);
+   
+   if (!f.exists()) {
+      if (item.equals("eclipsejar")) return getRemoteResourceDirectory().getPath();
+    }
+   
    return f.getPath();
 }
 
@@ -1042,6 +1074,36 @@ public File getLibraryDirectory()
 }
 
 
+public File getResourceDirectory()
+{
+   if (resource_dir != null) return resource_dir;
+   
+   File f = null;
+   
+   if (install_jar && jar_directory != null) {
+      f = new File(jar_directory);
+    }
+   else if (install_path != null) {
+      f = new File(install_path);
+    }
+   else return null;
+   
+   f = new File(f,BOARD_INSTALL_RESOURCES);
+   
+   if (!f.exists()) f.mkdir();
+   if (!f.exists() || !f.isDirectory()) {
+      File f1 = BoardProperties.getPropertyDirectory();
+      File f2 = new File(f1,BOARD_INSTALL_RESOURCES);
+      f2.mkdirs();
+      if (f2.exists() && f2.isDirectory()) f = f2;
+    }
+   
+   resource_dir = f;
+   
+   return f;
+}
+
+
 public File getRemoteLibraryDirectory()
 {
    switch (getRunMode()) {
@@ -1059,6 +1121,26 @@ public File getRemoteLibraryDirectory()
     }
 
    return getLibraryDirectory();
+}
+
+
+public File getRemoteResourceDirectory()
+{
+   switch (getRunMode()) {
+      case SERVER :
+      case NORMAL :
+	 return getResourceDirectory();
+      case CLIENT :
+	 break;
+    }
+   
+   FileSystemView fsv = BoardFileSystemView.getFileSystemView();
+   if (fsv instanceof BoardFileSystemView) {
+      BoardFileSystemView bfsv = (BoardFileSystemView) fsv;
+      return bfsv.getRemoteResourceDirectory();
+    }
+   
+   return getResourceDirectory();
 }
 
 
@@ -1960,7 +2042,8 @@ private boolean checkInstall()
       else ins.close();
       for (String s : BOARD_RESOURCE_PROPS) {
 	 if (!ok) break;
-	 ins = getClass().getClassLoader().getResourceAsStream(s);
+         ins = getClass().getClassLoader().getResourceAsStream("resources/" + s);
+//       if (ins == null) ins = getClass().getClassLoader().getResourceAsStream(s);
 	 if (ins == null) {
 	    ok = false;
 	    System.err.println("BOARD: Setup failed on " + s);
@@ -2045,6 +2128,8 @@ private static boolean checkInstallDirectory(File ind)
 
    File libb = new File(ind,BOARD_INSTALL_LIBRARY);
    if (!libb.exists() || !libb.isDirectory()) return false;
+   File resb = new File(ind,BOARD_INSTALL_RESOURCES);
+   if (!resb.exists() || !resb.isDirectory()) return false;
    File binb = new File(ind,BOARD_INSTALL_BINARY);
    if (!binb.exists() || !binb.isDirectory()) return false;
    File inf = new File(libb,BOARD_RESOURCE_PLUGIN_ECLIPSE);
@@ -2053,7 +2138,7 @@ private static boolean checkInstallDirectory(File ind)
    if (!elib.exists() || !elib.canRead()) return false;
 
    for (String s : BOARD_RESOURCE_PROPS) {
-      inf = new File(libb,s);
+      inf = new File(resb,s);
       if (!inf.exists() || !inf.canRead()) return false;
     }
    for (String s : BOARD_LIBRARY_FILES) {
@@ -2070,6 +2155,13 @@ private static boolean checkInstallDirectory(File ind)
       if (!inf.exists() || !inf.canRead()) inf = new File(libb,s);
       if (!inf.exists() || !inf.canRead()) {
 	 BoardLog.logX("BOARD","Missing extra library file " + inf);
+       }
+    }
+   for (String s : BOARD_RESOURCE_EXTRAS) {
+      s = s.replace("/",File.separator);
+      inf = new File(resb,s);
+      if (!inf.exists() || !inf.canRead()) {
+	 BoardLog.logX("BOARD","Missing extra resource file " + inf);
        }
     }
    for (String s : BOARD_BINARY_FILES) {
@@ -2116,7 +2208,12 @@ private void checkJarResources()
 	     }
 	    catch (IOException e) { }
 	  }
-	 if (ins == null) ins = BoardSetup.class.getClassLoader().getResourceAsStream(s);
+         if (ins == null) {
+            ins = BoardSetup.class.getClassLoader().getResourceAsStream("resources/" + s);
+          }
+	 if (ins == null) {
+            ins = BoardSetup.class.getClassLoader().getResourceAsStream(s);
+          }
 
 	 checkJarResourceItem(s,f1,ins);
        }
@@ -2149,6 +2246,8 @@ private void checkJarLibraries()
 
    File libd = getLibraryDirectory();
    if (!libd.exists()) libd.mkdir();
+   File resd = getResourceDirectory();
+   if (!resd.exists()) resd.mkdir();
 
    for (String s : BOARD_LIBRARY_FILES) {
       must_restart |= extractLibraryResource(s,libd,update_setup);
@@ -2156,6 +2255,10 @@ private void checkJarLibraries()
 
    for (String s : BOARD_LIBRARY_EXTRAS) {
       extractLibraryResource(s,libd,auto_update);
+    }
+   
+   for (String s : BOARD_RESOURCE_EXTRAS) {
+      extractResourceFile(s,resd,auto_update);
     }
 
    File libt = new File(libd,"templates");
@@ -2225,6 +2328,43 @@ private boolean extractLibraryResource(String s,File libd,boolean force)
        }
     }
 
+   return upd;
+}
+
+
+private boolean extractResourceFile(String s,File resd,boolean force)
+{
+   boolean upd = false;
+   
+   String xs = s;
+   int idx = s.lastIndexOf("/");
+   if (idx >= 0) {
+      xs = s.replace('/',File.separatorChar);
+      String hd = xs.substring(0,idx);
+      File fd = new File(resd,hd);
+      if (!fd.exists()) fd.mkdirs();
+    }
+   
+   File f1 = new File(resd,xs);
+   if (!force && f1.exists()) return false;
+   upd = true;
+   
+   try {
+      InputStream ins = BoardSetup.class.getClassLoader().getResourceAsStream("resources/" + s);
+      if (ins != null) {
+	 FileOutputStream ots = new FileOutputStream(f1);
+	 copyFile(ins,ots);
+       }
+    }
+   catch (IOException e) {
+      if (f1.exists()) upd = false;			// use old version if necessary
+      else {
+	 BoardLog.logE("BOARD","Problem setting up jar resource file " + s + ": " + e,e);
+	 reportError("Problem setting up jar resource file " + s + ": " + e);
+	 System.exit(1);
+       }
+    }
+   
    return upd;
 }
 
@@ -2353,7 +2493,8 @@ private void checkLibResources()
 	 checkResourceFile(s);
        }
       catch (IOException e) {
-	 BoardLog.logE("BOARD","Problem setting up lib resource " + s + " (" + lbv + "," + install_path + ")",e);
+	 BoardLog.logE("BOARD","Problem setting up lib resource " + s + " (" +
+               lbv + "," + install_path + ")",e);
 	 reportError("Problem setting up lib resource " + s + ": " + e);
 	 System.exit(1);
        }
@@ -2365,10 +2506,16 @@ public void checkResourceFile(String resfile) throws IOException
 {
    File ivv = BoardProperties.getPropertyDirectory();
    if (!ivv.exists()) ivv.mkdir();
-   File lbv = new File(install_path,BOARD_INSTALL_LIBRARY);
-
    File f1 = new File(ivv,resfile);
-   File f2 = new File(lbv,resfile);
+   
+   File res = new File(install_path,BOARD_INSTALL_RESOURCES);
+   File f2 = new File(res,resfile);
+   
+   if (!f2.exists() || !f2.canRead()) {
+      // handle old installs
+      File lbv = new File(install_path,BOARD_INSTALL_LIBRARY);
+      f2 = new File(lbv,resfile);
+    }
    InputStream ins = new FileInputStream(f2);
    if (f1.exists()) {
       ensurePropsDefined(resfile,ins);
@@ -2639,7 +2786,7 @@ private class PaletteDialog implements ActionListener {
       pnl.addBottomButton("OK","OK",this);
       pnl.addBottomButton("CANCEL","CANCEL",this);
       pnl.addBottomButtons();
-
+   
       working_dialog = new JDialog((JFrame) null,"Bubbles Palette Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();
@@ -2659,22 +2806,22 @@ private class PaletteDialog implements ActionListener {
    @Override public void actionPerformed(ActionEvent evt) {
       String nm = evt.getActionCommand();
       if (nm.contains("Classical")) {
-	 use_palette = DEFAULT_PALETTE;
+         use_palette = DEFAULT_PALETTE;
        }
       else if (nm.contains("Inverted")) {
-	 use_palette = "inverse_" + DEFAULT_PALETTE;
+         use_palette = "inverse_" + DEFAULT_PALETTE;
        }
       else if (nm.contains("Remember")) {
-	 JCheckBox btn = (JCheckBox) evt.getSource();
-	 save_palette = btn.isSelected();
+         JCheckBox btn = (JCheckBox) evt.getSource();
+         save_palette = btn.isSelected();
        }
       else if (nm.equals("CANCEL")) {
-	 result_status = false;
-	 working_dialog.setVisible(false);
+         result_status = false;
+         working_dialog.setVisible(false);
        }
       else if (nm.equals("OK")) {
-	 result_status = true;
-	 working_dialog.setVisible(false);
+         result_status = true;
+         working_dialog.setVisible(false);
        }
     }
 

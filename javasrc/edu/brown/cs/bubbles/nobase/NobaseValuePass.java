@@ -24,6 +24,7 @@ package edu.brown.cs.bubbles.nobase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -295,8 +296,17 @@ void setForceDefine()				{ force_define = true; }
       setValue(n,NobaseValue.createString(n.getLiteralValue()));
     }
    catch (IllegalArgumentException e) {
-      NobaseMain.logE("Problem with string value: " + n.getEscapedValue());
-      setValue(n,NobaseValue.createString(n.getEscapedValue()));
+      // incomplete string or string with error
+      String s0 = n.getEscapedValue();
+      if (s0 != null && s0.length() > 0) {
+         char c0 = s0.charAt(0);
+         if (c0 == '"' || c0 == '\'' || c0 == '`') {
+            s0 = s0.substring(1);
+            char c1 = s0.charAt(s0.length()-1);
+            if (c1 == c0) s0 = s0.substring(0,s0.length()-1);
+          }
+       }
+      setValue(n,NobaseValue.createString(s0));
     }
 }
 
@@ -364,6 +374,25 @@ void setForceDefine()				{ force_define = true; }
       else if (nvl != null) nvl.addProperty(null,lvl);
       setValue(n,lvl);
     }
+   return false;
+}
+
+
+@Override public boolean visit(ArrayName n)
+{
+   NobaseValue lvl = set_lvalue;
+   if (set_lvalue == null) return true;
+   int idx = 0;
+   for (Object o : n.elements()) {
+      ASTNode ex = (ASTNode) o;
+      NobaseValue idxv = NobaseValue.createNumber(idx);
+      NobaseValue nlvl = lvl.getProperty(idxv,false);
+      if (nlvl == null) nlvl = NobaseValue.createAnyValue();
+      set_lvalue = nlvl;
+      ex.accept(this);
+      set_lvalue = lvl;
+    }
+   
    return false;
 }
 
@@ -719,10 +748,21 @@ void setForceDefine()				{ force_define = true; }
 /********************************************************************************/
 
 @Override public void endVisit(ArrayName n)
-{ }
+{
+   List<NobaseValue> vals = new ArrayList<>();
+   for (Object o : n.elements()) {
+      ASTNode ex = (ASTNode) o;
+      NobaseValue v = NobaseAst.getNobaseValue(ex);
+      vals.add(v);
+    }
+   NobaseValue rslt = NobaseValue.createArrayValue(vals);
+   NobaseAst.setNobaseValue(n,rslt);
+}
 
 @Override public void endVisit(AssignmentName n)
-{ }
+{
+   NobaseMain.logD("Assignment Name " + n);
+}
 
 @Override public void endVisit(ObjectName n)
 { }
@@ -1199,7 +1239,7 @@ private boolean handleDeclaration(VariableDeclaration vd)
     }
 
    SimpleName fident = vd.getName();
-   List<SimpleName> names = new ArrayList<>();
+   Map<SimpleName,String> names = new LinkedHashMap<>(); 
    if (fident == null) {
       ASTNode apat = null;
       if (vd instanceof VariableDeclarationFragment) {
@@ -1216,16 +1256,32 @@ private boolean handleDeclaration(VariableDeclaration vd)
             for (Object o : pat.objectProperties()) {
                ObjectLiteralField olf = (ObjectLiteralField) o;
                Expression ex = olf.getFieldName();
-               if (ex instanceof SimpleName) names.add((SimpleName) ex);
+               Expression ex1 = olf.getInitializer();
+               if (ex instanceof SimpleName) {
+                  SimpleName sn = (SimpleName) ex;
+                  String key = sn.getIdentifier();
+                  if (ex1 != null && ex1 instanceof SimpleName) {
+                     String key1 = ((SimpleName) ex1).getIdentifier();
+                     if (key1 != null && !key1.equals("MISSING")) key = key1;
+                   }
+                  names.put(sn,key);
+                }
                else NobaseMain.logE("Unknown object literal value for " + pat);
              }
+          }
+         else if (apat instanceof RestElementName) {
+            RestElementName ren = (RestElementName) apat;
+            if (ren.getArgument() instanceof SimpleName) {
+               fident = (SimpleName) ren.getArgument();
+             }
+            else NobaseMain.logE("Unknown rest element name " + ren.getArgument());
           }
          else NobaseMain.logE("Unknown pattern value for " + apat);
        }
      else NobaseMain.logI("NO NAME " + vd.getBodyChild() + " @@ " + vd);
     }
    else {
-      names.add(fident);
+      names.put(fident,fident.getIdentifier());
       NobaseMain.logD("Declaration for " + fident + " " + vd.getBodyChild());
     }
    
@@ -1295,11 +1351,13 @@ private boolean handleDeclaration(VariableDeclaration vd)
     }
    
    if (fident != null) {
-      defineName(fident,decltype,initv,vd,false);
+      defineName(fident,decltype,initv,vd,null);
     }
    else {
-      for (SimpleName sn : names) {
-         defineName(sn,decltype,initv,vd,true);
+      for (Map.Entry<SimpleName,String> ent : names.entrySet()) {
+         SimpleName sn = ent.getKey();
+         String use = ent.getValue();
+         defineName(sn,decltype,initv,null,use);
        }
     }
    
@@ -1308,9 +1366,9 @@ private boolean handleDeclaration(VariableDeclaration vd)
 
 
 
-private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,VariableDeclaration vd,boolean mult)
+private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,VariableDeclaration vd,String mult)
 {
-   NobaseSymbol sym = NobaseAst.getDefinition(vd);
+   NobaseSymbol sym = NobaseAst.getDefinition(fident);
    if (sym == null && fident != null) {
       NobaseSymbol nsym = new NobaseSymbol(for_project,enclosing_file,vd,fident.getIdentifier(),true);
       if (enclosing_function != null) {
@@ -1323,8 +1381,8 @@ private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,
 	 nsym.setDataType(decltype);
        }
       if (initv != null) {
-         if (mult) {
-            NobaseValue nv1 = initv.getProperty(fident.getIdentifier(),false);
+         if (mult != null) {
+            NobaseValue nv1 = initv.getProperty(mult,false);
             if (nv1 != null) nsym.setValue(nv1);
             else NobaseMain.logD("No value found for " + fident + " in " + initv);
           }
@@ -1338,7 +1396,7 @@ private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,
 	 if (!dupok) duplicateDef(fident.getIdentifier(),vd);
        }
       
-      NobaseAst.setDefinition(vd,sym);
+      if (vd != null)  NobaseAst.setDefinition(vd,sym);
       NobaseAst.setDefinition(fident,sym);
     }
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bass.delete.package">true</entry>
+<entry key="Bass.delete.project">true</entry>
+<entry key="Bass.delete.file">true</entry>
+<entry key="Bass.delete.class">false</entry>
+<entry key="Bass.delete.confirm">false</entry>
+<entry key="Bass.delete.rebuild">false</entry>
+</properties>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

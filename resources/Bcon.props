@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bcon.code.color">#800000ff</entry>
+<entry key="Bcon.comment.color">#803f7f5f</entry>
+<entry key="Bcon.focus.color">#ff0000</entry>
+<entry key="Bcon.exists.color">#ffff00</entry>
+<entry key="Bcon.notexists.color">#80cccccc</entry>
+<entry key="Bcon.class.class.color">#00c0c0</entry>
+<entry key="Bcon.class.method.color">#0000ff</entry>
+<entry key="Bcon.class.field.color">#ff00ff</entry>
+<entry key="Bcon.class.initializer.color">orange</entry>
+<entry key="Bcon.class.comment.color">#3f7f5f</entry>
+<entry key="Bcon.class.font.size">9</entry>
+<entry key="Bcon.package.explorer">true</entry>
+</properties>
+
+

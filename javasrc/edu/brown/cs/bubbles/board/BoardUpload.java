@@ -38,6 +38,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Random;
 
+import edu.brown.cs.ivy.file.IvyFile;
+
 
 
 /**
@@ -62,10 +64,20 @@ private String boundary_string;
 private int	time_out;
 
 
+private static File local_uploads;
 private static Random static_random = new Random();
 private static boolean has_failed = false;
 
-
+static {
+   BoardProperties bp = BoardProperties.getProperties("Board");
+   String dir = bp.getProperty(BOARD_SAVE_LOCAL_DIR);
+   if (dir == null || dir.length() == 0) local_uploads = null;
+   else {
+      local_uploads = new File(dir);
+      local_uploads.mkdir();
+      if (!local_uploads.exists() || !local_uploads.canWrite()) local_uploads = null;
+    }
+}
 
 /********************************************************************************/
 /*										*/
@@ -107,6 +119,8 @@ public BoardUpload(File file) throws IOException
 
 public BoardUpload(File file, String user, String runid) throws IOException
 {
+   if (uploadLocal(file,user,runid)) return;
+   
    time_out = METRICS_UPLOAD_TIMEOUT;
 
    String url = getSaveAddress();
@@ -120,6 +134,26 @@ public BoardUpload(File file, String user, String runid) throws IOException
    setParameter("runid", runid);
    setParameter("set", "0");
    postAndExit(url);
+}
+
+
+
+private boolean uploadLocal(File file,String user,String runid)
+{
+   if (local_uploads == null) return false;
+   File f1 = new File(local_uploads,user);
+   File f2 = new File(f1,runid);
+   f2.mkdirs();
+   int ct = f2.list().length;
+   File f3 = new File(f2,user + "_" + ct + "_" + file.getName());
+   if (file.renameTo(f3)) return true;
+   
+   try {
+      IvyFile.copyFile(file,f3);
+    }
+   catch (IOException e) { }
+   
+   return true; 
 }
 
 

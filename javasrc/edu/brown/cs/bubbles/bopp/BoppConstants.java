@@ -75,7 +75,7 @@ enum OptionType {
 /**
  * Name of preferences xml
  */
-String	  PREFERENCES_XML_FILENAME_NEW	= "preferences.new.xml";
+String	  PREFERENCES_XML_FILENAME = "preferences.xml";
 
 
 
@@ -85,7 +85,7 @@ String	  PREFERENCES_XML_FILENAME_NEW	= "preferences.new.xml";
 /*										*/
 /********************************************************************************/
 
-Insets	  BOPP_BUTTON_INSETS		 = new Insets(0,8,0,8);
+Insets	  BOPP_BUTTON_INSETS = new Insets(0,8,0,8);
 
 
 

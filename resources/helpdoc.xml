@@ -1,0 +1,597 @@
+<HELPDOC>
+
+
+<!--
+
+	The following are snippets for styling and information that get added to
+	all the individual demo pages.
+
+-->
+
+
+<!-- style tag to add to the beginning of everything, because underlined links look dumb -->
+<STYLE>
+	<TEXT><![CDATA[
+		<style type='text/css'>
+		a {
+			text-decoration: none;
+			color: $(LINK);
+		}
+		html {
+			color: $(TEXT);
+		}
+
+		#back {
+			color: $(BACK);
+			font-weight: bold;
+		}
+
+		.error {
+			color: $(ERROR);
+			background-color: $(BACK);
+			font-weight: bold;
+		}
+
+		.tbutton {
+			white-space: nowrap;
+		}
+		</style>
+	]]></TEXT>
+</STYLE>
+
+<!-- Instruction text -->
+<HELP KEY='instructions'>
+	<TEXT><![CDATA[
+		<em>To view an on-screen demonstration of a topic, click "Show Me".  To view the demo with spoken
+		narration, click "Tell Me".</em>
+	]]></TEXT>
+</HELP>
+
+
+<!--
+
+	The following are main menu screens, as in what pops up when you hover over
+	certain areas.	They contain lists of links to the specific demo pages. The
+	targets for the link contain both information about where they are going and
+	where they have come from, in order to build 'BACK' buttons
+
+-->
+
+
+<!-- the main demo screen that appears when you're over the bubble area -->
+<HELP KEY='bubblearea' WHEN='When on the main bubble area'>
+<TEXT><![CDATA[
+	<html>
+	<em>Click links below to view/hear help demos:</em>
+	<p>
+		&raquo; <a href='gotodemo:spec_dragarea;backto:bubblearea'>Drag the bubble area</a> <br>
+		&raquo; <a href='gotodemo:spec_resizebubble;backto:bubblearea'>Resize a bubble</a> <br>
+		&raquo; <a href='gotodemo:spec_movebubble;backto:bubblearea'>Move a bubble</a> <br>
+		&raquo; <a href='gotodemo:spec_removebubble;backto:bubblearea'>Remove a bubble</a> <br>
+		&raquo; <a href='gotodemo:spec_searchcode;backto:bubblearea'>Search the project code</a> <br>
+		&raquo; <a href='gotodemo:spec_searchdocs;backto:bubblearea'>Search the documentation</a> <br>
+		&raquo; <a href='gotodemo:spec_searchboth;backto:bubblearea'>Search both code and docs</a> <br>
+		&raquo; <a href='gotodemo:spec_toolbar;backto:bubblearea'>Put up the simple toolbar</a> <br>
+		&raquo; <a href='gotodemo:spec_currcontext;backto:bubblearea'>Show the current area context</a> <br>
+		&raquo; <a href='gotodemo:spec_changefocus;backto:bubblearea'>Change the focus bubble</a> <br>
+		&raquo; <a href='gotodemo:spec_proglog;backto:bubblearea'>Augment the programmer's log</a> <br>
+	</p>
+	</html>
+	]]></TEXT>
+</HELP>
+
+<!-- Demo screen for the border of a bubble -->
+<HELP KEY='bubbleborder' WHEN="When on a bubble's border">
+<TEXT><![CDATA[
+	<html>
+	<em>Click links below to view/hear help demos:</em>
+	<p>
+		&raquo; <a href='gotodemo:spec_resizebubble;backto:bubbleborder'>Resize this bubble</a> <br>
+		&raquo; <a href='gotodemo:spec_movebubble;backto:bubbleborder'>Move this bubble</a> <br>
+		&raquo; <a href='gotodemo:spec_removebubble;backto:bubbleborder'>Remove this bubble</a> <br>
+	</p>
+	</html>
+]]></TEXT>
+</HELP>
+
+<!-- Demo menu for inside a bubble -->
+<HELP KEY='bubblecontent' WHEN='When inside a bubble'>
+<TEXT><![CDATA[
+	<html>
+	<em>Click links below to view/hear help demos:</em>
+	<p>
+		&raquo; <a href='gotodemo:spec_resizebubble;backto:bubblecontent'>Resize this bubble</a> <br>
+		&raquo; <a href='gotodemo:spec_movebubble;backto:bubblecontent'>Move this bubble</a> <br>
+		&raquo; <a href='gotodemo:spec_removebubble;backto:bubblecontent'>Remove this bubble</a> <br>
+		&raquo; <a href='gotodemo:spec_changefocus;backto:bubblecontent'>Make this bubble the focus</a> <br>
+		&raquo; <a href='gotodemo:spec_contextmenu;backto:bubblecontent'>Get this bubble's context menu</a> <br>
+		&raquo; <a href='gotodemo:spec_fixbubble;backto:bubblecontent'>Fix this bubble's location</a> <br>
+		&raquo; <a href='gotodemo:spec_linkbubble;backto:bubblecontent'>Link this bubble to another</a> <br>
+	</p>
+	</html>
+]]></TEXT>
+</HELP>
+
+<!-- Demo menu for when on a bubble group outline -->
+<HELP KEY='bubblegroup' WHEN='When on a bubble group outline'>
+<TEXT><![CDATA[
+	<html>
+	<em>Click links below to view/hear help demos:</em>
+	<p>
+		&raquo; <a href='gotodemo:spec_movebubblegroup;backto:bubblegroup'>Move this group</a> <br>
+		&raquo; <a href='gotodemo:spec_removebubblegroup;backto:bubblegroup'>Remove this group</a> <br>
+		&raquo; <a href='gotodemo:spec_titlegroup;backto:bubblegroup'>Title this group</a> <br>
+		&raquo; <a href='gotodemo:spec_mergebubble;backto:bubblegroup'>Merge a bubble into this group</a> <br>
+		&raquo; <a href='gotodemo:spec_mergetwogroups;backto:bubblegroup'>Merge two groups</a> <br>
+		&raquo; <a href='gotodemo:spec_resizebubble;backto:bubblegroup'>Resize a bubble</a> <br>
+		&raquo; <a href='gotodemo:spec_removebubble;backto:bubblegroup'>Remove a bubble</a> <br>
+	</p>
+	</html>
+]]></TEXT>
+</HELP>
+
+<!-- Demo menu for when on a single bubble's outline -->
+<HELP KEY='bubblehalo' WHEN='When on a singleton bubble group outline'>
+<TEXT><![CDATA[
+	<html>
+	<em>Click links below to view/hear help demos:</em>
+	<p>
+		&raquo; <a href='gotodemo:spec_removebubble;backto:bubblehalo'>Remove this bubble</a> <br>
+		&raquo; <a href='gotodemo:spec_mergeintogroup;backto:bubblehalo'>Merge this bubble into a group</a> <br>
+		&raquo; <a href='gotodemo:spec_resizebubble;backto:bubblehalo'>Resize this bubble</a> <br>
+	</p>
+	</html>
+]]></TEXT>
+</HELP>
+
+<!-- Demo menu for when on a bubble link -->
+<HELP KEY='bubblelink' WHEN='When on a link between bubbles'>
+<TEXT><![CDATA[
+	<html>
+	<em>Click links below to view/hear help demos:</em>
+	<p>
+		&raquo; <a href='gotodemo:spec_removelink;backto:bubblelink'>Remove this link</a> <br>
+		&raquo; <a href='gotodemo:spec_changelink;backto:bubblelink'>Change the link style</a> <br>
+		&raquo; <a href='gotodemo:spec_collapselink;backto:bubblelink'>Collapse this link</a> <br>
+	</p>
+	</html>
+]]></TEXT>
+</HELP>
+
+<!-- Demo menu for when in the overview bar -->
+<HELP KEY='overviewarea' WHEN='When in the overview bar'>
+<TEXT><![CDATA[
+	<html>
+	<em>Click links below to view/hear help demos:</em>
+	<p>
+		&raquo; <a href='gotodemo:spec_moveviewport;backto:overviewarea'>Move the viewport</a> <br>
+		&raquo; <a href='gotodemo:spec_changeviewport;backto:overviewarea'>Change the viewport</a> <br>
+		&raquo; <a href='gotodemo:spec_movebubblegroup;backto:overviewarea'>Move a group of bubbles</a> <br>
+	</p>
+	</html>
+]]></TEXT>
+</HELP>
+
+<!-- Demo menu for the topbar -->
+<HELP KEY='topbar' WHEN='When in the top bar'>
+<TEXT><![CDATA[
+	<html>
+	<em>Click links below to view/hear help demos:</em>
+	<p>
+		&raquo; <a href='gotodemo:spec_createworkingset;backto:topbar'>Create a working set</a> <br>
+		&raquo; <a href='gotodemo:spec_cleardisplay;backto:topbar'>Clear the display</a> <br>
+		&raquo; <a href='gotodemo:spec_loadworkingset;backto:topbar'>Load a saved working set</a> <br>
+		&raquo; <a href='gotodemo:spec_printdisplay;backto:topbar'>Print the current display</a> <br>
+	</p>
+	</html>
+]]></TEXT>
+</HELP>
+
+<!-- Second demo menu for topbar -->
+<HELP KEY='topbarworkingset' WHEN='When in the top bar'>
+<TEXT><![CDATA[
+	<html>
+	<em>Click links below to view/hear help demos:</em>
+	<p>
+		&raquo; <a href='gotodemo:spec_renameworkingset;backto:topbarworkingset'>Change the name of a working set</a> <br>
+		&raquo; <a href='gotodemo:spec_resizeworkingset;backto:topbarworkingset'>Change the size of a working set</a> <br>
+		&raquo; <a href='gotodemo:spec_removeworkingset;backto:topbarworkingset'>Remove the working set</a> <br>
+		&raquo; <a href='gotodemo:spec_saveworkingset;backto:topbarworkingset'>Save the working set</a> <br>
+		&raquo; <a href='gotodemo:spec_exportworkingset;backto:topbarworkingset'>Export the working set</a> <br>
+		&raquo; <a href='gotodemo:spec_cleardisplay;backto:topbarworkingset'>Clear the display</a> <br>
+		&raquo; <a href='gotodemo:spec_printdisplay;backto:topbarworkingset'>Print the current display</a> <br>
+	</p>
+	</html>
+]]></TEXT>
+</HELP>
+
+
+<!--
+
+	The following are specific help demo pages accessible through the above
+	menus.	Each will have a back button appended to it by the BhelpFactory
+	class when it is handled.
+
+-->
+
+
+<!-- drag a bubble area -->
+<HELP KEY='spec_dragarea'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>scroll the bubble area</b>, drag with the <em>right</em> mouse button.  Alternatively,
+		you can use the arrow keys while pressing the Control (Command on the Mac) key.
+		[<a class='tbutton' href='showme:dragarea'> Tell Me </a>] [<a class='tbutton' href='showme:dragarea_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- resize a bubble -->
+<HELP KEY='spec_resizebubble'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>resize a bubble</b>, press the <em>left</em> mouse button on the proper border and then
+		drag to make the bubble the desired size.
+		[<a class='tbutton' href='showme:resizebubble'> Tell Me </a>] [<a class='tbutton' href='showme:resizebubble_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- move a bubble -->
+<HELP KEY='spec_movebubble'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>move a bubble</b>, press the <em>right</em> mouse button and move
+		the bubble to its desired location.
+		[<a class='tbutton' href='showme:movebubble'> Tell Me </a>] [<a class='tbutton' href='showme:movebubble_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- remove a bubble -->
+<HELP KEY='spec_removebubble'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>remove a bubble</b>, click with the <em>middle</em> mouse button on the bubble or its border.
+		Note that a remove bubble will replace this bubble and will slowly fade to nothingness. You can click
+		on this remove bubble to restore the original bubble.
+		[<a class='tbutton' href='showme:removebubble'> Tell Me </a>] [<a class='tbutton' href='showme:removebubble_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- search the source code -->
+<HELP KEY='spec_searchcode'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>search over project code</b>, click with the <em>right</em> mouse button or
+		use the control-O (command-O on the mac) key or the F10 key.  Using the right click will bring up the
+		default menu; the others will not.
+		[<a class='tbutton' href='showme:searchcode'> Tell Me </a>] [<a class='tbutton' href='showme:searchcode_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- search the documentation -->
+<HELP KEY='spec_searchdocs'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>search over documentation</b>, <em>control</em> click with the <em>right</em>
+		mouse button or use the F12 key.
+		[<a class='tbutton' href='showme:searchdocs'> Tell Me </a>] [<a class='tbutton' href='showme:searchdocs_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- search both code and documentation -->
+<HELP KEY='spec_searchboth'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>search over both code and documentation</b>, <em>shift</em> click with the <em>right</em>
+		mouse button or use the F11 key.  This also brings up the default menu.
+		this can be made the default by selecting the appropriate
+		option.
+		[<a class='tbutton' href='showme:searchboth'> Tell Me </a>] [<a class='tbutton' href='showme:searchboth_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- bring up the simple toolbar -->
+<HELP KEY='spec_toolbar'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>put up the simple tool bar</b>, use F1.  The tool bar will appear in the upper left
+		or upper right of the display (depending on where the package explorer is located).
+		[<a class='tbutton' href='showme:toolbar'> Tell Me </a>] [<a class='tbutton' href='showme:toolbar_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- Show the current area in context -->
+<HELP KEY='spec_currcontext'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>show the current area in context</b> use F9.  Hitting F9 again will go back to a
+		normal display.
+		[<a class='tbutton' href='showme:currcontext'> Tell Me </a>] [<a class='tbutton' href='showme:currcontext_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- change the focus bubble -->
+<HELP KEY='spec_changefocus'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>change the focus bubble</b>, either move the mouse to it or use the arrow keys while
+		pressing ALT to move to the nearest bubble in the specified direction.
+	]]></TEXT>
+</HELP>
+
+<!-- augment the programmer's log -->
+<HELP KEY='spec_proglog'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>augment the programmer's log</b> either by adding a note, image, or screen dump to the current task,
+		or to change the current task, hit F2.
+	]]></TEXT>
+</HELP>
+
+<!-- get a context menu -->
+<HELP KEY='spec_contextmenu'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>get a context menu for this bubble</b>, <em>right</em> click inside the bubble.  Note the actual context
+		menu might depend on where in the bubble you click since it can represent the local context.
+		[<a class='tbutton' href='showme:contextmenu'> Tell Me </a>] [<a class='tbutton' href='showme:contextmenu_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- make bubble's location fixed -->
+<HELP KEY='spec_fixbubble'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>fix this bubble's location on the display</b>, right click and choose <em>Make Fixed</em> if
+		the option exists.Not all bubbles can be fixed in this way.  To undo this setting, right click and
+		choose <em>Make Floating</em>
+	]]></TEXT>
+</HELP>
+
+<!-- link bubble to another -->
+<HELP KEY='spec_linkbubble'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>link this bubble to another</b>, press the <em>control</em> key and then drag a line from the
+		starting bubble to the ending bubble using the <em>right</em> mouse button.  This will unlink the
+		bubbles if they are already linked.
+		[<a class='tbutton' href='showme:linkbubble'> Tell Me </a>] [<a class='tbutton' href='showme:linkbubble_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- move a group of bubbles -->
+<HELP KEY='spec_movebubblegroup'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>aove all bubbles in this group</b>, press down in the group border drag
+		with the <em>right</em> mouse button and drag to its desired location.
+		[<a class='tbutton' href='showme:movebubblegroup'> Tell Me </a>] [<a class='tbutton' href='showme:movebubblegroup_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- remove a group of bubbles -->
+<HELP KEY='spec_removebubblegroup'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>remove all bubbles in this group</b>, <em>double</em> click with the <em>middle</em> mouse
+		button on the group area.  The remove bubble that remains will restore all bubbles in the group.
+		[<a class='tbutton' href='showme:removebubblegroup'> Tell Me </a>] [<a class='tbutton' href='showme:removebubblegroup_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- add a title to a bubble group -->
+<HELP KEY='spec_titlegroup'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>title this group</b>, <em>left</em> click on the title area at the top of the group
+		and type in (or edit) the group name.
+		[<a class='tbutton' href='showme:titlegroup'> Tell Me </a>] [<a class='tbutton' href='showme:titlegroup_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- merge a bubble into a group -->
+<HELP KEY='spec_mergebubble'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>merge a bubble into a group</b> just move that bubble (using right-drag) until it joins
+		the group.
+	]]></TEXT>
+</HELP>
+
+<!-- merge two groups of bubbles -->
+<HELP KEY='spec_mergetwogroups'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>merge two groups</b>, place the groups near each other and then move a single bubble so
+		that it spans the groups and makes them one.
+	]]></TEXT>
+</HELP>
+
+<!-- remove a link between two bubbles -->
+<HELP KEY='spec_removelink'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>remove this link</b>, either control-drag a line from the start bubble to the end bubble or
+		click with the <em>right</em> mouse button to get a context menu and choose <em?Remove</em>
+		[<a class='tbutton' href='showme:removelink'> Tell Me </a>] [<a class='tbutton' href='showme:removelink_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- change the style of the link between two bubbles -->
+<HELP KEY='spec_changelink'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>changke the link style</b>, <em>right</em> click on the link and choose the <em>Style</em>
+		option you want.
+		[<a class='tbutton' href='showme:changelink'> Tell Me </a>] [<a class='tbutton' href='showme:changelink_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- collapse the link between two bubbles -->
+<HELP KEY='spec_collapselink'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>collapse a linke</b>, <em>right</em> click on the link and choose the <em>Collapse</em>
+		option.  This will bring the target bubble close to the source bubble.
+		[<a class='tbutton' href='showme:collapselink'> Tell Me </a>] [<a class='tbutton' href='showme:collapselink_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- move the viewport -->
+<HELP KEY='spec_moveviewport'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>move the viewport</b>, press the <em>right</em> mouse button in the current viewport in the
+		overview bar and drag it to its new location.
+		[<a class='tbutton' href='showme:moveviewport'> Tell Me </a>] [<a class='tbutton' href='showme:moveviewport_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- change the viewport -->
+<HELP KEY='spec_changeviewport'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>change the viewport</b>, click with the <em>left</em> mouse button at the desired viewport
+		location.  You can also press down to move the location and then drag it to its target.
+		[<a class='tbutton' href='showme:changeviewport'> Tell Me </a>] [<a class='tbutton' href='showme:changeviewport_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- create a working set -->
+<HELP KEY='spec_createworkingset'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>create a working set</b>, click with the <em>left</em> mouse button in the area above the current view,
+		where "Create Task..." is displayed.  Alternatively, use the <em>right</em> mouse button to bring up a context
+		menu by clicking where there is no working set and choose "Create Working Set".
+		[<a class='tbutton' href='showme:createworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:createworkingset_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- clear the display -->
+<HELP KEY='spec_cleardisplay'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>clear the display</b>, use the <em>right</em> mouse button to get a context menu and then choose either
+		"Clear Bubbles" to remove all bubbles visible in the current viewport or "Clear All Bubbles" to remove all the
+		bubbles in the workspace.
+		[<a class='tbutton' href='showme:cleardisplay'> Tell Me </a>] [<a class='tbutton' href='showme:cleardisplay_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- load a previously saved working set -->
+<HELP KEY='spec_loadworkingset'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>load a saved working set</b>, use the <em>right</em> mouse button to get a context menu.	Then either choose
+		"Load Working Set" to load the working set from a file or choose a working set from the task shelf, which is the
+		selection to the right of the menu.
+		[<a class='tbutton' href='showme:loadworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:loadworkingset_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- print the current display -->
+<HELP KEY='spec_printdisplay'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>print the current display</b>, use the <em>right</em> mouse button to get a context menu and choose the "Print"
+		option.  Alternatively, you can choose "Export as PDF" to produce a image file for later use.
+		[<a class='tbutton' href='showme:printdisplay'> Tell Me </a>] [<a class='tbutton' href='showme:printdisplay_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- rename a working set -->
+<HELP KEY='spec_renameworkingset'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>change the name of a working set</b>, click on the current name with the <em>left</em> mouse button and then
+		use keyboard editing to enter a new name.
+		[<a class='tbutton' href='showme:renameworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:renameworkingset_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- change the size of a working set -->
+<HELP KEY='spec_resizeworkingset'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>change the size of a working set</b>, press down with the <em>left</em> mouse button near the side to change
+		and drag the edge to the desired size.
+		[<a class='tbutton' href='showme:resizeworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:resizeworkingset_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- remove a working set -->
+<HELP KEY='spec_removeworkingset'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>remove the working set</b>, use the <em>right</em> mouse button to get a context menu and then choose one of the
+		following:  "Remove Working Set" will remove the working set but leave all the bubbles in place; "Clear and Remove Working
+		Set" will do this and remove all bubbles in the set; "Close and Save to Task Shelf" will save the
+		working set to the task shelf, close the working set and clear its bubbles.
+		[<a class='tbutton' href='showme:removeworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:removeworkingset_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- save a working set -->
+<HELP KEY='spec_saveworkingset'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>save the working set</b>, use the <em>right</em> mouse button to get a context menu and chen choose one of the
+		following: "Save Working Set" to save the working set to a file; "Save Working Set To Task Shelf" to save the Working
+		set to the task shelf where it can be quickly reloaed later; or "Close and Save to Task Shelf" which will save the
+		current working set to the task shelf and will clear its bubbles and remove it.
+		[<a class='tbutton' href='showme:saveworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:saveworkingset_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+<!-- export a working set -->
+<HELP KEY='spec_exportworkingset'>
+	<TEXT><![CDATA[
+	<p>
+		To <b>export the working set</b>, use the <em>right</em> mouse button to get a context menu and then choose one of the
+		following: "EMail Working Set" to send the working set in a loadable from in an e-mail message to a colleague;
+		"Export as PDF" to create a saved image of the working set; "EMail as PDF" to send an image of the working set; or
+		"Save Working Set" to save the current working set to a file.
+		[<a class='tbutton' href='showme:exportworkingset'> Tell Me </a>] [<a class='tbutton' href='showme:exportworkingset_silent'> Show Me </a>]
+	]]></TEXT>
+</HELP>
+
+</HELPDOC>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

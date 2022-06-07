@@ -185,6 +185,7 @@ void handleErrors(String proj,File forfile,int eid,Element ep)
 	    // if (bp.getErrorType() == BumpErrorType.NOTICE) continue; // notes not returned on recompile -- seems fixed
 	    if (deled == null) deled = new ArrayList<BumpProblemImpl>();
 	    deled.add(bp);
+            BoardLog.logD("BUMP","Remove problem " + bp);
 	    it.remove();
 	 }
       }

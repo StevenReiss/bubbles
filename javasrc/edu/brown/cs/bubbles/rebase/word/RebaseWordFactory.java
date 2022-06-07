@@ -24,14 +24,16 @@
 
 package edu.brown.cs.bubbles.rebase.word;
 
+import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.rebase.RebaseMain;
 
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -492,12 +494,10 @@ private static void setupWordSets()
    short_words = new HashMap<String,String>();
    HashSet<String> fnd = new HashSet<String>();
 
-   String root = System.getProperty("edu.brown.cs.bubbles.rebase.ROOT");
-   File f1 = new File(root);
-   File f2 = new File(f1,"lib");
-   File f = new File(f2,WORD_LIST_FILE);
-
-   try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+   InputStream ins = BoardProperties.getResourceFile(WORD_LIST_FILE);
+   if (ins == null) return;
+   
+   try (BufferedReader br = new BufferedReader(new InputStreamReader(ins))) {
       for ( ; ; ) {
 	 String wd = br.readLine();
 	 if (wd == null) break;

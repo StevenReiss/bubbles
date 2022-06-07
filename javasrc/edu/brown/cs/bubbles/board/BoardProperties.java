@@ -124,7 +124,7 @@ public synchronized static BoardProperties getProperties(String id)
  * exists, returns null.
  **/
 
-public static InputStream getLibraryFile(String name)
+public static InputStream getResourceFile(String name)
 {
    // allow user version in ~/.bubbles
 
@@ -148,15 +148,15 @@ public static InputStream getLibraryFile(String name)
 
    // use jar version if available
    if (url != null) {
-      String nm = "lib/" + name;
+      String nm = "resources/" + name;
       InputStream ins = BoardProperties.class.getClassLoader().getResourceAsStream(nm);
       if (ins != null) return ins;
       dir = sp.getProperty(BOARD_PROP_JAR_DIR);
     }
 
-   // use whats in the lib directory
+   // use whats in the resources directory
    File f1 = new File(dir);
-   File f2 = new File(f1,"lib");
+   File f2 = new File(f1,"resources");
    File f3 = new File(f2,pname);
 
    try {

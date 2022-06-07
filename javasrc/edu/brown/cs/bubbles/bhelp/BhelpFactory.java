@@ -82,7 +82,7 @@ private BhelpFactory(BudaRoot br)
 {
    buda_root = br;
    demo_map = new HashMap<String,BhelpDemo>();
-   InputStream ins = BoardProperties.getLibraryFile(HELP_RESOURCE);
+   InputStream ins = BoardProperties.getResourceFile(HELP_RESOURCE);
    if (ins != null) {
       Element xml = IvyXml.loadXmlFromStream(ins);
       for (Element ex : IvyXml.children(xml,"DEMO")) {  // for each element in demo file
@@ -183,7 +183,7 @@ void displayDemoScreen(Component comp,String name,String backto)
       jcomp.getParent().getParent().setVisible(true);
       
       //Retrieve the proper demo
-      InputStream ins = BoardProperties.getLibraryFile(HELP_DOCUMENT);
+      InputStream ins = BoardProperties.getResourceFile(HELP_DOCUMENT);
       if (ins != null) {
 	 Element xml = IvyXml.loadXmlFromStream(ins);
 	 text += "<html>";

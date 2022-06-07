@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Rose.rose.debug">true</entry>
+<entry key="Rose.rose.add.path">rose.jar</entry>
+<entry key="Rose.fait.class.path">fait.jar:asm.jar:eclipsejar:junit.jar:ivy.jar</entry>
+<entry key="Rose.fait.threads">1</entry>
+<entry key="Rose.fait.debug">true</entry>
+<entry key="Rose.fait.trace">true</entry>
+<entry key="Rose.seede.class.path">seede.jar:asm.jar:eclipsejar:junit.jar:ivy.jar:poppy.jar</entry>
+<entry key="Rose.seede.debug">true</entry>
+<entry key="Rose.seede.trace">true</entry>
+<entry key="Rose.processor.1">edu.brown.cs.rose.sepal.SepalWrongVariable</entry>
+<entry key="Rose.processor.2">edu.brown.cs.rose.sepal.SepalForLoopIndex</entry>
+<entry key="Rose.processor.3">edu.brown.cs.rose.sepal.SepalCommonProblems</entry>
+<entry key="Rose.processor.4">edu.brown.cs.rose.sepal.SepalAvoidException</entry>
+<entry key="Rose.processor.5">edu.brown.cs.rose.sepal.SepalValueFixer</entry>
+<entry key="Rose.processor.6">edu.brown.cs.rose.sepal.SepalLocalSearch</entry>
+<entry key="Rose.processor.7">edu.brown.cs.rose.sepal.SepalIfCondition</entry>
+<entry key="Rose.processor.8">edu.brown.cs.rose.sepal.SepalIndexFixer</entry>
+<entry key="Rose.processor.9">edu.brown.cs.rose.sepal.SepalArgOrder</entry>
+<entry key="Rose.processor.10">edu.brown.cs.rose.sepal.SepalSequencer</entry>
+<entry key="Rose.processor.11">edu.brown.cs.rose.sepal.SepalUseSetter</entry>
+<entry key="Differences.family">Monospaced</entry>
+<entry key="Differences.size">11</entry>
+<entry key="Differences.tabsize">8</entry>
+<entry key="Original.parent">Differences</entry>
+<entry key="Original.foreground">#00cc00</entry>
+<entry key="Edited.parent">Differences</entry>
+<entry key="Edited.foreground">#cc0000</entry>
+</properties>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

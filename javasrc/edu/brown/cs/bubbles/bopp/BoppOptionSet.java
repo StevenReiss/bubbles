@@ -84,7 +84,7 @@ BoppOptionSet(BudaRoot br)
    buda_root = br;
    doing_add = true;
 
-   Element xml = IvyXml.loadXmlFromStream(BoardProperties.getLibraryFile(PREFERENCES_XML_FILENAME_NEW));
+   Element xml = IvyXml.loadXmlFromStream(BoardProperties.getResourceFile(PREFERENCES_XML_FILENAME));
    for (Element op : IvyXml.children(xml,"PACKAGE")) {
       loadXmlPackage(op);
     }

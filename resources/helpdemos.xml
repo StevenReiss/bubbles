@@ -1,0 +1,853 @@
+<!-- Demos for the help menu. -->
+<HELPDEMOS>
+
+   <!-- Test action -->
+   <DEMO NAME='testaction'>
+      <ACTION TYPE='FINDBUBBLE' LEFT='true' SET='start' />
+      <ACTION TYPE='FINDBUBBLE' RIGHT='true' SET='middle' />
+      <ACTION TYPE='FINDBUBBLE' CENTER='true' SET='end' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>In this example we first move to a bubble on the left of the display</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' TARGET='start' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Now we move the mouse to a bubble on the right</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' TARGET='middle' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Now we move to a bubble near the center of the display</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' TARGET='end' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>And right click on that bubble</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' UP='true' DOWN='true' BUTTON='4' />
+      <ACTION TYPE='SPEECH' WAIT='true' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- Demo to drag the background area -->
+   <DEMO NAME='dragarea'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>First move the mouse so it is over the bubble area background</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='BUBBLEAREA' SET='point' />
+      <ACTION TYPE='MOVE' TARGET='point' DELAY='1.0' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Push down with the right mouse button</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' BUTTON='4' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>Then you can drag the background around by moving the mouse</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	      <POINT X='0' Y='-300' />
+	      <POINT X='300' Y='0' />
+	      <POINT X='0' Y='300' />
+	      <POINT X='-300' Y='0' />
+	      <POINT X='0' Y='0' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>And release the mouse button when you are done</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' UP='TRUE' BUTTON='4' />
+      <ACTION TYPE='RESET' />
+	</DEMO>
+
+   <!-- Demo to search the code -->
+   <DEMO NAME='searchcode'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move the mouse so it is over the background</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='BUBBLEAREA' SET='point' />
+      <ACTION TYPE='MOVE' TARGET='point' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Then, click with the right mouse button, or click control O, or use the F10 key</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' BUTTON='4' />
+      <ACTION TYPE='MOUSE' UP='true' BUTTON='4' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Now, enter your search term in the box that appears</TEXT>
+      </ACTION>
+      <ACTION TYPE='TYPE' TEXT='enter search term' DELAY='100' BACKSPACE='true' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>To remove the window, click the bubble area background</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' TARGET='point' >
+	 <POINT X ='-10' Y='-10' />
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='TRUE' BUTTON='LEFT' />
+      <ACTION TYPE='MOUSE' UP='TRUE' BUTTON='LEFT' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- Demo to search the documentation -->
+   <DEMO NAME='searchdocs'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move the mouse so it is over the background</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='BUBBLEAREA' SET='point' />
+      <ACTION TYPE='MOVE' TARGET='point'  />
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='300'>
+	 <TEXT>First, click with the right mouse button, or use the F12 key</TEXT>
+      </ACTION>
+      <ACTION TYPE='KEY' CONTROL='false' KEY='F12' DOWN='true' UP='true' />
+      <ACTION TYPE='PAUSE' DURATION='300' />
+      <ACTION TYPE='MOVE'>
+	 <POINT X='40' Y='40' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='800'>
+	 <TEXT>Enter your search term in the box that appears</TEXT>
+      </ACTION>
+      <ACTION TYPE='TYPE' TEXT='enter search term' DELAY='100' BACKSPACE='true' />
+      <ACTION TYPE='RESET'/>
+   </DEMO>
+
+   <!-- Demo to search both documentation and code -->
+   <DEMO NAME='searchboth'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First click with the right mouse button, or use the F11 keys</TEXT>
+      </ACTION>
+      <ACTION TYPE='KEY' KEY='F11' DOWN='true' />
+      <ACTION TYPE='KEY' KEY='F11' UP='true' />
+      <ACTION TYPE='PAUSE' DURATION='800' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Enter your search term in the box that appears</TEXT>
+      </ACTION>
+      <ACTION TYPE='TYPE' TEXT='enter search term' DELAY='100' BACKSPACE='true' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- Demo to resize a bubble -->
+   <DEMO NAME='resizebubble'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>First move the mouse so it is over the border of a bubble.	You can
+		   tell when this occurs by the cursor.</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='BORDER_E' SET='point' />
+      <ACTION TYPE='MOVE' TARGET='point'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Push down with the left mouse button</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' BUTTON='16' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>Then you can extend or shrink the size by moving the mouse</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' TARGET='point'  >
+	      <POINT X='200' Y='0' />
+	      <POINT X='-75' Y='0' />
+	      <POINT X='0' Y='0' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>And release the mouse button when you are done</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' UP='TRUE' BUTTON='16' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- Demo to move a bubble -->
+   <DEMO NAME='movebubble'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>First move the mouse so it is over the bubble you want to move.</TEXT>
+      </ACTION>
+      <ACTION TYPE='FINDBUBBLE' MOUSE='true' SET='point' />
+      <ACTION TYPE='MOVE' TARGET='point'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Push down with the right mouse button</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' BUTTON='4' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>Then you can move the bubble to where you want it.</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' TARGET='point'  >
+	      <POINT X='300' Y='0' />
+	      <POINT X='0' Y='300' />
+	      <POINT X='-300' Y='0' />
+	      <POINT X='0' Y='0' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>Release the mouse button when you are done</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' UP='TRUE' BUTTON='4' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!--  Demo to remove a bubble -->
+   <DEMO NAME='removebubble'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>First move the mouse so it is over the bubble you want to remove.</TEXT>
+      </ACTION>
+      <ACTION TYPE='FINDBUBBLE' MOUSE='true' SET='bbl' />
+      <ACTION TYPE='MOVE' TARGET='bbl' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	      <TEXT>Either click with the middle button or type escape or control W.</TEXT>
+      </ACTION>
+      <ACTION TYPE='KEY' MENU='true' KEY='W' />
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='1500'>
+	      <TEXT>This will make the window go away.	Note that a shadow window remains
+		   to undo the deletion.  If you left click on the shadow, the window
+		   will be restored.</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='LEFT' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- Demo to show the simple toolbar -->
+   <DEMO NAME='toolbar'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, press the F1 key to open the simple toolbar.  It will appear
+	 in the upper left hand corner of the screen</TEXT>
+      </ACTION>
+      <ACTION TYPE='KEY' DOWN='true' UP='true' CONTROL='false' KEY='F1' />
+      <ACTION TYPE='PAUSE' DURATION='1500' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>When you are done, clicking F1 again will remove the toolbar</TEXT>
+      </ACTION>
+      <ACTION TYPE='KEY' DOWN='true' UP='true' CONTROL='false' KEY='F1' />
+   </DEMO>
+
+   <!-- Demo to show the current area in context -->
+   <DEMO NAME='currcontext'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, press the F9 key to show the current area in context
+	 </TEXT>
+      </ACTION>
+      <ACTION TYPE='KEY' DOWN='true' UP='true' CONTROL='false' KEY='F9' />
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='1500'>
+	 <TEXT>When you are done, clicking F9 again will return to normal view</TEXT>
+      </ACTION>
+      <ACTION TYPE='KEY' DOWN='true' UP='true' CONTROL='false' KEY='F9' />
+   </DEMO>
+
+   <!-- Demo to show the context menu -->
+   <DEMO NAME='contextmenu'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move your mouse into the bubble</TEXT>
+      </ACTION>
+      <ACTION TYPE='FINDBUBBLE' MOUSE='true' SET='bbl' />
+      <ACTION TYPE='MOVE' TARGET='bbl' />
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='1500'>
+	 <TEXT>Then, click with the right mouse button to view the context menu</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='RIGHT' />
+      <ACTION TYPE='PAUSE' DURATION='1500' />
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='1000'>
+	 <TEXT>To remove the menu, click the background of the bubble</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' TARGET='POINT'>
+	 <POINT X='-10' Y='0' />
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='LEFT' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- Demo to move a group of bubbles -->
+   <DEMO NAME='movebubblegroup'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First move the mouse so it is over the border of the bubble group you
+	 want to move</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='GROUP' SET='grp' />
+      <ACTION TYPE='MOVE' TARGET='grp'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Push down with the right mouse button</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' BUTTON='4' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Then you can move the bubble group where you want it</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE'  >
+	 <POINT X='300' Y='0' />
+	 <POINT X='0' Y='300' />
+	 <POINT X='-300' Y='0' />
+	 <POINT X='0' Y='0' />
+      </ACTION>
+      <ACTION TYPE='MOUSE' UP='TRUE' BUTTON='4' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Release the mouse button when you are done</TEXT>
+      </ACTION>
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- demo to remove a ~group~ of bubbles -->
+   <DEMO NAME='removebubblegroup'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First move the mouse so it is over the border of the bubble group
+	 you want to move</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='GROUP' SET='grp' />
+      <ACTION TYPE='MOVE' TARGET='grp' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Then, double click with the middle mouse button</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='MIDDLE' />
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='MIDDLE' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>There is a shadow bubble left behind which if clicked will
+	 restore the entire bubble group.</TEXT>
+      </ACTION>
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- demo to add a title to a group of bubbles -->
+   <DEMO NAME='titlegroup'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move the mouse so it is over the bubble group title area</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='GROUPNAME' SET='grp' />
+      <ACTION TYPE='MOVE' TARGET='grp' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Then just type to create a title for the group</TEXT>
+      </ACTION>
+      <ACTION TYPE='TYPE' TEXT='enter title' DELAY='100' BACKSPACE='true' />
+      <ACTION TYPE='MOVE' TARGET='point' >
+	 <POINT X='0' Y='-20' />
+      </ACTION>
+   </DEMO>
+
+   <!-- demo to link two bubbles -->
+   <DEMO NAME='linkbubble'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move your mouse to the source bubble</TEXT>
+      </ACTION>
+      <ACTION TYPE='FINDBUBBLE' MOUSE='true' SET='bbl' />
+      <ACTION TYPE='MOVE' TARGET='bbl' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Hold the control key and drag with the right mouse button to the target bubble</TEXT>
+      </ACTION>
+      <ACTION TYPE='KEY' CONTROL='true' DOWN='true' />
+      <ACTION TYPE='MOUSE' DOWN='true' BUTTON='RIGHT' />
+      <ACTION TYPE='FINDBUBBLE' MOUSE='true' OTHER='true' SET='obbl' />
+      <ACTION TYPE='MOVE' TARGET='obbl' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Release the control key first and then the mouse button to create the link</TEXT>
+      </ACTION>
+      <ACTION TYPE='KEY' CONTROL='true' UP='true' />
+      <ACTION TYPE='MOUSE' UP='true' BUTTON='RIGHT' />
+   </DEMO>
+
+   <!-- Demo to move the viewport around -->
+   <DEMO NAME='moveviewport'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First move your mouse to the viewport area</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='OVERVIEW' SET='tb' />
+      <ACTION TYPE='MOVE' TARGET='tb' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Press down with the left mouse button</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' BUTTON='LEFT' />
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='1000'>
+	 <TEXT>Now you can drag the viewport around</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	 <POINT X='-300' Y='-70' />
+	 <POINT X='-300' Y='0' />
+	 <POINT X='0' Y='-70' />
+	 <POINT X='0' Y='0' />
+      </ACTION>
+      <ACTION TYPE='MOUSE' UP='true' BUTTON='LEFT' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- Demo to change the viewport location -->
+   <DEMO NAME='changeviewport'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move your mouse to the viewport area</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='OVERVIEW' SET='ov' />
+      <ACTION TYPE='MOVE' TARGET='ov' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Clicking at a location in the viewport will change the view to that area</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='LEFT' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='200' Y='0' />
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='LEFT' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='-400' Y='0' />
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='LEFT' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='200' Y='0' />
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='LEFT' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- Demo to create a new working set -->
+   <DEMO NAME='createworkingset'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Frist, move your mouse so that it is over the very top bar</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='TOPBAR' SET='tb' />
+      <ACTION TYPE='MOVE' TARGET='tb'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Open a context menu by right clicking</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='RIGHT' DOWN='true' UP='true' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Select define working set from the choices which appear</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='BUBBLEMENU' SET='tbpu' />
+      <ACTION TYPE='MOVE' TARGET='tbpu'  />
+      <ACTION TYPE='PAUSE' DURATION='100' />
+      <ACTION TYPE='MOVE'>
+	 <POINT X='10' Y='10' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='500' />
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='LEFT' />
+      <ACTION TYPE='RESET'/>
+   </DEMO>
+
+   <!-- Demo to clear the display -->
+   <DEMO NAME='cleardisplay'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Frist, move your mouse so that it is over the very top bar</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='TOPBAR' SET='tb' />
+      <ACTION TYPE='MOVE' TARGET='tb'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Open a context menu by right clicking</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='RIGHT' DOWN='true' UP='true' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Now select either clear bubbles in view to clear just the
+	 bubbles currently visible, or clear all bubbles to remove all
+	 bubbles</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='BUBBLEMENU' SET='tbpu' />
+      <ACTION TYPE='MOVE' TARGET='tbpu' />
+      <ACTION TYPE='MOVE'>
+	 <POINT X='10' Y='0' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='500' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='90' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='1500' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='60' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='1500' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='-60' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='200' />
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='LEFT' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- demo to load a working set -->
+   <DEMO NAME='loadworkingset'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Frist, move your mouse so that it is over the very top bar</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='TOPBAR' SET='tb' />
+      <ACTION TYPE='MOVE' TARGET='tb' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Open a context menu by right clicking</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='RIGHT' DOWN='true' UP='true' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Select load working set from the drop down menu which appears</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='BUBBLEMENU' SET='bm' />
+      <ACTION TYPE='MOVE' TARGET='bm'  />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='10' Y='0' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='500' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='30' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='1500' />
+      <ACTION TYPE='MOUSE' BUTTON='LEFT' DOWN='true' UP='true' />
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Double click on, or enter the name of the working set you wish to load</TEXT>
+      </ACTION>
+      <ACTION TYPE='TYPE' DELAY='100' TEXT='enter filename' BACKSPACE='true' />
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Then click open or if you have changed your mind click cancel</TEXT>
+      </ACTION>
+      <ACTION TYPE='LOOP' ITERS='3'>
+	 <ACTION TYPE='KEY' DOWN='true' UP='true' KEY='TAB' />
+	 <ACTION TYPE='PAUSE' DURATION='50' />
+      </ACTION>
+      <ACTION TYPE='KEY' DOWN='true' UP='true' KEY='SPACE' />
+   </DEMO>
+
+   <!-- Demo to print the display -->
+   <DEMO NAME='printdisplay'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move your mouse so that it is over the very top bar</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='TOPBAR' SET='tb' />
+      <ACTION TYPE='MOVE' TARGET='tb'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Open a context menu by right clicking</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='RIGHT' DOWN='true' UP='true' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Select print from the dropdown menu which appears</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='BUBBLEMENU' SET='bm' />
+      <ACTION TYPE='MOVE' TARGET='bm'  />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='10' Y='0' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='500' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='110' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='100'>
+	 <TEXT>Adjust your print settings as you see fit</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='LEFT' DOWN='true' UP='true' />
+      <ACTION TYPE='PAUSE' DURATION='2000' />
+      <ACTION TYPE='LOOP' ITERS='10'>
+	 <ACTION TYPE='KEY' DOWN='true' UP='true' KEY='TAB' />
+	 <ACTION TYPE='PAUSE' DURATION='50' />
+      </ACTION>
+      <ACTION TYPE='KEY' DOWN='true' UP='true' KEY='SPACE' />
+      <ACTION TYPE='PAUSE' DURATION='2000' />
+      <ACTION TYPE='LOOP' ITERS='7'>
+	 <ACTION TYPE='KEY' DOWN='true' UP='true' KEY='TAB' />
+	 <ACTION TYPE='PAUSE' DURATION='50' />
+      </ACTION>
+      <ACTION TYPE='KEY' DOWN='true' UP='true' KEY='SPACE' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- demo to rename a working set -->
+   <DEMO NAME='renameworkingset'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First move your mouse to the title area of the working set
+	 you would like to rename</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='TOPBARWORKINGSET_INSIDE' SET='tbws' />
+      <ACTION TYPE='MOVE' TARGET='tbws'  />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='-10' Y='-5' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Click once with the left mouse button to select the text of the title</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' UP='true' BUTTON='LEFT' />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Enter the name of the working set</TEXT>
+      </ACTION>
+      <ACTION TYPE='TYPE' TEXT='enter title' DELAY='100' BACKSPACE='true' />
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='1000'>
+	 <TEXT>When you are done, to save this title, just move your mouse away from
+	 the title area</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='10' />
+      </ACTION>
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- Demo to resize a working set -->
+   <DEMO NAME='resizeworkingset'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First move your mouse to the right side of the working set you want to
+	 resize</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='TOPBARWORKINGSET_EAST' SET='tbws' />
+      <ACTION TYPE='MOVE' TARGET='tbws'  />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='-7' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='50'>
+	 <TEXT>When your cursor becomes an arrow, press down with the right mouse button
+	 and drag to resize the working set</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' DOWN='true' BUTTON='LEFT' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='200' Y='0' />
+	 <POINT X='0' Y='0' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Release the mouse button when you are done</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' UP='true' BUTTON='LEFT' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- demo to remove a working set -->
+   <DEMO NAME='removeworkingset'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move your mouse to the working set that you want to remove</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='TOPBARWORKINGSET_INSIDE' SET='tbws' />
+      <ACTION TYPE='MOVE' TARGET='tbws'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Open a context menu by clicking the right mouse button</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='RIGHT' DOWN='true' UP='true' />
+      <ACTION TYPE='PAUSE' DURATION='300' />
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='WORKINGSETMENU' SET='bm' />
+      <ACTION TYPE='MOVE' TARGET='bm'  />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='10' Y='0' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='100'>
+	 <TEXT>Clicking Close and Save to Task Shelf will save the current working set to
+	 the task shelf where it can be quickly reloaded later. Then, it will close the working
+	 set and clear its bubbles.</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='100' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Clicking remove working set will erase the working set definition, but leave
+	 all bubbles in place</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='20' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Clicking clear and remove working set will erase both the working set
+	 definition and any bubbles contained in the working set.</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='-20' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='500' />
+      <ACTION TYPE='MOUSE' BUTTON='LEFT' DOWN='true' UP='true' />
+
+   </DEMO>
+
+   <!-- demo to save a working set -->
+   <DEMO NAME='saveworkingset'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move your mouse until it is over the working set you want to
+	 save.</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='TOPBARWORKINGSET_INSIDE' SET='tbws' />
+      <ACTION TYPE='MOVE' TARGET='tbws'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Click with the right mouse button to open a context menu</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='RIGHT' DOWN='true' UP='true' />
+      <ACTION TYPE='PAUSE' DURATION='300' />
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='WORKINGSETMENU' SET='bm' />
+      <ACTION TYPE='MOVE' TARGET='bm'  />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='10' Y='0' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='100' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='10' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Clicking close and save to task shelf will save the current working set
+	 to the task shelf while closing it and removing all of its bubbles</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='140' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Clicking save working set will save the working set to a file</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='20' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Clicking save working set to task shelf will save the working set to the
+	    task shelf while closing it and removing all of its bubbles</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='-20' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='500' />
+      <ACTION TYPE='MOUSE' BUTTON='LEFT' DOWN='true' UP='true' />
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>If you opt to save to a file, you will be prompted to enter a name
+	    for your save.</TEXT>
+      </ACTION>
+      <ACTION TYPE='TYPE' TEXT='enter filename' DELAY='100' BACKSPACE='true' />
+      <ACTION TYPE='PAUSE' DURATION='500' />
+      <ACTION TYPE='LOOP' ITERS='3'>
+	 <ACTION TYPE='KEY' DOWN='true' UP='true' KEY='TAB' />
+	 <ACTION TYPE='PAUSE' DURATION='50' />
+      </ACTION>
+      <ACTION TYPE='KEY' DOWN='true' UP='true' KEY='SPACE' />
+   </DEMO>
+
+   <!-- demo to export a working set -->
+   <DEMO NAME='exportworkingset'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move your mouse until it is over the working set you want to
+	 save.</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='TOPBARWORKINGSET_INSIDE' SET='tbws' />
+      <ACTION TYPE='MOVE' TARGET='tbws'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Click with the right mouse button to open a context menu</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='RIGHT' DOWN='true' UP='true' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='10' Y='0' />
+      </ACTION>
+      <ACTION TYPE='PAUSE' DURATION='100' />
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='30' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Select email working set to send the working set in a loadable form in
+	 an email message to a colleague</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='20' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Select export as PDF to create a saved image of the working set</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='20' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Select email as PDF to send an image of the working set</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE' >
+	 <POINT X='0' Y='80' />
+      </ACTION>
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Select save working set to save the current working set to a file</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='LEFT' DOWN='true' UP='true' />
+      <ACTION TYPE='PAUSE' DURATION='500' />
+      <ACTION TYPE='TYPE' TEXT='enter filename' DELAY='100' BACKSPACE='true' />
+      <ACTION TYPE='PAUSE' DURATION='500' />
+      <ACTION TYPE='LOOP' ITERS='3'>
+	 <ACTION TYPE='KEY' DOWN='true' UP='true' KEY='TAB' />
+	 <ACTION TYPE='PAUSE' DURATION='50' />
+      </ACTION>
+      <ACTION TYPE='KEY' DOWN='true' UP='true' KEY='SPACE' />
+   </DEMO>
+
+   <!-- demo to remove a link between bubbles -->
+   <DEMO NAME='removelink'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move your mouse so that it is over the link you wish to remove</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='LINK' SET='link' />
+      <ACTION TYPE='MOVE' TARGET='link'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Then, click with the right mouse button to open a context menu</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='RIGHT' DOWN='true' UP='true' />
+      <ACTION TYPE='PAUSE' DURATION='100' />
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='POPUPMENU' SET='pm' />
+      <ACTION TYPE='MOVE' TARGET='pm'  />
+      <ACTION TYPE='SPEECH' WAIT='true' PAUSEFOR='500'>
+	 <TEXT>Select remove from the menu which appears to remove this link</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='LEFT' DOWN='true' UP='true' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- demo to change the link style -->
+   <DEMO NAME='changelink'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move your mouse so that it is over the link you wish to remove</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='LINK' SET='link' />
+      <ACTION TYPE='MOVE' TARGET='link'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Then, click with the right mouse button to open a context menu</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='RIGHT' DOWN='true' UP='true' />
+      <ACTION TYPE='PAUSE' DURATION='100' />
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='POPUPMENU' SET='pm' />
+      <ACTION TYPE='MOVE' TARGET='pm'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Select style from the menu which appears to remove this link, and you
+	 can choose between solid, dashed, and reference styles</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE'>
+	 <POINT X='0' Y='20' />
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='LEFT' DOWN='true' UP='true' />
+      <ACTION TYPE='PAUSE' DURATION='1500' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+   <!-- demo to change the link style -->
+   <DEMO NAME='collapselink'>
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>First, move your mouse so that it is over the link you wish to remove</TEXT>
+      </ACTION>
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='LINK' SET='link' />
+      <ACTION TYPE='MOVE' TARGET='link'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Then, click with the right mouse button to open a context menu</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='RIGHT' DOWN='true' UP='true' />
+      <ACTION TYPE='PAUSE' DURATION='100' />
+      <ACTION TYPE='BACKGROUND' MOUSE='true' AREA='POPUPMENU' SET='pm' />
+      <ACTION TYPE='MOVE' TARGET='pm'  />
+      <ACTION TYPE='SPEECH' WAIT='true'>
+	 <TEXT>Select collapse from the menu which appears in order to collapse the
+	    link</TEXT>
+      </ACTION>
+      <ACTION TYPE='MOVE'>
+	 <POINT X='0' Y='40' />
+      </ACTION>
+      <ACTION TYPE='MOUSE' BUTTON='LEFT' DOWN='true' UP='true' />
+      <ACTION TYPE='PAUSE' DURATION='1500' />
+      <ACTION TYPE='RESET' />
+   </DEMO>
+
+
+
+</HELPDEMOS>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

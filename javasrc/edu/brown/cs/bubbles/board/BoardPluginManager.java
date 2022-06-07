@@ -449,21 +449,21 @@ private static class PluginData implements Comparable<PluginData> {
        }
       plugin_mains = new ArrayList<>();
       for (Element e : IvyXml.children(xml,"MAIN")) {
-	 plugin_mains.add(IvyXml.getText(e).trim());
+         plugin_mains.add(IvyXml.getText(e).trim());
        }
       String s = IvyXml.getAttrString(xml,"MAIN");
       if (s != null) plugin_mains.add(s);
-
+   
       plugin_resources = new ArrayList<>();
       for (Element e : IvyXml.children(xml,"RESOURCE")) {
-	 plugin_resources.add(IvyXml.getText(e).trim());
+         plugin_resources.add(IvyXml.getText(e).trim());
        }
       String s1 = IvyXml.getAttrString(xml,"RESOURCE");
       if (s1 != null) plugin_resources.add(s1);
-
+   
       plugin_requires = new ArrayList<>();
       for (Element e : IvyXml.children(xml,"REQUIRES")) {
-	 plugin_requires.add(IvyXml.getText(e).trim());
+         plugin_requires.add(IvyXml.getText(e).trim());
        }
       String s2 = IvyXml.getAttrString(xml,"REQUIRES");
       if (s2 != null) plugin_requires.add(s2);
@@ -489,11 +489,11 @@ private static class PluginData implements Comparable<PluginData> {
       if (!plugins.exists()) plugins.mkdir();
       File p1 = new File(plugins,file);
       if (p1.exists()) {
-	 File p2 = new File(plugins,file + ".save");
-	 p1.renameTo(p2);
-	 p2.deleteOnExit();
+         File p2 = new File(plugins,file + ".save");
+         p1.renameTo(p2);
+         p2.deleteOnExit();
        }
-
+   
       URL u = new URL(plugin_url);
       InputStream uins = u.openConnection().getInputStream();
       IvyFile.copyFile(uins,p1);
@@ -504,22 +504,22 @@ private static class PluginData implements Comparable<PluginData> {
 
    private void installResource() {
       for (String res : plugin_resources) {
-	 try {
-	    JarFile jf = new JarFile(plugin_file);
-	    ZipEntry ze = jf.getEntry(res);
-	    if (ze == null) {
-	       BoardLog.logE("BOARD","Missing plugin resource file " + res);
-	       continue;
-	     }
-	    File libdir = BoardSetup.getSetup().getLibraryDirectory();
-	    File tgt = new File(libdir,res);
-	    InputStream ins = jf.getInputStream(ze);
-	    IvyFile.copyFile(ins,tgt);
-	    jf.close();
-	    BoardSetup.getSetup().checkResourceFile(res);
-	  }
-	 catch (IOException _ex) {
-	  }
+         try {
+            JarFile jf = new JarFile(plugin_file);
+            ZipEntry ze = jf.getEntry(res);
+            if (ze == null) {
+               BoardLog.logE("BOARD","Missing plugin resource file " + res);
+               continue;
+             }
+            File libdir = BoardSetup.getSetup().getResourceDirectory();
+            File tgt = new File(libdir,res);
+            InputStream ins = jf.getInputStream(ze);
+            IvyFile.copyFile(ins,tgt);
+            jf.close();
+            BoardSetup.getSetup().checkResourceFile(res);
+          }
+         catch (IOException _ex) {
+          }
        }
     }
 

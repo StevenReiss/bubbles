@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bedu.chat.csci0150">true</entry>
+<entry key="Bedu.help.csci0150">http://www.eecs.ucf.edu/isuelab/videos/CodeBubbles.mp4</entry>
+<entry key="Bedu.submit.csci0150.Cartoon">/course/cs015/bin/cs015_handin Cartoon</entry>
+<entry key="Bedu.submit.csci0150.Swarm">/course/cs015/bin/cs015_handin Swarm</entry>
+<entry key="Bedu.submit.csci0150.Tetris">/course/cs015/bin/cs015_handin Tetris</entry>
+<entry key="Bedu.submit.csci0150.Sketchy">/course/cs015/bin/cs015_handin Sketchy</entry>
+<entry key="Bedu.submit.csci0150.Otherllo">/course/cs015/bin/cs015_handin Othello</entry>
+<entry key="Bedu.submit.csci0150.Adventure">/course/cs015/bin/cs015_handin Adventure</entry>
+<entry key="Bedu.submit.csci0150.Indy">/course/cs015/bin/cs015_handin Indy</entry>
+<entry key="Bedu.survey.csci0150">http://isue-server.eecs.ucf.edu/survey/index.php?sid=79825</entry>
+</properties>

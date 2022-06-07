@@ -168,8 +168,7 @@ private void showReport(ReportData rd)
 
 private void loadReports()
 {
-   BoardSetup bs = BoardSetup.getSetup();
-   Element xml = IvyXml.loadXmlFromFile(bs.getLibraryPath("reports.xml"));
+   Element xml = IvyXml.loadXmlFromStream(BoardProperties.getResourceFile("reports.xml"));
    if (xml == null) return;
    for (Element rpt : IvyXml.children(xml,"REPORT")) {
       ReportData rd = new ReportData(rpt);

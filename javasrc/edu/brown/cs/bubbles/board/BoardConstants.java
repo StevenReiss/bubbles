@@ -340,6 +340,7 @@ String BOARD_IDEA_WS_DATA = ".idea";
  **/
 
 String BOARD_INSTALL_LIBRARY = "lib";
+String BOARD_INSTALL_RESOURCES = "resources";
 String BOARD_INSTALL_BINARY = "bin";
 
 /**
@@ -396,7 +397,7 @@ String BOARD_RESOURCE_PLUGIN_IDEA = "bubjet.jar";
  *	The jar name of a file to determine if the jar is a valid bubble build
  **/
 
-String BOARD_RESOURCE_CHECK  = "Bale.props";    // check to see if using jar
+String BOARD_RESOURCE_CHECK  = "resources/Bale.props";    // check to see if using jar
 
 
 
@@ -409,6 +410,7 @@ String [] BOARD_RESOURCE_PROPS =  new String [] {
    "Bgta.props", "Buda.props", "Bass.props", "Bted.props", "Board.props",
    "Board.x86.props", "Bddt.props", "Bcon.props", "Bueno.props", "Bvcr.props",
    "Batt.props", "Bedu.props", "Bnote.props", "Bbook.props", "Buda.python.props",
+   "Buda.js.props",
    "Bandaid.props","Barr.props","Bass.props","Bdoc.java.props","Bdoc.python.props",
    "Bhelp.props", "Bwiz.props", "Rebus.props", "Buss.props",
    "Bema.rebus.props","Buda.rebus.props", "Bass.rebus.props", "Bale.rebus.props",
@@ -433,7 +435,7 @@ String [] BOARD_LIBRARY_FILES = new String [] {
    "joscar-protocol.jar",
    "bubblesasm.jar",
    "wikitextcore.jar", "wikitexttrac.jar",
-   "mail.jar",
+   "mail.jar","json.jar",
    "derby.jar", "derbyclient.jar", "derbynet.jar", "mysql.jar", "postgresql.jar",
 };
 
@@ -447,9 +449,6 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
    "LagHunter-4.jar",
    "LagHunterBootClasses_4.jar",
    "LiLaConfiguration.ini",
-   "bbookbkg.gif",
-   "keybindings.csv",
-   "mouseusage.html",
    "annotations.jar",
    "cofoja.jar",
    "pydev.jar",
@@ -460,12 +459,7 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
    "nashorn.jar",
 *******************/
    "websocket.jar",
-   "json.jar",
    "asm.jar",
-   "helpdemos.xml",
-   "helpdoc.xml",
-   "rebusprops.xml",
-   "reports.xml",
 
    "com.google.guava.jar",
    "com.google.javascript.jar",
@@ -529,12 +523,18 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
    "freetts/voices.txt",
 *********/
 
-   "words",
    "cocker.jar",
 
    "marytts/marytts.jar",
    "marytts/marytts-lang-en-5.2.jar",
    "marytts/voice-cmu-slt-hsmm-5.2.jar",
+};
+
+
+String [] BOARD_RESOURCE_EXTRAS = new String [] {
+      "bbookbkg.gif",
+      "rebusprops.xml",
+      
 };
 
 
@@ -657,7 +657,7 @@ enum RunMode {
  **/
 
 String BOARD_SAVE_ADDR_PROP = "Board.save.address";
-
+String BOARD_SAVE_LOCAL_DIR = "Board.save.local.directory";
 
 /**
  *	Property indicating URL where uploads are saved

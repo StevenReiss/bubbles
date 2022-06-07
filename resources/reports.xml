@@ -1,0 +1,40 @@
+<REPORTS>
+  <REPORT NAME='seede' MIN='50' MAX='110' SENDTO='spr+seedereport@cs.brown.edu'>
+     <LABEL BANNER='TRUE'>Thank you for usine Continuous Execution</LABEL>
+     <SEPARATOR/>
+     <LABEL>Could you please help us by rating your experience:</LABEL>
+     <CHOICE NAME='Usefulness'>
+	<OPTION IGNORE='t'>Please Select One</OPTION>
+	<OPTION>Not at all useful</OPTION>
+	<OPTION>Somewhat useful</OPTION>
+	<OPTION>Very useful</OPTION>
+	<OPTION>How did I live without</OPTION>
+     </CHOICE>
+     <CHOICE NAME='Use Situation'>
+	<OPTION IGNORE='TRUE'>Please Select One</OPTION>
+	<OPTION>Writing new code</OPTION>
+	<OPTION>Debugging</OPTION>
+	<OPTION>Fixing existing code</OPTION>
+	<OPTION>Ohter</OPTION>
+     </CHOICE>
+     <CHOICE NAME='Initial responsiveness'>
+	<OPTION IGNORE='TRUE'>Please Select One</OPTION>
+	<OPTION>Too slow to use</OPTION>
+	<OPTION>Very slow</OPTION>
+	<OPTION>Slow</OPTION>
+	<OPTION>Acceptable</OPTION>
+	<OPTION>Fast</OPTION>
+	<OPTION>Amazing</OPTION>
+     </CHOICE>
+     <CHOICE NAME='Responsiveness after edit'>
+	<OPTION IGNORE='TRUE'>Please Select One</OPTION>
+	<OPTION>Too slow to use</OPTION>
+	<OPTION>Very slow</OPTION>
+	<OPTION>Slow</OPTION>
+	<OPTION>Acceptable</OPTION>
+	<OPTION>Fast</OPTION>
+	<OPTION>Amazing</OPTION>
+     </CHOICE>
+     <TEXTAREA NAME='Comments/Suggestions' WIDTH='40' HEIGHT='5' />
+  </REPORT>
+</REPORTS>

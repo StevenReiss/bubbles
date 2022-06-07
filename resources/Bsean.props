@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bsean.problem.font">SansSerif/1/12</entry>
+<entry key="Bsean.problem.height">150</entry>
+<entry key="Bsean.problem.width">400</entry>
+<entry key="Bsean.problem.fixed">true</entry>
+<entry key="Bsean.fait.threads">4</entry>
+<entry key="Bsean.fait.debug">false</entry>
+<entry key="Bsean.fait.trace">false</entry>
+<entry key="Bsean.fait.class.path">fait.jar:asm9.jar:eclipsejar:junit.jar:ivy.jar</entry>
+<entry key="Bsean.var.width">600</entry>
+<entry key="Bsean.var.height">600</entry>
+
+</properties>

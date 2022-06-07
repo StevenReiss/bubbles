@@ -404,7 +404,7 @@ private InputStream getPaletteStream()
     }
 
    File dir0 = BoardProperties.getPropertyDirectory();
-   File dir1 = BoardSetup.getSetup().getLibraryDirectory();
+   File dir1 = BoardSetup.getSetup().getResourceDirectory();
    File f = new File(dir0,palette_name);
    if (!f.exists()) {
       File f1 = new File(dir0,palette_name + ".palette");
@@ -430,7 +430,7 @@ private InputStream getPaletteStream()
 
    String nm = palette_name;
    if (!nm.endsWith(".palette")) nm = nm + ".palette";
-   ins = BoardProperties.getLibraryFile(nm);
+   ins = BoardProperties.getResourceFile(nm);
    if (ins != null) return ins;
 
    return null;
@@ -444,16 +444,16 @@ private InputStream getDefaultPaletteStream()
 
    String nm = DEFAULT_PALETTE;
 
-   File dir1 = BoardSetup.getSetup().getLibraryDirectory();
-   File f = new File(dir1,palette_name);
-   if (f.exists() && f.canRead()) {
-      try {
-	 return new FileInputStream(f);
-       }
-      catch (IOException e) { }
-    }
+// File dir1 = BoardSetup.getSetup().getResourceDirectory();
+// File f = new File(dir1,palette_name);
+// if (f.exists() && f.canRead()) {
+//    try {
+// 	 return new FileInputStream(f);
+//     }
+//    catch (IOException e) { }
+//  }
 
-   ins = BoardProperties.getLibraryFile(nm);
+   ins = BoardProperties.getResourceFile(nm);
    if (ins != null) return ins;
 
    return null;

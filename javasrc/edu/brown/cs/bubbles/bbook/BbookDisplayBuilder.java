@@ -195,7 +195,7 @@ BbookDisplayBuilder(Map<String,Object> props)
 
 String generateHtml()
 {
-   String bkg = BoardSetup.getSetup().getLibraryPath("bbookbkg.gif");
+   String bkg = BoardSetup.getSetup().getResourcePath("bbookbkg.gif");
 
    StringBuffer html = new StringBuffer();
 

@@ -60,7 +60,7 @@
 	 <classpath refid='test.classpath' />
       </java>
       <copy file='helptext.html' tofile='/pro/web/web/people/spr/codebubbles/todohelp.html' />
-      <copy file='helptext.html' tofile='${BUBBLES}/lib/helptext.html' />
+      <copy file='helptext.html' tofile='${BUBBLES}/resources/helptext.html' />
    </target>
 
    <target name='jar' depends='compile'>

@@ -308,8 +308,9 @@ private void scanArgs(String [] args)
 	  }
 	 else if (args[i].startsWith("-inv")) {                 // -inverse
 	    if (palette_name == null) palette_name = "inverse_bubbles.palette";
-	    else if (palette_name.startsWith("inverse_"))
-		  palette_name = palette_name.substring(8);
+	    else if (palette_name.startsWith("inverse_")) {
+               palette_name = palette_name.substring(8);
+             }
 	    else palette_name = "inverse_" + palette_name;
 	  }
 	 else badArgs();
@@ -625,6 +626,7 @@ private void loadPlugins(File dir,BudaRoot root)
 		  String dep = at.getValue("Bubbles-depends");
 		  String palette = at.getValue("Bubbles-palette");
 		  String res = at.getValue("Bubbles-resource");
+                  String lib = at.getValue("Bubbles-lib");
 		  String load = jfn.getAbsolutePath();
 		  String basename = null;
 		  if (dep != null) {
@@ -636,6 +638,13 @@ private void loadPlugins(File dir,BudaRoot root)
 		     while (tok.hasMoreTokens()) {
 			String nm = tok.nextToken();
 			setupPluginResource(jf,nm);
+		      }
+		   }
+                  if (lib != null) {
+		     StringTokenizer tok = new StringTokenizer(lib);
+		     while (tok.hasMoreTokens()) {
+			String nm = tok.nextToken();
+			setupPluginLibrary(jf,nm);
 		      }
 		   }
 		  if (starts != null) {
@@ -669,11 +678,28 @@ private void setupPluginResource(JarFile jf,String res)
    try {
       ZipEntry ze = jf.getEntry(res);
       if (ze == null) return;
-      File libdir = BoardSetup.getSetup().getLibraryDirectory();
+      File libdir = BoardSetup.getSetup().getResourceDirectory();
       File tgt = new File(libdir,res);
       InputStream ins = jf.getInputStream(ze);
       IvyFile.copyFile(ins,tgt);
       BoardSetup.getSetup().checkResourceFile(res);
+    }
+   catch (IOException ex) {
+      BoardLog.logE("BEMA","Problem loading plugin resource file " + res);
+    }
+}
+
+
+
+private void setupPluginLibrary(JarFile jf,String res)
+{
+   try {
+      ZipEntry ze = jf.getEntry(res);
+      if (ze == null) return;
+      File libdir = BoardSetup.getSetup().getLibraryDirectory();
+      File tgt = new File(libdir,res);
+      InputStream ins = jf.getInputStream(ze);
+      IvyFile.copyFile(ins,tgt);
     }
    catch (IOException ex) {
       BoardLog.logE("BEMA","Problem loading plugin resource file " + res);

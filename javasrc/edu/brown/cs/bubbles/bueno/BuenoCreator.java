@@ -871,7 +871,7 @@ static Reader findTemplate(String id,BuenoProperties props)
    
    // else use default template
    String pnm = "templates/" + id + ".template";
-   InputStream ins = BoardProperties.getLibraryFile(pnm);
+   InputStream ins = BoardProperties.getResourceFile(pnm);
    if (ins != null) return new InputStreamReader(ins);
    
    return null;
@@ -883,10 +883,10 @@ private static InputStreamReader checkTemplateForProject(String prj,String id)
    if (prj == null) return null;
    
    String xnm = "templates/" + prj + "/" + id + ".template";
-   InputStream ins = BoardProperties.getLibraryFile(xnm);
+   InputStream ins = BoardProperties.getResourceFile(xnm);
    if (ins != null) return new InputStreamReader(ins);
    xnm = "templates/" + prj.toLowerCase() + "/" + id + ".template";
-   ins = BoardProperties.getLibraryFile(xnm);
+   ins = BoardProperties.getResourceFile(xnm);
    if (ins != null) return new InputStreamReader(ins);   
    
    return null;

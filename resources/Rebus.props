@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Rebus.search.engines">OHLOH,GITHUB</entry>
+<entry key="Rebus.use.tasks">false</entry>
+<entry key="Rebus.cache.directory"></entry>
+<entry key="Rebus.cache.use">true</entry>
+</properties>
+
