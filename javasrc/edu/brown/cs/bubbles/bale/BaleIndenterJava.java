@@ -1092,6 +1092,7 @@ private boolean looksLikeMethodDecl()
       // return type name
       if (cur_token == BaleTokenType.IDENTIFIER || cur_token == BaleTokenType.TYPEKEY) return true;
       if (cur_token == BaleTokenType.KEYWORD ||         // handle constructors
+            cur_token == BaleTokenType.LBRACE ||
             cur_token == null ||
             cur_token == BaleTokenType.SEMICOLON) return true;
     }

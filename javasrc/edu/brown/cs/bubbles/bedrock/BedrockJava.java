@@ -609,7 +609,7 @@ private static class FindTypeHandler extends TypeNameRequestor {
 /*										*/
 /********************************************************************************/
 
-void handleJavaSearch(String proj,String bid,String patstr,String foritems,
+void handlePatternSearch(String proj,String bid,String patstr,String foritems,
 			 boolean defs,boolean refs,boolean impls,
 			 boolean equiv,boolean exact,boolean system,
 			 IvyXmlWriter xw) throws BedrockException
@@ -685,7 +685,9 @@ void handleJavaSearch(String proj,String bid,String patstr,String foritems,
    int fg = IJavaSearchScope.SOURCES | IJavaSearchScope.REFERENCED_PROJECTS;
    if (system) {
       fg |= IJavaSearchScope.SYSTEM_LIBRARIES | IJavaSearchScope.APPLICATION_LIBRARIES;
-      scp = SearchEngine.createWorkspaceScope();
+//    scp = SearchEngine.createWorkspaceScope();
+      scp = SearchEngine.createJavaSearchScope(pelt,fg);
+      // this doesn't really use the system libraries
     }
    else {
       scp = SearchEngine.createJavaSearchScope(pelt,fg);
@@ -695,7 +697,7 @@ void handleJavaSearch(String proj,String bid,String patstr,String foritems,
    SearchParticipant [] parts = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
    FindHandler fh = new FindHandler(xw,filter,system,begin);
 
-   BedrockPlugin.logD("BEGIN SEARCH " + pat + " " + (System.currentTimeMillis()-begin));
+   BedrockPlugin.logD("BEGIN SEARCH " + pat + " " + (System.currentTimeMillis()-begin) + " " + proj);
    BedrockPlugin.logD("SEARCH SCOPE " + system + " " + fg + " " + scp);
 
    try {

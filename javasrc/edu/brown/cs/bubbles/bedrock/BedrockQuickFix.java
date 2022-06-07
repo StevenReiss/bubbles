@@ -50,6 +50,7 @@ import org.eclipse.jdt.ui.text.java.IProblemLocation;
 import org.eclipse.jdt.ui.text.java.IQuickAssistProcessor;
 import org.eclipse.jdt.ui.text.java.IQuickFixProcessor;
 import org.eclipse.ltk.core.refactoring.Change;
+import org.eclipse.ltk.core.refactoring.NullChange;
 import org.eclipse.ltk.core.refactoring.TextChange;
 import org.eclipse.jdt.ui.text.java.correction.CUCorrectionProposal;
 import org.eclipse.jdt.ui.text.java.correction.ChangeCorrectionProposal;
@@ -327,8 +328,9 @@ private void outputProposal(IJavaCompletionProposal p,IvyXmlWriter xw)
 	    TextChange tc = (TextChange) c;
 	    textedit = tc.getEdit();
 	  }
+         else if (c instanceof NullChange) ;
 	 else {
-	    BedrockPlugin.logE("Change proposal lacks test change: " + p + " " + c);
+            BedrockPlugin.logE("Change proposal lacks test change: " + p + " " + c);
 	  }
        }
     }

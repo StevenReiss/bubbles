@@ -266,7 +266,7 @@ private double computePriority(double parprior,ASTNode base,double pass1prior)
    double p = down_priority.getPriority(parprior,base);
 
    if (pass1prior > p) p = pass1prior;
-
+   
    return p;
 }
 

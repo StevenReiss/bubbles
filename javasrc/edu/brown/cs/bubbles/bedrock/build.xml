@@ -88,6 +88,8 @@
       <copy file='bedrock.jar'
 		tofile='/vol/Developer/jee-2020-09/Eclipse.app/Contents/Eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
       <copy file='bedrock.jar'
+		tofile='/vol/Developer/jee-2022-03/Eclipse.app/Contents/Eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+      <copy file='bedrock.jar'
 		tofile='/Users/spr/.p2/pool/plugins/bedrock_1.0.0.jar' />
    </target>
 

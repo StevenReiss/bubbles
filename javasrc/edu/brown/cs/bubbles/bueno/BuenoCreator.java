@@ -506,7 +506,7 @@ protected void setupMarquisComment(StringBuffer buf,BuenoProperties props)
    pbuf.append("/*                                                                              */\n");
    pbuf.append("/*       ${COMMENT}                                                             */\n");
    pbuf.append("/*                                                                              */\n");
-   pbuf.append("/********************************************************************************/BG");
+   pbuf.append("/********************************************************************************/\n");
 
    StringReader sr = new StringReader(pbuf.toString());
    try {

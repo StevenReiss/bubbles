@@ -159,8 +159,8 @@ private static class ImportFixer extends BfixFixer {
    @Override protected String getMemoId()	{ return for_identifier; }
 
    @Override protected RunnableFix findFix() {
-      int soffet = for_document.mapOffsetToJava(for_problem.getStart());
-      BaleWindowElement elt = for_document.getCharacterElement(soffet);
+      int soffset = for_document.mapOffsetToJava(for_problem.getStart());
+      BaleWindowElement elt = for_document.getCharacterElement(soffset);
       if (!elt.isTypeIdentifier()) {
          if (for_identifier.length() == 0) return null;
          if (!Character.isUpperCase(for_identifier.charAt(0))) return null;
@@ -169,7 +169,7 @@ private static class ImportFixer extends BfixFixer {
    
       ImportChecker ic = getImportCheckerForProject(for_problem.getProject());
       if (ic == null) return null;
-      Collection<String> types = ic.findImport(for_identifier);
+      Collection<String> types = ic.findImport(for_identifier,for_problem.getProject(),for_problem.getFile(),for_problem.getStart());
       if (types == null || types.size() == 0) return null;
    
       String accept = null;
@@ -312,46 +312,46 @@ private static class ImportChecker {
       BumpClient bc = BumpClient.getBump();
       Element e = bc.getProjectData(for_project,false,false,true,false,true);
       if (e == null) return;
-
+   
       project_classes = new HashSet<String>();
       explicit_imports = new HashSet<String>();
       demand_imports = new HashSet<String>();
       implicit_imports = new HashSet<String>();
-
+   
       Element clss = IvyXml.getChild(e,"CLASSES");
       for (Element cls : IvyXml.children(clss,"TYPE")) {
-	 String nm = IvyXml.getTextElement(cls,"NAME");
-	 project_classes.add(nm);
+         String nm = IvyXml.getTextElement(cls,"NAME");
+         project_classes.add(nm);
        }
       for (Element refs : IvyXml.children(e,"REFERENCES")) {
-	 String rproj = IvyXml.getText(refs);
-	 ImportChecker nic = getImportCheckerForProject(rproj);
-	 for (String s : nic.project_classes) {
-	    project_classes.add(s);
-	  }
+         String rproj = IvyXml.getText(refs);
+         ImportChecker nic = getImportCheckerForProject(rproj);
+         for (String s : nic.project_classes) {
+            project_classes.add(s);
+          }
        }
       @SuppressWarnings("unused") String pkg = null;
       for (Element imps : IvyXml.children(e,"IMPORT")) {
-	 String npkg = IvyXml.getAttrString(imps,"PACKAGE");
-	 if (npkg !=  null) pkg = npkg;
-	 if (IvyXml.getAttrBool(imps,"STATIC")) continue;
-	 String imp = IvyXml.getText(imps);
-	 if (IvyXml.getAttrBool(imps,"DEMAND")) {
-	    int idx = imp.indexOf(".*");
-	    if (idx > 0) imp = imp.substring(0,idx);
-	    demand_imports.add(imp);
-	  }
-	 else {
-	    explicit_imports.add(imp);
-	    int idx = imp.lastIndexOf(".");
-	    if (idx >= 0) {
-	       implicit_imports.add(imp.substring(0,idx));
-	     }
-	  }
+         String npkg = IvyXml.getAttrString(imps,"PACKAGE");
+         if (npkg !=  null) pkg = npkg;
+         if (IvyXml.getAttrBool(imps,"STATIC")) continue;
+         String imp = IvyXml.getText(imps);
+         if (IvyXml.getAttrBool(imps,"DEMAND")) {
+            int idx = imp.indexOf(".*");
+            if (idx > 0) imp = imp.substring(0,idx);
+            demand_imports.add(imp);
+          }
+         else {
+            explicit_imports.add(imp);
+            int idx = imp.lastIndexOf(".");
+            if (idx >= 0) {
+               implicit_imports.add(imp.substring(0,idx));
+             }
+          }
        }
     }
 
-   Collection<String> findImport(String nm) {
+   Collection<String> findImport(String nm,String proj,File file,int offset) {
       String pat = "." + nm;
       Set<String> match = new HashSet<String>();
       for (String s : project_classes) {
@@ -368,6 +368,9 @@ private static class ImportChecker {
       BumpClient bc = BumpClient.getBump();
       List<BumpLocation> typlocs = bc.findAllTypes(nm);
       if (typlocs == null) return null;
+      if (typlocs.size() == 0) {
+         typlocs = bc.findSystemDefinitions(proj,file,offset);
+       }
       for (BumpLocation bl : typlocs) {
          String tnm = bl.getSymbolName();
          int idx = tnm.indexOf("<");

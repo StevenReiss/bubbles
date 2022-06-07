@@ -118,7 +118,7 @@ BumpProblemImpl(Element d,String id,int eid,String proj)
 @Override synchronized public List<BumpFix> getFixes()
 {
    if (!computed_fixes) {
-      Element r = BumpClient.getBump().computeQuickFix(this,-1,0,false);
+      Element r = BumpClient.getBump().computeQuickFix(this,-1,0,true);
       BoardLog.logD("BUMP","FOUND FIXES: " + IvyXml.convertXmlToString(r));
       for (Element f : IvyXml.children(r,"FIX")) {
 	 EditFix ef = new EditFix(f);

@@ -2009,6 +2009,21 @@ public List<BumpLocation> findDefinition(String proj,File file,int spos,int epos
 }
 
 
+public List<BumpLocation> findSystemDefinitions(String proj,File file,int spos)
+{
+   waitForIDE();
+   
+   String q = "FILE='" + file.getPath() + "' START='" + spos + "' END='" + spos + "'";
+   q += " EXACT='F' SYSTEM='T'";
+   
+   Element xml = getXmlReply("FINDDEFINITIONS",proj,q,null,0);
+   
+   if (!IvyXml.isElement(xml,"RESULT")) return null;
+   
+   return getSearchResults(proj,xml,true);
+}
+
+
 
 /**
  *	This routine finds all implementations of a method.  It is similar to findDefinitions

@@ -191,6 +191,8 @@ BuenoCreatorTemplate()
 
 
 
+
+
 @Override protected void setupJavadocComment(StringBuffer buf,BuenoProperties props)
 {
    Reader r = findTemplate("javadoc",props);
