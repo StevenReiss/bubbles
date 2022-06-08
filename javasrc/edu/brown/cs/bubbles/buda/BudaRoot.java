@@ -3205,6 +3205,8 @@ private class BubbleRemover implements ActionListener {
    
    @Override public void actionPerformed(ActionEvent e) {
       List<BudaBubble> remove = new ArrayList<>();
+      long maxcheck = -1;
+      long maxopen = -1;
       long now = System.currentTimeMillis();
       long delta = 0;
       if (last_active > 0) {
@@ -3220,7 +3222,8 @@ private class BubbleRemover implements ActionListener {
          if (viewed <= 0) continue;
          long checktime = now - viewed;
          long unviewedtime = bb.getUnviewedTime();
-         if (last_active > 0) checktime = bb.getUnviewedTime();
+         maxcheck = Math.max(maxcheck,checktime);
+         maxopen = Math.max(maxopen,unviewedtime);
          if (remove_time > 0 && checktime > remove_time) remove.add(bb);
          else if (active_time > 0 && unviewedtime > active_time) remove(bb);
          else if (delta > 0) {
@@ -3228,7 +3231,10 @@ private class BubbleRemover implements ActionListener {
             if (!show) bb.noteUnviewed(delta);
           }
        }
+      BoardLog.logD("BUDA","Check remove " + maxcheck + " " + maxopen + " " +
+            remove.size());
       for (BudaBubble bb : remove) {
+         BoardLog.logD("BUDA","Auto remove " + bb);
          bubble_area.removeBubble(bb);
        }
     }

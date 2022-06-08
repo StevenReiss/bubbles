@@ -551,7 +551,7 @@ private List<BaleElement> scanText(String text,int baseoffset,
 	    nelt = new BaleElement.Comment(doc,cur,soff,eoff,false,bt.getType());
 	    break;
          case EOLSTRING :
-            nelt = new BaleElement.Literal(doc,cur,soff,eoff,bt.getType());
+            nelt = new BaleElement.Literal(doc,cur,soff,eoff,true,bt.getType());
             nstate = BaleTokenState.IN_MULTILINE_STRING;
             break;
 	 case KEYWORD :
@@ -595,7 +595,7 @@ private List<BaleElement> scanText(String text,int baseoffset,
 	 case CHARLITERAL :
 	 case STRING :
 	 case LONGSTRING :
-	    nelt = new BaleElement.Literal(doc,cur,soff,eoff,bt.getType());
+	    nelt = new BaleElement.Literal(doc,cur,soff,eoff,false,bt.getType());
 	    break;
 	 case IDENTIFIER :
 	    nelt = idmap.getElement(soff);

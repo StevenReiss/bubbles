@@ -1546,12 +1546,20 @@ static class Number extends Leaf {
 
 static class Literal extends Leaf {
 
-   Literal(BaleDocument d,BaleElement.Branch p,int offs,int offe,BaleTokenType tt) {
+   private boolean end_line;
+   
+   Literal(BaleDocument d,BaleElement.Branch p,int offs,int offe,
+         boolean eol,BaleTokenType tt) {
       super(d,p,null,offs,offe,tt);
+      end_line = eol;
     }
 
    @Override public String getName()		{ return "Literal"; }
-
+   @Override boolean isEndOfLine()		{ return end_line; }
+   @Override BaleTokenState getEndTokenState() {
+      return (end_line ? BaleTokenState.IN_MULTILINE_STRING : BaleTokenState.NORMAL);
+    }
+   
 }	// end of inner class Literal
 
 
