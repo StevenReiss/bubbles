@@ -86,6 +86,7 @@ import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
 import org.eclipse.jdt.core.dom.SuperFieldAccess;
 import org.eclipse.jdt.core.dom.SuperMethodInvocation;
+import org.eclipse.jdt.core.dom.TextBlock;
 import org.eclipse.jdt.core.dom.ThisExpression;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.TypeLiteral;
@@ -405,6 +406,10 @@ private class RefPass extends ASTVisitor {
    public @Override void endVisit(StringLiteral n) {
       RebaseJavaAst.setExprType(n,findType("java.lang.String"));
     }
+   
+   public @Override void endVisit(TextBlock n) {
+      RebaseJavaAst.setExprType(n,findType("java.lang.String"));
+   }
 
    public @Override void endVisit(TypeLiteral n) {
       RebaseJavaAst.setExprType(n,findType("java.lang.Class"));

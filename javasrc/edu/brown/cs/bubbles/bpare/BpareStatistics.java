@@ -101,6 +101,7 @@ import org.eclipse.jdt.core.dom.SwitchCase;
 import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.SynchronizedStatement;
 import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.TextBlock;
 import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.ThisExpression;
 import org.eclipse.jdt.core.dom.ThrowStatement;
@@ -232,6 +233,7 @@ private static Class<?> [] ast_classes = new Class<?> [] {
    SwitchStatement.class,
    SynchronizedStatement.class,
    TagElement.class,
+   TextBlock.class,
    TextElement.class,
    ThisExpression.class,
    ThrowStatement.class,

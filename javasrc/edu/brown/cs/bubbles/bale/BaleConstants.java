@@ -134,14 +134,14 @@ enum BaleTokenType {
    EOL, 				// end of line
    SPACE,				// white space (no end of line)
    LINECOMMENT, 			// single line comment with possible eol
-   EOLFORMALCOMMENT,			// middle of formal comment with eol
-   ENDFORMALCOMMENT,			// end of formal comment
-   EOLCOMMENT,				// middle of comment with eol
-   ENDCOMMENT,				// end of comment
-   KEYWORD,				// keyword other those below
-   RETURN,				// the keyword return
-   IF,					// the keyword if
-   DO,					// the keyword do
+   EOLFORMALCOMMENT,		// middle of formal comment with eol
+   ENDFORMALCOMMENT,		// end of formal comment
+   EOLCOMMENT,			// middle of comment with eol
+   ENDCOMMENT,			// end of comment
+   KEYWORD,			// keyword other those below
+   RETURN,			// the keyword return
+   IF,				// the keyword if
+   DO,				// the keyword do
    FOR, 				// the keyword for
    TRY, 				// the keyword try
    NEW, 				// the keyword new
@@ -153,45 +153,46 @@ enum BaleTokenType {
    CATCH,				// the keyword catch
    CLASS,				// the keyword class
    WHILE,				// the keyword while
-   STATIC,				// the keyword static
-   SWITCH,				// the keyword switch
-   DEFAULT,				// the keyword default
-   FINALLY,				// the keyword finally
-   INTERFACE,				// the keyword interface
+   STATIC,			// the keyword static
+   SWITCH,			// the keyword switch
+   DEFAULT,			// the keyword default
+   FINALLY,			// the keyword finally
+   INTERFACE,			// the keyword interface
    SYNCHRONIZED,			// the keyword synchronized
-   CONTINUE,				// the keyword continue
+   CONTINUE,			// the keyword continue
    PASS,				// the keyword pass
    RAISE,				// the keyword raise
-   IMPORT,				// the keyword import
-   PACKAGE,				// the keyword package
-   TYPEKEY,				// type keyword (int, void, ...)
-   NUMBER,				// numeric literal
+   IMPORT,			// the keyword import
+   PACKAGE,			// the keyword package
+   TYPEKEY,			// type keyword (int, void, ...)
+   NUMBER,			// numeric literal
    CHARLITERAL, 			// character literal
-   STRING,				// string literal
-   LONGSTRING,				// long string literal (multiline)
-   IDENTIFIER,				// identifier
-   LPAREN,				// left paren (
-   RPAREN,				// right paren )
-   LBRACE,				// left brace {
-   RBRACE,				// right brace }
-   LBRACKET,				// left bracket [
-   RBRACKET,				// right bracket ]
-   SEMICOLON,				// semicolon ;
+   STRING,			// string literal
+   LONGSTRING,			// long string literal (multiline)
+   IDENTIFIER,			// identifier
+   LPAREN,			// left paren (
+   RPAREN,			// right paren )
+   LBRACE,			// left brace {
+   RBRACE,			// right brace }
+   LBRACKET,			// left bracket [
+   RBRACKET,			// right bracket ]
+   SEMICOLON,			// semicolon ;
    COMMA,				// comma ,
    COLON,				// colon :
    QUESTIONMARK,			// question mark ?
-   LANGLE,				// left angle bracket <
-   RANGLE,				// right angle bracket >
+   LANGLE,			// left angle bracket <
+   RANGLE,			// right angle bracket >
    DOT, 				// period .
-   AT,					// at sign @
-   OP,					// valid operator
+   AT,				// at sign @
+   OP,			     	// valid operator
    EQUAL,				// equals sign
-   BACKSLASH,				// backslash
-   BADSTRING,				// unclosed string
-   BADCHARLIT,				// unclosed character literal
-   BADNUMBER,				// 0x, ###e ###e+ ###e-
-   ELIDED,				// elision image
-   FUNCTION,                            // the js keyword function
+   BACKSLASH,			// backslash
+   EOLSTRING,                      // end of line inside a multiline string     
+   BADSTRING,			// unclosed string
+   BADCHARLIT,			// unclosed character literal
+   BADNUMBER,			// 0x, ###e ###e+ ###e-
+   ELIDED,			// elision image
+   FUNCTION,                       // the js keyword function
    OTHER				// illegal token or character
 }
 

@@ -550,6 +550,10 @@ private List<BaleElement> scanText(String text,int baseoffset,
 	 case ENDCOMMENT :
 	    nelt = new BaleElement.Comment(doc,cur,soff,eoff,false,bt.getType());
 	    break;
+         case EOLSTRING :
+            nelt = new BaleElement.Literal(doc,cur,soff,eoff,bt.getType());
+            nstate = BaleTokenState.IN_MULTILINE_STRING;
+            break;
 	 case KEYWORD :
 	 case IF :
 	 case DO :

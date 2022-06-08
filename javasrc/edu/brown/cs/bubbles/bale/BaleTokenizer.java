@@ -317,11 +317,11 @@ BaleToken getNextToken()
       int ct = useMultilineCount();
       if (ct > 0) {
          int bup = 0;
-         for (int i = 0; i < ct; ++i) {
+         for (int i = 0; i < ct-1; ++i) {
             char ch1 = nextChar();
             bup++;
             if (ch1 != ch) break;
-            if (i == ct-1) {
+            if (i == ct-2) {
                return scanMultiLineString(ch,ct);
              }
           }
@@ -576,13 +576,13 @@ private Token scanMultiLineString(char delim,int ct)
        }
       else if (ch == '\n') {
 	 token_state = BaleTokenState.IN_MULTILINE_STRING;
-	 return buildToken(BaleTokenType.LONGSTRING);
+	 return buildToken(BaleTokenType.EOLSTRING);
        }
       else if (ch == '\r') {
 	 ch = nextChar();
 	 if (ch != '\n') backup();
 	 token_state = BaleTokenState.IN_MULTILINE_STRING;
-	 return buildToken(BaleTokenType.LONGSTRING);
+	 return buildToken(BaleTokenType.EOLSTRING);
        }
     }
 }

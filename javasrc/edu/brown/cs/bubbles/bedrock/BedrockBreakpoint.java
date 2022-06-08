@@ -123,6 +123,7 @@ import org.eclipse.jdt.core.dom.SwitchCase;
 import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.SynchronizedStatement;
 import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.TextBlock;
 import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.ThisExpression;
 import org.eclipse.jdt.core.dom.ThrowStatement;
@@ -924,6 +925,7 @@ private static class BreakpointLocator extends ASTVisitor {
    @Override public boolean visit(SwitchStatement node) 		{ return visit(node,false); }
    @Override public boolean visit(SynchronizedStatement node)		{ return visit(node,false); }
    @Override public boolean visit(TagElement node)			{ return false; }
+   @Override public boolean visit(TextBlock node)			{ return visit(node,true); }
    @Override public boolean visit(TextElement node)			{ return false; }
    @Override public boolean visit(ThisExpression node)			{ return visit(node,true); }
    @Override public boolean visit(ThrowStatement node)			{ return visit(node,true); }
@@ -983,26 +985,27 @@ private static class BreakpointLocator extends ASTVisitor {
 
    private boolean isReplacedByConstantValue(Expression node) {
       switch (node.getNodeType()) {
-	 case ASTNode.BOOLEAN_LITERAL:
-	 case ASTNode.CHARACTER_LITERAL:
-	 case ASTNode.NUMBER_LITERAL:
-	 case ASTNode.STRING_LITERAL:
-	    return true;
-	 case ASTNode.SIMPLE_NAME:
-	 case ASTNode.QUALIFIED_NAME:
-	    return isReplacedByConstantValue((Name)node);
-	 case ASTNode.FIELD_ACCESS:
-	    return isReplacedByConstantValue((FieldAccess)node);
-	 case ASTNode.SUPER_FIELD_ACCESS:
-	    return isReplacedByConstantValue((SuperFieldAccess)node);
-	 case ASTNode.INFIX_EXPRESSION:
-	    return isReplacedByConstantValue((InfixExpression)node);
-	 case ASTNode.PREFIX_EXPRESSION:
-	    return isReplacedByConstantValue((PrefixExpression)node);
-	 case ASTNode.CAST_EXPRESSION:
-	    return isReplacedByConstantValue(((CastExpression)node).getExpression());
-	 default:
-	    return false;
+         case ASTNode.BOOLEAN_LITERAL:
+         case ASTNode.CHARACTER_LITERAL:
+         case ASTNode.NUMBER_LITERAL:
+         case ASTNode.STRING_LITERAL:
+         case ASTNode.TEXT_BLOCK :
+            return true;
+         case ASTNode.SIMPLE_NAME:
+         case ASTNode.QUALIFIED_NAME:
+            return isReplacedByConstantValue((Name)node);
+         case ASTNode.FIELD_ACCESS:
+            return isReplacedByConstantValue((FieldAccess)node);
+         case ASTNode.SUPER_FIELD_ACCESS:
+            return isReplacedByConstantValue((SuperFieldAccess)node);
+         case ASTNode.INFIX_EXPRESSION:
+            return isReplacedByConstantValue((InfixExpression)node);
+         case ASTNode.PREFIX_EXPRESSION:
+            return isReplacedByConstantValue((PrefixExpression)node);
+         case ASTNode.CAST_EXPRESSION:
+            return isReplacedByConstantValue(((CastExpression)node).getExpression());
+         default:
+            return false;
        }
     }
 

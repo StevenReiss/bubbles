@@ -435,7 +435,7 @@ String [] BOARD_LIBRARY_FILES = new String [] {
    "joscar-protocol.jar",
    "bubblesasm.jar",
    "wikitextcore.jar", "wikitexttrac.jar",
-   "mail.jar","json.jar",
+   "mail.jar","json.jar", "jsoup.jar",
    "derby.jar", "derbyclient.jar", "derbynet.jar", "mysql.jar", "postgresql.jar",
 };
 
@@ -534,7 +534,7 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
 String [] BOARD_RESOURCE_EXTRAS = new String [] {
       "bbookbkg.gif",
       "rebusprops.xml",
-      
+
 };
 
 
