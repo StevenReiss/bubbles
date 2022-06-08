@@ -75,6 +75,8 @@
 		tofile='/home/spr/eclipse-neonx/eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
       <copy file='bedrock.jar'
 		tofile='/home/spr/eclipse-oxygenx/eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+      <copy file='bedrock.jar'
+		tofile='/home/spr/eclipse-2022-03/eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
    </target>
 
    <target name='eduplugin' depends='plugin' if='ivy.present'>
