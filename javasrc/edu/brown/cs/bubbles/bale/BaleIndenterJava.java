@@ -42,8 +42,7 @@
 
 package edu.brown.cs.bubbles.bale;
 
-
-
+import javax.swing.text.BadLocationException;
 
 class BaleIndenterJava extends BaleIndenter implements BaleConstants {
 
@@ -355,6 +354,30 @@ private int findReferencePosition(int offset)
 
 private int findCommentPosition()
 {
+   BaleElement pelt = null;
+   for (pelt = cur_element.getPreviousCharacterElement(); 
+      pelt != null && pelt.isEmpty(); 
+      pelt = pelt.getPreviousCharacterElement());
+   
+   if (pelt == null) return cur_offset;
+   
+   switch (pelt.getTokenType()) {
+      case EOLCOMMENT :
+      case EOLFORMALCOMMENT :
+         // here we are already in the middle of a comment
+         int in0 = getLeadingWhitespaceLength(pelt.getStartOffset());
+         String s0 = getElementText(pelt);
+         String s1 = getElementText(cur_element);
+         if (s0 == null || s1 == null) return cur_offset;
+         if (s0.startsWith("/") && s1.startsWith("*")) cur_align = in0+1;
+         else cur_align = in0;
+         break;    
+      case LINECOMMENT :
+         break;
+      default :
+         return cur_offset;
+    }
+   
    return cur_offset;
 }
 
@@ -1201,6 +1224,16 @@ private BaleTokenType previousToken()
 }
 
 
+
+private String getElementText(BaleElement be)
+{
+   try {
+      String s = bale_document.getText(be.getStartOffset(),be.getEndOffset()-be.getStartOffset());
+      return s;
+    }
+   catch (BadLocationException e) { }
+   return null;
+}
 
 
 /********************************************************************************/

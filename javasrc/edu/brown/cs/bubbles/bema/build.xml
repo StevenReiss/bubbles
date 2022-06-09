@@ -173,6 +173,7 @@
 	 <fileset dir='${BUBBLES}/' includes='resources/*.html' />
 	 <fileset dir='${BUBBLES}/' includes='resources/*.gif' />
 	 <fileset dir='${BUBBLES}/' includes='resources/words' />
+	 <fileset dir='${BUBBLES}/' includes='resources/templates/*.template' />
 	 <fileset dir='${BUBBLES}/' includes='lib/helpdoc.xml' />
 	 <fileset dir='${BUBBLES}/' includes='lib/helpdemos.xml' />
 	 <fileset dir='${BUBBLES}/' includes='lib/preferences.new.xml' />

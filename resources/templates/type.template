@@ -1,0 +1,29 @@
+/********************************************************************************/
+/*										*/
+/*		${NAME}.java							*/
+/*										*/
+/*	description of class							*/
+/*										*/
+/*	Written by ${AUTHOR}							*/
+/*										*/
+/********************************************************************************/
+
+
+
+$(PACKAGE)
+
+$(IMPORTS)
+
+$(MODIFIERS)$(TYPE) $(NAME)$(EXTENDS)$(IMPLEMENTS)
+{
+
+
+$(CONTENT)
+
+
+}	// end of $(TYPE) $(NAME)
+
+
+
+
+/* end of $(NAME).java */

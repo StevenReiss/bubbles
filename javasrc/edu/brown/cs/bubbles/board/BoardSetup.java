@@ -2171,9 +2171,9 @@ private static boolean checkInstallDirectory(File ind)
 	 BoardLog.logX("BOARD","Missing binary file " + inf);
        }
     }
-   File libt = new File(libb,"templates");
+   File rest = new File(resb,"templates");
    for (String s : BOARD_TEMPLATES) {
-      inf = new File(libt,s);
+      inf = new File(rest,s);
       if (!inf.exists() || !inf.canRead()) {
 	 BoardLog.logX("BOARD","Missing template file " + inf);
        }
@@ -2261,10 +2261,10 @@ private void checkJarLibraries()
       extractResourceFile(s,resd,auto_update);
     }
 
-   File libt = new File(libd,"templates");
-   if (!libt.exists()) libt.mkdir();
+   File rest = new File(resd,"templates");
+   if (!rest.exists()) rest.mkdir();
    for (String s : BOARD_TEMPLATES) {
-      extractLibraryResource(s,libt,auto_update);
+      extractLibraryResource(s,rest,auto_update);
     }
 
    File pyd = libd.getParentFile();
