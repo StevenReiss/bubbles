@@ -182,13 +182,16 @@ void scanItem(URL u)
       id = id.replace("%3E",">");
       start = doc.getElementById(id);
       if (start != null && start.tagName().equals("a")) {
-         start = start.nextElementSibling();
+	 start = start.nextElementSibling();
        }
     }
    else {
       start = doc.getElementsByTag("main").first();
     }
-   extractItem(start);
+   if (start != null) extractItem(start);
+   else {
+      BoardLog.logX("BDOC","No item found for " + u);
+    }
 }
 
 
@@ -211,7 +214,7 @@ protected void addRawHtmlDivToDescription(Element e0,boolean br)
 	 item_description.append("<div>");
 	 item_description.append(html);
 	 item_description.append("</div>");
-         if (br) item_description.append("<br/>");
+	 if (br) item_description.append("<br/>");
        }
     }
 }
@@ -227,7 +230,7 @@ protected void addRawHtmlDivToDescription(Element e0,boolean br)
 protected void scanSubitems(Element e0)
 {
    if (e0 == null) return;
-   
+
    for (Element dtitm : e0.select(".notes > dt")) {
       scanSubItem(dtitm);
     }
@@ -236,8 +239,10 @@ protected void scanSubitems(Element e0)
     }
 }
 
+
 protected void scanSignature(Element e0,String typ)
 {
+   if (e0 == null) return;
    Element sign = e0.select(typ).first();
    if (sign == null) sign = e0.select("pre").first();
    addRawHtmlDivToDescription(sign,true);
@@ -262,14 +267,14 @@ protected void scanSubItem(Element dt)
    for (Element nitm = dt.nextElementSibling(); nitm != null; nitm = nitm.nextElementSibling()) {
       if (nitm.tagName().equals("dt")) break;
       if (nitm.tagName().equals("dd")) {
-         Element sitmlnk = nitm.select("a").first();
-         if (sitmlnk == null) continue;
-         String hr = sitmlnk.attr("href");
-         if (hr == null) continue;
-         SubItemImpl curitm = new SubItemImpl(lr);
-         curitm.setName(sitmlnk.text());
-         curitm.setUrl(ref_url,hr);
-         addSubitem(curitm);
+	 Element sitmlnk = nitm.select("a").first();
+	 if (sitmlnk == null) continue;
+	 String hr = sitmlnk.attr("href");
+	 if (hr == null) continue;
+	 SubItemImpl curitm = new SubItemImpl(lr);
+	 curitm.setName(sitmlnk.text());
+	 curitm.setUrl(ref_url,hr);
+	 addSubitem(curitm);
        }
     }
 }

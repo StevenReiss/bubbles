@@ -63,6 +63,7 @@ BdocDocMethod(URL u) throws IOException
 
 @Override void extractItem(Element e0)
 {
+   if (e0 == null) return;
    scanSubitems(e0);
    scanSignature(e0,".member-signature");
    scanBody(e0);

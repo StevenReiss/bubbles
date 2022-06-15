@@ -465,14 +465,14 @@ private class SplashPanel extends InstallerPanel implements ActionListener {
    @Override JPanel getPanel() {
       SwingGridPanel pnl = new SwingGridPanel();
       pnl.beginLayout();
-
+   
       SplashImage spnl = new SplashImage();
       pnl.addLabellessRawComponent("SPLASH",spnl);
-
+   
       pnl.addBottomButton("Exit","EXIT",this);
       continue_button = pnl.addBottomButton("Continue","CONTINUE",this);
       pnl.addBottomButtons();
-
+   
       return pnl;
     }
 

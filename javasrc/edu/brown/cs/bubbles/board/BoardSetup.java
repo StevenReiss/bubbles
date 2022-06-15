@@ -1421,7 +1421,7 @@ public void doInstall()
 
 /**
  *	Entry point for doing setup for a bubbles applications.  Any application should
- *	first consruct an instance of BoardSetup and then call this method.  Once the
+ *	first construct an instance of BoardSetup and then call this method.  Once the
  *	method returns, bubbles should be ready to use.
  **/
 
@@ -3305,11 +3305,6 @@ private boolean checkDefaultInstallation()
 
 
 
-
-
-
-
-
 /********************************************************************************/
 /*										*/
 /*	Setup dialog management 						*/
@@ -3640,6 +3635,7 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
    private JTextField workspace_field;
 
    WorkspaceDialog() {
+      BoardLog.logD("BOARD","Asking for workspace");
       SwingGridPanel pnl = new SwingGridPanel();
    
       // library might not be set up here -- can't use BoardColors

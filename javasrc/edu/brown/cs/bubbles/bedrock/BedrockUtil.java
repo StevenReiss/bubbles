@@ -1330,11 +1330,18 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
    if (elt instanceof IPackageFragment || elt instanceof IType) {
       Display d = BedrockApplication.getDisplay();
       if (d != null) {
-	 JavadocUrl ju = new JavadocUrl(elt);
-	 d.syncExec(ju);
-	 URL u = ju.getResult();
-	 if (u != null) {
-	    xw.field("JAVADOC",u.toString());
+	 try {
+	    JavadocUrl ju = new JavadocUrl(elt);
+//	    d.syncExec(ju);
+//	    BedrockPlugin.logD("Get javadoc location for " + elt);
+	    ju.run();
+	    URL u = ju.getResult();
+	    if (u != null) {
+	       xw.field("JAVADOC",u.toString());
+	     }
+	  }
+	 catch (Throwable t) {
+	    BedrockPlugin.logE("Problem getting javadoc element",t);
 	  }
        }
     }
@@ -1928,11 +1935,15 @@ static void outputValue(IEvaluationResult rslt,int lvl,int arraysz,IvyXmlWriter 
 
    if (ex != null) xw.field("STATUS","EXCEPTION");
    else if (rslt.hasErrors()) xw.field("STATUS","ERROR");
-   // else if (rslt.isTerminated()) xw.field("STATUS","TERMINATED");    // requires newer eclipse
+   else if (rslt.isTerminated()) xw.field("STATUS","TERMINATED");    // requires newer eclipse
    else xw.field("STATUS","OK");
 
    if (ex != null) {
-      xw.textElement("EXCEPTION",ex.toString());
+      String cause = ex.toString();
+      for (Throwable ex1 = ex.getCause(); ex1 != null; ex1 = ex1.getCause()) {
+	 cause += " caused by " + ex1.toString();
+       }
+      xw.textElement("EXCEPTION",cause);
       BedrockPlugin.logE("Problem with evaluation",ex);
    }
    else if (rslt.hasErrors()) {

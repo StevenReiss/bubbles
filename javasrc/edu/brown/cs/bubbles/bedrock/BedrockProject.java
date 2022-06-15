@@ -51,9 +51,12 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -85,6 +88,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
+import org.eclipse.ui.progress.WorkbenchJob;
 import org.osgi.framework.Bundle;
 import org.osgi.service.prefs.Preferences;
 import org.w3c.dom.Element;
@@ -726,7 +730,12 @@ private boolean attachProject(IProject p,boolean setup)
       p.open(null);
       IJavaProject ijp = JavaCore.create(p);
       ijp.open(null);
-      if (setup) setupDefaults(ijp);
+      if (setup) {
+         SetupDefaults sdf = new SetupDefaults(ijp);
+         sdf.schedule();
+         sdf.join();
+       }
+//    if (setup) setupDefaults(ijp);
     }
    catch (JavaModelException e) {
       BedrockPlugin.logI("Error resolving project: " + e);
@@ -774,6 +783,45 @@ private void setupProjects()
 
 
 
+private class SetupDefaults extends WorkbenchJob {
+ 
+// private IJavaProject for_project;
+   
+   SetupDefaults(IJavaProject ijp) {
+      super(BedrockApplication.getDisplay(),"setupDefaults");
+//    for_project = ijp;
+    }
+   
+   @Override public IStatus runInUIThread(IProgressMonitor m) {
+      try {
+         BedrockApplication.getDisplay();
+         IPreferenceStore ps = DebugUITools.getPreferenceStore();
+         String s = ps.getString("org.eclipse.debug.ui.switch_perspective_on_suspend");
+         if (s == null || s.equals("prompt")) {
+            ps.setValue("org.eclipse.debug.ui.switch_perspective_on_suspend","never");
+          }
+         s = ps.getString("org.eclipse.debug.ui.save_dirty_editors_before_launch");
+         if (s == null || s.equals("prompt")) {
+            ps.setValue("org.eclipse.debug.ui.save_dirty_editors_before_launch","always");
+          }
+         s = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
+         if (s == null || !s.equals("always")) {
+            ps.setValue("org.eclipse.debug.ui.cancel_launch_with_compile_errors","always");
+            String s1 = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
+            BedrockPlugin.logD("PREFSET " + s + " " + s1);
+          }
+         BedrockPlugin.logD("PREFVALUE " + s);
+       }
+      catch (Throwable t) {
+         BedrockPlugin.logE("Problem seting defaults",t);
+       }
+      
+      return Status.OK_STATUS;
+    }
+}
+
+ 
+@SuppressWarnings("unused")
 private void setupDefaults(IJavaProject ijp)
 {
    try {

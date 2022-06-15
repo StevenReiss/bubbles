@@ -1124,6 +1124,8 @@ private class LaunchConfig implements BumpLaunchConfig {
     }
 
    void update(Element xml) {
+      BoardLog.logD("BUMP","Found Launch Config " + IvyXml.convertXmlToString(xml));
+   
       config_type = IvyXml.getAttrEnum(xml,"TYPE",BumpLaunchConfigType.UNKNOWN);
       Element type = IvyXml.getChild(xml,"TYPE");
       if (type != null) {
@@ -2075,9 +2077,9 @@ private class ValueData implements BumpRunValue {
    private void addValues(Element xml) {
       if (xml == null) return;
       for (Element e : IvyXml.children(xml,"VALUE")) {
-	 if (sub_values == null) sub_values = new HashMap<>();
-	 ValueData vd = new ValueData(this,e);
-	 sub_values.put(vd.getName(),vd);
+         if (sub_values == null) sub_values = new HashMap<>();
+         ValueData vd = new ValueData(this,e);
+         sub_values.put(vd.getName(),vd);
        }
     }
 

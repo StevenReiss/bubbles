@@ -191,7 +191,6 @@ BddtEvaluationBubble(BddtLaunchControl ctrl)
       popup.add(new RemoveAction(ee));
       popup.add(new EditAction(ee));
       // add an expand action (ee.toString(); ee.x + ee.y + ...)
-      
     }
 
    popup.add(getFloatBubbleAction());

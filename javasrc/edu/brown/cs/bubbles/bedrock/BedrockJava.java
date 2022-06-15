@@ -1117,12 +1117,20 @@ void handleFindHierarchy(String proj,String pkg,String cls,boolean all,IvyXmlWri
        }
     }
    else {
+      BedrockPlugin.logD("Adding all projects");
       for (IJavaElement pi : getAllProjects()) {
 	 IJavaProject xjp = pi.getJavaProject();
 	 if (xjp != null && !rgn.contains(xjp)) {
 	    rgn.add(xjp);
 	    ++addct;
 	  }
+         for (IJavaElement par = xjp.getParent(); par != null; par = par.getParent()) {
+            BedrockPlugin.logD("PROJECT PARENT " + par.getElementName());
+            if (par != null && !rgn.contains(par)) {
+               rgn.add(par);
+               ++addct;
+             }
+          }
 	 // String pnm = pi.getJavaProject().getProject().getName();
 	 // handleFindHierarchy(pnm,null,null,all,xw);
        }
@@ -1136,7 +1144,7 @@ void handleFindHierarchy(String proj,String pkg,String cls,boolean all,IvyXmlWri
 	 if (fortype != null && !havejp) {
 	    ith = fortype.newTypeHierarchy(null);
 	  }
-	 if (fortype != null) {
+	 else if (fortype != null) {
 	    ith = ijp.newTypeHierarchy(fortype,rgn,null);
 	  }
 	 else {

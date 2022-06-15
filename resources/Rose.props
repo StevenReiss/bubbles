@@ -28,6 +28,7 @@
 <entry key="Original.foreground">#00cc00</entry>
 <entry key="Edited.parent">Differences</entry>
 <entry key="Edited.foreground">#cc0000</entry>
+<entry key="Rose.max.up">1</entry>
 </properties>
 
 

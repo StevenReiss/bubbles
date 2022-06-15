@@ -334,6 +334,20 @@ void expandFirst()
    value_component.getTree().expandRow(1);
 }
 
+void expandFrame(BumpStackFrame frm)
+{
+   for (int i = 1; i < value_component.getRowCount(); ++i) {
+      Object o = value_component.getValueAt(i,-1);
+      if (o instanceof ValueTreeNode) {
+         ValueTreeNode vtn = (ValueTreeNode) o;
+         if (vtn.getFrame() == frm) {
+            value_component.getTree().expandRow(i);
+            break;
+          }
+       }
+    }
+}
+
 
 
 

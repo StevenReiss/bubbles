@@ -115,6 +115,7 @@ BedrockApplication(boolean ecl)
 // is_setup = true;
 
    the_app = this;
+   BedrockPlugin.logD("Start application " + ecl + " " + this);
 }
 
 
@@ -229,7 +230,7 @@ private static class Stopper extends Thread {
 
 static Display getDisplay()
 {
-   // BedrockPlugin.logD("BEDROCK: get display " + the_app);
+   BedrockPlugin.logD("BEDROCK: get display " + the_app);
 
    if (the_app == null) return null;
 
@@ -307,8 +308,9 @@ private synchronized void noteSetup()
       int sts = PlatformUI.RETURN_UNSTARTABLE;
       BedrockPlugin.logI("DISPLAY START " + use_display + " " + hide_display + " " + tiny_display);
       try {
+         if (base_display == null) base_display = Display.getDefault();
 	 if (base_display == null) base_display = PlatformUI.createDisplay();
-	 BedrockPlugin.logI("DISPLAY = " + base_display);
+	 BedrockPlugin.logI("DISPLAY = " + base_display + " " + Display.getDefault());
 	 EndChecker ec = new EndChecker();
 	 ec.start();
 	 is_setup = false;

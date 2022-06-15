@@ -1052,6 +1052,8 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
    IThread thrd = null;
    IStackFrame sfrm = null;
    boolean evaldone = false;
+   
+   BedrockPlugin.logD("Evaluate " + tname + " " + frid + " " + eid + " " + expr);
 
    int detail = (impl ? DebugEvent.EVALUATION_IMPLICIT : DebugEvent.EVALUATION);
 
@@ -1070,7 +1072,10 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 		}
 	     }
 	  }
-	 if (thrd == null) continue;		// not in this launch
+	 if (thrd == null) {
+            BedrockPlugin.logD("Evaluation thread " + tname + " not found in launch " + launch);
+            continue;		// not in this launch
+          }
 	 for (IStackFrame frame: thrd.getStackFrames()) {
 	    if (matchFrame(frid,frame)) {
 	       sfrm = frame;
@@ -1081,8 +1086,9 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
             BedrockPlugin.logD("Stack frame " + frid + " doesn't exist");
             return;
           }
-	 if (!(sfrm instanceof IJavaStackFrame))
+	 if (!(sfrm instanceof IJavaStackFrame)) {
 	    throw new BedrockException("Stack frame " + frid + " not java frame");
+          }
 	 IJavaStackFrame jsf = (IJavaStackFrame) sfrm;
 
 	 if (jproj == null) {
@@ -1143,7 +1149,9 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
        }
     }
 
-   if (!evaldone) throw new BedrockException("No evaluation to do");
+   if (!evaldone) {
+      throw new BedrockException("No evaluation to do");
+    }
 }
 
 

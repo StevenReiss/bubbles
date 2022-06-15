@@ -100,6 +100,7 @@ private int		collect_id;
 private Map<BumpChangeHandler,Boolean> change_handlers;
 private SwingEventListenerList<BumpOpenEditorBubbleHandler> open_editor_bubble_handlers;
 private SwingEventListenerList<BumpProgressHandler> progress_handlers;
+private List<String>	debug_jvm_args;
 
 private boolean 	ide_active;
 private boolean 	doing_exit;
@@ -187,6 +188,11 @@ protected BumpClient()
    change_handlers = new ConcurrentHashMap<>();
    open_editor_bubble_handlers = new SwingEventListenerList<>(BumpOpenEditorBubbleHandler.class);
    progress_handlers = new SwingEventListenerList<>(BumpProgressHandler.class);
+
+   debug_jvm_args = new ArrayList<>();
+   if (System.getProperty("os.name").startsWith("Mac")) {
+//    debug_jvm_args.add("-XstartOnFirstThread");
+    }
 
    collect_id = (int)(Math.random() * 10000);
 
@@ -826,66 +832,66 @@ private class FileGetServerHandler implements MintHandler {
       File f = null;
       if (kind != null && kind.equals("BDOC")) f = BoardSetup.getDocumentationFile();
       else if (kind != null && kind.equals("NOTE")) {
-         if (act != null && act.equals("LIST")) {
-            try {
-               File f2 = File.createTempFile("notelist","dir");
-               f2.deleteOnExit();
-               File f1 = BoardSetup.getBubblesWorkingDirectory();
-               PrintWriter fw = new PrintWriter(new FileWriter(f2));
-               for (File nmf : f1.listFiles()) {
-        	  if (nmf.isDirectory()) continue;
-        	  if (!nmf.canRead()) continue;
-        	  if (!nmf.getName().endsWith(".html")) continue;
-        	  fw.println(nmf.getName());
-        	}
-               fw.close();
-               f = f2;
-             }
-            catch (IOException e) {
-               msg.replyTo("<FAIL/>");
-               return;
-             }
-          }
-         File f1 = BoardSetup.getBubblesWorkingDirectory();
-         File f2 = new File(filenm);
-         f = new File(f1,f2.getName());
-         if (act != null && act.equals("DELETE")) {
-            f.delete();
-            msg.replyTo("<OK/>");
-            return;
-          }
+	 if (act != null && act.equals("LIST")) {
+	    try {
+	       File f2 = File.createTempFile("notelist","dir");
+	       f2.deleteOnExit();
+	       File f1 = BoardSetup.getBubblesWorkingDirectory();
+	       PrintWriter fw = new PrintWriter(new FileWriter(f2));
+	       for (File nmf : f1.listFiles()) {
+		  if (nmf.isDirectory()) continue;
+		  if (!nmf.canRead()) continue;
+		  if (!nmf.getName().endsWith(".html")) continue;
+		  fw.println(nmf.getName());
+		}
+	       fw.close();
+	       f = f2;
+	     }
+	    catch (IOException e) {
+	       msg.replyTo("<FAIL/>");
+	       return;
+	     }
+	  }
+	 File f1 = BoardSetup.getBubblesWorkingDirectory();
+	 File f2 = new File(filenm);
+	 f = new File(f1,f2.getName());
+	 if (act != null && act.equals("DELETE")) {
+	    f.delete();
+	    msg.replyTo("<OK/>");
+	    return;
+	  }
        }
       else f = new File(filenm);
       BoardLog.logD("BUMP","Remote file request " + f + " " + filenm + " " + id);
-   
+
       try {
-         FileInputStream fr = new FileInputStream(f);
-         long len = f.length();
-         int pos = 0;
-         byte [] buf = new byte[40960];
-         while (pos < len) {
-            int ct = fr.read(buf,0,buf.length);
-            MintDefaultReply mr = new MintDefaultReply();
-            IvyXmlWriter xw = new IvyXmlWriter();
-            xw.begin("BUMPFILE");
-            xw.field("ID",id);
-            xw.field("POS",pos);
-            xw.field("LEN",len);
-            xw.field("CT",ct);
-            xw.bytesElement("CNTS",buf,0,ct);
-            xw.end("BUMPFILE");
-            mint_control.send(xw.toString(),mr,MintConstants.MINT_MSG_FIRST_NON_NULL);
-            xw.close();
-            mr.waitFor();
-            pos += ct;
-          }
-         fr.close();
-         msg.replyTo("<OK/>");
+	 FileInputStream fr = new FileInputStream(f);
+	 long len = f.length();
+	 int pos = 0;
+	 byte [] buf = new byte[40960];
+	 while (pos < len) {
+	    int ct = fr.read(buf,0,buf.length);
+	    MintDefaultReply mr = new MintDefaultReply();
+	    IvyXmlWriter xw = new IvyXmlWriter();
+	    xw.begin("BUMPFILE");
+	    xw.field("ID",id);
+	    xw.field("POS",pos);
+	    xw.field("LEN",len);
+	    xw.field("CT",ct);
+	    xw.bytesElement("CNTS",buf,0,ct);
+	    xw.end("BUMPFILE");
+	    mint_control.send(xw.toString(),mr,MintConstants.MINT_MSG_FIRST_NON_NULL);
+	    xw.close();
+	    mr.waitFor();
+	    pos += ct;
+	  }
+	 fr.close();
+	 msg.replyTo("<OK/>");
        }
       catch (IOException e) {
-         msg.replyTo("<FAIL/>");
+	 msg.replyTo("<FAIL/>");
        }
-   
+
     }
 
 }	// end of inner class FileGetServerHandler
@@ -1306,7 +1312,7 @@ private void outputPropertyValue(String nm,Object val,IvyXmlWriter xw)
    else if (val.getClass() == String.class) {
       xw.field("TYPE","String");
       xw.cdataElement("VALUE",val.toString());
-    }	
+    }
    else if (val.getClass() == Boolean.class) {
       xw.field("TYPE","boolean");
       xw.cdataElement("VALUE",val.toString());
@@ -1314,7 +1320,7 @@ private void outputPropertyValue(String nm,Object val,IvyXmlWriter xw)
    else if (val.getClass() == File.class) {
       xw.field("TYPE","File");
       xw.textElement("VALUE",((File) val).getPath());
-    }	
+    }
    else if (val instanceof List<?>) {
       xw.field("TYPE","List");
       List<?> lval = (List<?>) val;
@@ -1732,7 +1738,7 @@ public List<BumpLocation> findAllTypes(String nm)
 
 /**
  *	Return a list of BumpLocations containing the definitions of all annotations
- *	matching the given pattern.								
+ *	matching the given pattern.							
  *	@param proj the project to search in, null implies all projects
  *	@param nm the search pattern
  *	@param def if true, include definitions in the output set
@@ -2012,14 +2018,14 @@ public List<BumpLocation> findDefinition(String proj,File file,int spos,int epos
 public List<BumpLocation> findSystemDefinitions(String proj,File file,int spos)
 {
    waitForIDE();
-   
+
    String q = "FILE='" + file.getPath() + "' START='" + spos + "' END='" + spos + "'";
    q += " EXACT='F' SYSTEM='T'";
-   
+
    Element xml = getXmlReply("FINDDEFINITIONS",proj,q,null,0);
-   
+
    if (!IvyXml.isElement(xml,"RESULT")) return null;
-   
+
    return getSearchResults(proj,xml,true);
 }
 
@@ -2203,20 +2209,20 @@ public Collection<BumpCompletion> getCompletions(String proj,File file,int id,in
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Find expected type so we can auto create declaration                    */
-/*                                                                              */
+/*										*/
+/*	Find expected type so we can auto create declaration			*/
+/*										*/
 /********************************************************************************/
 
 /**
- *      This returns the expected type for an assignment so that the assignment
- *      can be made into a declaration with an inferred type.
+ *	This returns the expected type for an assignment so that the assignment
+ *	can be made into a declaration with an inferred type.
  **/
 
 public Element getExpectedType(String proj,File file,int line)
 {
    waitForIDE();
-   
+
    String rq = "FILE='" + file.getPath() + "' LINE='" + line + "'";
    Element xml = getXmlReply("GETEXPECTEDTYPE",proj,rq,null,0);
    if (!IvyXml.isElement(xml,"RESULT")) return null;
@@ -2825,12 +2831,23 @@ public BumpBreakModel getBreakModel()
 
 
 
+/********************************************************************************/
+/*										*/
+/*	Debugger action methods 						*/
+/*										*/
+/********************************************************************************/
+
 public BumpRunModel getRunModel()
 {
    return run_manager;
 }
 
-
+public void addJvmDebugArgument(String arg)
+{
+   if (!debug_jvm_args.contains(arg)) {
+      debug_jvm_args.add(arg);
+    }
+}
 
 Element getRunConfigurations()
 {
@@ -2961,7 +2978,8 @@ private String getDebugArgs(String id)
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :
 	 MintDefaultReply mdr = new MintDefaultReply();
-	 mint_control.send("<BUMP TYPE='STARTDEBUG' ID='" + id + "' />",mdr,MINT_MSG_FIRST_NON_NULL);
+	 mint_control.send("<BUMP TYPE='STARTDEBUG' ID='" + id + "' />",
+	       mdr,MINT_MSG_FIRST_NON_NULL);
 	 Element xml = mdr.waitForXml();
 	 if (xml != null) {
 	    xtr = IvyXml.getText(xml);
@@ -2972,6 +2990,11 @@ private String getDebugArgs(String id)
       case NORMAL :
 	 xtr = run_manager.startDebugArgs(id);
 	 break;
+    }
+
+   for (String s : debug_jvm_args) {
+      if (xtr == null) xtr = s;
+      else xtr += " " + s;
     }
 
    return xtr;
@@ -3771,7 +3794,7 @@ protected class IDEHandler implements MintHandler {
 		     BoardLog.logD("BUMP","NAMES: " + nc.getSize());
 		   }
 		  msg.replyTo("<OK/>");
-                  // wait until add to ensure end doesn't come before we are all processed
+		  // wait until add to ensure end doesn't come before we are all processed
 		}
 	       break;
 	    case "ENDNAMES" :
@@ -3879,23 +3902,23 @@ protected static class NameCollector {
    synchronized void addNames(Element xml) {
       int ctr = 0;
       for (Element fe : IvyXml.children(xml,"FILE")) {
-         String path = IvyXml.getTextElement(fe,"PATH");
-         for (Element itm : IvyXml.children(fe,"ITEM")) {
-            int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
-            int length = IvyXml.getAttrInt(itm,"LENGTH");
-            String pnm = IvyXml.getAttrString(itm,"PROJECT");
-            BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
-            result_names.add(bl);
-            ++ctr;
-          }
+	 String path = IvyXml.getTextElement(fe,"PATH");
+	 for (Element itm : IvyXml.children(fe,"ITEM")) {
+	    int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
+	    int length = IvyXml.getAttrInt(itm,"LENGTH");
+	    String pnm = IvyXml.getAttrString(itm,"PROJECT");
+	    BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
+	    result_names.add(bl);
+	    ++ctr;
+	  }
        }
       BoardLog.logD("BUMP","Received " + ctr + " Names");
       for (Element itm : IvyXml.children(xml,"ITEM")) {
-         String pnm = IvyXml.getAttrString(itm,"PROJECT");
-         String pth = IvyXml.getAttrString(itm,"PATH");
-         BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
-         result_names.add(bl);
-         // BoardLog.logD("BUMP","Added project name " + bl);
+	 String pnm = IvyXml.getAttrString(itm,"PROJECT");
+	 String pth = IvyXml.getAttrString(itm,"PATH");
+	 BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
+	 result_names.add(bl);
+	 // BoardLog.logD("BUMP","Added project name " + bl);
        }
       BoardSetup.getSetup().noteNamesLoaded(result_names.size(),max_sym);
     }
@@ -3909,12 +3932,12 @@ protected static class NameCollector {
 
    synchronized Collection<BumpLocation> getNames() {
       while (!is_done) {
-         try {
-            wait();
-          }
-         catch (InterruptedException e) { }
+	 try {
+	    wait();
+	  }
+	 catch (InterruptedException e) { }
        }
-   
+
       return result_names;
     }
 

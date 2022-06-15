@@ -1196,7 +1196,7 @@ private void addExecutionAnnot(BumpThread bt)
             props.getBoolean("Bddt.show.user.bubble")) {
          for (int i = 1; i < stk.getNumFrames(); ++i) {
             BumpStackFrame bsf1 = stk.getFrame(i);
-            if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0) {
+            if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0 && !bsf1.isSystem()) {
                ExecutionAnnot ea = new ExecutionAnnot(bt,bsf1);
                removeExecutionAnnot(bt);
                exec_annots.put(bt,ea);
@@ -1730,8 +1730,8 @@ private static class EvaluationListener implements BumpEvaluationHandler, Expres
    @Override public void evaluationError(String eid,String expr,String error) {
       error_value = error;
       synchronized (this) {
-	 is_done = true;
-	 notifyAll();
+         is_done = true;
+         notifyAll();
        }
     }
 

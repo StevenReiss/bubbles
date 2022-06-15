@@ -67,6 +67,8 @@ BdocDocPackage(URL u) throws IOException
 
 @Override void extractItem(Element e0)
 {
+   if (e0 == null) return;
+   
    Element desc = e0.select(".package-description").first();
    if (desc == null) desc = e0.select(".description").first();
    if (desc == null) desc = e0.select(".contentContainer section").first();

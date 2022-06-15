@@ -253,8 +253,15 @@ Connection getLogDatabase()
 	 bnote_conn = DriverManager.getConnection(url,props);
        }
       catch (SQLException e) {
-	 // TODO: Should warn the user here
-	 BoardLog.logE("BNOTE","Problem creating database: " + e,e);
+         switch (database_type) {
+            case "derby" :
+            case "embed" :
+               BoardLog.logW("BNOTE","Problem creating database: " + e);
+               break;
+            default :
+               BoardLog.logE("BNOTE","Problem creating database: " + e,e);
+               break;
+          }
       }
     }
    else {
