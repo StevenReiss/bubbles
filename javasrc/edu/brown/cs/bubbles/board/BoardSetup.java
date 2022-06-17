@@ -3073,6 +3073,8 @@ private void restartBubbles()
       cp.append(File.pathSeparator);
       cp.append(f.getPath());
     }
+   cp.append(File.pathSeparator);
+   cp.append(getEclipsePath());
 
    List<String> args = new ArrayList<String>();
    if (java_args != null) args.addAll(java_args);

@@ -25,4 +25,7 @@
 <entry key="Beam.show.save">true</entry>
 <entry key="Beam.show.build">true</entry>
 <entry key="Beam.show.refresh">true</entry>
+<entry key="Beam.timer.width">250</entry>
+<entry key="Beam.timer.height">300</entry>
+
 </properties>
