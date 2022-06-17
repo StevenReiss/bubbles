@@ -311,7 +311,9 @@ private void handleInstalls()
 
 public void updatePlugins()
 {
+   System.err.println("BOARDUPDATE: Update Plugins " + all_plugins.size());
    for (PluginData pd : all_plugins) {
+      System.err.println("BOARDUPDATE: Update plugin " + pd.getName() + " " + pd.isInstalled());
       if (pd.isInstalled()) {
 	 pd.update();
        }
@@ -415,7 +417,11 @@ private static synchronized void getPluginData()
 	 all_plugins.add(new PluginData(pe));
        }
     }
-   catch (IOException e) { }
+   catch (IOException e) { 
+       System.err.println("BOARDUPDATE: Problem getting plugin data");
+       e.printStackTrace();
+
+    }
 }
 
 
@@ -579,17 +585,18 @@ private static class PluginData implements Comparable<PluginData> {
       File root = BoardSetup.getSetup().getRootDirectory();
       File plugins = new File(root,BOARD_ECLIPSE_DROPINS);
       File p1 = new File(plugins,file);
+      System.err.println("BOARDUPDATE: CHECK plugin at " + p1);
       if (p1.exists()) {
-	 plugin_file = p1;
-	 plugin_installed = true;
-	 return;
+         plugin_file = p1;
+         plugin_installed = true;
+         return;
        }
       plugins = new File(root,BOARD_ECLIPSE_PLUGINS);
       p1 = new File(plugins,file);
-      if (p1.exists()) {
-	 plugin_file = p1;
-	 plugin_installed = true;
-	 return;
+      System.err.println("BOARDUPDATE: CHECK plugin at " + p1);   if (p1.exists()) {
+         plugin_file = p1;
+         plugin_installed = true;
+         return;
        }
       plugin_installed = false;
     }

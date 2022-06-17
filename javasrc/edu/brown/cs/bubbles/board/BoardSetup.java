@@ -2057,6 +2057,7 @@ private boolean checkInstall()
       install_jar = ok;
 
       if (install_jar) {
+         BoardLog.logI("BOARD","Running from jar file");
 	 URL url = getClass().getClassLoader().getResource(BOARD_RESOURCE_PLUGIN_ECLIPSE);
 	 String file = url.toString();
 	 if (file.startsWith("jar:file:/")) file = file.substring(9);

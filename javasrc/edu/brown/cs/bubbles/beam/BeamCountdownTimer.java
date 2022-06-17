@@ -23,8 +23,10 @@
 
 package edu.brown.cs.bubbles.beam;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.text.DecimalFormat;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -34,6 +36,7 @@ import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.ivy.swing.SwingButton;
 import edu.brown.cs.ivy.swing.SwingComboBox;
+import edu.brown.cs.ivy.swing.SwingGridPanel;
 
 class BeamCountdownTimer extends BudaBubble implements BeamConstants
 {
@@ -45,9 +48,9 @@ class BeamCountdownTimer extends BudaBubble implements BeamConstants
 /*                                                                              */
 /********************************************************************************/
 
-private long input_hours;
-private long input_miunutes;
-private long input_seconds;
+private long cur_hours;
+private long cur_miunutes;
+private long cur_seconds;
 private long input_time;
 private long last_tick_time;
 private long running_time;
@@ -82,15 +85,62 @@ private static final long serialVersionUID = 1;
 public BeamCountdownTimer()
 {
    super(null,BudaBorder.RECTANGLE);
-   input_hours = 0;
-   input_miunutes = 0;
-   input_seconds = 0;
+   cur_hours = 0;
+   cur_miunutes = 0;
+   cur_seconds = 0;
    
-   BoardProperties bp = BoardProperties.getProperties("Beam");
-   int w = bp.getInt("Beam.timer.width",250);
-   int h = bp.getInt("Beam.timer.height",300);
-   
+   setContentPane(new CountdownPanel());
 }
+
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Timer methods                                                           */
+/*                                                                              */
+/********************************************************************************/
+
+private void changeLabelTimer()
+{
+   label_time.setForeground(Color.BLACK);
+   String text = time_formatter.format(cur_hours) + " : " + 
+         time_formatter.format(cur_miunutes)  + " : " +
+         time_formatter.format(cur_seconds);
+   label_time.setText(text);
+}
+
+/********************************************************************************/
+/*                                                                              */
+/*      Panel to hold the timer                                                 */
+/*                                                                              */
+/********************************************************************************/
+
+private class CountdownPanel extends SwingGridPanel {
+  
+   CountdownPanel() {
+      BoardProperties bp = BoardProperties.getProperties("Beam");
+      int w = bp.getInt("Beam.timer.width",250);
+      int h = bp.getInt("Beam.timer.height",300);
+      
+      label_time = new JLabel();
+      changeLabelTimer();
+      
+      Vector<String> tfour = new Vector<>();
+      for (int i = 0; i <= 24; ++i) {
+         tfour.add(time_formatter.format(i));
+       }
+      Vector<String> sixty = new Vector<>();
+      for (int i = 0; i <= 60; ++i) {
+         sixty.add(time_formatter.format(i));
+       }
+      hours_input = new SwingComboBox<String>(tfour);
+    }
+   
+}       // end of inner class CountdownPanel
+
+
+
 
 }       // end of class BeamCountdownTimer
 
