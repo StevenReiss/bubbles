@@ -28,6 +28,7 @@ import java.awt.Image;
 import java.text.DecimalFormat;
 import java.util.Vector;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.Timer;
@@ -118,6 +119,8 @@ private void changeLabelTimer()
 
 private class CountdownPanel extends SwingGridPanel {
   
+   private static final long serialVersionUID = 1;
+   
    CountdownPanel() {
       BoardProperties bp = BoardProperties.getProperties("Beam");
       int w = bp.getInt("Beam.timer.width",250);
@@ -134,7 +137,10 @@ private class CountdownPanel extends SwingGridPanel {
       for (int i = 0; i <= 60; ++i) {
          sixty.add(time_formatter.format(i));
        }
-      hours_input = new SwingComboBox<String>(tfour);
+      hours_input = new SwingComboBox<>(tfour);
+      minutes_input = new SwingComboBox<>(sixty);
+      seconds_input = new SwingComboBox<>(sixty);
+    
     }
    
 }       // end of inner class CountdownPanel

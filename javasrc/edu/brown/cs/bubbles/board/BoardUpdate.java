@@ -25,17 +25,15 @@
 
 package edu.brown.cs.bubbles.board;
 
-import edu.brown.cs.ivy.exec.IvyExecQuery;
-import edu.brown.cs.ivy.file.IvyFile;
-import edu.brown.cs.ivy.swing.SwingTextField;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.swing.JFrame;
@@ -64,8 +62,11 @@ import java.io.Writer;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -78,7 +79,7 @@ import java.util.concurrent.TimeUnit;
  *	to do the update.
  **/
 
-public class BoardUpdate implements BoardConstants {
+public class BoardUpdate {
 
 
 /********************************************************************************/
@@ -146,7 +147,7 @@ private static final String VERSION_RESOURCE = "version.xml";
 private static final String	UPDATER_PREFIX = "bubblesupdater";
 private static final String	UPDATER_SUFFIX = ".jar";
 
-
+private static final String BUBBLES_DIR = "https://www.cs.brown.edu/people/spr/bubbles/";
 
 
 /********************************************************************************/
@@ -408,7 +409,7 @@ private void startUpdate() throws IOException
    OutputStream ots = new BufferedOutputStream(new FileOutputStream(f));
    URL u = new URL(bubbles_dir + UPDATER_URL);
    InputStream ins = u.openConnection(update_proxy).getInputStream();
-   IvyFile.copyFile(ins,ots);
+   copyFile(ins,ots);
 
    System.err.println("BUBBLES: Starting update");
 
@@ -416,7 +417,7 @@ private void startUpdate() throws IOException
    int ln = java_args.size();
 
    int idx = 0;
-   java_args.add(idx++,IvyExecQuery.getJavaPath());
+   java_args.add(idx++,getJavaPath());
 
    java_args.add(idx++,"-jar");
    java_args.add(idx++,f.getPath());
@@ -433,6 +434,7 @@ private void startUpdate() throws IOException
        }
     }
    catch (Throwable t) {
+      // not from updater
       BoardLog.logE("BOARD","Problem getting proxy info for updater",t);
     }
 
@@ -463,7 +465,7 @@ private void setupUpdate()
 
    JPanel pnl = new JPanel(new BorderLayout());
    pnl.setBackground(new Color(211,232,248));
-   JTextField prog = new SwingTextField();
+   JTextField prog = new JTextField();
    prog.setEditable(false);
    pnl.add(prog,BorderLayout.SOUTH);
    JLabel lbl = new JLabel("<html><h1><c>Updating Code Bubbles</c></h1>" +
@@ -510,14 +512,14 @@ private void setupUpdate()
       InputStream ins = new FileInputStream(jf0);
       OutputStream ots = new FileOutputStream(jf1);
       jf1.deleteOnExit();
-      IvyFile.copyFile(ins,ots);
+      copyFile(ins,ots);
       usebackup = true;
 
       prog.setText("Downloading new version of bubbles");
       URL u = new URL(bubbles_dir + BUBBLES_URL);
       ins = u.openConnection(update_proxy).getInputStream();
       ots = new FileOutputStream(jf0);
-      IvyFile.copyFile(ins,ots);
+      copyFile(ins,ots);
     }
    catch (Throwable t) {
       JOptionPane.showMessageDialog(null,"Problem doing update: " + t);
@@ -529,7 +531,7 @@ private void setupUpdate()
 	 try {
 	    InputStream ins = new FileInputStream(jf1);
 	    OutputStream ots = new FileOutputStream(jf0);
-	    IvyFile.copyFile(ins,ots);
+	    copyFile(ins,ots);
 	  }
 	 catch (IOException e) {
 	    System.err.println("BOARDUPDATE: problem restoring backup " + jf1);
@@ -540,13 +542,12 @@ private void setupUpdate()
       System.exit(1);
     }
 
-   BoardPluginManager bpm = new BoardPluginManager();
-   bpm.updatePlugins();
+   updatePlugins();
 
    try {
       prog.setText("Restarting bubbles");
       List<String> args = new ArrayList<String>();
-      args.add(IvyExecQuery.getJavaPath());
+      args.add(getJavaPath());
       if (max_memory > 0) args.add("-Xmx" + max_memory);
       args.add("-cp");
       args.add(jf0.getPath());
@@ -578,15 +579,140 @@ private void setupUpdate()
        }
     }
    catch (IOException e) {
-      System.err.println("BOARD: Problem restarting bubbles: " + e);
+      System.err.println("BOARDUPDATE: Problem restarting bubbles: " + e);
       System.exit(1);
     }
 }
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Plugin updater                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+private void updatePlugins()
+{
+   Map<String,URL> plugins = getPluginData();
+   
+   File p1 = new File(jar_file);
+   File p2 = p1.getParentFile();
+   File dir = new File(p2,"dropins");
+   if (!dir.exists()) dir = new File(p2,"plugins");
+   if (!dir.exists()) return;
+   for (File f : dir.listFiles()) {
+      URL u1 = plugins.get(f.getName());
+      if (u1 != null) updatePlugin(f,u1);
+    }
+}
 
 
 
+private void updatePlugin(File jar,URL url)
+{
+   long dlm = jar.lastModified();
+   URLConnection uc = null;
+   try {
+      uc = url.openConnection();
+      long urldlm = uc.getLastModified();
+      if (urldlm < dlm) return;
+    }
+   catch (IOException e) {
+      System.err.println("BOARDUPATE: Problem updating plugin " + jar);
+      e.printStackTrace();
+    }
+   
+   File f1 = new File(jar + ".save");
+   jar.renameTo(f1);
+   try {
+      InputStream uins = uc.getInputStream();
+      copyFile(uins,jar);
+      f1.delete();
+    }
+   catch (IOException e) {
+      f1.renameTo(jar);
+      System.err.println("BOARDUPDATE: Problem copying plugin update for " + jar);
+      e.printStackTrace();
+    }
+}
+
+
+private Map<String,URL> getPluginData()
+{
+   Map<String,URL> rslt = new HashMap<>();
+   
+   try {
+      URL u = new URL(BUBBLES_DIR + "/plugins.xml");
+      InputStream uins = u.openConnection().getInputStream();
+      Element xml = loadXmlFromStream(uins);
+      NodeList nl = xml.getElementsByTagName("PLUGIN");
+      for (int i = 0; i < nl.getLength(); ++i) {
+         Element pxml = (Element) nl.item(i);
+         String urls = pxml.getAttribute("URL");
+         int idx = urls.lastIndexOf("/");
+         String jar = urls.substring(idx+1);
+         URL pu = new URL(urls);
+         rslt.put(jar,pu);
+       }
+    }
+   catch (IOException e) {
+      System.err.println("BOARDUPDATE: Problem getting plugin data");
+      e.printStackTrace();
+    }
+   
+   return rslt;
+}
+
+
+
+private void copyFile(InputStream r,File df) throws IOException
+{
+   FileOutputStream w = new FileOutputStream(df);
+   try {
+      byte [] buf = new byte[8192];
+      for ( ; ; ) {
+         int ln = r.read(buf);
+         if (ln <= 0) break;
+         w.write(buf,0,ln);
+       }
+    }
+   finally {
+      w.close();
+      r.close();
+    }
+}
+
+
+private void copyFile(InputStream ins,OutputStream ots) throws IOException
+{
+   byte [] buf = new byte[8192];
+   
+   for ( ; ; ) {
+      int ct = ins.read(buf,0,buf.length);
+      if (ct < 0) break;
+      ots.write(buf,0,ct);
+    }
+   
+   ins.close();
+   ots.close();
+}
+
+
+private String getJavaPath()
+{
+   String jpath = System.getProperty("java.home");
+   File jhome = new File(jpath);
+   File f1 = new File(jhome,"bin");
+   File f2 = new File(f1,"java");
+   if (f2.exists() && f2.canExecute()) return f2.getPath();
+   
+   File f3 = new File(jpath,"jre");
+   File f4 = new File(f3,"bin");
+   File f5 = new File(f4,"java");
+   if (f5.exists() && f5.canExecute()) return f5.getPath();
+   
+   return "java";
+}
 
 
 
@@ -772,7 +898,92 @@ private static void outputXmlString(String s,Writer pw)
 }
 
 
+private Element loadXmlFromStream(InputStream inf)
+{
+   Element rslt = null;
+   XmlParser xp = new XmlParser(false);
+   if (inf == null) return null;
+   
+   try {
+      InputSource ins = new InputSource(inf);
+      Document xdoc = xp.parse(ins);
+      inf.close();
+      rslt = xdoc.getDocumentElement();
+      xp.reset();
+    }
+   catch (SAXException e) {
+      System.err.println("Ivy XML parse error for input stream: " + e.getMessage());
+    }
+   catch (IOException e) {
+      System.err.println("Ivy XML I/O error for input stream: " + e.getMessage());
+    }
+   catch (Exception e) {
+      System.err.println("Ivy XML error for input stream: " + e);
+      e.printStackTrace();
+    }
+   
+   return rslt;
+}
 
+
+/********************************************************************************/
+/*										*/
+/*	Create a parser 							*/
+/*										*/
+/********************************************************************************/
+
+private static class XmlParser {
+
+   DocumentBuilder parser_object;
+   
+   XmlParser(boolean ns) {
+      DocumentBuilderFactory dbf = null;
+      try {
+         dbf = DocumentBuilderFactory.newInstance();
+       }
+      catch (Exception e) {
+         System.err.println("BOARDUPDATE: Problem creating document builder factory: " + e);
+         throw e;
+       }
+      dbf.setValidating(false);
+      // dbf.setXIncludeAware(false);
+      dbf.setNamespaceAware(ns);
+      dbf.setIgnoringElementContentWhitespace(true);
+      
+      try {
+         System.setProperty("entityExpansionLimit","100000000");
+       }
+      catch (Throwable e) { }
+      try {
+         dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
+       }
+      catch (Throwable e) { }
+      try {
+         parser_object = dbf.newDocumentBuilder();
+       }
+      catch (ParserConfigurationException e) {
+         System.err.println("IvyXml: Problem creating java xml parser: " + e.getMessage());
+         System.exit(1);
+       }
+    }
+   
+   Document parse(InputSource is) throws Exception {
+      return parser_object.parse(is);
+    }
+   
+   Document parse(String uri) throws Exception {
+      return parser_object.parse(uri);
+    }
+   
+   void reset() {
+      try {
+         parser_object.reset();
+         parse("<END/>");
+       }
+      catch (Throwable e) { }
+    }
+
+}	// end of subclass XmlParser
 
 
 }	// end of class BoardUpdate
