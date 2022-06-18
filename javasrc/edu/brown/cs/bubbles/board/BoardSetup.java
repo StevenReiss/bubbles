@@ -837,7 +837,9 @@ void setRunSize(long sz)
 public String getLibraryPath(String item)
 {
    File f = getLibraryDirectory();
-   if (f == null) return null;
+   if (f == null) {
+      return null;
+    }
 
    f = new File(f,item);
    if (!f.exists()) {
@@ -918,8 +920,15 @@ public String getEclipsePath()
    StringBuffer buf = new StringBuffer();
    int fnd = 0;
    String ejp = getLibraryPath("eclipsejar");
-   File ejr = new File(ejp);
-   if (ejr.exists() && ejr.isDirectory()) {
+   if (ejp == null) {           // might occur if we haven't check the installation
+      if (!checkInstall()) {
+         BoardLog.logD("BOARD","Attempt to get eclipse path without valid installation");
+       }
+      ejp = getLibraryPath("eclipsejar");
+    }
+   File ejr = null;
+   if (ejp != null) ejr = new File(ejp);
+   if (ejr != null && ejr.exists() && ejr.isDirectory()) {
       for (File nfil : ejr.listFiles()) {
 	 if (nfil.getName().startsWith("org.eclipse.") || nfil.getName().startsWith("com.google.")) {
             if (nfil.getName().endsWith(".jar")) {
@@ -1056,7 +1065,11 @@ public File getLibraryDirectory()
    else if (install_path != null) {
       f = new File(install_path);
     }
-   else return null;
+   else {
+      BoardLog.logE("BOARD","No library directory found " +
+         install_jar + " " + jar_directory + " " + install_path);
+      return null;
+    }
 
    f = new File(f,BOARD_INSTALL_LIBRARY);
 
@@ -2046,13 +2059,16 @@ private boolean checkInstall()
 //       if (ins == null) ins = getClass().getClassLoader().getResourceAsStream(s);
 	 if (ins == null) {
 	    ok = false;
-	    System.err.println("BOARD: Setup failed on " + s);
+	    BoardLog.logE("BOARD","Setup failed on " + s);
 	  }
 	 else ins.close();
        }
       if (ok) {
 	 URL url = BoardImage.class.getClassLoader().getResource(BOARD_RESOURCE_CHECK);
-	 if (url == null || !url.toString().startsWith("jar")) ok = false;
+	 if (url == null || !url.toString().startsWith("jar")) {
+            BoardLog.logE("BOARD","Problem accessing resources: " + url);
+            ok = false;
+          }
        }
       install_jar = ok;
 
