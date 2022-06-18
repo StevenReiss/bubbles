@@ -177,6 +177,7 @@ public static void setup()
    BudaRoot.registerMenuButton(HELP_TUTORIAL_BUTTON,getFactory());
    BudaRoot.registerMenuButton(HELP_KEY_BUTTON,getFactory());
    BudaRoot.registerMenuButton(PALETTE_BUTTON,getFactory());
+   BudaRoot.registerMenuButton(TIMER_BUTTON,getFactory());
 
    BoardProperties bp = BoardProperties.getProperties("Beam");
    if (bp.getBoolean("Beam.show.save")) {
@@ -437,6 +438,10 @@ static void sendMailDirect(String to,String subj,String body,List<File> add,Stri
 	 buda_root.repaint();
 	 buda_root.handlePropertyChange();
        }
+    }
+   else if (id.equals(TIMER_BUTTON)) {
+      bb = new BeamCountdownTimer();
+      pos = BudaBubblePosition.FLOAT;
     }
 
    if (bba != null && bb != null) {

@@ -346,6 +346,7 @@ Beam.ProblemNoticeColor :	0xff056006
 Beam.ProgressDoneColor	:	0xffc0ffc0
 Beam.ProgressTodoColor	:	0xffc0c0c0
 
+Beam.TimerColor 	:	wheat
 
 
 Bgta.BubbleTopColor	:	white

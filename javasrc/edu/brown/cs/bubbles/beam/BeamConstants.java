@@ -349,6 +349,7 @@ String HELP_MAIL_KEY = "Beam.help.mailto";
 String BEAM_TOOLBAR_MENU_BUTTON = "DefaultMenu";
 
 String PALETTE_BUTTON = "Admin.Admin.Set Color Palette";
+String TIMER_BUTTON = "Admin.Admin.Create Timer";
 
 
 

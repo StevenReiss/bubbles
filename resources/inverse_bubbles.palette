@@ -1,5 +1,6 @@
 Bass.panel.select.background	:	0xff2d4035
 Bvcr.DiffCenterBackground	:	0xff000000
+Beam.TimerColor	:	0xff402d38
 Buda.OverviewFakeTextColor	:	0xff000000
 Batt.BarTypeNone	:	0xff000000
 Bdyn.BackgroundColor	:	0xff000000
