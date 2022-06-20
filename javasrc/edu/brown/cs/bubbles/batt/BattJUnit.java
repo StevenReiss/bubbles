@@ -771,13 +771,12 @@ private static class ExitException extends SecurityException {
 
 
 
-@SuppressWarnings("removal")
+@SuppressWarnings("all")
 private static class NoExitManager extends SecurityManager {
 
    @Override public void checkPermission(Permission p)			{ }
    @Override public void checkPermission(Permission p,Object ctx)	{ }
 
-   @SuppressWarnings("deprecation")
    @Override public void checkExit(int sts) {
       super.checkExit(sts);
       throw new ExitException(sts);

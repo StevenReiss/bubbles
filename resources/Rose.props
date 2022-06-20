@@ -29,6 +29,7 @@
 <entry key="Edited.parent">Differences</entry>
 <entry key="Edited.foreground">#cc0000</entry>
 <entry key="Rose.max.up">1</entry>
+<entry key="Rose.ask.driver">false</entry>
 </properties>
 
 

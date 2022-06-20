@@ -373,8 +373,9 @@ private void log(LogLevel lvl,String src,String msg,Throwable t)
       if (debug_writer != null) debug_writer.println(txt);
       if (use_stderr) System.err.println(txt);
 
-      if (t != null) {
-	 txt = src + ":EX: " + t.getMessage();
+      String pfx = ":EX: ";
+      for ( ; t != null; t = t.getCause()) { 
+	 txt = src + pfx + t.getMessage();
 	 if (debug_writer != null) {
 	    debug_writer.println(txt);
 	    t.printStackTrace(debug_writer);
@@ -383,6 +384,7 @@ private void log(LogLevel lvl,String src,String msg,Throwable t)
 	    System.err.println(txt);
 	    t.printStackTrace();
 	  }
+         pfx = ":EC: ";
        }
     }
 }
