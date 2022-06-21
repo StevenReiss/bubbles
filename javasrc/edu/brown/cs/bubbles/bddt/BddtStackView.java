@@ -596,32 +596,32 @@ private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBub
 
    @Override protected void paintComponent(Graphics g) {
       if (!is_frozen && !is_extinct && value_model.hasBeenFrozen())
-	 is_frozen = true;
-
+         is_frozen = true;
+   
       Dimension sz = getSize();
       Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
       Graphics2D g2 = (Graphics2D) g.create();
       Color top = BoardColors.getColor(BDDT_STACK_TOP_COLOR_PROP);
       Color bot = BoardColors.getColor(BDDT_STACK_BOTTOM_COLOR_PROP);
       if (is_frozen) {
-	 top = BoardColors.getColor(BDDT_STACK_FROZEN_TOP_COLOR_PROP);
-	 bot = BoardColors.getColor(BDDT_STACK_FROZEN_BOTTOM_COLOR_PROP);
+         top = BoardColors.getColor(BDDT_STACK_FROZEN_TOP_COLOR_PROP);
+         bot = BoardColors.getColor(BDDT_STACK_FROZEN_BOTTOM_COLOR_PROP);
        }
       else if (is_extinct) {
-	 top = BoardColors.getColor(BDDT_STACK_EXTINCT_TOP_COLOR_PROP);
-	 bot = BoardColors.getColor(BDDT_STACK_EXTINCT_BOTTOM_COLOR_PROP);
+         top = BoardColors.getColor(BDDT_STACK_EXTINCT_TOP_COLOR_PROP);
+         bot = BoardColors.getColor(BDDT_STACK_EXTINCT_BOTTOM_COLOR_PROP);
        }
       if (top.getRGB() != bot.getRGB()) {
-	 Paint p = new GradientPaint(0f,0f,top,0f,sz.height,bot);
-	 g2.setPaint(p);
+         Paint p = new GradientPaint(0f,0f,top,0f,sz.height,bot);
+         g2.setPaint(p);
        }
       else {
-	 g2.setColor(top);
+         g2.setColor(top);
        }
       g2.fill(r);
       value_model.lock();
       try {
-	 super.paintComponent(g);
+         super.paintComponent(g);
        }
       finally { value_model.unlock(); }
     }
@@ -709,7 +709,7 @@ private static class CellDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+        						       boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       cmp.setOpaque(false);
       return cmp;
@@ -729,12 +729,12 @@ private static class TreeCellRenderer extends DefaultTreeCellRenderer {
     }
 
    @Override public Component getTreeCellRendererComponent(JTree tree,
-							      Object value,
-							      boolean sel,
-							      boolean expanded,
-							      boolean leaf,
-							      int row,
-							      boolean hasfocus) {
+        						      Object value,
+        						      boolean sel,
+        						      boolean expanded,
+        						      boolean leaf,
+        						      int row,
+        						      boolean hasfocus) {
       Component c = super.getTreeCellRendererComponent(tree,value,sel,expanded,leaf,row,hasfocus);
       return c;
    }
