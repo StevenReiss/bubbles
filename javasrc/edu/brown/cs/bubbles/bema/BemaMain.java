@@ -150,8 +150,8 @@ private BoardLanguage	for_language;
 private String		palette_name;
 private boolean 	install_only;
 private boolean 	no_bedrock;
-private Map<String,ClassLoader> class_loaders;
 
+private static Map<String,ClassLoader> class_loaders = new HashMap<>();
 
 
 
@@ -183,7 +183,6 @@ private BemaMain(String [] args)
    no_bedrock = false;
    auto_update = null;
    palette_name = null;
-   class_loaders = new HashMap<>();
 
    checkDefaultLanguage();
 
@@ -240,9 +239,9 @@ private void scanArgs(String [] args)
 	       ask_workspace = false;
 	     }
 	  }
-         else if (args[i].startsWith("-idea")) {                // -idea
-            useJavaIdea();
-          }
+	 else if (args[i].startsWith("-idea")) {                // -idea
+	    useJavaIdea();
+	  }
 	 else if (args[i].startsWith("-course") && i+1 < ln) {  // -course <course>
 	    course_name = args[++i];
 	    File fa = new File(System.getProperty("user.home"));
@@ -309,8 +308,8 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-inv")) {                 // -inverse
 	    if (palette_name == null) palette_name = "inverse_bubbles.palette";
 	    else if (palette_name.startsWith("inverse_")) {
-               palette_name = palette_name.substring(8);
-             }
+	       palette_name = palette_name.substring(8);
+	     }
 	    else palette_name = "inverse_" + palette_name;
 	  }
 	 else badArgs();
@@ -528,7 +527,7 @@ private void start()
     }
 
    SwingKey.saveKeyDefinitions();
-   
+
    BumpClient nbc = BumpClient.getBump();
    Element xe = nbc.getAllProjects(300000);
    if (IvyXml.getChild(xe,"PROJECT") == null) {
@@ -590,6 +589,7 @@ private void loadPlugins(BudaRoot buda)
    BoardProperties bp = BoardProperties.getProperties("Bema");
    String pinf = bp.getProperty("Bema.pluginfolder","dropins plugins");
    if (pinf != null) {
+      List<String> names= new ArrayList<>();
       StringTokenizer tok = new StringTokenizer(pinf);
       while (tok.hasMoreTokens()) {
 	 String pdir = tok.nextToken();
@@ -599,15 +599,18 @@ private void loadPlugins(BudaRoot buda)
 	    dir = new File(root,pdir);
 	  }
 	 if (dir.exists() && dir.isDirectory()) {
-	    loadPlugins(dir,buda);
+	    loadPlugins(dir,buda,names);
 	  }
+       }
+      for (String s : names) {
+	 finishPackage(s);
        }
     }
 }
 
 
 
-private void loadPlugins(File dir,BudaRoot root)
+private void loadPlugins(File dir,BudaRoot root,List<String> names)
 {
    File [] cands = dir.listFiles();
    if (cands != null) {
@@ -626,7 +629,7 @@ private void loadPlugins(File dir,BudaRoot root)
 		  String dep = at.getValue("Bubbles-depends");
 		  String palette = at.getValue("Bubbles-palette");
 		  String res = at.getValue("Bubbles-resource");
-                  String lib = at.getValue("Bubbles-lib");
+		  String lib = at.getValue("Bubbles-lib");
 		  String load = jfn.getAbsolutePath();
 		  String basename = null;
 		  if (dep != null) {
@@ -640,7 +643,7 @@ private void loadPlugins(File dir,BudaRoot root)
 			setupPluginResource(jf,nm);
 		      }
 		   }
-                  if (lib != null) {
+		  if (lib != null) {
 		     StringTokenizer tok = new StringTokenizer(lib);
 		     while (tok.hasMoreTokens()) {
 			String nm = tok.nextToken();
@@ -654,6 +657,7 @@ private void loadPlugins(File dir,BudaRoot root)
 			if (basename == null) basename = nm;
 			setupPackage(nm,load);
 			initializePackage(nm,root);
+			names.add(nm);
 		      }
 		   }
 		  if (basename != null && palette != null) {
@@ -810,6 +814,50 @@ private void initializePackage(String nm,BudaRoot br)
 }
 
 
+private void finishPackage(String nm)
+{
+   try {
+      ClassLoader cldr = class_loaders.get(nm);
+      if (cldr == null) cldr = BemaMain.class.getClassLoader();
+      Class<?> c = Class.forName(nm,true,cldr);
+      Method m = c.getMethod("postLoad");
+      m.invoke(null);
+    }
+   catch (ClassNotFoundException e) {
+      if (nm.contains("bubbles.bicex.") ||
+	    nm.contains("bubbles.brepair") ||
+	    nm.contains("bubbles.bsean")) return;
+      BoardLog.logE("BEMA","Package " + nm + " doesn't exist");
+    }
+   catch (NoSuchMethodException e) {
+      // BoardLog.logI("BEMA","no initialize method");
+    }
+   catch (Throwable e) {
+      BoardLog.logE("BEMA","Error during initialization",e);
+      // missing initialize method is okay, missing class already caught
+    }
+}
+
+
+
+public static Class<?> findClass(String nm)
+{
+   try {
+      return Class.forName(nm);
+    }
+   catch (ClassNotFoundException e) { }
+
+   for (ClassLoader cldr : class_loaders.values()) {
+      try {
+	 return Class.forName(nm,true,cldr);
+       }
+      catch (ClassNotFoundException e) { }
+    }
+
+   return null;
+}
+
+
 
 private Collection<String> getSetupPackageProperties()
 {
@@ -876,8 +924,8 @@ private void checkDefaultLanguage()
 	 break;
        }
       else if (elt.equals("bibbles.jar")) {
-         useJavaIdea();
-         break;
+	 useJavaIdea();
+	 break;
        }
     }
 }

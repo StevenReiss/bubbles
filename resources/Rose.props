@@ -4,7 +4,7 @@
 <entry key="Rose.rose.debug">true</entry>
 <entry key="Rose.rose.add.path">rose.jar</entry>
 <entry key="Rose.fait.class.path">fait.jar:asm.jar:eclipsejar:junit.jar:ivy.jar</entry>
-<entry key="Rose.fait.threads">1</entry>
+<entry key="Rose.fait.threads">4</entry>
 <entry key="Rose.fait.debug">true</entry>
 <entry key="Rose.fait.trace">true</entry>
 <entry key="Rose.seede.class.path">seede.jar:asm.jar:eclipsejar:junit.jar:ivy.jar:poppy.jar</entry>
