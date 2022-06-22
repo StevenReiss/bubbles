@@ -2130,7 +2130,8 @@ private class StepUserFilter implements BumpThreadFilter {
       if (stk.getNumFrames() == initial_stack.getNumFrames()) {
          if (frm.getMethod().equals(frm0.getMethod()) &&
         	(frm.getLineNumber() == frm0.getLineNumber() || frm.getLineNumber() == 1) &&
-        	frm.getClass().equals(frm0.getClass())) {
+        	frm.getClass().equals(frm0.getClass()) &&
+           bt.getExceptionType() == null)  {
             bump_client.stepInto(bt);
             return null;
           }
