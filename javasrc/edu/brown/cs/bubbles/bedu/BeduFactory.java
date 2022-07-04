@@ -30,7 +30,7 @@ import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaErrorBubble;
 import edu.brown.cs.bubbles.buda.BudaRoot;
-
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
@@ -402,10 +402,7 @@ static File getInstallDirectory()
 
    if (f == null) return null;
 
-   try {
-      f = f.getCanonicalFile();
-   }
-   catch (IOException e) { }
+   f = IvyFile.getCanonical(f);
 
    return f;
 }

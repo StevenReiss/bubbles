@@ -494,9 +494,9 @@ private class RemoteFile extends File {
       Element xml = fileCanonical(this);
       String s = IvyXml.getAttrString(xml,"FILE");
       if (!IvyXml.getAttrBool(xml,"STATUS")) {
-	 throw new IOException(s);
+         throw new IOException(s);
        }
-
+   
       return IvyXml.getAttrString(xml,"FILE");
     }
 

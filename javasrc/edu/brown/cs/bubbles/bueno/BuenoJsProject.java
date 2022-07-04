@@ -229,22 +229,23 @@ private void initialzeProject()
 {
    BuenoPathEntry pd = new BuenoPathEntry(project_file,PathType.SOURCE,false);
    project_paths.add(pd);
-
+   
    if (project_type == ProjectType.NODE_JS) {
-      if (project_includes != null && !project_includes.equals("")) {
-	 String fpath = project_file.getPath();
-	 int sz = fpath.length();
-	 File [] sdirs = project_file.listFiles();
-	 if (sdirs != null) {
-	    for (File sdir : sdirs) {
-	       String pn = sdir.getPath();
-	       pn = pn.substring(sz+1);
-	       if (includeFile(pn)) {
-		  BuenoPathEntry spd = new BuenoPathEntry(sdir,PathType.SOURCE,false);
-		  project_paths.add(spd);
-		}
-	     }
-	  }
+      if (project_includes == null || project_includes.equals("")) { }
+      else {
+         String fpath = project_file.getPath();
+         int sz = fpath.length();
+         File [] sdirs = project_file.listFiles();
+         if (sdirs != null) {
+            for (File sdir : sdirs) {
+               String pn = sdir.getPath();
+               pn = pn.substring(sz+1);
+               if (includeFile(pn)) {
+                  BuenoPathEntry spd = new BuenoPathEntry(sdir,PathType.SOURCE,false);
+                  project_paths.add(spd);
+                }
+             }
+          }
        }
       File f1 = new File(project_file,"node_modules");
       BuenoPathEntry lpd = new BuenoPathEntry(f1,PathType.LIBRARY,true);
@@ -258,11 +259,12 @@ private void initialzeProject()
 
 private boolean includeFile(String path)
 {
-   if (project_includes == null) return false;
-   StringTokenizer tok = new StringTokenizer(project_includes);
-   while (tok.hasMoreTokens()) {
-      String pat = tok.nextToken();
-      if (pat.equals(path)) return true;
+   if (project_includes != null) {
+      StringTokenizer tok = new StringTokenizer(project_includes);
+      while (tok.hasMoreTokens()) {
+         String pat = tok.nextToken();
+         if (pat.equals(path)) return true;
+       }
     }
 
    return false;
@@ -359,18 +361,18 @@ private class ProjectCreator extends SwingGridPanel implements ActionListener, U
       String dnm = null;
       ProjectType pt = (ProjectType) type_field.getSelectedItem();
       switch (pt) {
-	 case HTML :
-	    if (file_field != null) dnm = file_field.getText().trim();
-	    break;
-	 case NODE_JS :
-	    if (source_field != null) dnm = source_field.getText().trim();
-	    break;
+         case HTML :
+            if (file_field != null) dnm = file_field.getText().trim();
+            break;
+         case NODE_JS :
+            if (source_field != null) dnm = source_field.getText().trim();
+            break;
        }
       if (dnm != null && dnm.length() == 0) dnm = null;
       if (dnm != null) {
-	 File f1 = new File(dnm);
-	 if (f1.isAbsolute()) return f1;
-	 else pfx = dnm;
+         File f1 = new File(dnm);
+         if (f1.isAbsolute()) return f1;
+         else pfx = dnm;
        }
       File f1 = new File(BoardSetup.getSetup().getDefaultWorkspace());
       return new File(f1,pfx);
@@ -381,28 +383,28 @@ private class ProjectCreator extends SwingGridPanel implements ActionListener, U
       boolean isok = true;
       ProjectType pt = (ProjectType) type_field.getSelectedItem();
       switch (pt) {
-	 case HTML :
-	    source_field.setVisible(false);
-	    subdirs_field.setVisible(false);
-	    file_field.setVisible(true);
-	    String snm = file_field.getText().trim();
-	    if (snm != null && snm.length() > 0) {
-	       File f = new File(snm);
-	       if (!f.exists() || !f.isDirectory()) isok = false;
-	     }
-	    break;
-	 case NODE_JS :
-	    source_field.setVisible(true);
-	    subdirs_field.setVisible(true);
-	    file_field.setVisible(false);
-	    String hnm = source_field.getText().trim();
-	    if (hnm != null && hnm.length() > 0) {
-	       File f = new File(hnm);
-	       if (!f.exists() || !f.isDirectory()) isok = false;
-	     }
-	    break;
+         case HTML :
+            source_field.setVisible(false);
+            subdirs_field.setVisible(false);
+            file_field.setVisible(true);
+            String snm = file_field.getText().trim();
+            if (snm != null && snm.length() > 0) {
+               File f = new File(snm);
+               if (!f.exists() || !f.isDirectory()) isok = false;
+             }
+            break;
+         case NODE_JS :
+            source_field.setVisible(true);
+            subdirs_field.setVisible(true);
+            file_field.setVisible(false);
+            String hnm = source_field.getText().trim();
+            if (hnm != null && hnm.length() > 0) {
+               File f = new File(hnm);
+               if (!f.exists() || !f.isDirectory()) isok = false;
+             }
+            break;
        }
-
+   
       String pnm = name_field.getText().trim();
       if (!pnm.matches("\\w+")) isok = false;
       if (isok) {
@@ -411,7 +413,7 @@ private class ProjectCreator extends SwingGridPanel implements ActionListener, U
          File f2 = f1.getParentFile();
          if (f1.exists() || !f2.exists() || !f2.isDirectory()) isok = false;
       }
-
+   
       create_button.setEnabled(isok);
     }
 

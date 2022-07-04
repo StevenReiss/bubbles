@@ -22,6 +22,7 @@
 package edu.brown.cs.bubbles.pybase;
 
 
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -80,10 +81,7 @@ PybaseProject(PybaseMain pm,String name,File base)
    pybase_main = pm;
    project_manager = pm.getProjectManager();
    base_directory = base.getAbsoluteFile();
-   try {
-      base_directory = base_directory.getCanonicalFile();
-   }
-   catch (IOException e) { }
+   base_directory = IvyFile.getCanonical(base_directory);
    if (name == null) name = base.getName();
    project_name = name;
    project_paths = new ArrayList<IPathSpec>();
@@ -233,12 +231,7 @@ void editProject(Element pxml)
    for (Element pelt : IvyXml.children(pxml,"PATH")) {
       havepath = true;
       File f1 = new File(IvyXml.getAttrString(pelt,"DIRECTORY"));
-      try {
-	 f1 = f1.getCanonicalFile();
-       }
-      catch (IOException e) {
-	 f1 = f1.getAbsoluteFile();
-       }
+      f1 = IvyFile.getCanonical(f1);
       boolean fnd = false;
       for (IPathSpec ps : project_paths) {
 	 if (done.contains(ps)) continue;

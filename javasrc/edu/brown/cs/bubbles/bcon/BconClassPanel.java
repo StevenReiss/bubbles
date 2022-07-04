@@ -1160,12 +1160,12 @@ private class ListMover extends TransferHandler {
 
    @Override protected void exportDone(JComponent src,Transferable d,int act) {
       if (act == MOVE) {
-	 try {
-	    ListTransfer lt = (ListTransfer) d.getTransferData(region_flavor);
-	    lt.removeText();
-	  }
-	 catch (IOException e) { }
-	 catch (UnsupportedFlavorException e) { }
+         try {
+            ListTransfer lt = (ListTransfer) d.getTransferData(region_flavor);
+            lt.removeText();
+          }
+         catch (IOException e) { }
+         catch (UnsupportedFlavorException e) { }
        }
       BudaRoot br = BudaRoot.findBudaRoot(class_panel);
       if (br != null) br.handleSaveAllRequest();

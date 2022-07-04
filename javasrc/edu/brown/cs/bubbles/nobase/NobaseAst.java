@@ -171,6 +171,8 @@ static int getExtendedEndPosition(ASTNode n)
 
 static int getLineNumber(ASTNode n)
 {
+   if (n == null) return 0;
+   
    JavaScriptUnit ju = (JavaScriptUnit) n.getRoot();
    int lno = ju.getLineNumber(n.getStartPosition());
    if (lno < 0 && n.getParent() != null) {
@@ -178,6 +180,7 @@ static int getLineNumber(ASTNode n)
     }
    if (lno < 0) {
       NobaseMain.logE("No line number for ASTNode " + n);
+      lno = 0;
     }
    
    return lno;

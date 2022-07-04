@@ -25,13 +25,12 @@
 package edu.brown.cs.bubbles.bpare;
 
 import edu.brown.cs.bubbles.board.BoardSetup;
-
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -74,18 +73,12 @@ BpareProject(Element xml)
       if (IvyXml.getAttrBool(cp,"SOURCE")) {
 	 String fp0 = IvyXml.getTextElement(cp,"PATH");
 	 File f0 = new File(fp0);
-	 try {
-	    f0 = f0.getCanonicalFile();
-	 }
-	 catch (IOException e) { }
+         f0 = IvyFile.getCanonical(f0);
 	 if (f0.exists() && f0.canRead()) file_set.add(f0);
 	 else {
 	    String fp1 = IvyXml.getText(cp);
 	    File f1 = new File(fp1);
-	    try {
-	       f1 = f1.getCanonicalFile();
-	    }
-	    catch (IOException e) { }
+            f1 = IvyFile.getCanonical(f1);
 	    if (f1.exists() && f1.canRead()) file_set.add(f1);
 	  }
        }

@@ -58,7 +58,9 @@ private boolean is_nested;
 NobasePathSpec(Element xml)
  {
    String fnm = IvyXml.getTextElement(xml,"SOURCE");
+   if (fnm == null) fnm = IvyXml.getTextElement(xml,"BINARY");
    if (fnm == null) {
+      // old form
       fnm = IvyXml.getTextElement(xml,"DIR") ;
       is_user = IvyXml.getAttrBool(xml,"USER");
       is_exclude = IvyXml.getAttrBool(xml,"EXCLUDE");

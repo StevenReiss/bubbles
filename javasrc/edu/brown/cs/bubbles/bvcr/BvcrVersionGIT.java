@@ -25,7 +25,7 @@
 package edu.brown.cs.bubbles.bvcr;
 
 import edu.brown.cs.bubbles.board.BoardProperties;
-
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import java.io.File;
@@ -173,10 +173,7 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
    else {
       cmd += " --";
       for (File f : diffs) {
-	 try {
-	    f = f.getCanonicalFile();
-	  }
-	 catch (IOException e) { }
+         f = IvyFile.getCanonical(f);
 	 cmd += " " + f.getAbsolutePath();
        }
     }
@@ -253,10 +250,7 @@ private void findGitRoot()
     }
 
    String cmds = git_command + " log --reverse '--pretty=format:" + GIT_LOG_FORMAT + "'";
-   try {
-      f = f.getCanonicalFile();
-    }
-   catch (IOException e) { }
+   f = IvyFile.getCanonical(f);
    cmds += " -- " + f.getAbsolutePath();
    // parent version information is inaccurate in this case
 

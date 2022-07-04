@@ -86,12 +86,18 @@ BuenoPathEntry(Element e)
    is_new = false;
    is_modified = false;
    
-   if (cur_language == BoardLanguage.JS && source_path ==  null) {
-      // handle old style definitions
-      source_path = IvyXml.getTextElement(e,"DIR");
-      if (IvyXml.getAttrBool(e,"USER")) path_type = PathType.LIBRARY;
-      else if (IvyXml.getAttrBool(e,"EXCLUDE")) path_type = PathType.EXCLUDE;
-      else path_type = PathType.SOURCE;
+   if (cur_language == BoardLanguage.JS) {   
+      if (source_path == null && binary_path != null) {
+         source_path = binary_path;
+         binary_path = null;
+       }
+      if (source_path ==  null) {
+         // handle old style definitions
+         source_path = IvyXml.getTextElement(e,"DIR");
+         if (!IvyXml.getAttrBool(e,"USER")) path_type = PathType.LIBRARY;
+         else if (IvyXml.getAttrBool(e,"EXCLUDE")) path_type = PathType.EXCLUDE;
+         else path_type = PathType.SOURCE;
+       }
     }
 }
 
@@ -99,15 +105,13 @@ BuenoPathEntry(Element e)
 BuenoPathEntry(File f,PathType typ,boolean nest)
 {
    path_type = typ;
-   path_type = PathType.LIBRARY;
    source_path = null;
    output_path = null;
    binary_path = null;
    if (f != null) {
-      if (path_type == PathType.LIBRARY) binary_path = f.getPath();
-      else {
-         source_path = f.getPath();
-       }
+      if (cur_language == BoardLanguage.JS) source_path = f.getPath();
+      else if (path_type == PathType.LIBRARY) binary_path = f.getPath();
+      else source_path = f.getPath();
     }
    is_exported = false;
    is_optional = false;

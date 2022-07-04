@@ -3291,10 +3291,7 @@ private boolean checkDefaultInstallation()
       String pth = System.getProperty("edu.brown.cs.bubbles.jarpath");
       if (pth != null) {
 	 f = new File(pth);
-	 try {
-	    f = f.getCanonicalFile();
-	  }
-	 catch (IOException e) { }
+         f = IvyFile.getCanonical(f);
 	 if (!f.exists()) f = null;
        }
     }
@@ -3799,10 +3796,9 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
     }
 
    @Override public void keyPressed(KeyEvent e) {
-      BoardLog.logD("BOARD", "KeyEvent handled: " + KeyEvent.getKeyText(e.getKeyCode()));
       if (accept_button.isEnabled() && e.getKeyCode() == KeyEvent.VK_ENTER) {
-	 result_status = true;
-	 working_dialog.setVisible(false);
+         result_status = true;
+         working_dialog.setVisible(false);
        }
    }
 

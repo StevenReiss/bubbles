@@ -30,6 +30,7 @@ import edu.brown.cs.bubbles.pybase.symbols.Found;
 import edu.brown.cs.bubbles.pybase.symbols.SourceToken;
 
 import edu.brown.cs.ivy.exec.IvyExec;
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -204,12 +205,7 @@ void handleCreateProject(String name,String dir,IvyXmlWriter xw) throws PybaseEx
    if (!pdir.isDirectory()) {
       throw new PybaseException("Project path must be a directory " + pdir);
     }
-   try {
-      pdir = pdir.getCanonicalFile();
-    }
-   catch (IOException e) {
-      pdir = pdir.getAbsoluteFile();
-    }
+   pdir = IvyFile.getCanonical(pdir);
 
    loadProject(name,pdir);
 

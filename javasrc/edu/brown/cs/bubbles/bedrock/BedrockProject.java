@@ -33,6 +33,7 @@
 package edu.brown.cs.bubbles.bedrock;
 
 
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -1176,11 +1177,7 @@ ICompilationUnit getCompilationUnit(String proj,String file) throws BedrockExcep
 	    IPath p = ents[i].getPath();
 	    File f = BedrockUtil.getFileForPath(p,ip);
 	    if (!f.exists()) continue;
-	    File f1 = null;
-	    try {
-	       f1 = f.getCanonicalFile();
-	     }
-	    catch (IOException _ex) { }
+	    File f1 = IvyFile.getCanonical(f);
 	    icu = checkFilePrefix(ijp,f.getAbsolutePath(),file);
 	    if (icu != null) return icu;
 	    if (f1 != null && !f.equals(f1)) {
@@ -1299,10 +1296,7 @@ private IFile findProjectFile(IResource ir,String name,String fname)
 	 File f1 = f;
 	 if (fname != null && !f1.getName().equals(fname)) return null;
 	 if (f.getAbsolutePath().equals(name) || f.getPath().equals(name)) return ifl;
-	 try {
-	    f1 = f.getCanonicalFile();
-	  }
-	 catch (IOException e) { }
+         f1 = IvyFile.getCanonical(f);
 	 if (f.getAbsolutePath().equals(name) || f1.getAbsolutePath().equals(name)) return ifl;
        }
       else if (ir instanceof IContainer) {
@@ -1626,10 +1620,7 @@ private void addSourceFiles(IResource ir,IvyXmlWriter xw,FileFilter ff)
       File f = ip.toFile();
       if (ff != null && !ff.accept(f)) continue;
       if (f.exists()) {
-	 try {
-	    f = f.getCanonicalFile();
-	  }
-	 catch (IOException _e) { }
+         f = IvyFile.getCanonical(f);
 	 xw.begin("FILE");
 	 if (ct.getId().endsWith("javaSource")) xw.field("SOURCE",true);
 	 else if (ct.getId().endsWith("javaClass")) xw.field("BINARY",true);

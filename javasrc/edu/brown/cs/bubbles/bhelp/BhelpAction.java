@@ -837,43 +837,43 @@ private static class TypeAction extends BhelpAction {
       pause(50);
       String knm = "";
       for (char c : (text_to_enter).toCharArray()) {
-	 if (Character.isLowerCase(c)) {  //Lowercase letters
-	    knm = "VK_" + (char)(c - 32);
-	  }
-	 else if (Character.isUpperCase(c)) {	    //Uppercase letters
-	    knm = "VK_" + c;
-	    upper_case = true;
-	  }
-	 else if (Character.isSpaceChar(c)) {	    //Space
-	    knm = "VK_SPACE";
-	  }
-	 try {
-	    Field f = KeyEvent.class.getField(knm);
-	    key_code = f.getInt(null);
-	  }
-	 catch (Throwable t) {
-	    BoardLog.logE("BHELP", "(TypeAction) Problem with key name: " + knm + ": " + t);
-	  }
-
-	 if (upper_case) ctx.keyPress(KeyEvent.VK_SHIFT);
-	 if (key_code != 0) ctx.keyPress(key_code);
-
-	 pause(20);
-
-	 if (upper_case) ctx.keyRelease(KeyEvent.VK_SHIFT);
-	 if (key_code != 0) ctx.keyRelease(key_code);
-
-	 pause(delay_milis);
+         if (Character.isLowerCase(c)) {  //Lowercase letters
+            knm = "VK_" + (char)(c - 32);
+          }
+         else if (Character.isUpperCase(c)) {	    //Uppercase letters
+            knm = "VK_" + c;
+            upper_case = true;
+          }
+         else if (Character.isSpaceChar(c)) {	    //Space
+            knm = "VK_SPACE";
+          }
+         try {
+            Field f = KeyEvent.class.getField(knm);
+            key_code = f.getInt(null);
+          }
+         catch (Throwable t) {
+            BoardLog.logE("BHELP", "(TypeAction) Problem with key name: " + knm + ": " + t);
+          }
+   
+         if (upper_case) ctx.keyPress(KeyEvent.VK_SHIFT);
+         if (key_code != 0) ctx.keyPress(key_code);
+   
+         pause(20);
+   
+         if (upper_case) ctx.keyRelease(KeyEvent.VK_SHIFT);
+         if (key_code != 0) ctx.keyRelease(key_code);
+   
+         pause(delay_milis);
        }
-
+   
       pause(500);
-
+   
       if (back_space) {
-	 for(int i = 0; i < text_to_enter.length(); ++i) {
-	    ctx.keyPress(KeyEvent.VK_BACK_SPACE);
-	    pause(20);
-	    ctx.keyRelease(KeyEvent.VK_BACK_SPACE);
-	  }
+         for(int i = 0; i < text_to_enter.length(); ++i) {
+            ctx.keyPress(KeyEvent.VK_BACK_SPACE);
+            pause(20);
+            ctx.keyRelease(KeyEvent.VK_BACK_SPACE);
+          }
        }
     }
 

@@ -1276,7 +1276,16 @@ private boolean handleDeclaration(VariableDeclaration vd)
              }
             else NobaseMain.logE("Unknown rest element name " + ren.getArgument());
           }
-         else NobaseMain.logE("Unknown pattern value for " + apat);
+         else if (apat instanceof ArrayName) {
+            ArrayName an = (ArrayName) apat;
+            for (Object o : an.elements()) {
+               if (o instanceof SimpleName) {
+                  SimpleName sn = (SimpleName) o;
+                  names.put(sn,sn.getIdentifier());
+                }
+             }
+          }
+         else NobaseMain.logE("Unknown pattern value for " + apat.getClass().getName() + " " + apat);
        }
      else NobaseMain.logI("NO NAME " + vd.getBodyChild() + " @@ " + vd);
     }
@@ -1357,7 +1366,7 @@ private boolean handleDeclaration(VariableDeclaration vd)
       for (Map.Entry<SimpleName,String> ent : names.entrySet()) {
          SimpleName sn = ent.getKey();
          String use = ent.getValue();
-         defineName(sn,decltype,initv,null,use);
+         defineName(sn,decltype,initv,vd,use);
        }
     }
    

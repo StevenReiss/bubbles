@@ -41,6 +41,7 @@ import edu.brown.cs.bubbles.bump.BumpLocation;
 import edu.brown.cs.bubbles.buss.BussBubble;
 import edu.brown.cs.bubbles.buss.BussConstants;
 import edu.brown.cs.bubbles.buss.BussFactory;
+import edu.brown.cs.ivy.file.IvyFile;
 
 import javax.swing.text.Document;
 import javax.swing.text.Position;
@@ -49,7 +50,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -86,10 +86,7 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
    for (BumpLocation bl : locs) {
       if (bl.getSymbolType() != BumpSymbolType.UNKNOWN) {
          File f = bl.getFile();
-         try {
-            f = f.getCanonicalFile();
-          }
-         catch (IOException e) { }
+         f = IvyFile.getCanonical(f);
          Set<Integer> offs = used.get(f);
          if (offs == null) {
             offs = new HashSet<>();
@@ -146,11 +143,7 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
 	    key = key + ".<PREFIX>";
 	    break;
 	 case UNKNOWN :
-            File f1 = f;
-            try {
-               f1 = f.getCanonicalFile();
-             }
-            catch (IOException e) { }
+            File f1 = IvyFile.getCanonical(f);
             Set<Integer> offs = used.get(f1);
             if (offs != null) {
                int off = bl.getOffset();

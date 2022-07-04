@@ -91,10 +91,7 @@ NobaseProject(NobaseMain pm,String name,File base)
    nobase_main = pm;
    project_manager = pm.getProjectManager();
    base_directory = base.getAbsoluteFile();
-   try {
-      base_directory = base_directory.getCanonicalFile();
-    }
-   catch (IOException e) { }
+   base_directory = IvyFile.getCanonical(base_directory);
    if (name == null) name = base.getName();
    project_name = name;
    project_paths = new ArrayList<NobasePathSpec>();
@@ -354,15 +351,13 @@ void editProject(Element pxml)
    Set<NobasePathSpec> done = new HashSet<NobasePathSpec>();
    Set<NobasePathSpec> dels = new HashSet<NobasePathSpec>();
    for (Element pelt : IvyXml.children(pxml,"PATH")) {
-      String dir = IvyXml.getAttrString(pelt,"DIRECTORY");
+      NobaseMain.logD("Work on path entry " + IvyXml.convertXmlToString(pelt));
+      String dir = IvyXml.getTextElement(pelt,"SOURCE");
+      if (dir == null) dir = IvyXml.getTextElement(pelt,"BINARY");
+      if (dir == null) dir = IvyXml.getTextElement(pelt,"DIR");
       if (dir == null) continue;
       File f1 = new File(dir);
-      try {
-	 f1 = f1.getCanonicalFile();
-       }
-      catch (IOException e) {
-	 f1 = f1.getAbsoluteFile();
-       }
+      f1 = IvyFile.getCanonical(f1);
       NobasePathSpec oldspec = null;
       for (NobasePathSpec ps : project_paths) {
 	 if (done.contains(ps)) continue;
@@ -377,17 +372,35 @@ void editProject(Element pxml)
 	 if (oldspec != null) dels.add(oldspec);
        }
       else {
-	 boolean usr = IvyXml.getAttrBool(pelt,"USER");
-	 boolean exc = IvyXml.getAttrBool(pelt,"EXCLUDE");
-	 boolean nest = IvyXml.getAttrBool(pelt,"NEST");
-	 if (oldspec != null) {
-	    oldspec.setProperties(usr,exc,nest);
-	  }
-	 else {
-	    NobasePathSpec ps = project_manager.createPathSpec(f1,usr,exc,nest);
-	    done.add(ps);
-	    project_paths.add(ps);
-	  }
+         boolean usr = true;
+         boolean exc = false;
+         boolean nest = IvyXml.getAttrBool(pelt,"NEST");
+         String typ = IvyXml.getAttrString(pelt,"TYPE");
+         if (typ != null) {
+            switch (typ) {
+               case "EXCLUDE" :
+                  exc = true;
+                  break;
+               case "LIBRARY" :
+                  usr = false;
+                  break;
+               default :
+                  break;
+             }
+          }
+         else {
+            usr = IvyXml.getAttrBool(pelt,"USER");
+            exc = IvyXml.getAttrBool(pelt,"EXCLUDE");
+          }
+         if (oldspec != null) {
+            oldspec.setProperties(usr,exc,nest);
+          }
+         else {
+            NobaseMain.logD("Add path spec for " + f1 + " " + usr + " " + exc + " " + nest);
+            NobasePathSpec ps = project_manager.createPathSpec(f1,usr,exc,nest);
+            done.add(ps);
+            project_paths.add(ps);
+          }
        }
     }
 
@@ -1131,10 +1144,7 @@ private NobaseFile getNodeModuleFile(File nmod,String fnm)
 	       if (mnm == null) mnm = mod;
 	       File src = new File(tgt,main);
 	       if (src.exists()) {
-		  try {
-		     src = src.getCanonicalFile();
-		   }
-		  catch (IOException e) { }
+                  src = IvyFile.getCanonical(src);
 		  if (src.isDirectory()) {
 		     src = new File(src,"index.js");
 		     if (!src.exists()) src = new File(src,"index.node");

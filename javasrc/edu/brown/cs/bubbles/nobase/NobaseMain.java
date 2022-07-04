@@ -25,6 +25,7 @@
 package edu.brown.cs.bubbles.nobase;
 
 import edu.brown.cs.ivy.exec.IvySetup;
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.mint.MintArguments;
 import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
@@ -235,12 +236,7 @@ private void scanArgs(String [] args)
 	  }
 	 else if (args[i].startsWith("-ws") && i+1 < args.length) {     // -ws <workspace>
 	    work_directory = new File(args[++i]);
-	    try {
-	       work_directory = work_directory.getCanonicalFile();
-	     }
-	    catch (IOException e) {
-	       work_directory = work_directory.getAbsoluteFile();
-	     }
+            work_directory = IvyFile.getCanonical(work_directory);
 	  }
          else if (args[i].startsWith("-log") && i+1 < args.length) {     // -log <logfile>
             try {

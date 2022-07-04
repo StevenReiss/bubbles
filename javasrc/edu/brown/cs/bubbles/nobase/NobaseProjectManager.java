@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.nobase;
 
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -173,12 +174,7 @@ void handleCreateProject(String name,String dir,IvyXmlWriter xw) throws NobaseEx
    if (!pdir.isDirectory()) {
       throw new NobaseException("Project path must be a directory " + pdir);
     }
-   try {
-      pdir = pdir.getCanonicalFile();
-    }
-   catch (IOException e) {
-      pdir = pdir.getAbsoluteFile();
-    }
+   pdir = IvyFile.getCanonical(pdir);
 
    loadProject(name,pdir);
 

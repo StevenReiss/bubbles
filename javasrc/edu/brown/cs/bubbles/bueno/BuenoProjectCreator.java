@@ -774,16 +774,10 @@ private String getFilePath(BuenoProjectProps props,File f)
 {
    File pdir = props.getFile(PROJ_PROP_DIRECTORY);
    pdir = pdir.getAbsoluteFile();
-   try {
-      pdir = pdir.getCanonicalFile();
-   }
-   catch (IOException e) { }
+   pdir = IvyFile.getCanonical(pdir);
 
    f = f.getAbsoluteFile();
-   try {
-      f = f.getCanonicalFile();
-   }
-   catch (IOException e) { }
+   f = IvyFile.getCanonical(f);
 
    String p1 = f.getPath();
    String p2 = pdir.getPath();
@@ -795,10 +789,7 @@ private String getFilePath(BuenoProjectProps props,File f)
 
    for (Map.Entry<String,File> ent : props.getLinks().entrySet()) {
       File f3 = ent.getValue().getAbsoluteFile();
-      try {
-	 f3 = f3.getCanonicalFile();
-      }
-      catch (IOException e) { }
+      f3 = IvyFile.getCanonical(f3);
       p2 = f3.getPath();
       p3 = p2 + File.separator;
       if (p1.equals(p2)) {

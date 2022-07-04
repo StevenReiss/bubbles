@@ -26,11 +26,10 @@
 
 package edu.brown.cs.bubbles.pybase.symbols;
 
-import edu.brown.cs.bubbles.pybase.PybaseMain;
+import edu.brown.cs.ivy.file.IvyFile;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -123,18 +122,13 @@ private static PyFileListing getPyFilesBelow(PyFileListing result,File file,
 	  }
 
 	 // check if it is a symlink loop
-	 try {
-	    File canonicalizeddir = file.getCanonicalFile();
-	    if (!canonicalizeddir.equals(file)) {
-	       if (canonicalfolders.contains(canonicalizeddir)) {
-		  return result;
-		}
-	     }
-	    canonicalfolders.add(canonicalizeddir);
-	  }
-	 catch (IOException e) {
-	    PybaseMain.logE("Problem canonicalizing file", e);
-	  }
+         File canonicalizeddir = IvyFile.getCanonical(file);
+         if (!canonicalizeddir.equals(file)) {
+            if (canonicalfolders.contains(canonicalizeddir)) {
+               return result;
+             }
+          }
+         canonicalfolders.add(canonicalizeddir);
 
 	 File[] files = null;
 

@@ -25,9 +25,9 @@
 package edu.brown.cs.bubbles.bueno;
 
 import edu.brown.cs.bubbles.bueno.BuenoConstants.BuenoProjectMaker;
+import edu.brown.cs.ivy.file.IvyFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -142,10 +142,7 @@ protected void findFiles(File dir,Set<File> srcs,Set<File> libs,Set<File> rsrcs)
     }
 
    String pnm = dir.getPath();
-   try {
-      dir = dir.getCanonicalFile();
-    }
-   catch (IOException e) { }
+   dir = IvyFile.getCanonical(dir);
 
    if (dir.length() < 10) return;
    if (!dir.isFile()) return;
