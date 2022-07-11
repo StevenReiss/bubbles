@@ -1294,10 +1294,12 @@ private boolean handleDeclaration(VariableDeclaration vd)
       NobaseMain.logD("Declaration for " + fident + " " + vd.getBodyChild());
     }
    
+   VariableKind vk = null;
    ASTNode par = vd.getParent();
    NobaseType decltype = null;
    if (par instanceof VariableDeclarationExpression) {
       VariableDeclarationExpression vde = (VariableDeclarationExpression) par;
+      vk = vde.getKind();
       if (vde.getType() != null) {
 	 decltype = NobaseAst.getType(vde.getType());
        }
@@ -1305,6 +1307,7 @@ private boolean handleDeclaration(VariableDeclaration vd)
     }
    else if (par instanceof VariableDeclarationStatement) {
       VariableDeclarationStatement vds = (VariableDeclarationStatement) par;
+      vk = vds.getKind();
       if (vds.getType() != null) {
 	 decltype = NobaseAst.getType(vds.getType());
        }
@@ -1343,6 +1346,7 @@ private boolean handleDeclaration(VariableDeclaration vd)
    if (par instanceof CatchClause) {
       // catch variable
       NobaseSymbol nsym = new NobaseSymbol(for_project,enclosing_file,vd,fident.getIdentifier(),true);
+      nsym.setSymbolType(SymbolType.LET);
       if (enclosing_function != null) {
 	 setName(nsym,enclosing_function + "." + fident.getIdentifier(),cur_scope);
        }
@@ -1360,13 +1364,13 @@ private boolean handleDeclaration(VariableDeclaration vd)
     }
    
    if (fident != null) {
-      defineName(fident,decltype,initv,vd,null);
+      defineName(fident,decltype,initv,vd,null,vk);
     }
    else {
       for (Map.Entry<SimpleName,String> ent : names.entrySet()) {
          SimpleName sn = ent.getKey();
          String use = ent.getValue();
-         defineName(sn,decltype,initv,vd,use);
+         defineName(sn,decltype,initv,vd,use,vk);
        }
     }
    
@@ -1375,11 +1379,14 @@ private boolean handleDeclaration(VariableDeclaration vd)
 
 
 
-private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,VariableDeclaration vd,String mult)
+private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,VariableDeclaration vd,String mult,VariableKind vk)
 {
    NobaseSymbol sym = NobaseAst.getDefinition(fident);
    if (sym == null && fident != null) {
       NobaseSymbol nsym = new NobaseSymbol(for_project,enclosing_file,vd,fident.getIdentifier(),true);
+      if (vk == VariableKind.LET) nsym.setSymbolType(SymbolType.LET);
+      else if (vk == VariableKind.CONST) nsym.setSymbolType(SymbolType.CONST);
+      else if (vk == VariableKind.VAR) nsym.setSymbolType(SymbolType.VAR);
       if (enclosing_function != null) {
 	 setName(nsym,enclosing_function + "." + fident.getIdentifier(),cur_scope);
        }
