@@ -199,69 +199,70 @@ private Vector<String> getExtensions(String str)
 
 
 /**
- * Resets the file extension map.  Useful if the user changes the file extension
- * properties.
- */
+* Resets the file extension map.  Useful if the user changes the file extension
+* properties.
+*/
 private void getExtensionsFromProperties()
 {
    file_extensions.clear();
    for (String str : getExtensions(bted_props.getString(BASH_EXTENSION))) {
       file_extensions.put(str, "text/bash");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(C_EXTENSION))) {
       file_extensions.put(str, "text/c");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(CLOJURE_EXTENSION))) {
       file_extensions.put(str, "text/clojure");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(CPP_EXTENSION))) {
       file_extensions.put(str, "text/cpp");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(DOSBATCH_EXTENSION))) {
       file_extensions.put(str, "text/dosbatch");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(GROOVY_EXTENSION))) {
       file_extensions.put(str, "text/groovy");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(JAVA_EXTENSION))) {
       file_extensions.put(str, "text/java");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(JAVASCRIPT_EXTENSION))) {
       file_extensions.put(str, "text/javascript");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(JFLEX_EXTENSION))) {
       file_extensions.put(str, "text/jflex");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(LUA_EXTENSION))) {
       file_extensions.put(str, "text/lua");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(PROPERTIES_EXTENSION))) {
       file_extensions.put(str, "text/properties");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(PYTHON_EXTENSION))) {
       file_extensions.put(str, "text/python");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(RUBY_EXTENSION))) {
       file_extensions.put(str, "text/ruby");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(SCALA_EXTENSION))) {
       file_extensions.put(str, "text/scala");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(SQL_EXTENSION))) {
       file_extensions.put(str, "text/sql");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(TAL_EXTENSION))) {
       file_extensions.put(str, "text/tal");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(XHTML_EXTENSION))) {
       file_extensions.put(str, "text/xhtml");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(XML_EXTENSION))) {
       file_extensions.put(str, "text/xml");
-   }
+    }
    for (String str : getExtensions(bted_props.getString(XPATH_EXTENSION))) {
       file_extensions.put(str, "text/xpath");
-   }
+    }
+   file_extensions.put("html","text/html");
 }
 
 

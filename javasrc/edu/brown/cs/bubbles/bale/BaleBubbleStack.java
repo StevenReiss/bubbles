@@ -419,14 +419,14 @@ private abstract class GenericStackEntry implements BussEntry {
 
    @Override public BudaBubble getBubble() {
       if (item_bubble == null) {
-	 def_location.update();
-	 Component c = source_bubble;
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(source_bubble);
-	 if (bba == null) c = bubble_area;
-	 item_bubble = createBubble(c,source_position,source_point,false,def_location,false,BudaLinkStyle.NONE);
+         def_location.update();
+         Component c = source_bubble;
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(source_bubble);
+         if (bba == null) c = bubble_area;
+         item_bubble = createBubble(c,source_position,source_point,false,def_location,false,BudaLinkStyle.NONE);
        }
       if (item_bubble != null && item_bubble.getContentPane() != null) {
-	 item_bubble.getContentPane().repaint();
+         item_bubble.getContentPane().repaint();
        }
       return item_bubble;
     }

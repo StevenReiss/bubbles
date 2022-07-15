@@ -601,8 +601,15 @@ private NobaseProject getProject(String proj,String file)
       StringTokenizer tok = new StringTokenizer(file,"/");
       if (tok.countTokens() > 3) {	// File is /REBUS/<project>/<Engine>/...
 	 String rebus = tok.nextToken();
-	 if (!rebus.equals("REBUS")) return null;
-	 proj = tok.nextToken();
+	 if (rebus.equals("REBUS")) {
+            proj = tok.nextToken();
+          }
+       }
+    }
+   if (proj == null && file != null) {
+      File f = new File(file);
+      for (NobaseProject p : all_projects.values()) {
+         if (p.containsFile(f)) return p;
        }
     }
 

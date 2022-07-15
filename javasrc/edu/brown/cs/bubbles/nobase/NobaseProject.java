@@ -278,6 +278,16 @@ Collection<NobaseFile> getAllFiles()
    return new ArrayList<NobaseFile>(all_files);
 }
 
+
+boolean containsFile(File f)
+{
+   for (NobaseFile nf : all_files) {
+      if (nf.getFile().equals(f)) return true;
+    }
+   
+   return false;
+}
+
 NobaseFile findFile(String path)
 {
    if (path == null) return null;

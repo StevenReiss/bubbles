@@ -48,6 +48,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.Date;
 
 
@@ -102,7 +103,8 @@ BudaChannel(BudaRoot br,Element e,BudaChannelSet cs,String label)
    Dimension sz = new Dimension(0,BUBBLE_CHANNEL_OVERVIEW_HEIGHT);
    bubble_overview.setMinimumSize(sz);
    bubble_overview.setPreferredSize(sz);
-   bubble_overview.addMouseMotionListener(br.getShadeMotionAdapter());   addGBComponent(bubble_overview,3,0,1,2,10,0);
+   MouseMotionAdapter mma = br.getShadeMotionAdapter();
+   if (mma != null) bubble_overview.addMouseMotionListener(mma);   addGBComponent(bubble_overview,3,0,1,2,10,0);
 
    JButton close = new JButton(new DeleteAction());
    addGBComponent(close,0,1,1,1,0,0);

@@ -1604,7 +1604,11 @@ private boolean isShadeDown()
 
 MouseMotionAdapter getShadeMotionAdapter()
 {
-   return new OverviewListener();
+   if (BUDA_PROPERTIES.getBoolean("Buda.overview.shades")) {
+      return new OverviewListener();
+    }
+   
+   return null;
 }
 
 
