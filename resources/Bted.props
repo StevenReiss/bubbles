@@ -24,7 +24,7 @@
 <entry key="Bted.extension.scala">.scl</entry>
 <entry key="Bted.extension.sql">.sql</entry>
 <entry key="Bted.extension.tal">.tal</entry>
-<entry key="Bted.extension.xhtml">.xhtml, .html, .htm</entry>
+<entry key="Bted.extension.xhtml">.xhtml, .html, .htm, .handlebars, .hbs</entry>
 <entry key="Bted.extension.xml">.xml</entry>
 <entry key="Bted.extension.xpath">.xpath</entry>
 <entry key="Bted.line.wrapping">true</entry>

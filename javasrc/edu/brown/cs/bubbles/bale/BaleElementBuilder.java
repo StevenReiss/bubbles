@@ -309,6 +309,8 @@ private BaleElement.Branch createOuterBranch(BaleAstNode sn)
 	 return new BaleElement.MethodNode(for_document,cur_parent);
       case FIELD :
 	 return new BaleElement.FieldNode(for_document,cur_parent);
+      case VARIABLE :
+         return new BaleElement.VariableNode(for_document,cur_parent);
       case ANNOTATION :
 	 return new BaleElement.AnnotationNode(for_document,cur_parent);
       case STATEMENT :

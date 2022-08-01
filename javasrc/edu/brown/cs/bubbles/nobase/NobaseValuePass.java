@@ -1209,6 +1209,16 @@ private void handleName(String name,ASTNode id)
 @Override public void endVisit(PackageDeclaration n) { }
 
 
+@Override public boolean visit(ImportDeclaration n) 
+{
+   for (Object o : n.specifiers()) {
+      ModuleSpecifier ms = (ModuleSpecifier) o;
+      SimpleName sn = ms.getLocal();
+      defineName(sn,null,null,sn,null,VariableKind.VAR);
+    }
+   return false;
+}
+
 
 
 
@@ -1379,7 +1389,7 @@ private boolean handleDeclaration(VariableDeclaration vd)
 
 
 
-private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,VariableDeclaration vd,String mult,VariableKind vk)
+private void defineName(SimpleName fident,NobaseType decltype,NobaseValue initv,ASTNode vd,String mult,VariableKind vk)
 {
    NobaseSymbol sym = NobaseAst.getDefinition(fident);
    if (sym == null && fident != null) {

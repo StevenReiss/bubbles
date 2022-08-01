@@ -25,7 +25,6 @@
 
 package edu.brown.cs.bubbles.bueno;
 
-import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.bump.BumpClient;
 
 import java.lang.reflect.Modifier;
@@ -55,8 +54,7 @@ public class BuenoProperties extends HashMap<BuenoConstants.BuenoKey,Object> imp
 
 public BuenoProperties()
 {
-   BoardProperties bp = BoardProperties.getProperties("Bueno");
-   bp.put(BuenoKey.KEY_AUTHOR,System.getProperty("user.name"));
+   put(BuenoKey.KEY_AUTHOR,System.getProperty("user.name"));
 }
 
 

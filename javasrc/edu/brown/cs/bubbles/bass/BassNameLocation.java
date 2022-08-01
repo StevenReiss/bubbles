@@ -108,9 +108,11 @@ BassNameLocation(BumpLocation bl,String prefix)
 	 break;
       case ENUM_CONSTANT :
       case FIELD :
-      case GLOBAL :
 	 name_type = BassNameType.FIELDS;
 	 break;
+      case GLOBAL :
+         name_type = BassNameType.VARIABLES;
+         break;
       case MAIN_PROGRAM :
 	 name_type = BassNameType.MAIN_PROGRAM;
 	 break;
@@ -229,6 +231,8 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
    switch (name_type) {
       case FIELDS :
 	 return "< FIELDS >";
+      case VARIABLES :
+	 return "< VARIABLES >";
       case STATICS :
 	 return "< INITIALIZERS >";
       case MAIN_PROGRAM :
@@ -288,6 +292,7 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
       case STATICS :
       case MAIN_PROGRAM :
       case FIELDS :
+      case VARIABLES :
       case CLASS :
       case THROWABLE :
       case ENUM :
@@ -329,6 +334,7 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
 	 bb = bf.createMethodBubble(getProject(),getFullName());
 	 break;
       case FIELDS :
+      case VARIABLES :
 	 bb = bf.createFieldsBubble(getProject(),getFile(),getNameHead());
 	 break;
       case STATICS :
@@ -377,6 +383,7 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
       case CONSTRUCTOR :
       case METHOD :
       case FIELDS :
+      case VARIABLES :
       case STATICS :
       case MAIN_PROGRAM :
       case CLASS :

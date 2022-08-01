@@ -734,12 +734,12 @@ private static class OptionFont extends BoppOptionBase implements ActionListener
 
    private void setFont(Font ft) {
       if (font_prop != null) {
-	 getProperties().setProperty(font_prop,ft);
+         getProperties().setProperty(font_prop,ft);
        }
       else {
-	 if (family_prop != null) getProperties().setProperty(family_prop,ft.getFamily());
-	 if (size_prop != null) getProperties().setProperty(size_prop,ft.getSize());
-	 if (style_prop != null) getProperties().setProperty(style_prop,ft.getStyle());
+         if (family_prop != null) getProperties().setProperty(family_prop,ft.getFamily());
+         if (size_prop != null) getProperties().setProperty(size_prop,ft.getSize());
+         if (style_prop != null) getProperties().setProperty(style_prop,ft.getStyle());
        }
     }
 

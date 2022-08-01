@@ -172,7 +172,13 @@ public static void setup()
    BudaRoot.addPortConfigurator("BALE",bc);
 
    BudaRoot.registerMenuButton("Admin.Admin.Import Java Formats",new FormatImporter());
-   BudaRoot.registerMenuButton("Admin.Admin.Import Formats from Project",new ProjectFormatImporter());
+   switch (BoardSetup.getSetup().getLanguage()) {
+      case JAVA :
+         BudaRoot.registerMenuButton("Admin.Admin.Import Formats from Project",new ProjectFormatImporter());
+         break;
+      default :
+         break;
+    }
 
    BuenoFactory.getFactory().addInsertionHandler(new BaleInserter());
 }
@@ -235,8 +241,10 @@ BaleFragmentEditor createMethodFragmentEditor(BumpLocation loc)
 BaleFragmentEditor createFieldFragmentEditor(String proj,File file,String cls)
 {
    List<BumpLocation> locs = bump_client.findFields(proj,file,cls);
+   
+   String typ = BaleFactory.getFieldsName();
 
-   return getEditorFromLocations(locs,BaleFragmentType.FIELDS,cls + ".<FIELDS>");
+   return getEditorFromLocations(locs,BaleFragmentType.FIELDS,cls + ".<" + typ + ">");
 }
 
 
@@ -1291,9 +1299,10 @@ private BaleFragmentEditor getEditorFromLocations(List<BumpLocation> locs)
       case ENUM_CONSTANT :
       case FIELD :
       case GLOBAL :
+         String nm = getFieldsName();
 	 ftyp = BaleFragmentType.FIELDS;
 	 int idx = fragname.lastIndexOf(".");
-	 fragname = fragname.substring(0,idx) + ".< FIELDS >";
+	 fragname = fragname.substring(0,idx) + ".< " + nm + " >";
 	 break;
       case MODULE :
 	 ftyp = BaleFragmentType.FILE;
@@ -1304,6 +1313,18 @@ private BaleFragmentEditor getEditorFromLocations(List<BumpLocation> locs)
     }
 
    return getEditorFromLocations(locs,ftyp,fragname);
+}
+
+
+public static String getFieldsName()
+{
+   switch (BoardSetup.getSetup().getLanguage()) {
+      default :
+         return "FIELDS";
+      case JS :
+      case PYTHON :
+         return "VARIABLES";
+    }
 }
 
 

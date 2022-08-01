@@ -80,8 +80,8 @@ NobaseJsdt()
    parser.setKind(ASTParser.K_COMPILATION_UNIT);
   
    Map<String,String> opts = new Hashtable<>();
-   opts.put(JavaScriptCore.COMPILER_COMPLIANCE,"1.7");
-   parser.setCompilerOptions(opts);
+   opts.put(JavaScriptCore.COMPILER_COMPLIANCE,"1.6");
+// parser.setCompilerOptions(opts);
       
    JavaScriptUnit cu = (JavaScriptUnit) parser.createAST(null);
    ParseData rslt = new ParseData(proj,fd,cu,lib);

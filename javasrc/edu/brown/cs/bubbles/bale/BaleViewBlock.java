@@ -480,6 +480,8 @@ private boolean isBuddable()
 {
    BaleElement be = getBaleElement();
    if (be.getBubbleType() == BaleFragmentType.NONE) return false;
+   if (be.getName().equals("Variable")) return false;
+   
    BaleElement par = be.getBaleParent();
    // if (par.getBaleParent() != null) return false;
 

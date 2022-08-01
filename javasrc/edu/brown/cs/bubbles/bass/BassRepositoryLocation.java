@@ -530,6 +530,15 @@ private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 	  }
 	 else usedmap.put(key,bn);
 	 break;
+      case VARIABLES :
+         key = "VARIABLE@@@" + bn.getNameHead();
+	 BassNameLocation vbn = usedmap.get(key);
+	 if (vbn != null) {
+	    vbn.addLocation(bl);
+	    bn = null;
+	  }
+	 else usedmap.put(key,bn);
+	 break;
       case MAIN_PROGRAM :
 	 key = "MAIN@@@" + bn.getNameHead();
 	 BassNameLocation mbn = usedmap.get(key);

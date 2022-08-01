@@ -392,6 +392,7 @@ private synchronized boolean checkReference(BdocReference br)
       case METHOD :
       case MAIN_PROGRAM :
       case FIELDS :
+      case VARIABLES :
       case PACKAGE :
       case STATICS :
          break;
@@ -534,16 +535,17 @@ private static class MemberInfo {
 
    void addReference(BdocReference br) {
       switch (br.getNameType()) {
-	 case METHOD :
-	    break;
-	 case FIELDS :
-	    return;				// might want to do inherited fields
-	 case CONSTRUCTOR :
-	    return;
-	 default :
-	    return;
+         case METHOD :
+            break;
+         case FIELDS :
+         case VARIABLES :
+            return;				// might want to do inherited fields
+         case CONSTRUCTOR :
+            return;
+         default :
+            return;
        }
-
+   
       String nm = br.getDigestedName(); 	// without parameters
       int idx = nm.lastIndexOf(".");
       if (idx < 0) return;
@@ -551,13 +553,13 @@ private static class MemberInfo {
       String itm = nm.substring(idx+1);
       Map<String,List<BdocReference>> mems = ref_byclass.get(cls);
       if (mems == null) {
-	 mems = new HashMap<String,List<BdocReference>>();
-	 ref_byclass.put(cls,mems);
+         mems = new HashMap<String,List<BdocReference>>();
+         ref_byclass.put(cls,mems);
        }
       List<BdocReference> refs = mems.get(itm);
       if (refs == null) {
-	 refs = new ArrayList<BdocReference>(2);
-	 mems.put(itm,refs);
+         refs = new ArrayList<BdocReference>(2);
+         mems.put(itm,refs);
        }
       refs.add(br);
     }

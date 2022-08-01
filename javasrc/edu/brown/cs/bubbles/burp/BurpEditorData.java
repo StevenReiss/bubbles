@@ -25,9 +25,11 @@
 
 package edu.brown.cs.bubbles.burp;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 
+import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.UndoableEditEvent;
@@ -156,6 +158,10 @@ void noteSave()
 
 @Override public void undoableEditHappened(UndoableEditEvent evt)
 {
+   if (!SwingUtilities.isEventDispatchThread()) {
+      BoardLog.logX("BURP","Edit event outside of awt thread");
+    }
+
    UndoableEdit ued = evt.getEdit();
 
    for_history.handleNewEdit(this,ued,in_event,next_sig);

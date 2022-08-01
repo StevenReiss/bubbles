@@ -58,8 +58,8 @@ private int		end_offset;
 private BaleTokenState	token_state;
 private int		token_start;
 private boolean 	ignore_white;
-private char            cur_delim;
-private int             delim_count;
+private char		cur_delim;
+private int		delim_count;
 
 private static Map<String,BaleTokenType> java_keyword_map;
 private static Set<String>	java_op_set;
@@ -120,12 +120,12 @@ void setIgnoreWhitespace(boolean fg)		{ ignore_white = fg; }
 
 abstract protected BaleTokenType getKeyword(String s);
 abstract protected boolean isOperator(String s);
-protected boolean useSlashStarComments()                { return true; }
-protected boolean useSlashSlashComments()               { return true; }
-protected boolean useHashComments()                     { return false; }
-protected int useMultilineCount()                       { return 0; }
-protected boolean isStringStart(char c)                 { return c == '"'; }
-protected boolean isMultilineStringStart(char c)        { return false; }
+protected boolean useSlashStarComments()		{ return true; }
+protected boolean useSlashSlashComments()		{ return true; }
+protected boolean useHashComments()			{ return false; }
+protected int useMultilineCount()			{ return 0; }
+protected boolean isStringStart(char c) 		{ return c == '"'; }
+protected boolean isMultilineStringStart(char c)	{ return false; }
 
 static Collection<String> getKeywords(BoardLanguage bl)
 {
@@ -316,16 +316,16 @@ BaleToken getNextToken()
    else if (isStringStart(ch)) {
       int ct = useMultilineCount();
       if (ct > 0) {
-         int bup = 0;
-         for (int i = 0; i < ct-1; ++i) {
-            char ch1 = nextChar();
-            bup++;
-            if (ch1 != ch) break;
-            if (i == ct-2) {
-               return scanMultiLineString(ch,ct);
-             }
-          }
-         for (int i = 0; i < bup; ++i) backup();
+	 int bup = 0;
+	 for (int i = 0; i < ct-1; ++i) {
+	    char ch1 = nextChar();
+	    bup++;
+	    if (ch1 != ch) break;
+	    if (i == ct-2) {
+	       return scanMultiLineString(ch,ct);
+	     }
+	  }
+	 for (int i = 0; i < bup; ++i) backup();
        }
       return scanString(ch);
     }
@@ -406,14 +406,14 @@ BaleToken getNextToken()
 	 String op = getInputString(token_start,cur_offset);
 	 if (!isOperator(op)) break;
 	 eql = (ch == '=');
-         ++nch;
+	 ++nch;
        }
       backup();
       if (eql) return buildToken(BaleTokenType.EQUAL);
       if (nch == 1) {
-         if (fch == ':') return buildToken(BaleTokenType.COLON);
-         if (fch == '<') return buildToken(BaleTokenType.LANGLE);
-         if (fch == '>') return buildToken(BaleTokenType.RANGLE);
+	 if (fch == ':') return buildToken(BaleTokenType.COLON);
+	 if (fch == '<') return buildToken(BaleTokenType.LANGLE);
+	 if (fch == '>') return buildToken(BaleTokenType.RANGLE);
        }
       return buildToken(BaleTokenType.OP);
     }
@@ -675,7 +675,7 @@ private static class JavaTokenizer extends BaleTokenizer {
 
    @Override protected BaleTokenType getKeyword(String s) { return java_keyword_map.get(s); }
    @Override protected boolean isOperator(String s)	{ return java_op_set.contains(s); }
-   @Override protected int useMultilineCount()          { return 3; }
+   @Override protected int useMultilineCount()		{ return 3; }
 
 }	// end of inner class JavaTokenizer
 
@@ -798,11 +798,11 @@ private static class PythonTokenizer extends BaleTokenizer {
    @Override protected boolean useSlashSlashComments()	{ return false; }
    @Override protected boolean useSlashStarComments()	{ return false; }
    @Override protected boolean useHashComments()	{ return true; }
-   @Override protected int useMultilineCount()          { return 3; }
+   @Override protected int useMultilineCount()		{ return 3; }
    @Override protected boolean isStringStart(char c) {
       return c == '"' || c == '\'';
     }
-   
+
 }	// end of inner class PythonTokenizer
 
 
@@ -910,9 +910,16 @@ private static class JSTokenizer extends BaleTokenizer {
 
 static {
    js_keyword_map = new HashMap<String,BaleTokenType>();
+   js_keyword_map.put("abstract",BaleTokenType.KEYWORD);
+   js_keyword_map.put("arguments",BaleTokenType.KEYWORD);
+   js_keyword_map.put("async",BaleTokenType.KEYWORD);
+   js_keyword_map.put("await",BaleTokenType.KEYWORD);
+   js_keyword_map.put("boolean",BaleTokenType.TYPEKEY);
    js_keyword_map.put("break",BaleTokenType.BREAK);
+   js_keyword_map.put("byte",BaleTokenType.TYPEKEY);
    js_keyword_map.put("case",BaleTokenType.CASE);
    js_keyword_map.put("catch",BaleTokenType.CATCH);
+   js_keyword_map.put("char",BaleTokenType.TYPEKEY);
    js_keyword_map.put("class",BaleTokenType.CLASS);
    js_keyword_map.put("const",BaleTokenType.KEYWORD);
    js_keyword_map.put("continue",BaleTokenType.KEYWORD);
@@ -920,21 +927,29 @@ static {
    js_keyword_map.put("default",BaleTokenType.DEFAULT);
    js_keyword_map.put("delete",BaleTokenType.KEYWORD);
    js_keyword_map.put("do",BaleTokenType.DO);
+   js_keyword_map.put("double",BaleTokenType.TYPEKEY);
    js_keyword_map.put("else",BaleTokenType.ELSE);
    js_keyword_map.put("enum",BaleTokenType.ENUM);
+   js_keyword_map.put("eval",BaleTokenType.KEYWORD);
    js_keyword_map.put("export",BaleTokenType.KEYWORD);
    js_keyword_map.put("extends",BaleTokenType.KEYWORD);
    js_keyword_map.put("false",BaleTokenType.KEYWORD);
+   js_keyword_map.put("final",BaleTokenType.FINALLY);
    js_keyword_map.put("finally",BaleTokenType.FINALLY);
+   js_keyword_map.put("float",BaleTokenType.TYPEKEY);
    js_keyword_map.put("for",BaleTokenType.FOR);
    js_keyword_map.put("function",BaleTokenType.FUNCTION);
+   js_keyword_map.put("goto",BaleTokenType.IF);
    js_keyword_map.put("if",BaleTokenType.IF);
-   js_keyword_map.put("in",BaleTokenType.KEYWORD);
    js_keyword_map.put("implements",BaleTokenType.KEYWORD);
    js_keyword_map.put("import",BaleTokenType.KEYWORD);
+   js_keyword_map.put("in",BaleTokenType.KEYWORD);
    js_keyword_map.put("instanceof",BaleTokenType.KEYWORD);
+   js_keyword_map.put("int",BaleTokenType.TYPEKEY);
    js_keyword_map.put("interface",BaleTokenType.INTERFACE);
    js_keyword_map.put("let",BaleTokenType.KEYWORD);
+   js_keyword_map.put("long",BaleTokenType.TYPEKEY);
+   js_keyword_map.put("native",BaleTokenType.KEYWORD);
    js_keyword_map.put("new",BaleTokenType.NEW);
    js_keyword_map.put("null",BaleTokenType.KEYWORD);
    js_keyword_map.put("package",BaleTokenType.KEYWORD);
@@ -942,16 +957,21 @@ static {
    js_keyword_map.put("protected",BaleTokenType.KEYWORD);
    js_keyword_map.put("public",BaleTokenType.KEYWORD);
    js_keyword_map.put("return",BaleTokenType.RETURN);
+   js_keyword_map.put("short",BaleTokenType.TYPEKEY);
    js_keyword_map.put("static",BaleTokenType.STATIC);
    js_keyword_map.put("super",BaleTokenType.KEYWORD);
    js_keyword_map.put("switch",BaleTokenType.SWITCH);
+   js_keyword_map.put("synchronized",BaleTokenType.KEYWORD);
    js_keyword_map.put("this",BaleTokenType.KEYWORD);
    js_keyword_map.put("throw",BaleTokenType.KEYWORD);
+   js_keyword_map.put("throws",BaleTokenType.KEYWORD);
+   js_keyword_map.put("transient",BaleTokenType.KEYWORD);
    js_keyword_map.put("true",BaleTokenType.KEYWORD);
    js_keyword_map.put("try",BaleTokenType.TRY);
    js_keyword_map.put("typeof",BaleTokenType.KEYWORD);
    js_keyword_map.put("var",BaleTokenType.KEYWORD);
    js_keyword_map.put("void",BaleTokenType.TYPEKEY);
+   js_keyword_map.put("volatile",BaleTokenType.KEYWORD);
    js_keyword_map.put("while",BaleTokenType.WHILE);
    js_keyword_map.put("with",BaleTokenType.KEYWORD);
    js_keyword_map.put("yield",BaleTokenType.KEYWORD);

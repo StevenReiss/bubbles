@@ -131,6 +131,7 @@ BdocPanel(BdocReference r) throws BdocException
 	    doc_item = new BdocDocMethod(r.getReferenceUrl());
 	    break;
 	 case FIELDS :
+         case VARIABLES :
 	    doc_item = new BdocDocField(r.getReferenceUrl());
 	    break;
 	 case CLASS :

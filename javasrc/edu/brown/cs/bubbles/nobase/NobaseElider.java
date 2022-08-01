@@ -336,8 +336,7 @@ private String getNodeType(ASTNode n)
 	    case MODULE :
 	       break;
 	    case VARIABLE :
-	       if (d.getInitializer() != null) typ = "INITIALIZER";
-	       else typ = "FIELD";
+               typ = "VARIABLE";
 	       break;
 	  }
        }

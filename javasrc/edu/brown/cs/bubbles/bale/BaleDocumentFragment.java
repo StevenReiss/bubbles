@@ -669,7 +669,7 @@ private boolean checkForNameChange(BaleElement be)
 	 int idx = id.lastIndexOf(".");
 	 String pfx = "";
 	 if (idx >= 0) pfx = id.substring(0,idx) + ". ";
-	 pfx += "< FIELDS >";
+	 pfx += "< " + BaleFactory.getFieldsName() + " >";
 	 fragment_name = pfx;
 	 return true;
        }

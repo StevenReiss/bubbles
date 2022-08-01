@@ -103,6 +103,8 @@ BudaBubble createExecBubble(BumpThread bt)
    boolean godown = bddt_properties.getBoolean("Bddt.grow.down");
 
    BumpThreadStack stk = bt.getStack();
+   if (stk == null) return null;
+
    BumpStackFrame usefrm = stk.getFrame(0);
    BudaBubble bb = createSourceBubble(stk,0,BubbleType.EXEC,false,godown);
    if (bb == null && stk != null && bddt_properties.getBoolean("Bddt.show.user.bubble")) {
@@ -118,12 +120,12 @@ BudaBubble createExecBubble(BumpThread bt)
 	 for (int i = 1; i < mx; ++i) {
 	    BumpStackFrame frame = stk.getFrame(i);
 	    if (bd != null && bd.getFrame() != null && matchFrameMethod(bd.getFrame(),frame)) {
-               usefrm = frame;
-               break;
-             }	   
-            if (launch_control.frameFileExists(frame) && !frame.isSystem()) {
+	       usefrm = frame;
+	       break;
+	     }	
+	    if (launch_control.frameFileExists(frame) && !frame.isSystem()) {
 	       bb = createSourceBubble(stk,i,BubbleType.EXEC,false,godown);
-               usefrm = frame;
+	       usefrm = frame;
 	       break;
 	    }
 	  }
@@ -137,7 +139,7 @@ BudaBubble createExecBubble(BumpThread bt)
       if (bddt_properties.getBoolean("Bddt.show.values")) {
 	 BddtStackView sv = new BddtStackView(launch_control,bt);
 	 if (usefrm == null) sv.expandFirst();
-         else sv.expandFrame(usefrm);
+	 else sv.expandFrame(usefrm);
 	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bb);
 	 if (bba == null || stk == null) return bb;
 	 BubbleData nbd = new BubbleData(sv,bt,stk,stk.getFrame(0),BubbleType.FRAME);
@@ -293,9 +295,9 @@ private BudaBubble createSourceBubble(BumpThreadStack stk,int frm,BubbleType typ
 	 String mid = mthd + frame.getSignature();
 	 if (frame.isSystem() && launch_control.frameFileExists(frame) && libbbl) {
 	    bb = BaleFactory.getFactory().createSystemMethodBubble(proj,mid,
-                  frame.getFile(),frame.getLineNumber());
+		  frame.getFile(),frame.getLineNumber());
 	    if (bb == null) {
-               bb = new BddtLibraryBubble(frame);
+	       bb = new BddtLibraryBubble(frame);
 	     }
 	  }
 	 else if (!frame.isSystem()) {
@@ -322,8 +324,8 @@ private BudaBubble createSourceBubble(BumpThreadStack stk,int frm,BubbleType typ
       int wd = bb.getWidth() + BDDT_STACK_WIDTH + BudaConstants.BUBBLE_CREATION_NEAR_SPACE;
       Point xpt = findSpaceForBubble(xpos,ypos,ht,wd,godown);
       if (xpt != null) {
-         xpos = xpt.x;
-         ypos = xpt.y;
+	 xpos = xpt.x;
+	 ypos = xpt.y;
        }
       // TODO: want to ensure space available here -- if not move the point
       BubbleData nbd = new BubbleData(bb,bt,stk,frame,typ);
@@ -934,13 +936,13 @@ private static boolean matchFrameMethod(BumpStackFrame sf1,BumpStackFrame sf2)
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Find space for bubble                                                   */
-/*                                                                              */
+/*										*/
+/*	Find space for bubble							*/
+/*										*/
 /********************************************************************************/
 
 private Point findSpaceForBubble(int xpos,int ypos,int ht,int wd,boolean godown)
-{ 
+{
    Point rslt = null;
    for ( ; ; ) {
       Rectangle r = new Rectangle(xpos-5,ypos-5, wd+10,ht+10);
@@ -948,10 +950,10 @@ private Point findSpaceForBubble(int xpos,int ypos,int ht,int wd,boolean godown)
       int maxx = -1;
       int maxy = -1;
       for (BudaBubble bb : bubble_area.getBubblesInRegion(r)) {
-         if (bb.isFixed() || bb.isTransient() || !bb.isShowing()) continue;
-         maxx = Math.max(maxx,bb.getX() + bb.getWidth() + BudaConstants.BUBBLE_CREATION_SPACE);
-         maxy = Math.max(maxy,bb.getY() + bb.getHeight() + BudaConstants.BUBBLE_CREATION_SPACE);
-         ++ct;
+	 if (bb.isFixed() || bb.isTransient() || !bb.isShowing()) continue;
+	 maxx = Math.max(maxx,bb.getX() + bb.getWidth() + BudaConstants.BUBBLE_CREATION_SPACE);
+	 maxy = Math.max(maxy,bb.getY() + bb.getHeight() + BudaConstants.BUBBLE_CREATION_SPACE);
+	 ++ct;
        }
       if (ct == 0) return rslt;
       if (godown) ypos = maxy;
@@ -975,10 +977,10 @@ private class BubbleUpdater implements BubbleViewCallback {
       if (BudaRoot.findBudaBubbleArea(bb) != bubble_area) return;
       BudaWorkingSet ws = BddtFactory.getFactory().getActiveWorkingSet();
       if (ws != null) {
-         if (!ws.getRegion().intersects(bb.getBounds())) return;
+	 if (!ws.getRegion().intersects(bb.getBounds())) return;
        }
       if (bubble_map.get(bb) == null) {
-         bubble_map.put(bb,new BubbleData(bb));
+	 bubble_map.put(bb,new BubbleData(bb));
        }
     }
 
@@ -1099,18 +1101,18 @@ private static class BubbleData {
       if (bubble_type != BubbleType.EXEC && bubble_type != BubbleType.USER) return false;
       int lvl = -1;
       for (int i = 0; i < stk.getNumFrames(); ++i) {
-         if (stk.getFrame(i) == frm) {
-            lvl = i;
-            break;
-          }
-         else if (frm != null && stk.getFrame(i) != null && frm.getId() == stk.getFrame(i).getId()) {
-            lvl = i;
-            break;
-         }
+	 if (stk.getFrame(i) == frm) {
+	    lvl = i;
+	    break;
+	  }
+	 else if (frm != null && stk.getFrame(i) != null && frm.getId() == stk.getFrame(i).getId()) {
+	    lvl = i;
+	    break;
+	 }
        }
       if (lvl != frame_level || stk.getNumFrames() != stack_depth &&
-               bubble_type == BubbleType.EXEC)
-         return false;
+	       bubble_type == BubbleType.EXEC)
+	 return false;
       return matchFrameMethod(frm,for_frame);
     }
 
@@ -1125,13 +1127,13 @@ private static class BubbleData {
       String s1b = s1.substring(idx1);
       if (!sameMethod(s1a,frm.getMethod())) return false;
       if (!BumpLocation.compareParameters(frm.getSignature(),s1b)) return false;
-   
+
       int lvl = -1;
       for (int i = 0; i < stk.getNumFrames(); ++i) {
-         if (stk.getFrame(i) == frm) {
-            lvl = i;
-            break;
-          }
+	 if (stk.getFrame(i) == frm) {
+	    lvl = i;
+	    break;
+	  }
        }
       // take over user bubble here
       for_stack = stk;
@@ -1149,15 +1151,15 @@ private static class BubbleData {
 
    int aboveLevel(BumpThread bt,BumpThreadStack stk,BumpStackFrame frm) {
       if (base_thread != bt || frame_level < 0) return -1;
-   
+
       int ct0 = for_stack.getNumFrames();
       int ct1 = stk.getNumFrames();
       for (int i = ct0-1; i >= frame_level; --i) {
-         int j = ct1 - (ct0 - i);
-         BumpStackFrame bsf0 = for_stack.getFrame(i);
-         BumpStackFrame bsf1 = stk.getFrame(j);
-         if (bsf1 == frm) return -1;
-         if (!matchFrameMethod(bsf0,bsf1)) return -1;
+	 int j = ct1 - (ct0 - i);
+	 BumpStackFrame bsf0 = for_stack.getFrame(i);
+	 BumpStackFrame bsf1 = stk.getFrame(j);
+	 if (bsf1 == frm) return -1;
+	 if (!matchFrameMethod(bsf0,bsf1)) return -1;
        }
       return ct0 - frame_level;
     }

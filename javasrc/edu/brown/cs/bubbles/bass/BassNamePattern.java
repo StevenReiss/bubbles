@@ -253,6 +253,7 @@ int match(BassName bn)
 	    if (is_method || is_field) return -1;
 	    break;
 	 case FIELDS :
+         case VARIABLES :
 	    if (is_method || is_interface || is_type) return -1;
 	    break;
 	 case METHOD :

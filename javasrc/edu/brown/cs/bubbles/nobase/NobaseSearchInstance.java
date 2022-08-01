@@ -635,7 +635,7 @@ private class RegionVisitor extends DefaultASTVisitor {
    @Override public void endVisit(Block n) {
       --current_depth;
     }
-
+   
    @Override public boolean visit(VariableDeclarationFragment n) {
       NobaseSymbol nsym = NobaseAst.getDefinition(n);
       if (nsym == null) return false;
@@ -667,9 +667,13 @@ private class RegionVisitor extends DefaultASTVisitor {
 
 
    @Override public boolean visitNode(ASTNode n) {
+      if (n instanceof VariableDeclarationStatement &&
+            n.getParent() instanceof JavaScriptUnit) {
+         return super.visitNode(n);
+       }
       if (n instanceof Statement) {
-	 if (do_computations) outputRange(n);
-	 return false;
+         if (do_computations) outputRange(n);
+         return false;
        }
       return super.visitNode(n);
     }

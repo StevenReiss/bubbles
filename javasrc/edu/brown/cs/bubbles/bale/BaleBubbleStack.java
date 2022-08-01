@@ -119,10 +119,14 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
 	    break;
 	 case FIELD :
 	 case ENUM_CONSTANT :
-	 case GLOBAL :
 	    key = bl.getSymbolName();
 	    int idx = key.lastIndexOf(".");
 	    key = key.substring(0,idx+1) + ".<FIELDS>";
+	    break;
+         case GLOBAL :
+            key = bl.getSymbolName();
+	    idx = key.lastIndexOf(".");
+	    key = key.substring(0,idx+1) + ".<VARIABLES>";
 	    break;
 	 case STATIC_INITIALIZER :
 	    key = bl.getSymbolName();

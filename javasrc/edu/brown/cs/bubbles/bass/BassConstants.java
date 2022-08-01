@@ -81,7 +81,8 @@ enum BassNameType {
    PACKAGE,
    METHOD,
    CONSTRUCTOR,
-   FIELDS,
+   FIELDS,  
+   VARIABLES,                   // JS and Python variable declarations
    STATICS,
    MAIN_PROGRAM,
    CLASS,

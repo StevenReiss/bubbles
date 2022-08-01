@@ -104,7 +104,7 @@ private SwingEventListenerList<BddtFrameListener> frame_listeners;
 private Action			stepinto_action;
 private Action			stepuser_action;
 private FileSystemView		file_system;
-private BddtPerfViewTable       perf_data;
+private BddtPerfViewTable	perf_data;
 
 private JPanel			launch_panel;
 
@@ -150,7 +150,7 @@ BddtLaunchControl(BumpLaunchConfig blc)
 
    String log = launch_config.getLogFile();
    if (log != null) BddtFactory.getFactory().getConsoleControl().setLogFile(this,log);
-   
+
    perf_data = new BddtPerfViewTable(this);
 }
 
@@ -178,7 +178,7 @@ BddtBubbleManager getBubbleManager()		{ return bubble_manager; }
 BudaBubble createPerfBubble()
 {
    if (perf_data == null) return null;
-   
+
    return perf_data.createBubble();
 }
 
@@ -460,25 +460,25 @@ private class PlayAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-         case READY :
-         case TERMINATED :
-            BoardMetrics.noteCommand("BDDT","StartDebug");
-            setProcess(null);
-            setLaunchState(LaunchState.STARTING);
-            bubble_manager.restart();
-            BoardThreadPool.start(new StartDebug());
-            break;
-         case STARTING :
-         case RUNNING :
-            break;
-         case PAUSED :
-         case PARTIAL_PAUSE :
-            if (cur_process != null) {
-               BoardMetrics.noteCommand("BDDT","ResumeDebug");
-               waitForFreeze();
-               bump_client.resume(cur_process);
-             }
-            break;
+	 case READY :
+	 case TERMINATED :
+	    BoardMetrics.noteCommand("BDDT","StartDebug");
+	    setProcess(null);
+	    setLaunchState(LaunchState.STARTING);
+	    bubble_manager.restart();
+	    BoardThreadPool.start(new StartDebug());
+	    break;
+	 case STARTING :
+	 case RUNNING :
+	    break;
+	 case PAUSED :
+	 case PARTIAL_PAUSE :
+	    if (cur_process != null) {
+	       BoardMetrics.noteCommand("BDDT","ResumeDebug");
+	       waitForFreeze();
+	       bump_client.resume(cur_process);
+	     }
+	    break;
        }
     }
 
@@ -529,19 +529,19 @@ private class StopAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-         case READY :
-         case TERMINATED :
-            break;
-         case STARTING :
-         case RUNNING :
-         case PARTIAL_PAUSE :
-         case PAUSED :
-            if (cur_process != null) {
-               BoardMetrics.noteCommand("BDDT","TerminateDebug");
-               waitForFreeze();
-               bump_client.terminate(cur_process);
-             }
-            break;
+	 case READY :
+	 case TERMINATED :
+	    break;
+	 case STARTING :
+	 case RUNNING :
+	 case PARTIAL_PAUSE :
+	 case PAUSED :
+	    if (cur_process != null) {
+	       BoardMetrics.noteCommand("BDDT","TerminateDebug");
+	       waitForFreeze();
+	       bump_client.terminate(cur_process);
+	     }
+	    break;
        }
     }
 
@@ -627,28 +627,28 @@ private class StepUserAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       if ((evt.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
-         stepinto_action.actionPerformed(evt);
-         return;
+	 stepinto_action.actionPerformed(evt);
+	 return;
        }
-   
+
       switch (launch_state) {
-         case READY :
-         case TERMINATED :
-            PlayAction pa = new PlayAction();
-            pa.actionPerformed(evt);
-            break;
-         case STARTING :
-         case RUNNING :
-            break;
-         case PARTIAL_PAUSE :
-         case PAUSED :
-            BumpThread bt = event_handler.getLastStoppedThread();
-            if (bt != null) {
-               BoardMetrics.noteCommand("BDDT","StepUserDebug");
-               waitForFreeze();
-               bump_client.stepUser(bt);
-             }
-            break;
+	 case READY :
+	 case TERMINATED :
+	    PlayAction pa = new PlayAction();
+	    pa.actionPerformed(evt);
+	    break;
+	 case STARTING :
+	 case RUNNING :
+	    break;
+	 case PARTIAL_PAUSE :
+	 case PAUSED :
+	    BumpThread bt = event_handler.getLastStoppedThread();
+	    if (bt != null) {
+	       BoardMetrics.noteCommand("BDDT","StepUserDebug");
+	       waitForFreeze();
+	       bump_client.stepUser(bt);
+	     }
+	    break;
       }
    }
 
@@ -739,34 +739,34 @@ private class DropToFrameAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-         case READY :
-         case TERMINATED :
-            PlayAction pa = new PlayAction();
-            pa.actionPerformed(evt);
-            break;
-         case STARTING :
-         case RUNNING :
-            break;
-         case PARTIAL_PAUSE :
-         case PAUSED :
-            BumpThread bt = event_handler.getLastStoppedThread();
-            if (bt != null) {
-               if ((evt.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
-        	  waitForFreeze();
-        	  BumpThreadStack stk = bt.getStack();
-        	  BumpStackFrame frm = stk.getFrame(1);
-        	  if (frm != null) {
-        	     BoardMetrics.noteCommand("BDDT","DropToPriorFrameDebug");
-        	     bump_client.dropToFrame(frm);
-        	   }
-        	}
-               else {
-        	  BoardMetrics.noteCommand("BDDT","DropToFrameDebug");
-        	  waitForFreeze();
-        	  bump_client.dropToFrame(bt);
-        	}
-             }
-            break;
+	 case READY :
+	 case TERMINATED :
+	    PlayAction pa = new PlayAction();
+	    pa.actionPerformed(evt);
+	    break;
+	 case STARTING :
+	 case RUNNING :
+	    break;
+	 case PARTIAL_PAUSE :
+	 case PAUSED :
+	    BumpThread bt = event_handler.getLastStoppedThread();
+	    if (bt != null) {
+	       if ((evt.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
+		  waitForFreeze();
+		  BumpThreadStack stk = bt.getStack();
+		  BumpStackFrame frm = stk.getFrame(1);
+		  if (frm != null) {
+		     BoardMetrics.noteCommand("BDDT","DropToPriorFrameDebug");
+		     bump_client.dropToFrame(frm);
+		   }
+		}
+	       else {
+		  BoardMetrics.noteCommand("BDDT","DropToFrameDebug");
+		  waitForFreeze();
+		  bump_client.dropToFrame(bt);
+		}
+	     }
+	    break;
        }
     }
 
@@ -782,21 +782,21 @@ private class StartDebug implements Runnable {
       BudaRoot br = BudaRoot.findBudaRoot(BddtLaunchControl.this);
       if (br == null) return;
       br.handleSaveAllRequest();
-   
+
       BumpErrorType etyp = bump_client.getErrorType();
-   
+
       if (etyp == BumpErrorType.ERROR) {
-         int sts = JOptionPane.showConfirmDialog(BddtLaunchControl.this,
-               "Start debugging with compiler errors?",
-               "Error Check for Run",JOptionPane.YES_NO_OPTION,
-               JOptionPane.QUESTION_MESSAGE);
-         if (sts == JOptionPane.YES_OPTION) etyp = BumpErrorType.WARNING;
+	 int sts = JOptionPane.showConfirmDialog(BddtLaunchControl.this,
+	       "Start debugging with compiler errors?",
+	       "Error Check for Run",JOptionPane.YES_NO_OPTION,
+	       JOptionPane.QUESTION_MESSAGE);
+	 if (sts == JOptionPane.YES_OPTION) etyp = BumpErrorType.WARNING;
        }
       if (etyp == BumpErrorType.ERROR || etyp == BumpErrorType.FATAL) {
-         setLaunchState(LaunchState.READY);
-         return;
+	 setLaunchState(LaunchState.READY);
+	 return;
        }
-   
+
       String id = "B_" + Integer.toString(((int)(Math.random() * 100000)));
       BumpProcess bp = bump_client.startDebug(launch_config,id);
       if (bp != null && cur_process == null) setProcess(bp);
@@ -1018,32 +1018,32 @@ private class RunEventHandler implements BumpRunEventHandler {
    @Override synchronized public void handleProcessEvent(BumpRunEvent evt) {
       BumpLaunchConfig elc = evt.getLaunchConfiguration();
       switch (evt.getEventType()) {
-         case PROCESS_ADD :
-            if (cur_process == null && launch_state == LaunchState.STARTING &&
-        	   (elc == null || elc == launch_config)) {
-               setProcess(evt.getProcess());
-               last_stopped = null;
-               BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
-               BddtFactory.getFactory().getHistoryControl().clearHistory(cur_process);
-               if (perf_data != null) perf_data.clear();
-             }
-            break;
-         case PROCESS_REMOVE :
-            if (cur_process == evt.getProcess()) {
-               setLaunchState(LaunchState.TERMINATED);
-               thread_states.clear();
-               setProcess(null);
-               last_stopped = null;
-             }
-            else if (cur_process == null && launch_state == LaunchState.STARTING &&
-        		(elc == null || elc == launch_config)) {
-               setLaunchState(LaunchState.TERMINATED);
-               thread_states.clear();
-               last_stopped = null;
-             }
-            break;
-         default:
-            break;
+	 case PROCESS_ADD :
+	    if (cur_process == null && launch_state == LaunchState.STARTING &&
+		   (elc == null || elc == launch_config)) {
+	       setProcess(evt.getProcess());
+	       last_stopped = null;
+	       BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
+	       BddtFactory.getFactory().getHistoryControl().clearHistory(cur_process);
+	       if (perf_data != null) perf_data.clear();
+	     }
+	    break;
+	 case PROCESS_REMOVE :
+	    if (cur_process == evt.getProcess()) {
+	       setLaunchState(LaunchState.TERMINATED);
+	       thread_states.clear();
+	       setProcess(null);
+	       last_stopped = null;
+	     }
+	    else if (cur_process == null && launch_state == LaunchState.STARTING &&
+			(elc == null || elc == launch_config)) {
+	       setLaunchState(LaunchState.TERMINATED);
+	       thread_states.clear();
+	       last_stopped = null;
+	     }
+	    break;
+	 default:
+	    break;
        }
     }
 
@@ -1052,40 +1052,40 @@ private class RunEventHandler implements BumpRunEventHandler {
       BumpThread bt = evt.getThread();
       BumpThreadState ost = thread_states.get(bt);
       BumpThreadState nst = bt.getThreadState();
-   
+
       switch (evt.getEventType()) {
-         case THREAD_ADD :
-            nst = BumpThreadState.RUNNING;
-            //$FALL-THROUGH$
-         case THREAD_CHANGE :
-            thread_states.put(bt,nst);
-            if (nst != ost) {
-               handleThreadStateChange(bt,ost);
-               if (nst.isStopped()) last_stopped = bt;
-               else if (last_stopped == bt) last_stopped = null;
-             }
-            else if (nst.isStopped()) {
-               addExecutionAnnot(bt);
-             }
-            break;
-         case THREAD_REMOVE :
-            removeExecutionAnnot(bt);
-            if (bt == last_stopped) last_stopped = null;
-            thread_states.remove(bt);
-            break;
-         case THREAD_TRACE :
-         case THREAD_HISTORY :
-            return;
-         default:
-            break;
+	 case THREAD_ADD :
+	    nst = BumpThreadState.RUNNING;
+	    //$FALL-THROUGH$
+	 case THREAD_CHANGE :
+	    thread_states.put(bt,nst);
+	    if (nst != ost) {
+	       handleThreadStateChange(bt,ost);
+	       if (nst.isStopped()) last_stopped = bt;
+	       else if (last_stopped == bt) last_stopped = null;
+	     }
+	    else if (nst.isStopped()) {
+	       addExecutionAnnot(bt);
+	     }
+	    break;
+	 case THREAD_REMOVE :
+	    removeExecutionAnnot(bt);
+	    if (bt == last_stopped) last_stopped = null;
+	    thread_states.remove(bt);
+	    break;
+	 case THREAD_TRACE :
+	 case THREAD_HISTORY :
+	    return;
+	 default:
+	    break;
        }
-   
+
       int tct = thread_states.size();
       int rct = 0;
       for (Map.Entry<BumpThread,BumpThreadState> ent : thread_states.entrySet()) {
-         BumpThreadState bts = ent.getValue();
-         if (bts.isStopped() && last_stopped == null) last_stopped = ent.getKey();
-         else if (bts.isRunning()) ++rct;
+	 BumpThreadState bts = ent.getValue();
+	 if (bts.isStopped() && last_stopped == null) last_stopped = ent.getKey();
+	 else if (bts.isRunning()) ++rct;
        }
       if (tct == 0) setLaunchState(LaunchState.TERMINATED);
       else if (rct == 0) setLaunchState(LaunchState.PAUSED);
@@ -1179,7 +1179,7 @@ private class CreateBubble implements Runnable {
 private void addExecutionAnnot(BumpThread bt)
 {
    removeExecutionAnnot(bt);
-   
+
    BoardProperties props = BoardProperties.getProperties("Bddt");
 
    BumpThreadStack stk = bt.getStack();
@@ -1187,24 +1187,24 @@ private void addExecutionAnnot(BumpThread bt)
       BumpStackFrame bsf = stk.getFrame(0);
       if (frameFileExists(bsf) && bsf.getLineNumber() > 0 && !bsf.isSystem()) {
 	 ExecutionAnnot ea = new ExecutionAnnot(bt,bsf);
-         removeExecutionAnnot(bt);
+	 removeExecutionAnnot(bt);
 	 exec_annots.put(bt,ea);
 	 BaleFactory.getFactory().addAnnotation(ea);
 	 setActiveFrame(bsf);
        }
-      else if (!props.getBoolean("Bddt.show.library.bubbles") && 
-            props.getBoolean("Bddt.show.user.bubble")) {
-         for (int i = 1; i < stk.getNumFrames(); ++i) {
-            BumpStackFrame bsf1 = stk.getFrame(i);
-            if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0 && !bsf1.isSystem()) {
-               ExecutionAnnot ea = new ExecutionAnnot(bt,bsf1);
-               removeExecutionAnnot(bt);
-               exec_annots.put(bt,ea);
-               BaleFactory.getFactory().addAnnotation(ea);
-               setActiveFrame(bsf1);
-               break;
-             }
-          }
+      else if (!props.getBoolean("Bddt.show.library.bubbles") &&
+	    props.getBoolean("Bddt.show.user.bubble")) {
+	 for (int i = 1; i < stk.getNumFrames(); ++i) {
+	    BumpStackFrame bsf1 = stk.getFrame(i);
+	    if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0 && !bsf1.isSystem()) {
+	       ExecutionAnnot ea = new ExecutionAnnot(bt,bsf1);
+	       removeExecutionAnnot(bt);
+	       exec_annots.put(bt,ea);
+	       BaleFactory.getFactory().addAnnotation(ea);
+	       setActiveFrame(bsf1);
+	       break;
+	     }
+	  }
        }
     }
 }
@@ -1241,14 +1241,14 @@ void setActiveFrame(BumpStackFrame frm)
       active_frame = frm;
       int stoplvl = 0;
       if (frm.getThread().getExceptionType() != null) {
-         BumpThreadStack stk = frm.getThread().getStack();
-         for (int i = 0; i < stk.getNumFrames(); ++i) {
-            BumpStackFrame bsf1 = stk.getFrame(i);
-            if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0) {
-               stoplvl = i;
-               break;
-             }
-          }
+	 BumpThreadStack stk = frm.getThread().getStack();
+	 for (int i = 0; i < stk.getNumFrames(); ++i) {
+	    BumpStackFrame bsf1 = stk.getFrame(i);
+	    if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0) {
+	       stoplvl = i;
+	       break;
+	     }
+	  }
        }
       if (frm.getLevel() > stoplvl && frm.getFile() != null) {
 	 frame_annot = new FrameAnnot(frm);
@@ -1282,18 +1282,18 @@ private class ExecutionAnnot implements BaleAnnotation {
       for_frame = frm;
       for_file = frm.getFile();
       boolean lcl = frm.isSystem();
-   
+
       for_document = BaleFactory.getFactory().getFileOverview(null,for_file,lcl);
       int off = for_document.findLineOffset(frm.getLineNumber());
       annot_color = BoardColors.getColor(BDDT_EXECUTE_ANNOT_COLOR_PROP);
       except_color = BoardColors.getColor(BDDT_EXECUTE_EXCEPT_COLOR_PROP);
-   
+
       execute_pos = null;
       try {
-         execute_pos = for_document.createPosition(off);
+	 execute_pos = for_document.createPosition(off);
        }
       catch (BadLocationException e) {
-         BoardLog.logE("BDDT","Bad execution position",e);
+	 BoardLog.logE("BDDT","Bad execution position",e);
        }
     }
 
@@ -1321,7 +1321,7 @@ private class ExecutionAnnot implements BaleAnnotation {
    @Override public Color getLineColor(BudaBubble bbl) {
       BumpStackFrame frm = bubble_manager.getFrameForBubble(bbl);
       if (frm != null && !frm.sameFrame(for_frame)) {
-         return null;
+	 return null;
        }
       if (for_thread.getExceptionType() != null) return except_color;
       return annot_color;
@@ -1361,12 +1361,12 @@ private class FrameAnnot implements BaleAnnotation {
       if (for_document == null) return;
       int off = for_document.findLineOffset(frm.getLineNumber());
       annot_color = BoardColors.getColor(BDDT_FRAME_ANNOT_COLOR_PROP);
-   
+
       try {
-         execute_pos = for_document.createPosition(off);
+	 execute_pos = for_document.createPosition(off);
        }
       catch (BadLocationException e) {
-         BoardLog.logE("BDDT","Bad execution position",e);
+	 BoardLog.logE("BDDT","Bad execution position",e);
        }
     }
 
@@ -1730,8 +1730,8 @@ private static class EvaluationListener implements BumpEvaluationHandler, Expres
    @Override public void evaluationError(String eid,String expr,String error) {
       error_value = error;
       synchronized (this) {
-         is_done = true;
-         notifyAll();
+	 is_done = true;
+	 notifyAll();
        }
     }
 
@@ -1749,7 +1749,7 @@ private static class EvaluationListener implements BumpEvaluationHandler, Expres
 	    wait(1000l);
 	  }
 	 catch (InterruptedException e) { }
-	 if ((System.currentTimeMillis() - start) > 60000) {
+	 if ((System.currentTimeMillis() - start) > 10000) {
 	    evaluationError(null,null,"Operation Timeout");
 	  }
        }

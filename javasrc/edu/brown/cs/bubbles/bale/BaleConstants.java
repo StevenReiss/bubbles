@@ -84,7 +84,7 @@ enum BaleFragmentType {
    METHOD,
    CLASS,
    FILE,
-   FIELDS,				// set of fields (python attributes)
+   FIELDS,				// set of fields (python attributes, javascript vars)
    STATICS,				// static initializers (python evaluations)
    MAIN,				// python main program
    HEADER,				// class header
@@ -250,6 +250,7 @@ enum BaleAstNodeType {
    ANNOTATION,
    CLASS,
    FIELD,
+   VARIABLE,
    INITIALIZER,
    METHOD,
    FILE,

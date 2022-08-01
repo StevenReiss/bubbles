@@ -155,6 +155,13 @@ void outputNameData(NobaseFile rf,IvyXmlWriter xw)
 {
    ASTNode an = getDefNode();
    if (an == null) return;
+   if (an instanceof VariableDeclarationFragment) {
+      ASTNode pan = an.getParent();
+      if (pan instanceof VariableDeclarationStatement) {
+         VariableDeclarationStatement vds = (VariableDeclarationStatement) pan;
+         if (vds.fragments().size() == 1) an = vds;
+       }
+    }
 
    xw.begin("ITEM");
    xw.field("PROJECT",for_project.getName());

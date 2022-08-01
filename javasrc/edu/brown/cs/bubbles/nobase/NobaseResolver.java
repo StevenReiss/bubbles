@@ -132,6 +132,8 @@ static boolean isGeneratedName(String name)
 {
    if (name == null) return false;
    if (name.equals("MISSING")) return true;
+   if (name.equals("await")) return true;
+   if (name.equals("async")) return true;
    Matcher m = INTERNAL_NAME.matcher(name);return m.matches();
 }
 

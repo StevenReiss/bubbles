@@ -202,6 +202,7 @@ protected String getLocalName()
 	 nm1 = nm1.replace('$','.');
 	 return nm1;
       case FIELDS :
+      case VARIABLES :
       case METHOD :
       case CONSTRUCTOR :
       case STATICS :
@@ -237,6 +238,7 @@ protected String getLocalName()
       case ANNOTATION :
 	 return getNameHead();
       case FIELDS :
+      case VARIABLES :
       case METHOD :
       case CONSTRUCTOR :
       case STATICS :

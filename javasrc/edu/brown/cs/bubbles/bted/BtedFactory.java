@@ -88,7 +88,7 @@ private static HashMap<String, String> file_extensions = new HashMap<String,Stri
 private static BtedFactory	     the_factory;
 private static BoardProperties	 bted_props = BoardProperties.getProperties("Bted");
 
-private static File             last_directory = null;
+private static File		last_directory = null;
 
 
 
@@ -142,9 +142,9 @@ public static void setup()
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Access methods                                                          */
-/*                                                                              */
+/*										*/
+/*	Access methods								*/
+/*										*/
 /********************************************************************************/
 
 static File getLastDirectory()
@@ -262,7 +262,6 @@ private void getExtensionsFromProperties()
    for (String str : getExtensions(bted_props.getString(XPATH_EXTENSION))) {
       file_extensions.put(str, "text/xpath");
     }
-   file_extensions.put("html","text/html");
 }
 
 
@@ -423,27 +422,27 @@ boolean isFileOpen(File file)
 	 bb = new BtedBubble(null,StartMode.NEW);
        }
       else if (id.equals(LOAD_FILE_BUTTON)) {
-         JFileChooser chooser = new JFileChooser(last_directory);
-         int returnval = chooser.showOpenDialog(bba);
-         if (returnval == JFileChooser.APPROVE_OPTION) {
-            File f = chooser.getSelectedFile();
-            setLastDirectory(f);
-            if (f.exists() && f.canRead()) {
-               bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
-             }
-          }
+	 JFileChooser chooser = new JFileChooser(last_directory);
+	 int returnval = chooser.showOpenDialog(bba);
+	 if (returnval == JFileChooser.APPROVE_OPTION) {
+	    File f = chooser.getSelectedFile();
+	    setLastDirectory(f);
+	    if (f.exists() && f.canRead()) {
+	       bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
+	     }
+	  }
        }
       else if (id.equals(REMOTE_FILE_BUTTON)) {
-         JFileChooser chooser = new JFileChooser(last_directory,
-               BoardFileSystemView.getFileSystemView());
-         int returnval = chooser.showOpenDialog(bba);
-         if (returnval == JFileChooser.APPROVE_OPTION) {
-            File f = chooser.getSelectedFile();
-            setLastDirectory(f);
-            if (f.exists() && f.canRead()) {
-               bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
-             }
-          }
+	 JFileChooser chooser = new JFileChooser(last_directory,
+	       BoardFileSystemView.getFileSystemView());
+	 int returnval = chooser.showOpenDialog(bba);
+	 if (returnval == JFileChooser.APPROVE_OPTION) {
+	    File f = chooser.getSelectedFile();
+	    setLastDirectory(f);
+	    if (f.exists() && f.canRead()) {
+	       bb = new BtedBubble(f.getPath(),StartMode.LOCAL);
+	     }
+	  }
        }
     }
    catch (Throwable t) {

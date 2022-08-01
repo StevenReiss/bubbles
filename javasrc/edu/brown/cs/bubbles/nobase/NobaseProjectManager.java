@@ -379,8 +379,8 @@ private static class NameWalker extends DefaultASTVisitor {
 
    @Override public boolean visit(VariableDeclarationFragment d) {
       if (d.getInitializer() != null &&
-	    d.getInitializer() instanceof FunctionExpression) {
-	 return true;
+            d.getInitializer() instanceof FunctionExpression) {
+         return true;
        }
       return false;
     }
@@ -390,6 +390,9 @@ private static class NameWalker extends DefaultASTVisitor {
     }
 
    @Override public boolean visitNode(ASTNode n) {
+      if (n instanceof VariableDeclarationStatement &&
+            n.getParent() instanceof JavaScriptUnit)
+         return true;
       if (n instanceof Statement) return false;
       return true;
     }

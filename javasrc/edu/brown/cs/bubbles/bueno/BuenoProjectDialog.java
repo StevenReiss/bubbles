@@ -421,7 +421,8 @@ private class NewPathEntryBubble extends BudaBubble implements ActionListener {
       if (dir != null && !dir.equals(last_directory)) {
          last_directory = dir;
          BoardProperties bp = BoardProperties.getProperties("Bueno");
-         bp.setProperty("Bueno.library.directory",dir.getAbsolutePath());
+         String dp = dir.getAbsolutePath();
+         bp.setProperty("Bueno.library.directory",dp);
          try {
             bp.save();
           }

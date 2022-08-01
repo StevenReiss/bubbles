@@ -84,6 +84,7 @@ static {
    ast_types.put("ENUM",BaleAstNodeType.CLASS);
    ast_types.put("ENUMC",BaleAstNodeType.FIELD);
    ast_types.put("FIELD",BaleAstNodeType.FIELD);
+   ast_types.put("VARIABLE",BaleAstNodeType.VARIABLE);
    ast_types.put("INITIALIZER",BaleAstNodeType.INITIALIZER);
    ast_types.put("ANNOT",BaleAstNodeType.ANNOTATION);
    ast_types.put("COMPUNIT",BaleAstNodeType.FILE);

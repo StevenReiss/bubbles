@@ -782,6 +782,9 @@ public void save() throws IOException
       BoardLog.logE("BOARD","Problem storing properties",e);
       throw e;
     }
+   catch (Throwable t) {
+      BoardLog.logE("BOARD","Problem storing properties for " + this,t);
+    }
    finally {
       file_locker.unlock();
     }

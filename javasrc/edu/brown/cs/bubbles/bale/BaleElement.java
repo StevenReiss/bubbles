@@ -1075,6 +1075,20 @@ static class FieldNode extends Branch {
 }	// end of inner class FieldNode
 
 
+static class VariableNode extends Branch {
+
+   // JavaScript variable declaration
+   VariableNode(BaleDocument d,BaleElement.Branch par) {
+      super(d,par,null);
+    }
+   
+   @Override public String getName()		{ return "Variable"; }
+   @Override boolean isOutsideLine()		{ return true; }
+   @Override BaleFragmentType getBubbleType()	{ return BaleFragmentType.FIELDS; }
+
+}	// end of inner class FieldNode
+
+
 
 static class AnnotationNode extends Branch {
 

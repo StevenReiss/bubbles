@@ -81,6 +81,7 @@ void handleTextSearch(String proj,int fgs,String pat,int maxresult,IvyXmlWriter 
     }
    catch (PatternSyntaxException e) {
       pp = Pattern.compile(pat,fgs|Pattern.LITERAL);
+
     }
 
    Pattern filepat = null;
@@ -148,10 +149,15 @@ private class FindOuterVisitor extends ASTVisitor {
    @Override public boolean visit(FunctionExpression n) {
       return checkNode(n);
     }
+   
+   @Override public boolean visit(VariableDeclarationStatement n) {
+      return checkNode(n);
+    }
 
    private boolean checkNode(ASTNode n) {
       int soff = n.getStartPosition();
-      int eoff = soff + n.getLength();	    if (soff < start_offset && eoff > end_offset) {
+      int eoff = soff + n.getLength();	   
+      if (soff < start_offset && eoff > end_offset) {
 	 item_found = n;
        }
       if (start_offset > eoff) return false;
