@@ -73,6 +73,12 @@ BgtaLoginInfoRepository(Vector<BgtaManager> mans,BgtaRepository rep)
 }
 
 
+@Override public boolean isEmpty()
+{
+   return all_info.isEmpty();
+}
+
+
 
 
 

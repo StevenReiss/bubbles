@@ -461,6 +461,10 @@ void runProject(String cfg,String mode,boolean build,boolean reg,String vmarg,St
 	       xw.field("PROCESS",ip.hashCode());
 	       setupConsole(ip);
 	     }
+            if (tgt instanceof IJavaDebugTarget) {
+               IJavaDebugTarget jdt = (IJavaDebugTarget) tgt;
+               jdt.addHotCodeReplaceListener(this);
+             }
 	  }
 	 xw.end("LAUNCH");
        }
@@ -1624,17 +1628,19 @@ private boolean handleInternalEvent(DebugEvent event)
 
 @Override public void hotCodeReplaceFailed(IJavaDebugTarget tgt,DebugException e)
 {
-   BedrockPlugin.logD("Hot code replace failed " + tgt + " " + e);
+   BedrockPlugin.logD("HOT CODE replace failed " + tgt + " " + e);
 }
 
 
 @Override public void hotCodeReplaceSucceeded(IJavaDebugTarget tgt)
-{ }
+{ 
+   BedrockPlugin.logD("HOT CODE replace success " + tgt);
+}
 
 
 @Override public void obsoleteMethods(IJavaDebugTarget tgt)
 {
-   BedrockPlugin.logD("Hot code replace obsolete methods " + tgt);
+   BedrockPlugin.logD("HOT CODE replace obsolete methods " + tgt);
 }
 
 

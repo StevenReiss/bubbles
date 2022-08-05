@@ -96,6 +96,12 @@ void addNewRep(BgtaBuddyRepository bbr)
 }
 
 
+@Override public boolean isEmpty()
+{
+   return complete_rep.isEmpty();
+}
+
+
 @Override public boolean includesRepository(BassRepository br)
 {
    if (br == this) return true;

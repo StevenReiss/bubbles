@@ -391,7 +391,9 @@ public static BassRepository getRepository(BudaConstants.SearchType typ)
 	 else rslt = new BassRepositoryMerge(br,rslt);
        }
     }
-
+   
+   if (rslt.isEmpty()) return null;
+   
    return rslt;
 }
 

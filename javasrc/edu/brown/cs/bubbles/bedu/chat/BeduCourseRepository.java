@@ -109,6 +109,12 @@ private BeduCourseRepository(Collection<BeduCourse> c)
 }
 
 
+@Override public boolean isEmpty()
+{
+   return my_courses.isEmpty();
+}
+
+
 @Override public boolean includesRepository(BassRepository br)
 {
    return (br == this);

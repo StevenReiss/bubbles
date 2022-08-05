@@ -1363,17 +1363,21 @@ private List<BaleRegion> getRegionsFromLocations(List<BumpLocation> locs)
       if (lang == BoardLanguage.JS) {
 	 // handle VAR which might be missing in a declaration location context
 	 int decloff = soffset;
-	 while (decloff >= 3) {
-	    if (!Character.isWhitespace(s.charAt(decloff-1))) {
-	       if (s.charAt(decloff-1) == 'r' && s.charAt(decloff-2) == 'a' &&
-		     s.charAt(decloff-3) == 'v' &&
-		     (decloff == 3 || Character.isWhitespace(s.charAt(decloff-4)))) {
-		   soffset = decloff-3;
-		}
-	       break;
-	     }
-	    --decloff;
-	  }
+         while (decloff > 0) {
+            if (Character.isWhitespace(s.charAt(decloff-1))) --decloff;
+            else {
+               boolean fnd = false;
+               for (String key : new String [] { "var", "let", "const", "async" }) {
+                  if (checkForPriorKeyword(s,decloff,key)) {
+                     decloff -= key.length();
+                     soffset = decloff;
+                     fnd = true;
+                     break;
+                   }
+                }
+               if (!fnd) break;
+             }
+          }
        }
       // extend the logical regions and note if it ends with a new line
       while (soffset > 0) {
@@ -1446,6 +1450,19 @@ private List<BaleRegion> getRegionsFromLocations(List<BumpLocation> locs)
     }
 
    return rgns;
+}
+
+
+private boolean checkForPriorKeyword(Segment s,int off,String key)
+{
+   int ln = key.length();
+   if (off < ln) return false;
+   
+   for (int i = 0; i < ln; ++i) {
+      char c = key.charAt(ln-1-i);
+      if (s.charAt(off-1-i) != c) return false;
+    }
+   return true;
 }
 
 

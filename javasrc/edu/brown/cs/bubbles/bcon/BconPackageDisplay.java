@@ -1020,8 +1020,8 @@ private class SearchAction extends AbstractAction {
       BoardMetrics.noteCommand("BCON","GotoSearch");
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BconPackageDisplay.this);
       if (bba != null) {
-	 bba.addBubble(bb,BconPackageDisplay.this,null,
-			  PLACEMENT_PREFER|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+         bba.addBubble(bb,BconPackageDisplay.this,null,
+        		  PLACEMENT_PREFER|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
        }
     }
 

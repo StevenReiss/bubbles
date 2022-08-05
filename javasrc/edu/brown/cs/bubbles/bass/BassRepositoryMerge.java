@@ -94,6 +94,13 @@ public BassRepositoryMerge(BassRepository p1,BassRepository p2)
 }
 
 
+@Override public boolean isEmpty()
+{
+   if (first_repository != null && !first_repository.isEmpty()) return false;
+   if (second_repository != null && !second_repository.isEmpty()) return false;
+   return true;
+}
+
 
 @Override public boolean includesRepository(BassRepository br)
 {

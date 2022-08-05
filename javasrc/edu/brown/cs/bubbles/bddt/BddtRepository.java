@@ -124,6 +124,12 @@ BddtRepository()
 }
 
 
+@Override public boolean isEmpty()
+{
+   return config_map.isEmpty() && process_map.isEmpty();
+}
+
+
 @Override public boolean includesRepository(BassRepository br)
 {
    return br == this;

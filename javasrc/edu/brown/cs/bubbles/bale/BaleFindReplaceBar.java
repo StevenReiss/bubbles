@@ -311,72 +311,76 @@ private JTextField createTextField(int ln)
    for_document.baleWriteLock();
    try {
       BowiFactory.startTask();
-      last_dir = dir == 0 ? last_dir : dir;
-      // if the text field is empty then don't search but also reset the look
-      if (search_for == null || search_for.length() == 0) {
-	 clearHighlights();
-	 searched_for = null;
-	 return;
-       }
-      // if the user changed the text then run a new search
-      if (searched_for == null || (is_case_sensitive.isSelected() && !search_for.equals(searched_for))
-	     || (!is_case_sensitive.isSelected() && !search_for.equalsIgnoreCase(searched_for))
-	     || current_caret_position != editor_pane.getCaretPosition()) {
-	 clearHighlights();
-	 searched_for = search_for;
-	 // find and store the indices of all the occurrences so that going back and forth doesn't require a new search
-	 findAllOccurences(search_for, dir);
-	 number_label.setText("Matches: " + occurrences_set.size());
-	 //current_index = -1;
-       }
-      if (occurrences_set == null || occurrences_set.size() == 0) {
-	 clearHighlights();
-	 return;
-       }
-
-      // depending on the find direction, either navigate to the next or previous occurrence.
-      // wrap around if necessary
-      int found = 0;
-      if (dir > 0) {
-	 current_index++;
-	 if (current_index >= occurrences_set.size()) current_index = 0;
-       }
-      else if (dir < 0) {
-	 current_index--;
-	 if (current_index < 0) current_index = occurrences_set.size() - 1;
-       }
-      else if (dir == 0) {
-	 current_index = 0;
-       }
-      found = occurrences_set.get(current_index).getOffset();
-      int len = search_for.length();
-
       try {
-	 current_caret_position = found+len;
-	 editor_pane.setCaretPosition(found);
-	 editor_pane.moveCaretPosition(found+len);
-	 my_highlighter.changeHighlight(my_highlight_tag,found,found+len);
-	 // Rectangle r = new Rectangle();
-	 // r.setFrame(editor_pane.modelToView2D(found+len));
-	 // editor_pane.scrollRectToVisible(r);
-	 editor_pane.scrollRectToVisible(SwingText.modelToView2D(editor_pane,found+len));
-	 currentelement = for_document.getCharacterElement(found);
-	 if (currentelement == null) return;
-	 BoardMetrics.noteCommand("BALE","Find");
-
-	 if (currentelement.isElided()){
-	    currentelement.setElided(false);
-	    for_document.handleElisionChange();
-	    editor_pane.increaseSizeForElidedElement(currentelement);
-	    BoardMetrics.noteCommand("BALE","FindUnElision");
-	    BaleEditorBubble.noteElision(editor_pane);
-	  }
+         last_dir = dir == 0 ? last_dir : dir;
+         // if the text field is empty then don't search but also reset the look
+         if (search_for == null || search_for.length() == 0) {
+            clearHighlights();
+            searched_for = null;
+            return;
+          }
+         // if the user changed the text then run a new search
+         if (searched_for == null || (is_case_sensitive.isSelected() && !search_for.equals(searched_for))
+               || (!is_case_sensitive.isSelected() && !search_for.equalsIgnoreCase(searched_for))
+               || current_caret_position != editor_pane.getCaretPosition()) {
+            clearHighlights();
+            searched_for = search_for;
+            // find and store the indices of all the occurrences so that going back and forth doesn't require a new search
+            findAllOccurences(search_for, dir);
+            number_label.setText("Matches: " + occurrences_set.size());
+            //current_index = -1;
+          }
+         if (occurrences_set == null || occurrences_set.size() == 0) {
+            clearHighlights();
+            return;
+          }
+         
+         // depending on the find direction, either navigate to the next or previous occurrence.
+         // wrap around if necessary
+         int found = 0;
+         if (dir > 0) {
+            current_index++;
+            if (current_index >= occurrences_set.size()) current_index = 0;
+          }
+         else if (dir < 0) {
+            current_index--;
+            if (current_index < 0) current_index = occurrences_set.size() - 1;
+          }
+         else if (dir == 0) {
+            current_index = 0;
+          }
+         found = occurrences_set.get(current_index).getOffset();
+         int len = search_for.length();
+         
+         try {
+            current_caret_position = found+len;
+            editor_pane.setCaretPosition(found);
+            editor_pane.moveCaretPosition(found+len);
+            my_highlighter.changeHighlight(my_highlight_tag,found,found+len);
+            // Rectangle r = new Rectangle();
+            // r.setFrame(editor_pane.modelToView2D(found+len));
+            // editor_pane.scrollRectToVisible(r);
+            editor_pane.scrollRectToVisible(SwingText.modelToView2D(editor_pane,found+len));
+            currentelement = for_document.getCharacterElement(found);
+            if (currentelement == null) return;
+            BoardMetrics.noteCommand("BALE","Find");
+            
+            if (currentelement.isElided()){
+               currentelement.setElided(false);
+               for_document.handleElisionChange();
+               editor_pane.increaseSizeForElidedElement(currentelement);
+               BoardMetrics.noteCommand("BALE","FindUnElision");
+               BaleEditorBubble.noteElision(editor_pane);
+             }
+          }
+         catch (BadLocationException e) { }
        }
-      catch (BadLocationException e) { }
+      finally {
+         BowiFactory.stopTask();
+       }
     }
    finally {
       for_document.baleWriteUnlock();
-      BowiFactory.stopTask();
     }
 }
 

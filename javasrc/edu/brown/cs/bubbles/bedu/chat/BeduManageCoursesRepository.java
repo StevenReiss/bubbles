@@ -39,6 +39,12 @@ class BeduManageCoursesRepository implements BassConstants.BassRepository {
    return l;
 }
 
+
+@Override public boolean isEmpty()
+{
+   return false;
+}
+
 @Override public boolean includesRepository(BassRepository br)
 {
    return br == this;

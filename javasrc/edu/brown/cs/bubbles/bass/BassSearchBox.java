@@ -487,32 +487,32 @@ private class Reseter implements Runnable {
    @Override public void run() {
       BowiFactory.startTask();
       try {
-	 for ( ; ; ) {
-	    for ( ; ; ) {
-	       String t;
-	       synchronized (this) {
-		  t = reset_text;
-		  if (t == null) break;
-		  reset_text = null;
-		}
-	       tree_model.reset(t,false);
-	     }
-
-	    try {
-	       SwingUtilities.invokeAndWait(new TreeUpdater());
-	     }
-	    catch (InterruptedException e) { }
-	    catch (InvocationTargetException e) {
-	       BoardLog.logE("BASS","Problem with global tree update",e);
-	     }
-
-	    synchronized (this) {
-	       if (reset_text == null) {
-		  is_active = false;
-		  break;
-		}
-	     }
-	  }
+         for ( ; ; ) {
+            for ( ; ; ) {
+               String t;
+               synchronized (this) {
+        	  t = reset_text;
+        	  if (t == null) break;
+        	  reset_text = null;
+        	}
+               tree_model.reset(t,false);
+             }
+   
+            try {
+               SwingUtilities.invokeAndWait(new TreeUpdater());
+             }
+            catch (InterruptedException e) { }
+            catch (InvocationTargetException e) {
+               BoardLog.logE("BASS","Problem with global tree update",e);
+             }
+   
+            synchronized (this) {
+               if (reset_text == null) {
+        	  is_active = false;
+        	  break;
+        	}
+             }
+          }
        }
       finally { BowiFactory.stopTask(); }
     }

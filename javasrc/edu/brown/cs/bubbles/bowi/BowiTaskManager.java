@@ -57,14 +57,15 @@ BowiTaskManager(BudaRoot br)
 /*                                                                              */
 /********************************************************************************/
 
-void startTask() 
+synchronized void startTask() 
 {
-   if (wait_cursor++ == 0) buda_root.startWaitCursor();
+   if (wait_cursor++ > 0) return;
+   buda_root.startWaitCursor();
 }
 
 
 
-void stopTask()
+synchronized void stopTask()
 {
    if (wait_cursor == 0) return;
    wait_cursor--;

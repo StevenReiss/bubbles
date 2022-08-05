@@ -699,12 +699,12 @@ private static class SaveButton implements ActionListener, Runnable
       BoardMetrics.noteCommand("BDDT","SaveAll");
       BowiFactory.startTask();
       try {
-	 BumpClient bc = BumpClient.getBump();
-	 bc.saveAll();
-	 buda_root.handleSaveAllRequest();
+         BumpClient bc = BumpClient.getBump();
+         bc.saveAll();
+         buda_root.handleSaveAllRequest();
        }
       finally {
-	 BowiFactory.stopTask();
+         BowiFactory.stopTask();
        }
     }
 
@@ -723,11 +723,11 @@ private static class BuildButton implements ActionListener, Runnable
       BoardMetrics.noteCommand("BDDT","Build");
       BowiFactory.startTask();
       try {
-	 BumpClient bc = BumpClient.getBump();
-	 bc.compile(false, true, false);
+         BumpClient bc = BumpClient.getBump();
+         bc.compile(false, true, false);
        }
       finally {
-	 BowiFactory.stopTask();
+         BowiFactory.stopTask();
        }
     }
 
@@ -747,11 +747,11 @@ private static class RefreshButton implements ActionListener, Runnable
       BoardMetrics.noteCommand("BEAM","Refresh");
       BowiFactory.startTask();
       try {
-	 BumpClient bc = BumpClient.getBump();
-	 bc.compile(false, false, true);
+         BumpClient bc = BumpClient.getBump();
+         bc.compile(false, false, true);
        }
       finally {
-	 BowiFactory.stopTask();
+         BowiFactory.stopTask();
        }
     }
 

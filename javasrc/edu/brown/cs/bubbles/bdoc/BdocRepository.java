@@ -282,6 +282,12 @@ private synchronized void waitForSearches()
 }
 
 
+@Override public boolean isEmpty()
+{
+   waitForReady();
+   return all_items.isEmpty() && inherited_items.isEmpty();
+}
+
 
 @Override public boolean includesRepository(BassRepository br)	{ return br == this; }
 

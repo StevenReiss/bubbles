@@ -230,6 +230,14 @@ private class BvfmCodeRepository implements BassUpdatableRepository {
        }
       return rslt;
     }
+   
+   @Override public boolean isEmpty() {
+      for (BvfmVirtualFile vf : file_set.keySet()) {
+         String s = vf.getCommonLocation();
+         if (s != null) return false;
+       }
+      return true;
+    }
 
    @Override public boolean includesRepository(BassRepository br) {
       if (br == this) return true;
@@ -255,10 +263,16 @@ private class BvfmGroupRepository implements BassUpdatableRepository {
    @Override public Iterable<BassName> getAllNames() {
       List<BassName> rslt = new ArrayList<>();
       for (BvfmVirtualFile vf : file_set.keySet()) {
-	 rslt.add(new GroupName(vf));
+         rslt.add(new GroupName(vf));
        }
       return rslt;
     }
+   
+   
+   @Override public boolean isEmpty()
+   {
+      return file_set.isEmpty();
+   }
 
    @Override public boolean includesRepository(BassRepository br) {
       if (br == this) return true;

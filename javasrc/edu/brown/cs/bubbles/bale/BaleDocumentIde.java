@@ -390,11 +390,13 @@ private void setLanguage()
 @Override void save()
 {
    BowiFactory.startTask();
-   bump_client.saveFile(project_name,file_name);
-
-   is_dirty = false;
-
-   BowiFactory.stopTask();
+   try {
+      bump_client.saveFile(project_name,file_name);
+      is_dirty = false;
+    }
+   finally {
+      BowiFactory.stopTask();
+    }
 }
 
 
@@ -402,15 +404,23 @@ private void setLanguage()
 @Override void commit()
 {
    BowiFactory.startTask();
-   bump_client.commitFile(project_name,file_name);
-   BowiFactory.stopTask();
+   try {
+      bump_client.commitFile(project_name,file_name);
+    }
+   finally {
+      BowiFactory.stopTask();
+    }
 }
 
 @Override void compile()
 {
    BowiFactory.startTask();
-   bump_client.compileFile(project_name,file_name);
-   BowiFactory.stopTask();
+   try {
+      bump_client.compileFile(project_name,file_name);
+    }
+   finally {
+      BowiFactory.stopTask();
+    }
 }
 
 

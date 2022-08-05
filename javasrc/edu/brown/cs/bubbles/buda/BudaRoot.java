@@ -963,6 +963,8 @@ public void createDocSearchBubble(Point pt,String proj,String pfx)
    if (docsearch_bubble != null) docsearch_bubble.setVisible(false);
 
    BudaBubble bb = search_creator.createSearch(SearchType.SEARCH_DOC,proj,pfx);
+   if (bb == null) return;
+   
    bb.addComponentListener(new SearchSingleton());
    if (!BUDA_PROPERTIES.getBoolean(SEARCH_ALLOW_MULTIPLE)) docsearch_bubble = bb;
 

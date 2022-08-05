@@ -348,6 +348,10 @@ private class RenameDoer implements Runnable {
                   BaleApplyEdits bae = new BaleApplyEdits();
                   bae.applyEdits(rename_edits);
                 }
+               catch (Throwable t) {
+                  BowiFactory.stopTask();
+                  throw t;
+                }
                finally {
                   BurpHistory.getHistory().endEditAction(oed);
                 }
@@ -356,12 +360,16 @@ private class RenameDoer implements Runnable {
             BoardThreadPool.start(this);
             break;
          case 2 :
-            br = BudaRoot.findBudaRoot(for_editor);
-            if (br != null) {
-               br.handleSaveAllRequest();
-               bc.compile(false,true,true);
+            try {
+               br = BudaRoot.findBudaRoot(for_editor);
+               if (br != null) {
+                  br.handleSaveAllRequest();
+                  bc.compile(false,true,true);
+                }
              }
-            BowiFactory.stopTask();
+            finally {
+               BowiFactory.stopTask();
+             }
             break;
       }
    }

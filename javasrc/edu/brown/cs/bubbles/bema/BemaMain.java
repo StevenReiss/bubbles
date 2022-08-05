@@ -548,28 +548,28 @@ private static class ProjectBubbleAdder implements Runnable {
    @Override public void run() {
       BudaBubble bb = null;
       switch (BoardSetup.getSetup().getLanguage()) {
-	 default :
-	    bb = BuenoFactory.getFactory().getCreateProjectBubble();
-	    break;
-	 case REBUS :
-	    try {
-	       Class<?> c = Class.forName("edu.brown.cs.bubbles.rebus.RebusFactory");
-	       Method m = c.getMethod("createSearchBubble");
-	       bb = (BudaBubble) m.invoke(null);
-	     }
-	    catch (Throwable t) {
-	       BoardLog.logE("BEMA","Problem creating rebus bubble",t);
-	     }
-	    break;
+         default :
+            bb = BuenoFactory.getFactory().getCreateProjectBubble();
+            break;
+         case REBUS :
+            try {
+               Class<?> c = Class.forName("edu.brown.cs.bubbles.rebus.RebusFactory");
+               Method m = c.getMethod("createSearchBubble");
+               bb = (BudaBubble) m.invoke(null);
+             }
+            catch (Throwable t) {
+               BoardLog.logE("BEMA","Problem creating rebus bubble",t);
+             }
+            break;
        }
       if (bb != null) {
-	 buda_root.waitForSetup();
-	 BudaBubbleArea bba = buda_root.getCurrentBubbleArea();
-	 Dimension d = bb.getSize();
-	 Rectangle r = bba.getViewport();
-	 int x0 = r.x + r.width/2 - d.width/2;
-	 int y0 = r.y + r.height/2 - d.height/2;
-	 bba.addBubble(bb, x0, y0);
+         buda_root.waitForSetup();
+         BudaBubbleArea bba = buda_root.getCurrentBubbleArea();
+         Dimension d = bb.getSize();
+         Rectangle r = bba.getViewport();
+         int x0 = r.x + r.width/2 - d.width/2;
+         int y0 = r.y + r.height/2 - d.height/2;
+         bba.addBubble(bb, x0, y0);
        }
     }
 

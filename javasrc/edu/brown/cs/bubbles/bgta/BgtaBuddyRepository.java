@@ -100,6 +100,20 @@ BgtaManager getManager()
 }
 
 
+@Override public boolean isEmpty()
+{
+   synchronized (this) {
+      while (!is_ready) {
+	 try {
+	    wait();
+	  }
+	 catch (InterruptedException e) {}
+       }
+      return all_names.isEmpty();
+    }
+}
+
+
 
 /********************************************************************************/
 /*										*/

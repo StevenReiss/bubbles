@@ -32,6 +32,7 @@ package edu.brown.cs.bubbles.beam;
 
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.swing.SwingEditorPane;
 
 import javax.swing.JEditorPane;
@@ -39,10 +40,8 @@ import javax.swing.JScrollPane;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 
 class BeamMouseBubble extends BudaBubble implements BeamConstants
@@ -70,24 +69,17 @@ BeamMouseBubble()
 {
    super(null,BudaBorder.RECTANGLE);
 
-   StringBuffer buf = new StringBuffer();
-   BufferedReader br = null;
+   String cnts = null;
 
    try {
       InputStream ins = BoardProperties.getResourceFile("mouseusage.html");
       if (ins == null) return;
-      br = new BufferedReader(new InputStreamReader(ins));
-      for ( ; ; ) {
-	 String ln = br.readLine();
-	 if (ln == null) break;
-	 buf.append(ln);
-	 buf.append("\n");
-       }
+      cnts = IvyFile.loadFile(ins);
       ins.close();
     }
    catch (IOException e) { }
 
-   JEditorPane edit = new SwingEditorPane("text/html",buf.toString());
+   JEditorPane edit = new SwingEditorPane("text/html",cnts);
    edit.setEditable(false);
    edit.setPreferredSize(new Dimension(600,670));
    JScrollPane jsp = new JScrollPane(edit);

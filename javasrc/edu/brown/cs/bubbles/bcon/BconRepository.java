@@ -133,6 +133,12 @@ BconRepository()
 }
 
 
+@Override public boolean isEmpty()
+{
+   return active_names.isEmpty();
+}
+
+
 
 @Override public boolean includesRepository(BassRepository br)	{ return br == this; }
 

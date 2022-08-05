@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -711,6 +712,10 @@ private void handleProcessEvent(Element xml)
 	 if (pd != null) {
 	    if (pd.getName() != null) named_processes.remove(pd.getName());
 	    evt = new ProcessEvent(BumpRunEventType.PROCESS_REMOVE,pd);
+            for (Iterator<ThreadData> it = active_threads.values().iterator(); it.hasNext(); ) {
+               ThreadData td = it.next();
+               if (td.getProcess() == pd) it.remove();
+             }
 	  }
 	 break;
       case CREATE :
@@ -1438,7 +1443,7 @@ private class ProcessData implements BumpProcess {
    @Override public Iterable<BumpThread> getThreads() {
       List<BumpThread> rslt = new ArrayList<BumpThread>();
       for (ThreadData td : active_threads.values()) {
-	 if (td.getProcess() == this && !td.isInternal()) rslt.add(td);
+         if (td.getProcess() == this && !td.isInternal()) rslt.add(td);
        }
       return rslt;
     }

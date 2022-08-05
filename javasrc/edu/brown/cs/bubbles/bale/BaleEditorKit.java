@@ -1924,13 +1924,13 @@ private static class SaveAllRun implements Runnable {
    @Override public void run() {
       BowiFactory.startTask();
       try {
-	 // BumpClient.getBump().saveAll();
-	 for_root.handleSaveAllRequest();
-	 BumpClient.getBump().compile(false,false,false);
-	 try {
-	    for_root.saveConfiguration(null);
-	  }
-	 catch (IOException ex) { }
+         // BumpClient.getBump().saveAll();
+         for_root.handleSaveAllRequest();
+         BumpClient.getBump().compile(false,false,false);
+         try {
+            for_root.saveConfiguration(null);
+          }
+         catch (IOException ex) { }
        }
       finally { BowiFactory.stopTask(); }
     }
@@ -1960,14 +1960,14 @@ private static class RedoElisionAction extends AbstractAction {
       BaleDocument bd = target.getBaleDocument();
       BowiFactory.startTask();
       try {
-	 bd.baleWriteLock();
-	 try {
-	    bd.redoElision();
-	    bd.handleElisionChange();
-	    target.getPreferredSize();
-	    bd.fixElisions();
-	  }
-	 finally { bd.baleWriteUnlock(); }
+         bd.baleWriteLock();
+         try {
+            bd.redoElision();
+            bd.handleElisionChange();
+            target.getPreferredSize();
+            bd.fixElisions();
+          }
+         finally { bd.baleWriteUnlock(); }
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","RedoElision");
@@ -1990,19 +1990,19 @@ private static class RemoveElisionAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BowiFactory.startTask();
       try {
-	 BaleEditorPane target = getBaleEditor(e);
-	 if (!checkEditor(target)) return;
-	 BaleDocument bd = target.getBaleDocument();
-	 bd.baleWriteLock();
-	 try {
-	    BaleElideMode em = bd.getElideMode();
-	    bd.removeElision();
-	    bd.handleElisionChange();
-	    bd.setElideMode(em);
-	  }
-	 finally { bd.baleWriteUnlock(); }
-	 BoardMetrics.noteCommand("BALE","RemoveElision");
-	 BaleEditorBubble.noteElision(target);
+         BaleEditorPane target = getBaleEditor(e);
+         if (!checkEditor(target)) return;
+         BaleDocument bd = target.getBaleDocument();
+         bd.baleWriteLock();
+         try {
+            BaleElideMode em = bd.getElideMode();
+            bd.removeElision();
+            bd.handleElisionChange();
+            bd.setElideMode(em);
+          }
+         finally { bd.baleWriteUnlock(); }
+         BoardMetrics.noteCommand("BALE","RemoveElision");
+         BaleEditorBubble.noteElision(target);
        }
       finally { BowiFactory.stopTask(); }
     }
@@ -2026,26 +2026,26 @@ private static class ExplicitElisionAction extends AbstractAction {
       BaleDocument bd = target.getBaleDocument();
       BowiFactory.startTask();
       try {
-	 bd.baleWriteLock();
-	 try {
-	    int off = target.getCaretPosition();
-	    BaleElement.Branch br = bd.getParagraphElement(off);
-	    BaleElement ebr = null;
-	    if (br.isElided()) {
-	       br.setElided(false);
-	       ebr = br;
-	     }
-	    else {
-	       while (br != null && !br.canElide()) {
-		  br = br.getBaleParent();
-		}
-	       if (br == null) return;
-	       br.setElided(true);
-	     }
-	    bd.handleElisionChange();
-	    if (ebr != null) target.increaseSizeForElidedElement(ebr);
-	  }
-	 finally { bd.baleWriteUnlock(); }
+         bd.baleWriteLock();
+         try {
+            int off = target.getCaretPosition();
+            BaleElement.Branch br = bd.getParagraphElement(off);
+            BaleElement ebr = null;
+            if (br.isElided()) {
+               br.setElided(false);
+               ebr = br;
+             }
+            else {
+               while (br != null && !br.canElide()) {
+        	  br = br.getBaleParent();
+        	}
+               if (br == null) return;
+               br.setElided(true);
+             }
+            bd.handleElisionChange();
+            if (ebr != null) target.increaseSizeForElidedElement(ebr);
+          }
+         finally { bd.baleWriteUnlock(); }
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","ExplicitElision");
@@ -2492,52 +2492,52 @@ private static class GotoDefinitionAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BowiFactory.startTask();
       try {
-	 BaleEditorPane target = getBaleEditor(e);
-	 if (!checkReadEditor(target)) return;
-
-	 BaleDocument bd = target.getBaleDocument();
-	 int soff = target.getSelectionStart();
-	 int eoff = target.getSelectionEnd();
-	 if (eoff != soff) eoff = soff;
-
-	 BumpClient bc = BumpClient.getBump();
-	 List<BumpLocation> locs;
-	 BalePosition sp;
-	 try {
-	    sp = (BalePosition) bd.createPosition(soff);
-	    locs = bc.findDefinition(null,			   // bd.getProjectName(),
-					bd.getFile(),
-					bd.mapOffsetToEclipse(soff),
-					bd.mapOffsetToEclipse(soff));
-	  }
-	 catch (BadLocationException ex) {
-	    return;
-	  }
-
-	 if (doClassSearchAction(locs)) {
-	    goto_search_action.actionPerformed(e);
-	    return;
-	  }
-
-	 if (locs == null || locs.size() == 0) {
-	    if (e.getActionCommand() == null) {
-	       e = new ActionEvent(target,e.getID(),
-		     "GotoDefinitionAction",e.getWhen(),e.getModifiers());
-	     }
-	    goto_doc_action.actionPerformed(e);
-	    return;
-	  }
-	
-	 if (locs.size() == 1) {
-	    BumpLocation loc0 = locs.get(0);
-	    int foff = bd.mapOffsetToEclipse(soff);
-	    if (foff >= loc0.getOffset() && foff <= loc0.getEndOffset()) {
-	       goto_reference_action.actionPerformed(e);
-	       return;
-	     }
-	  }
-	
-	 BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
+         BaleEditorPane target = getBaleEditor(e);
+         if (!checkReadEditor(target)) return;
+   
+         BaleDocument bd = target.getBaleDocument();
+         int soff = target.getSelectionStart();
+         int eoff = target.getSelectionEnd();
+         if (eoff != soff) eoff = soff;
+   
+         BumpClient bc = BumpClient.getBump();
+         List<BumpLocation> locs;
+         BalePosition sp;
+         try {
+            sp = (BalePosition) bd.createPosition(soff);
+            locs = bc.findDefinition(null,			   // bd.getProjectName(),
+        				bd.getFile(),
+        				bd.mapOffsetToEclipse(soff),
+        				bd.mapOffsetToEclipse(soff));
+          }
+         catch (BadLocationException ex) {
+            return;
+          }
+   
+         if (doClassSearchAction(locs)) {
+            goto_search_action.actionPerformed(e);
+            return;
+          }
+   
+         if (locs == null || locs.size() == 0) {
+            if (e.getActionCommand() == null) {
+               e = new ActionEvent(target,e.getID(),
+        	     "GotoDefinitionAction",e.getWhen(),e.getModifiers());
+             }
+            goto_doc_action.actionPerformed(e);
+            return;
+          }
+        
+         if (locs.size() == 1) {
+            BumpLocation loc0 = locs.get(0);
+            int foff = bd.mapOffsetToEclipse(soff);
+            if (foff >= loc0.getOffset() && foff <= loc0.getEndOffset()) {
+               goto_reference_action.actionPerformed(e);
+               return;
+             }
+          }
+        
+         BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","GoToDefinition");
@@ -2559,50 +2559,50 @@ private static class GotoImplementationAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BowiFactory.startTask();
       try {
-	 BaleEditorPane target = getBaleEditor(e);
-	 if (!checkReadEditor(target)) return;
-	 BaleDocument bd = target.getBaleDocument();
-	 int soff = target.getSelectionStart();
-	 int eoff = target.getSelectionEnd();
-	 if (eoff != soff) eoff = soff;
-
-	 BumpClient bc = BumpClient.getBump();
-	 List<BumpLocation> locs;
-	 BalePosition sp;
-	 try {
-	    sp = (BalePosition) bd.createPosition(soff);
-	    locs = bc.findImplementations(bd.getProjectName(),
-					     bd.getFile(),
-					     bd.mapOffsetToEclipse(soff),
-					     bd.mapOffsetToEclipse(eoff));
-	  }
-	 catch (BadLocationException ex) {
-	    return;
-	  }
-
-	 if (doClassSearchAction(locs)) {
-	    goto_search_action.actionPerformed(e);
-	    return;
-	  }
-
-	 if (locs == null || locs.size() == 0) {
-	    if (e.getActionCommand() == null) {
-	       e = new ActionEvent(target,e.getID(),"GotoImplementationAction",e.getWhen(),e.getModifiers());
-	     }
-	    goto_doc_action.actionPerformed(e);
-	    return;
-	  }
-	
-	 if (locs.size() == 1) {
-	    BumpLocation loc0 = locs.get(0);
-	    int foff = bd.mapOffsetToEclipse(soff);
-	    if (foff >= loc0.getOffset() && foff <= loc0.getEndOffset()) {
-	       goto_reference_action.actionPerformed(e);
-	       return;
-	     }
-	  }
-	
-	 BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
+         BaleEditorPane target = getBaleEditor(e);
+         if (!checkReadEditor(target)) return;
+         BaleDocument bd = target.getBaleDocument();
+         int soff = target.getSelectionStart();
+         int eoff = target.getSelectionEnd();
+         if (eoff != soff) eoff = soff;
+   
+         BumpClient bc = BumpClient.getBump();
+         List<BumpLocation> locs;
+         BalePosition sp;
+         try {
+            sp = (BalePosition) bd.createPosition(soff);
+            locs = bc.findImplementations(bd.getProjectName(),
+        				     bd.getFile(),
+        				     bd.mapOffsetToEclipse(soff),
+        				     bd.mapOffsetToEclipse(eoff));
+          }
+         catch (BadLocationException ex) {
+            return;
+          }
+   
+         if (doClassSearchAction(locs)) {
+            goto_search_action.actionPerformed(e);
+            return;
+          }
+   
+         if (locs == null || locs.size() == 0) {
+            if (e.getActionCommand() == null) {
+               e = new ActionEvent(target,e.getID(),"GotoImplementationAction",e.getWhen(),e.getModifiers());
+             }
+            goto_doc_action.actionPerformed(e);
+            return;
+          }
+        
+         if (locs.size() == 1) {
+            BumpLocation loc0 = locs.get(0);
+            int foff = bd.mapOffsetToEclipse(soff);
+            if (foff >= loc0.getOffset() && foff <= loc0.getEndOffset()) {
+               goto_reference_action.actionPerformed(e);
+               return;
+             }
+          }
+        
+         BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","GoToImplementation");
@@ -2830,41 +2830,41 @@ private static class GotoTypeAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BowiFactory.startTask();
       try {
-	 BaleEditorPane target = getBaleEditor(e);
-	 if (!checkReadEditor(target)) return;
-
-	 BaleDocument bd = target.getBaleDocument();
-	 int soff = target.getSelectionStart();
-	 int eoff = target.getSelectionEnd();
-
-	 BumpClient bc = BumpClient.getBump();
-	 Collection<BumpLocation> locs;
-	 BalePosition sp;
-	 try {
-	    sp = (BalePosition) bd.createPosition(soff);
-	    locs = bc.findTypeDefinition(bd.getProjectName(),
-					    bd.getFile(),
-					    bd.mapOffsetToEclipse(soff),
-					    bd.mapOffsetToEclipse(eoff));
-	  }
-	 catch (BadLocationException ex) {
-	    return;
-	  }
-
-	 if (doClassSearchAction(locs)) {
-	    handleSearchAction(e,locs);
-	    return;
-	  }
-
-	 if (locs == null || locs.size() == 0) {
-	    if (e.getActionCommand() == null) {
-	       e = new ActionEvent(target,e.getID(),"GotoTypeAction",e.getWhen(),e.getModifiers());
-	     }
-	    goto_doc_action.actionPerformed(e);
-	    return;
-	  }
-
-	 BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
+         BaleEditorPane target = getBaleEditor(e);
+         if (!checkReadEditor(target)) return;
+   
+         BaleDocument bd = target.getBaleDocument();
+         int soff = target.getSelectionStart();
+         int eoff = target.getSelectionEnd();
+   
+         BumpClient bc = BumpClient.getBump();
+         Collection<BumpLocation> locs;
+         BalePosition sp;
+         try {
+            sp = (BalePosition) bd.createPosition(soff);
+            locs = bc.findTypeDefinition(bd.getProjectName(),
+        				    bd.getFile(),
+        				    bd.mapOffsetToEclipse(soff),
+        				    bd.mapOffsetToEclipse(eoff));
+          }
+         catch (BadLocationException ex) {
+            return;
+          }
+   
+         if (doClassSearchAction(locs)) {
+            handleSearchAction(e,locs);
+            return;
+          }
+   
+         if (locs == null || locs.size() == 0) {
+            if (e.getActionCommand() == null) {
+               e = new ActionEvent(target,e.getID(),"GotoTypeAction",e.getWhen(),e.getModifiers());
+             }
+            goto_doc_action.actionPerformed(e);
+            return;
+          }
+   
+         BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","GoToType");
@@ -3163,23 +3163,23 @@ private static class FixErrorsAction extends TextAction {
       int soff = be.getSelectionStart();
       int eoff = be.getSelectionEnd();
       if (soff == eoff) {
-	 BaleDocument bd = be.getBaleDocument();
-	 int lno = bd.findLineNumber(soff);
-	 soff = bd.findLineOffset(lno);
-	 eoff = bd.findLineOffset(lno+1);
+         BaleDocument bd = be.getBaleDocument();
+         int lno = bd.findLineNumber(soff);
+         soff = bd.findLineOffset(lno);
+         eoff = bd.findLineOffset(lno+1);
        }
       BoardMetrics.noteCommand("BALE",String.valueOf(getValue(Action.NAME)));
       if (fix_method != null) {
-	 BowiFactory.startTask();
-	 try {
-	    fix_method.invoke(null,be.getBaleDocument(),soff,eoff);
-	  }
-	 catch (Throwable t) {
-	    BoardLog.logE("BALE","Problem invoking fix errors",t);
-	  }
-	 finally {
-	    BowiFactory.stopTask();
-	  }
+         BowiFactory.startTask();
+         try {
+            fix_method.invoke(null,be.getBaleDocument(),soff,eoff);
+          }
+         catch (Throwable t) {
+            BoardLog.logE("BALE","Problem invoking fix errors",t);
+          }
+         finally {
+            BowiFactory.stopTask();
+          }
       }
     }
 

@@ -115,6 +115,13 @@ BassRepositoryLocation()
     }
 }
 
+@Override public boolean isEmpty()
+{
+   waitForNames();
+   
+   return all_names.isEmpty();
+}
+
 
 
 @Override public boolean includesRepository(BassRepository br)	{ return br == this; }

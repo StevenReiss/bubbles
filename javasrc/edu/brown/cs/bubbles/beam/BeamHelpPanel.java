@@ -62,7 +62,6 @@ private BudaRoot		for_root;
 /*										*/
 /********************************************************************************/
 
-
 BeamHelpPanel(BudaRoot br)
 {
    for_root = br;

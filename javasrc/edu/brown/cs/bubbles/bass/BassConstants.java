@@ -290,6 +290,12 @@ interface BassRepository {
       return br == this;
     }
 
+/**
+*       Check if repository is empty
+**/
+   default boolean isEmpty() {
+      return false;
+    }
 
 }	// end of interface BassRepository
 

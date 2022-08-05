@@ -435,7 +435,7 @@ private class LocationVisitor extends ASTVisitor {
 
    private NobaseSymbol getRelevantSymbol(ASTNode n) {
       NobaseSymbol js = null;
-      if (name_found == null) {
+      if (name_found != null) {
          if (use_defs) {
             js = NobaseAst.getDefinition(n);
             if (js != null && match_symbols.contains(js))
