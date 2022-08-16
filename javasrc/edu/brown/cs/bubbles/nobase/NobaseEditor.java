@@ -31,6 +31,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
 import org.w3c.dom.Element;
 
 import java.io.File;
@@ -59,7 +60,6 @@ private Map<NobaseFile,EditHandler>	handler_map;
 private Map<String,EditParameters>	edit_parameters;
 
 
-
 /********************************************************************************/
 /*										*/
 /*	Constructors								*/
@@ -74,7 +74,6 @@ NobaseEditor(NobaseMain pm)
    handler_map = new HashMap<NobaseFile,EditHandler>();
    edit_parameters = new HashMap<String,EditParameters>();
 }
-
 
 /********************************************************************************/
 /*										*/
@@ -123,7 +122,6 @@ void elisionSetup(String proj,String bid,String file,boolean compute,
    if (fd == null) {
       throw new NobaseException("File " + file + " not available for elision");
     }
-
    if (monitor_map.get(fd) == null) {
       throw new NobaseException("File " + file + " not open");
     }
@@ -326,6 +324,44 @@ private void commitFile(NobaseProject pp,NobaseFile ifd,String bid,boolean refre
     }
 }
 
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      RENAME command                                                         */
+/*                                                                              */
+/********************************************************************************/
+
+void handleRename(String proj,String bid,String file,int start,int end,String name,String handle,
+      String newname,
+      boolean refs,
+      boolean doedit,
+      String filespat,IvyXmlWriter xw)
+        throws NobaseException
+{
+   NobaseProject pp = nobase_main.getProjectManager().findProject(proj);
+   NobaseFile fd = nobase_main.getFileManager().getFileData(file);
+   if (fd == null) throw new NobaseException("File " + file + " not found");
+   if (pp == null) pp = fd.getProject();
+   if (pp == null) {
+      throw new NobaseException("No project found for " + proj + " and " + file);
+    }
+   ISemanticData isd = pp.getParseData(fd);
+   if (isd == null || isd.getRootNode() == null) throw new NobaseException("Unable to get AST for file " + file);
+   NobaseSearchInstance search = new NobaseSearchInstance(pp);
+   ASTVisitor av = search.getFindLocationVisitor(start,end);
+   isd.getRootNode().accept(av);
+   ASTVisitor av1 = search.getLocationsVisitor(true,true,true,false,false);
+   for (NobaseFile ifd : pp.getAllFiles()) {
+      search.setFile(ifd);
+      ISemanticData isd1 = pp.getParseData(ifd);
+      if (isd1 != null && isd1.getRootNode() != null) isd1.getRootNode().accept(av1);
+    }
+   for (SearchResult mtch : search.getMatches()) {
+      NobaseMain.logD("Create edit " + mtch.getFile().getFile().getPath() + " " +
+            mtch.getOffset() + " " + mtch.getLength() + " " + name + " " + newname);
+    }
+}
 
 
 /********************************************************************************/

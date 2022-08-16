@@ -530,7 +530,26 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
 	       IvyXml.getAttrBool(xml,"BREAK",true),
 	       IvyXml.getAttrString(xml,"REPLYID"),xw);
 	 break;
-     case "ENTER" :
+      case "RENAME" :
+         nobase_editor.handleRename(proj,IvyXml.getAttrString(xml,"BID","*"),
+	       IvyXml.getAttrString(xml,"FILE"),
+	       IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
+	       IvyXml.getAttrString(xml,"NAME"),IvyXml.getAttrString(xml,"HANDLE"),
+	       IvyXml.getAttrString(xml,"NEWNAME"),
+	       IvyXml.getAttrBool(xml,"UPDATEREFS",true),
+	       IvyXml.getAttrBool(xml,"DOEDIT",false),
+	       IvyXml.getAttrString(xml,"FILES"),xw);
+         break;
+      case "FORMATCODE" :
+         xw.close();
+	 throw new NobaseException("Unimplemented NOBASE command " + cmd);
+         
+      case "RENAMERESOURCE" :                   // only used for java 
+      case "FILEELIDE" :                        // only used for system files in Java
+      case "MOVEELEMENT" :                      // only used for java
+         xw.close();
+	 throw new NobaseException("Unimplemented NOBASE command " + cmd);
+      case "ENTER" :
 	 if (num_clients == 0 && nobase_pinger == null) {
 	    nobase_pinger = new Pinger();
 	    nobase_timer.schedule(nobase_pinger,30000,30000);
@@ -567,6 +586,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
       case "SAVEWORKSPACE" :
          xw.text("SAVED");
          break;
+         
       default :
 	 xw.close();
 	 throw new NobaseException("Unknown NOBASE command " + cmd);

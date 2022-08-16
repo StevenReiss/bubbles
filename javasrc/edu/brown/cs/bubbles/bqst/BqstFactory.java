@@ -33,7 +33,7 @@ import javax.swing.JFrame;
 public class BqstFactory implements BqstConstants {
 
 
-
+ 
 /********************************************************************************/
 /*										*/
 /*	Factory methods 							*/

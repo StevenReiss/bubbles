@@ -1814,14 +1814,14 @@ private class StackData implements BumpThreadStack {
       if (!IvyXml.isElement(xml,"STACKFRAMES")) xml = IvyXml.getChild(xml,"STACKFRAMES");
       stack_frames = new ArrayList<StackFrame>();
       for (Element telt : IvyXml.children(xml,"THREAD")) {
-	 String teid = IvyXml.getAttrString(telt,"ID");
-	 if (tid.equals(teid)) {
-	    for_thread = findThread(tid);
-	    for (Element e : IvyXml.children(telt,"STACKFRAME")) {
-	       stack_frames.add(new StackFrame(for_thread,e,stack_frames.size()));
-	     }
-	    break;
-	  }
+         String teid = IvyXml.getAttrString(telt,"ID");
+         if (tid.equals(teid)) {
+            for_thread = findThread(tid);
+            for (Element e : IvyXml.children(telt,"STACKFRAME")) {
+               stack_frames.add(new StackFrame(for_thread,e,stack_frames.size()));
+             }
+            break;
+          }
        }
     }
 

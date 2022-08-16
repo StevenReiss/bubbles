@@ -74,6 +74,10 @@ class BaleConfigurator implements BaleConstants, BudaConstants.BubbleConfigurato
       String name = IvyXml.getAttrString(cnt,"NAME");
       String filn = IvyXml.getAttrString(cnt,"FILE");
       File file = (filn == null ? null : new File(filn));
+      if (name.endsWith("(...)")) {
+         int idx1 = name.lastIndexOf("(");
+         name = name.substring(0,idx1);
+       }
       int idx = name.lastIndexOf(".");
       if (name.length() == 0) name = null;
       String head = name;

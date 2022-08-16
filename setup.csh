@@ -18,6 +18,8 @@ if (! (-e ../ivy)) then
    source ivysetupenv
    popd
    make newmachine
+   ant
+   make bubbles
    popd
 
 endif

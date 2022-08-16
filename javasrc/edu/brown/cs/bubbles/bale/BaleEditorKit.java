@@ -164,6 +164,7 @@ private static final Action javadoc_comment_action = new CommentAction("JavadocC
 private static final Action fix_errors_action = new FixErrorsAction();
 private static final Action finish_action = new FinishAction();
 private static final Action infer_decl_action = new InferDeclarationAction();
+private static final Action smart_delete_next_character_action = new SmartDeleteNextCharacterAction();
 
 
 
@@ -224,6 +225,7 @@ private static final Action [] local_actions = {
    format_action,
    expand_action,
    expandxy_action,
+   smart_delete_next_character_action,
 
    goto_definition_action,
    goto_implementation_action,
@@ -309,6 +311,7 @@ private static final SwingKey [] skey_defs = new SwingKey[] {
    new SwingKey("CODEEDIT",null,javadoc_comment_action,"xalt shift J"),
    new SwingKey("CODEEDIT",null,quick_fix_action,"menu 1","alt 1"),
    new SwingKey("CODEEDIT",null,infer_decl_action,"menu shift I"),
+   new SwingKey("CODEEDIT",null,smart_delete_next_character_action,"shift DELETE"),
 
 };
 
@@ -655,58 +658,58 @@ private static class DefaultKeyAction extends TextAction {
       BaleDocument bd = target.getBaleDocument();
       bd.baleWriteLock();
       try {
-	 Dimension d0 = target.getSize();
-	 if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
-	 else d0 = target.getPreferredSize();
-
-	 String content = e.getActionCommand();
-	 int mod = e.getModifiers();
-	 if ((content != null) && (content.length() > 0) &&
-	       ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
-	    char c = content.charAt(0);
-
-	    if ((c >= 0x20) && (c != 0x7F)) {
-	       int sel = target.getSelectionStart();
-	       if (target.getOverwriteMode()) {
-		  if (sel == target.getSelectionEnd()) {
-		     String prev = null;
-		     try {
-			prev = target.getText(sel,1);
-		      }
-		     catch (BadLocationException ex) { }
-		     if (prev == null || prev.equals("\n"));
-		     else if (prev.equals("\t")) {
-			int cpos = bd.getColumnPosition(sel);
-			int npos = bd.getNextTabPosition(cpos);
-			StringBuilder buf = new StringBuilder();
-			for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
-			target.setSelectionEnd(sel+1);
-			target.replaceSelection(buf.toString());
-			target.setSelectionStart(sel);
-			target.setSelectionEnd(sel+1);
-		      }
-		     else target.setSelectionEnd(sel+1);
-		   }
-		}
-
-	       target.replaceSelection(content);
-	       if (content != null && shouldAutoIndent(target,content,sel)) {
-		  // TODO: check that this is the only thing on the line
-		  indent_lines_action.actionPerformed(e);
-		}
-	       BaleCompletionContext ctx = target.getCompletionContext();
-	       if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
-		  new BaleCompletionContext(target,sel,c);
-		}
-
-	       if (d0 != null) {
-		  Dimension d1 = target.getPreferredSize();
-		  if (d1.height > d0.height) {
-		     target.increaseSize(1);
-		   }
-		}
-	     }
-	  }
+         Dimension d0 = target.getSize();
+         if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
+         else d0 = target.getPreferredSize();
+         
+         String content = e.getActionCommand();
+         int mod = e.getModifiers();
+         if ((content != null) && (content.length() > 0) &&
+               ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
+            char c = content.charAt(0);
+            
+            if ((c >= 0x20) && (c != 0x7F)) {
+               int sel = target.getSelectionStart();
+               if (target.getOverwriteMode()) {
+                  if (sel == target.getSelectionEnd()) {
+                     String prev = null;
+                     try {
+                        prev = target.getText(sel,1);
+                      }
+                     catch (BadLocationException ex) { }
+                     if (prev == null || prev.equals("\n"));
+                     else if (prev.equals("\t")) {
+                        int cpos = bd.getColumnPosition(sel);
+                        int npos = bd.getNextTabPosition(cpos);
+                        StringBuilder buf = new StringBuilder();
+                        for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
+                        target.setSelectionEnd(sel+1);
+                        target.replaceSelection(buf.toString());
+                        target.setSelectionStart(sel);
+                        target.setSelectionEnd(sel+1);
+                      }
+                     else target.setSelectionEnd(sel+1);
+                   }
+                }
+               
+               target.replaceSelection(content);
+               if (content != null && shouldAutoIndent(target,content,sel)) {
+                  // TODO: check that this is the only thing on the line
+                  indent_lines_action.actionPerformed(e);
+                }
+               BaleCompletionContext ctx = target.getCompletionContext();
+               if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
+                  new BaleCompletionContext(target,sel,c);
+                }
+               
+               if (d0 != null) {
+                  Dimension d1 = target.getPreferredSize();
+                  if (d1.height > d0.height) {
+                     target.increaseSize(1);
+                   }
+                }
+             }
+          }
        }
       finally { bd.baleWriteUnlock(); }
    }
@@ -1086,6 +1089,59 @@ private static class DeleteLineAction extends TextAction {
     }
 
 }	// end of inner class DeleteLineAction
+
+
+private static class SmartDeleteNextCharacterAction extends TextAction {
+   
+   private static final long serialVersionUID = 1;
+   
+   SmartDeleteNextCharacterAction() {
+      super("SmartDeleteNextCharacterAction");
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      BaleEditorPane be = getBaleEditor(e);
+      if (!checkEditor(be)) return;
+      BaleDocument bd = be.getBaleDocument();
+      bd.baleWriteLock();
+      try {
+         int soff = be.getSelectionStart();
+         int eoff = be.getSelectionEnd();
+         if (eoff != soff) {
+            be.cut();
+          }
+         else if (soff < bd.getLength()) {
+            int ct = 1;
+            if (soff < bd.getLength()-1) {
+               String dotchars = bd.getText(soff,2);
+               char c0 = dotchars.charAt(0);
+               char c1 = dotchars.charAt(1);
+               if (c0 >= '\uD800' && c0 <= '\uDBFF' &&
+                     c1 >= '\uDC00' && c1 <= '\uDFFF') {
+                  ct = 2;
+                }
+               else if (c0 == '\n') {
+                  int len = 0; 
+                  int ext = Math.min(bd.getLength()-1-soff,120);
+                  String eolchars = bd.getText(soff,ext);
+                  for (int i = 0; i < eolchars.length(); ++i) {
+                     char c = eolchars.charAt(i);
+                     if (!Character.isWhitespace(c)) break;
+                     else ++len;
+                   }
+                  bd.replace(soff,len," ",null);
+                  return;
+                }
+               bd.remove(soff,ct);
+             }
+          }
+       }
+      catch (BadLocationException ex) { }
+      finally { bd.baleWriteUnlock(); }
+    }
+      
+      
+}
 
 
 
@@ -3150,11 +3206,11 @@ private static class FixErrorsAction extends TextAction {
    FixErrorsAction() {
       super("FixErrorsInRegion");
       try {
-	 Class<?> c = Class.forName("edu.brown.cs.bubbles.bfix.BfixFactory");
-	 fix_method = c.getMethod("fixErrorsInRegion",BaleWindowDocument.class,int.class,int.class);
+         Class<?> c = Class.forName("edu.brown.cs.bubbles.bfix.BfixFactory");
+         fix_method = c.getMethod("fixErrorsInRegion",BaleWindowDocument.class,int.class,int.class);
       }
       catch (Exception e) { }
-
+   
     }
 
    @Override public void actionPerformed(ActionEvent e) {

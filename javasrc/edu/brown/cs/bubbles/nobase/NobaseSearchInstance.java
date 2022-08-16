@@ -415,6 +415,7 @@ private class LocationVisitor extends ASTVisitor {
       default_def = null;
       for (NobaseSymbol ns : match_symbols) {
          default_def = ns;
+         if (name_found == null) name_found = ns.getName();
          break;
        }
     }
@@ -435,29 +436,27 @@ private class LocationVisitor extends ASTVisitor {
 
    private NobaseSymbol getRelevantSymbol(ASTNode n) {
       NobaseSymbol js = null;
-      if (name_found != null) {
-         if (use_defs) {
-            js = NobaseAst.getDefinition(n);
-            if (js != null && match_symbols.contains(js))
-               return js;
-          }
-         if (use_refs) {
-            js = NobaseAst.getReference(n);
-            if (js != null && match_symbols.contains(js)) return js;
-            NobaseValue nv = NobaseAst.getNobaseValue(n);
-            if (nv != null) {
-               Collection<NobaseSymbol> refs = nv.getDefinitions();
-               if (refs != null && refs.size() > 0) {
-                  for (NobaseSymbol ns : refs) {
-                     if (match_symbols.contains(ns))
-                        return ns;
-                   }
+      if (use_defs) {
+         js = NobaseAst.getDefinition(n);
+         if (js != null && match_symbols.contains(js))
+            return js;
+       }
+      if (use_refs) {
+         js = NobaseAst.getReference(n);
+         if (js != null && match_symbols.contains(js)) return js;
+         NobaseValue nv = NobaseAst.getNobaseValue(n);
+         if (nv != null) {
+            Collection<NobaseSymbol> refs = nv.getDefinitions();
+            if (refs != null && refs.size() > 0) {
+               for (NobaseSymbol ns : refs) {
+                  if (match_symbols.contains(ns))
+                     return ns;
                 }
              }
-            if (js == null && n instanceof SimpleName && default_def != null) {
-               SimpleName sn = (SimpleName) n;
-               if (sn.getIdentifier().equals(name_found)) return default_def;
-             }
+          }
+         if (js == null && n instanceof SimpleName && default_def != null && name_found != null) {
+            SimpleName sn = (SimpleName) n;
+            if (sn.getIdentifier().equals(name_found)) return default_def;
           }
        }
       return null;

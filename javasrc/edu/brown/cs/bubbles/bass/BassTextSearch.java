@@ -36,7 +36,9 @@ import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.bowi.BowiFactory;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
+import edu.brown.cs.bubbles.buda.BudaErrorBubble;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 import edu.brown.cs.bubbles.bump.BumpClient;
@@ -246,7 +248,6 @@ private class Searcher implements Runnable {
         	     search_literal,
         	     !search_case,
         	     false,max);
-            if (locs == null || locs.size() == 0) return;
             search_result = locs;
           }
          finally { BowiFactory.stopTask(); }
@@ -257,9 +258,15 @@ private class Searcher implements Runnable {
          if (in_place && search_location != null) {
             pt = new Point(search_location.x,search_location.y);
           }
-   
-         BaleFactory.getFactory().createBubbleStack(BassTextSearch.this,null,pt,false,
-        					       search_result,BudaLinkStyle.NONE);
+         if (search_result == null || search_result.size() == 0) {
+            BudaErrorBubble bbl = new BudaErrorBubble("Nothing found from text search");
+            BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BassTextSearch.this);
+            bba.addBubble(bbl,null,pt,PLACEMENT_MOVETO);
+          }
+         else {
+            BaleFactory.getFactory().createBubbleStack(BassTextSearch.this,null,pt,false,
+                  search_result,BudaLinkStyle.NONE);
+          }
        }
     }
 

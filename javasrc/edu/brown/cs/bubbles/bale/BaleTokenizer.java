@@ -60,6 +60,7 @@ private int		token_start;
 private boolean 	ignore_white;
 private char		cur_delim;
 private int		delim_count;
+protected int           cur_flags;
 
 private static Map<String,BaleTokenType> java_keyword_map;
 private static Set<String>	java_op_set;
@@ -105,6 +106,7 @@ private BaleTokenizer(String text,BaleTokenState start)
    ignore_white = false;
    cur_delim = 0;
    delim_count = 0;
+   cur_flags = 0;
 }
 
 
@@ -378,12 +380,18 @@ BaleToken getNextToken()
 
     }
    else if (ch == '{') return buildToken(BaleTokenType.LBRACE);
-   else if (ch == '}') return buildToken(BaleTokenType.RBRACE);
+   else if (ch == '}') {
+      cur_flags = 0;
+      return buildToken(BaleTokenType.RBRACE);
+    }
    else if (ch == '(') return buildToken(BaleTokenType.LPAREN);
    else if (ch == ')') return buildToken(BaleTokenType.RPAREN);
    else if (ch == '[') return buildToken(BaleTokenType.LBRACKET);
    else if (ch == ']') return buildToken(BaleTokenType.RBRACKET);
-   else if (ch == ';') return buildToken(BaleTokenType.SEMICOLON);
+   else if (ch == ';') {
+      cur_flags = 0;
+      return buildToken(BaleTokenType.SEMICOLON);
+    }   
    else if (ch == ',') return buildToken(BaleTokenType.COMMA);
    else if (ch == '\\') return buildToken(BaleTokenType.BACKSLASH);
    else if (ch == '.') {
@@ -890,13 +898,30 @@ static {
 /*										*/
 /********************************************************************************/
 
+private static final int INSIDE_FOR = 1;
+private static final int INSIDE_IMPORT = 2;
+
+
 private static class JSTokenizer extends BaleTokenizer {
 
    JSTokenizer(String text,BaleTokenState start) {
       super(text,start);
     }
 
-   @Override protected BaleTokenType getKeyword(String s) { return js_keyword_map.get(s); }
+   @Override protected BaleTokenType getKeyword(String s) {
+      if (s.equals("for")) cur_flags = INSIDE_FOR;
+      else if (s.equals("import")) cur_flags = INSIDE_IMPORT;
+      switch (cur_flags) {
+         case INSIDE_FOR :
+            if (s.equals("of") || s.equals("in")) return BaleTokenType.KEYWORD;
+            break;
+         case INSIDE_IMPORT :
+            if (s.equals("as") || s.equals("from")) return BaleTokenType.KEYWORD;
+            break;
+       }
+      return js_keyword_map.get(s); 
+    }
+   
    @Override protected boolean isOperator(String s)	{ return js_op_set.contains(s); }
    @Override protected boolean isStringStart(char c) {
       return c == '"' || c == '\'';

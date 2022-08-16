@@ -302,8 +302,10 @@ void setForceDefine()				{ force_define = true; }
          char c0 = s0.charAt(0);
          if (c0 == '"' || c0 == '\'' || c0 == '`') {
             s0 = s0.substring(1);
-            char c1 = s0.charAt(s0.length()-1);
-            if (c1 == c0) s0 = s0.substring(0,s0.length()-1);
+            if (s0.length() > 0) {
+               char c1 = s0.charAt(s0.length()-1);
+               if (c1 == c0) s0 = s0.substring(0,s0.length()-1);
+             }
           }
        }
       setValue(n,NobaseValue.createString(s0));
@@ -311,25 +313,16 @@ void setForceDefine()				{ force_define = true; }
 }
 
 
-@Override public void endVisit(TemplateLiteral n)
+@Override public boolean visit(TemplateLiteral n)
 {
-   StringBuffer buf = new StringBuffer();
-   
-   List<?> elts = n.elements();
-   List<?> exprs = n.expressions();
-   for (int i = 0; i < elts.size(); ++i) {
-      TemplateElement te = (TemplateElement) elts.get(i);
-      buf.append(te.getRawValue());
-      if (te.isTail()) break;
-      NobaseValue nv = NobaseAst.getNobaseValue((Expression) exprs.get(i));
-      if (nv == null || nv.getKnownValue() == null) {
-         buf = null;
-         break;
-       }
-      else buf.append(nv.getKnownValue().toString());
+   for (Object o : n.expressions()) {
+      Expression ex = (Expression) o;
+      ex.accept(this);
     }
-   if (buf == null) setValue(n,NobaseValue.createString());
-   else setValue(n,NobaseValue.createString(buf.toString()));
+   
+   setValue(n,NobaseValue.createString());
+   
+   return false;
 }
 
 @Override public void endVisit(TemplateElement n) 
@@ -677,8 +670,7 @@ void setForceDefine()				{ force_define = true; }
 
 @Override public void endVisit(SpreadElement n)
 {
-   // ???
-
+   // ... args
    setValue(n,NobaseValue.createAnyValue());
 }
 
@@ -941,6 +933,9 @@ private void handleName(String name,ASTNode id)
 @Override public boolean visit(ForInStatement n)
 {
    localScopeBegin(n);
+   
+   handleAwaitedFor(n.getIterationVariable()); 
+   
    return true;
 }
 
@@ -954,7 +949,45 @@ private void handleName(String name,ASTNode id)
 @Override public boolean visit(ForOfStatement n)
 {
    localScopeBegin(n);
+   
+   handleAwaitedFor(n.getIterationVariable());
+   
    return true;
+}
+
+
+private void handleAwaitedFor(ASTNode n)
+{
+   if (n.toString().equals("MISSING")) {
+      NobaseSymbol sym = NobaseAst.getDefinition(n);
+      if (sym != null) return;
+      
+      int start = n.getStartPosition();
+      int len = n.getLength();
+      String cnts = enclosing_file.getContents().substring(start,start+len);
+      if (cnts.startsWith("(")) cnts = cnts.substring(1);
+      int idx = cnts.indexOf(" ");
+      if (idx < 0) return;
+      String what = cnts.substring(0,idx).trim();
+      String name = cnts.substring(idx).trim();
+      SimpleName sn = n.getAST().newSimpleName(name);
+      VariableKind vk = VariableKind.VAR;
+      switch (what) {
+         case "const" :
+            vk = VariableKind.CONST;
+            break;
+         case "let" :
+            vk = VariableKind.LET;
+            break;
+         case "var" :
+            vk = VariableKind.VAR;
+            break;
+         default :
+            NobaseMain.logE("Unknown variable kind " + what);
+            break;
+       }
+      defineName(sn,null,null,n,null,vk);
+    }
 }
 
 
@@ -1300,6 +1333,13 @@ private boolean handleDeclaration(VariableDeclaration vd)
      else NobaseMain.logI("NO NAME " + vd.getBodyChild() + " @@ " + vd);
     }
    else {
+      if (fident.getIdentifier().contains("MISSING")) {
+         switch (vd.getParent().getNodeType()) {
+            case ASTNode.CATCH_CLAUSE :
+               return false;
+          }
+         System.err.println("CHECK HERE");
+       }
       names.put(fident,fident.getIdentifier());
       NobaseMain.logD("Declaration for " + fident + " " + vd.getBodyChild());
     }

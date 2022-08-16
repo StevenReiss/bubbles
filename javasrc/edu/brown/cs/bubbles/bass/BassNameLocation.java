@@ -377,9 +377,9 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
       case PROJECT :
       case PACKAGE :
       case FILE :
-      case MODULE :
       default :
 	 break;
+      case MODULE :
       case CONSTRUCTOR :
       case METHOD :
       case FIELDS :

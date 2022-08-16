@@ -2902,7 +2902,11 @@ Element getThreadStack(BumpThread bt)
 
    String q = "LAUNCH='" + bt.getLaunch().getId() + "' THREAD='" + bt.getId() + "'";
 
-   return getXmlReply("GETSTACKFRAMES",null,q,null,5000);
+   Element rslt = getXmlReply("GETSTACKFRAMES",null,q,null,5000);
+   
+   BoardLog.logD("BUMP","Stack: " + IvyXml.convertXmlToString(rslt));
+   
+   return rslt;
 }
 
 

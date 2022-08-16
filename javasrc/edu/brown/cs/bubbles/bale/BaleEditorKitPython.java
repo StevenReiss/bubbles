@@ -31,6 +31,7 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Keymap;
 import javax.swing.text.TextAction;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.ivy.swing.SwingKey;
 
 import java.awt.event.ActionEvent;
@@ -85,6 +86,7 @@ BaleEditorKitPython()
 
 @Override public Keymap getKeymap(Keymap base)
 {
+   BoardLog.logD("BALE","PYTHON get keymap called");
    // this should only be called once, but it is called for each editor
    // control-tab doesn't work for some reason
    SwingKey sk;
