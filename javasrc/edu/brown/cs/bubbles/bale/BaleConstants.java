@@ -314,7 +314,8 @@ enum BaleElideMode {
    ELIDE_CHECK_NEVER,			// leave as is
    ELIDE_CHECK_ONCE,			// check once, then leave as is
    ELIDE_CHECK_ALWAYS,			// redo elision as the cursor moves
-   ELIDE_NONE				// no elision
+   ELIDE_NONE,				// no elision
+   ELIDE_COMMENTS,                      // no code elision
 }
 
 
@@ -1346,7 +1347,9 @@ interface BaleLanguageKit {
 
    Action [] getActions();
    Keymap getKeymap(Keymap base);
-   default BaleHinter getHinter()               { return null; }
+   default BaleHinter getHinter()                       { return null; }
+   default String getPostContent(String content)        { return null; }
+   default boolean checkContent(String content)        { return false; }
 
 }	// end of inner class BaleLanguageKit
 
@@ -1420,6 +1423,18 @@ interface BaleWindowElement {
    BaleWindowElement getBaleParent();
    String getName();
 }	// end of inner interface BaleWindowElement
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Local editing attributes                                                */
+/*                                                                              */
+/********************************************************************************/
+
+String BALE_AUTO_INSERT_CLOSE = "Bale.auto.insert.close";
+
+
 
 
 }	// end of interface BaleConstants

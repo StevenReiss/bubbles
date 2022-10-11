@@ -37,7 +37,7 @@
 <entry key="Buda.tooltip.background">ffffffc0</entry>
 <entry key="Buda.tooltip.foreground">ff000000</entry>
 <entry key="Buda.remove.old.time">168</entry>
-<entry key="Buda.remove.old.active.time">6</entry>
+<entry key="Buda.remove.old.active.time">96</entry>
 </properties>
 
 

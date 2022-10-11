@@ -244,28 +244,23 @@ private class ProcessHandler implements BumpRunEventHandler
    @Override public void handleProcessEvent(BumpRunEvent evt) {
       BumpProcess blp;
       switch (evt.getEventType()) {
-	 case PROCESS_ADD :
-	    blp = evt.getProcess();
-	    if (blp != null) {
-	       active_processes.add(blp);
-	     }
-	    break;
-	 case PROCESS_REMOVE :
-	    blp = evt.getProcess();
-	    if (blp != null) {
-	       active_processes.remove(blp);
-	     }
-	    break;
-	 case PROCESS_CHANGE :
-	    //TODO: Update process
-	    break;
-	 case PROCESS_PERFORMANCE :
-	 case PROCESS_SWING :
-	 case PROCESS_TRIE :
-	 case PROCESS_TRACE :
-	    break;
-	 default:
-	    break;
+         case PROCESS_ADD :
+            blp = evt.getProcess();
+            if (blp != null) {
+               active_processes.add(blp);
+             }
+            break;
+         case PROCESS_REMOVE :
+            blp = evt.getProcess();
+            if (blp != null) {
+               active_processes.remove(blp);
+             }
+            break;
+         case PROCESS_CHANGE :
+            //TODO: Update process
+            break;
+         default:
+            break;
        }
       process_model.fireTableDataChanged();
    }

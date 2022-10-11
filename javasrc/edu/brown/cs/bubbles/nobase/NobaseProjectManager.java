@@ -393,6 +393,7 @@ private static class NameWalker extends DefaultASTVisitor {
       if (n instanceof VariableDeclarationStatement &&
             n.getParent() instanceof JavaScriptUnit)
          return true;
+      if (n instanceof TypeDeclarationStatement) return true;
       if (n instanceof Statement) return false;
       return true;
     }

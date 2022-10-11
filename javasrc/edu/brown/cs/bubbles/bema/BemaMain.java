@@ -668,7 +668,10 @@ private void loadPlugins(File dir,BudaRoot root,List<String> names)
 		}
 	     }
 	    catch (IOException e) {
-	       BoardLog.logE("BEMA","Can't access plugin jar file " + jfn,e);
+               BoardLog.logE("BEMA","Can't access plugin jar file " + jfn,e);
+               JOptionPane.showMessageDialog(null,
+                     "Problem loading plugin " + jfn,
+                     "Bubbles Plugin Problem",JOptionPane.WARNING_MESSAGE);
 	     }
 	  }
        }

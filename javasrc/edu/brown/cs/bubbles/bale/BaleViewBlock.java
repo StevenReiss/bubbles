@@ -751,8 +751,7 @@ private void doLayout()
 
    tryLayout(last_priority,last_width);
 
-   if (isTopNode() && last_height != 0 &&
-	  getBaleElement().getElideMode() != BaleElideMode.ELIDE_NONE) {
+   if (isTopNode() && last_height != 0 && doElide()) {
       if (our_data.getActualHeight() > last_height) {
 	 findPriority(last_priority,1,last_width);
        }
@@ -761,6 +760,18 @@ private void doLayout()
 	 findPriority(0,last_priority,last_width);
        }
     }
+}
+
+
+private boolean doElide() 
+{
+   BaleElement be = getBaleElement();
+   if (be.getElideMode() == BaleElideMode.ELIDE_NONE) return false;
+   if (!be.isComment() && be.getElideMode() == BaleElideMode.ELIDE_COMMENTS) {
+      return false;
+    }
+   
+   return true;
 }
 
 
@@ -853,6 +864,9 @@ private void setDrawStyle(boolean fg)
       case ELIDE_NONE :
 	 fg = false;
 	 break;
+      case ELIDE_COMMENTS :
+         if (!be.isComment()) fg = false;
+         break;
     }
    be.setElided(fg);
 

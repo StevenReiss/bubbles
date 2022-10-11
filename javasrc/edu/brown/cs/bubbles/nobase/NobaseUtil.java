@@ -31,6 +31,7 @@ import org.eclipse.jface.text.IDocument;
 
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 
+import java.awt.Point;
 import java.io.File;
 import java.util.List;
 
@@ -184,16 +185,26 @@ static void outputName(NobaseSymbol nm,IvyXmlWriter xw)
    if (root != null) {
       xw.field("LINE",NobaseAst.getLineNumber(root));
       xw.field("COL",NobaseAst.getColumn(root));
-      int off1 = root.getStartPosition();
-      int off2 = off1 + root.getLength();
+      int off1x = root.getStartPosition();
+      int off2x = off1x + root.getLength();
+      Point pt =  NobaseAst.getExtendedPosition(root,file);
+      int off1 = pt.x;
+      int off2 = pt.y;
       xw.field("STARTOFFSET",off1);
       xw.field("ENDOFFSET",off2);
       xw.field("LENGTH",off2-off1+1);
+      if (off1 != off1x || off2 != off2x) {
+         NobaseMain.logD("OFFSETS DIFFER " + nm.getName() + " " + 
+               off1 + " " + off1x + " " + off2 + " " + off2x);
+       }
     }
    xw.field("QNAME",nm.getBubblesName());
    xw.field("HANDLE",nm.getHandle());
    xw.end("ITEM");
 }
+
+
+
 
 
 

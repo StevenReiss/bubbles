@@ -123,7 +123,6 @@ import org.eclipse.ltk.core.refactoring.resource.DeleteResourceChange;
 import org.eclipse.ltk.core.refactoring.resource.MoveResourceChange;
 import org.eclipse.ltk.core.refactoring.resource.RenameResourceChange;
 import org.eclipse.ltk.core.refactoring.resource.ResourceChange;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.text.edits.CopySourceEdit;
 import org.eclipse.text.edits.CopyTargetEdit;
 import org.eclipse.text.edits.CopyingRangeMarker;
@@ -1328,21 +1327,16 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
     }
 
    if (elt instanceof IPackageFragment || elt instanceof IType) {
-      Display d = BedrockApplication.getDisplay();
-      if (d != null) {
-	 try {
-	    JavadocUrl ju = new JavadocUrl(elt);
-//	    d.syncExec(ju);
-//	    BedrockPlugin.logD("Get javadoc location for " + elt);
-	    ju.run();
-	    URL u = ju.getResult();
-	    if (u != null) {
-	       xw.field("JAVADOC",u.toString());
-	     }
-	  }
-	 catch (Throwable t) {
-	    BedrockPlugin.logE("Problem getting javadoc element",t);
-	  }
+      try {
+         JavadocUrl ju = new JavadocUrl(elt);
+         ju.run();
+         URL u = ju.getResult();
+         if (u != null) {
+            xw.field("JAVADOC",u.toString());
+          }
+       }
+      catch (Throwable t) {
+         BedrockPlugin.logE("Problem getting javadoc element",t);
        }
     }
 

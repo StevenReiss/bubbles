@@ -158,7 +158,7 @@ public void outputXml(IvyXmlWriter xw)
    if (!is_user) xw.field("TYPE","LIBRARY");
    else if (is_exclude) xw.field("TYPE","EXCLUDE");
    else xw.field("TYPE","INCLUDE");
-   xw.field("NEST",is_nested);
+   xw.field("NESTED",is_nested);
    xw.end("PATH");
 }
 

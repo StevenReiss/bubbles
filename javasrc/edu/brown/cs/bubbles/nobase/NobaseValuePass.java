@@ -119,7 +119,31 @@ void setForceDefine()				{ force_define = true; }
 @Override public void preVisit(ASTNode n)
 {
    if (force_define) return;                    // only consider first pass
-   NobaseMain.logD("Visit " + n.getClass().getName() + " " + n.properties() + " " + n.getFlags());
+   NobaseMain.logD("Visit " + n.getClass().getName() + " " + n.properties() + " " + n.getFlags() + " " + n);
+  
+   if (n instanceof SimpleName) {
+      switch (((SimpleName) n).getIdentifier()) {
+         case "MISSING" :
+//          System.err.println("CHECK MISSING " + n.getParent().getClass() + " " +
+//                n.getParent().getParent().getClass());
+            switch (n.getParent().getNodeType()) {
+               case ASTNode.PARENTHESIZED_EXPRESSION :
+                  if (n.getParent().getParent().getNodeType() == ASTNode.FOR_OF_STATEMENT) ;
+                  else {
+                     NobaseMessage msg = new NobaseMessage(ErrorSeverity.ERROR,
+                           "Parenthesis error",
+                           NobaseAst.getLineNumber(n),NobaseAst.getColumn(n),
+                           NobaseAst.getEndLine(n),NobaseAst.getEndColumn(n));
+                     error_list.add(msg);
+                   }
+                  break;
+             }
+            break;
+         default :
+            break;
+       }
+    }
+   
 // if (n instanceof Expression) {
 //    Expression en = (Expression) n;
 //    NobaseMain.logD("\tConstant value: " + en.resolveConstantExpressionValue());
@@ -871,6 +895,10 @@ private void handleName(String name,ASTNode id)
 @Override public boolean visit(Block n)
 {
    localScopeBegin(n);
+// System.err.println("CHECK BLOCK " + n.getLength() + " " + n.getFlags() + " " +
+//       (n.getBodyChild() == n) + " " + n.getStartPosition() + " " +
+//       n.getLength() + " " + n.statements().size());
+   
    return true;
 }
 

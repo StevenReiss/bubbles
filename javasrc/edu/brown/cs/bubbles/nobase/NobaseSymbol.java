@@ -25,6 +25,9 @@
 package edu.brown.cs.bubbles.nobase;
 
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
+
+import java.awt.Point;
+
 import org.eclipse.wst.jsdt.core.dom.*;
 
 
@@ -171,8 +174,9 @@ void outputNameData(NobaseFile rf,IvyXmlWriter xw)
       xw.field("JSTYPE",symbol_value.getType().getName());
     }
    xw.field("TYPE",getExternalTypeName());
-   int spos = NobaseAst.getExtendedStartPosition(an);
-   int epos = NobaseAst.getExtendedEndPosition(an);
+   Point pt0 = NobaseAst.getExtendedPosition(an,rf);
+   int spos = pt0.x;
+   int epos = pt0.y;
    xw.field("STARTOFFSET",spos);
    xw.field("LENGTH",epos-spos);
    xw.field("ENDOFFSET",epos);

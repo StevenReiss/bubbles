@@ -1018,32 +1018,37 @@ private class RunEventHandler implements BumpRunEventHandler {
    @Override synchronized public void handleProcessEvent(BumpRunEvent evt) {
       BumpLaunchConfig elc = evt.getLaunchConfiguration();
       switch (evt.getEventType()) {
-	 case PROCESS_ADD :
-	    if (cur_process == null && launch_state == LaunchState.STARTING &&
-		   (elc == null || elc == launch_config)) {
-	       setProcess(evt.getProcess());
-	       last_stopped = null;
-	       BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
-	       BddtFactory.getFactory().getHistoryControl().clearHistory(cur_process);
-	       if (perf_data != null) perf_data.clear();
-	     }
-	    break;
-	 case PROCESS_REMOVE :
-	    if (cur_process == evt.getProcess()) {
-	       setLaunchState(LaunchState.TERMINATED);
-	       thread_states.clear();
-	       setProcess(null);
-	       last_stopped = null;
-	     }
-	    else if (cur_process == null && launch_state == LaunchState.STARTING &&
-			(elc == null || elc == launch_config)) {
-	       setLaunchState(LaunchState.TERMINATED);
-	       thread_states.clear();
-	       last_stopped = null;
-	     }
-	    break;
-	 default:
-	    break;
+         case PROCESS_ADD :
+            if (cur_process == null && launch_state == LaunchState.STARTING &&
+        	   (elc == null || elc == launch_config)) {
+               setProcess(evt.getProcess());
+               last_stopped = null;
+               BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
+               BddtFactory.getFactory().getHistoryControl().clearHistory(cur_process);
+               if (perf_data != null) perf_data.clear();
+             }
+            break;
+         case PROCESS_REMOVE :
+            if (cur_process == evt.getProcess()) {
+               setLaunchState(LaunchState.TERMINATED);
+               thread_states.clear();
+               setProcess(null);
+               last_stopped = null;
+             }
+            else if (cur_process == null && launch_state == LaunchState.STARTING &&
+        		(elc == null || elc == launch_config)) {
+               setLaunchState(LaunchState.TERMINATED);
+               thread_states.clear();
+               last_stopped = null;
+             }
+            break;
+         case HOTCODE_FAILURE :
+             JOptionPane.showMessageDialog(BddtLaunchControl.this,
+                  "Hot Code Swapping Failed",
+                  "Hot Code Failure",JOptionPane.WARNING_MESSAGE);
+             break;
+         default:
+            break;
        }
     }
 
@@ -1242,11 +1247,13 @@ void setActiveFrame(BumpStackFrame frm)
       int stoplvl = 0;
       if (frm.getThread().getExceptionType() != null) {
 	 BumpThreadStack stk = frm.getThread().getStack();
-	 for (int i = 0; i < stk.getNumFrames(); ++i) {
-	    BumpStackFrame bsf1 = stk.getFrame(i);
-	    if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0) {
-	       stoplvl = i;
-	       break;
+	 if (stk != null) {
+	    for (int i = 0; i < stk.getNumFrames(); ++i) {
+	       BumpStackFrame bsf1 = stk.getFrame(i);
+	       if (frameFileExists(bsf1) && bsf1.getLineNumber() > 0) {
+		  stoplvl = i;
+		  break;
+		}
 	     }
 	  }
        }

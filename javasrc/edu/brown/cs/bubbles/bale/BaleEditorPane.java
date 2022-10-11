@@ -739,7 +739,7 @@ private static class BaleTextUI extends TextUI {
    @Override public Dimension getPreferredSize(JComponent c) {
       readLock(c);
       try {
-	 return base_ui.getPreferredSize(c);
+         return base_ui.getPreferredSize(c);
        }
       finally { readUnlock(c); }
     }

@@ -733,7 +733,8 @@ private int skipToPreviousListItemOrListStart()
    int startline = cur_line;
    int startposition = cur_offset;
    BaleElement start = cur_element;
-
+   boolean commalist = false;
+   
    while (true) {
       previousToken();
 
@@ -760,8 +761,8 @@ private int skipToPreviousListItemOrListStart()
 	    // scope introduction: special treat who special is
 	 case LPAREN :
 	 case LBRACE :
-	 case LBRACKET :
-            if (cur_line <= startline-1) {
+	 case LBRACKET : 
+            if (cur_line <= startline-1 && !commalist) {
                cur_indent = pref_continuation_indent;
                return cur_offset;
              }
@@ -779,6 +780,9 @@ private int skipToPreviousListItemOrListStart()
 	       cur_indent = pref_ternary_indent;
 	     }
 	    return cur_offset;
+         case COMMA :
+            commalist = true;
+            break;
 	 case EOF :
 	 case NONE :
 	    return 0;

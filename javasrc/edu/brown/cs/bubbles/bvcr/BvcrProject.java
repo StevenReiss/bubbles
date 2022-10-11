@@ -59,10 +59,15 @@ BvcrProject(Element xml)
    Element cps = IvyXml.getChild(xml,"CLASSPATH");
    for (Element cp : IvyXml.children(cps,"PATH")) {
       String typ = IvyXml.getAttrString(cp,"TYPE");
-      if (typ.equals("SOURCE") && !IvyXml.getAttrBool(cp,"NESTED")) {
-	 if (source_directory == null) {
-	    source_directory = IvyXml.getTextElement(cp,"SOURCE");
-	  }
+      switch (typ) {
+         case "SOURCE" :
+         case "INCLUDE" :
+            if (!IvyXml.getAttrBool(cp,"NESTED")) {
+               if (source_directory == null) {
+                  source_directory = IvyXml.getTextElement(cp,"SOURCE");
+                }
+             }
+            break;
        }
     }
 }

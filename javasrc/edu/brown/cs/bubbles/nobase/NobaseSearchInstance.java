@@ -28,6 +28,7 @@ import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import org.eclipse.wst.jsdt.core.dom.*;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -593,7 +594,7 @@ public void findTextRegions(ISemanticData isd,boolean pfx,boolean statics,boolea
     }
 
    RegionVisitor rv = new RegionVisitor(xw,initcmmts,requires,exports,
-	 fctdecls,vardecls,computations);
+	 fctdecls,vardecls,computations,isd.getFileData());
    isd.getRootNode().accept(rv);
 }
 
@@ -608,9 +609,10 @@ private class RegionVisitor extends DefaultASTVisitor {
    private boolean do_variables;
    private boolean do_computations;
    private int current_depth;
+   private NobaseFile for_file;
 
    RegionVisitor(IvyXmlWriter xw,boolean cmmt,boolean req,
-	 boolean exp,boolean fct,boolean var,boolean c) {
+         boolean exp,boolean fct,boolean var,boolean c,NobaseFile nf) {
       xml_writer = xw;
       do_comments = cmmt;
       do_requires = req;
@@ -619,6 +621,7 @@ private class RegionVisitor extends DefaultASTVisitor {
       do_variables = var;
       do_computations = c;
       current_depth = 0;
+      for_file = nf;
     }
 
    @Override public boolean visit(Block n) {
@@ -723,8 +726,9 @@ private class RegionVisitor extends DefaultASTVisitor {
     }
 
    private void outputRange(ASTNode n) {
-      int spos = NobaseAst.getExtendedStartPosition(n);
-      int epos = NobaseAst.getExtendedEndPosition(n);
+      Point pt = NobaseAst.getExtendedPosition(n,for_file);
+      int spos = pt.x;
+      int epos = pt.y;
       xml_writer.begin("RANGE");
       xml_writer.field("PATH",current_file.getFile().getPath());
       xml_writer.field("START",spos);

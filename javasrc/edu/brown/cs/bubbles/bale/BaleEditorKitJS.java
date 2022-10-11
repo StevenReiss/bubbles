@@ -25,6 +25,11 @@
 package edu.brown.cs.bubbles.bale;
 
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import javax.swing.Action;
 import javax.swing.text.Keymap;
 
@@ -45,6 +50,24 @@ class BaleEditorKitJS implements BaleConstants, BaleConstants.BaleLanguageKit
 private static final Action [] local_actions = {
 };
 
+private static final Map<String,String> content_map;
+private static final Set<String> post_content;
+
+static {
+   content_map = new HashMap<>();
+   content_map.put("{","}");
+   content_map.put("(",")");
+   content_map.put("[","]");
+   content_map.put("'","'");
+   content_map.put("\"","\"");
+   post_content = new HashSet<>();
+   for (String val : content_map.values()) {
+      for (int i = 0; i < val.length(); ++i) {
+         String c = val.substring(i,i+1);
+         post_content.add(c);
+       }
+    }
+}
 
 
 
@@ -76,6 +99,21 @@ BaleEditorKitJS()
 {
    return base;
 }
+
+
+
+@Override public String getPostContent(String content)
+{
+   if (!BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_CLOSE)) return null;
+   return content_map.get(content);
+}
+
+@Override public boolean checkContent(String content)
+{
+   if (!BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_CLOSE)) return false;
+   return post_content.contains(content);
+}
+
 
 
 

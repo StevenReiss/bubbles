@@ -180,6 +180,7 @@ private void process()
    the_monitor.loadProjects();
 
    for (BvcrProject bp : project_map.values()) {
+      System.err.println("BVCR: check project " + bp.getName());
       BvcrVersionManager bvm = BvcrVersionManager.createVersionManager(bp,the_monitor);
       if (bvm != null) {
 	 manager_map.put(bp.getName(),bvm);

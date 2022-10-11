@@ -159,14 +159,6 @@ private class ProcessHandler implements BumpRunEventHandler {
                bp.finish();
              }
             break;
-         case PROCESS_CHANGE :
-            break;
-         case PROCESS_PERFORMANCE :
-            break;
-         case PROCESS_SWING :
-            break;
-         case PROCESS_TRIE :
-            break;
          case PROCESS_TRACE :
             if (bp != null) {
                Element xml = (Element) evt.getEventData();

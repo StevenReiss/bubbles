@@ -95,7 +95,17 @@ private PrintWriter	perf_writer;
 private SwingEventListenerList<BumpRunEventHandler> event_handlers;
 
 
-enum RunEventKind { NONE, RESUME, SUSPEND, CREATE, TERMINATE, CHANGE, MODEL_SPECIFIC };
+enum RunEventKind {
+   NONE, 
+   RESUME,
+   SUSPEND, 
+   CREATE, 
+   TERMINATE,
+   CHANGE, 
+   MODEL_SPECIFIC,
+   HOTCODE_SUCCESS,
+   HOTCODE_FAILURE,
+};
 enum RunEventDetail { NONE, STEP_INTO, STEP_OVER, STEP_RETURN, TERMINATE, BREAKPOINT,
 			 CLIENT_REQUEST, EVALUATION, EVALUATION_IMPLICIT,
 			 STATE, CONTENT };
@@ -992,6 +1002,19 @@ private void handleTargetEvent(Element xml,long when)
    if (nm != null) pd.setProcessName(nm);
 
    if (dtl == BumpThreadStateDetail.CONTENT) return;
+   
+   switch (kind) {
+      case HOTCODE_SUCCESS :
+         ProcessEvent evts = new ProcessEvent(BumpRunEventType.HOTCODE_SUCCESS,pd);
+         sendProcessEvent(evts);
+         return;
+      case HOTCODE_FAILURE :
+         ProcessEvent evtf = new ProcessEvent(BumpRunEventType.HOTCODE_FAILURE,pd);
+         sendProcessEvent(evtf);
+         return;
+      default :
+         break;
+    }
 
    for (BumpThread bt : pd.getThreads()) {
       ThreadData td = (ThreadData) bt;
@@ -1016,17 +1039,25 @@ private void handleTargetEvent(Element xml,long when)
       if (pd != null) {
 	 if (pd.getName() != null) named_processes.remove(pd.getName());
 	 ProcessEvent evt = new ProcessEvent(BumpRunEventType.PROCESS_REMOVE,pd);
-	 for (BumpRunEventHandler reh : event_handlers) {
-	    try {
-	       reh.handleProcessEvent(evt);
-	     }
-	    catch (Throwable t) {
-	       BoardLog.logE("BUMP","Problem handling process event",t);
-	     }
-	  }
+         sendProcessEvent(evt);
        }
     }
 }
+
+
+private void sendProcessEvent(ProcessEvent evt)
+{
+   for (BumpRunEventHandler reh : event_handlers) {
+      try {
+         reh.handleProcessEvent(evt);
+       }
+      catch (Throwable t) {
+         BoardLog.logE("BUMP","Problem handling process event",t);
+       }
+    }
+}
+
+
 
 
 

@@ -461,10 +461,10 @@ void runProject(String cfg,String mode,boolean build,boolean reg,String vmarg,St
 	       xw.field("PROCESS",ip.hashCode());
 	       setupConsole(ip);
 	     }
-            if (tgt instanceof IJavaDebugTarget) {
-               IJavaDebugTarget jdt = (IJavaDebugTarget) tgt;
-               jdt.addHotCodeReplaceListener(this);
-             }
+	    if (tgt instanceof IJavaDebugTarget) {
+	       IJavaDebugTarget jdt = (IJavaDebugTarget) tgt;
+	       jdt.addHotCodeReplaceListener(this);
+	     }
 	  }
 	 xw.end("LAUNCH");
        }
@@ -786,8 +786,8 @@ void getVariableValue(String tname,String frid,String vname,int lvls,int arrayma
 		}
 	     }
 	    if (val == null) {
-	       BedrockPlugin.logD("VAR FAIL " + vhead + " " + sfrm.hashCode() + " " + 
-                     thrd.hashCode() + " " + tname + " " + frid + " " + vname);
+	       BedrockPlugin.logD("VAR FAIL " + vhead + " " + sfrm.hashCode() + " " +
+		     thrd.hashCode() + " " + tname + " " + frid + " " + vname);
 	       throw new BedrockException("Save variable " + vhead + " not found");
 	     }
 	  }
@@ -983,23 +983,23 @@ private static class CallFormatter {
    IJavaValue convertValue(IJavaObject v,IJavaThread thrd) {
       IJavaValue rslt = null;
       try {
-         IJavaDebugTarget tgt = (IJavaDebugTarget) thrd.getDebugTarget();
-         IJavaType [] typs = tgt.getJavaTypes(static_class);
-         if (static_class == null) {
-            // method call on v
-            IJavaValue [] args = setupArgs(tgt,null);
-            rslt = varEval(v,method_name,method_signature,args,thrd,false);
-          }
-         else {
-            // static method call
-            if (typs == null) return null;
-            IJavaClassType clstyp = (IJavaClassType) typs[0];
-            IJavaValue [] args = setupArgs(tgt,v);
-            rslt = varEval(clstyp,method_name,method_signature,args,thrd);
-          }
+	 IJavaDebugTarget tgt = (IJavaDebugTarget) thrd.getDebugTarget();
+	 IJavaType [] typs = tgt.getJavaTypes(static_class);
+	 if (static_class == null) {
+	    // method call on v
+	    IJavaValue [] args = setupArgs(tgt,null);
+	    rslt = varEval(v,method_name,method_signature,args,thrd,false);
+	  }
+	 else {
+	    // static method call
+	    if (typs == null) return null;
+	    IJavaClassType clstyp = (IJavaClassType) typs[0];
+	    IJavaValue [] args = setupArgs(tgt,v);
+	    rslt = varEval(clstyp,method_name,method_signature,args,thrd);
+	  }
        }
       catch (DebugException e) {
-         BedrockPlugin.logE("Problem handling value conversion",e);
+	 BedrockPlugin.logE("Problem handling value conversion",e);
        }
       return rslt;
     }
@@ -1012,26 +1012,26 @@ private static class CallFormatter {
       int idx = 0;
       if (arg0 != null) args[idx++] = arg0;
       if (arg_values != null) {
-         for (Object o : arg_values) {
-            IJavaValue v = null;
-            if (o == null) v = tgt.nullValue();
-            else if (o instanceof Boolean) v = tgt.newValue(((Boolean) o).booleanValue());
-            else if (o instanceof Byte) v = tgt.newValue(((Byte) o).byteValue());
-            else if (o instanceof Character) v = tgt.newValue(((Character) o).charValue());
-            else if (o instanceof Double) v = tgt.newValue(((Double) o).doubleValue());
-            else if (o instanceof Float) v = tgt.newValue(((Float) o).floatValue());
-            else if (o instanceof Integer) v = tgt.newValue(((Integer) o).intValue());
-            else if (o instanceof Long) v = tgt.newValue(((Long) o).longValue());
-            else if (o instanceof Short) v = tgt.newValue(((Short) o).shortValue());
-            else if (o instanceof String) v = tgt.newValue(((String) o));
-            else {
-               BedrockPlugin.logE("Unknown type for conversion args" + o);
-               v = tgt.nullValue();
-             }
-            args[idx++] = v;
-          }
+	 for (Object o : arg_values) {
+	    IJavaValue v = null;
+	    if (o == null) v = tgt.nullValue();
+	    else if (o instanceof Boolean) v = tgt.newValue(((Boolean) o).booleanValue());
+	    else if (o instanceof Byte) v = tgt.newValue(((Byte) o).byteValue());
+	    else if (o instanceof Character) v = tgt.newValue(((Character) o).charValue());
+	    else if (o instanceof Double) v = tgt.newValue(((Double) o).doubleValue());
+	    else if (o instanceof Float) v = tgt.newValue(((Float) o).floatValue());
+	    else if (o instanceof Integer) v = tgt.newValue(((Integer) o).intValue());
+	    else if (o instanceof Long) v = tgt.newValue(((Long) o).longValue());
+	    else if (o instanceof Short) v = tgt.newValue(((Short) o).shortValue());
+	    else if (o instanceof String) v = tgt.newValue(((String) o));
+	    else {
+	       BedrockPlugin.logE("Unknown type for conversion args" + o);
+	       v = tgt.nullValue();
+	     }
+	    args[idx++] = v;
+	  }
        }
-   
+
       return args;
     }
 
@@ -1056,7 +1056,7 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
    IThread thrd = null;
    IStackFrame sfrm = null;
    boolean evaldone = false;
-   
+
    BedrockPlugin.logD("Evaluate " + tname + " " + frid + " " + eid + " " + expr);
 
    int detail = (impl ? DebugEvent.EVALUATION_IMPLICIT : DebugEvent.EVALUATION);
@@ -1077,9 +1077,9 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 	     }
 	  }
 	 if (thrd == null) {
-            BedrockPlugin.logD("Evaluation thread " + tname + " not found in launch " + launch);
-            continue;		// not in this launch
-          }
+	    BedrockPlugin.logD("Evaluation thread " + tname + " not found in launch " + launch);
+	    continue;		// not in this launch
+	  }
 	 for (IStackFrame frame: thrd.getStackFrames()) {
 	    if (matchFrame(frid,frame)) {
 	       sfrm = frame;
@@ -1087,12 +1087,12 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 	     }
 	  }
 	 if (sfrm == null) {
-            BedrockPlugin.logD("Stack frame " + frid + " doesn't exist");
-            return;
-          }
+	    BedrockPlugin.logD("Stack frame " + frid + " doesn't exist");
+	    return;
+	  }
 	 if (!(sfrm instanceof IJavaStackFrame)) {
 	    throw new BedrockException("Stack frame " + frid + " not java frame");
-          }
+	  }
 	 IJavaStackFrame jsf = (IJavaStackFrame) sfrm;
 
 	 if (jproj == null) {
@@ -1195,30 +1195,30 @@ private class EvalListener implements IEvaluationListener {
    @Override public void evaluationComplete(IEvaluationResult rslt) {
       BedrockPlugin.logD("FINISH EVALUTAION OF " + for_id + " " + reply_id + " " + save_id + " " + output_level);
       if (save_id != null) {
-         try {
-            synchronized (outside_variables) {
-               Map<String,IValue> vals = outside_variables.get(for_frame);
-               if (vals == null) {
-                  vals = new HashMap<>();
-                  outside_variables.put(for_frame,vals);
-                }
-               vals.put(save_id,rslt.getValue());
-             }
-          }
-         catch (Throwable t) {
-            BedrockPlugin.logE("Problem with saving value",t);
-          }
+	 try {
+	    synchronized (outside_variables) {
+	       Map<String,IValue> vals = outside_variables.get(for_frame);
+	       if (vals == null) {
+		  vals = new HashMap<>();
+		  outside_variables.put(for_frame,vals);
+		}
+	       vals.put(save_id,rslt.getValue());
+	     }
+	  }
+	 catch (Throwable t) {
+	    BedrockPlugin.logE("Problem with saving value",t);
+	  }
        }
       BedrockPlugin.logD("START EVAL MESSAGE OUT");
       IvyXmlWriter xw = our_plugin.beginMessage("EVALUATION",for_id);
       xw.field("ID",reply_id);
       if (save_id != null) xw.field("SAVEID",save_id);
       try {
-         BedrockUtil.outputValue(rslt,output_level,array_size,xw);
+	 BedrockUtil.outputValue(rslt,output_level,array_size,xw);
        }
       catch (Throwable t) {
-         BedrockPlugin.logE("Problem with eval output",t);
-         xw.textElement("ERROR",t.toString());
+	 BedrockPlugin.logE("Problem with eval output",t);
+	 xw.textElement("ERROR",t.toString());
        }
       BedrockPlugin.logD("EVAL: " + xw.toString());
       our_plugin.finishMessage(xw);
@@ -1629,12 +1629,31 @@ private boolean handleInternalEvent(DebugEvent event)
 @Override public void hotCodeReplaceFailed(IJavaDebugTarget tgt,DebugException e)
 {
    BedrockPlugin.logD("HOT CODE replace failed " + tgt + " " + e);
+
+   sendHotCodeMessage(tgt,false,e);
 }
 
 
 @Override public void hotCodeReplaceSucceeded(IJavaDebugTarget tgt)
-{ 
+{
    BedrockPlugin.logD("HOT CODE replace success " + tgt);
+
+   sendHotCodeMessage(tgt,true,null);
+}
+
+
+private void sendHotCodeMessage(IJavaDebugTarget tgt,boolean succ,DebugException e)
+{
+   IvyXmlWriter xw = our_plugin.beginMessage("RUNEVENT");
+   xw.field("TIME",System.currentTimeMillis());
+   xw.begin("RUNEVENT");
+   xw.field("TYPE","TARGET");
+   xw.field("KIND",(succ ? "HOTCODE_SUCCESS" : "HOTCODE_FAILURE"));
+   if (e != null) xw.field("ERROR",e.toString());
+   BedrockUtil.outputDebugTarget(tgt,xw);
+   xw.end("RUNEVENT");
+   BedrockPlugin.logD("RUNEVENT: " + xw.toString());
+   our_plugin.finishMessageWait(xw);
 }
 
 
@@ -1840,35 +1859,35 @@ private class ConsoleThread extends Thread {
       StringBuffer buf = null;
       boolean iserr = false;
       for (ConsoleWrite cw : cd.getWrites()) {
-         if (cw.isEof()) {
-            if (buf != null) flushConsole(pid,buf,iserr);
-            buf = null;
-            eofConsole(pid);
-            continue;
-          }
-         if (buf == null) {
-            if (cw.getText() != null) {
-               buf = new StringBuffer();
-               iserr = cw.isStdErr();
-               buf.append(cw.getText());
-             }
-          }
-         else if (iserr == cw.isStdErr()) {
-            if (cw.getText() != null) buf.append(cw.getText());
-          }
-         else {
-            flushConsole(pid,buf,iserr);
-            buf = null;
-            if (cw.getText() != null) {
-               buf = new StringBuffer();
-               iserr = cw.isStdErr();
-               buf.append(cw.getText());
-             }
-          }
-         if (buf != null && buf.length() > 32768) {
-            flushConsole(pid,buf,iserr);
-            buf = null;
-          }
+	 if (cw.isEof()) {
+	    if (buf != null) flushConsole(pid,buf,iserr);
+	    buf = null;
+	    eofConsole(pid);
+	    continue;
+	  }
+	 if (buf == null) {
+	    if (cw.getText() != null) {
+	       buf = new StringBuffer();
+	       iserr = cw.isStdErr();
+	       buf.append(cw.getText());
+	     }
+	  }
+	 else if (iserr == cw.isStdErr()) {
+	    if (cw.getText() != null) buf.append(cw.getText());
+	  }
+	 else {
+	    flushConsole(pid,buf,iserr);
+	    buf = null;
+	    if (cw.getText() != null) {
+	       buf = new StringBuffer();
+	       iserr = cw.isStdErr();
+	       buf.append(cw.getText());
+	     }
+	  }
+	 if (buf != null && buf.length() > 32768) {
+	    flushConsole(pid,buf,iserr);
+	    buf = null;
+	  }
        }
       if (buf != null) flushConsole(pid,buf,iserr);
     }

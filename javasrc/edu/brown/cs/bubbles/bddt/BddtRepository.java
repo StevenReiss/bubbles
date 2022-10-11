@@ -273,23 +273,23 @@ private class ModelHandler implements BumpConstants.BumpRunEventHandler {
    @Override public void handleProcessEvent(BumpRunEvent evt) {
       BumpProcess blp = evt.getProcess();
       switch (evt.getEventType()) {
-	 case PROCESS_ADD :
-	    ProcessName pn = new ProcessName(blp);
-	    process_map.put(blp,pn);
-	    BassFactory.reloadRepository(BddtRepository.this);
-	    break;
-	 case PROCESS_REMOVE :
-	    process_map.remove(blp);
-	    BassFactory.reloadRepository(BddtRepository.this);
-	    break;
-	 case PROCESS_PERFORMANCE :
-	 case PROCESS_CHANGE :
-	 case PROCESS_SWING :
-	 case PROCESS_TRIE :
-	 case PROCESS_TRACE :
-	    break;
-	 default:
-	    break;
+         case PROCESS_ADD :
+            ProcessName pn = new ProcessName(blp);
+            process_map.put(blp,pn);
+            BassFactory.reloadRepository(BddtRepository.this);
+            break;
+         case PROCESS_REMOVE :
+            process_map.remove(blp);
+            BassFactory.reloadRepository(BddtRepository.this);
+            break;
+         case PROCESS_PERFORMANCE :
+         case PROCESS_CHANGE :
+         case PROCESS_SWING :
+         case PROCESS_TRIE :
+         case PROCESS_TRACE :
+            break;
+         default:
+            break;
        }
     }
 

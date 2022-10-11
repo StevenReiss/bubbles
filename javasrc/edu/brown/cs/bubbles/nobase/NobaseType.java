@@ -265,7 +265,7 @@ private static class ObjectType extends NobaseType {
 private static class ClassType extends NobaseType {
 
    ClassType() {
-      super("object");
+      super("class");
     }
    
    @Override public String toString() {         

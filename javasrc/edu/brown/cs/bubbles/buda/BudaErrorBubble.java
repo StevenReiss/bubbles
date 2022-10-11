@@ -26,6 +26,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 
@@ -84,10 +86,23 @@ private class ErrorContentPane extends JPanel
    private ErrorContentPane(String errmsg) {
       JLabel errlabel = new JLabel(errmsg);
       errlabel.setForeground(text_color);
+      errlabel.addMouseListener(new QuitAction());
       add(new JLabel(errmsg));
     }
 
 }	// end of inner class ErrorContentPane
+
+
+private class QuitAction extends MouseAdapter {
+
+   @Override public void mouseClicked(MouseEvent e) {
+      setVisible(false);
+    }
+
+}	// end of inner calss QuitAction
+
+
+
 
 
 

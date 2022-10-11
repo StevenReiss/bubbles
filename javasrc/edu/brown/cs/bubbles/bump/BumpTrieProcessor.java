@@ -124,19 +124,11 @@ private synchronized TrieDataImpl setupProcess(BumpProcess bp)
 	    process_data.remove(proc);
 	  }
 	 break;
-      case PROCESS_CHANGE :
-	 break;
-      case PROCESS_PERFORMANCE :
-	 break;
-      case PROCESS_SWING :
-	 break;
       case PROCESS_TRIE :
 	 if (bp != null) {
 	    Element xml = (Element) evt.getEventData();
 	    bp.handleTrieEvent(xml);
 	  }
-	 break;
-      case PROCESS_TRACE :
 	 break;
       default :
 	 break;

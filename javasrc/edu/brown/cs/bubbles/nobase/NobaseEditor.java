@@ -134,6 +134,9 @@ void elisionSetup(String proj,String bid,String file,boolean compute,
        }
     }
 
+   if (pp == null) pp = fd.getProject();
+   if (pp == null) throw new NobaseException("Project not found for " + file);
+
    ISemanticData isd = pp.getParseData(fd);
    if (isd == null) throw new NobaseException("Unable to get AST for file " + file);
 
@@ -327,9 +330,9 @@ private void commitFile(NobaseProject pp,NobaseFile ifd,String bid,boolean refre
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      RENAME command                                                         */
-/*                                                                              */
+/*										*/
+/*	RENAME command							       */
+/*										*/
 /********************************************************************************/
 
 void handleRename(String proj,String bid,String file,int start,int end,String name,String handle,
@@ -337,7 +340,7 @@ void handleRename(String proj,String bid,String file,int start,int end,String na
       boolean refs,
       boolean doedit,
       String filespat,IvyXmlWriter xw)
-        throws NobaseException
+	throws NobaseException
 {
    NobaseProject pp = nobase_main.getProjectManager().findProject(proj);
    NobaseFile fd = nobase_main.getFileManager().getFileData(file);
@@ -359,7 +362,7 @@ void handleRename(String proj,String bid,String file,int start,int end,String na
     }
    for (SearchResult mtch : search.getMatches()) {
       NobaseMain.logD("Create edit " + mtch.getFile().getFile().getPath() + " " +
-            mtch.getOffset() + " " + mtch.getLength() + " " + name + " " + newname);
+	    mtch.getOffset() + " " + mtch.getLength() + " " + name + " " + newname);
     }
 }
 
@@ -519,10 +522,10 @@ private class AutoCompile implements Runnable {
       int delay = ep.getDelayTime();
       if (delay < 0) return;
       if (delay > 0) {
-         try {
-            Thread.sleep(delay);
-          }
-         catch (InterruptedException e) { }
+	 try {
+	    Thread.sleep(delay);
+	  }
+	 catch (InterruptedException e) { }
        }
       if (!edit_data.getEditId().equals(edit_id)) return;
       ISemanticData isd = for_project.reparseFile(for_file);
@@ -531,35 +534,35 @@ private class AutoCompile implements Runnable {
       if (!edit_data.getEditId().equals(edit_id)) return;
       IvyXmlWriter xw = NobaseMain.getNobaseMain().beginMessage("EDITERROR");
       if (isd.getProject() != null) {
-         xw.field("PROJECT",isd.getProject().getName());
+	 xw.field("PROJECT",isd.getProject().getName());
        }
       xw.field("FILE",for_file.getFile().getPath());
       xw.field("ID",edit_id);
       xw.begin("MESSAGES");
       if (msgs != null && msgs.size() > 0) {
-         for (NobaseMessage pm : msgs) {
-            NobaseUtil.outputProblem(pm,isd,xw);
-          }
+	 for (NobaseMessage pm : msgs) {
+	    NobaseUtil.outputProblem(pm,isd,xw);
+	  }
        }
       xw.end("MESSAGES");
-   
+
       if (!edit_data.getEditId().equals(edit_id)) return;
       NobaseMain.getNobaseMain().finishMessage(xw);
       if (ep.getAutoElide()) {
-         if (!edit_data.getEditId().equals(edit_id)) return;
-         NobaseElider pe = edit_data.checkElider();
-         if (pe != null) {
-            xw = NobaseMain.getNobaseMain().beginMessage("ELISION",edit_data.getBaseId());
-            xw.field("FILE",for_file.getFile().getPath());
-            xw.field("ID",edit_id);
-            xw.begin("ELISION");
-            if (pe.computeElision(isd,xw)) {
-               if (edit_data.getEditId().equals(edit_id)) {
-        	  xw.end("ELISION");
-        	  NobaseMain.getNobaseMain().finishMessage(xw);
-        	}
-             }
-          }
+	 if (!edit_data.getEditId().equals(edit_id)) return;
+	 NobaseElider pe = edit_data.checkElider();
+	 if (pe != null) {
+	    xw = NobaseMain.getNobaseMain().beginMessage("ELISION",edit_data.getBaseId());
+	    xw.field("FILE",for_file.getFile().getPath());
+	    xw.field("ID",edit_id);
+	    xw.begin("ELISION");
+	    if (pe.computeElision(isd,xw)) {
+	       if (edit_data.getEditId().equals(edit_id)) {
+		  xw.end("ELISION");
+		  NobaseMain.getNobaseMain().finishMessage(xw);
+		}
+	     }
+	  }
        }
     }
 

@@ -215,7 +215,7 @@ private void start()
     }
 
    mint_control = MintControl.create(mint_handle,MintSyncMode.SINGLE);
-   mint_control.register("<BUBBLES DO='_VAR_1' LANG='Node/JS' />",new CommandHandler());
+   mint_control.register("<BUBBLES DO='_VAR_1' />",new CommandHandler());
 }
 
 

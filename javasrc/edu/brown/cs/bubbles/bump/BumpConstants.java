@@ -641,7 +641,9 @@ enum BumpRunEventType {
    THREAD_REMOVE,
    THREAD_CHANGE,
    THREAD_TRACE,
-   THREAD_HISTORY
+   THREAD_HISTORY,
+   HOTCODE_SUCCESS,
+   HOTCODE_FAILURE,
 }
 
 
@@ -685,6 +687,7 @@ interface BumpRunEventHandler extends EventListener {
    default void handleLaunchEvent(BumpRunEvent evt)                     { }
    default void handleProcessEvent(BumpRunEvent evt)                    { }
    default void handleThreadEvent(BumpRunEvent evt)                     { }
+   
    
    default void handleConsoleMessage(BumpProcess proc,
          BumpConsoleMode mode,boolean iseof,String msg)                 { }

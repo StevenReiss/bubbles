@@ -47,6 +47,7 @@ import edu.brown.cs.ivy.swing.SwingGridPanel;
 import edu.brown.cs.ivy.swing.SwingText;
 import edu.brown.cs.ivy.xml.IvyXml;
 
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
@@ -64,6 +65,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -257,11 +259,23 @@ void setInitialSize(Dimension d)
 
    eps.width += BALE_DELTA_EDITING_WIDTH;
    
+   Dimension eps0 = new Dimension(eps);
+   
    if (eps.height > d.height || eps.width > d.width) {
       // bd.recheckElisions();
       editor_pane.setSize(d);
       eps = editor_pane.getPreferredSize();
    }
+   
+   if (eps0.height > 400 && eps.height < 50) {
+      String nm = "RemoveCodeElisionAction";    // RemoveElisionAction
+      Action act = BaleEditorKit.findAction(nm);
+      if (act != null) {
+         ActionEvent evt = new ActionEvent(editor_pane,0,nm);
+         act.actionPerformed(evt);
+       }
+      eps.height = Math.min(800,eps0.height);
+    }
 
    eps.width += BALE_ANNOT_NUMBER_WIDTH;
    

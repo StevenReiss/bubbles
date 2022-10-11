@@ -97,7 +97,7 @@ class BaleEditorKit extends DefaultEditorKit implements BaleConstants, ViewFacto
 
 private final static long serialVersionUID = 1;
 
-private transient BaleLanguageKit language_kit;
+private static transient BaleLanguageKit language_kit;
 private transient Action []	  bale_actions;
 
 private static final Action undo_action = BurpHistory.getUndoAction();
@@ -140,13 +140,15 @@ private static final Action revert_action = new RevertAction();
 private static final Action force_save_action = new ForceSaveAction();
 private static final Action explicit_elision_action = new ExplicitElisionAction();
 private static final Action redo_elision_action = new RedoElisionAction();
-private static final Action remove_elision_action = new RemoveElisionAction();
+private static final Action remove_elision_action = new RemoveElisionAction(false);
+private static final Action remove_code_elision_action = new RemoveElisionAction(true);
 private static final Action autocomplete_action = new AutoCompleteAction();
 private static final Action rename_action = new RenameAction();
 private static final Action extract_method_action = new ExtractMethodAction();
 private static final Action format_action = new FormatAction();
 private static final Action expand_action = new ExpandAction();
-private static final Action expandxy_action = new ExpandXYAction();
+private static final Action expandxy_action = new ExpandXYAction(false);
+private static final Action expandxy_code_action = new ExpandXYAction(true);
 
 private static final Action goto_definition_action = new GotoDefinitionAction();
 private static final Action goto_implementation_action = new GotoImplementationAction();
@@ -215,6 +217,7 @@ private static final Action [] local_actions = {
    explicit_elision_action,
    redo_elision_action,
    remove_elision_action,
+   remove_code_elision_action,
    smart_paste_action,
    move_lines_up_action,
    move_lines_down_action,
@@ -225,6 +228,7 @@ private static final Action [] local_actions = {
    format_action,
    expand_action,
    expandxy_action,
+   expandxy_code_action,
    smart_delete_next_character_action,
 
    goto_definition_action,
@@ -294,6 +298,7 @@ private static final SwingKey [] skey_defs = new SwingKey[] {
    new SwingKey("CODEEDIT",null,format_action,"menu shift F"),
    new SwingKey("CODEEDIT",null,expand_action,"xalt B"),
    new SwingKey("CODEEDIT",null,expandxy_action,"xalt shift B","menu shift B"),
+   new SwingKey("CODEECIT",null,expandxy_code_action,"menu ctrl shift B"),
    new SwingKey("CODEEDIT",null,fix_errors_action,"menu shift P", "xalt shift P"),
    new SwingKey("CODEEDIT",null,autocomplete_action,"ctrl SPACE"),
    new SwingKey("CODEEDIT",null,finish_action,"yalt SPACE"),
@@ -663,43 +668,64 @@ private static class DefaultKeyAction extends TextAction {
          else d0 = target.getPreferredSize();
          
          String content = e.getActionCommand();
+         String postcontent = null;
          int mod = e.getModifiers();
          if ((content != null) && (content.length() > 0) &&
                ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
             char c = content.charAt(0);
+            int soff = target.getSelectionStart();
+   	 int eoff = target.getSelectionEnd();
             
             if ((c >= 0x20) && (c != 0x7F)) {
-               int sel = target.getSelectionStart();
-               if (target.getOverwriteMode()) {
-                  if (sel == target.getSelectionEnd()) {
+               boolean overwrite = target.getOverwriteMode();
+               if (soff == eoff && !overwrite) {
+                  if (language_kit.checkContent(content) && 
+                        bd.checkTypeover(content,soff)) overwrite = true;
+                  else postcontent = language_kit.getPostContent(content);
+                }
+               if (overwrite) {
+                  if (soff == target.getSelectionEnd()) {
                      String prev = null;
                      try {
-                        prev = target.getText(sel,1);
+                        prev = target.getText(soff,1);
                       }
                      catch (BadLocationException ex) { }
+                     eoff = soff+1;
                      if (prev == null || prev.equals("\n"));
                      else if (prev.equals("\t")) {
-                        int cpos = bd.getColumnPosition(sel);
+                        int cpos = bd.getColumnPosition(soff);
                         int npos = bd.getNextTabPosition(cpos);
                         StringBuilder buf = new StringBuilder();
                         for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
-                        target.setSelectionEnd(sel+1);
+                        target.setSelectionEnd(eoff);
                         target.replaceSelection(buf.toString());
-                        target.setSelectionStart(sel);
-                        target.setSelectionEnd(sel+1);
+                        target.setSelectionStart(soff);
+                        target.setSelectionEnd(eoff);
                       }
-                     else target.setSelectionEnd(sel+1);
+                     else target.setSelectionEnd(eoff);
                    }
                 }
-               
+               if (soff != eoff) bd.handleReplaceTypeover(soff,eoff);
+              
                target.replaceSelection(content);
-               if (content != null && shouldAutoIndent(target,content,sel)) {
+               if (postcontent != null) {
+                  int off = target.getSelectionEnd();
+                  try {
+                     bd.insertString(off,postcontent,null);
+                   }
+                  catch (BadLocationException ex) { }
+                  bd.setCreatedTypeover(postcontent,off);
+                  target.setSelectionStart(off);
+                  target.setSelectionEnd(off);
+                }
+   
+               if (content != null && shouldAutoIndent(target,content,soff)) {
                   // TODO: check that this is the only thing on the line
                   indent_lines_action.actionPerformed(e);
                 }
                BaleCompletionContext ctx = target.getCompletionContext();
                if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
-                  new BaleCompletionContext(target,sel,c);
+                  new BaleCompletionContext(target,soff,c);
                 }
                
                if (d0 != null) {
@@ -911,110 +937,116 @@ private static class NewlineAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane target = getBaleEditor(e);
       if (!checkEditor(target)) return;
-
+      
       BaleDocument bd = target.getBaleDocument();
       bd.baleWriteLock();
       try {
-	 String text = "\n";
-	 String posttext = null;
-	 int postdelta = 0;
-	 int size = 1;
-	 int postsize = 0;
-	 int soff = target.getSelectionStart();
-	 int eoff = target.getSelectionEnd();
-	 BaleElement elt = bd.getCharacterElement(eoff);
-	 if (elt != null && elt.isComment()) {
-	    switch (elt.getEndTokenState()) {
-	       case IN_COMMENT :
-	       case IN_FORMAL_COMMENT :
-		  String ind = " ";
-		  BaleElement be1 = elt.getPreviousCharacterElement();
-		  if (be1 != null) {
-		     BaleElement.Indent bin = be1.getIndent();
-		     if (bin != null) {
-			int col = bin.getFirstColumn();
-			StringBuffer buf = new StringBuffer();
-			for (int i = 0; i < col; ++i) buf.append(" ");
-			ind = buf.toString();
-		      }
-		     else if (be1.isComment()) {
-			try {
-			   String ctxt = target.getText(elt.getStartOffset(),elt.getEndOffset()-elt.getStartOffset()+1);
-			   int ct = 0;
-			   while (ctxt.charAt(ct) == ' ') ++ct;
-			   ind = ctxt.substring(0,ct);
-			 }
-			catch (BadLocationException ex) { }
-		      }
-		   }
-		  text += ind + "*";
-		  break;
-	       default:
-		  break;
-	     }
-	  }
-	
-	 if (doAutoClose(bd,elt,soff,eoff)) {
-	    posttext= "\n}";
-	    postsize = 1;
-	    try {
-	       String txt = target.getText(eoff,100);
-	       boolean havetxt = false;
-	       for (int i = 0; i < txt.length(); ++i) {
-		  if (txt.charAt(i) == '\n') {
-		     if (havetxt) postdelta = i;
-		     break;
-		   }
-		  else if (!Character.isWhitespace(txt.charAt(i))) havetxt = true;
-		}
-	     }
-	    catch (BadLocationException ex) { }
-	  }
-	
-	 boolean grow = true;
-	 boolean rep = true;
-	 boolean ind = true;
-	
-	 if (soff != eoff) {
-	    int slno = bd.findLineNumber(soff);
-	    int elno = bd.findLineNumber(eoff);
-	    if (elno != slno) grow = false;
-	  }
-	 else {
-	    if (target.getOverwriteMode()) {
-	       rep = false;
-	       grow = false;
-	       int nlno = bd.findLineNumber(soff) + 1;
-	       int pos = bd.getFirstNonspace(nlno);
-	       if (pos >= 0) ind = false;
-	       else pos = -pos;
-	       if (pos < bd.getEndPosition().getOffset()) target.setCaretPosition(pos);
-	       soff = pos-1;
-	     }
-	  }
-	
-	 if (rep) target.replaceSelection(text);
-	 if (ind) {
-	    int lno = bd.findLineNumber(soff+1);
-	    bd.fixLineIndent(lno);
-	  }
-	 if (posttext != null) {
-	    int noff = target.getSelectionStart();
-	    try {
-	       bd.insertString(noff+postdelta, posttext, null);
-	       int nlno = bd.findLineNumber(noff+1+postdelta);
-	       for (int i = 0; i < postsize; ++i) {
-		  bd.fixLineIndent(nlno+i);
-		}
-	       size += postsize;
-	     }
-	    catch (BadLocationException ex) { }
-	    target.setSelectionStart(noff);
-	    target.setSelectionEnd(noff);
-	  }
-	 if (grow) {
-	    target.increaseSize(size);
-	  }
+         String text = "\n";
+         String posttext = null;
+         int postdelta = 0;
+         int size = 1;
+         int postsize = 0;
+         int soff = target.getSelectionStart();
+         int eoff = target.getSelectionEnd();
+         BaleElement elt = bd.getCharacterElement(eoff);
+         if (elt != null && elt.isComment()) {
+            switch (elt.getEndTokenState()) {
+               case IN_COMMENT :
+               case IN_FORMAL_COMMENT :
+                  String ind = " ";
+                  BaleElement be1 = elt.getPreviousCharacterElement();
+                  if (be1 != null) {
+                     BaleElement.Indent bin = be1.getIndent();
+                     if (bin != null) {
+                        int col = bin.getFirstColumn();
+                        StringBuffer buf = new StringBuffer();
+                        for (int i = 0; i < col; ++i) buf.append(" ");
+                        ind = buf.toString();
+                      }
+                     else if (be1.isComment()) {
+                        try {
+                           String ctxt = target.getText(elt.getStartOffset(),
+                                 elt.getEndOffset()-elt.getStartOffset()+1);
+                           int ct = 0;
+                           while (ctxt.charAt(ct) == ' ') ++ct;
+                           ind = ctxt.substring(0,ct);
+                         }
+                        catch (BadLocationException ex) { }
+                      }
+                   }
+                  text += ind + "*";
+                  break;
+               default:
+                  break;
+             }
+          }
+         
+         String tok = doAutoClose(bd,elt,soff,eoff);
+         if (tok != null) {
+            posttext= "\n" + tok;
+            postsize = 1;
+            try {
+               String txt = target.getText(eoff,100);
+               boolean havetxt = false;
+               for (int i = 0; i < txt.length(); ++i) {
+                  if (txt.charAt(i) == '\n') {
+                     if (havetxt) postdelta = i;
+                     break;
+                   }
+                  else if (!Character.isWhitespace(txt.charAt(i))) havetxt = true;
+                }
+             }
+            catch (BadLocationException ex) { }
+          }
+         if (tok == null) {
+            posttext = doAutoLine(bd,elt,soff,eoff);
+            postdelta = 0;
+          }      
+         
+         boolean grow = true;
+         boolean rep = true;
+         boolean ind = true;
+         
+         if (soff != eoff) {
+            int slno = bd.findLineNumber(soff);
+            int elno = bd.findLineNumber(eoff);
+            if (elno != slno) grow = false;
+          }
+         else {
+            if (target.getOverwriteMode()) {
+               rep = false;
+               grow = false;
+               int nlno = bd.findLineNumber(soff) + 1;
+               int pos = bd.getFirstNonspace(nlno);
+               if (pos >= 0) ind = false;
+               else pos = -pos;
+               if (pos < bd.getEndPosition().getOffset()) target.setCaretPosition(pos);
+               soff = pos-1;
+             }
+          }
+         
+         if (rep) target.replaceSelection(text);
+         if (ind) {
+            int lno = bd.findLineNumber(soff+1);
+            bd.fixLineIndent(lno);
+          }
+         if (posttext != null) {
+            int noff = target.getSelectionStart();
+            try {
+               bd.insertString(noff+postdelta, posttext, null);
+               int nlno = bd.findLineNumber(noff+1+postdelta);
+               for (int i = 0; i < postsize; ++i) {
+                  bd.fixLineIndent(nlno+i);
+                }
+               size += postsize;
+             }
+            catch (BadLocationException ex) { }
+            target.setSelectionStart(noff);
+            target.setSelectionEnd(noff);
+          }
+         if (grow) {
+            target.increaseSize(size);
+          }
        }
       finally { bd.baleWriteUnlock(); }
    }
@@ -1023,28 +1055,68 @@ private static class NewlineAction extends TextAction {
 
 
 
-private static boolean doAutoClose(BaleDocument bd,BaleElement elt,int soff,int eoff)
+private static String doAutoClose(BaleDocument bd,BaleElement elt,int soff,int eoff)
 {
-   if (!BALE_PROPERTIES.getBoolean("Bale.autoclose")) return false;
-   if (elt == null) return false;
+   if (!BALE_PROPERTIES.getBoolean("Bale.autoclose")) return null;
+   if (elt == null) return null;
    BaleElement e1 = elt.getPreviousCharacterElement();
-   if (e1 == null || e1.getTokenType() != BaleTokenType.LBRACE) return false;
+   if (e1 == null) return null;
 
+   BaleTokenType left = e1.getTokenType();
+   BaleTokenType right = null;
+   String token = null;
+   switch (left) {
+      case LBRACE :
+         right = BaleTokenType.RBRACE;
+         token = "}";
+         break;
+      case LBRACKET :
+         right = BaleTokenType.RBRACKET;
+         token = "]";
+         break;
+    }
+   if (right == null) return null;
+   
    int bct = 0;
    int act = 0;
    for (BaleElement e3 = elt; e3 != null; e3 = e3.getNextCharacterElement()) {
-      if (e3.getTokenType() == BaleTokenType.LBRACE) ++bct;
-      else if (e3.getTokenType() == BaleTokenType.RBRACE) --bct;
+      if (e3.getTokenType() == left) ++bct;
+      else if (e3.getTokenType() == right) --bct;
     }
    for (BaleElement e4 = elt.getPreviousCharacterElement(); e4 != null; e4 = e4.getPreviousCharacterElement()) {
-      if (e4.getTokenType() == BaleTokenType.LBRACE) ++act;
-      else if (e4.getTokenType() == BaleTokenType.RBRACE) --act;
+      if (e4.getTokenType() == left) ++act;
+      else if (e4.getTokenType() == right) --act;
     }
    // System.err.println("TOKENS : " + act + " " + bct);
-   if (act+bct == 0) return false;
-   if (act + bct > 0) return true;
+   if (act+bct == 0) return null;
+   if (act + bct > 0) return token;
+   
+   return null;
+}
 
-   return false;
+private static String doAutoLine(BaleDocument bd,BaleElement elt,int soff,int eoff)
+{
+   if (elt == null) return null;
+   
+   BaleTokenType look = null;
+   switch (elt.getTokenType()) {
+      case RBRACE :
+         look = BaleTokenType.LBRACE;
+         break;
+      case RBRACKET :
+         look = BaleTokenType.LBRACKET;
+         break;
+      case RPAREN :
+         look = BaleTokenType.LPAREN;
+         break;
+      default :
+         return null;
+    }
+   BaleElement e1 = elt.getPreviousCharacterElement();
+   if (e1 == null) return null;
+   if (e1.getTokenType() == look) return "\n";
+   
+   return null;
 }
 
 
@@ -2037,10 +2109,12 @@ private static class RedoElisionAction extends AbstractAction {
 
 private static class RemoveElisionAction extends AbstractAction {
 
+   private boolean code_only;
    private static final long serialVersionUID = 1;
 
-   RemoveElisionAction() {
-      super("RemoveElisionAction");
+   RemoveElisionAction(boolean code) {
+      super(code ? "RemoveCodeElisionAction" : "RemoveElisionAction");
+      code_only = code;
     }
 
    @Override public void actionPerformed(ActionEvent e) {
@@ -2052,7 +2126,8 @@ private static class RemoveElisionAction extends AbstractAction {
          bd.baleWriteLock();
          try {
             BaleElideMode em = bd.getElideMode();
-            bd.removeElision();
+            if (code_only) bd.removeCodeElision();
+            else bd.removeElision();
             bd.handleElisionChange();
             bd.setElideMode(em);
           }
@@ -2497,10 +2572,12 @@ private static class ExpandAction extends TextAction {
 
 private static class ExpandXYAction extends TextAction {
 
+   private boolean code_only;
    private static final long serialVersionUID = 1;
 
-   ExpandXYAction() {
-      super("ExpandXYAction");
+   ExpandXYAction(boolean code) {
+      super(code ? "ExpandXYCodeAction" : "ExpandXYAction");
+      code_only = code;
    }
 
    @Override public void actionPerformed(ActionEvent e) {
@@ -2516,14 +2593,15 @@ private static class ExpandXYAction extends TextAction {
       BudaBubble bb = BudaRoot.findBudaBubble(target);
       if (bb == null) return;
       Dimension d1 = bb.getSize();
-
+   
       if (vx > d1.width || vy >= d1.height) {
-	 d1.width += Math.max(0,vx - d1.width + 10);
-	 d1.height += Math.max(0, vy - d1.height + 30);
-	 bb.setSize(d1);
+         d1.width += Math.max(0,vx - d1.width + 10);
+         d1.height += Math.max(0, vy - d1.height + 30);
+         bb.setSize(d1);
        }
-
-      remove_elision_action.actionPerformed(e);
+   
+      if (code_only) remove_code_elision_action.actionPerformed(e);
+      else remove_elision_action.actionPerformed(e);
    }
 
 }	// end of inner class ExpandAction

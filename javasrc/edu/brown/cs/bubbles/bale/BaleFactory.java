@@ -299,6 +299,13 @@ BaleFragmentEditor createClassFragmentEditor(String proj,String cls)
 public BaleFragmentEditor createFileEditor(String proj,File fil,String cls)
 {
    List<BumpLocation> locs = bump_client.findCompilationUnit(proj,fil,cls);
+   
+   if (cls == null) { 
+      String nm = fil.getName();
+      int idx = nm.lastIndexOf(".");
+      if (idx > 0) nm = nm.substring(0,idx);
+      cls = nm; 
+    }
 
    return getEditorFromLocations(locs,BaleFragmentType.FILE,cls + ".<FILE>");
 }
@@ -442,7 +449,7 @@ BudaBubble createLocationEditorBubble(Component src,Position p,Point at,
 	  }
 	 break;
       case MODULE :
-	 // fed = createFileEditor(bl.getSymbolProject(),bl.getFile(),null);
+         fed = createFileEditor(bl.getSymbolProject(),bl.getFile(),null);
 	 break;
       case EXPORT :
       case IMPORT :

@@ -395,13 +395,13 @@ protected static class ViewData {
 
    void setSizeAtPriority(View v,double p,float w) {
       if (v instanceof BaleView && w > 0) {
-	 BaleView bv = (BaleView) v;
-	 actual_height = bv.getHeightAtPriority(p,w);
-	 actual_width = w;
+         BaleView bv = (BaleView) v;
+         actual_height = bv.getHeightAtPriority(p,w);
+         actual_width = w;
        }
       else {
-	 actual_height = pref_y;
-	 actual_width = pref_x;
+         actual_height = pref_y;
+         actual_width = pref_x;
        }
     }
 

@@ -175,14 +175,14 @@ private class HistoryHandler implements BumpConstants.BumpRunEventHandler {
 
    @Override public void handleProcessEvent(BumpRunEvent evt) {
       switch (evt.getEventType()) {
-	 case PROCESS_REMOVE :
-	    BumpProcess bp = evt.getProcess();
-	    synchronized (history_data) {
-	       process_data.remove(bp.getId());
-	     }
-	    break;
-	 default:
-	    break;
+         case PROCESS_REMOVE :
+            BumpProcess bp = evt.getProcess();
+            synchronized (history_data) {
+               process_data.remove(bp.getId());
+             }
+            break;
+         default:
+            break;
        }
     }
 

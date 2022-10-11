@@ -242,6 +242,8 @@ static Display getDisplay()
 
 private synchronized void waitForSetup()
 {
+   if (is_setup) return;
+   
    while (!is_setup) {
       BedrockPlugin.logD("BEDROCK: wait for setup");
       try {
@@ -249,6 +251,7 @@ private synchronized void waitForSetup()
        }
       catch (InterruptedException e) { }
     }
+   BedrockPlugin.logD("BEDROCK: setup is complete");
 }
 
 

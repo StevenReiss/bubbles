@@ -113,11 +113,15 @@ void outputXml(IvyXmlWriter xw,int ctr,int lvl)
    xw.field("LINENO",source_line);
    xw.field("COLUMN",source_column);
    xw.field("LEVEL",frame_index);
-   xw.field("FILE",frame_file);
-   xw.field("FILETYPE","JS");
-   for (ScopeData sd : frame_scopes) {
-      sd.outputXml(lvl,xw);
+   
+   if (!frame_file.startsWith("internal/")) {
+      xw.field("FILE",frame_file);
+      xw.field("FILETYPE","JS");
+      for (ScopeData sd : frame_scopes) {
+         sd.outputXml(lvl,xw);
+       }
     }
+   
    xw.end("STACKFRAME");
 }
 

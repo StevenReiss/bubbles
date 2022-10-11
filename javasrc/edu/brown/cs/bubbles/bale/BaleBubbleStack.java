@@ -138,11 +138,14 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
 	    idx = key.lastIndexOf(".");
 	    key = key.substring(0,idx+1) + ".<MAIN>";
 	    break;
+         case MODULE :
+            key = bl.getSymbolName();
+            key += ".<MODULE>";
+            break;
 	 case CLASS :
 	 case INTERFACE :
 	 case ENUM :
 	 case THROWABLE :
-	 case MODULE :
 	    key = bl.getSymbolName();
 	    key = key + ".<PREFIX>";
 	    break;

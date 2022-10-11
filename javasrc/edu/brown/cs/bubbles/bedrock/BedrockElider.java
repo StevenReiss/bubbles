@@ -531,7 +531,7 @@ private void outputHintData(ASTNode n,IvyXmlWriter xw)
        }
       xw.field("NUMPARAM",nparam);
       for (int i = 0; i < mthd.getNumberOfParameters(); ++i) {
-	 int j = Math.min(i,pnames.length);
+	 int j = Math.min(i,pnames.length-1);
 	 xw.begin("PARAMETER");
 	 xw.field("NAME",pnames[j]);
 	 xw.field("TYPE",ptypes[j]);

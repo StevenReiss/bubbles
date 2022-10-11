@@ -49,7 +49,10 @@ import javax.swing.undo.UndoableEdit;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -74,6 +77,9 @@ private transient BaleIndenter	our_indenter;
 
 private int			id_counter;		// count # of edits
 private long			last_edit;
+
+private Map<Position,String> created_text;
+
 
 private static AtomicInteger	edit_counter = new AtomicInteger();
 private static final long serialVersionUID = 1;
@@ -108,6 +114,8 @@ BaleDocument(AbstractDocument.Content data)
 
    tab_handler = new BaleTabHandler();
    our_indenter = null;
+   
+   created_text = new HashMap<>();
 }
 
 
@@ -809,6 +817,7 @@ void redoElision()
    switch (elide_mode) {
       case ELIDE_CHECK_NEVER :
       case ELIDE_NONE :
+      case ELIDE_COMMENTS : 
 	 elide_mode = BaleElideMode.ELIDE_CHECK_ONCE;
 	 break;
       default:
@@ -820,6 +829,11 @@ void redoElision()
 void removeElision()
 {
    elide_mode = BaleElideMode.ELIDE_NONE;
+}
+
+void removeCodeElision()
+{
+   elide_mode = BaleElideMode.ELIDE_COMMENTS;
 }
 
 
@@ -1057,8 +1071,55 @@ protected void clearIndenter()
 /*										*/
 /********************************************************************************/
 
-protected void checkOrphan()			  { }
+protected void checkOrphan()            { }
 boolean isOrphan()			{ return false; }
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Auto-inserted typeover management                                       */
+/*                                                                              */
+/********************************************************************************/
+
+void setCreatedTypeover(String cnt,int off)
+{
+   for (int i = 0; i < cnt.length(); ++i) {
+      String c = cnt.substring(i,i+1);
+      try {
+         Position p = createPosition(off+i);
+         created_text.put(p,c);
+       }
+      catch (BadLocationException e) { }
+    }
+}
+
+
+boolean checkTypeover(String txt,int off)
+{
+   for (Iterator<Map.Entry<Position,String>> it = created_text.entrySet().iterator(); it.hasNext(); ) {
+      Map.Entry<Position,String> ent = it.next();
+      int poff = ent.getKey().getOffset();
+      if (poff == off) {
+         if (txt.equals(ent.getValue())) {
+            it.remove();
+            return true;
+          }
+       }
+    }
+   return false;
+}
+
+
+void handleReplaceTypeover(int soff,int eoff) 
+{
+   for (Iterator<Map.Entry<Position,String>> it = created_text.entrySet().iterator(); it.hasNext(); ) {
+      Map.Entry<Position,String> ent = it.next();
+      int poff = ent.getKey().getOffset();
+      if (poff >= soff && poff < eoff) it.remove();
+    }
+}
+
 
 
 /********************************************************************************/

@@ -3197,9 +3197,9 @@ private class BubbleRemover implements ActionListener {
    
    
    BubbleRemover() {
-      long delay = BUDA_PROPERTIES.getLong("Buda.remove.old.time",0);  // hours
+      long delay = BUDA_PROPERTIES.getLong("Buda.remove.old.time",168);  // hours
       remove_time = delay * 60*60*1000;                                          // in ms
-      long adelay = BUDA_PROPERTIES.getLong("Buda.remove.old.active.time",0);
+      long adelay = BUDA_PROPERTIES.getLong("Buda.remove.old.active.time",96);
       active_time = adelay * 60*60*1000;
       if (delay <= 0 && adelay <= 0) return;
       int every = REMOVAL_CHECK_TIME;
@@ -3224,6 +3224,7 @@ private class BubbleRemover implements ActionListener {
        }
       Rectangle cur = bubble_area.getVisibleRect();
       for (BudaBubble bb : bubble_area.getBubbles()) {
+         if (bb.isFixed() || bb.isFloating()) continue;
          long viewed = bb.getLastViewed();
          if (viewed <= 0) continue;
          long checktime = now - viewed;

@@ -24,8 +24,13 @@
 
 package edu.brown.cs.bubbles.nobase;
 
+import java.awt.Point;
+import java.util.List;
+
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
+import org.eclipse.wst.jsdt.core.dom.StructuralPropertyDescriptor;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclarationStatement;
 
 
 
@@ -154,18 +159,72 @@ static int getEndPosition(ASTNode  n)
 }
 
 
-static int getExtendedStartPosition(ASTNode n)
+
+
+
+static Point getExtendedPosition(ASTNode n,NobaseFile f)
 {
-   JavaScriptUnit ju = (JavaScriptUnit) n.getRoot();
-   return ju.getExtendedStartPosition(n);
+   ASTNode usen = n;
+   switch (n.getNodeType()) {
+      case ASTNode.VARIABLE_DECLARATION_FRAGMENT :
+         ASTNode p = n.getParent();
+         switch (p.getNodeType()) {
+            case ASTNode.VARIABLE_DECLARATION_STATEMENT :
+               VariableDeclarationStatement vds = (VariableDeclarationStatement) p;
+               if (vds.fragments().get(0) == n) usen = p;
+               break;
+            default :
+               System.err.println("CHECK HERE");
+               break;
+          }
+         break;
+      case ASTNode.FUNCTION_DECLARATION :
+      case ASTNode.SINGLE_VARIABLE_DECLARATION :
+      case ASTNode.TYPE_DECLARATION_STATEMENT :
+      case ASTNode.VARIABLE_DECLARATION_STATEMENT :
+         break;
+      case ASTNode.TYPE_DECLARATION :
+         p = n.getParent();
+         switch (p.getNodeType()) {
+            case ASTNode.TYPE_DECLARATION_STATEMENT :
+               usen = p;
+               break;
+            default :
+               break;
+          }
+         break;
+      default :
+         System.err.println("CHECK HERE");
+         break;
+    }
+   
+   int p3 = -1;
+   JavaScriptUnit n0 = (JavaScriptUnit) usen.getRoot();
+   ASTNode n1 = usen.getParent();
+   StructuralPropertyDescriptor spd = usen.getLocationInParent();
+   if (n1 != null && spd.isChildListProperty()) {
+      List<?> plst = (List<?>) n1.getStructuralProperty(spd);
+      int idx = plst.indexOf(usen);
+      if (idx > 0) {
+         ASTNode n2 = (ASTNode) plst.get(idx-1);
+         p3 = n2.getStartPosition() + n2.getLength() + 1;
+       }
+    }
+   
+   int p1 = n0.getExtendedStartPosition(usen);
+   int p2 = n0.getExtendedLength(usen);
+   if (p3 > 0 && p3 < p1) {
+      String cnts = f.getContents();
+      while (Character.isWhitespace(cnts.charAt(p3))) ++p3;
+      p2 += (p1-p3);
+      p1 = p3;
+    }
+   
+   return new Point(p1,p1 + p2);
 }
 
 
-static int getExtendedEndPosition(ASTNode n)
-{
-   JavaScriptUnit ju = (JavaScriptUnit) n.getRoot();
-   return ju.getExtendedStartPosition(n) + ju.getExtendedLength(n);
-}
+
 
 
 

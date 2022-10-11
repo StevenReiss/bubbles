@@ -169,7 +169,7 @@ void loadProjects()
       String pnm = IvyXml.getAttrString(pe,"NAME");
       MintDefaultReply prply = new MintDefaultReply();
       String pmsg = "<BUBBLES DO='OPENPROJECT' PROJECT='" + pnm +
-      "' CLASSES='false' FILES='false' PATHS='true' OPTIONS='false' />";
+            "' CLASSES='false' FILES='false' PATHS='true' OPTIONS='false' />";
       mint_control.send(pmsg,prply,MINT_MSG_FIRST_NON_NULL);
       Element pr = prply.waitForXml();
       if (!IvyXml.isElement(pr,"RESULT")) {

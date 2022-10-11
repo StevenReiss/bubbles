@@ -641,9 +641,11 @@ void outputProject(boolean files,boolean paths,boolean clss,boolean opts,IvyXmlW
    xw.field("WORKSPACE",project_manager.getWorkSpaceDirectory().getPath());
 
    if (paths) {
+      xw.begin("CLASSPATH");
       for (NobasePathSpec ps : project_paths) {
 	 ps.outputXml(xw);
        }
+      xw.end("CLASSPATH");
     }
    if (files) {
       for (File fs : project_files) {
