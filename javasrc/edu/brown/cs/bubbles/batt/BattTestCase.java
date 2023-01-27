@@ -184,7 +184,6 @@ synchronized boolean handleTestState(Element e)
        }
       catch (IllegalArgumentException ex) { }
     }
-
    if (ost != test_state) chng = true;
 
    Element xe = IvyXml.getChild(e,"COVERAGE");
@@ -199,8 +198,12 @@ synchronized boolean handleTestState(Element e)
 
 synchronized void handleTestCounts(Element e)
 {
+   if (e == null && count_data == null) return;
+   
    if (e == null) count_data = null;
    else count_data = new BattCountData(e);
+   
+   update();
 }
 
 

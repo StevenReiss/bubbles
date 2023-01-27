@@ -31,7 +31,6 @@ import java.io.*;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.management.*;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.*;
 import java.security.ProtectionDomain;

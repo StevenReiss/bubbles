@@ -95,6 +95,7 @@ private BattThread	server_thread;
 private Set<String>	error_classes;
 private IvyExec 	current_test;
 private long		last_report;
+private Object          message_lock;
 
 
 
@@ -131,6 +132,7 @@ private BattMain(String [] args)
    error_classes = new HashSet<String>();
    current_test = null;
    last_report = 0;
+   message_lock = new Object();
 
    junit_jar = null;
    String s = System.getProperty("java.class.path");
@@ -833,7 +835,7 @@ synchronized BattTestCase findTestCase(String nm)
    if (btc == null) {
       btc = new BattTestCase(nm);
       test_cases.put(nm,btc);
-      System.err.println("TEST CASES " + test_cases.size() + " " + nm);
+      System.err.println("BATT: TEST CASES " + test_cases.size() + " " + nm);
     }
 
    return btc;
@@ -956,7 +958,7 @@ void reportTestStatus(boolean force)
    long now;
 
    synchronized (this) {
-      rpt = new ArrayList<BattTestCase>(test_cases.values());
+      rpt = new ArrayList<>(test_cases.values());
       now = System.currentTimeMillis();
     }
 
@@ -1053,19 +1055,24 @@ private class Client extends IvyXmlReaderThread {
     }
 
    @Override protected void processXmlMessage(String msg) {
-      System.err.println("BATT: CLIENT MSG: " + msg);
       Element e = IvyXml.convertStringToXml(msg);
-
-      if (IvyXml.isElement(e,"TESTCASE")) {
-	 String nm = IvyXml.getAttrString(e,"NAME");
-	 BattTestCase btc = findTestCase(nm);
-	 btc.handleTestState(e);
-	 reportTestStatus(false);
-       }
-      else if (IvyXml.isElement(e,"TESTCOUNTS")) {
-	 String nm = IvyXml.getAttrString(e,"NAME");
-	 BattTestCase btc = findTestCase(nm);
-	 btc.handleTestCounts(e);
+   
+      synchronized(message_lock) {
+         System.err.println("BATT: CLIENT MSG: " + client_socket.getLocalPort() + " " + msg);
+         
+         if (IvyXml.isElement(e,"TESTCASE")) {
+            String nm = IvyXml.getAttrString(e,"NAME");
+            BattTestCase btc = findTestCase(nm);
+            btc.handleTestState(e);
+            reportTestStatus(false);
+          }
+         else if (IvyXml.isElement(e,"TESTCOUNTS")) {
+            String nm = IvyXml.getAttrString(e,"NAME");
+            BattTestCase btc = findTestCase(nm);
+            btc.handleTestCounts(e);
+          }
+         
+         System.err.println("BATT: FINISH CLIENT MSG");
        }
    }
 

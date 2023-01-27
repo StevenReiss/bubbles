@@ -382,7 +382,6 @@ private void process()
    Request rq = null;
 
    if (single_test != null) {
-      System.err.println("WORK ON TEST " + single_test);
       int idx1 = single_test.indexOf("(");
       int idx2 = single_test.indexOf(")");
       String mnm = single_test.substring(0,idx1);
