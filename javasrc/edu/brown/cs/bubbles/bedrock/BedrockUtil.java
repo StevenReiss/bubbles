@@ -1316,7 +1316,9 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
 	 if (mem.getParent() instanceof IType && !(elt instanceof IType)) {
 	    IType par = (IType) mem.getParent();
 	    if (par.isInterface()) {
-	       if (elt instanceof IMethod) fgs |= Flags.AccAbstract;
+	       if (elt instanceof IMethod) {
+                  if ((fgs & Flags.AccDefaultMethod) == 0) fgs |= Flags.AccAbstract;
+                }
 	       fgs |= Flags.AccPublic;
 	    }
 	    xw.field("QNAME",par.getFullyQualifiedName() + "." + nm);

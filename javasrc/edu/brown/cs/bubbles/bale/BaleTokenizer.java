@@ -736,7 +736,7 @@ static {
    java_keyword_map.put("synchronized",BaleTokenType.SYNCHRONIZED);
    java_keyword_map.put("this",BaleTokenType.KEYWORD);
    java_keyword_map.put("throw",BaleTokenType.KEYWORD);
-   java_keyword_map.put("throws",BaleTokenType.KEYWORD);
+   java_keyword_map.put("throws",BaleTokenType.THROWS);
    java_keyword_map.put("transient",BaleTokenType.KEYWORD);
    java_keyword_map.put("true",BaleTokenType.KEYWORD);
    java_keyword_map.put("try",BaleTokenType.TRY);
@@ -989,7 +989,7 @@ static {
    js_keyword_map.put("synchronized",BaleTokenType.KEYWORD);
    js_keyword_map.put("this",BaleTokenType.KEYWORD);
    js_keyword_map.put("throw",BaleTokenType.KEYWORD);
-   js_keyword_map.put("throws",BaleTokenType.KEYWORD);
+   js_keyword_map.put("throws",BaleTokenType.THROWS);
    js_keyword_map.put("transient",BaleTokenType.KEYWORD);
    js_keyword_map.put("true",BaleTokenType.KEYWORD);
    js_keyword_map.put("try",BaleTokenType.TRY);

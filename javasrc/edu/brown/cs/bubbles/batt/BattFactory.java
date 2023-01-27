@@ -740,6 +740,7 @@ public static BumpLaunchConfig getLaunchConfigurationForTest(BattTest btc)
          if (pnm != null) break;
        }
     }
+   BoardLog.logD("BATT","Set launch project " + pnm + " " + locs.size());
 
    BumpLaunchConfig blc = brm.createLaunchConfiguration(nm,BumpLaunchConfigType.JUNIT_TEST);
    if (blc == null) return null;

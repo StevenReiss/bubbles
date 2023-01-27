@@ -508,7 +508,7 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
 // "karma.jar",
    "mail.jar",
 //   "activation.jar",
-
+   "js-scriptengine.jar",
 /*********
    "speech.properties",
    "freetts/freetts.jar",

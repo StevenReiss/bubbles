@@ -78,7 +78,7 @@ private transient BaleIndenter	our_indenter;
 private int			id_counter;		// count # of edits
 private long			last_edit;
 
-private Map<Position,String> created_text;
+private transient Map<Position,String> created_text;
 
 
 private static AtomicInteger	edit_counter = new AtomicInteger();
@@ -114,7 +114,7 @@ BaleDocument(AbstractDocument.Content data)
 
    tab_handler = new BaleTabHandler();
    our_indenter = null;
-   
+
    created_text = new HashMap<>();
 }
 
@@ -517,7 +517,7 @@ void waitForAst()
 	 catch (InterruptedException e) { }
        }
       if (be.getAstNode() == null) {
-         BoardLog.logE("BALE","AST not found for " + be);
+	 BoardLog.logE("BALE","AST not found for " + be);
        }
     }
 }
@@ -737,7 +737,7 @@ void removeRegions(List<BaleRegion> rgns)		{ }
 
 
 @Override public Position createHistoryPosition(int off) throws BadLocationException
-{						
+{					
    return getBaseEditDocument().createPosition(getDocumentOffset(off));
 }
 
@@ -817,7 +817,7 @@ void redoElision()
    switch (elide_mode) {
       case ELIDE_CHECK_NEVER :
       case ELIDE_NONE :
-      case ELIDE_COMMENTS : 
+      case ELIDE_COMMENTS :
 	 elide_mode = BaleElideMode.ELIDE_CHECK_ONCE;
 	 break;
       default:
@@ -1040,7 +1040,7 @@ BaleIndenter getIndenter()
    if (our_indenter == null) {
       switch (getLanguage()) {
 	 case JAVA :
-         case JAVA_IDEA : 
+	 case JAVA_IDEA :
 	 case REBUS :
 	 default :
 	    our_indenter = new BaleIndenterJava(this);
@@ -1071,15 +1071,15 @@ protected void clearIndenter()
 /*										*/
 /********************************************************************************/
 
-protected void checkOrphan()            { }
+protected void checkOrphan()		{ }
 boolean isOrphan()			{ return false; }
 
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Auto-inserted typeover management                                       */
-/*                                                                              */
+/*										*/
+/*	Auto-inserted typeover management					*/
+/*										*/
 /********************************************************************************/
 
 void setCreatedTypeover(String cnt,int off)
@@ -1087,8 +1087,8 @@ void setCreatedTypeover(String cnt,int off)
    for (int i = 0; i < cnt.length(); ++i) {
       String c = cnt.substring(i,i+1);
       try {
-         Position p = createPosition(off+i);
-         created_text.put(p,c);
+	 Position p = createPosition(off+i);
+	 created_text.put(p,c);
        }
       catch (BadLocationException e) { }
     }
@@ -1101,17 +1101,17 @@ boolean checkTypeover(String txt,int off)
       Map.Entry<Position,String> ent = it.next();
       int poff = ent.getKey().getOffset();
       if (poff == off) {
-         if (txt.equals(ent.getValue())) {
-            it.remove();
-            return true;
-          }
+	 if (txt.equals(ent.getValue())) {
+	    it.remove();
+	    return true;
+	  }
        }
     }
    return false;
 }
 
 
-void handleReplaceTypeover(int soff,int eoff) 
+void handleReplaceTypeover(int soff,int eoff)
 {
    for (Iterator<Map.Entry<Position,String>> it = created_text.entrySet().iterator(); it.hasNext(); ) {
       Map.Entry<Position,String> ent = it.next();
@@ -1131,7 +1131,7 @@ void handleReplaceTypeover(int soff,int eoff)
 private class DummyElement extends AbstractDocument.LeafElement
 {
    private static final long serialVersionUID = 1;
- 
+
    DummyElement(Element par,AttributeSet a,int soff,int eoff) {
       super(par,a,soff,eoff);
     }

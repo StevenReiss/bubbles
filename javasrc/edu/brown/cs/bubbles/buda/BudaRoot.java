@@ -3194,6 +3194,7 @@ private class BubbleRemover implements ActionListener {
    private long         remove_time;
    private long         active_time;
    private long         last_active;
+   private boolean      first_time;
    
    
    BubbleRemover() {
@@ -3207,9 +3208,21 @@ private class BubbleRemover implements ActionListener {
       timer.setRepeats(true);
       timer.start();
       last_active = BoardMetrics.getLastActive();
+      first_time = true;
     }
    
    @Override public void actionPerformed(ActionEvent e) {
+      Rectangle cur = bubble_area.getVisibleRect();
+    
+      if (first_time) {
+         for (BudaBubble bb : bubble_area.getBubbles()) {
+            if (bb.isFixed() || bb.isFloating()) continue;
+            boolean show = bb.getBounds().intersects(cur);
+            if (show) bb.noteViewed();
+          }
+         first_time = false;
+       }
+      
       List<BudaBubble> remove = new ArrayList<>();
       long maxcheck = -1;
       long maxopen = -1;
@@ -3222,7 +3235,6 @@ private class BubbleRemover implements ActionListener {
             delta = REMOVAL_CHECK_TIME;
           }
        }
-      Rectangle cur = bubble_area.getVisibleRect();
       for (BudaBubble bb : bubble_area.getBubbles()) {
          if (bb.isFixed() || bb.isFloating()) continue;
          long viewed = bb.getLastViewed();

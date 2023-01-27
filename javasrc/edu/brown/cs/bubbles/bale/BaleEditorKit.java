@@ -825,7 +825,7 @@ private static class BackspaceAction extends TextAction {
 
    private transient Action delete_prev_action;
    private transient Action backward_action;
-
+   
    private static final long serialVersionUID = 1;
 
    BackspaceAction() {
@@ -838,7 +838,25 @@ private static class BackspaceAction extends TextAction {
       BaleEditorPane target = getBaleEditor(e);
       if (target == null) ;
       else if (target.getOverwriteMode()) backward_action.actionPerformed(e);
-      else delete_prev_action.actionPerformed(e);
+      else {
+         BaleDocument bd = target.getBaleDocument();
+         int soff = target.getSelectionStart();
+         int eoff = target.getSelectionEnd();
+         if (soff == eoff && BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_CLOSE)) {
+            try {
+               String del = target.getText(soff-1,1);
+               String d1 = language_kit.getPostContent(del);
+               if (d1 != null) {
+                  if (bd.checkTypeover(d1,soff)) {
+                     bd.remove(soff,1);
+                   }
+                }
+             }
+            catch (BadLocationException ex) { }
+            
+          }
+         delete_prev_action.actionPerformed(e);
+       }
     }
 
 }	// end of inner class BackspaceAction
@@ -953,7 +971,7 @@ private static class NewlineAction extends TextAction {
             switch (elt.getEndTokenState()) {
                case IN_COMMENT :
                case IN_FORMAL_COMMENT :
-                  String ind = " ";
+                  String indtxt = " ";
                   BaleElement be1 = elt.getPreviousCharacterElement();
                   if (be1 != null) {
                      BaleElement.Indent bin = be1.getIndent();
@@ -961,7 +979,7 @@ private static class NewlineAction extends TextAction {
                         int col = bin.getFirstColumn();
                         StringBuffer buf = new StringBuffer();
                         for (int i = 0; i < col; ++i) buf.append(" ");
-                        ind = buf.toString();
+                        indtxt = buf.toString();
                       }
                      else if (be1.isComment()) {
                         try {
@@ -969,12 +987,12 @@ private static class NewlineAction extends TextAction {
                                  elt.getEndOffset()-elt.getStartOffset()+1);
                            int ct = 0;
                            while (ctxt.charAt(ct) == ' ') ++ct;
-                           ind = ctxt.substring(0,ct);
+                           indtxt = ctxt.substring(0,ct);
                          }
                         catch (BadLocationException ex) { }
                       }
                    }
-                  text += ind + "*";
+                  text += indtxt + "*";
                   break;
                default:
                   break;
@@ -1001,6 +1019,7 @@ private static class NewlineAction extends TextAction {
          if (tok == null) {
             posttext = doAutoLine(bd,elt,soff,eoff);
             postdelta = 0;
+            if (posttext != null && posttext.contains("\n")) postsize = 1;
           }      
          
          boolean grow = true;
@@ -1026,12 +1045,8 @@ private static class NewlineAction extends TextAction {
           }
          
          if (rep) target.replaceSelection(text);
-         if (ind) {
-            int lno = bd.findLineNumber(soff+1);
-            bd.fixLineIndent(lno);
-          }
+         int noff = target.getSelectionStart();
          if (posttext != null) {
-            int noff = target.getSelectionStart();
             try {
                bd.insertString(noff+postdelta, posttext, null);
                int nlno = bd.findLineNumber(noff+1+postdelta);
@@ -1044,6 +1059,11 @@ private static class NewlineAction extends TextAction {
             target.setSelectionStart(noff);
             target.setSelectionEnd(noff);
           }
+         if (ind) {
+            int lno = bd.findLineNumber(soff+1);
+            bd.fixLineIndent(lno);
+          }
+         
          if (grow) {
             target.increaseSize(size);
           }
@@ -2282,6 +2302,7 @@ private static class FinishAction extends TextAction {
                case DO :
                case CASE :
                case CATCH :
+               case THROWS :
                case KEYWORD :
                case FINALLY :
                case IF :

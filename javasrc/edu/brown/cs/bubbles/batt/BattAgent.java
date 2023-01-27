@@ -106,7 +106,7 @@ private BattAgent(String args,Instrumentation inst)
    thread_stack = new HashMap<>();
    simple_stats = true;
 
-   // System.err.println("BATTAGENT: START " + args + " " + inst);
+// System.err.println("BATTAGENT: START " + args + " " + inst);
 
    scanArgs(args);
 
@@ -758,11 +758,6 @@ private static class ThreadData {
     }
 
 }	// end of inner class ThreadData
-
-
-
-
-
 
 
 

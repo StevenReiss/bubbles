@@ -75,7 +75,8 @@ private static final String [] SYSTEM_PACKAGES = new String [] {
    "sun/",
    "com/sun/",
    "oracle/",
-   "jrockit/"
+   "jrockit/",
+   "jdk/",
 };
 
 
@@ -114,21 +115,21 @@ void setClasses(String [] clsset)
       s = s.replace('.','/');
       if (isBattClass(s) || isSystemClass(s)) continue;
       user_classes.add(s);
-      // System.err.println("BATTAGENT: ADD CLASS " + s);
+//    System.err.println("BATTAGENT: ADD CLASS " + s);
     }
 
    for (String s : user_classes) {
       String s1 = s.replace("/",".");
       String s2 = s1.replace("$",".");
       try {
-	 // System.err.println("BATTAGENT: TRY " + s1);
+//       System.err.println("BATTAGENT: TRY " + s1);
 	 Class.forName(s1);
        }
       catch (Throwable t) {
-	 // System.err.println("BATTAGENT: NOT FOUND: " + s1 + " " + t);
+//       System.err.println("BATTAGENT: NOT FOUND: " + s1 + " " + t);
 	 try {
 	    Class.forName(s2);
-	    // System.err.println("BATTAGENT: FOUND: " + s2);
+//          System.err.println("BATTAGENT: FOUND: " + s2);
 	  }
 	 catch (Throwable xt) { }
        }
@@ -149,7 +150,7 @@ void setClasses(String [] clsset)
    if (do_debug) {
       System.err.println("BATTAGENT: CHECK " + name + " " + Thread.currentThread().getName() + " " + cls);
       if (name.contains("SesameExecRunner$MasterThread")) {
-	 // Thread.dumpStack();
+         Thread.dumpStack();
 	 // TODO: Determine why this trys to load the class from within the class
 	 return null;
        }

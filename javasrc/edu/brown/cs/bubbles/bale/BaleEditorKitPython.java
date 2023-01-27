@@ -118,7 +118,7 @@ private static class PythonBackspaceAction extends TextAction {
 
    @Override public void actionPerformed(ActionEvent e) {
       if (backspace_action == null) {
-	 backspace_action = BaleEditorKit.findAction("BackspaceAction");
+         backspace_action = BaleEditorKit.findAction("BackspaceAction");
        }
       BaleEditorPane target = BaleEditorKit.getBaleEditor(e);
       if (!BaleEditorKit.checkReadEditor(target)) return;
@@ -129,18 +129,18 @@ private static class PythonBackspaceAction extends TextAction {
       
       boolean start = false;
       try {
-	 if (lsoff == soff) start = true;
-	 else {
-	    String txt = bd.getText(lsoff,soff-lsoff);
-	    txt = txt.trim();
-	    if (txt.equals("")) start = true;
-	 }
+         if (lsoff == soff) start = true;
+         else {
+            String txt = bd.getText(lsoff,soff-lsoff);
+            txt = txt.trim();
+            if (txt.equals("")) start = true;
+         }
       }
       catch (BadLocationException ex) { }
       
       if (!start) {
-	 backspace_action.actionPerformed(e);
-	 return;
+         backspace_action.actionPerformed(e);
+         return;
       }
       
       BaleIndenter bind = bd.getIndenter();
@@ -148,13 +148,13 @@ private static class PythonBackspaceAction extends TextAction {
       int tind = bind.getDesiredIndentation(soff);
       
       if (tind != oind || oind == 0) {
-	 backspace_action.actionPerformed(e);
-	 return;
+         backspace_action.actionPerformed(e);
+         return;
        }
       int delta = bind.getUnindentSize();
       if (delta > oind) delta = oind;
       for (int i = 0; i < delta; ++i) {
-	 backspace_action.actionPerformed(e);
+         backspace_action.actionPerformed(e);
        }
     }
 

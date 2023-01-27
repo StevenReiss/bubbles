@@ -744,6 +744,8 @@ void renameResource(String proj,String bid,String file,String newname,IvyXmlWrit
 
    try {
       icu.rename(newname,true,new NullProgressMonitor());
+      fd.noteDeleted();
+      file_map.remove(fd.getFileName());
     }
    catch (JavaModelException e) {
       throw new BedrockException("Problem renaming compilation unit: " + e,e);
@@ -1602,6 +1604,7 @@ void handleDelete(String proj,String what,String path)
 
    if (fd != null) {
       String file = fd.getFileName();
+      fd.noteDeleted();
       file_map.remove(file);
       IvyXmlWriter xw = our_plugin.beginMessage("RESOURCE");
       xw.begin("DELTA");
@@ -2095,6 +2098,7 @@ private class FileData implements IBufferChangedListener {
    private CompilationUnit last_ast;
    private DefaultCopyOwner copy_owner;
    private ICompilationUnit working_unit;
+   private boolean is_deleted;
 
    FileData(String proj,String nm,ICompilationUnit cu) {
       try {
@@ -2112,6 +2116,7 @@ private class FileData implements IBufferChangedListener {
       line_separator = null;
       update_on_open = false;
       safe_update = false;
+      is_deleted = false;
       copy_owner = new DefaultCopyOwner(this);
       copy_owner.suppressErrors(true);
       try {
@@ -2272,9 +2277,14 @@ private class FileData implements IBufferChangedListener {
       if (bid != null && isPrivateId(bid)) return;
       getUser(bid).noteEdit(soff,len,rlen);
     }
+   
+   void noteDeleted() {
+      is_deleted = true;
+    }
 
    synchronized void commit(boolean refresh,boolean save,boolean compile) throws JavaModelException {
       // first ensure the default ICompilationUnit is saved/refreshed
+      if (is_deleted) return;
       BedrockBreakMover brkmvr = null;
       if (compile) {
          last_ast = null;

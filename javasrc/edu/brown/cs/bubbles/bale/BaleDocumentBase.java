@@ -141,7 +141,7 @@ private Position createInternalPosition(int offs) throws BadLocationException
 {
    BalePosition bp = super.savePosition(p);
 
-   if (known_positions == null) known_positions = new WeakHashMap<BalePosition,Object>();
+   if (known_positions == null) known_positions = new WeakHashMap<>();
 
    synchronized (known_positions) {
       known_positions.put(bp,Boolean.TRUE);

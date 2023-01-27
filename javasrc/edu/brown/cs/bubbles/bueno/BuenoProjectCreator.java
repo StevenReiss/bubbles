@@ -839,8 +839,8 @@ private static class ProjProps extends HashMap<String,Object> implements BuenoPr
    @Override public List<File> getSources() {
       List<File> lf = (List<File>)get(PROJ_PROP_SOURCE);
       if (lf == null) {
-	 lf = new ArrayList<File>();
-	 super.put(PROJ_PROP_SOURCE,lf);
+         lf = new ArrayList<File>();
+         super.put(PROJ_PROP_SOURCE,lf);
        }
       return lf;
    }

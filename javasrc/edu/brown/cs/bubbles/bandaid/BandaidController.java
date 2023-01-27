@@ -31,6 +31,8 @@ import java.io.*;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.management.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.*;
 import java.security.ProtectionDomain;
 import java.util.*;
@@ -102,6 +104,8 @@ private long		num_checks;
 private int		max_depth;
 private double		last_check;
 
+private static Method  thread_id_method;
+
 private Map<String,BandaidAgent> agent_names;
 
 private Instrumentation 	class_inst;
@@ -114,7 +118,18 @@ private static boolean do_debug = false;
 
 private static BandaidController the_control = null;
 
-
+static {
+   thread_id_method = null;
+   try {
+      thread_id_method = Thread.class.getMethod("threadId");
+    }
+   catch (NoSuchMethodException e0) {
+      try {
+         thread_id_method = Thread.class.getMethod("getId");
+       }
+      catch (NoSuchMethodException e1) { }
+    }
+}
 
 
 
@@ -206,9 +221,9 @@ private BandaidController(String args,Instrumentation inst)
 
    socket_client = new SocketClient();
    if (socket_client.isValid()) socket_client.sendMessage("CONNECT " + process_id);
-
+ 
    monitor_thread = new ClassMonitor();
-   ignore_thread.set((int) monitor_thread.getId());
+   ignore_thread.set((int) getThreadId(monitor_thread));
    monitor_thread.start();
 
    if (class_inst != null) {
@@ -368,7 +383,7 @@ long getMonitorThreadId()
 {
    if (monitor_thread == null) return 0;
 
-   return monitor_thread.getId();
+   return getThreadId(monitor_thread);
 }
 
 
@@ -398,6 +413,21 @@ boolean useThread()
 
 
 String getBaseDirectory()		{ return base_directory; }
+
+
+
+static long getThreadId(Thread th)
+{
+   if (thread_id_method == null) return th.hashCode();
+ 
+   try {
+      Long val = (Long) thread_id_method.invoke(th);
+      return val.longValue();
+    }
+   catch (Throwable t) { }
+   
+   return th.hashCode();
+}
 
 
 
@@ -636,7 +666,7 @@ private void monitorStacks(long now,ThreadInfo [] tinfo)
       ThreadInfo ti = tinfo[i];
       if (ti == null) continue;
       long tid = ti.getThreadId();
-      if (tid == Thread.currentThread().getId()) continue;
+      if (tid == getThreadId(Thread.currentThread())) continue;
       if (!useThread(tid)) continue;
 
       StackTraceElement [] trc = ti.getStackTrace();
@@ -671,7 +701,7 @@ void generateStackDump(BandaidXmlWriter xw)
    for (int i = 0; i < tinfo.length; ++i) {
       if (tinfo[i] == null) continue;
       long tid = tinfo[i].getThreadId();
-      if (tid == Thread.currentThread().getId()) continue;
+      if (tid == getThreadId(Thread.currentThread())) continue;
       StackTraceElement [] trc = tinfo[i].getStackTrace();
       dumpThreadInfo(tinfo[i],trc,xw);
     }
@@ -937,6 +967,8 @@ private static class DebugOutput implements ClassFileTransformer {
       return null;
     }
 }
+
+
 
 
 

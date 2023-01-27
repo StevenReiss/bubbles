@@ -49,6 +49,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.ILocalVariable;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IOpenable;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -170,61 +171,61 @@ private class NameThread extends Thread {
    void addElement(IJavaElement je) {
       boolean dochld = false;
       boolean doelt = false;
-   
+
       switch (je.getElementType()) {
-         case IJavaElement.CLASS_FILE :
-            return;
-         case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-            IPackageFragmentRoot ipfr = (IPackageFragmentRoot) je;
-            try {
-               if (!ipfr.isArchive() && !ipfr.isExternal() &&
-        	      ipfr.getKind() == IPackageFragmentRoot.K_SOURCE)
-        	  dochld = true;
-             }
-            catch (JavaModelException e) { }
-            break;
-         case IJavaElement.PACKAGE_FRAGMENT :
-         case IJavaElement.JAVA_PROJECT :
-            dochld = true;
-            doelt = true;
-            break;
-         case IJavaElement.JAVA_MODEL :
-         case IJavaElement.IMPORT_CONTAINER :
-         case IJavaElement.IMPORT_DECLARATION :
-         case IJavaElement.TYPE_PARAMETER :
-         case IJavaElement.PACKAGE_DECLARATION :
-         default :
-            dochld = true;
-            break;
-         case IJavaElement.COMPILATION_UNIT :
-            dochld = false;
-            doelt = true;
-            break;
-         case IJavaElement.FIELD :
-         case IJavaElement.METHOD :
-         case IJavaElement.INITIALIZER :
-         case IJavaElement.TYPE :
-         case IJavaElement.LOCAL_VARIABLE :
-            dochld = false;
-            break;
+	 case IJavaElement.CLASS_FILE :
+	    return;
+	 case IJavaElement.PACKAGE_FRAGMENT_ROOT :
+	    IPackageFragmentRoot ipfr = (IPackageFragmentRoot) je;
+	    try {
+	       if (!ipfr.isArchive() && !ipfr.isExternal() &&
+		      ipfr.getKind() == IPackageFragmentRoot.K_SOURCE)
+		  dochld = true;
+	     }
+	    catch (JavaModelException e) { }
+	    break;
+	 case IJavaElement.PACKAGE_FRAGMENT :
+	 case IJavaElement.JAVA_PROJECT :
+	    dochld = true;
+	    doelt = true;
+	    break;
+	 case IJavaElement.JAVA_MODEL :
+	 case IJavaElement.IMPORT_CONTAINER :
+	 case IJavaElement.IMPORT_DECLARATION :
+	 case IJavaElement.TYPE_PARAMETER :
+	 case IJavaElement.PACKAGE_DECLARATION :
+	 default :
+	    dochld = true;
+	    break;
+	 case IJavaElement.COMPILATION_UNIT :
+	    dochld = false;
+	    doelt = true;
+	    break;
+	 case IJavaElement.FIELD :
+	 case IJavaElement.METHOD :
+	 case IJavaElement.INITIALIZER :
+	 case IJavaElement.TYPE :
+	 case IJavaElement.LOCAL_VARIABLE :
+	    dochld = false;
+	    break;
        }
-   
+
       if (dochld) {
-         if (doelt) separate_elements.put(je,Boolean.FALSE);
-         if (je instanceof IParent) {
-            try {
-               for (IJavaElement c : ((IParent) je).getChildren()) {
-        	  addElement(c);
-        	}
-             }
-            catch (JavaModelException e) { }
-            catch (Throwable e) {
-               BedrockPlugin.logE("Problem geting children for all names: " + e);
-             }
-          }
+	 if (doelt) separate_elements.put(je,Boolean.FALSE);
+	 if (je instanceof IParent) {
+	    try {
+	       for (IJavaElement c : ((IParent) je).getChildren()) {
+		  addElement(c);
+		}
+	     }
+	    catch (JavaModelException e) { }
+	    catch (Throwable e) {
+	       BedrockPlugin.logE("Problem geting children for all names: " + e);
+	     }
+	  }
        }
       else if (doelt) {
-         separate_elements.put(je,Boolean.TRUE);
+	 separate_elements.put(je,Boolean.TRUE);
        }
     }
 
@@ -533,13 +534,13 @@ private static class ClassFilter implements FindFilter {
    ClassFilter(IJavaElement [] elts) {
       base_types = new HashSet<>();
       for (IJavaElement je : elts) {
-         if (je instanceof IMember) {
-            IMember im = (IMember) je;
-            IType ty = im.getDeclaringType();
-            String nm = ty.getFullyQualifiedName().replace('$','.');
-            // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
-            base_types.add(nm);
-          }
+	 if (je instanceof IMember) {
+	    IMember im = (IMember) je;
+	    IType ty = im.getDeclaringType();
+	    String nm = ty.getFullyQualifiedName().replace('$','.');
+	    // BedrockPlugin.logD("ADD FILTER TYPE " + nm);
+	    base_types.add(nm);
+	  }
        }
     }
 
@@ -648,6 +649,8 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
    if (equiv) mrule = SearchPattern.R_EQUIVALENT_MATCH;
    else if (exact) mrule = SearchPattern.R_EXACT_MATCH;
 
+   BedrockPlugin.logD("SEARCH PATTERN: " + patstr + " " + forflags + " " + limit + " " + mrule);
+
    SearchPattern pat = SearchPattern.createPattern(patstr,forflags,limit,mrule);
    if (pat == null) {
       throw new BedrockException("Invalid java search pattern `" + patstr + "' " + forflags + " " +
@@ -684,9 +687,26 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
    IJavaSearchScope scp = null;
    int fg = IJavaSearchScope.SOURCES | IJavaSearchScope.REFERENCED_PROJECTS;
    if (system) {
+      IJavaElement top = null;
+      for (IJavaElement telt = pelt[0]; telt != null; telt = telt.getParent()) {
+	 top = telt;
+       }
+      if (top instanceof IOpenable) {
+//	 IOpenable topo = (IOpenable) top;
+//	 try {
+//	    topo.open(null);
+//	  }
+//	 catch (JavaModelException e) {
+//	    BedrockPlugin.logE("Problem opening root",e);
+//	  }
+       }
+      IJavaElement [] pelt1 = new IJavaElement[pelt.length+1];
+      for (int i = 0; i < pelt.length; ++i) pelt1[i+1] = pelt[i];
+      pelt1[0] = top;
       fg |= IJavaSearchScope.SYSTEM_LIBRARIES | IJavaSearchScope.APPLICATION_LIBRARIES;
 //    scp = SearchEngine.createWorkspaceScope();
-      scp = SearchEngine.createJavaSearchScope(pelt,fg);
+      scp = SearchEngine.createJavaSearchScope(pelt1,fg);
+      BedrockPlugin.logD("SYSTEM SEARCH SCOPE " + pelt1.length + " " + scp);
       // this doesn't really use the system libraries
     }
    else {
@@ -733,7 +753,7 @@ private static class FindHandler extends SearchRequestor {
    @Override public void acceptSearchMatch(SearchMatch mat) {
       BedrockPlugin.logD("FOUND MATCH " + mat + (System.currentTimeMillis()-begin_time));
       if (reportMatch(mat)) {
-         BedrockUtil.outputSearchMatch(mat,xml_writer);
+	 BedrockUtil.outputSearchMatch(mat,xml_writer);
        }
     }
 
@@ -790,6 +810,8 @@ void textSearch(String proj,int regexpfgs,String pat,int max,IvyXmlWriter xw)
       pp = Pattern.compile(pat,regexpfgs | Pattern.LITERAL);
     }
 
+   BedrockPlugin.logD("TEXT SEARCH " + pat + " " + scp + " " + pp);
+   
    SearchHandler sh = new SearchHandler(xw,units,max);
 
    BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,"Doing text search");
@@ -852,11 +874,11 @@ private class SearchHandler extends TextSearchRequestor {
 
    private IJavaElement getElement(IFile r,int off,int len) {
       for (ICompilationUnit icu : base_units) {
-         IResource ir = icu.getResource();
-         if (ir == null) return null;
-         if (ir.equals(r)) {
-            return findInnerElement(icu,off,len);
-          }
+	 IResource ir = icu.getResource();
+	 if (ir == null) return null;
+	 if (ir.equals(r)) {
+	    return findInnerElement(icu,off,len);
+	  }
        }
       return null;
     }
@@ -865,27 +887,27 @@ private class SearchHandler extends TextSearchRequestor {
       if (!(elt instanceof ISourceReference)) return null;
       ISourceReference sref = (ISourceReference) elt;
       try {
-         ISourceRange rng = sref.getSourceRange();
-         if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
+	 ISourceRange rng = sref.getSourceRange();
+	 if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
        }
       catch (JavaModelException ex) {
-         BedrockPlugin.logE("Problem getting range: " + ex);
-         return null;
+	 BedrockPlugin.logE("Problem getting range: " + ex);
+	 return null;
        }
-   
+
       if (!(elt instanceof IParent)) return elt;
-   
+
       IParent par = (IParent) elt;
       try {
-         for (IJavaElement je : par.getChildren()) {
-            IJavaElement fe = findInnerElement(je,off,len);
-            if (fe != null) return fe;
-          }
+	 for (IJavaElement je : par.getChildren()) {
+	    IJavaElement fe = findInnerElement(je,off,len);
+	    if (fe != null) return fe;
+	  }
        }
       catch (JavaModelException ex) {
-         BedrockPlugin.logE("Problem getting children: " + ex);
+	 BedrockPlugin.logE("Problem getting children: " + ex);
        }
-   
+
       return elt;
     }
 
@@ -1124,13 +1146,13 @@ void handleFindHierarchy(String proj,String pkg,String cls,boolean all,IvyXmlWri
 	    rgn.add(xjp);
 	    ++addct;
 	  }
-         for (IJavaElement par = xjp.getParent(); par != null; par = par.getParent()) {
-            BedrockPlugin.logD("PROJECT PARENT " + par.getElementName());
-            if (par != null && !rgn.contains(par)) {
-               rgn.add(par);
-               ++addct;
-             }
-          }
+	 for (IJavaElement par = xjp.getParent(); par != null; par = par.getParent()) {
+	    BedrockPlugin.logD("PROJECT PARENT " + par.getElementName());
+	    if (par != null && !rgn.contains(par)) {
+	       rgn.add(par);
+	       ++addct;
+	     }
+	  }
 	 // String pnm = pi.getJavaProject().getProject().getName();
 	 // handleFindHierarchy(pnm,null,null,all,xw);
        }

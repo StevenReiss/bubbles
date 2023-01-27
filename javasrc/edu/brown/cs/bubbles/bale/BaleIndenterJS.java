@@ -136,7 +136,7 @@ private void setupPreferences()
    pref_continuation_indent = getOptionInt("continuation_indent",2);
    int opts = getOptionInt("alignment_for_expressions_in_array_initializer",0);
    pref_array_indent = ((opts & 0x3) == 2 ? 1 : pref_continuation_indent);
-   pref_array_dims_deep_indent = true;
+   pref_array_dims_deep_indent = false;
    pref_array_deep_indent = ((opts & 0x3) == 1);
    opts = getOptionInt("alignment_for_condition_expression",80);
    pref_ternary_deep_align = ((opts & 0x3) == 1);
@@ -261,10 +261,11 @@ private int findReferenceIndentation(int offset)
 private int findReferencePosition(int offset)
 {
    boolean danglingelse = false;
-   boolean unindent = false;
+   int unindent = 0;
    boolean indent = false;
    boolean matchbrace = false;
    boolean matchparen = false;
+   boolean matchbracket = false;
    boolean matchcase = false;
 
    cur_indent = 0;
@@ -319,14 +320,26 @@ private int findReferencePosition(int offset)
 	 matchcase = true;
 	 break;
       case LBRACE :
-	 if (bracelessblockstart && !pref_indent_braces_for_blocks) unindent = true;
+	 if (bracelessblockstart && !pref_indent_braces_for_blocks) unindent = 1;
 	 else if ((ptyp == BaleTokenType.COLON || ptyp == BaleTokenType.EQUAL ||
 		      ptyp == BaleTokenType.RBRACKET) && !pref_indent_braces_for_arrays)
-	    unindent = true;
-         else if (looksLikeEndMethodDecl())
-            unindent = true;
-	 else if (!bracelessblockstart && pref_indent_braces_for_methods)
-	    indent = true;
+	    unindent = 1;
+         else {
+            int mdln = looksLikeEndMethodDecl();
+            if (mdln > 0) {
+               unindent = 1;
+               if ((cur_line - mdln) >= 2) unindent = 2;
+             }
+            else {
+               int cdln = looksLikeEndClassDecl();
+               if (cdln > 0) {
+                  unindent = 2;
+                }
+               else if (!bracelessblockstart && pref_indent_braces_for_methods)  {
+                  indent = true;
+                } 
+             }
+          }
 	 break;
       case RBRACE :
 	 matchbrace = true;
@@ -334,13 +347,19 @@ private int findReferencePosition(int offset)
       case RPAREN :
 	 matchparen = true;
 	 break;
+      case RBRACKET :
+         matchbracket = true;
+         break;
+      case THROWS :
+         indent = true;
+         break;
       default:
 	 break;
     }
 
-   int ref = findReferencePosition(danglingelse,matchbrace,matchparen,matchcase);
+   int ref = findReferencePosition(danglingelse,matchbrace,matchparen,matchbracket,matchcase);
 
-   if (unindent) cur_indent--;
+   if (unindent > 0) cur_indent -= unindent;
    if (indent) cur_indent++;
 
    return ref;
@@ -363,7 +382,7 @@ private int findCommentPosition()
 
 @SuppressWarnings("fallthrough")
 private int findReferencePosition(boolean danglingelse,boolean matchbrace,
-				     boolean matchparen,boolean matchcase)
+				     boolean matchparen,boolean matchbracket,boolean matchcase)
 {
    cur_indent = 0; // the indentation modification type filter text
    cur_align = -1;
@@ -378,7 +397,7 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
       if (skipScope(BaleTokenType.LBRACE,BaleTokenType.RBRACE)) {
 	 // if cur_element is first token on the line, return the indent of the line
 	 // if the opening brace is not on the start of the line,skip to the start
-	 int pos = skipToStatementStart(true,true);
+	 int pos = skipToStatementStart(true,true,false);
 	 cur_indent = 0; // indent is aligned with reference position
 	 if (pref_rbrace_indent > 0 && pos > 0) {
 	    int wp = getLeadingWhitespaceLength(pos);
@@ -389,24 +408,35 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
       else {
 	 // if we can't find the matching brace,the heuristic is to unindent
 	 // by one against the normal position
-	 int pos = findReferencePosition(danglingelse,false,matchparen,matchcase);
+	 int pos = findReferencePosition(danglingelse,false,matchparen,matchbracket,matchcase);
 	 cur_indent--;
 	 return pos;
        }
     }
 
-   // align parenthesis'
+   // align parenthesis
    if (matchparen) {
       if (skipScope(BaleTokenType.LPAREN,BaleTokenType.RPAREN)) return cur_offset;
       else {
 	 // if we can't find the matching paren,the heuristic is to unindent
 	 // by one against the normal position
-	 int pos = findReferencePosition(danglingelse,matchbrace,false,matchcase);
+	 int pos = findReferencePosition(danglingelse,matchbrace,false,false,matchcase);
 	 cur_indent--;
 	 return pos;
        }
     }
-
+   
+   if (matchbracket) {
+      if (skipScope(BaleTokenType.LBRACKET,BaleTokenType.RBRACKET)) return cur_offset;
+      else {
+	 // if we can't find the matching paren,the heuristic is to unindent
+	 // by one against the normal position
+	 int pos = findReferencePosition(danglingelse,matchbrace,false,false,matchcase);
+	 cur_indent--;
+	 return pos;
+       }
+    }
+   
    // the only reliable way to get case labels aligned (due to many different styles of using braces in a block)
    // is to go for another case statement,or the scope opening brace
    if (matchcase) {
@@ -414,10 +444,13 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
     }
 
    previousToken();
+   boolean eos = false;
 
    switch (cur_token) {
-      case RANGLE :
       case RBRACE:
+         eos = true;
+      // fall through
+      case RANGLE :
 	 // skip the block and fall through
 	 // if we can't complete the scope,reset the scan position
 	 BaleElement ce = cur_element;
@@ -427,7 +460,7 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
 	 // this is the 90% case: after a statement block
 	 // the end of the previous statement / block previous.end
 	 // search to the end of the statement / block before the previous; the token just after that is previous.start
-	 return skipToStatementStart(danglingelse,false);
+	 return skipToStatementStart(danglingelse,false,eos);
 
 	 // scope introduction: special treat who special is
       case LPAREN:
@@ -467,7 +500,7 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
 	 return cur_offset;
 
       case TRY :
-	 return skipToStatementStart(danglingelse,false);
+	 return skipToStatementStart(danglingelse,false,false);
 
       case RPAREN:
 	 if (skipScope(BaleTokenType.LPAREN,BaleTokenType.RPAREN)) {
@@ -480,14 +513,14 @@ private int findReferencePosition(boolean danglingelse,boolean matchbrace,
 	     }
 	    setCurrent(scope);
 	    if (looksLikeMethodDecl()) {
-	       return skipToStatementStart(danglingelse,false);
+	       return skipToStatementStart(danglingelse,false,false);
 	     }
 	    if (cur_token == BaleTokenType.CATCH) {
-	       return skipToStatementStart(danglingelse,false);
+	       return skipToStatementStart(danglingelse,false,false);
 	     }
 	    setCurrent(scope);
 	    if (looksLikeAnonymousTypeDecl()) {
-	       return skipToStatementStart(danglingelse,false);
+	       return skipToStatementStart(danglingelse,false,false);
 	     }
 	  }
 	 // restore
@@ -522,6 +555,7 @@ private int getBlockIndent(boolean ismethodbody,boolean istypebody,boolean isinn
    if (istypebody) {
       int v = pref_type_indent + (pref_indent_braces_for_types ? 1 : 0);
       if (v == 0 && pref_indent_inner_class && isinnerclass) v = 1;
+      else if (v == 0 && pref_indent_inner_class) v = 1;        // all classes are inner classes
       return v;
     }
    else if (ismethodbody)
@@ -553,6 +587,7 @@ private boolean isConditional()
          case IMPORT :
          case PACKAGE :
          case FUNCTION :
+         case THROWS :
 	    continue;
 	 case CASE:
 	 case DEFAULT :
@@ -654,7 +689,7 @@ private int handleScopeIntroduction(BaleElement bound)
 	 if (looksLikeArrayInitializerIntro() && !pref_indent_braces_for_arrays
 		|| !pref_indent_braces_for_blocks) {
 	    setCurrent(celt);
-	    return skipToStatementStart(true,true); // set to true to match the first if
+	    return skipToStatementStart(true,true,false); // set to true to match the first if
 	  }
 	 else return pos;
 
@@ -682,15 +717,15 @@ private int handleScopeIntroduction(BaleElement bound)
 private int setFirstElementAlignment(int scopeintroduceroffset,BaleElement bound)
 {
    //TODO: This doesn't really match the original code
-   cur_align = getLeadingWhitespaceLength(scopeintroduceroffset);
-
+   cur_align = getLeadingWhitespaceLength(scopeintroduceroffset+1);
+   cur_indent = 1;
    return cur_align;
 }
 
 
 
 
-/********************************************************************************/
+ /********************************************************************************/
 /*										*/
 /*	Methods to scan backward over a unit of some sort			*/
 /*										*/
@@ -735,7 +770,13 @@ private int skipToPreviousListItemOrListStart()
                return cur_offset;
              }
 	    return handleScopeIntroduction(start);
-
+            
+         case CLASS :
+         case INTERFACE :
+         case ENUM :
+            cur_indent = pref_continuation_indent;
+            break;
+            
 	 case SEMICOLON :
             if (cur_line <= startline-1) cur_indent = pref_continuation_indent;
 	    return cur_offset;
@@ -857,7 +898,7 @@ private boolean skipNextIF()
 
 
 @SuppressWarnings("fallthrough")
-private int skipToStatementStart(boolean danglingelse,boolean isinblock)
+private int skipToStatementStart(boolean danglingelse,boolean isinblock,boolean ateos)
 {
    final int NOTHING = 0;
    final int READ_PARENS = 1;
@@ -913,7 +954,10 @@ private int skipToStatementStart(boolean danglingelse,boolean isinblock)
 	 case NONE :
 	    if (isinblock) cur_indent = getBlockIndent(maybemethodbody == READ_IDENT, istypebody, innerclass);
 	    else if (cur_indent == 0 && cur_token == BaleTokenType.LPAREN) cur_indent = 1;		// handle for
-	    // else: cur_indent set by previous calls
+            // else: cur_indent set by previous calls
+            else if (cur_token == BaleTokenType.NONE && !ateos) {
+//             cur_indent = 1;
+             }
 	    return previous_offset;
 	 case COLON:
 	    int pos = previous_offset;
@@ -976,6 +1020,7 @@ private int skipToStatementStart(boolean danglingelse,boolean isinblock)
          case IMPORT :
          case PACKAGE :
          case FUNCTION :
+         case THROWS :
 	    if (maybemethodbody == READ_PARENS) maybemethodbody= READ_IDENT;
 	    if (cur_element != null && cur_element.getName().equals("ClassDeclMemberId"))
 	       innerclass = true;
@@ -1051,7 +1096,7 @@ private boolean hasMatchingDo()
 	 skipScope();
 	 // fall through
       case SEMICOLON :
-	 skipToStatementStart(false,false);
+	 skipToStatementStart(false,false,false);
 	 return cur_token == BaleTokenType.DO;
       default:
 	 break;
@@ -1088,7 +1133,7 @@ private boolean looksLikeMethodDecl()
 }
 
 
-private boolean looksLikeEndMethodDecl()
+private int looksLikeEndMethodDecl()
 {
    BaleElement start = cur_element;
    try {
@@ -1096,11 +1141,11 @@ private boolean looksLikeEndMethodDecl()
          BaleTokenType ctyp = previousToken();
          switch (ctyp) {
             case RPAREN :
-               if (!skipScope()) return false;
-               if (looksLikeMethodDecl()) return true;
+               if (!skipScope()) return -1;
+               if (looksLikeMethodDecl()) return cur_line;
                break;
             case RBRACKET :
-               if (!skipScope()) return false;
+               if (!skipScope()) return -1;
                break;
             case IF :
             case WHILE :
@@ -1108,13 +1153,49 @@ private boolean looksLikeEndMethodDecl()
             case FOR :
             case SEMICOLON :
             case RBRACE :
-               return false;
+               return -1;
             case NONE :
-               return false;
+               return -1;
             default : 
                break;
           }
          
+       }
+    }
+   finally { 
+      setCurrent(start);
+    }
+}
+
+
+private int looksLikeEndClassDecl() 
+{
+   BaleElement start = cur_element;
+   try {
+      for ( ; ; ) {
+         BaleTokenType ctyp = previousToken();
+         switch (ctyp) {
+            case RPAREN :
+               return -1;
+            case RBRACKET :
+               if (!skipScope()) return -1;
+               break;
+            case IF :
+            case WHILE :
+            case DO :
+            case FOR :
+            case SEMICOLON :
+            case RBRACE :
+               return -1;
+            case CLASS :
+            case INTERFACE :
+            case ENUM :
+               return cur_line;
+            case NONE :
+               return -1;
+            default : 
+               break;
+          }
        }
     }
    finally { 

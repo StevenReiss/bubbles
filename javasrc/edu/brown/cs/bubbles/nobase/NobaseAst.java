@@ -167,37 +167,37 @@ static Point getExtendedPosition(ASTNode n,NobaseFile f)
    ASTNode usen = n;
    switch (n.getNodeType()) {
       case ASTNode.VARIABLE_DECLARATION_FRAGMENT :
-         ASTNode p = n.getParent();
-         switch (p.getNodeType()) {
-            case ASTNode.VARIABLE_DECLARATION_STATEMENT :
-               VariableDeclarationStatement vds = (VariableDeclarationStatement) p;
-               if (vds.fragments().get(0) == n) usen = p;
-               break;
-            default :
-               System.err.println("CHECK HERE");
-               break;
-          }
-         break;
+	 ASTNode p = n.getParent();
+	 switch (p.getNodeType()) {
+	    case ASTNode.VARIABLE_DECLARATION_STATEMENT :
+	       VariableDeclarationStatement vds = (VariableDeclarationStatement) p;
+	       if (vds.fragments().get(0) == n) usen = p;
+	       break;
+	    default :
+	       System.err.println("CHECK HERE");
+	       break;
+	  }
+	 break;
       case ASTNode.FUNCTION_DECLARATION :
       case ASTNode.SINGLE_VARIABLE_DECLARATION :
       case ASTNode.TYPE_DECLARATION_STATEMENT :
       case ASTNode.VARIABLE_DECLARATION_STATEMENT :
-         break;
+	 break;
       case ASTNode.TYPE_DECLARATION :
-         p = n.getParent();
-         switch (p.getNodeType()) {
-            case ASTNode.TYPE_DECLARATION_STATEMENT :
-               usen = p;
-               break;
-            default :
-               break;
-          }
-         break;
+	 p = n.getParent();
+	 switch (p.getNodeType()) {
+	    case ASTNode.TYPE_DECLARATION_STATEMENT :
+	       usen = p;
+	       break;
+	    default :
+	       break;
+	  }
+	 break;
       default :
-         System.err.println("CHECK HERE");
-         break;
+	 System.err.println("CHECK HERE");
+	 break;
     }
-   
+
    int p3 = -1;
    JavaScriptUnit n0 = (JavaScriptUnit) usen.getRoot();
    ASTNode n1 = usen.getParent();
@@ -206,20 +206,20 @@ static Point getExtendedPosition(ASTNode n,NobaseFile f)
       List<?> plst = (List<?>) n1.getStructuralProperty(spd);
       int idx = plst.indexOf(usen);
       if (idx > 0) {
-         ASTNode n2 = (ASTNode) plst.get(idx-1);
-         p3 = n2.getStartPosition() + n2.getLength() + 1;
+	 ASTNode n2 = (ASTNode) plst.get(idx-1);
+	 p3 = n2.getStartPosition() + n2.getLength() + 1;
        }
     }
-   
+
    int p1 = n0.getExtendedStartPosition(usen);
    int p2 = n0.getExtendedLength(usen);
    if (p3 > 0 && p3 < p1) {
       String cnts = f.getContents();
-      while (Character.isWhitespace(cnts.charAt(p3))) ++p3;
+      while (p3 < p1 && p3 < cnts.length() && Character.isWhitespace(cnts.charAt(p3))) ++p3;
       p2 += (p1-p3);
       p1 = p3;
     }
-   
+
    return new Point(p1,p1 + p2);
 }
 
@@ -231,7 +231,7 @@ static Point getExtendedPosition(ASTNode n,NobaseFile f)
 static int getLineNumber(ASTNode n)
 {
    if (n == null) return 0;
-   
+
    JavaScriptUnit ju = (JavaScriptUnit) n.getRoot();
    int lno = ju.getLineNumber(n.getStartPosition());
    if (lno < 0 && n.getParent() != null) {
@@ -241,7 +241,7 @@ static int getLineNumber(ASTNode n)
       NobaseMain.logE("No line number for ASTNode " + n);
       lno = 0;
     }
-   
+
    return lno;
 }
 

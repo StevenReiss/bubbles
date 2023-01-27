@@ -105,6 +105,8 @@ private Action			stepinto_action;
 private Action			stepuser_action;
 private FileSystemView		file_system;
 private BddtPerfViewTable	perf_data;
+private BumpProcess             hotswap_fail;
+
 
 private JPanel			launch_panel;
 
@@ -129,6 +131,7 @@ BddtLaunchControl(BumpLaunchConfig blc)
     }
 
    cur_process = null;
+   hotswap_fail = null;
    launch_state = LaunchState.READY;
    exec_annots = new ConcurrentHashMap<>();
    active_frame = null;
@@ -196,6 +199,7 @@ boolean matchProcess(BumpProcess p)
 private void setProcess(BumpProcess p)
 {
    cur_process = p;
+   hotswap_fail = null;
 
    BddtFactory.getFactory().setProcess(BddtLaunchControl.this,p);
 
@@ -529,19 +533,19 @@ private class StopAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	 case PARTIAL_PAUSE :
-	 case PAUSED :
-	    if (cur_process != null) {
-	       BoardMetrics.noteCommand("BDDT","TerminateDebug");
-	       waitForFreeze();
-	       bump_client.terminate(cur_process);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            break;
+         case STARTING :
+         case RUNNING :
+         case PARTIAL_PAUSE :
+         case PAUSED :
+            if (cur_process != null) {
+               BoardMetrics.noteCommand("BDDT","TerminateDebug");
+               waitForFreeze();
+               bump_client.terminate(cur_process);
+             }
+            break;
        }
     }
 
@@ -1043,10 +1047,13 @@ private class RunEventHandler implements BumpRunEventHandler {
              }
             break;
          case HOTCODE_FAILURE :
-             JOptionPane.showMessageDialog(BddtLaunchControl.this,
-                  "Hot Code Swapping Failed",
-                  "Hot Code Failure",JOptionPane.WARNING_MESSAGE);
-             break;
+            if (hotswap_fail != cur_process) {
+               JOptionPane.showMessageDialog(BddtLaunchControl.this,
+                     "Hot Code Swapping Failed",
+                     "Hot Code Failure",JOptionPane.WARNING_MESSAGE);
+               hotswap_fail = cur_process;
+             }
+            break;
          default:
             break;
        }

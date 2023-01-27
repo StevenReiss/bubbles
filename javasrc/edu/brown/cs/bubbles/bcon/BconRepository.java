@@ -83,8 +83,9 @@ BconRepository()
       case REBUS :
 	 BassRepository br = BassFactory.getRepository(BudaConstants.SearchType.SEARCH_CODE);
 	 BassUpdatingRepository bur = (BassUpdatingRepository) br;
+	 if (bur == null) return;
 	 bur.addUpdateRepository(this);
-	
+
 	 synchronized (active_names) {
 	    for (BassName bn : br.getAllNames()) {
 	       switch (bn.getNameType()) {
@@ -93,7 +94,7 @@ BconRepository()
 		  case ENUM :
 		  case THROWABLE :
 		  case MODULE :
-                  case ANNOTATION :
+		  case ANNOTATION :
 		     break;
 		  default :
 		     continue;
@@ -159,7 +160,7 @@ BconRepository()
 private static class BconName extends BassNameBase {
 
    private BumpLocation bump_location;
-   private String       sub_project;
+   private String	sub_project;
 
    BconName(BumpLocation bl,String subpro) {
       bump_location = bl;
@@ -168,7 +169,7 @@ private static class BconName extends BassNameBase {
     }
 
    @Override public String getProject() 	{ return bump_location.getSymbolProject(); }
-   @Override public String getSubProject()      { return sub_project; }
+   @Override public String getSubProject()	{ return sub_project; }
    @Override public int getModifiers()		{ return bump_location.getModifiers(); }
    @Override protected String getKey()		{ return bump_location.getKey() + "<BCON>"; }
    @Override protected String getSymbolName()	{ return bump_location.getSymbolName(); }
@@ -189,8 +190,8 @@ private static class BconName extends BassNameBase {
       BconFactory bf = BconFactory.getFactory();
       boolean fg = bump_location.getKey().contains("$");
       return bf.createClassBubble(null,bump_location.getProject(),
-        			     bump_location.getFile(),
-        			     bump_location.getSymbolName(),fg);
+				     bump_location.getFile(),
+				     bump_location.getSymbolName(),fg);
     }
 
    @Override public String createPreviewString() {
@@ -289,7 +290,7 @@ private void reload()
 	    case INTERFACE :
 	    case ENUM :
 	    case THROWABLE :
-            case ANNOTATION :
+	    case ANNOTATION :
 	       break;
 	    default :
 	       continue;

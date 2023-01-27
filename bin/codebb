@@ -23,7 +23,7 @@ foreach i ($ECLLIB/org.eclipse.*.jar $ECLLIB/com.google.*.jar)
    set CP7 = ${CP7}:$i
 end
 
-set CP8 = $LIB/mail.jar:$LIB/activation.jar
+set CP8 = $LIB/mail.jar:$LIB/js-scriptengine.jar
 set CP9 = $LIB/bubblesasm.jar:$LIB/asm.jar:$LIB/junit.jar:$LIB/jsoup.jar:$LIB/json.jar
 
 set CPA = ""

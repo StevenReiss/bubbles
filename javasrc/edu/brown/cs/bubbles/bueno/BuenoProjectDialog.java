@@ -116,7 +116,7 @@ private static int	dialog_placement = BudaConstants.PLACEMENT_PREFER |
 
 private static String [] compiler_levels = new String[] {
    "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "9", 
-      "10", "11", "12", "13", "14", "15", "16", "17", "18"
+      "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"
 };
 
 private static final String SOURCE_OPTION = "org.eclipse.jdt.core.compiler.source";

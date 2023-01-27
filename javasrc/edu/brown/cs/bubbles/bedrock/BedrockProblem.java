@@ -159,9 +159,15 @@ private String [] getArguments(IMarkerDelta imd)
    String v = imd.getAttribute("arguments","");
    int idx = v.indexOf(":");
    if (idx < 0) return null;
+   
    int narg = 0;
-   try { narg = Integer.parseInt(v.substring(0,idx)); }
-   catch (NumberFormatException e) { return null; }
+   try { 
+      narg = Integer.parseInt(v.substring(0,idx));
+    }
+   catch (NumberFormatException e) {
+      return null; 
+    }
+   
    String [] rslt;
    if (narg == 0) rslt = new String [0];
    else {
@@ -173,7 +179,7 @@ private String [] getArguments(IMarkerDelta imd)
        }
     }
    if (rslt.length != narg) {
-      BedrockPlugin.logE("Problem parsing arguments " + narg + " " + rslt.length + " " + v);
+      BedrockPlugin.logE("Problem parsing delta arguments " + narg + " " + rslt.length + " " + v);
    }
    return rslt;
 }
@@ -185,14 +191,26 @@ private String [] getArguments(IMarker im)
    int idx = v.indexOf(":");
    if (idx < 0) return null;
    int narg = 0;
-   try { narg = Integer.parseInt(v.substring(0,idx)); }
+   try { 
+      narg = Integer.parseInt(v.substring(0,idx)); 
+    }
    catch (NumberFormatException e) { return null; }
+   
    String [] rslt;
    if (narg == 0) rslt = new String [0];
-   else rslt = v.substring(idx+1).split("#");
+   else {
+      String s1 = v.substring(idx+1);
+      s1 = s1.replace("##","@@@@@");
+      rslt = s1.split("#");
+      for (int i = 0; i < rslt.length; ++i) {
+	 rslt[i] = rslt[i].replace("@@@@@","#");
+       }
+    }
+   
    if (rslt.length != narg) {
       BedrockPlugin.logE("Problem parsing arguments " + narg + " " + rslt.length + " " + v);
-   }
+    }
+   
    return rslt;
 }
 

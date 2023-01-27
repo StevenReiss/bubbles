@@ -258,16 +258,16 @@ private static class ContextAction extends AbstractAction {
       BconFactory fac = BconFactory.getFactory();
       String cls = cname;
       if (method == null) {
-	 if (cname.endsWith(">")) {
-	    int idx = cname.lastIndexOf(".");
-	    if (idx > 0) cls = cname.substring(0,idx);
-	  }
+         if (cname.endsWith(">")) {
+            int idx = cname.lastIndexOf(".");
+            if (idx > 0) cls = cname.substring(0,idx);
+          }
        }
       else {
-	 int idx = method.indexOf("(");
-	 int idx1 = method.lastIndexOf(".",idx);
-	 cls = method.substring(0,idx1);
-	 method = method.substring(idx1+1);
+         int idx = method.indexOf("(");
+         int idx1 = method.lastIndexOf(".",idx);
+         cls = method.substring(0,idx1);
+         method = method.substring(idx1+1);
        }
       String fnm = fil.getName();
       if (fnm.endsWith(".java")) fnm = fnm.substring(0,fnm.length()-5);
@@ -275,8 +275,8 @@ private static class ContextAction extends AbstractAction {
       BudaBubble nbbl = fac.createClassBubble(bbl,proj,fil,cls,inner,cname);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(bbl);
       if (bba != null && nbbl != null) {
-	 bba.addBubble(nbbl,bbl,null,
-		  BudaConstants.PLACEMENT_PREFER|BudaConstants.PLACEMENT_GROUPED|BudaConstants.PLACEMENT_NEW);
+         bba.addBubble(nbbl,bbl,null,
+        	  BudaConstants.PLACEMENT_PREFER|BudaConstants.PLACEMENT_GROUPED|BudaConstants.PLACEMENT_NEW);
        }
     }
 

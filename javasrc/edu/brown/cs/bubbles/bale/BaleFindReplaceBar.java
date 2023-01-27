@@ -63,7 +63,9 @@ import javax.swing.text.Segment;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FocusTraversalPolicy;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -154,8 +156,9 @@ BaleFindReplaceBar(BaleEditorPane edt,boolean dorep)
 
    text_field = createTextField(10);
    text_field.setAction(new SearchAction());
+   text_field.requestFocusInWindow();                           
    topbox.addGBComponent(text_field,0,0,1,1,10,0);
-
+   
    JButton b2 = createButton("Prev",prev_icon,"LAST");
    topbox.addGBComponent(b2,1,0,1,1,0,0);
 
@@ -164,7 +167,8 @@ BaleFindReplaceBar(BaleEditorPane edt,boolean dorep)
 
    JButton b1 = createButton(null,cancel_icon,"DONE");
    topbox.addGBComponent(b1,3,0,1,1,0,0);
-
+   b1.setFocusable(false);
+   
    addGBComponent(topbox,0,0,0,1,10,0);
 
    SwingGridPanel bottombox = new SwingGridPanel();
@@ -187,18 +191,18 @@ BaleFindReplaceBar(BaleEditorPane edt,boolean dorep)
    addGBComponent(bottombox,0,1,0,1,10,0);
 
    SwingGridPanel replacebox = new SwingGridPanel();
-
+   
    replace_field = createTextField(10);
    replace_field.setAction(new ReplaceAction());
    replacebox.addGBComponent(replace_field,0,0,1,1,10,0);
-
+   addGBComponent(replacebox,0,2,0,1,10,0);
+   
    JButton b4 = createButton("Repl",repl_icon,"REPL");
    replacebox.addGBComponent(b4,1,0,1,1,0,0);
-
+   
    JButton b5 = createButton("ReplAll",replall_icon,"REPLALL");
    replacebox.addGBComponent(b5,2,0,1,1,0,0);
-
-   addGBComponent(replacebox,0,2,0,1,10,0);
+   
    replace_panel = replacebox;
 
    replace_size = getPreferredSize();
@@ -215,6 +219,10 @@ BaleFindReplaceBar(BaleEditorPane edt,boolean dorep)
     }
 
    editor_pane.addCaretListener(new HighlightCanceler());
+   
+   FindFocusTraversalPolicy focus = new FindFocusTraversalPolicy(text_field,replace_field,b4,b5,b3,b2);
+   setFocusCycleRoot(true);
+   setFocusTraversalPolicy(focus);
 
    setReplace(dorep);
 }
@@ -227,7 +235,7 @@ private JButton createButton(String txt,Icon icn,String cmd)
    btn.setActionCommand(cmd);
    btn.addActionListener(this);
    btn.setBorder(null);
-   btn.setFocusPainted(false);
+// btn.setFocusPainted(false);
    btn.setContentAreaFilled(false);
 
    if (txt == null) {
@@ -393,7 +401,7 @@ private void findAllOccurences(String text, int dir)
       int soff = 0;
       int eoff = for_document.getLength();
       int len = text.length();
-      List<Position> occurrences = new ArrayList<Position>();
+      List<Position> occurrences = new ArrayList<>();
       int tlen = eoff-soff;
       try {
 	 boolean search = true;
@@ -491,7 +499,7 @@ private void replaceAll()
    findAllOccurences(search_for,last_dir);
    
    if (occurrences_set == null || occurrences_set.isEmpty()) return;
-   if (current_index < 0 || current_index >= occurrences_set.size()) return;
+// if (current_index < 0 || current_index >= occurrences_set.size()) return;
    if (search_for == null) return;
 
    String s = replace_field.getText();
@@ -678,6 +686,57 @@ private class HighlightCanceler implements CaretListener {
     }
 
 }	// end of inner class HighlightCanceler
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Focus policy                                                            */
+/*                                                                              */
+/********************************************************************************/
+
+private static class FindFocusTraversalPolicy extends FocusTraversalPolicy {
+   
+   private List<Component> focus_order;
+   
+   FindFocusTraversalPolicy(Component ... comps) {
+      focus_order = new ArrayList<>();
+      for (Component c : comps) focus_order.add(c);
+    }
+   
+   @Override public Component getComponentAfter(Container cont,Component comp) {
+      int sz = focus_order.size();
+      int start = focus_order.indexOf(comp);
+      for (int idx = (start + 1) % sz; ; idx  = (idx + 1) % sz) {
+         Component c1 = focus_order.get(idx);
+         System.err.println("FOCUS " + idx + " " + sz + " " + start + " " + c1.isVisible() + " " + c1.getParent().isVisible() + " " +
+             c1.isFocusable() + " " + c1.isShowing());
+         if (c1.isVisible() && c1.getParent().isVisible()) return c1;
+       }
+    }
+   
+   @Override public Component getComponentBefore(Container cont,Component comp) {
+      int sz = focus_order.size();
+      for (int idx = (focus_order.indexOf(comp) + sz - 1) % sz; ; idx = (idx + sz - 1) % sz) {
+         Component c1 = focus_order.get(idx);
+         if (c1.isVisible()) return c1;
+       }
+    }
+   
+   @Override public Component getDefaultComponent(Container cont) {
+      return focus_order.get(0);
+    }
+   
+   @Override public Component getFirstComponent(Container cont) {
+      return focus_order.get(0);
+    }
+   
+   @Override public Component getLastComponent(Container cont) {
+      return focus_order.get(focus_order.size()-1);
+    }
+   
+}       // end of inner class FindFocusTraversalPolicy
+
 
 
 

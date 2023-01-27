@@ -330,7 +330,7 @@ private class DebugAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent evt) {
       BumpLaunchConfig blc = BattFactory.getLaunchConfigurationForTest(test_case);
       if (blc == null) return;
-
+   
       BddtFactory.getFactory().newDebugger(blc);
     }
 

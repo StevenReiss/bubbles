@@ -191,7 +191,7 @@ protected BumpClient()
 
    debug_jvm_args = new ArrayList<>();
    if (System.getProperty("os.name").startsWith("Mac")) {
-//    debug_jvm_args.add("-XstartOnFirstThread");
+//    addJvmDebugArgument("-XstartOnFirstThread");
     }
 
    collect_id = (int)(Math.random() * 10000);

@@ -166,7 +166,7 @@ BandaidAgentTracer(BandaidController bc)
 @Override public byte [] transform(ClassLoader ldr,String nm,Class<?> redef,ProtectionDomain dom,
       byte [] buf)
 {
-   // System.err.println("BANDAID: TRACE " + nm + " " + ldr);
+// System.err.println("BANDAID: TRACE " + nm + " " + ldr);
    if (trace_map == null) return null;
 
    Map<String,TraceData> tdm = trace_map.get(nm);
@@ -584,18 +584,18 @@ private class TraceSet {
    boolean output(Writer w) throws IOException {
       boolean fg = false;
       for (Map.Entry<Thread,ThreadSet> ent : thread_map.entrySet()) {
-	 ThreadSet ts = ent.getValue();
-	 if (ts.containsData()) {
-	    if (!fg) {
-	       w.append("START " + get_cpu_time + "\n");
-	     }
-	    Thread th = ent.getKey();
-	    w.append("THREAD " + System.identityHashCode(th) + " " +
-			th.getId() + " " +
-		   th.getName() + "\n");
-	    fg = true;
-	    ts.output(w);
-	  }
+         ThreadSet ts = ent.getValue();
+         if (ts.containsData()) {
+            if (!fg) {
+               w.append("START " + get_cpu_time + "\n");
+             }
+            Thread th = ent.getKey();
+            w.append("THREAD " + System.identityHashCode(th) + " " +
+        		BandaidController.getThreadId(th) + " " +
+        	   th.getName() + "\n");
+            fg = true;
+            ts.output(w);
+          }
        }
       return fg;
     }

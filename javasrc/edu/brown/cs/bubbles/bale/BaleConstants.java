@@ -158,15 +158,16 @@ enum BaleTokenType {
    DEFAULT,			// the keyword default
    FINALLY,			// the keyword finally
    INTERFACE,			// the keyword interface
-   SYNCHRONIZED,			// the keyword synchronized
+   SYNCHRONIZED,		// the keyword synchronized
    CONTINUE,			// the keyword continue
-   PASS,				// the keyword pass
-   RAISE,				// the keyword raise
+   PASS,			// the keyword pass
+   RAISE,			// the keyword raise
    IMPORT,			// the keyword import
    PACKAGE,			// the keyword package
+   THROWS,                      // the keyword throws
    TYPEKEY,			// type keyword (int, void, ...)
    NUMBER,			// numeric literal
-   CHARLITERAL, 			// character literal
+   CHARLITERAL, 		// character literal
    STRING,			// string literal
    LONGSTRING,			// long string literal (multiline)
    IDENTIFIER,			// identifier
@@ -177,9 +178,9 @@ enum BaleTokenType {
    LBRACKET,			// left bracket [
    RBRACKET,			// right bracket ]
    SEMICOLON,			// semicolon ;
-   COMMA,				// comma ,
-   COLON,				// colon :
-   QUESTIONMARK,			// question mark ?
+   COMMA,			// comma ,
+   COLON,			// colon :
+   QUESTIONMARK,		// question mark ?
    LANGLE,			// left angle bracket <
    RANGLE,			// right angle bracket >
    DOT, 				// period .

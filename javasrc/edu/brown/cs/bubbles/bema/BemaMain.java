@@ -349,14 +349,16 @@ private void start()
       bs.doInstall();
       return;
     }
-
+   
+   if (for_language != null) {
+      // should be done first since it can change system properties
+      bs.setLanguage(for_language);
+    }
+   
    if (new_workspace) bs.setCreateWorkspace(use_workspace);
    else if (use_workspace != null) bs.setDefaultWorkspace(use_workspace);
 
    if (course_name != null) bs.setCourseName(course_name);
-   if (for_language != null) {
-      bs.setLanguage(for_language);
-    }
 
    if (skip_setup) bs.setSkipSetup();
    if (force_setup) bs.setForceSetup(true);

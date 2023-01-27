@@ -119,7 +119,7 @@
      CALLBACK='flush handleComment handleEndOfLineString handleEndTag handleError handleSimpleTag handleStartTag handleText' /> >
 
    <PACKAGE NAME='javax.swing' />
-   <CLASS NAME='edu.brown.cs.bubbles.board.BoardUserReport />
+   <CLASS NAME='edu.brown.cs.bubbles.board.BoardUserReport' />
 
 </FAIT>
 

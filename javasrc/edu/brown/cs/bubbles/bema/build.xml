@@ -28,7 +28,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='wikitext*.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='activation.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='commons-compress.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
 	 <pathelement location='${BUBBLES}/lib/bubblesasm.jar' />
@@ -54,7 +54,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='org.eclipse.*.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='activation.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
 	 <pathelement location='${BUBBLES}/lib/bubblesasm.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='marytts/*.jar' />
@@ -78,7 +78,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='wikitext*.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='activation.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <pathelement location='${BUBBLES}/lib/bubblesasm.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='marytts/*.jar' />
 	 <fileset dir='${BUBBLES}/eclipsejar/' includes='*.jar' />
@@ -102,7 +102,7 @@
 	 <!-- <fileset dir='${BUBBLES}/lib/' includes='nashorn.jar' />  -->
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='activation.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
 	 <pathelement location='${BUBBLES}/lib/bubblesasm.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='marytts/*.jar' />
@@ -126,7 +126,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='wikitext*.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='activation.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
 	 <pathelement location='${BUBBLES}/lib/bubblesasm.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='marytts/*.jar' />
@@ -214,7 +214,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='cocker.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='activation.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='reports.xml' />
 	 <fileset dir='${BUBBLES}/eclipsejar/' includes='*.jar' />
 	 <fileset dir='.' includes='pyblesfiles.txt' />

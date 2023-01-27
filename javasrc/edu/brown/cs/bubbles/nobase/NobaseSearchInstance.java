@@ -317,6 +317,7 @@ private class FindLocationVisitor extends DefaultASTVisitor {
          if (par instanceof QualifiedName || par instanceof FieldAccess) {
             match_symbols.addAll(findAllSymbols(n.getIdentifier()));
           }
+         else if (par instanceof ObjectLiteralField) ;
          else NobaseMain.logE("Unknown name selected in " + par.getClass() + " " + par);
        }
       if (js != null) {
