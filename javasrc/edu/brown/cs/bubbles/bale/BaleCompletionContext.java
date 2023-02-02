@@ -323,7 +323,7 @@ private void handleCompletion(CompletionItem ci)
          int j0 = be.getBaleDocument().mapOffsetToJava(ci.getEndIndex());
          if (j0 >= j) j = j0;
        }
-      System.err.println("CHECK COMPLETE " + i + " " + j + " " + be.getCaretPosition() + " " + s);
+      BoardLog.logD("BALE","CHECK COMPLETE " + i + " " + j + " " + be.getCaretPosition() + " " + s);
       try {
 	 d.remove(i,j-i);
 	 d.insertString(i,s,null);
@@ -440,7 +440,10 @@ private synchronized void restrictOptions()
    else {
       CompletionItem ci = found_items.iterator().next();
       off0 = be.getBaleDocument().mapOffsetToJava(ci.getStartIndex());
-    }
+      if (ci.getCompletionText() == null ||
+            ci.getCompletionText().length() == 0) 
+        off0 = off1;
+   }
 
    try {
       String text1 = null;
@@ -571,31 +574,31 @@ private class CompletionGetter implements Runnable {
        }
       
       List<BumpCompletion> callcomps = null;
-      
+      int cct = 0;
       for (Iterator<BumpCompletion> it = completions.iterator(); it.hasNext(); ) {
          BumpCompletion bc = it.next();
          switch (bc.getType()) {
             case METHOD_REF :
                if (bc.getCompletion() == null || bc.getCompletion().length() == 0) {
                   it.remove();
-                  if (bc.getSignature() != null && bc.getCompletion() != null) {
+                  if (bc.getSignature() != null && bc.getCompletion() != null && cct == 0) {
                      if (callcomps == null) callcomps = new ArrayList<BumpCompletion>();
                      callcomps.add(bc);
                    }
                 }
+               else ++cct;
                break;
             case TYPE_REF :
             case FIELD_REF :
-               if (bc.getCompletion() == null || bc.getCompletion().length() == 0) it.remove();
-               break;
             default :
                if (bc.getCompletion() == null || bc.getCompletion().length() == 0) it.remove();
-               // else it.remove();
+               else ++cct;
                break;
           }
        }
       
-      if (completions.size() == 0 && callcomps != null) {
+   // if (completions.size() == 0 && callcomps != null) {
+      if (callcomps != null) {
          handleFound(callcomps,true);
        }
       else  if (completions.size() == 0) {

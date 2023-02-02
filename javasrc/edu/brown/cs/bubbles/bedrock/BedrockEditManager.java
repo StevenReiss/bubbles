@@ -2183,6 +2183,7 @@ private class FileData implements IBufferChangedListener {
        }
       catch (Throwable t) {
          BedrockPlugin.logE("Problem reconsiling working unit: " + t,t);
+         BedrockPlugin.logD("Source: " + default_buffer.getText(0,default_buffer.getLength()));
        }
    
       return null;

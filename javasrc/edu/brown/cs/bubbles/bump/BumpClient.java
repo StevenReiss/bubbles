@@ -2198,6 +2198,8 @@ public Collection<BumpCompletion> getCompletions(String proj,File file,int id,in
 
    Collection<BumpCompletion> rslt = new ArrayList<BumpCompletion>();
 
+// BoardLog.logD("BUMP","COMPLETIONS: " + IvyXml.convertXmlToString(xml));
+   
    Element root = IvyXml.getChild(xml,"COMPLETIONS");
    for (Element c : IvyXml.children(root,"COMPLETION")) {
       BumpCompletion bc = new BumpCompletionImpl(c);
