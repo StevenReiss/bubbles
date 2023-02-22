@@ -539,9 +539,10 @@ public static Color invertColor(Color base)
 {
    int r = base.getRed();
    int g = base.getGreen();
-   int b = base.getBlue();
-    
+   int b = base.getBlue(); 
+   
    int lum = (r * 299 + g * 587 + b * 114)/1000;
+   
    int invlum = 255-lum;
    if (invlum >= 192) {
       invlum += (255-invlum)/5;
@@ -559,13 +560,13 @@ public static Color invertColor(Color base)
 	 binv = invlum * 1000 / 114;
        }
       else {
-	 double x =  b * 144.0 / g + 587.0;
+	 double x =  b * 114.0 / g + 587.0;
 	 ginv = (int) (invlum * 1000 / x);
 	 binv = b * ginv / g;
        }
     }
    else {
-      double x = 299.0 + g * 587.0 / r + b * 144 / r;
+      double x = 299.0 + g * 587.0 / r + b * 114 / r;
       rinv = (int)(invlum * 1000 / x);
       ginv = g * rinv / r;
       binv = b * rinv / r;
@@ -604,6 +605,76 @@ public static Color invertColor(Color base)
    return new Color(rinv,ginv,binv,base.getAlpha());
 }
 
+
+public static Color invertColorW3(Color base)
+{
+   int r = base.getRed();
+   int g = base.getGreen();
+   int b = base.getBlue();
+   
+   double rsrgb = r / 255.0;
+   double gsrgb = g / 255.0;
+   double bsrgb = b / 255.0;
+   double rr = (rsrgb < 0.03928 ? rsrgb/12.92 : Math.pow((rsrgb + 0.055)/1.055,2.4));
+   double gg = (gsrgb < 0.03928 ? gsrgb/12.92 : Math.pow((gsrgb + 0.055)/1.055,2.4)); 
+   double bb = (bsrgb < 0.03928 ? bsrgb/12.92 : Math.pow((bsrgb + 0.055)/1.055,2.4));
+   double lum = rr * 0.2126 + gg * 0.7152 + bb * 0.0722;
+   double invlum = 1.0 - lum; 
+   
+   double vmin = Math.min(Math.min(rsrgb,gsrgb),bsrgb);
+   double rpct = rsrgb - vmin;
+   double gpct = gsrgb - vmin;
+   double bpct = bsrgb - vmin;
+   
+   double rinv = 0;
+   double ginv = 0;
+   double binv = 0;
+   
+   if (invlum == 0) return Color.BLACK;
+   else if (rpct == 0) {
+      if (gpct == 0 && bpct == 0) return Color.WHITE;
+      else if (gpct == 0) {
+         binv = invlum / 0.0722;
+       }
+      else {
+         double x = 0.7152 + bpct/gpct * 0.0722;
+         ginv = invlum / x;
+         binv = bpct/gpct * ginv;
+       }
+    }
+   else {
+      double x = 0.2126 + gpct * 0.7152 / rpct + bpct * 0.0722 / rpct;
+      rinv = invlum / x;
+      ginv = gpct * rinv / rsrgb;
+      binv = bpct * rinv / rsrgb;
+    }
+   
+   // need to scale by adding white in if inverse is > 1.0
+   
+   int rset = rescale(rinv);
+   int gset = rescale(ginv);
+   int bset = rescale(binv);
+   
+   Color cnew = new Color(rset,gset,bset,base.getAlpha());
+   
+   return cnew;
+}
+
+
+private static int rescale(double v) 
+{
+   double rx = 0;
+   
+   if (v * 12.92 <= 0.03928) rx = v * 12.92;
+   else rx = Math.pow(v,1/2.4)* 1.055 - 0.055;
+   if (rx < 0) rx = 0;
+   else if (rx > 1) rx = 1;
+   
+   int r = (int) (rx * 255 + 0.4);
+   
+   return r;
+   
+}
 
 
 

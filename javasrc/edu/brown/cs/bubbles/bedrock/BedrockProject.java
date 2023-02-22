@@ -286,12 +286,12 @@ void listProjects(IvyXmlWriter xw)
 	 xw.textElement("USEDBY",up[j].getName());
        }
 //    try {
-//      for (IBuildConfiguration ibcfg : projs[i].getBuildConfigs()) {
-//         xw.begin("BUILDCONFIG");
-//         xw.field("NAME",ibcfg.getName());
-//         xw.field("CLASS",ibcfg.getClass().getName());
-//         xw.end("BUILDCONFIG");
-//       }
+//	for (IBuildConfiguration ibcfg : projs[i].getBuildConfigs()) {
+//	   xw.begin("BUILDCONFIG");
+//	   xw.field("NAME",ibcfg.getName());
+//	   xw.field("CLASS",ibcfg.getClass().getName());
+//	   xw.end("BUILDCONFIG");
+//	 }
 //     }
 //    catch (CoreException e) { }
       xw.end("PROJECT");
@@ -305,12 +305,12 @@ void openProject(String name,boolean fil,boolean pat,boolean cls,boolean opt,boo
 	throws BedrockException
 {
    setupProjects();
-   
+
    IProject p = findProject(name);
    if (p == null) return;
-   
+
    boolean fg = attachProject(p,false);
-   
+
    if (!fg) {
       xw.emptyElement("FAIL");
     }
@@ -732,9 +732,9 @@ private boolean attachProject(IProject p,boolean setup)
       IJavaProject ijp = JavaCore.create(p);
       ijp.open(null);
       if (setup) {
-         SetupDefaults sdf = new SetupDefaults(ijp);
-         sdf.schedule();
-         sdf.join();
+	 SetupDefaults sdf = new SetupDefaults(ijp);
+	 sdf.schedule();
+	 sdf.join();
        }
 //    if (setup) setupDefaults(ijp);
     }
@@ -750,11 +750,11 @@ private boolean attachProject(IProject p,boolean setup)
       BedrockPlugin.logE("Error with project attach: " + e,e);
       return false;
     }
-   
+
    if (!open_projects.contains(p)) {
       open_projects.add(p);
     }
-   
+
    return true;
 }
 
@@ -785,43 +785,43 @@ private void setupProjects()
 
 
 private class SetupDefaults extends WorkbenchJob {
- 
+
 // private IJavaProject for_project;
-   
+
    SetupDefaults(IJavaProject ijp) {
       super(BedrockApplication.getDisplay(),"setupDefaults");
 //    for_project = ijp;
     }
-   
+
    @Override public IStatus runInUIThread(IProgressMonitor m) {
       try {
-         BedrockApplication.getDisplay();
-         IPreferenceStore ps = DebugUITools.getPreferenceStore();
-         String s = ps.getString("org.eclipse.debug.ui.switch_perspective_on_suspend");
-         if (s == null || s.equals("prompt")) {
-            ps.setValue("org.eclipse.debug.ui.switch_perspective_on_suspend","never");
-          }
-         s = ps.getString("org.eclipse.debug.ui.save_dirty_editors_before_launch");
-         if (s == null || s.equals("prompt")) {
-            ps.setValue("org.eclipse.debug.ui.save_dirty_editors_before_launch","always");
-          }
-         s = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
-         if (s == null || !s.equals("always")) {
-            ps.setValue("org.eclipse.debug.ui.cancel_launch_with_compile_errors","always");
-            String s1 = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
-            BedrockPlugin.logD("PREFSET " + s + " " + s1);
-          }
-         BedrockPlugin.logD("PREFVALUE " + s);
+	 BedrockApplication.getDisplay();
+	 IPreferenceStore ps = DebugUITools.getPreferenceStore();
+	 String s = ps.getString("org.eclipse.debug.ui.switch_perspective_on_suspend");
+	 if (s == null || s.equals("prompt")) {
+	    ps.setValue("org.eclipse.debug.ui.switch_perspective_on_suspend","never");
+	  }
+	 s = ps.getString("org.eclipse.debug.ui.save_dirty_editors_before_launch");
+	 if (s == null || s.equals("prompt")) {
+	    ps.setValue("org.eclipse.debug.ui.save_dirty_editors_before_launch","always");
+	  }
+	 s = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
+	 if (s == null || !s.equals("always")) {
+	    ps.setValue("org.eclipse.debug.ui.cancel_launch_with_compile_errors","always");
+	    String s1 = ps.getString("org.eclipse.debug.ui.cancel_launch_with_compile_errors");
+	    BedrockPlugin.logD("PREFSET " + s + " " + s1);
+	  }
+	 BedrockPlugin.logD("PREFVALUE " + s);
        }
       catch (Throwable t) {
-         BedrockPlugin.logE("Problem seting defaults",t);
+	 BedrockPlugin.logE("Problem seting defaults",t);
        }
-      
+
       return Status.OK_STATUS;
     }
 }
 
- 
+
 @SuppressWarnings("unused")
 private void setupDefaults(IJavaProject ijp)
 {
@@ -1296,7 +1296,7 @@ private IFile findProjectFile(IResource ir,String name,String fname)
 	 File f1 = f;
 	 if (fname != null && !f1.getName().equals(fname)) return null;
 	 if (f.getAbsolutePath().equals(name) || f.getPath().equals(name)) return ifl;
-         f1 = IvyFile.getCanonical(f);
+	 f1 = IvyFile.getCanonical(f);
 	 if (f.getAbsolutePath().equals(name) || f1.getAbsolutePath().equals(name)) return ifl;
        }
       else if (ir instanceof IContainer) {
@@ -1368,7 +1368,7 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
       catch (JavaModelException e) { }
       xw.end("RAWPATH");
     }
-
+											
    if (fil) {
       xw.begin("FILES");
       addSourceFiles(p,xw,null);
@@ -1620,7 +1620,7 @@ private void addSourceFiles(IResource ir,IvyXmlWriter xw,FileFilter ff)
       File f = ip.toFile();
       if (ff != null && !ff.accept(f)) continue;
       if (f.exists()) {
-         f = IvyFile.getCanonical(f);
+	 f = IvyFile.getCanonical(f);
 	 xw.begin("FILE");
 	 if (ct.getId().endsWith("javaSource")) xw.field("SOURCE",true);
 	 else if (ct.getId().endsWith("javaClass")) xw.field("BINARY",true);

@@ -2,20 +2,20 @@
 
   <PLUGIN NAME="FAIT"
 	  DESCRIPTION="Continuous flow analyzer for static checking"
-	  URL="http://www.cs.brown.edu/people/spr/bubbles/dropins/fait.jar">
+	  URL="https://www.cs.brown.edu/people/spr/bubbles/dropins/fait.jar">
      <RESOURCE>Bsean.props</RESOURCE>
      <MAIN>edu.brown.cs.faitbb.bsean.BseanFactory</MAIN>
   </PLUGIN>
 
   <PLUGIN NAME="UMLite"
 	  DESCRIPTION="UML editor"
-	  URL="http://www.cs.brown.edu/people/spr/bubbles/dropins/bublet.jar">
+	  URL="https://www.cs.brown.edu/people/spr/bubbles/dropins/bublet.jar">
      <MAIN>com.baselet.bubbles.BubletFactory</MAIN>
   </PLUGIN>
 
   <PLUGIN NAME="SEEDE"
 	  DESCRIPTION="Continuous Execution (live programming) for Java"
-	  URL="http://www.cs.brown.edu/people/spr/bubbles/dropins/seede.jar" >
+	  URL="https://www.cs.brown.edu/people/spr/bubbles/dropins/seede.jar" >
      <RESOURCE>Bicex.props</RESOURCE>
      <MAIN>edu.brown.cs.seedebb.bicex.BicexFactory</MAIN>
      <RESOURCE>Brepair.props</RESOURCE>
@@ -24,7 +24,7 @@
 
   <PLUGIN NAME="ROSE"
 	  DESCRIPTION="Quick Repair of Run Time Bugs for Java"
-	  URL="http://www.cs.brown.edu/people/spr/bubbles/dropins/rose.jar" >
+	  URL="https://www.cs.brown.edu/people/spr/bubbles/dropins/rose.jar" >
      <RESOURCE>Rose.props</RESOURCE>
      <RESOURCE>rose.palette</RESOURCE>
      <RESOURCE>images/rose.png</RESOURCE>

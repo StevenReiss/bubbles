@@ -142,3 +142,12 @@ javadep1
 lvylib.jar
 ivysrc.jar
 lib/ivy.jar
+java/words
+.DS_Store
+lib/updateeclipsemac.csh
+lib/JSFiles
+ivylib.jar
+dropins
+dropins.export
+lib/bubjet.jar
+javasrc/edu/brown/cs/bubbles/bema/updater.jar

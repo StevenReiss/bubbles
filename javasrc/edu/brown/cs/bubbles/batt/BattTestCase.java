@@ -95,6 +95,9 @@ BattTestCase(String name)
 
 @Override public BattCountData getCountData()			{ return count_data; }
 
+@Override public String getFailMessage()                        { return fail_message; }
+@Override public String getFailTrace()                          { return fail_trace; }
+
 synchronized void setStatus(TestStatus sts)
 {
    if (sts == test_status) return;
@@ -294,7 +297,7 @@ synchronized void longReport(IvyXmlWriter xw)
 
 /********************************************************************************/
 /*										*/
-/*	Tool tip methods							 */
+/*	Tool tip methods						        */
 /*										*/
 /********************************************************************************/
 
@@ -331,14 +334,6 @@ synchronized String getToolTip()
 
    return buf.toString();
 }
-
-
-String getFailTrace()
-{
-   return fail_trace;
-}
-
-
 
 
 

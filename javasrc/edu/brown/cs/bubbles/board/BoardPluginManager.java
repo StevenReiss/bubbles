@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -406,12 +407,18 @@ public static File installResources(Class<?> c,String dir,BoardPluginFilter fltr
 private static synchronized void getPluginData()
 {
    if (all_plugins != null) return;
+   HttpURLConnection.setFollowRedirects(true);
 
    all_plugins = new TreeSet<>();
 
    try {
       URL u = new URL(BUBBLES_DIR + PLUGIN_DESCRIPTION_URL);
-      InputStream uins = u.openConnection().getInputStream();
+      HttpURLConnection hc = (HttpURLConnection) u.openConnection();
+      int sts = hc.getResponseCode();
+      if (sts > 300) {
+         BoardLog.logE("BOARD","Bad URL connection for plugin: " + sts + " " + u);
+       }
+      InputStream uins = hc.getInputStream();
       Element e = IvyXml.loadXmlFromStream(uins);
       for (Element pe : IvyXml.children(e,"PLUGIN")) {
 	 all_plugins.add(new PluginData(pe));

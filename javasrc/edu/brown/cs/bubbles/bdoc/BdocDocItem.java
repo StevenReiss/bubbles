@@ -178,9 +178,12 @@ void scanItem(URL u)
    String id = u.getRef();
    Element start = null;
    if (id != null) {
-      id = id.replace("%3C","<");
-      id = id.replace("%3E",">");
       start = doc.getElementById(id);
+      if (start == null) {
+         id = id.replace("%3C","<");
+         id = id.replace("%3E",">");
+         start = doc.getElementById(id);
+       }
       if (start != null && start.tagName().equals("a")) {
 	 start = start.nextElementSibling();
        }

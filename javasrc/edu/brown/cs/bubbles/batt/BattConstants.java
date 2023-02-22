@@ -217,6 +217,8 @@ interface BattTest {
     TestStatus getStatus();
     TestState getState();
     BattTestCounts getCountData();
+    String getFailMessage();
+    String getFailTrace();
 
 }
 

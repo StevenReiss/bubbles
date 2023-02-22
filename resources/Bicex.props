@@ -6,7 +6,7 @@
 <entry key="Bicex.seede.trace">false</entry>
 <entry key="Bicex.seede.open">java.desktop/sun.font java.desktop/sun.awt java.desktop/sun.swing
     java.desktop/javax.swing java.base/jdk.internal.math java.base/sun.nio.cs
-    java.base/java.nio
+    java.base/java.nio java.base/jdk.internal.misc
 </entry>
 </properties>
 

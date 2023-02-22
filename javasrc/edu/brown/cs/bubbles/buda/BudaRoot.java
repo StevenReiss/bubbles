@@ -2438,6 +2438,10 @@ private synchronized void doneSetup()
    if (BUDA_PROPERTIES.getBoolean("Buda.overview.shades")) {
       enableWindowShades();
     }
+   else {
+      if (shade_down) windowShadeDown();
+      else forceShadeDown();
+    }
 
    notifyAll();
 }
