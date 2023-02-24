@@ -95,8 +95,8 @@ BattTestCase(String name)
 
 @Override public BattCountData getCountData()			{ return count_data; }
 
-@Override public String getFailMessage()                        { return fail_message; }
-@Override public String getFailTrace()                          { return fail_trace; }
+@Override public String getFailMessage()			{ return fail_message; }
+@Override public String getFailTrace()				{ return fail_trace; }
 
 synchronized void setStatus(TestStatus sts)
 {
@@ -146,13 +146,13 @@ synchronized boolean handleTestState(Element e)
    if (sts.equals("FAILURE")) {
       test_status = TestStatus.FAILURE;
       if (test_state == TestState.RUNNING || test_state == TestState.TO_BE_RUN ||
-            test_state == TestState.UNKNOWN)
+	    test_state == TestState.UNKNOWN)
 	 test_state = TestState.UP_TO_DATE;
     }
    else if (sts.equals("SUCCESS")) {
       test_status = TestStatus.SUCCESS;
       if (test_state == TestState.RUNNING || test_state == TestState.TO_BE_RUN ||
-            test_state == TestState.UNKNOWN)
+	    test_state == TestState.UNKNOWN)
 	 test_state = TestState.UP_TO_DATE;
     }
    else {
@@ -202,10 +202,10 @@ synchronized boolean handleTestState(Element e)
 synchronized void handleTestCounts(Element e)
 {
    if (e == null && count_data == null) return;
-   
+
    if (e == null) count_data = null;
    else count_data = new BattCountData(e);
-   
+
    update();
 }
 
@@ -297,7 +297,7 @@ synchronized void longReport(IvyXmlWriter xw)
 
 /********************************************************************************/
 /*										*/
-/*	Tool tip methods						        */
+/*	Tool tip methods							*/
 /*										*/
 /********************************************************************************/
 
@@ -307,7 +307,7 @@ synchronized String getToolTip()
    buf.append("<html>");
    buf.append("<b>TEST ");
    buf.append(test_name);
-   buf.append("</b><hr>");
+   buf.append("</b><hr />");
    buf.append("<table cellpadding=0 cellspacing=1 align=left >");
    buf.append("<tr><td>STATUS&nbsp;</td><td>");
    buf.append(test_status.toString());

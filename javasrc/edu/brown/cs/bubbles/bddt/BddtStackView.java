@@ -339,11 +339,11 @@ void expandFrame(BumpStackFrame frm)
    for (int i = 1; i < value_component.getRowCount(); ++i) {
       Object o = value_component.getValueAt(i,-1);
       if (o instanceof ValueTreeNode) {
-         ValueTreeNode vtn = (ValueTreeNode) o;
-         if (vtn.getFrame() == frm) {
-            value_component.getTree().expandRow(i);
-            break;
-          }
+	 ValueTreeNode vtn = (ValueTreeNode) o;
+	 if (vtn.getFrame() == frm) {
+	    value_component.getTree().expandRow(i);
+	    break;
+	  }
        }
     }
 }
@@ -382,26 +382,26 @@ private class ClickHandler extends BoardMouser {
 
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2 || e.getClickCount() == 3) {
-         Point pt = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),value_component);
-         pt = new Point(pt.x,pt.y-5);
-         int row = value_component.rowAtPoint(pt);
-         Object v0 = value_component.getValueAt(row,-1);
-         ValueTreeNode tn = null;
-         if (v0 instanceof ValueTreeNode) tn = (ValueTreeNode) v0;
-         if (tn != null) {
-            AbstractAction aa = null;
-            boolean isfrm = tn.getFrame() != null && tn.getValue() == null;
-            if (isfrm && e.getClickCount() == 2) {
-               aa = new SourceAction(tn);
-             }
-            else if (isfrm && e.getClickCount() == 3) {
-               aa = new ExtractAction(tn);
-             }
-            else if (!isfrm && e.getClickCount() == 2) {
-               aa = new ExtractAction(tn);
-             }
-            if (aa != null) aa.actionPerformed(null);
-          }
+	 Point pt = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),value_component);
+	 pt = new Point(pt.x,pt.y-5);
+	 int row = value_component.rowAtPoint(pt);
+	 Object v0 = value_component.getValueAt(row,-1);
+	 ValueTreeNode tn = null;
+	 if (v0 instanceof ValueTreeNode) tn = (ValueTreeNode) v0;
+	 if (tn != null) {
+	    AbstractAction aa = null;
+	    boolean isfrm = tn.getFrame() != null && tn.getValue() == null;
+	    if (isfrm && e.getClickCount() == 2) {
+	       aa = new SourceAction(tn);
+	     }
+	    else if (isfrm && e.getClickCount() == 3) {
+	       aa = new ExtractAction(tn);
+	     }
+	    else if (!isfrm && e.getClickCount() == 2) {
+	       aa = new ExtractAction(tn);
+	     }
+	    if (aa != null) aa.actionPerformed(null);
+	  }
        }
     }
 
@@ -596,32 +596,32 @@ private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBub
 
    @Override protected void paintComponent(Graphics g) {
       if (!is_frozen && !is_extinct && value_model.hasBeenFrozen())
-         is_frozen = true;
-   
+	 is_frozen = true;
+
       Dimension sz = getSize();
       Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
       Graphics2D g2 = (Graphics2D) g.create();
       Color top = BoardColors.getColor(BDDT_STACK_TOP_COLOR_PROP);
       Color bot = BoardColors.getColor(BDDT_STACK_BOTTOM_COLOR_PROP);
       if (is_frozen) {
-         top = BoardColors.getColor(BDDT_STACK_FROZEN_TOP_COLOR_PROP);
-         bot = BoardColors.getColor(BDDT_STACK_FROZEN_BOTTOM_COLOR_PROP);
+	 top = BoardColors.getColor(BDDT_STACK_FROZEN_TOP_COLOR_PROP);
+	 bot = BoardColors.getColor(BDDT_STACK_FROZEN_BOTTOM_COLOR_PROP);
        }
       else if (is_extinct) {
-         top = BoardColors.getColor(BDDT_STACK_EXTINCT_TOP_COLOR_PROP);
-         bot = BoardColors.getColor(BDDT_STACK_EXTINCT_BOTTOM_COLOR_PROP);
+	 top = BoardColors.getColor(BDDT_STACK_EXTINCT_TOP_COLOR_PROP);
+	 bot = BoardColors.getColor(BDDT_STACK_EXTINCT_BOTTOM_COLOR_PROP);
        }
       if (top.getRGB() != bot.getRGB()) {
-         Paint p = new GradientPaint(0f,0f,top,0f,sz.height,bot);
-         g2.setPaint(p);
+	 Paint p = new GradientPaint(0f,0f,top,0f,sz.height,bot);
+	 g2.setPaint(p);
        }
       else {
-         g2.setColor(top);
+	 g2.setColor(top);
        }
       g2.fill(r);
       value_model.lock();
       try {
-         super.paintComponent(g);
+	 super.paintComponent(g);
        }
       finally { value_model.unlock(); }
     }
@@ -642,22 +642,22 @@ private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBub
       ValueTreeNode tn = null;
       if (v0 instanceof ValueTreeNode) tn = (ValueTreeNode) v0;
       if (tn != null) {
-         StringBuffer buf = new StringBuffer();
-         buf.append("<html>");
-         Object vobj = tn.getValue();
-         String what = tn.getKey();
-         if (what == null) return null;
-         if (vobj == null) return what;
-         buf.append(what);
-         buf.append(" = ");
-         buf.append(IvyXml.htmlSanitize(vobj.toString()));
-         String evl = launch_control.getEvaluationString(tn.getFrame(),tn.getRunValue(),what);
-         if (evl != null) {
-            buf.append("<hr>");
-            // buf.append(IvyXml.htmlSanitize(evl));
-            buf.append(evl);
-          }
-         return buf.toString();
+	 StringBuffer buf = new StringBuffer();
+	 buf.append("<html>");
+	 Object vobj = tn.getValue();
+	 String what = tn.getKey();
+	 if (what == null) return null;
+	 if (vobj == null) return what;
+	 buf.append(what);
+	 buf.append(" = ");
+	 buf.append(IvyXml.htmlSanitize(vobj.toString()));
+	 String evl = launch_control.getEvaluationString(tn.getFrame(),tn.getRunValue(),what);
+	 if (evl != null) {
+	    buf.append("<hr />");
+	    // buf.append(IvyXml.htmlSanitize(evl));
+	    buf.append(evl);
+	  }
+	 return buf.toString();
        }
       return null;
     }
@@ -709,7 +709,7 @@ private static class CellDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-        						       boolean foc,int r,int c) {
+							       boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       cmp.setOpaque(false);
       return cmp;
@@ -729,12 +729,12 @@ private static class TreeCellRenderer extends DefaultTreeCellRenderer {
     }
 
    @Override public Component getTreeCellRendererComponent(JTree tree,
-        						      Object value,
-        						      boolean sel,
-        						      boolean expanded,
-        						      boolean leaf,
-        						      int row,
-        						      boolean hasfocus) {
+							      Object value,
+							      boolean sel,
+							      boolean expanded,
+							      boolean leaf,
+							      int row,
+							      boolean hasfocus) {
       Component c = super.getTreeCellRendererComponent(tree,value,sel,expanded,leaf,row,hasfocus);
       return c;
    }

@@ -71,6 +71,7 @@ public static Color TRANSPARENT = new Color(0,0,0,0);
 
 private static int MAX_COUNT =	16;		// check every so often
 
+private static boolean  use_w3 = true;
 
 
 
@@ -537,6 +538,8 @@ private void createInversePalette()
 
 public static Color invertColor(Color base)
 {
+   if (use_w3) return invertColorW3(base);
+   
    int r = base.getRed();
    int g = base.getGreen();
    int b = base.getBlue(); 
@@ -632,7 +635,9 @@ public static Color invertColorW3(Color base)
    
    if (invlum == 0) return Color.BLACK;
    else if (rpct == 0) {
-      if (gpct == 0 && bpct == 0) return Color.WHITE;
+      if (gpct == 0 && bpct == 0) {
+         rinv = ginv = binv = invlum;
+       }
       else if (gpct == 0) {
          binv = invlum / 0.0722;
        }
@@ -645,9 +650,23 @@ public static Color invertColorW3(Color base)
    else {
       double x = 0.2126 + gpct * 0.7152 / rpct + bpct * 0.0722 / rpct;
       rinv = invlum / x;
-      ginv = gpct * rinv / rsrgb;
-      binv = bpct * rinv / rsrgb;
+      ginv = gpct * rinv / rpct;
+      binv = bpct * rinv / rpct;
     }
+
+   double vmax = Math.max(Math.max(rinv,binv),ginv);  
+   if (vmax > 1) {
+      double  x = (vmax - invlum) / (1 - invlum);
+      rinv /= x;
+      ginv /= x;
+      binv /= x;
+      double vlum = invlum / x;
+      double w = invlum - vlum;
+      rinv += w;
+      ginv += w;
+      binv += w;
+    }
+
    
    // need to scale by adding white in if inverse is > 1.0
    

@@ -59,6 +59,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
@@ -405,6 +406,7 @@ private static void badArgs()
 
 private void startUpdate() throws IOException
 {
+   HttpURLConnection.setFollowRedirects(true);  
    File f = File.createTempFile(UPDATER_PREFIX,UPDATER_SUFFIX);
    OutputStream ots = new BufferedOutputStream(new FileOutputStream(f));
    URL u = new URL(bubbles_dir + UPDATER_URL);
@@ -614,12 +616,19 @@ private void updatePlugin(File jar,URL url)
    URLConnection uc = null;
    try {
       uc = url.openConnection();
+      if (uc instanceof HttpURLConnection) {
+         HttpURLConnection hc = (HttpURLConnection) uc;
+         if (hc.getResponseCode() >= 300) {
+            throw new IOException("Bad url for plugiun " + jar + " " + hc.getResponseCode());
+          }
+       }
       long urldlm = uc.getLastModified();
       if (urldlm < dlm) return;
     }
    catch (IOException e) {
       System.err.println("BOARDUPATE: Problem updating plugin " + jar);
       e.printStackTrace();
+      return;
     }
    
    File f1 = new File(jar + ".save");

@@ -198,7 +198,7 @@ Collection<BconRegion> findRegions(BudaConstants.BudaContentNameType typ,String 
 	 default:
 	    break;
        }
-      
+
       switch (typ) {
 	 case CLASS :
 	    ok = true;
@@ -211,7 +211,7 @@ Collection<BconRegion> findRegions(BudaConstants.BudaContentNameType typ,String 
 	 default:
 	    break;
        }
-      
+
       if (!ok) continue;
 
       String nm = br.getRegionName();
@@ -474,7 +474,7 @@ String computeToolTip(int ln0,int ln1)
 
    String rslt = "<html>Class = " + for_class;
    if (rgn != null) rslt += "<br>Region = " + rgn.getRegionName();
-   if (s != null) rslt += "<hr><br><pre>" + s + "</pre>";
+   if (s != null) rslt += "<hr /><br><pre>" + s + "</pre>";
 
    return rslt;
 }

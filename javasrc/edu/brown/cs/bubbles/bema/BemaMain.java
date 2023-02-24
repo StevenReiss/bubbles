@@ -665,7 +665,10 @@ private void loadPlugins(File dir,BudaRoot root,List<String> names)
 		  if (basename != null && palette != null) {
 		     ClassLoader cldr = class_loaders.get(basename);
 		     URL u = cldr.getResource(palette);
-		     if (u != null) BoardColors.addPalette(u);
+		     if (u != null) {
+                        BoardLog.logD("BEMA","Add plugin palette " + u);
+                        BoardColors.addPalette(u);
+                      }
 		   }
 		}
 	     }

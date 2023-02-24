@@ -16,16 +16,24 @@ package edu.brown.cs.bubbles.board;
 
 import edu.brown.cs.ivy.exec.IvyExec;
 
+import java.awt.Color;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 
+import org.junit.Test;
+
 
 public class BoardTest {
 
 
-public static void main(String [] args)
+public BoardTest() { }
+
+
+
+@Test
+public void testStartup()
 {
    try {
       new IvyExec("'C:\\Program Files\\Eclipse\\eclipse' -data 'C:\\Program Files\\Eclipse'");
@@ -74,6 +82,26 @@ public static void main(String [] args)
       t.printStackTrace();
     }
 }
+
+
+@Test
+public void testInvertColors()
+{
+   Color rc1 = BoardColors.invertColorW3(new Color(255,255,128));
+   System.err.println("RESULT IS " + rc1);
+   Color rc2 = BoardColors.invertColorW3(Color.RED);
+   System.err.println("RESULT IS " + rc2);
+   Color rc3 = BoardColors.invertColorW3(Color.GREEN);
+   System.err.println("RESULT IS " + rc3);
+   Color rc4 = BoardColors.invertColorW3(Color.BLUE);
+   System.err.println("RESULT IS " + rc4);
+   Color rc5 = BoardColors.invertColorW3(Color.YELLOW);
+   System.err.println("RESULT IS " + rc5);
+   Color rc6 = BoardColors.invertColorW3(new Color(64,0,0));
+   System.err.println("RESULT IS " + rc6);
+   
+}
+
 
 
 
