@@ -22,6 +22,7 @@
 	 <pathelement location='${BUBBLES}/lib/activation.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='commons-compress.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='junit.jar' />
        </path>
       <path id='test.classpath'>
 	 <pathelement location='${BUBBLES}/java' />
@@ -30,6 +31,7 @@
 	 <pathelement location='${BUBBLES}/lib/activation.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='commons-compress.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='junit.jar' />
 	</path>
    </target>
 
