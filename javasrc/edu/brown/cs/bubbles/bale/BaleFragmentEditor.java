@@ -42,7 +42,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
-
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 import edu.brown.cs.ivy.swing.SwingText;
 import edu.brown.cs.ivy.xml.IvyXml;
@@ -649,8 +649,17 @@ void relocateFindBar()
 
 @Override public void annotationAdded(BaleAnnotation ba)
 {
-   if (ba.getFile() == null) return;
-   if (!ba.getFile().equals(getDocument().getFile())) return;
+   File fan = ba.getFile();
+   if (fan == null) return;
+   File fdo = getDocument().getFile();
+   if (!fan.equals(fdo)) {
+      String f1 = fan.getName();
+      String f2 = fdo.getName();
+      if (!f1.equals(f2)) return;
+      File fan1 = IvyFile.getCanonical(fan);
+      File fdo1 = IvyFile.getCanonical(fdo);
+      if (!fan1.equals(fdo1)) return;
+    }
 
    int fragoffset = getDocument().getFragmentOffset(ba.getDocumentOffset());
    if (fragoffset < 0) return;
