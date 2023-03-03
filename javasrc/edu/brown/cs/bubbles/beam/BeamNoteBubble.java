@@ -30,6 +30,7 @@
 
 package edu.brown.cs.bubbles.beam;
 
+import edu.brown.cs.bubbles.bale.BaleConstants;
 import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardLog;
@@ -41,6 +42,7 @@ import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 import edu.brown.cs.bubbles.bump.BumpClient;
+import edu.brown.cs.bubbles.bump.BumpLocation;
 import edu.brown.cs.bubbles.burp.BurpHistory;
 
 import edu.brown.cs.ivy.mint.MintControl;
@@ -109,13 +111,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-class BeamNoteBubble extends BudaBubble implements BeamConstants,
+public class BeamNoteBubble extends BudaBubble implements BeamConstants,
 	BudaConstants.BudaBubbleOutputer, BudaConstants.Scalable
 {
 
@@ -147,6 +150,10 @@ private static SimpleDateFormat file_dateformat = new SimpleDateFormat("yyMMddHH
 private static final String COLOR_OUTPUT = "<!-- COLORS: TOP=%1 BOTTOM=%2 -->";
 private static final String COLOR_PATTERN_S = "^<!-- COLORS: TOP=(\\p{XDigit}+) BOTTOM=(\\p{XDigit}+) -->$";
 private static final Pattern COLOR_PATTERN = Pattern.compile(COLOR_PATTERN_S,Pattern.MULTILINE);
+
+private static Pattern LOCATION_PATTERN =
+   Pattern.compile("at ([a-zA-Z0-9<>$_.]+)\\(([a-zA-Z0-9_]+\\.java)\\:([0-9]+)\\)");
+
 
 
 private static Color		default_top_color;
@@ -492,7 +499,7 @@ private class SetColorAction extends AbstractAction {
 
 
 
-void setNoteColor(Color top,Color bot)
+public void setNoteColor(Color top,Color bot)
 {
    top_color = top;
    bottom_color = bot;
@@ -509,6 +516,11 @@ void setNoteColor(Color top,Color bot)
 Color getTopColor()			{ return top_color; }
 
 Color getBottomColor()			{ return bottom_color; }
+
+public void setEditable(boolean ed)
+{
+   note_area.setEditable(ed);
+}
 
 
 
@@ -1198,26 +1210,138 @@ private class ComponentHandler extends ComponentAdapter {
 /*										*/
 /********************************************************************************/
 
-private static class LinkListener extends HTMLEditorKit.LinkController {
+private class LinkListener extends HTMLEditorKit.LinkController {
 
    private static final long serialVersionUID = 1;
 
 
    @Override public void mouseClicked(MouseEvent e) {
       JEditorPane editor = (JEditorPane) e.getSource();
-      if (!editor.isEditable()) return;
       if (!SwingUtilities.isLeftMouseButton(e)) return;
       int mods = e.getModifiersEx();
       if ((mods & InputEvent.ALT_DOWN_MASK) != 0) {
-	 Point pt = new Point(e.getX(),e.getY());
-	 int pos = SwingText.viewToModel2D(editor,pt);
-	 if (pos >= 0) {
-	    activateLink(pos,editor);
-	  }
+         if (!editor.isEditable()) return;
+         Point pt = new Point(e.getX(),e.getY());
+         int pos = SwingText.viewToModel2D(editor,pt);
+         if (pos >= 0) {
+            activateLink(pos,editor);
+            e.consume();
+          }
+       }
+      else if (e.getClickCount() == 2) {
+         Point pt = new Point(e.getX(),e.getY());
+         if (checkForGoto(editor,pt)) e.consume();
        }
     }
 
 }	// end of inner class LinkListener
+
+
+private boolean checkForGoto(JEditorPane ed,Point pt0)
+{
+   int pos = SwingText.viewToModel2D(ed,pt0);
+   if (pos >= 0) {
+      int start = Math.max(0,pos-100);
+      int end = Math.min(ed.getDocument().getLength(),pos+100);
+      try {
+	 String txt = ed.getText(start,end-start);
+	 int p0 = pos - start;
+	 for (int i = p0; i >= 0; --i) {
+	    if (i >= txt.length()) continue;
+	    if (txt.charAt(i) == '\n') {
+	       start = start + i + 1;
+	       txt = txt.substring(i+1);
+	       break;
+	     }
+	  }
+	 p0 = pos-start;
+	 if (p0 < 0) return false;
+	 for (int i = p0; i < txt.length(); ++i) {
+	    if (txt.charAt(i) == '\n') {
+	       txt = txt.substring(0,i);
+	       break;
+               
+	     }
+	  }
+	 Matcher m = LOCATION_PATTERN.matcher(txt);
+	 if (m.find()) {
+	    int spos = m.start();
+	    int epos = m.end();
+	    if (spos <= p0 && epos >= p0) {
+	       int lno = Integer.parseInt(m.group(3));
+	       GotoLine gl = new GotoLine(m.group(1),m.group(2),lno);
+	       if (gl.isValid()) {
+                  gl.perform();
+                  return true;
+                }
+	     }
+	  }
+       }
+      catch (BadLocationException ex) { }
+    }
+   return false;
+}
+
+
+private class GotoLine {
+
+   private String class_name;
+   private String method_name;
+   private boolean is_constructor;
+   private int line_number;
+   private List<BumpLocation> goto_locs;
+   
+   GotoLine(String mthd,String file,int line) {
+      goto_locs = null;
+      int idx = mthd.lastIndexOf(".");
+      if (idx < 0) return;
+      class_name = mthd.substring(0,idx).replace("$",".");
+      method_name = mthd.substring(idx+1);
+      String nmthd = null;
+      if (method_name.equals("<init>")) {
+         idx = class_name.lastIndexOf(".");
+         if (idx >= 0) method_name = class_name.substring(idx+1);
+         else method_name = class_name;
+         is_constructor = true;
+         nmthd = class_name;
+       }
+      else {
+         is_constructor = false;
+         nmthd = class_name + "." + method_name;
+       }
+      line_number = line;
+      BumpClient bc = BumpClient.getBump();
+      List<BumpLocation> locs = bc.findMethods(null,nmthd,false,true,is_constructor,false);
+      if (locs == null || locs.isEmpty()) return;
+      BumpLocation bl0 = locs.get(0);
+      File f = bl0.getFile();
+      if (!f.exists()) return;
+      if (locs.size() > 1) {
+         BaleFactory bf = BaleFactory.getFactory();
+         BaleConstants.BaleFileOverview bfo = bf.getFileOverview(null,f);
+         if (bfo == null) return;
+         int loff = bfo.findLineOffset(line_number);
+         for (Iterator<BumpLocation> it = locs.iterator(); it.hasNext(); ) {
+            BumpLocation bl1 = it.next();
+            if (bl1.getOffset() > loff || bl1.getEndOffset() < loff) it.remove();
+          }
+         if (locs.size() == 0) return;
+       }
+      goto_locs = locs;
+    }
+   
+   boolean isValid()			{ return goto_locs != null; }
+   
+   void perform() {
+      if (goto_locs != null && goto_locs.size() > 0) createBubble();
+    }
+   
+   void createBubble() {
+      BaleFactory bf = BaleFactory.getFactory();
+      bf.createBubbleStack(BeamNoteBubble.this,null,null,false,goto_locs,null);
+    }
+   
+}	// end of inner class GotoLine
 
 
 

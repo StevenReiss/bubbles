@@ -29,7 +29,7 @@ ssh -t -t $1 ${ahost} ls -ld $3 >! $f
 
 if ($status != 0) exit(1)
 
-set x1 = `fgrep "$3" $f | grep 'drwx'`
+set x1 = `grep -F "$3" $f | grep 'drwx'`
 if ("$x1" == '') exit(1)
 
 rm -rf $f

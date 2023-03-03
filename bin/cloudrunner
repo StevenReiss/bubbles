@@ -27,11 +27,11 @@ ssh -t -t $1 ${ahost} xvfb-run -a $c "$3" -m $4 >&! $lh &
 
 while (1)
    jobs > /tmp/cloudjobs
-   fgrep "[1]" /tmp/cloudjobs
+   grep -F "[1]" /tmp/cloudjobs
    if ($status == 1) then
       break
    endif
-   fgrep "$READY" ${lh}
+   grep -F "$READY" ${lh}
    if ($status == 0) then
      echo $READY
      break

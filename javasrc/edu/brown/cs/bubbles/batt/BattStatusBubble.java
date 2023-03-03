@@ -29,6 +29,7 @@ import edu.brown.cs.bubbles.bale.BaleConstants;
 import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.bddt.BddtFactory;
 import edu.brown.cs.bubbles.beam.BeamFactory;
+import edu.brown.cs.bubbles.beam.BeamNoteBubble;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
@@ -654,8 +655,12 @@ private class ShowStackAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       String result = test_case.getToolTip();
       BeamFactory bf = BeamFactory.getFactory();
-      BudaBubble bb = bf.createNoteBubble(result);
+      BeamNoteBubble bb = bf.createNoteBubble(result);
       if (bb == null) return;
+      bb.setEditable(false);
+      bb.setNoteColor(BoardColors.getColor("Batt.Status.Top"),
+            BoardColors.getColor("Batt.Status.Bottom"));
+      
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BattStatusBubble.this);
       if (bba != null) {
          bba.addBubble(bb,BattStatusBubble.this,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);

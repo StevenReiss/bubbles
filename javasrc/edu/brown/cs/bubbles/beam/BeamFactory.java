@@ -260,7 +260,7 @@ private static Icon imageToFlagIcon(String path)
 /*										*/
 /********************************************************************************/
 
-public BudaBubble createNoteBubble(String cnts)
+public BeamNoteBubble createNoteBubble(String cnts)
 {
    BeamNoteBubble bbl = new BeamNoteBubble(null,cnts,null);
 

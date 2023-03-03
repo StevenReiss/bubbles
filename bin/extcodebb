@@ -1,7 +1,7 @@
 #! /bin/csh -f
 
-set x1 = `fgrep edu.brown.cs.bubbles.jar ~/.bubbles/System.props | sed -e 's/^.*">//' | sed -e 's/<.*$//'`
-set x2 = `fgrep edu.brown.cs.bubbles.install ~/.bubbles/System.props | sed -e 's/^.*">//' | sed -e 's/<.*$//'`
+set x1 = `grep -F edu.brown.cs.bubbles.jar ~/.bubbles/System.props | sed -e 's/^.*">//' | sed -e 's/<.*$//'`
+set x2 = `grep -F edu.brown.cs.bubbles.install ~/.bubbles/System.props | sed -e 's/^.*">//' | sed -e 's/<.*$//'`
 
 if (X$x1 == X) then
    echo Bubbles not yet set up.  Please run the jar file directly to set it up.

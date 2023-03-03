@@ -192,7 +192,8 @@ Batt.BarType.NEED_FAILURE :	255,0,255
 Batt.BarType.FAILURE	:	red
 Batt.BarType.IGNORED	:	192,255,255
 Batt.BarTypeNone	:	white
-
+Batt.Status.Top 	:	0xffffd4
+Batt.Status.Bottom	:	0xffffd4
 
 
 Bbook.OverviewColor	:	cyan

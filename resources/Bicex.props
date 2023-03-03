@@ -4,13 +4,34 @@
 <entry key='Bicex.seede.class.path'>seede.jar:asm.jar:eclipsejar:junit.jar:ivy.jar</entry>
 <entry key="Bicex.seede.debug">false</entry>
 <entry key="Bicex.seede.trace">false</entry>
-<entry key="Bicex.seede.open">java.desktop/sun.font java.desktop/sun.awt java.desktop/sun.swing
-    java.desktop/javax.swing java.base/jdk.internal.math java.base/sun.nio.cs
-    java.desktop/sun.java2d java.desktop/sun.java2d.loops java.desktop/sun.lwawt
-    java.desktop/sun.java2d.pipe java.desktop/sun.awt.image
+<entry key="Bicex.seede.open.user"></entry>
+<entry key="Bicex.seede.open">java.base/jdk.internal.math java.base/sun.nio.cs
     java.base/java.nio java.base/jdk.internal.misc
 </entry>
+<entry key="Bicex.seede.open.desktop">java.desktop/sun.font java.desktop/sun.awt
+    java.desktop/sun.swing java.desktop/javax.swing
+    java.desktop/sun.java2d java.desktop/sun.java2d.loops java.desktop/sun.lwawt
+    java.desktop/sun.java2d.pipe java.desktop/sun.awt.image
+</entry>
 </properties>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
