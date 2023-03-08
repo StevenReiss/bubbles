@@ -174,7 +174,7 @@ Bale.visualization.gradient.color.3	:	0xff009780
 Bale.visualization.gradient.color.2	:	0xff008584
 Bbook.PanelColor	:	0xff008e8e
 Bale.visualization.gradient.color.1	:	0xff9f99ff
-Batt.Status.Bottom	:	0xffff4c4c
+Batt.Status.Bottom	:	0xff2d2d00
 Bcon.LabelColor	:	0xffffffff
 Batt.BarType.PENDING	:	0xffb9b9b9
 Bcon.PackageInnerArc	:	0xffb9b9b9
@@ -246,7 +246,7 @@ Bueno.project.editor.background	:	0xff9f9f9f
 Bale.attr.builtinid.foreground	:	0xff00f6f6
 Bddt.PerfBottomColor	:	0xff000000
 Bddt.StackExtinctBottomColor	:	0xff000000
-Batt.Status.Top	:	0xffff4c4c
+Batt.Status.Top	:	0xff2d2d00
 Bddt.attr.stderr.foreground	:	0xff4f4f00
 Bddt.ExecutionAnnotation.exception.color	:	0x40ffdede
 Buda.area.top.color	:	0xff84dbff
