@@ -1560,7 +1560,7 @@ private class ProcessData implements BumpProcess {
              }
           }
          else if (td == null) {
-            System.err.println("Can't find thread " + id + " " + IvyXml.convertXmlToString(tc));
+            BoardLog.logD("BUMP","Can't find thread " + id + " " + IvyXml.convertXmlToString(tc));
           }
        }
       

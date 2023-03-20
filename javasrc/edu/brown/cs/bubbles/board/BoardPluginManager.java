@@ -49,6 +49,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
+import javax.net.ssl.SSLException;
 import javax.swing.DropMode;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -105,6 +106,8 @@ private JList<PluginData>		install_list;
 private JDialog 			working_dialog;
 
 private static Set<PluginData> all_plugins = null;
+
+private static boolean                  use_http = false;
 
 
 private static final String PLUGIN_DESCRIPTION_URL = "/plugins.xml";
@@ -410,24 +413,36 @@ private static synchronized void getPluginData()
    HttpURLConnection.setFollowRedirects(true);
 
    all_plugins = new TreeSet<>();
-
-   try {
-      URL u = new URL(BUBBLES_DIR + PLUGIN_DESCRIPTION_URL);
-      HttpURLConnection hc = (HttpURLConnection) u.openConnection();
-      int sts = hc.getResponseCode();
-      if (sts > 300) {
-         BoardLog.logE("BOARD","Bad URL connection for plugin: " + sts + " " + u);
+   
+   String utxt = BUBBLES_DIR + PLUGIN_DESCRIPTION_URL;
+   for (int i = 0; i < 2; ++i) {
+      try {
+         if (use_http) utxt = utxt.replace("https","http");
+         URL u = new URL(utxt);
+         HttpURLConnection hc = (HttpURLConnection) u.openConnection();
+         int sts = hc.getResponseCode();
+         if (sts > 300) {
+            BoardLog.logE("BOARD","Bad URL connection for plugin: " + sts + " " + u);
+          }
+         InputStream uins = hc.getInputStream();
+         Element e = IvyXml.loadXmlFromStream(uins);
+         for (Element pe : IvyXml.children(e,"PLUGIN")) {
+            all_plugins.add(new PluginData(pe));
+          }
        }
-      InputStream uins = hc.getInputStream();
-      Element e = IvyXml.loadXmlFromStream(uins);
-      for (Element pe : IvyXml.children(e,"PLUGIN")) {
-	 all_plugins.add(new PluginData(pe));
+      catch (SSLException e) {
+         if (!use_http) {
+            use_http = true;
+            continue;
+          }
+         BoardLog.logE("BOARD","HTTPS Problem getting plugin data: " + e);
+         // try again with http (different plugin file -- it also must use http ???
        }
-    }
-   catch (IOException e) { 
-       System.err.println("BOARDUPDATE: Problem getting plugin data");
-       e.printStackTrace();
-
+      catch (IOException e) { 
+         BoardLog.logE("BOARD","Problem getting plugin data: " + e);
+         e.printStackTrace();
+       }
+      break;
     }
 }
 
@@ -495,6 +510,7 @@ private static class PluginData implements Comparable<PluginData> {
 
    void install() throws IOException {
       if (plugin_installed) return;
+      if (use_http) plugin_url = plugin_url.replace("https","http");
       int idx = plugin_url.lastIndexOf("/");
       String file = plugin_url.substring(idx+1);
       File root = BoardSetup.getSetup().getRootDirectory();
@@ -562,6 +578,7 @@ private static class PluginData implements Comparable<PluginData> {
 
    void update() {
       if (!plugin_installed) return;
+      if (use_http) plugin_url = plugin_url.replace("https","http");   
       long dlm = plugin_file.lastModified();
       URLConnection uc = null;
       try {
@@ -587,6 +604,7 @@ private static class PluginData implements Comparable<PluginData> {
     }
 
    private void checkInstalled() {
+      if (use_http) plugin_url = plugin_url.replace("https","http");
       int idx = plugin_url.lastIndexOf("/");
       String file = plugin_url.substring(idx+1);
       File root = BoardSetup.getSetup().getRootDirectory();
