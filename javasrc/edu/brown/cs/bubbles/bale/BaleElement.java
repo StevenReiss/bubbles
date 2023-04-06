@@ -310,19 +310,37 @@ public String getMethodName()
    BaleElement be = this;
    // first find containing parent method block
    for ( ; be != null; be = be.getBaleParent()) {
+//    BoardLog.logD("BALE","getMethodName look at " + be.getName());
       if (be.getName().equals("Method") || be.getName().equals("DeclSet"))
 	 break;
       if (be.getBubbleType() != BaleFragmentType.NONE) return null;
     }
+   
    BaleElement ce = be;
-   while (ce != null && !ce.isLeaf()) ce = ce.getBaleElement(0);
+   while (ce != null && !ce.isLeaf()) {
+      ce = ce.getBaleElement(0);
+//    BoardLog.logD("BALE","getMethodName down to " + ce.getName());
+    }
+   BaleElement le = ce;
    while (ce != null) {
       if (ce.getName().equals("MethodDeclId")) {
 	 return ce.getFullName();
        }
-      if (ce.getName().equals("Block")) break;
       if (ce.getTokenType() == BaleTokenType.LPAREN) break;
+      if (ce.getTokenType() == BaleTokenType.LBRACE) break;
+      if (ce.getTokenType() == BaleTokenType.SEMICOLON) break;
       ce = ce.getNextCharacterElement();
+//    BoardLog.logD("BALE","getMethodName move to " + ce.getName());
+    }
+   ce = le;
+   while (ce != null) {
+      if (ce.getName().equals("MethodDeclId")) {
+	 return ce.getFullName();
+       }
+      if (ce.getTokenType() == BaleTokenType.RBRACE) break;
+      if (ce.getTokenType() == BaleTokenType.SEMICOLON) break;
+      ce = ce.getPreviousCharacterElement();
+      //    BoardLog.logD("BALE","getMethodName back to " + ce.getName());  
     }
 
    return null;

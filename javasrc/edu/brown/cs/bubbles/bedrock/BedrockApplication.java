@@ -317,6 +317,7 @@ private synchronized void noteSetup()
 	 EndChecker ec = new EndChecker();
 	 ec.start();
 	 is_setup = false;
+         // perhaps run this is SWT thread?
 	 sts = PlatformUI.createAndRunWorkbench(base_display,new WbAdvisor());
        }
       catch (Throwable t) {

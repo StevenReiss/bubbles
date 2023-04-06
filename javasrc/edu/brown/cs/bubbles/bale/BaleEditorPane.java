@@ -1256,7 +1256,10 @@ private class ContextData implements BaleContextConfig {
     }
 
    @Override public String getMethodName() {
-      if (editor_element == null) return null;
+      if (editor_element == null) {
+         BoardLog.logD("BALE","No editor element for getMethodName");
+         return null;
+       }
       return editor_element.getMethodName();
     }
 
