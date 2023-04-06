@@ -251,6 +251,11 @@ private static class PackageAction extends AbstractAction
       source_bubble = bb;
       source_point = wh;
       project_name = proj;
+      if (pkg != null) {
+         int idx = pkg.indexOf(":");
+         if (idx >= 0) pkg = pkg.substring(idx+1);
+         if (pkg.length() == 0) pkg = null;
+       }
       package_name = pkg;
     }
 
@@ -259,9 +264,9 @@ private static class PackageAction extends AbstractAction
       BoardMetrics.noteCommand("BCON","CreatePackageBubble");
       BudaRoot.hideSearchBubble(e);
       BudaBubble bb = BconFactory.getFactory().createPackageBubble(source_bubble,project_name,
-								      package_name);
+        							      package_name);
       if (bb == null) return;
-
+   
       BassFactory.getFactory().addNewBubble(source_bubble,source_point,bb);
     }
 

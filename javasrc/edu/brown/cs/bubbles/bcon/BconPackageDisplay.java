@@ -1048,24 +1048,24 @@ private class ComputeGraph implements Runnable {
 
    @Override public void run() {
       synchronized (this) {
-	 if (doing_compute) {
-	    need_recompute = true;
-	    return;
-	 }
-	 doing_compute = true;
+         if (doing_compute) {
+            need_recompute = true;
+            return;
+         }
+         doing_compute = true;
       }
-
+   
       for ( ; ; ) {
-	 package_graph.getNodes();
-	 synchronized (this) {
-	    if (!need_recompute) {
-	       doing_compute = false;
-	       break;
-	    }
-	    need_recompute = false;
-	 }
+         package_graph.getNodes();
+         synchronized (this) {
+            if (!need_recompute) {
+               doing_compute = false;
+               break;
+            }
+            need_recompute = false;
+         }
       }
-
+   
       SwingUtilities.invokeLater(new SetupGraph());
    }
 

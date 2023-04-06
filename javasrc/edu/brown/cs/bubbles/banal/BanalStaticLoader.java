@@ -89,8 +89,9 @@ BanalStaticLoader(BanalProjectManager bpm,BanalVisitor vis)
 void process()
 {
    user_visitor.begin();
-
+   
    for (BanalClassData bcd : project_manager.getClassData()) {
+      System.err.println("BANAL: Work on class " + bcd.getName() + " " + bcd.getProject());
       if (!user_visitor.checkUseProject(bcd.getProject())) continue;
       if (!user_visitor.checkUseClass(bcd.getName())) continue;
       processClass(bcd);
@@ -104,7 +105,10 @@ void process()
 private void processClass(BanalClassData cd)
 {
    InputStream ins = cd.getClassStream();
-   if (ins == null) return;
+   if (ins == null) {
+      System.err.println("BANAL: No input found for " + cd.getName());
+      return;
+    }
 
    AsmClassVisitor acv = new AsmClassVisitor(cd.getProject());
 

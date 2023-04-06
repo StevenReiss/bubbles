@@ -130,6 +130,9 @@ private String computePackageGraph(String proj,String pkg,boolean mthds,boolean 
 {
    BanalPackageGraph pg = new BanalPackageGraph(proj,pkg,mthds,samecls);
    BanalStaticLoader bsl = new BanalStaticLoader(project_manager,pg);
+   
+   System.err.println("BANAL: compute package graph " + proj + " " + pkg + " " + mthds + " " + samecls);
+   
    bsl.process();
 
    IvyXmlWriter xw = new IvyXmlWriter();
@@ -286,6 +289,11 @@ private class CommandHandler implements MintHandler {
          else if (cmd.equals("PACKAGEGRAPH")) {
             String proj = IvyXml.getAttrString(e,"PROJECT");
             String pkg = IvyXml.getAttrString(e,"PACKAGE");
+            if (pkg != null) {
+               int idx = pkg.indexOf(":");
+               if (idx >= 0) pkg = pkg.substring(idx+1);
+             }
+            if (pkg != null && pkg.length() == 0) pkg = null;
             boolean mthds = IvyXml.getAttrBool(e,"METHODS");
             boolean samec = IvyXml.getAttrBool(e,"SAMECLASS");
             rply = computePackageGraph(proj,pkg,mthds,samec);

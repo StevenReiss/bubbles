@@ -68,7 +68,7 @@ private BanalMonitor	banal_monitor;
 
 BanalProjectManager(BanalMonitor bm)
 {
-   user_classes = new HashMap<String,Map<String,ClassData>>();
+   user_classes = new HashMap<>();
    classes_valid = false;
    accessing_data = false;
    banal_monitor = bm;
@@ -129,9 +129,11 @@ private void checkClassData()
 
       for (Element pe : IvyXml.children(projs,"PROJECT")) {
 	 String pnm = IvyXml.getAttrString(pe,"NAME");
+         System.err.println("BANAL: Work on project " + pnm);
 	 if (user_classes.get(pnm) != null) continue;
 
 	 Element pinfo = openProject(pnm);
+         System.err.println("BANAL: Open Project: " + IvyXml.convertXmlToString(pinfo));
 	 if (pinfo == null) continue;
 
 	 Map<String,ClassData> mcd = new HashMap<>();

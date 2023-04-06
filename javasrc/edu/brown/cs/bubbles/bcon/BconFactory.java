@@ -176,6 +176,12 @@ public BudaBubble createClassBubble(Component source,String proj,File f,String c
 
 public BudaBubble createPackageBubble(Component source,String proj,String pkg)
 {
+   if (pkg != null) {
+      int idx = pkg.indexOf(":");
+      if (idx >= 0) pkg = pkg.substring(idx+1);
+      if (pkg.length() == 0) pkg = null;
+    }
+   
    BconPackagePanel pnl = new BconPackagePanel(proj,pkg);
 
    return new BconBubble(pnl);
