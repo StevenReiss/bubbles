@@ -11,5 +11,6 @@
 <entry key="Bsean.fait.class.path">fait.jar:asm.jar:eclipsejar:junit.jar:ivy.jar</entry>
 <entry key="Bsean.var.width">600</entry>
 <entry key="Bsean.var.height">600</entry>
-
+<entry key="Bsean.slice.conddepth">6</entry>
+<entry key="Bsean.slice.depth">10</entry>
 </properties>
