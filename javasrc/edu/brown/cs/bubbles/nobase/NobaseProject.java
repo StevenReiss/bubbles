@@ -94,11 +94,11 @@ NobaseProject(NobaseMain pm,String name,File base)
    base_directory = IvyFile.getCanonical(base_directory);
    if (name == null) name = base.getName();
    project_name = name;
-   project_paths = new ArrayList<NobasePathSpec>();
-   project_files = new ArrayList<File>();
+   project_paths = new ArrayList<>();
+   project_files = new ArrayList<>();
    nobase_prefs = new NobasePreferences(pm.getSystemPreferences());
-   all_files = new HashSet<NobaseFile>();
-   parse_data = new HashMap<NobaseFile,ISemanticData>();
+   all_files = new HashSet<>();
+   parse_data = new HashMap<>();
    global_scope = new NobaseScope(ScopeType.GLOBAL,null);
    NobaseSymbol undef = new NobaseSymbol(this,null,null,"undefined",true);
    global_scope.define(undef);

@@ -1392,7 +1392,10 @@ public List<BumpLocation> findMethods(String proj,String pat,boolean refs,boolea
    sw.write("' DEFS='" + defs +"' REFS='" + refs + "'");
    if (cnstr) sw.write(" FOR='CONSTRUCTOR'");
    else sw.write(" FOR='METHOD'");
-   if (system) sw.write(" SYSTEM='T'");
+   if (system) {
+      sw.write(" SYSTEM='T'");
+      BoardLog.logD("BUMP","SEARCH FOR SYSTEM METHODS");
+    }
 
    Element xml = getXmlReply("PATTERNSEARCH",proj,sw.toString(),null,0);
 
@@ -1693,6 +1696,7 @@ public List<BumpLocation> findAllImplements(String nm)
    IvyXml.outputXmlString(nm,sw);
    sw.write("' DEFS='true' REFS='false' SYSTEM='true' IMPLS='true'");
    sw.write(" FOR='CLASS'");
+   BoardLog.logD("BUMP","FIND ALL IMPL WITH SYSTEM");
 
    Element xml = getXmlReply("PATTERNSEARCH",null,sw.toString(),null,0);
 

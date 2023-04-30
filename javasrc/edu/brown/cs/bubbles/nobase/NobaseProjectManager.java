@@ -151,7 +151,8 @@ void handleListProjects(IvyXmlWriter xw)
    for (NobaseProject p : all_projects.values()) {
       xw.begin("PROJECT");
       xw.field("NAME",p.getName());
-      xw.field("ISJS",true);
+//    xw.field("ISJS",true);
+      xw.field("LANGUAGE","JAVASCRIPT");
       xw.field("BASE",p.getBasePath().getPath());
       xw.end("PROJECT");
     }

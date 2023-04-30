@@ -364,18 +364,6 @@ synchronized String getToolTip()
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 }	// end of class BattTestCase
 
 

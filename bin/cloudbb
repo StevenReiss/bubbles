@@ -37,7 +37,9 @@ else
       set CPB = ${CPB}:$i
    end
 
-   set CP = ${CP1}:${CP2}:${CP3}:${CP4}:${CP5}:${CP6}:${CP7}:${CP8}:${CP9}:${CPA}:${CPB}
+   set CPC = $INS/resources
+
+   set CP = ${CP1}:${CP2}:${CP3}:${CP4}:${CP5}:${CP6}:${CP7}:${CP8}:${CP9}:${CPA}:${CPB}:${CPC}
 
    if ($?BROWN_JAVA_HOME == 0) then
       set JBIN = /pro/java/linux/jdk-10/bin

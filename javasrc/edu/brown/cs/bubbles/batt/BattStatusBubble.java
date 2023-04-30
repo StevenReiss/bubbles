@@ -684,48 +684,48 @@ private class GotoFailureAction extends AbstractAction {
       String trace = test_case.getFailTrace();
       StringTokenizer tok = new StringTokenizer(trace,"\n\r\t");
       while (tok.hasMoreTokens()) {
-	 String line = tok.nextToken();
-	 if (line.length() == 0) continue;
-	 Matcher m = LOCATION_PATTERN.matcher(line);
-	 if (m.find()) {
-	    int lno = Integer.parseInt(m.group(3));
-	    String mthd = m.group(1);
-	    int idx = mthd.lastIndexOf(".");
-	    if (idx < 0) continue;
-	    String cls = mthd.substring(0,idx).replace("$",".");
-	    mthd = mthd.substring(idx+1);
-	    String nmthd = null;
-	    boolean iscnstr = false;
-	    if (mthd.equals("<init>")) {
-	       idx = cls.lastIndexOf(".");
-	       if (idx >= 0) mthd = cls.substring(idx+1);
-	       else mthd = cls;
-	       iscnstr = true;
-	       nmthd = cls;
-	     }
-	    else {
-	       nmthd = cls + "." + mthd;
-	     }
-	    BumpClient bc = BumpClient.getBump();
-	    List<BumpLocation> locs = bc.findMethods(null,nmthd,false,true,iscnstr,false);
-	    if (locs == null || locs.isEmpty()) continue;
-	    BumpLocation bl0 = locs.get(0);
-	    File f = bl0.getFile();
-	    if (!f.exists()) continue;
-	    BaleFactory bf = BaleFactory.getFactory();
-	    if (locs.size() > 1) {
-	       BaleConstants.BaleFileOverview bfo = bf.getFileOverview(null,f);
-	       if (bfo == null) continue;
-	       int loff = bfo.findLineOffset(lno);
-	       for (Iterator<BumpLocation> it = locs.iterator(); it.hasNext(); ) {
-		  BumpLocation bl1 = it.next();
-		  if (bl1.getOffset() > loff || bl1.getEndOffset() < loff) it.remove();
-		}
-	       if (locs.size() == 0) continue;
-	     }
-	    bf.createBubbleStack(BattStatusBubble.this,null,null,false,locs,null);
-	    break;
-	  }
+         String line = tok.nextToken();
+         if (line.length() == 0) continue;
+         Matcher m = LOCATION_PATTERN.matcher(line);
+         if (m.find()) {
+            int lno = Integer.parseInt(m.group(3));
+            String mthd = m.group(1);
+            int idx = mthd.lastIndexOf(".");
+            if (idx < 0) continue;
+            String cls = mthd.substring(0,idx).replace("$",".");
+            mthd = mthd.substring(idx+1);
+            String nmthd = null;
+            boolean iscnstr = false;
+            if (mthd.equals("<init>")) {
+               idx = cls.lastIndexOf(".");
+               if (idx >= 0) mthd = cls.substring(idx+1);
+               else mthd = cls;
+               iscnstr = true;
+               nmthd = cls;
+             }
+            else {
+               nmthd = cls + "." + mthd;
+             }
+            BumpClient bc = BumpClient.getBump();
+            List<BumpLocation> locs = bc.findMethods(null,nmthd,false,true,iscnstr,false);
+            if (locs == null || locs.isEmpty()) continue;
+            BumpLocation bl0 = locs.get(0);
+            File f = bl0.getFile();
+            if (!f.exists()) continue;
+            BaleFactory bf = BaleFactory.getFactory();
+            if (locs.size() > 1) {
+               BaleConstants.BaleFileOverview bfo = bf.getFileOverview(null,f);
+               if (bfo == null) continue;
+               int loff = bfo.findLineOffset(lno);
+               for (Iterator<BumpLocation> it = locs.iterator(); it.hasNext(); ) {
+        	  BumpLocation bl1 = it.next();
+        	  if (bl1.getOffset() > loff || bl1.getEndOffset() < loff) it.remove();
+        	}
+               if (locs.size() == 0) continue;
+             }
+            bf.createBubbleStack(BattStatusBubble.this,null,null,false,locs,null);
+            break;
+          }
        }
     }
 

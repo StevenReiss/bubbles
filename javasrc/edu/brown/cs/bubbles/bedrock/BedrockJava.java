@@ -314,18 +314,23 @@ void handleFindAll(String proj,String file,int start,int end,boolean defs,boolea
    long begin = System.currentTimeMillis();
 
    try {
-      BedrockPlugin.logD("Getting search scopes");
+      BedrockPlugin.logD("Getting search scopes " + ijp);
       IJavaElement [] pelt;
 
       if (ijp != null) pelt = new IJavaElement[] { ijp };
       else pelt = getAllProjects();
 
       working = getWorkingElements(pelt);
-      int fg = IJavaSearchScope.SOURCES | IJavaSearchScope.REFERENCED_PROJECTS;
-      if (system) fg |= IJavaSearchScope.SYSTEM_LIBRARIES | IJavaSearchScope.APPLICATION_LIBRARIES;
+//    int fg = IJavaSearchScope.SOURCES | IJavaSearchScope.REFERENCED_PROJECTS;
+      int fg = IJavaSearchScope.SOURCES;
+      if (system) {
+	 BedrockPlugin.logD("DOING SYSTEM SEARCH");
+	 fg |= IJavaSearchScope.SYSTEM_LIBRARIES | IJavaSearchScope.APPLICATION_LIBRARIES;
+	 fg |= IJavaSearchScope.REFERENCED_PROJECTS;
+       }
       scp = SearchEngine.createJavaSearchScope(pelt,fg);
 
-      BedrockPlugin.logD("Locating item to search for " + (System.currentTimeMillis()-begin));
+      BedrockPlugin.logD("Locating item to search for " + (System.currentTimeMillis()-begin + " " + system));
       IJavaElement [] elts = icu.codeSelect(start,end-start);
 
       if (typeof) {
@@ -467,7 +472,7 @@ void handleFindAll(String proj,String file,int start,int end,boolean defs,boolea
    SearchParticipant [] parts = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
    FindHandler fh = new FindHandler(xw,filter,false,begin);
 
-   BedrockPlugin.logD("BEGIN SEARCH " + pat + " " + parts.length + " " + scp + " :: COPIES: " + working.length);
+   BedrockPlugin.logD("BEGIN SEARCH " + pat + " " + parts.length + "\n\t" + scp + " :: COPIES: " + working.length);
 
    try {
       se.search(pat,parts,scp,fh,null);
@@ -811,7 +816,7 @@ void textSearch(String proj,int regexpfgs,String pat,int max,IvyXmlWriter xw)
     }
 
    BedrockPlugin.logD("TEXT SEARCH " + pat + " " + scp + " " + pp);
-   
+
    SearchHandler sh = new SearchHandler(xw,units,max);
 
    BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,"Doing text search");

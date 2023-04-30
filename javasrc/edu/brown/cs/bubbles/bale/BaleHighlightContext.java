@@ -253,14 +253,16 @@ private class WaitTimer extends TimerTask {
 
 private void handleHighlight(CaretEvent start)
 {
-   BaleEditorPane edt = (BaleEditorPane) start.getSource();
-   BaleDocument doc = edt.getBaleDocument();
-
-   doc.baleReadLock();
-   try {
-      startHighlight(start);
-    }
-   finally { doc.baleReadUnlock(); }
+   startHighlight(start);
+   
+// BaleEditorPane edt = (BaleEditorPane) start.getSource();
+// BaleDocument doc = edt.getBaleDocument();
+// 
+// doc.baleReadLock();
+// try {
+//    startHighlight(start);
+//  }
+// finally { doc.baleReadUnlock(); }
 }
 
 
@@ -288,7 +290,6 @@ private void startHighlight(CaretEvent start)
       BaleElement prev = leaf.getPreviousCharacterElement();
       if (prev.getEndOffset() == start.getDot()) leaf = prev;
    }
-
 
    switch (leaf.getTokenType()) {
       case IDENTIFIER :
@@ -410,9 +411,9 @@ private class HighlightCreator implements Runnable {
    private Collection<BumpLocation> def_locs;
 
    HighlightCreator(CaretEvent start,int ctr,
-		       Collection<BumpLocation> r,
-		       Collection<BumpLocation> w,
-		       Collection<BumpLocation> d) {
+        	       Collection<BumpLocation> r,
+        	       Collection<BumpLocation> w,
+        	       Collection<BumpLocation> d) {
       start_event = start;
       edit_counter = ctr;
       read_locs = r;
@@ -423,16 +424,16 @@ private class HighlightCreator implements Runnable {
    @Override public void run() {
       BaleEditorPane edt = (BaleEditorPane) start_event.getSource();
       BaleDocument doc = edt.getBaleDocument();
-
+   
       doc.baleReadLock();
       try {
-	 if (doc.getEditCounter() != edit_counter) return;
-	 if (read_locs != null)
-	    createHighlights(start_event,BaleHighlightType.IDENTIFIER,read_locs);
-	 if (write_locs != null)
-	    createHighlights(start_event,BaleHighlightType.IDENTIFIER_WRITE,write_locs);
-	 if (def_locs != null)
-	    createHighlights(start_event,BaleHighlightType.IDENTIFIER_DEFINE,def_locs);
+         if (doc.getEditCounter() != edit_counter) return;
+         if (read_locs != null)
+            createHighlights(start_event,BaleHighlightType.IDENTIFIER,read_locs);
+         if (write_locs != null)
+            createHighlights(start_event,BaleHighlightType.IDENTIFIER_WRITE,write_locs);
+         if (def_locs != null)
+            createHighlights(start_event,BaleHighlightType.IDENTIFIER_DEFINE,def_locs);
        }
       finally { doc.baleReadUnlock(); }
     }
