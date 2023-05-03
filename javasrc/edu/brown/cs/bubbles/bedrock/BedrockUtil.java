@@ -1317,8 +1317,8 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
 	    IType par = (IType) mem.getParent();
 	    if (par.isInterface()) {
 	       if (elt instanceof IMethod) {
-                  if ((fgs & Flags.AccDefaultMethod) == 0) fgs |= Flags.AccAbstract;
-                }
+		  if ((fgs & Flags.AccDefaultMethod) == 0) fgs |= Flags.AccAbstract;
+		}
 	       fgs |= Flags.AccPublic;
 	    }
 	    xw.field("QNAME",par.getFullyQualifiedName() + "." + nm);
@@ -1330,15 +1330,15 @@ private static void outputSymbol(IJavaElement elt,String what,String nm,String k
 
    if (elt instanceof IPackageFragment || elt instanceof IType) {
       try {
-         JavadocUrl ju = new JavadocUrl(elt);
-         ju.run();
-         URL u = ju.getResult();
-         if (u != null) {
-            xw.field("JAVADOC",u.toString());
-          }
+	 JavadocUrl ju = new JavadocUrl(elt);
+	 ju.run();
+	 URL u = ju.getResult();
+	 if (u != null) {
+	    xw.field("JAVADOC",u.toString());
+	  }
        }
       catch (Throwable t) {
-         BedrockPlugin.logE("Problem getting javadoc element",t);
+	 BedrockPlugin.logE("Problem getting javadoc element",t);
        }
     }
 
