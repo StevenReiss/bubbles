@@ -355,6 +355,10 @@ private class ParseCheck implements Runnable {
                         // fg = checkJSPackageParsing();
                         fg = false;
                         break;
+                     case DART :
+                        // TOOD: check dart package parsing
+                        fg = false;
+                        break;
                    }
                   break;
                case NEW_METHOD :

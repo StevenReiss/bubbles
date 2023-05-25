@@ -122,6 +122,9 @@ BassCreator()
       case JS :
          addJSButtons(bb,where,menu,fullname,forname);
          break;
+      case DART :
+         addDartButtons(bb,where,menu,fullname,forname);
+         break;
       default :
 	 break;
     }
@@ -407,6 +410,13 @@ private void addJSButtons(BudaBubble bb,Point where,JPopupMenu menu,String fulln
     }
 }
 
+
+
+private void addDartButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname)
+{
+   // TODO: fill this in
+   return;
+} 
 
 
 

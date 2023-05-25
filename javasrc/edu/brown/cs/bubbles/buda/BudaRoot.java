@@ -296,6 +296,9 @@ void setBudaTitle()
       case REBUS :
          title += " (Code Search)";
          break;
+      case DART :
+         title += " (Dart)";
+         break;
     }
    String ws = BoardSetup.getSetup().getDefaultWorkspace();
    if (ws != null) {

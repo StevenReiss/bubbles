@@ -117,6 +117,8 @@ private void setupCallbacks()
 	 break;
       case JS :
 	 break;
+      case DART :
+         break;
     }
 }
 

@@ -68,6 +68,8 @@ private static Map<String,BaleTokenType> python_keyword_map;
 private static Set<String>	python_op_set;
 private static Map<String,BaleTokenType> js_keyword_map;
 private static Set<String>	js_op_set;
+private static Map<String,BaleTokenType> dart_keyword_map;
+private static Set<String>	dart_op_set;
 
 private static final String OP_CHARS = "=<!~?:>|&+-*/^%\\";
 
@@ -92,6 +94,8 @@ static BaleTokenizer create(String text,BaleTokenState start,BoardLanguage bl)
 	 return new PythonTokenizer(text,start);
       case JS :
 	 return new JSTokenizer(text,start);
+      case DART :
+         return new DartTokenizer(text,start);
     }
 }
 
@@ -141,6 +145,8 @@ static Collection<String> getKeywords(BoardLanguage bl)
 	 return python_keyword_map.keySet();
       case JS :
 	 return js_keyword_map.keySet();
+      case DART:
+         return dart_keyword_map.keySet();
     }
 }
 
@@ -1041,6 +1047,145 @@ static {
    js_op_set.add(">>");
    js_op_set.add(">>>");
    js_op_set.add(">");
+}
+
+
+
+/********************************************************************************/
+/*										*/
+/*	Dart tokenizer								*/
+/*										*/
+/********************************************************************************/
+
+private static class DartTokenizer extends BaleTokenizer {
+
+   DartTokenizer(String text,BaleTokenState start) {
+      super(text,start);
+    }
+   
+   @Override protected BaleTokenType getKeyword(String s) { 
+      // need to handle case 1 and case 2 keywords in context
+      return dart_keyword_map.get(s);
+    }
+   @Override protected boolean isOperator(String s)	{ return dart_op_set.contains(s); }
+   @Override protected int useMultilineCount()		{ return 3; }
+
+}	// end of inner class JavaTokenizer
+
+
+static {
+   dart_keyword_map = new HashMap<String,BaleTokenType>();
+   dart_keyword_map.put("abstract",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("as",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("assert",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("async",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("base",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("break",BaleTokenType.BREAK);
+   dart_keyword_map.put("case",BaleTokenType.CASE);
+   dart_keyword_map.put("catch",BaleTokenType.CATCH);
+   dart_keyword_map.put("class",BaleTokenType.CLASS);
+   dart_keyword_map.put("const",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("continue",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("covariant",BaleTokenType.TYPEKEY);
+   dart_keyword_map.put("default",BaleTokenType.DEFAULT);
+   dart_keyword_map.put("deferred",BaleTokenType.DEFAULT);
+   dart_keyword_map.put("do",BaleTokenType.DO);
+   dart_keyword_map.put("dynamic",BaleTokenType.TYPEKEY);
+   dart_keyword_map.put("else",BaleTokenType.ELSE);
+   dart_keyword_map.put("enum",BaleTokenType.ENUM);
+   dart_keyword_map.put("export",BaleTokenType.ENUM);
+   dart_keyword_map.put("extends",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("extension",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("external",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("factory",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("false",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("final",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("finally",BaleTokenType.FINALLY);
+   dart_keyword_map.put("for",BaleTokenType.FOR);
+   dart_keyword_map.put("Function",BaleTokenType.TYPEKEY);
+   dart_keyword_map.put("get",BaleTokenType.TYPEKEY);
+   dart_keyword_map.put("hide",BaleTokenType.GOTO);
+   dart_keyword_map.put("if",BaleTokenType.IF);
+   dart_keyword_map.put("implements",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("import",BaleTokenType.IMPORT);
+   dart_keyword_map.put("in",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("interface",BaleTokenType.INTERFACE);
+   dart_keyword_map.put("is",BaleTokenType.TYPEKEY);
+   dart_keyword_map.put("late",BaleTokenType.TYPEKEY);
+   dart_keyword_map.put("library",BaleTokenType.TYPEKEY);
+   dart_keyword_map.put("mixin",BaleTokenType.TYPEKEY);
+   dart_keyword_map.put("new",BaleTokenType.NEW);
+   dart_keyword_map.put("null",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("on",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("operator",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("part",BaleTokenType.PACKAGE);
+   dart_keyword_map.put("required",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("rethrow",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("return",BaleTokenType.RETURN);
+   dart_keyword_map.put("sealed",BaleTokenType.TYPEKEY);
+   dart_keyword_map.put("set",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("show",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("static",BaleTokenType.STATIC);
+   dart_keyword_map.put("super",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("switch",BaleTokenType.SWITCH);
+   dart_keyword_map.put("sync",BaleTokenType.SYNCHRONIZED);
+   dart_keyword_map.put("this",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("throw",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("true",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("try",BaleTokenType.TRY);
+   dart_keyword_map.put("typedef",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("var",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("void",BaleTokenType.TYPEKEY);
+   dart_keyword_map.put("when",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("while",BaleTokenType.WHILE);
+   dart_keyword_map.put("with",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("yield",BaleTokenType.KEYWORD);
+   
+   dart_op_set = new HashSet<String>();
+   dart_op_set.add("=");
+   dart_op_set.add("<");
+   dart_op_set.add("!");
+   dart_op_set.add("~");
+   dart_op_set.add("?");
+   dart_op_set.add(":");
+   dart_op_set.add("==");
+   dart_op_set.add("<=");
+   dart_op_set.add(">=");
+   dart_op_set.add("!=");
+   dart_op_set.add("||");
+   dart_op_set.add("&&");
+   dart_op_set.add("++");
+   dart_op_set.add("--");
+   dart_op_set.add("+");
+   dart_op_set.add("-");
+   dart_op_set.add("*");
+   dart_op_set.add("/");
+   dart_op_set.add("&");
+   dart_op_set.add("|");
+   dart_op_set.add("^");
+   dart_op_set.add("%");
+   dart_op_set.add("<<");
+   dart_op_set.add("+=");
+   dart_op_set.add("-=");
+   dart_op_set.add("*=");
+   dart_op_set.add("/=");
+   dart_op_set.add("&=");
+   dart_op_set.add("|=");
+   dart_op_set.add("^=");
+   dart_op_set.add("%=");
+   dart_op_set.add("<<=");
+   dart_op_set.add(">>=");
+   dart_op_set.add(">>>=");
+   dart_op_set.add(">>");
+   dart_op_set.add(">>>");
+   dart_op_set.add(">");
+   dart_op_set.add("::");
+   dart_op_set.add("->");
+   dart_op_set.add("~/");
+   dart_op_set.add("??");
+   dart_op_set.add("..");
+   dart_op_set.add("?..");
+   dart_op_set.add("?.");
 }
 
 

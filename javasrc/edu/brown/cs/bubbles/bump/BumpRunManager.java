@@ -205,6 +205,7 @@ BumpRunManager()
 	 break;
       case PYTHON :
       case JS :
+      case DART :
 	 use_debug_server = false;
 	 break;
       case REBUS :
@@ -727,6 +728,9 @@ private void handleProcessEvent(Element xml)
                if (td.getProcess() == pd) it.remove();
              }
 	  }
+         else {
+            BoardLog.logE("BUMP","Terminate process not found " + id);
+          }
 	 break;
       case CREATE :
       case CHANGE :

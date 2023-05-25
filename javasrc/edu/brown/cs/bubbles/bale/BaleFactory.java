@@ -1330,6 +1330,7 @@ public static String getFieldsName()
          return "FIELDS";
       case JS :
       case PYTHON :
+      case DART :
          return "VARIABLES";
     }
 }
@@ -1409,6 +1410,10 @@ private List<BaleRegion> getRegionsFromLocations(List<BumpLocation> locs)
 	       havecmmt = true;
 	     }
 	    else if (lang == BoardLanguage.JS &&
+		  s.charAt(eoffset) == '/' && s.charAt(eoffset+1) == '/') {
+	       havecmmt = true;
+	     }
+            else if (lang == BoardLanguage.DART &&
 		  s.charAt(eoffset) == '/' && s.charAt(eoffset+1) == '/') {
 	       havecmmt = true;
 	     }

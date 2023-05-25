@@ -480,6 +480,9 @@ public BudaBubble getCreateProjectBubble()
 	 return BuenoJsProject.createNewJsProjectBubble();
       case REBUS :
 	 return null;
+      case DART :
+         // TODO: set up new dart project bubble
+         return null;
       default :
 	 return null;
     }

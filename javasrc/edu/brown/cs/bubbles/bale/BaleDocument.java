@@ -667,6 +667,7 @@ BaleFragmentType getFragmentType()		{ return BaleFragmentType.NONE; }
    if (f.endsWith(".py") || f.endsWith(".PY")) return BoardLanguage.PYTHON;
    if (f.endsWith(".js") || f.endsWith(".JS")) return BoardLanguage.JS;
    if (f.endsWith(".java")) return BoardLanguage.JAVA;
+   if (f.endsWith(".dart")) return BoardLanguage.DART;
    return BoardLanguage.JAVA;
 }
 
@@ -1042,6 +1043,7 @@ BaleIndenter getIndenter()
 	 case JAVA :
 	 case JAVA_IDEA :
 	 case REBUS :
+         case DART :
 	 default :
 	    our_indenter = new BaleIndenterJava(this);
 	    break;

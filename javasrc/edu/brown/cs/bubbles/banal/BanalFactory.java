@@ -105,6 +105,7 @@ public static void initialize(BudaRoot br)
          break;
       case JS :
       case PYTHON :
+      case DART :
          return;
     }
    

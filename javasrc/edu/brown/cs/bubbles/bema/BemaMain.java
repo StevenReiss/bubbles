@@ -224,6 +224,9 @@ private void scanArgs(String [] args)
 	 else if (args[i].toLowerCase().startsWith("-js")) {     // -js (javascript)
 	    useJavaScript();
 	  }
+         else if (args[i].toLowerCase().startsWith("-da")) {     // -dart
+	    useDart();
+	  }
 	 else if (args[i].startsWith("-rebus")) {               // -rebus
 	    for_language = BoardLanguage.REBUS;
 	    File fa = new File(System.getProperty("user.home"));
@@ -935,6 +938,10 @@ private void checkDefaultLanguage()
 	 useJavaIdea();
 	 break;
        }
+      else if (elt.equals("dartbubbles.jar")) {
+         useDart();
+         break;
+       }
     }
 }
 
@@ -954,6 +961,16 @@ private void useJavaScript()
    for_language = BoardLanguage.JS;
    File fa = new File(System.getProperty("user.home"));
    fa = new File(fa,".nobbles");
+   BoardProperties.setPropertyDirectory(fa.getPath());
+}
+
+
+
+private void useDart()
+{
+   for_language = BoardLanguage.DART;
+   File fa = new File(System.getProperty("user.home"));
+   fa = new File(fa,".dartbubbles");
    BoardProperties.setPropertyDirectory(fa.getPath());
 }
 

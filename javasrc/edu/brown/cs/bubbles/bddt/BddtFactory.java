@@ -675,6 +675,9 @@ void addNewConfigurationActions(JPopupMenu menu)
       case JS :
 	 menu.add(new CreateConfigAction(BumpLaunchConfigType.JS));
 	 break;
+      case DART :
+         // todo : add dart configuration actions
+         break;
       case REBUS :
 	 break;
     }

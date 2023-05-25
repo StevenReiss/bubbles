@@ -136,7 +136,6 @@ private void runTest()
    sendCommand("PING",null,null,null);
    sendCommand("ENTER",null,null,null);
    sendCommand("LOGLEVEL",null,"LEVEL='DEBUG'",null);
-   sendCommand("MONITOR",null,"ON=TRUE",null);
    sendCommand("GETHOST",null,null,null);
    sendCommand("PREFERENCES",null,null,null);
    sendCommand("PROJECTS",null,null,null);

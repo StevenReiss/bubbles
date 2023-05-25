@@ -33,6 +33,7 @@
 package edu.brown.cs.bubbles.bedrock;
 
 
+import edu.brown.cs.ivy.file.IvyFormat;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -1876,6 +1877,11 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 	  }
 	 else if (typ.equals("Ljava/lang/String;") || typ.equals("java.lang.String")) {
 	    xw.field("KIND","STRING");
+            if (txt.contains("\\")) {
+               String txt0 = IvyFormat.getLiteralValue(txt);
+               BedrockPlugin.logD("Convert sting " + txt + " " + txt0);
+               txt = txt0;
+             }
 	    // txt is not quite right here if the string is complex
 	    // e.g \UD83D\UDE30" gets mapped to "\u07D8\u00B0"
 	  }

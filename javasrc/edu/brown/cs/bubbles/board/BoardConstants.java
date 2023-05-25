@@ -72,7 +72,8 @@ enum BoardLanguage {
    JAVA_IDEA,
    PYTHON,
    JS,
-   REBUS
+   REBUS,
+   DART
 }
 
 
@@ -93,6 +94,8 @@ String BOARD_PYTHON_PROP_BASE = System.getProperty("user.home") + File.separator
 String BOARD_NODEJS_PROP_BASE = System.getProperty("user.home") + File.separator + ".nobbles";
 String BOARD_REBUS_PROP_BASE = System.getProperty("user.home") + File.separator + ".rebus";
 String BOARD_IDEA_PROP_BASE = System.getProperty("user.home") + File.separator + ".bibbles";
+String BOARD_DART_PROP_BASE = System.getProperty("user.home") + File.separator + ".dartbubbles";
+
 
 
 

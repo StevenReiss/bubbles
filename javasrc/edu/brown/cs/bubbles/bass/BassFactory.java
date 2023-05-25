@@ -639,6 +639,9 @@ private static class ProjectProps implements BassPopupHandler {
             menu.add(new JSProjectAction(proj,bb,where));
             menu.add(new NewJSProjectAction(bb,where));
             break;
+         case DART :
+            // TOOD: add dart buttons for project
+            break;     
          case REBUS :
             break;
        }

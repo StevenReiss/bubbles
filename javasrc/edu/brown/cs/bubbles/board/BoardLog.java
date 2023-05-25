@@ -128,6 +128,10 @@ private void setupLogger()
 	 logname = "rebus";
 	 lgnm = "rebase";
 	 break;
+      case DART :
+         logname = "dartbub";
+         lgnm = "lspbase";
+         break;
     }
 
    File wsd = null;

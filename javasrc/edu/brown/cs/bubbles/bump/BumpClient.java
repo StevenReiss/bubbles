@@ -153,6 +153,9 @@ public synchronized static BumpClient getBump()
 	 case JS :
 	    default_client = new BumpClientJS();
 	    break;
+         case DART :
+            default_client = new BumpClientLsp("dart");
+            break;
        }
       loadProperties();
     }

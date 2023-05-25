@@ -254,6 +254,8 @@ void outputXml(IvyXmlWriter xw,boolean del)
          return jsToString();
       case PYTHON :
          return pythonToString();
+      case DART :
+         return dartToString();
     }
 }
 
@@ -304,6 +306,18 @@ private String pythonToString()
 
 private String jsToString()
 {
+   FileSystemView fsv = FileSystemView.getFileSystemView();
+   File f2 = fsv.createFileObject(source_path);
+   String rslt = path_type.toString() + " " + f2.getName(); 
+   if (is_nested) rslt += " (NESTED)";
+   return rslt;
+}
+
+
+
+private String dartToString()
+{
+   // TODO: this should set up a dart path entry
    FileSystemView fsv = FileSystemView.getFileSystemView();
    File f2 = fsv.createFileObject(source_path);
    String rslt = path_type.toString() + " " + f2.getName(); 

@@ -1045,6 +1045,9 @@ private class RunEventHandler implements BumpRunEventHandler {
                thread_states.clear();
                last_stopped = null;
              }
+            else {
+               BoardLog.logE("BDDT","Spurrious process remove event " + evt.getProcess().getName());
+             }
             break;
          case HOTCODE_FAILURE :
             if (hotswap_fail != cur_process) {
@@ -1430,6 +1433,9 @@ String getEvaluationString(BumpStackFrame frm,BumpRunValue rv,String id)
 	 return getEvaluationStringJava(frm,rv,id);
       case JS :
 	 return getEvaluationStringJS(frm,rv,id);
+      case DART :
+         // TODO: get dart evaluation string
+         return null;
     }
 }
 

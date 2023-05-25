@@ -370,6 +370,7 @@ private void setLanguage()
       if (f.endsWith(".py") || f.endsWith(".PY")) file_language = BoardLanguage.PYTHON;
       if (f.endsWith(".java")) file_language = BoardLanguage.JAVA;
       if (f.endsWith(".js")) file_language = BoardLanguage.JS;
+      if (f.endsWith(".dart")) file_language = BoardLanguage.DART;
     }
 }
 

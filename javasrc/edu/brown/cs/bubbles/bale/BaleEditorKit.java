@@ -364,6 +364,7 @@ BaleEditorKit(BoardLanguage lang)
 	 case JAVA :
 	 case JAVA_IDEA :
 	 case REBUS :
+         case DART :
 	    language_kit = new BaleEditorKitJava();
 	    break;
 	 case PYTHON :
@@ -449,6 +450,7 @@ static Action findAction(String name,BoardLanguage lang)
 	 case REBUS :
 	 case JAVA :
 	 case JAVA_IDEA :
+         case DART :
 	    lkit = new BaleEditorKitJava();
 	    break;
 	 case PYTHON :

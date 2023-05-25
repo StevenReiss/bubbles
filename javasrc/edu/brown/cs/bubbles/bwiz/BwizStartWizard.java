@@ -116,6 +116,9 @@ private void setup()
       case JS :
          // possibly add a new file button
          break;
+      case DART :
+         // TODO: add Dart buttons
+         break;
       default :
          break;
     }
@@ -134,6 +137,9 @@ private void setup()
       case PYTHON :
       case JS :
          // possibly add a new file button
+         break;
+      case DART :
+         // TODO: add dart buttons
          break;
       default :
          break;

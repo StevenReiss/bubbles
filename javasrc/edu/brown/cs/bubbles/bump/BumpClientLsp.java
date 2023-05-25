@@ -1,37 +1,26 @@
 /********************************************************************************/
-/*										*/
-/*		BumpClientJS.java						*/
-/*										*/
-/*	BUbbles Mint Partnership main class for using Node/JS			*/
-/*										*/
+/*                                                                              */
+/*              BumpClientLsp.java                                              */
+/*                                                                              */
+/*      Run LSPBASE for various languages                                       */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
+/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
-
-/* SVN: $Id$ */
 
 
 
 package edu.brown.cs.bubbles.bump;
-
-import edu.brown.cs.bubbles.board.BoardConstants;
-import edu.brown.cs.bubbles.board.BoardLog;
-import edu.brown.cs.bubbles.board.BoardSetup;
-
-import edu.brown.cs.ivy.exec.IvyExec;
-import edu.brown.cs.ivy.exec.IvyExecQuery;
-
-import javax.swing.JOptionPane;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,54 +29,64 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.swing.JOptionPane;
 
-class BumpClientJS extends BumpClient
+import edu.brown.cs.bubbles.board.BoardConstants;
+import edu.brown.cs.bubbles.board.BoardLog;
+import edu.brown.cs.bubbles.board.BoardSetup;
+import edu.brown.cs.ivy.exec.IvyExec;
+import edu.brown.cs.ivy.exec.IvyExecQuery;
+
+class BumpClientLsp extends BumpClient
 {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private boolean 	nobase_starting;
+private String          for_language;
+private boolean         lspbase_starting;
 
-private static String [] nobase_libs = new String [] {
+private static String [] lspbase_libs = new String [] {
+   "lspbase.jar",
+   "ivy.jar",
    "json.jar",
-   "asm.jar",
-   "jsoup.jar",
-   "eclipsejar",
 };
 
 
+
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
-BumpClientJS()
+BumpClientLsp(String lang)
 {
-   nobase_starting = false;
-
-   mint_control.register("<NOBASE SOURCE='NOBASE' TYPE='_VAR_0' />",new IDEHandler());
+   for_language = lang;
+   lspbase_starting = false;
+   
+   mint_control.register("<LSPBASE SOURCE='LSPBASE' TYPE='_VAR_0' />",
+         new IDEHandler());
 }
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      LspBase interaction methods                                             */
+/*                                                                              */
+/********************************************************************************/
 
-/********************************************************************************/
-/*										*/
-/*	Nobase interaction methods						*/
-/*										*/
-/********************************************************************************/
 
 /**
  *	Return the name of the back end.
  **/
 
-@Override public String getName()		{ return "Node/JS"; }
-@Override public String getServerName() 	{ return "NOBASE"; }
+@Override public String getName()		{ return "DartLsp"; }
+@Override public String getServerName() 	{ return "LSPBASE"; }
 
 
 
@@ -100,10 +99,10 @@ BumpClientJS()
 @Override void localStartIDE()
 {
    synchronized (this) {
-      if (nobase_starting) return;
-      nobase_starting = true;
+      if (lspbase_starting) return;
+      lspbase_starting = true;
     }
-
+   
    ensureRunning();
 }
 
@@ -114,23 +113,23 @@ private void ensureRunning()
 {
    if (tryPing()) return;
    if (BoardSetup.getSetup().getRunMode() == BoardConstants.RunMode.CLIENT) {
-      BoardLog.logE("BUMP","Client mode with no Node/JS Back End found");
+      BoardLog.logE("BUMP","Client mode with no LspBase/" + for_language + " found");
       JOptionPane.showMessageDialog(null,
 	    "Server must be running and accessible before client can be run",
 	    "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
       System.exit(1);
     }
-
+   
    String ws = system_properties.getProperty(BOARD_PROP_WORKSPACE);
-
-   String cls = "edu.brown.cs.bubbles.nobase.NobaseMain";
-
+   
+   String cls = "edu.brown.cs.bubbles.lspbase.LspBaseMain";
+   
    List<String> argl = new ArrayList<String>();
    argl.add(IvyExecQuery.getJavaPath());
-   argl.add("-Dedu.brown.cs.bubbles.MINT=" + mint_name);
-
-   String cp = System.getProperty("java.class.path");
-   for (String s : nobase_libs) {
+// argl.add("-Dedu.brown.cs.bubbles.MINT=" + mint_name);
+   
+   String cp = null;
+   for (String s : lspbase_libs) {
       if (s.equals("eclipsejar")) {
 	 cp += File.pathSeparator + BoardSetup.getSetup().getEclipsePath();
 	 continue;
@@ -138,36 +137,44 @@ private void ensureRunning()
       String lib = BoardSetup.getSetup().getLibraryPath(s);
       if (lib == null) continue;
       File f = new File(lib);
-      if (f.exists()) cp += File.pathSeparator + lib;
+      if (f.exists()) {
+         if (cp == null) cp = lib;
+         else cp += File.pathSeparator + lib;
+       }
     }
    argl.add("-cp");
    argl.add(cp);
-
+   
    File f1 = BoardSetup.getSetup().getRootDirectory();
-   argl.add("-Dedu.brown.cs.bubbles.nobase.ROOT=" + f1.getAbsolutePath());
-
+   argl.add("-Dedu.brown.cs.bubbles.lspbase.ROOT=" + f1.getAbsolutePath());
+   
    String eopt = system_properties.getProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS);
    if (eopt != null) {
       StringTokenizer tok = new StringTokenizer(eopt," ");
       while (tok.hasMoreTokens()) argl.add(tok.nextToken());
-   }
-
+    }
+   
    argl.add(cls);
    if (ws != null) {
       argl.add("-ws");
       argl.add(ws);
     }
-
+   argl.add("-mint");
+   argl.add(mint_name);
+   argl.add("-lang");
+   argl.add(for_language);
+   argl.add("-err");
+   
    String run = null;
    for (String s : argl) {
       if (run == null) run = s;
       else run += " " + s;
     }
    BoardLog.logI("BUMP","RUN: " + run);
-
+   
    try {
       IvyExec ex = null;
-      if (System.getProperty("Nobase.DEBUG") != null) {
+      if (System.getProperty("LspBase.DEBUG") != null) {
          runLocally(cls,argl);
        }
       else {
@@ -182,25 +189,25 @@ private void ensureRunning()
 	    catch (InterruptedException e) { }
 	  }
 	 if (tryPing()) {
-	    BoardLog.logI("BUMP","Node/JS Base started successfully");
+	    BoardLog.logI("BUMP","LspBase/" + for_language + " started successfully");
 	    eok = true;
 	    break;
 	  }
 	 if (ex != null && !ex.isRunning()) {
 	    BoardLog.logE("BUMP","Problem starting javascript back end");
 	    JOptionPane.showMessageDialog(null,
-		  "Node/JS (Nobase) could not be started.",
+		  "LspBase could not be started.",
 		  "Bubbles Setup Problem",JOptionPane.ERROR_MESSAGE);
 	    System.exit(1);
 	  }
        }
       if (!eok) {
-	 BoardLog.logE("BUMP","Node/JS doesn't seem to start");
+	 BoardLog.logE("BUMP","Lspbase/" + for_language + " doesn't seem to start");
 	 System.exit(1);
        }
     }
    catch (IOException e) {
-      BoardLog.logE("BUMP","Problem running Node/JS: " + e);
+      BoardLog.logE("BUMP","Problem running LSPBASE: " + e);
       System.exit(1);
     }
 }
@@ -208,18 +215,18 @@ private void ensureRunning()
 
 private void runLocally(String cmd,List<String> args)
 {
-  NobaseThread nt = new NobaseThread(cmd,args);
-  nt.start();
+   LspbaseThread nt = new LspbaseThread(cmd,args);
+   nt.start();
 }
 
 
-private static class NobaseThread extends Thread {
+private static class LspbaseThread extends Thread {
    
    private String main_class;
    private List<String> arg_list;
    
-   NobaseThread(String cls,List<String> args) {
-      super("NobaseMain");
+   LspbaseThread(String cls,List<String> args) {
+      super("LspBaseMain");
       main_class = cls;
       arg_list = args;
     }
@@ -247,18 +254,18 @@ private static class NobaseThread extends Thread {
          m.invoke(null,(Object) argarr);
        }
       catch (Throwable t) {
-         BoardLog.logE("BUMP","Problem starting nobase locally",t);
+         BoardLog.logE("BUMP","Problem starting lspbase locally",t);
        }
     }
    
-}       // end of inner class NobaseThread
+}       // end of inner class LspBaseThread
 
 
 
-}	// end of class BumpClientJS
+}       // end of class BumpClientLsp
 
 
 
 
-/* end of BumpClientJS.java */
+/* end of BumpClientLsp.java */
 
