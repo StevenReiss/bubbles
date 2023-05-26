@@ -171,61 +171,61 @@ private class NameThread extends Thread {
    void addElement(IJavaElement je) {
       boolean dochld = false;
       boolean doelt = false;
-   
+
       switch (je.getElementType()) {
-         case IJavaElement.CLASS_FILE :
-            return;
-         case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-            IPackageFragmentRoot ipfr = (IPackageFragmentRoot) je;
-            try {
-               if (!ipfr.isArchive() && !ipfr.isExternal() &&
-        	      ipfr.getKind() == IPackageFragmentRoot.K_SOURCE)
-        	  dochld = true;
-             }
-            catch (JavaModelException e) { }
-            break;
-         case IJavaElement.PACKAGE_FRAGMENT :
-         case IJavaElement.JAVA_PROJECT :
-            dochld = true;
-            doelt = true;
-            break;
-         case IJavaElement.JAVA_MODEL :
-         case IJavaElement.IMPORT_CONTAINER :
-         case IJavaElement.IMPORT_DECLARATION :
-         case IJavaElement.TYPE_PARAMETER :
-         case IJavaElement.PACKAGE_DECLARATION :
-         default :
-            dochld = true;
-            break;
-         case IJavaElement.COMPILATION_UNIT :
-            dochld = false;
-            doelt = true;
-            break;
-         case IJavaElement.FIELD :
-         case IJavaElement.METHOD :
-         case IJavaElement.INITIALIZER :
-         case IJavaElement.TYPE :
-         case IJavaElement.LOCAL_VARIABLE :
-            dochld = false;
-            break;
+	 case IJavaElement.CLASS_FILE :
+	    return;
+	 case IJavaElement.PACKAGE_FRAGMENT_ROOT :
+	    IPackageFragmentRoot ipfr = (IPackageFragmentRoot) je;
+	    try {
+	       if (!ipfr.isArchive() && !ipfr.isExternal() &&
+		      ipfr.getKind() == IPackageFragmentRoot.K_SOURCE)
+		  dochld = true;
+	     }
+	    catch (JavaModelException e) { }
+	    break;
+	 case IJavaElement.PACKAGE_FRAGMENT :
+	 case IJavaElement.JAVA_PROJECT :
+	    dochld = true;
+	    doelt = true;
+	    break;
+	 case IJavaElement.JAVA_MODEL :
+	 case IJavaElement.IMPORT_CONTAINER :
+	 case IJavaElement.IMPORT_DECLARATION :
+	 case IJavaElement.TYPE_PARAMETER :
+	 case IJavaElement.PACKAGE_DECLARATION :
+	 default :
+	    dochld = true;
+	    break;
+	 case IJavaElement.COMPILATION_UNIT :
+	    dochld = false;
+	    doelt = true;
+	    break;
+	 case IJavaElement.FIELD :
+	 case IJavaElement.METHOD :
+	 case IJavaElement.INITIALIZER :
+	 case IJavaElement.TYPE :
+	 case IJavaElement.LOCAL_VARIABLE :
+	    dochld = false;
+	    break;
        }
-   
+
       if (dochld) {
-         if (doelt) separate_elements.put(je,Boolean.FALSE);
-         if (je instanceof IParent) {
-            try {
-               for (IJavaElement c : ((IParent) je).getChildren()) {
-        	  addElement(c);
-        	}
-             }
-            catch (JavaModelException e) { }
-            catch (Throwable e) {
-               BedrockPlugin.logE("Problem geting children for all names: " + e);
-             }
-          }
+	 if (doelt) separate_elements.put(je,Boolean.FALSE);
+	 if (je instanceof IParent) {
+	    try {
+	       for (IJavaElement c : ((IParent) je).getChildren()) {
+		  addElement(c);
+		}
+	     }
+	    catch (JavaModelException e) { }
+	    catch (Throwable e) {
+	       BedrockPlugin.logE("Problem geting children for all names: " + e);
+	     }
+	  }
        }
       else if (doelt) {
-         separate_elements.put(je,Boolean.TRUE);
+	 separate_elements.put(je,Boolean.TRUE);
        }
     }
 
@@ -328,20 +328,20 @@ void handleFindAll(String proj,String file,int start,int end,boolean defs,boolea
 	 fg |= IJavaSearchScope.REFERENCED_PROJECTS;
        }
       else  {
-//       try {
-//          for (IJavaElement elt : pelt) {
-//             IJavaProject xjp = (IJavaProject) elt;
-//             IPackageFragmentRoot [] roots = ijp.getAllPackageFragmentRoots();
-//             BedrockPlugin.logD("NON_SYSTEM SEARCH " + xjp.getPath() + " " + roots.length);
-//             for (int i = 0; i < roots.length; ++i) {
-//                BedrockPlugin.logD("PACKAGE ROOT: " + roots[i].getPath());
-//              }
-//           }
-//         
-//        }
-//       catch (Throwable e) {
-//          BedrockPlugin.logD("Problem with listing roots: " + e);
-//        }
+//	 try {
+//	    for (IJavaElement elt : pelt) {
+//	       IJavaProject xjp = (IJavaProject) elt;
+//	       IPackageFragmentRoot [] roots = ijp.getAllPackageFragmentRoots();
+//	       BedrockPlugin.logD("NON_SYSTEM SEARCH " + xjp.getPath() + " " + roots.length);
+//	       for (int i = 0; i < roots.length; ++i) {
+//		  BedrockPlugin.logD("PACKAGE ROOT: " + roots[i].getPath());
+//		}
+//	     }
+//	
+//	  }
+//	 catch (Throwable e) {
+//	    BedrockPlugin.logD("Problem with listing roots: " + e);
+//	  }
        }
       scp = SearchEngine.createJavaSearchScope(pelt,fg);
 
@@ -739,12 +739,14 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
 
    BedrockPlugin.logD("BEGIN SEARCH " + pat + " " + (System.currentTimeMillis()-begin) + " " + proj);
    BedrockPlugin.logD("SEARCH SCOPE " + system + " " + fg + " " + scp);
-   try {
-      for (IPackageFragmentRoot root : ijp.getAllPackageFragmentRoots()) {
-         BedrockPlugin.logD("PACKAGE ROOT: " + root + " " + root.getPath());
+   if (ijp != null) {
+      try {
+	 for (IPackageFragmentRoot root : ijp.getAllPackageFragmentRoots()) {
+	    BedrockPlugin.logD("PACKAGE ROOT: " + root + " " + root.getPath());
+	  }
        }
+      catch (JavaModelException e) { }
     }
-   catch (JavaModelException e) { }
 
    try {
       se.search(pat,parts,scp,fh,null);

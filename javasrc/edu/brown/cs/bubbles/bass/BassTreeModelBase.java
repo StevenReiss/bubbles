@@ -275,11 +275,11 @@ private static void computeBranchType(BassName nm,Branch p)
 	 p.setBranchType(BranchNodeType.PROJECT);
 	 break;
       case METHOD :
-         p.setBranchType(BranchNodeType.METHOD);
-         break;
+	 p.setBranchType(BranchNodeType.METHOD);
+	 break;
       case ANNOTATION :
-         p.setBranchType(BranchNodeType.ANNOTATION);
-         break;
+	 p.setBranchType(BranchNodeType.ANNOTATION);
+	 break;
       default :
 	 p.setBranchType(BranchNodeType.CLASS);
 	 break;
@@ -306,13 +306,13 @@ private static class TreeSorter implements Comparator<BassName> {
       if (b1pfx == null && b2pfx != null) return -1;
       if (b1pfx != null && b2pfx == null) return 1;
       else if (b1pfx != null && b2pfx != null) {
-         int pd = b1pfx.compareTo(b2pfx);
-         if (pd != 0) return pd;
+	 int pd = b1pfx.compareTo(b2pfx);
+	 if (pd != 0) return pd;
       }
-   
+
       int d = b1.getSortPriority() - b2.getSortPriority();
       if (d != 0) return d;
-   
+
       return b1.getFullName().compareTo(b2.getFullName());
     }
 
@@ -362,29 +362,29 @@ private class Rebuilder implements Runnable {
 
    @Override public void run() {
       for ( ; ; ) {
-         synchronized (this) {
-            for ( ; ; ) {
-               long delta = start_time - System.currentTimeMillis();
-               if (delta <= 0) break;
-               try {
-                  wait(delta);
-                }
-               catch (InterruptedException e) { }
-             }
-            begin_time = start_time;
-          }
-         BoardLog.logD("BASS","RUN REBUILD " + begin_time + " " + System.currentTimeMillis());
-   
-         rebuild();
-   
-         BoardLog.logD("BASS","DONE REBUILD " + begin_time + " " + System.currentTimeMillis());
-         
-         synchronized (this) {
-            if (begin_time == start_time) {
-               is_active = false;
-               break;
-             }
-          }
+	 synchronized (this) {
+	    for ( ; ; ) {
+	       long delta = start_time - System.currentTimeMillis();
+	       if (delta <= 0) break;
+	       try {
+		  wait(delta);
+		}
+	       catch (InterruptedException e) { }
+	     }
+	    begin_time = start_time;
+	  }
+	 BoardLog.logD("BASS","RUN REBUILD " + begin_time + " " + System.currentTimeMillis());
+
+	 rebuild();
+
+	 BoardLog.logD("BASS","DONE REBUILD " + begin_time + " " + System.currentTimeMillis());
+	
+	 synchronized (this) {
+	    if (begin_time == start_time) {
+	       is_active = false;
+	       break;
+	     }
+	  }
        }
     }
 
@@ -425,7 +425,7 @@ void rebuild()
       // see if this works - doesn't
       root_node.collapseSingletons();
       root_node.removeEmptyNodes();
-      
+
       UpdateEvent evt = new UpdateEvent(adds,dels);
       for (BassTreeUpdateListener ul : listener_set) {
 	 ul.handleTreeUpdated(evt);
@@ -624,12 +624,12 @@ private static class Branch extends BassTreeImpl {
       child_nodes = new Vector<>();
       int idx = name.indexOf("#");
       if (idx > 0) {
-         display_name = name.substring(idx+1);
+	 display_name = name.substring(idx+1);
        }
       leaf_count = -1;
       if (par != null) {
-         if (par.getBassParent() == null) full_name = local_name;
-         else full_name = par.getFullName() + "." + local_name;
+	 if (par.getBassParent() == null) full_name = local_name;
+	 else full_name = par.getFullName() + "." + local_name;
        }
       else full_name = local_name;
     }
@@ -650,71 +650,71 @@ private static class Branch extends BassTreeImpl {
    void setBranchType(BranchNodeType type) {
       if (branch_type == type) return;
       switch (branch_type) {
-         case PROJECT :
-         case PACKAGE :
-         case METHOD :
-            branch_type = type;
-            break;
-         case CLASS:
-         case THROWABLE :
-            if (type == BranchNodeType.INTERFACE) branch_type = type;
-            if (type == BranchNodeType.ENUM) branch_type = type;
-            if (type == BranchNodeType.THROWABLE) branch_type = type;
-            if (type == BranchNodeType.ANNOTATION) branch_type = type;
-            break;
-         case INTERFACE :
-         case ANNOTATION :
-            break;
-         case ENUM :
-            if (type == BranchNodeType.INTERFACE) branch_type = type;
-            break;
-         case NONE:
-            break;
+	 case PROJECT :
+	 case PACKAGE :
+	 case METHOD :
+	    branch_type = type;
+	    break;
+	 case CLASS:
+	 case THROWABLE :
+	    if (type == BranchNodeType.INTERFACE) branch_type = type;
+	    if (type == BranchNodeType.ENUM) branch_type = type;
+	    if (type == BranchNodeType.THROWABLE) branch_type = type;
+	    if (type == BranchNodeType.ANNOTATION) branch_type = type;
+	    break;
+	 case INTERFACE :
+	 case ANNOTATION :
+	    break;
+	 case ENUM :
+	    if (type == BranchNodeType.INTERFACE) branch_type = type;
+	    break;
+	 case NONE:
+	    break;
        }
     }
 
    @Override public Icon getExpandIcon() {
       switch (branch_type) {
-         case CLASS :
-         case METHOD :
-            return BoardImage.getIcon("class_expand");
-         case THROWABLE :
-            return BoardImage.getIcon("throw_expand");
-         case PROJECT :
-            return BoardImage.getIcon("project_expand");
-         case PACKAGE :
-            return BoardImage.getIcon("package_expand");
-         case INTERFACE :
-            return BoardImage.getIcon("interface_expand");
-         case ENUM :
-            return BoardImage.getIcon("enum_expand");
-         case ANNOTATION :
-            return BoardImage.getIcon("annot_expand");
-         case NONE:
-            break;
+	 case CLASS :
+	 case METHOD :
+	    return BoardImage.getIcon("class_expand");
+	 case THROWABLE :
+	    return BoardImage.getIcon("throw_expand");
+	 case PROJECT :
+	    return BoardImage.getIcon("project_expand");
+	 case PACKAGE :
+	    return BoardImage.getIcon("package_expand");
+	 case INTERFACE :
+	    return BoardImage.getIcon("interface_expand");
+	 case ENUM :
+	    return BoardImage.getIcon("enum_expand");
+	 case ANNOTATION :
+	    return BoardImage.getIcon("annot_expand");
+	 case NONE:
+	    break;
        }
       return null;
     }
 
    @Override public Icon getCollapseIcon() {
       switch (branch_type) {
-         case CLASS :
-         case METHOD :
-            return BoardImage.getIcon("class_collapse");
-         case THROWABLE :
-            return BoardImage.getIcon("throw_collapse");
-         case PACKAGE :
-            return BoardImage.getIcon("package_collapse");
-         case PROJECT :
-            return BoardImage.getIcon("project_collapse");
-         case INTERFACE :
-            return BoardImage.getIcon("interface_collapse");
-         case ENUM :
-            return BoardImage.getIcon("enum_collapse");
-         case ANNOTATION :
-            return BoardImage.getIcon("annot_collapse");
-         default:
-            break;
+	 case CLASS :
+	 case METHOD :
+	    return BoardImage.getIcon("class_collapse");
+	 case THROWABLE :
+	    return BoardImage.getIcon("throw_collapse");
+	 case PACKAGE :
+	    return BoardImage.getIcon("package_collapse");
+	 case PROJECT :
+	    return BoardImage.getIcon("project_collapse");
+	 case INTERFACE :
+	    return BoardImage.getIcon("interface_collapse");
+	 case ENUM :
+	    return BoardImage.getIcon("enum_collapse");
+	 case ANNOTATION :
+	    return BoardImage.getIcon("annot_collapse");
+	 default:
+	    break;
        }
       return null;
     }
@@ -728,7 +728,7 @@ private static class Branch extends BassTreeImpl {
    @Override public String getLocalName()		{ return local_name; }
    @Override public String toString()			{ return display_name; }
    @Override public String getFullName()		{ return full_name; }
-   @Override Branch getBassParent()				{ return parent_node; }
+   @Override Branch getBassParent()			{ return parent_node; }
 
    @Override void collapseSingletons() {
       if (parent_node != null) {
@@ -769,7 +769,7 @@ private static class Branch extends BassTreeImpl {
 	 ti.collapseSingletons();
        }
     }
-   
+
    @Override boolean removeEmptyNodes() {
       boolean chng = true;
       while (chng) {
@@ -781,12 +781,12 @@ private static class Branch extends BassTreeImpl {
 	    }
 	 }
       }
-      
+
       if (!isLeaf() && parent_node != null && getChildCount() == 0) {
 	 parent_node.child_nodes.remove(this);
 	 return true;
       }
-      
+
       return false;
    }
 
@@ -833,103 +833,103 @@ private static class Branch extends BassTreeImpl {
       String [] comps = bn.getNameComponents();
       int cidx = 0;
       Branch parent = null;
-   
+
       Branch p = this;
       while (p != null && cidx < comps.length) {
-         parent = p;
-         Branch np = null;
-         for (BassTreeImpl bt : p.child_nodes) {
-            if (bt.getLocalName().equals(comps[cidx])) {
-               if (bt instanceof Branch) {
-        	  np = (Branch) bt;
-        	  cidx++;
-        	  break;
-        	}
-               else {
-        	  if (cidx == comps.length-1 && !force) return bt;
-        	  BoardLog.logW("BALE","Search tree has leaf and parent with the same name: " +
-        			   bt.getLocalName() + " in " + p.getLocalName());
-        	  break;
-        	}
-             }
-            else if (subsetName(bt.getLocalName(),comps[cidx])) {
-               String nm = comps[cidx];
-               int fnd = -1;
-               for (int i = cidx+1; i < comps.length; ++i) {
-        	  if (nm.endsWith(":")) nm += comps[i];
-        	  else nm += "." + comps[i];
-        	  if (bt.getLocalName().equals(nm)) {
-        	     np = (Branch) bt;
-        	     fnd = i;
-        	     break;
-        	   }
-        	}
-               if (fnd >= 0) {
-        	  cidx = fnd+1;
-        	  break;
-        	}
-               // need to split the local name
-               nm = comps[cidx];
-               fnd = cidx;
-               String nm1 = nm;
-               for (int i = cidx+1; i < comps.length; ++i) {
-        	  if (nm.endsWith(":")) nm += comps[i];
-        	  else nm += "." + comps[i];
-        	  if (!subsetName(bt.getLocalName(),nm)) {
-        	     fnd = i;
-        	     break;
-        	  }
-        	  nm1 += "." + comps[i];
-        	}
-               splitNode((Branch) bt,nm1);
-               np = (Branch) bt;
-               cidx = fnd;
-             }
-          }
-         if (np == null) break;
-         p = np;
+	 parent = p;
+	 Branch np = null;
+	 for (BassTreeImpl bt : p.child_nodes) {
+	    if (bt.getLocalName().equals(comps[cidx])) {
+	       if (bt instanceof Branch) {
+		  np = (Branch) bt;
+		  cidx++;
+		  break;
+		}
+	       else {
+		  if (cidx == comps.length-1 && !force) return bt;
+		  BoardLog.logW("BALE","Search tree has leaf and parent with the same name: " +
+				   bt.getLocalName() + " in " + p.getLocalName());
+		  break;
+		}
+	     }
+	    else if (subsetName(bt.getLocalName(),comps[cidx])) {
+	       String nm = comps[cidx];
+	       int fnd = -1;
+	       for (int i = cidx+1; i < comps.length; ++i) {
+		  if (nm.endsWith(":")) nm += comps[i];
+		  else nm += "." + comps[i];
+		  if (bt.getLocalName().equals(nm)) {
+		     np = (Branch) bt;
+		     fnd = i;
+		     break;
+		   }
+		}
+	       if (fnd >= 0) {
+		  cidx = fnd+1;
+		  break;
+		}
+	       // need to split the local name
+	       nm = comps[cidx];
+	       fnd = cidx;
+	       String nm1 = nm;
+	       for (int i = cidx+1; i < comps.length; ++i) {
+		  if (nm.endsWith(":")) nm += comps[i];
+		  else nm += "." + comps[i];
+		  if (!subsetName(bt.getLocalName(),nm)) {
+		     fnd = i;
+		     break;
+		  }
+		  nm1 += "." + comps[i];
+		}
+	       splitNode((Branch) bt,nm1);
+	       np = (Branch) bt;
+	       cidx = fnd;
+	     }
+	  }
+	 if (np == null) break;
+	 p = np;
        }
       if (cidx == comps.length && bn.getNameType() == BassNameType.PROJECT && p != null) return p;
       if (cidx >= comps.length) return parent;
       if (cidx != comps.length -1 && !force) return null;
-   
+
       for (int i = cidx; parent != null && i < comps.length-1; ++i) {
-         parent = parent.findNode(comps[i],BASS_DEFAULT_INTERIOR_PRIORITY);
+	 parent = parent.findNode(comps[i],BASS_DEFAULT_INTERIOR_PRIORITY);
        }
-   
+
       if (!force && parent != null) {
-         String txt = bn.getNameWithParameters();
-         for (BassTreeImpl bt : parent.child_nodes) {
-            if (txt.equals(bt.getLocalName())) return bt;
-          }
-         return null;
+	 String txt = bn.getNameWithParameters();
+	 for (BassTreeImpl bt : parent.child_nodes) {
+	    if (txt.equals(bt.getLocalName())) return bt;
+	  }
+	 return null;
        }
       if (parent == null) return null;
-   
+
       if (bn.getNameType() == BassNameType.PROJECT) {
-         String pat = comps[0] + ".";
-         for (BassTreeImpl bti : parent.child_nodes) {
-            String nm = bti.getFullName();
-            if (nm.startsWith(pat)) return null;
-         }
-         Branch bb = new Branch(comps[0],parent);
-         computeBranchType(bn,bb);
-         parent.addChild(bb);
-         return bb;
+	 String pat = comps[0] + ".";
+	 for (BassTreeImpl bti : parent.child_nodes) {
+	    String nm = bti.getFullName();
+	    if (nm.startsWith(pat)) return null;
+	 }
+	 Branch bb = new Branch(comps[0],parent);
+	 computeBranchType(bn,bb);
+	 parent.addChild(bb);
+	 return bb;
        }
       else if ((bn.getNameType() == BassNameType.CLASS || bn.getNameType() == BassNameType.INTERFACE ||
-        	  bn.getNameType() == BassNameType.ENUM || bn.getNameType() == BassNameType.ANNOTATION)
-               && bn.getClassName() != null &&
-               parent.getBranchType() == BranchNodeType.PACKAGE) {
-         if (parent.getFullName().endsWith(bn.getName())) {
-            computeBranchType(bn,parent);
-         }
+		  bn.getNameType() == BassNameType.ENUM || bn.getNameType() == BassNameType.ANNOTATION)
+	       && bn.getClassName() != null &&
+	       parent.getBranchType() == BranchNodeType.PACKAGE) {
+	 if (parent.getFullName().endsWith(bn.getName())) {
+	    computeBranchType(bn,parent);
+	 }
        }
-   
-   
+
+
       TreeLeaf tl = parent.insertChild(bn);
       ++leaf_count;
-   
+
       return tl;
     }
 
@@ -957,10 +957,10 @@ private static class Branch extends BassTreeImpl {
       else nd.setBranchType(BranchNodeType.PACKAGE);
       Branch b1 = new Branch(nm1,nd);
       b1.orig_name = orignm;
-   
+
       for (BassTreeImpl cn : nd.child_nodes) {
-         b1.addChild(cn);
-         cn.parent_node = b1;
+	 b1.addChild(cn);
+	 cn.parent_node = b1;
       }
       nd.child_nodes.clear();
       nd.addChild(b1);
