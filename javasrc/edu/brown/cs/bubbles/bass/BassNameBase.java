@@ -67,6 +67,7 @@ private   String	full_name;
 private   String	param_name;
 
 private static final String SPLIT_PATTERN = "[.]";
+private static final String DOT_SUBSTITUTE = "^^";
 
 
 
@@ -271,6 +272,8 @@ protected String getLocalName()
       else buf.append(":.");
     }
    if (sp != null) {
+      sp = sp.replace(".",DOT_SUBSTITUTE);
+      sp = sp.replace("/","/.");
       buf.append(sp);
       buf.append(":.");
     }

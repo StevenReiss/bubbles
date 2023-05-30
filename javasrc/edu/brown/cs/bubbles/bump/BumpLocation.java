@@ -75,6 +75,7 @@ private String		symbol_key;
 private String		symbol_handle;
 private int		symbol_flags;
 private String		symbol_project;
+private String          symbol_prefix;
 private BumpSymbolType	source_type;
 private String		symbol_return;
 private String          symbol_parameters;
@@ -169,6 +170,7 @@ BumpLocation(String proj,String file,int off,int len,String srctyp,Element itm)
    symbol_key = null;
    symbol_handle = null;
    symbol_flags = -1;
+   symbol_prefix = null;
    symbol_project = project_name;
    s6_source = null;
 
@@ -185,6 +187,7 @@ BumpLocation(String proj,String file,int off,int len,String srctyp,Element itm)
       symbol_length = IvyXml.getAttrInt(itm,"LENGTH");
       symbol_key = IvyXml.getAttrString(itm,"KEY");
       symbol_handle = IvyXml.getAttrString(itm,"HANDLE");
+      symbol_prefix = IvyXml.getAttrString(itm,"PREFIX");
       if (symbol_key == null) symbol_key = symbol_handle;
       else if (symbol_handle == null) symbol_handle = symbol_key;
       symbol_flags = IvyXml.getAttrInt(itm,"FLAGS");
@@ -292,6 +295,13 @@ public int getDefinitionEndOffset()		{ return symbol_offset + symbol_length; }
  **/
 
 public String getKey()				{ return symbol_key; }
+
+
+/**
+ *      Return prefix associated with symbol (language dependent)
+ **/
+
+public String getPrefix()                       { return symbol_prefix; }
 
 
 

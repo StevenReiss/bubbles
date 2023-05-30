@@ -523,6 +523,8 @@ private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 	 if (best != null) pfx = pmap.get(best);
        }
     }
+   
+   if (pfx == null) pfx = bl.getPrefix();
 
    BassNameLocation bn = new BassNameLocation(bl,pfx);
    String key = null;
