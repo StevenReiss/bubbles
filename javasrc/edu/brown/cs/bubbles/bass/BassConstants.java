@@ -346,6 +346,12 @@ int	BASS_DEFAULT_SORT_PRIORITY = 50;
 int	BASS_DEFAULT_INTERIOR_PRIORITY = 200;
 
 
+/**
+ *      Replacement for "." in names to allow . to be used for splitting
+ **/
+
+String DOT_SUBSTITUTE = "^^";
+
 
 
 /********************************************************************************/

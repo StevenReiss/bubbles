@@ -67,7 +67,7 @@ private   String	full_name;
 private   String	param_name;
 
 private static final String SPLIT_PATTERN = "[.]";
-private static final String DOT_SUBSTITUTE = "^^";
+
 
 
 
