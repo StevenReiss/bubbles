@@ -86,7 +86,7 @@ private Pattern 	anonclass_pattern = Pattern.compile("\\$[0-9]");
 
 BassRepositoryLocation()
 {
-   all_names = new HashSet<BassName>();
+   all_names = new HashSet<>();
    file_names = null;
    is_ready = false;
    update_repos = new ArrayList<>();
@@ -111,14 +111,14 @@ BassRepositoryLocation()
    waitForNames();
 
    synchronized (this) {
-      return new ArrayList<BassName>(all_names);
+      return new ArrayList<>(all_names);
     }
 }
 
 @Override public boolean isEmpty()
 {
    waitForNames();
-   
+
    return all_names.isEmpty();
 }
 
@@ -505,7 +505,10 @@ private String commonSuffix(String s1,String s2)
 
 private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 {
-   if (!isRelevant(bl)) return;
+   if (!isRelevant(bl)) {
+      BoardLog.logD("BASS","Ignore symbol " + bl);
+      return;
+    }
 
    String pfx = null;
    if (base_map != null && bl.getFile() != null && bl.getProject() != null) {
@@ -523,7 +526,7 @@ private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 	 if (best != null) pfx = pmap.get(best);
        }
     }
-   
+
    if (pfx == null) pfx = bl.getPrefix();
 
    BassNameLocation bn = new BassNameLocation(bl,pfx);
@@ -540,7 +543,7 @@ private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 	 else usedmap.put(key,bn);
 	 break;
       case VARIABLES :
-         key = "VARIABLE@@@" + bn.getNameHead();
+	 key = "VARIABLE@@@" + bn.getNameHead();
 	 BassNameLocation vbn = usedmap.get(key);
 	 if (vbn != null) {
 	    vbn.addLocation(bl);
@@ -586,8 +589,6 @@ private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 	 all_names.add(fnm);
 	 BassNameLocation inm = new BassNameLocation(bl,BassNameType.HEADER,pfx);
 	 all_names.add(inm);
-	 break;
-      default:
 	 break;
     }
 

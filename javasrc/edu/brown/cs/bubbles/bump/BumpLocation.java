@@ -75,10 +75,10 @@ private String		symbol_key;
 private String		symbol_handle;
 private int		symbol_flags;
 private String		symbol_project;
-private String          symbol_prefix;
+private String		symbol_prefix;
 private BumpSymbolType	source_type;
 private String		symbol_return;
-private String          symbol_parameters;
+private String		symbol_parameters;
 private String		s6_source;
 
 private static FileSystemView file_system = null;
@@ -94,6 +94,7 @@ static {
    symbol_map.put("Field",BumpSymbolType.FIELD);
    symbol_map.put("EnumConstant",BumpSymbolType.ENUM_CONSTANT);
    symbol_map.put("Function",BumpSymbolType.FUNCTION);
+   symbol_map.put("Method",BumpSymbolType.FUNCTION);
    symbol_map.put("Constructor",BumpSymbolType.CONSTRUCTOR);
    symbol_map.put("StaticInitializer",BumpSymbolType.STATIC_INITIALIZER);
    symbol_map.put("Exception",BumpSymbolType.CLASS);
@@ -298,10 +299,10 @@ public String getKey()				{ return symbol_key; }
 
 
 /**
- *      Return prefix associated with symbol (language dependent)
+ *	Return prefix associated with symbol (language dependent)
  **/
 
-public String getPrefix()                       { return symbol_prefix; }
+public String getPrefix()			{ return symbol_prefix; }
 
 
 
@@ -403,8 +404,8 @@ public static boolean compareParameters(String s0,String s1)
 //    int p0len = p0.length();
 //    int p1len = p1.length();
 //    if (p1len <= p0len) {
-//       BoardLog.logD("BUMP","Problem comparing signatures " + s0 + " " + s1 + " " + p0 + " " + p1);
-//       return false;
+//	 BoardLog.logD("BUMP","Problem comparing signatures " + s0 + " " + s1 + " " + p0 + " " + p1);
+//	 return false;
 //     }
 //    if (p1.charAt(p1len-p0len-1) != '.') return false;
     }

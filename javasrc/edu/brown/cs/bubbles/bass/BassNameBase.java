@@ -30,6 +30,7 @@
 
 package edu.brown.cs.bubbles.bass;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.bubbles.bump.BumpLocation;
@@ -283,6 +284,11 @@ protected String getLocalName()
       buf.append(".");
       buf.append(getLocalName());
     }
+   else {
+      buf.append(getLocalName());
+      // BoardLog.logD("BASS","No name head for " + this + " " + getLocalName());
+    }
+
    String nm = buf.toString();
 
    String [] nms = nm.split(SPLIT_PATTERN);
