@@ -79,6 +79,7 @@ private String		symbol_prefix;
 private BumpSymbolType	source_type;
 private String		symbol_return;
 private String		symbol_parameters;
+private String          symbol_detail;
 private String		s6_source;
 
 private static FileSystemView file_system = null;
@@ -197,6 +198,8 @@ BumpLocation(String proj,String file,int off,int len,String srctyp,Element itm)
       symbol_return = IvyFormat.formatTypeName(symbol_return);
       symbol_parameters = IvyXml.getAttrString(itm,"PARAMETERS");
       symbol_parameters = IvyFormat.formatTypeName(symbol_parameters);
+      symbol_detail = IvyXml.getAttrString(itm,"DETAIL");
+      
       if (file_location == null) {
 	 String fnm = IvyXml.getAttrString(itm,"PATH");
 	 if (fnm != null) file_location = file_system.createFileObject(fnm);
@@ -326,9 +329,13 @@ public BumpSymbolType getSourceType()		{ return source_type; }
  *	Return the parameter list of the enclosing definition if it has one.
  **/
 
-public String getParameters()
+public String getParameters()                   { return symbol_parameters; }
+
+
+public String getDetail()                  
 {
-   return symbol_parameters;
+   if (symbol_parameters != null) return symbol_parameters;
+   else return symbol_detail;
 }
 
 

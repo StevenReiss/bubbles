@@ -136,7 +136,7 @@ BassNameLocation(BumpLocation bl,String prefix)
 	 break;
     }
 
-   method_params = base_location.getParameters();
+   method_params = base_location.getDetail();
    if (name_type == BassNameType.METHOD) {
       if (Modifier.isPublic(getModifiers())) appropriate_icon = BoardImage.getIcon("method");
       else if (Modifier.isPrivate(getModifiers())) appropriate_icon = BoardImage.getIcon("private_method");
