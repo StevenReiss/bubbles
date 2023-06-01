@@ -198,17 +198,17 @@ void createSearchContext()
 
       byte [] buf = new byte[8192];
       try (FileInputStream fis = new FileInputStream(tnm)) {
-         for ( ; ; ) {
-            int rln = fis.read(buf);
-            if (rln <= 0) break;
-            for (int i = 0; i < rln; ++i) {
-               int v = buf[i] & 0xff;
-               String s1 = Integer.toHexString(v);
-               if (s1.length() == 1) sw.write("0");
-               sw.write(s1);
-               if ((i%32) == 31) sw.write("\n");
-             }
-          }
+	 for ( ; ; ) {
+	    int rln = fis.read(buf);
+	    if (rln <= 0) break;
+	    for (int i = 0; i < rln; ++i) {
+	       int v = buf[i] & 0xff;
+	       String s1 = Integer.toHexString(v);
+	       if (s1.length() == 1) sw.write("0");
+	       sw.write(s1);
+	       if ((i%32) == 31) sw.write("\n");
+	     }
+	  }
        }
       sw.write("]]></CONTENTS>\n</FILE>\n");
 
@@ -413,6 +413,7 @@ private Element checkSignature()
 {
    String snm = bump_location.getSymbolName();
    String pnm = bump_location.getParameters();
+   if (pnm == null) pnm = "()";
    String pfx = "";
    if (Modifier.isStatic(bump_location.getModifiers())) pfx = "static ";
    int idx = snm.lastIndexOf(".");

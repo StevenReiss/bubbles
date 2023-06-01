@@ -356,7 +356,10 @@ private static class Region implements Comparable<Region> {
 	    break;
 	 case FUNCTION :
 	 case CONSTRUCTOR :
-	    String mnm = base_location.getSymbolName() + base_location.getParameters();
+	    String prms = base_location.getParameters();
+	    String mnm = base_location.getSymbolName();
+	    if (prms != null) mnm += prms;
+	    else mnm += "(...)";
 	    bb = bf.createMethodBubble(base_location.getProject(),mnm);
 	    break;
 	 case STATIC_INITIALIZER :
@@ -962,16 +965,16 @@ private class HistoryGraph extends JPanel implements HistoryCallback {
 
    @Override public void paint(Graphics g) {
       for (PetalNode pn : petal_model.getNodes()) {
-         if (pn instanceof Node) {
-            Node nn = (Node) pn;
-            HistoryNode hn = nn.getNode();
-            Color c = node_color.get(hn);
-            if (c == null) c = BoardColors.getColor("Bvcr.HistoryDefaultColor");
-            Component lbl = pn.getComponent();
-            BoardColors.setColors(lbl,c);
-          }
+	 if (pn instanceof Node) {
+	    Node nn = (Node) pn;
+	    HistoryNode hn = nn.getNode();
+	    Color c = node_color.get(hn);
+	    if (c == null) c = BoardColors.getColor("Bvcr.HistoryDefaultColor");
+	    Component lbl = pn.getComponent();
+	    BoardColors.setColors(lbl,c);
+	  }
        }
-   
+
       super.paint(g);
     }
 
@@ -1082,19 +1085,19 @@ private static class FileData {
    private void scanFile() {
       num_lines = 0;
       try (BufferedReader rdr = new BufferedReader(new FileReader(file_name))) {
-         for ( ; ; ) {
-            String ln = rdr.readLine();
-            if (ln == null) break;
-            ++num_lines;
-            List<FileLineData> lfd = scanLine(ln);
-            if (lfd != null) {
-               line_data.put(num_lines,lfd);
-               line_text.put(num_lines,ln);
-             }
-          }
+	 for ( ; ; ) {
+	    String ln = rdr.readLine();
+	    if (ln == null) break;
+	    ++num_lines;
+	    List<FileLineData> lfd = scanLine(ln);
+	    if (lfd != null) {
+	       line_data.put(num_lines,lfd);
+	       line_text.put(num_lines,ln);
+	     }
+	  }
        }
       catch (IOException e) {
-         return;
+	 return;
        }
     }
 

@@ -235,7 +235,9 @@ BconRegionLocation(BaleConstants.BaleFileOverview fov,BumpLocation bl)
 	 break;
       case FUNCTION :
       case CONSTRUCTOR :
-	 String mnm = base_location.getSymbolName() + base_location.getParameters();
+	 String prms = base_location.getParameters();
+	 if (prms == null) prms = "(...)";
+	 String mnm = base_location.getSymbolName() + prms;
 	 bb = bf.createMethodBubble(base_location.getProject(),mnm);
 	 break;
       case STATIC_INITIALIZER :

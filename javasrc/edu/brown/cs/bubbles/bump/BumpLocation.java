@@ -417,7 +417,7 @@ public static boolean compareParameters(String s0,String s1)
 
 public static List<String> getParameterList(String arr)
 {
-   List<String> rslt = new ArrayList<String>();
+   List<String> rslt = new ArrayList<>();
    if (arr == null) return rslt;
 
    int start = -1;
