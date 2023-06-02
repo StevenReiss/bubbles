@@ -74,12 +74,12 @@ BaleElementBuilder(BaleElement.Branch be,BaleAstNode ast)
    for_document = be.getBaleDocument();
    root_element = be;
    root_element.setAstNode(ast);
-   new_children = new ArrayList<BaleElement>();
+   new_children = new ArrayList<>();
    cur_parent = root_element;
    cur_ast = ast;
    cur_line = null;
    token_state = BaleTokenState.NORMAL;
-   line_elements = new ArrayList<BaleElement>();
+   line_elements = new ArrayList<>();
    num_blank = 0;
 }
 
@@ -310,7 +310,7 @@ private BaleElement.Branch createOuterBranch(BaleAstNode sn)
       case FIELD :
 	 return new BaleElement.FieldNode(for_document,cur_parent);
       case VARIABLE :
-         return new BaleElement.VariableNode(for_document,cur_parent);
+	 return new BaleElement.VariableNode(for_document,cur_parent);
       case ANNOTATION :
 	 return new BaleElement.AnnotationNode(for_document,cur_parent);
       case STATEMENT :
@@ -344,7 +344,7 @@ private BaleElement.Branch createInnerBranch(BaleAstNode sn)
 	 case STATEMENT :
 	    return new BaleElement.StatementNode(for_document,cur_parent);
 	 case EXPRESSION :
-         case CALL_EXPR :
+	 case CALL_EXPR :
 	    return new BaleElement.ExpressionNode(for_document,cur_parent);
 	 case BLOCK :
 	 case SWITCH_BLOCK :
@@ -464,7 +464,7 @@ private BaleElement fixLeafElement(BaleElement be,boolean first)
 	     }
 	    break;
 	 default :
-            if (be.getClass() != BaleElement.Identifier.class) {
+	    if (be.getClass() != BaleElement.Identifier.class) {
 	       be = new BaleElement.Identifier(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
 	     }
 	    break;

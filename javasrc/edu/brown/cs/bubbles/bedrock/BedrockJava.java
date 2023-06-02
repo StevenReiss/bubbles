@@ -337,7 +337,7 @@ void handleFindAll(String proj,String file,int start,int end,boolean defs,boolea
 //		  BedrockPlugin.logD("PACKAGE ROOT: " + roots[i].getPath());
 //		}
 //	     }
-//	
+//
 //	  }
 //	 catch (Throwable e) {
 //	    BedrockPlugin.logD("Problem with listing roots: " + e);
@@ -739,14 +739,14 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
 
    BedrockPlugin.logD("BEGIN SEARCH " + pat + " " + (System.currentTimeMillis()-begin) + " " + proj);
    BedrockPlugin.logD("SEARCH SCOPE " + system + " " + fg + " " + scp);
-   if (ijp != null) {
-      try {
-	 for (IPackageFragmentRoot root : ijp.getAllPackageFragmentRoots()) {
-	    BedrockPlugin.logD("PACKAGE ROOT: " + root + " " + root.getPath());
-	  }
-       }
-      catch (JavaModelException e) { }
-    }
+// if (ijp != null) {
+//    try {
+//	 for (IPackageFragmentRoot root : ijp.getAllPackageFragmentRoots()) {
+//	    BedrockPlugin.logD("PACKAGE ROOT: " + root + " " + root.getPath());
+//	  }
+//     }
+//    catch (JavaModelException e) { }
+//  }
 
    try {
       se.search(pat,parts,scp,fh,null);
