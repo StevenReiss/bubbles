@@ -60,7 +60,7 @@ private List<BumpLocation>	location_set;
 private BumpLocation		base_location;
 private Icon			appropriate_icon;
 private String			method_params;
-private String                  file_prefix;
+private String			file_prefix;
 
 
 
@@ -89,8 +89,8 @@ BassNameLocation(BumpLocation bl,String prefix)
 	 name_type = BassNameType.CLASS;
 	 break;
       case ANNOTATION :
-         name_type = BassNameType.ANNOTATION;
-         break;
+	 name_type = BassNameType.ANNOTATION;
+	 break;
       case THROWABLE :
 	 name_type = BassNameType.THROWABLE;
 	 break;
@@ -111,8 +111,8 @@ BassNameLocation(BumpLocation bl,String prefix)
 	 name_type = BassNameType.FIELDS;
 	 break;
       case GLOBAL :
-         name_type = BassNameType.VARIABLES;
-         break;
+	 name_type = BassNameType.VARIABLES;
+	 break;
       case MAIN_PROGRAM :
 	 name_type = BassNameType.MAIN_PROGRAM;
 	 break;
@@ -314,6 +314,11 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
 
 
 
+protected String getPrefix()
+{
+   return base_location.getPrefix();
+}
+
 
 /********************************************************************************/
 /*										*/
@@ -428,7 +433,7 @@ BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
       default:
 	 break;
    }
-								
+							
    return null;
 }
 

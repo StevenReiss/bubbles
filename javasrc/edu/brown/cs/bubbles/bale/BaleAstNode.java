@@ -91,6 +91,7 @@ static {
    ast_types.put("METHOD",BaleAstNodeType.METHOD);
    ast_types.put("FUNCTION",BaleAstNodeType.METHOD);
    ast_types.put("MODULE", BaleAstNodeType.FILE);
+   ast_types.put("FILE", BaleAstNodeType.FILE);
    ast_types.put("IMPORT",BaleAstNodeType.IMPORT);
    ast_types.put("CALL",BaleAstNodeType.CALL);
    ast_types.put("CALLEXPR",BaleAstNodeType.CALL_EXPR);
@@ -105,6 +106,7 @@ static {
    id_types.put("FIELD",BaleAstIdType.FIELD);
    id_types.put("FIELDS",BaleAstIdType.FIELD_STATIC);
    id_types.put("FIELDC",BaleAstIdType.FIELDC);
+   id_types.put("VARIABLE",BaleAstIdType.FIELD);
    id_types.put("ENUMC",BaleAstIdType.ENUMC);
    id_types.put("METHODDECL",BaleAstIdType.METHOD_DECL);
    id_types.put("METHODDECLU",BaleAstIdType.METHOD_DECL);
@@ -214,7 +216,7 @@ int getEnd()					{ return end_position; }
 double getElidePriority()			{ return elide_priority; }
 BaleAstNode getParent() 			{ return parent_node; }
 String getFullName()				{ return full_name; }
-Element getHintData()                           { return hint_data; }
+Element getHintData()				{ return hint_data; }
 
 boolean isLastChild(BaleAstNode n) {
    if (child_nodes == null) return false;

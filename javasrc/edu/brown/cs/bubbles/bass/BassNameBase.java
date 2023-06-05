@@ -315,12 +315,19 @@ protected String getLocalName()
 @Override public String getFullName()
 {
    if (full_name == null) {
-      full_name = getNameHead() + "." + getNameWithParameters();
+      String s1 = getPrefix();
+      String s2 = getNameHead();
+      String fn = getNameWithParameters();
+      if (s2 != null) fn = s2 + "." + fn;
+      if (s1 != null) fn = s1 + ";" + fn;
+      full_name = fn;
     }
 
    return full_name;
 }
 
+
+protected String getPrefix()				{ return null; }
 
 
 @Override public Icon getDisplayIcon()			{ return null; }
