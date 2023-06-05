@@ -131,7 +131,7 @@ BaleDocument getBaleDocument()			{ return for_document; }
 
 BaleAstNode getAstNode()			{ return ast_node; }
 void setAstNode(BaleAstNode bn) {
-   ast_node = bn; 
+   ast_node = bn;
    old_hint = null;
 }
 
@@ -152,10 +152,10 @@ BaleFragmentType getBubbleType()		{ return BaleFragmentType.NONE; }
 boolean isDeclSet()				{ return false; }
 boolean isStatement()				{ return false; }
 boolean isOrphan()				{ return false; }
-boolean isHint()                                { return false; }
-String getHintText()                                { return null; }
-org.w3c.dom.Element getOldHintData()            { return old_hint; }
-void setOldHintData(org.w3c.dom.Element hint)    { old_hint = hint; }
+boolean isHint()				{ return false; }
+String getHintText()				    { return null; }
+org.w3c.dom.Element getOldHintData()		{ return old_hint; }
+void setOldHintData(org.w3c.dom.Element hint)	 { old_hint = hint; }
 
 @Override public BaleElement.Branch getBaleParent()	{ return parent_element; }
 
@@ -315,7 +315,7 @@ public String getMethodName()
 	 break;
       if (be.getBubbleType() != BaleFragmentType.NONE) return null;
     }
-   
+
    BaleElement ce = be;
    while (ce != null && !ce.isLeaf()) {
       ce = ce.getBaleElement(0);
@@ -340,7 +340,7 @@ public String getMethodName()
       if (ce.getTokenType() == BaleTokenType.RBRACE) break;
       if (ce.getTokenType() == BaleTokenType.SEMICOLON) break;
       ce = ce.getPreviousCharacterElement();
-      //    BoardLog.logD("BALE","getMethodName back to " + ce.getName());  
+      //    BoardLog.logD("BALE","getMethodName back to " + ce.getName());
     }
 
    return null;
@@ -751,22 +751,22 @@ static class Branch extends BaleElement {
       int nsz = children_elts.length;
       while (sz - 1 + num_children >= nsz) nsz *= 2;
       if (nsz != children_elts.length) {
-         children_elts = Arrays.copyOf(children_elts,nsz);
+	 children_elts = Arrays.copyOf(children_elts,nsz);
        }
       int idx = -1;
       for (int i = 0; i < num_children; ++i) {
-         if (children_elts[i] == old) {
-            idx = i;
-            break;
-          }
+	 if (children_elts[i] == old) {
+	    idx = i;
+	    break;
+	  }
        }
       if (idx < 0) return;
       System.arraycopy(children_elts,idx,children_elts,idx+sz-1,num_children-idx);
       for (BaleElement be : rep) {
-         checkCycle(be);
-         children_elts[idx++] = be;
-         be.parent_element = this;
-         be.clearCache();
+	 checkCycle(be);
+	 children_elts[idx++] = be;
+	 be.parent_element = this;
+	 be.clearCache();
        }
       old.parent_element = null;
       num_children += sz-1;
@@ -802,8 +802,8 @@ static class Branch extends BaleElement {
    @Override protected Position getStartPosition() {
       if (num_children == 0) return null;
       if (start_pos == null) {
-         BaleElement c = children_elts[0];
-         start_pos = c.getStartPosition();
+	 BaleElement c = children_elts[0];
+	 start_pos = c.getStartPosition();
        }
       return start_pos;
     }
@@ -990,26 +990,26 @@ static class Leaf extends BaleElement {
    void setPosition(int off0,int off1) {
       BaleDocument bd = getBaleDocument();
       try {
-         start_pos = bd.createPosition(off0);
-         end_pos = bd.createPosition(off1);
-         if (start_pos.getOffset() > end_pos.getOffset()) {
-            BoardLog.logE("BALE","Bad token: end is less than start");
-            start_pos = bd.createPosition(off0);
-            end_pos = bd.createPosition(off1);
-            int p0 = start_pos.getOffset();
-            int p1 = end_pos.getOffset();
-            BoardLog.logX("BALE","Bad token: end less than start: " + p0 + " " + p1 + " " +
-        		     token_type + " " +
-        		     getName() + " " + bd.getFragmentName() + " " + bd.getFile() + " " +
-        		     off0 + " " + off1);
-   
-            end_pos = start_pos;
-          }
-         if (getBaleParent() != null) getBaleParent().setChildPosition(start_pos,end_pos,this);
+	 start_pos = bd.createPosition(off0);
+	 end_pos = bd.createPosition(off1);
+	 if (start_pos.getOffset() > end_pos.getOffset()) {
+	    BoardLog.logE("BALE","Bad token: end is less than start");
+	    start_pos = bd.createPosition(off0);
+	    end_pos = bd.createPosition(off1);
+	    int p0 = start_pos.getOffset();
+	    int p1 = end_pos.getOffset();
+	    BoardLog.logX("BALE","Bad token: end less than start: " + p0 + " " + p1 + " " +
+			     token_type + " " +
+			     getName() + " " + bd.getFragmentName() + " " + bd.getFile() + " " +
+			     off0 + " " + off1);
+
+	    end_pos = start_pos;
+	  }
+	 if (getBaleParent() != null) getBaleParent().setChildPosition(start_pos,end_pos,this);
        }
       catch (BadLocationException e) {
-         start_pos = end_pos = null;
-         throw new Error("Can't create position references for leaf element " + start_pos + " " + end_pos);
+	 start_pos = end_pos = null;
+	 throw new Error("Can't create position references for leaf element " + start_pos + " " + end_pos);
        }
     }
 
@@ -1099,7 +1099,7 @@ static class VariableNode extends Branch {
    VariableNode(BaleDocument d,BaleElement.Branch par) {
       super(d,par,null);
     }
-   
+
    @Override public String getName()		{ return "Variable"; }
    @Override boolean isOutsideLine()		{ return true; }
    @Override BaleFragmentType getBubbleType()	{ return BaleFragmentType.FIELDS; }
@@ -1499,6 +1499,18 @@ static class AnnotationId extends Identifier {
 
 
 
+static class LabelId extends Identifier {
+
+   LabelId(BaleDocument d,BaleElement.Branch p,int offs,int offe) {
+      super(d,p,offs,offe);
+    }
+
+   @Override public String getName()		{ return "LabelId"; }
+
+}	// end of inner class StaticCallId
+
+
+
 static class BuiltinId extends Identifier {
 
    BuiltinId(BaleDocument d,BaleElement.Branch p,int offs,int offe) {
@@ -1579,9 +1591,9 @@ static class Number extends Leaf {
 static class Literal extends Leaf {
 
    private boolean end_line;
-   
+
    Literal(BaleDocument d,BaleElement.Branch p,int offs,int offe,
-         boolean eol,BaleTokenType tt) {
+	 boolean eol,BaleTokenType tt) {
       super(d,p,null,offs,offe,tt);
       end_line = eol;
     }
@@ -1591,7 +1603,7 @@ static class Literal extends Leaf {
    @Override BaleTokenState getEndTokenState() {
       return (end_line ? BaleTokenState.IN_MULTILINE_STRING : BaleTokenState.NORMAL);
     }
-   
+
 }	// end of inner class Literal
 
 
@@ -1726,7 +1738,7 @@ static class LineComment extends Leaf {
 static class OrphanElement extends Leaf {
 
    // private String fragment_name;
-   
+
    OrphanElement(BaleDocument d,BaleElement.Branch p,String nm) {
       super(d,p,null,0,1);
       // fragment_name = nm;
@@ -1741,18 +1753,18 @@ static class OrphanElement extends Leaf {
 
 
 static class HintElement extends Leaf {
-   
+
    private String hint_text;
-   
+
    HintElement(BaleElement base,String hint,int off) {
       super(base.getBaleDocument(),base.getBaleParent(),null,off,off);
       hint_text = hint;
     }
-   
-   @Override public String getName()            { return "Hint"; }
-   @Override boolean isComment()                { return true; }
-   @Override boolean isHint()                   { return true; }
-   @Override String getHintText()                   { return hint_text; }
+
+   @Override public String getName()		{ return "Hint"; }
+   @Override boolean isComment()		{ return true; }
+   @Override boolean isHint()			{ return true; }
+   @Override String getHintText()		    { return hint_text; }
 
 }
 

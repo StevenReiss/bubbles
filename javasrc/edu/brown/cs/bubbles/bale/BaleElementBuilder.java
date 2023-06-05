@@ -463,6 +463,17 @@ private BaleElement fixLeafElement(BaleElement be,boolean first)
 	       be = new BaleElement.BuiltinId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
 	     }
 	    break;
+	 case LABEL :
+	    if (!(be instanceof BaleElement.LabelId)) {
+	       be = new BaleElement.LabelId(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());
+	     }
+	    break;
+	 case KEYWORD :
+	    if (!(be instanceof BaleElement.Keyword)) {
+	       be = new BaleElement.Keyword(for_document,cur_parent,be.getStartOffset(),be.getEndOffset(),
+					       BaleTokenType.KEYWORD);
+	     }
+	    break;
 	 default :
 	    if (be.getClass() != BaleElement.Identifier.class) {
 	       be = new BaleElement.Identifier(for_document,cur_parent,be.getStartOffset(),be.getEndOffset());

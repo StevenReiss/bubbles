@@ -164,7 +164,7 @@ enum BaleTokenType {
    RAISE,			// the keyword raise
    IMPORT,			// the keyword import
    PACKAGE,			// the keyword package
-   THROWS,                      // the keyword throws
+   THROWS,			// the keyword throws
    TYPEKEY,			// type keyword (int, void, ...)
    NUMBER,			// numeric literal
    CHARLITERAL, 		// character literal
@@ -185,16 +185,16 @@ enum BaleTokenType {
    RANGLE,			// right angle bracket >
    DOT, 				// period .
    AT,				// at sign @
-   OP,			     	// valid operator
+   OP,				// valid operator
    EQUAL,				// equals sign
    BACKSLASH,			// backslash
-   EOLSTRING,                      // end of line inside a multiline string     
+   EOLSTRING,			   // end of line inside a multiline string
    BADSTRING,			// unclosed string
    BADCHARLIT,			// unclosed character literal
    BADNUMBER,			// 0x, ###e ###e+ ###e-
    ELIDED,			// elision image
-   FUNCTION,                       // the js keyword function
-   OTHER				// illegal token or character
+   FUNCTION,			// the js keyword function
+   OTHER			// illegal token or character
 }
 
 
@@ -290,7 +290,9 @@ enum BaleAstIdType {
    UNDEF,
    ANNOT,
    BUILTIN,
-   MODULE
+   MODULE,
+   LABEL,
+   KEYWORD,
 }
 
 
@@ -316,7 +318,7 @@ enum BaleElideMode {
    ELIDE_CHECK_ONCE,			// check once, then leave as is
    ELIDE_CHECK_ALWAYS,			// redo elision as the cursor moves
    ELIDE_NONE,				// no elision
-   ELIDE_COMMENTS,                      // no code elision
+   ELIDE_COMMENTS,			// no code elision
 }
 
 
@@ -358,7 +360,7 @@ enum BaleViewType {
    CODE,		// inside line element
    TEXT,		// use a BaleViewText
    ORPHAN,	// orphan display
-   HINT,           // hint display
+   HINT,	   // hint display
 }
 
 
@@ -409,7 +411,7 @@ enum BaleHighlightType {
 
 
 enum BaleStackType {
-   NORMAL,			// all bubbles, one bubble -> no stack		
+   NORMAL,			// all bubbles, one bubble -> no stack
    DROP_SOURCE, 		// ignore an instance from the source
    FORCE,			// force a stack even with one bubble
 }
@@ -1348,16 +1350,16 @@ interface BaleLanguageKit {
 
    Action [] getActions();
    Keymap getKeymap(Keymap base);
-   default BaleHinter getHinter()                       { return null; }
-   default String getPostContent(String content)        { return null; }
+   default BaleHinter getHinter()			{ return null; }
+   default String getPostContent(String content)	{ return null; }
    default boolean checkContent(String content)        { return false; }
 
 }	// end of inner class BaleLanguageKit
 
 
 interface BaleHinter {
-   default String getPreHint(BaleElement be)    { return null; }
-   default String getPostHint(BaleElement be)   { return null; }
+   default String getPreHint(BaleElement be)	{ return null; }
+   default String getPostHint(BaleElement be)	{ return null; }
 }
 
 
@@ -1428,9 +1430,9 @@ interface BaleWindowElement {
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Local editing attributes                                                */
-/*                                                                              */
+/*										*/
+/*	Local editing attributes						*/
+/*										*/
 /********************************************************************************/
 
 String BALE_AUTO_INSERT_CLOSE = "Bale.auto.insert.close";

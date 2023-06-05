@@ -174,10 +174,10 @@ public static void setup()
    BudaRoot.registerMenuButton("Admin.Admin.Import Java Formats",new FormatImporter());
    switch (BoardSetup.getSetup().getLanguage()) {
       case JAVA :
-         BudaRoot.registerMenuButton("Admin.Admin.Import Formats from Project",new ProjectFormatImporter());
-         break;
+	 BudaRoot.registerMenuButton("Admin.Admin.Import Formats from Project",new ProjectFormatImporter());
+	 break;
       default :
-         break;
+	 break;
     }
 
    BuenoFactory.getFactory().addInsertionHandler(new BaleInserter());
@@ -195,7 +195,7 @@ public static void initialize(BudaRoot br)
 
    bump_client.addOpenEditorBubbleHandler(new BaleOpenEditorHandler(br));
    getFactory().buda_root = br;
-   
+
    // force key definitions
    new BaleEditorKit(BoardLanguage.JAVA);
    new BaleEditorKit(BoardLanguage.PYTHON);
@@ -241,7 +241,7 @@ BaleFragmentEditor createMethodFragmentEditor(BumpLocation loc)
 BaleFragmentEditor createFieldFragmentEditor(String proj,File file,String cls)
 {
    List<BumpLocation> locs = bump_client.findFields(proj,file,cls);
-   
+
    String typ = BaleFactory.getFieldsName();
 
    return getEditorFromLocations(locs,BaleFragmentType.FIELDS,cls + ".<" + typ + ">");
@@ -299,12 +299,12 @@ BaleFragmentEditor createClassFragmentEditor(String proj,String cls)
 public BaleFragmentEditor createFileEditor(String proj,File fil,String cls)
 {
    List<BumpLocation> locs = bump_client.findCompilationUnit(proj,fil,cls);
-   
-   if (cls == null) { 
+
+   if (cls == null) {
       String nm = fil.getName();
       int idx = nm.lastIndexOf(".");
       if (idx > 0) nm = nm.substring(0,idx);
-      cls = nm; 
+      cls = nm;
     }
 
    return getEditorFromLocations(locs,BaleFragmentType.FILE,cls + ".<FILE>");
@@ -449,7 +449,7 @@ BudaBubble createLocationEditorBubble(Component src,Position p,Point at,
 	  }
 	 break;
       case MODULE :
-         fed = createFileEditor(bl.getSymbolProject(),bl.getFile(),null);
+	 fed = createFileEditor(bl.getSymbolProject(),bl.getFile(),null);
 	 break;
       case EXPORT :
       case IMPORT :
@@ -1186,28 +1186,28 @@ public boolean applyEdits(File file,Element edits)
 JTextComponent getTextComponent(BaleDocument doc)
 {
    if (doc == null) return null;
-   
+
    BudaBubble use = null;
    for (BudaBubble bb : buda_root.getCurrentBubbleArea().getBubbles()) {
       Document d = bb.getContentDocument();
       if (d == null) continue;
       if (d == doc) {
-         use = bb;
-         break;
+	 use = bb;
+	 break;
        }
       else if (d instanceof BaleDocument) {
-         BaleDocument bd = (BaleDocument) d;
-         if (bd.getBaseEditDocument() == doc) use = bb;
+	 BaleDocument bd = (BaleDocument) d;
+	 if (bd.getBaseEditDocument() == doc) use = bb;
        }
     }
    if (use == null) return null;
-   
+
    Component c = use.getContentPane();
    if (c instanceof BaleFragmentEditor) {
       BaleFragmentEditor bfe = (BaleFragmentEditor) c;
       return bfe.getEditor();
     }
-   
+
    return null;
 }
 
@@ -1306,7 +1306,7 @@ private BaleFragmentEditor getEditorFromLocations(List<BumpLocation> locs)
       case ENUM_CONSTANT :
       case FIELD :
       case GLOBAL :
-         String nm = getFieldsName();
+	 String nm = getFieldsName();
 	 ftyp = BaleFragmentType.FIELDS;
 	 int idx = fragname.lastIndexOf(".");
 	 fragname = fragname.substring(0,idx) + ".< " + nm + " >";
@@ -1327,11 +1327,11 @@ public static String getFieldsName()
 {
    switch (BoardSetup.getSetup().getLanguage()) {
       default :
-         return "FIELDS";
+	 return "FIELDS";
       case JS :
       case PYTHON :
       case DART :
-         return "VARIABLES";
+	 return "VARIABLES";
     }
 }
 
@@ -1371,22 +1371,44 @@ private List<BaleRegion> getRegionsFromLocations(List<BumpLocation> locs)
       if (lang == BoardLanguage.JS) {
 	 // handle VAR which might be missing in a declaration location context
 	 int decloff = soffset;
-         while (decloff > 0) {
-            if (Character.isWhitespace(s.charAt(decloff-1))) --decloff;
-            else {
-               boolean fnd = false;
-               for (String key : new String [] { "var", "let", "const", "async" }) {
-                  if (checkForPriorKeyword(s,decloff,key)) {
-                     decloff -= key.length();
-                     soffset = decloff;
-                     fnd = true;
-                     break;
-                   }
-                }
-               if (!fnd) break;
-             }
-          }
+	 while (decloff > 0) {
+	    if (Character.isWhitespace(s.charAt(decloff-1))) --decloff;
+	    else {
+	       boolean fnd = false;
+	       for (String key : new String [] { "var", "let", "const", "async" }) {
+		  if (checkForPriorKeyword(s,decloff,key)) {
+		     decloff -= key.length();
+		     soffset = decloff;
+		     fnd = true;
+		     break;
+		   }
+		}
+	       if (!fnd) break;
+	     }
+	  }
        }
+      if (lang == BoardLanguage.DART) {
+	 // handle preliminary @<annotation>
+	 int decloff = soffset;
+	 boolean havekey = false;
+	 while (decloff > 0) {
+	    char c = s.charAt(decloff-1);
+	    BoardLog.logD("BALE","DART BACKSCAN " + decloff + " " + ((int) c)+ " " + havekey +
+			     f1 + " " + soffset + " " + eoffset);
+
+	    if (!havekey && Character.isWhitespace(c)) --decloff;
+	    else if (Character.isJavaIdentifierPart(c)) {
+	       --decloff;
+	       havekey = true;
+	      }
+	    else if (havekey && c == '@') {
+	       soffset = decloff;
+	       havekey = false;
+	     }
+	    else break;
+	  }
+       }
+
       // extend the logical regions and note if it ends with a new line
       while (soffset > 0) {
 	 if (s.charAt(soffset-1) == '\n') break;
@@ -1413,7 +1435,7 @@ private List<BaleRegion> getRegionsFromLocations(List<BumpLocation> locs)
 		  s.charAt(eoffset) == '/' && s.charAt(eoffset+1) == '/') {
 	       havecmmt = true;
 	     }
-            else if (lang == BoardLanguage.DART &&
+	    else if (lang == BoardLanguage.DART &&
 		  s.charAt(eoffset) == '/' && s.charAt(eoffset+1) == '/') {
 	       havecmmt = true;
 	     }
@@ -1469,7 +1491,7 @@ private boolean checkForPriorKeyword(Segment s,int off,String key)
 {
    int ln = key.length();
    if (off < ln) return false;
-   
+
    for (int i = 0; i < ln; ++i) {
       char c = key.charAt(ln-1-i);
       if (s.charAt(off-1-i) != c) return false;
@@ -1681,25 +1703,25 @@ static class QuickFix extends AbstractAction {
       List<BaleFixer> fixes = new ArrayList<BaleFixer>();
       List<BumpFix> fixlist = for_problem.getFixes();
       if (fixlist != null) {
-         for (BumpFix bf : fixlist) {
-            BaleFixer fixer = new BaleFixer(for_problem,bf);
-            if (fixer.isValid()) fixes.add(fixer);
-         }
+	 for (BumpFix bf : fixlist) {
+	    BaleFixer fixer = new BaleFixer(for_problem,bf);
+	    if (fixer.isValid()) fixes.add(fixer);
+	 }
       }
       if (fixes.isEmpty()) {
-         JOptionPane.showMessageDialog(for_editor,"No quick fixes available");
-         return;
+	 JOptionPane.showMessageDialog(for_editor,"No quick fixes available");
+	 return;
        }
-   
+
       BaleFixer fix = null;
       Collections.sort(fixes);
       Object [] fixalts = fixes.toArray();
       fix = (BaleFixer) JOptionPane.showInputDialog(for_editor,"Select Quick Fix",
-        					       "Quick Fix Selector",
-        					       JOptionPane.QUESTION_MESSAGE,
-        					       null,fixalts,fixes.get(0));
+						       "Quick Fix Selector",
+						       JOptionPane.QUESTION_MESSAGE,
+						       null,fixalts,fixes.get(0));
       if (fix == null) return;
-   
+
       fix.actionPerformed(e);
       BoardMetrics.noteCommand("BALE","QuickFixOption");
     }
@@ -1740,34 +1762,34 @@ private static class FormatImporter implements BudaConstants.ButtonListener {
       Element n1 = xml;
       if (!IvyXml.isElement(xml,"profiles")) n1 = IvyXml.getChild(xml,"profiles");
       if (n1 != null) {
-         Element n2 = IvyXml.getChild(n1,"profile");
-         for (Element n3 : IvyXml.children(n2,"setting")) {
-            xw.begin("OPTION");
-            xw.field("NAME",IvyXml.getAttrString(n3,"id"));
-            xw.field("VALUE",IvyXml.getAttrString(n3,"value"));
-            xw.end("OPTION");
-          }
+	 Element n2 = IvyXml.getChild(n1,"profile");
+	 for (Element n3 : IvyXml.children(n2,"setting")) {
+	    xw.begin("OPTION");
+	    xw.field("NAME",IvyXml.getAttrString(n3,"id"));
+	    xw.field("VALUE",IvyXml.getAttrString(n3,"value"));
+	    xw.end("OPTION");
+	  }
        }
       else if (IvyXml.isElement(xml,"code_scheme")) {
-         for (Element n4 : IvyXml.elementsByTag(xml,"option")) {
-            xw.begin("IDEAOPTION");
-            xw.field("NAME",IvyXml.getAttrString(n4,"name"));
-            xw.field("VALUE",IvyXml.getAttrString(n4,"value"));
-            xw.end("IDEAOPTION");
-          }
+	 for (Element n4 : IvyXml.elementsByTag(xml,"option")) {
+	    xw.begin("IDEAOPTION");
+	    xw.field("NAME",IvyXml.getAttrString(n4,"name"));
+	    xw.field("VALUE",IvyXml.getAttrString(n4,"value"));
+	    xw.end("IDEAOPTION");
+	  }
        }
       xw.end("OPTIONS");
-      
+
       bump_client.loadPreferences(null,xw.toString());
       String v = BALE_PROPERTIES.getProperty("indent.tabulation.size");
       if (v == null) {
-         v = BumpClient.getBump().getOption("org.eclipse.jdt.core.formatter.tabulation.size");
-         if (v != null) {
-            try {
-               if (v != null) BaleTabHandler.setBaseTabSize(Integer.parseInt(v));
-             }
-            catch (NumberFormatException e) { }
-          }
+	 v = BumpClient.getBump().getOption("org.eclipse.jdt.core.formatter.tabulation.size");
+	 if (v != null) {
+	    try {
+	       if (v != null) BaleTabHandler.setBaseTabSize(Integer.parseInt(v));
+	     }
+	    catch (NumberFormatException e) { }
+	  }
        }
       xw.close();
       format_time = System.currentTimeMillis();
@@ -1779,12 +1801,12 @@ private static class FormatImporter implements BudaConstants.ButtonListener {
 
 /********************************************************************************/
 /*										*/
-/*	Import format from project                                              */
+/*	Import format from project						*/
 /*										*/
 /********************************************************************************/
 
 private static class ProjectFormatImporter implements BudaConstants.ButtonListener {
-   
+
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
       BoardProperties bp = BoardProperties.getProperties("System");
       String rec = bp.getProperty("edu.brown.cs.bubbles.recents");
@@ -1792,68 +1814,68 @@ private static class ProjectFormatImporter implements BudaConstants.ButtonListen
       StringTokenizer tok = new StringTokenizer(rec,";");
       String cur = BoardSetup.getSetup().getDefaultWorkspace();
       while (tok.hasMoreTokens()) {
-         String s = tok.nextToken();
-         s = s.trim();
-         if (s.equals(cur)) continue;
-         int idx = s.lastIndexOf(File.separator);
-         String s1 = s;
-         if (idx > 0) s1 = s.substring(idx+1);
-         if (s.length() == 0) continue;
-         File f1 = new File(s);
-         File f2 = new File(f1,".metadata");
-         File f3 = new File(f2,".plugins");
-         File f4 = new File(f3,"org.eclipse.core.runtime");
-         File f5 = new File(f4,".settings");
-         File f6 = new File(f5,"org.eclipse.jdt.core.prefs");
-         if (!f6.exists()) continue;
-         recs.put(s1,f6);
+	 String s = tok.nextToken();
+	 s = s.trim();
+	 if (s.equals(cur)) continue;
+	 int idx = s.lastIndexOf(File.separator);
+	 String s1 = s;
+	 if (idx > 0) s1 = s.substring(idx+1);
+	 if (s.length() == 0) continue;
+	 File f1 = new File(s);
+	 File f2 = new File(f1,".metadata");
+	 File f3 = new File(f2,".plugins");
+	 File f4 = new File(f3,"org.eclipse.core.runtime");
+	 File f5 = new File(f4,".settings");
+	 File f6 = new File(f5,"org.eclipse.jdt.core.prefs");
+	 if (!f6.exists()) continue;
+	 recs.put(s1,f6);
        }
       if (recs.size() == 0) return;
       String [] opts = new String[recs.size()];
       opts = recs.keySet().toArray(opts);
       Object sel = JOptionPane.showInputDialog(BudaRoot.findBudaRoot(bba),
-            "From Project","Select Project to Import From",
-            JOptionPane.QUESTION_MESSAGE, null, opts,opts[0]);
-      if (sel == null) return;      
+	    "From Project","Select Project to Import From",
+	    JOptionPane.QUESTION_MESSAGE, null, opts,opts[0]);
+      if (sel == null) return;
       File path = recs.get((String) sel);
       if (path == null) return;
       Properties props = new Properties();
       try (FileInputStream fr = new FileInputStream(path)) {
-         props.load(fr);
+	 props.load(fr);
        }
-      catch (IOException e) { 
-         return;
+      catch (IOException e) {
+	 return;
        }
-      
+
       IvyXmlWriter xw = new IvyXmlWriter();
       xw.begin("OPTIONS");
       for (Map.Entry<Object,Object> ent : props.entrySet()) {
-         String key = ent.getKey().toString();
-         if (key.startsWith("Bale.indent.") || key.startsWith("org.eclipse.jdt.core.formatter.")) {
-            xw.begin("OPTION");
-            xw.field("NAME",key);
-            xw.field("VALUE",ent.getValue().toString());
-            xw.end("OPTION");
-          }
+	 String key = ent.getKey().toString();
+	 if (key.startsWith("Bale.indent.") || key.startsWith("org.eclipse.jdt.core.formatter.")) {
+	    xw.begin("OPTION");
+	    xw.field("NAME",key);
+	    xw.field("VALUE",ent.getValue().toString());
+	    xw.end("OPTION");
+	  }
        }
       // need to handle IDEA as well
       xw.end("OPTIONS");
       bump_client.loadPreferences(null,xw.toString());
-      
+
       String v = BALE_PROPERTIES.getProperty("indent.tabulation.size");
       if (v == null) {
-         v = BumpClient.getBump().getOption("org.eclipse.jdt.core.formatter.tabulation.size");
-         if (v != null) {
-            try {
-               if (v != null) BaleTabHandler.setBaseTabSize(Integer.parseInt(v));
-             }
-            catch (NumberFormatException e) { }
-          }
+	 v = BumpClient.getBump().getOption("org.eclipse.jdt.core.formatter.tabulation.size");
+	 if (v != null) {
+	    try {
+	       if (v != null) BaleTabHandler.setBaseTabSize(Integer.parseInt(v));
+	     }
+	    catch (NumberFormatException e) { }
+	  }
        }
       xw.close();
       format_time = System.currentTimeMillis();
     }
-   
+
 }	// end of inner class FormatImporter
 
 

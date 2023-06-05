@@ -124,6 +124,8 @@ static {
    id_types.put("ANNOT",BaleAstIdType.ANNOT);
    id_types.put("BUILTIN",BaleAstIdType.BUILTIN) ;
    id_types.put("MODULE",BaleAstIdType.MODULE);
+   id_types.put("LABEL",BaleAstIdType.LABEL);
+   id_types.put("KEYWORD",BaleAstIdType.KEYWORD);
 
    // python-specific ids
    id_types.put("VARDECL",BaleAstIdType.FIELD_STATIC);

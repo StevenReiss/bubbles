@@ -60,7 +60,7 @@ private int		token_start;
 private boolean 	ignore_white;
 private char		cur_delim;
 private int		delim_count;
-protected int           cur_flags;
+protected int		cur_flags;
 
 private static Map<String,BaleTokenType> java_keyword_map;
 private static Set<String>	java_op_set;
@@ -95,7 +95,7 @@ static BaleTokenizer create(String text,BaleTokenState start,BoardLanguage bl)
       case JS :
 	 return new JSTokenizer(text,start);
       case DART :
-         return new DartTokenizer(text,start);
+	 return new DartTokenizer(text,start);
     }
 }
 
@@ -146,7 +146,7 @@ static Collection<String> getKeywords(BoardLanguage bl)
       case JS :
 	 return js_keyword_map.keySet();
       case DART:
-         return dart_keyword_map.keySet();
+	 return dart_keyword_map.keySet();
     }
 }
 
@@ -397,7 +397,7 @@ BaleToken getNextToken()
    else if (ch == ';') {
       cur_flags = 0;
       return buildToken(BaleTokenType.SEMICOLON);
-    }   
+    }
    else if (ch == ',') return buildToken(BaleTokenType.COMMA);
    else if (ch == '\\') return buildToken(BaleTokenType.BACKSLASH);
    else if (ch == '.') {
@@ -918,16 +918,16 @@ private static class JSTokenizer extends BaleTokenizer {
       if (s.equals("for")) cur_flags = INSIDE_FOR;
       else if (s.equals("import")) cur_flags = INSIDE_IMPORT;
       switch (cur_flags) {
-         case INSIDE_FOR :
-            if (s.equals("of") || s.equals("in")) return BaleTokenType.KEYWORD;
-            break;
-         case INSIDE_IMPORT :
-            if (s.equals("as") || s.equals("from")) return BaleTokenType.KEYWORD;
-            break;
+	 case INSIDE_FOR :
+	    if (s.equals("of") || s.equals("in")) return BaleTokenType.KEYWORD;
+	    break;
+	 case INSIDE_IMPORT :
+	    if (s.equals("as") || s.equals("from")) return BaleTokenType.KEYWORD;
+	    break;
        }
-      return js_keyword_map.get(s); 
+      return js_keyword_map.get(s);
     }
-   
+
    @Override protected boolean isOperator(String s)	{ return js_op_set.contains(s); }
    @Override protected boolean isStringStart(char c) {
       return c == '"' || c == '\'';
@@ -1062,8 +1062,8 @@ private static class DartTokenizer extends BaleTokenizer {
    DartTokenizer(String text,BaleTokenState start) {
       super(text,start);
     }
-   
-   @Override protected BaleTokenType getKeyword(String s) { 
+
+   @Override protected BaleTokenType getKeyword(String s) {
       // need to handle case 1 and case 2 keywords in context
       return dart_keyword_map.get(s);
     }
@@ -1079,6 +1079,7 @@ static {
    dart_keyword_map.put("as",BaleTokenType.KEYWORD);
    dart_keyword_map.put("assert",BaleTokenType.KEYWORD);
    dart_keyword_map.put("async",BaleTokenType.KEYWORD);
+   dart_keyword_map.put("await",BaleTokenType.KEYWORD);
    dart_keyword_map.put("base",BaleTokenType.KEYWORD);
    dart_keyword_map.put("break",BaleTokenType.BREAK);
    dart_keyword_map.put("case",BaleTokenType.CASE);
@@ -1140,7 +1141,7 @@ static {
    dart_keyword_map.put("while",BaleTokenType.WHILE);
    dart_keyword_map.put("with",BaleTokenType.KEYWORD);
    dart_keyword_map.put("yield",BaleTokenType.KEYWORD);
-   
+
    dart_op_set = new HashSet<String>();
    dart_op_set.add("=");
    dart_op_set.add("<");
