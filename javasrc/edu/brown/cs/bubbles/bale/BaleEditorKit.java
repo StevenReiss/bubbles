@@ -2800,7 +2800,6 @@ private static class GotoReferenceAction extends TextAction {
                bd.mapOffsetToEclipse(soff),
                bd.mapOffsetToEclipse(eoff),60000);
    
-   
          try {
             sp = (BalePosition) bd.createPosition(soff);
             locs = bc.findReferences(null,
