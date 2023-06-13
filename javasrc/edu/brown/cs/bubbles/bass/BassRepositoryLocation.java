@@ -582,7 +582,7 @@ private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 	 bn = new BassNameLocation(bl,BassNameType.HEADER,pfx);
 	 break;
       case PROJECT :
-	 // if (all_names.size() != 0) bn = null;
+         if (all_names.size() != 0) bn = null;
 	 break;
       case MODULE :
 	 BassNameLocation fnm = new BassNameLocation(bl,BassNameType.FILE,pfx);

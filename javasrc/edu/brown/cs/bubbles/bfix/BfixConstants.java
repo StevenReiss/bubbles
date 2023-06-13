@@ -66,9 +66,6 @@ String BFIX_MODEL_UPDATE_BUTTON = "Admin.Admin.Update Fix Models";
 
 
 
-
-
-
 /********************************************************************************/
 /*										*/
 /*	Comparator for region sort order					*/
@@ -144,17 +141,17 @@ interface FixAdapter {
 interface RunnableFix extends Callable<Boolean>, Runnable {
 
    double getPriority();
-   
+
    default public void run() {
       // only called when result isn't needed
       try {
-         call();
+	 call();
        }
       catch (Exception e) {
-         BoardLog.logE("BFIX","Problem with fixer",e);
+	 BoardLog.logE("BFIX","Problem with fixer",e);
        }
     }
-   
+
 }
 
 

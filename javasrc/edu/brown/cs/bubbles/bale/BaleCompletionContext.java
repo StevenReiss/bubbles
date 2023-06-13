@@ -128,7 +128,7 @@ private CompletionPanel the_panel;
 private static Map<String,Boolean> package_names;
 
 private static boolean	       case_insensitive;
-private static boolean         use_relevance;
+private static boolean	       use_relevance;
 
 private static long	completion_delay;
 
@@ -178,7 +178,7 @@ BaleCompletionContext(BaleEditorPane edt,int soff,char ch)
       for_editor.addFocusListener(edit_focus);
       for_editor.setCompletionContext(this);
     }
-   
+
    getter_thread = new CompletionGetter();
    BoardThreadPool.start(getter_thread);
 }
@@ -254,29 +254,29 @@ private class EditKeyer extends KeyAdapter {
       int ch = e.getKeyChar();
       BoardLog.logD("BALE","CONTEXT KEY CODE " + code);
       if (code == KeyEvent.VK_KP_UP || code == KeyEvent.VK_UP) {
-         the_panel.decCurrentIndex();
-         e.consume();
+	 the_panel.decCurrentIndex();
+	 e.consume();
        }
       if (code == KeyEvent.VK_KP_DOWN || code == KeyEvent.VK_DOWN) {
-         the_panel.incCurrentIndex();
-         e.consume();
+	 the_panel.incCurrentIndex();
+	 e.consume();
        }
-   
+
       if (code == KeyEvent.VK_ENTER) {
-         the_panel.handleCurrentIndex();
-         e.consume();
+	 the_panel.handleCurrentIndex();
+	 e.consume();
        }
       if (code == KeyEvent.VK_TAB) {
-         the_panel.handleCurrentIndex();
-         e.consume();
+	 the_panel.handleCurrentIndex();
+	 e.consume();
        }
       if (code == KeyEvent.VK_SPACE && (e.isControlDown() || e.isMetaDown())) {
-         the_panel.handleCurrentIndex();
-         e.consume();
+	 the_panel.handleCurrentIndex();
+	 e.consume();
        }
-   
+
       if (ch == '(' || ch == ')' || ch == ' ' || ch == ';' || ch == '*' || ch == ',') {
-         removeContext();
+	 removeContext();
       }
     }
 
@@ -320,8 +320,8 @@ private void handleCompletion(CompletionItem ci)
       int i = be.getBaleDocument().mapOffsetToJava(ci.getStartIndex());
       int j = be.getCaretPosition();
       if (ci.getEndIndex() >= 0) {
-         int j0 = be.getBaleDocument().mapOffsetToJava(ci.getEndIndex());
-         if (j0 >= j) j = j0;
+	 int j0 = be.getBaleDocument().mapOffsetToJava(ci.getEndIndex());
+	 if (j0 >= j) j = j0;
        }
       BoardLog.logD("BALE","CHECK COMPLETE " + i + " " + j + " " + be.getCaretPosition() + " " + s);
       try {
@@ -441,8 +441,8 @@ private synchronized void restrictOptions()
       CompletionItem ci = found_items.iterator().next();
       off0 = be.getBaleDocument().mapOffsetToJava(ci.getStartIndex());
       if (ci.getCompletionText() == null ||
-            ci.getCompletionText().length() == 0) 
-        off0 = off1;
+	    ci.getCompletionText().length() == 0)
+	off0 = off1;
    }
 
    try {
@@ -562,50 +562,50 @@ private class CompletionGetter implements Runnable {
       if (start_position == null || for_document == null) return;
       int spos = for_document.mapOffsetToEclipse(start_position.getOffset())+1;
       Collection<BumpCompletion> completions = null;
-      
+
       int ctr = for_document.getEditCounter();
       BumpClient bcc = BumpClient.getBump();
       completions = bcc.getCompletions(for_document.getProjectName(),
-            for_document.getFile(),
-            ctr,spos);
+	    for_document.getFile(),
+	    ctr,spos);
       if (completions == null) {
-         removeContext();
-         return;
+	 removeContext();
+	 return;
        }
-      
+
       List<BumpCompletion> callcomps = null;
       int cct = 0;
       for (Iterator<BumpCompletion> it = completions.iterator(); it.hasNext(); ) {
-         BumpCompletion bc = it.next();
-         switch (bc.getType()) {
-            case METHOD_REF :
-               if (bc.getCompletion() == null || bc.getCompletion().length() == 0) {
-                  it.remove();
-                  if (bc.getSignature() != null && bc.getCompletion() != null && cct == 0) {
-                     if (callcomps == null) callcomps = new ArrayList<BumpCompletion>();
-                     callcomps.add(bc);
-                   }
-                }
-               else ++cct;
-               break;
-            case TYPE_REF :
-            case FIELD_REF :
-            default :
-               if (bc.getCompletion() == null || bc.getCompletion().length() == 0) it.remove();
-               else ++cct;
-               break;
-          }
+	 BumpCompletion bc = it.next();
+	 switch (bc.getType()) {
+	    case METHOD_REF :
+	       if (bc.getCompletion() == null || bc.getCompletion().length() == 0) {
+		  it.remove();
+		  if (bc.getSignature() != null && bc.getCompletion() != null && cct == 0) {
+		     if (callcomps == null) callcomps = new ArrayList<>();
+		     callcomps.add(bc);
+		   }
+		}
+	       else ++cct;
+	       break;
+	    case TYPE_REF :
+	    case FIELD_REF :
+	    default :
+	       if (bc.getCompletion() == null || bc.getCompletion().length() == 0) it.remove();
+	       else ++cct;
+	       break;
+	  }
        }
-      
+
    // if (completions.size() == 0 && callcomps != null) {
       if (callcomps != null) {
-         handleFound(callcomps,true);
+	 handleFound(callcomps,true);
        }
       else  if (completions.size() == 0) {
-         removeContext();
+	 removeContext();
        }
       else {
-         handleFound(completions,false);
+	 handleFound(completions,false);
        }
    }
 
@@ -635,32 +635,32 @@ private static class CompletionComparator implements Comparator<BumpCompletion> 
 
    @Override public int compare(BumpCompletion c1,BumpCompletion c2) {
       int v = 0;
-      
+
       if (use_relevance) {
-         int r1 = c1.getRelevance();
-         int r2 = c2.getRelevance();
-         v = Integer.compare(r2,r1);
-         if (v != 0) return v;
+	 int r1 = c1.getRelevance();
+	 int r2 = c2.getRelevance();
+	 v = Integer.compare(r2,r1);
+	 if (v != 0) return v;
        }
-      
+
       if (c1.getName() == null && c2.getName() == null) v = 0;
       else if (c1.getName() == null) v = -1;
       else if (c2.getName() == null) v = 1;
       else if (case_insensitive) v = c1.getName().compareToIgnoreCase(c2.getName());
       else v = c1.getName().compareTo(c2.getName());
-      
+
       if (v != 0) return v;
       if (c1.getSignature() != null && c2.getSignature() != null) {
-         v = c1.getSignature().compareTo(c2.getSignature());
-         if (v != 0) return v;
+	 v = c1.getSignature().compareTo(c2.getSignature());
+	 if (v != 0) return v;
        }
       String t1 = c1.getDeclaringType();
       String t2 = c2.getDeclaringType();
       if (t1 != null && t2 != null) {
-         v = t1.compareTo(t2);
-         if (v != 0) return v;
+	 v = t1.compareTo(t2);
+	 if (v != 0) return v;
       }
-   
+
       return 0;
     }
 
@@ -716,7 +716,7 @@ private class CompletionPanel extends JPanel implements MouseListener {
    void decCurrentIndex(){
       if (item_list.getSelectedIndex() > 0)
       {
-         setCurrentIndex(item_list.getSelectedIndex() -1);
+	 setCurrentIndex(item_list.getSelectedIndex() -1);
       }
    }
 
@@ -806,12 +806,12 @@ private static class CompletionListCellRenderer extends DefaultListCellRenderer 
 
    @Override public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
      {
-         Component renderedcomp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-         CompletionItem ci = (CompletionItem) value;
-         Icon icn = ci.getIcon();
-         if (icn != null) ((JLabel) renderedcomp).setIcon(icn);
-   
-         return renderedcomp;
+	 Component renderedcomp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+	 CompletionItem ci = (CompletionItem) value;
+	 Icon icn = ci.getIcon();
+	 if (icn != null) ((JLabel) renderedcomp).setIcon(icn);
+
+	 return renderedcomp;
      }
 
 }	// end of inner class CompletionListCellRenderer
@@ -843,17 +843,17 @@ private static abstract class CompletionItem {
    protected void getSignatureObjects(String sgn) {
       param_types = "";
       return_type = "";
-   
+
       if (sgn == null) return;
       String s = IvyFormat.formatTypeName(sgn);
       if (s == null) return;
-   
+
       int parenindex = s.indexOf('(');
       if (parenindex >= 0) {
-         return_type = s.substring(0,parenindex);
-         return_type = shortenType(return_type);
-         String temp = s.substring(parenindex+1,s.length()-1);
-         param_types = shortenType(temp);
+	 return_type = s.substring(0,parenindex);
+	 return_type = shortenType(return_type);
+	 String temp = s.substring(parenindex+1,s.length()-1);
+	 param_types = shortenType(temp);
        }
     }
 
@@ -896,11 +896,11 @@ private static class CompletionItemNewMethod extends CompletionItem implements
 
    @Override String getCompletionText() 	{ return "("; }
 
-   @Override int getStartIndex()                { return -1; }
-   
-   @Override int getEndIndex()                  { return -1; }
-   
-   @Override int getRelevance()                 { return 1; }
+   @Override int getStartIndex()		{ return -1; }
+
+   @Override int getEndIndex()			{ return -1; }
+
+   @Override int getRelevance() 		{ return 1; }
 
    @Override boolean canStartWith(String text) {
       method_name = text;
@@ -918,32 +918,32 @@ private static class CompletionItemNewMethod extends CompletionItem implements
       link_editor = editor;
       BaleDocument doc = editor.getBaleDocument();
       try {
-         link_point = doc.createPosition(editor.getCaretPosition());
+	 link_point = doc.createPosition(editor.getCaretPosition());
        }
       catch (BadLocationException e) { return; }
-   
+
       String proj = doc.getProjectName();
-   
+
       BaleFactory.getFactory().createNewMethod(proj,class_name + "." + method_name,null,null,0,true,null,
-        					  editor,link_point,true,true);
+						  editor,link_point,true,true);
     }
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
       BudaBubble bb = BaleFactory.getFactory().createMethodBubble(proj,name);
       if (bb == null) return;
-   
+
       bba.addBubble(bb,null,p,PLACEMENT_MOVETO);
       // bba.add(bb,new BudaConstraint(p));
-   
+
       if (link_editor != null) {
-         BudaBubble bbo = BudaRoot.findBudaBubble(link_editor);
-         BudaRoot root = BudaRoot.findBudaRoot(bbo);
-         if (bbo != null && root != null && bbo.isShowing() && link_point != null) {
-            BudaConstants.LinkPort p0 = new BaleLinePort(link_editor,link_point,null);
-            BudaConstants.LinkPort p1 = new BudaDefaultPort(BudaPortPosition.BORDER_EW_TOP,true);
-            BudaBubbleLink lnk = new BudaBubbleLink(bbo,p0,bb,p1);
-            root.addLink(lnk);
-          }
+	 BudaBubble bbo = BudaRoot.findBudaBubble(link_editor);
+	 BudaRoot root = BudaRoot.findBudaRoot(bbo);
+	 if (bbo != null && root != null && bbo.isShowing() && link_point != null) {
+	    BudaConstants.LinkPort p0 = new BaleLinePort(link_editor,link_point,null);
+	    BudaConstants.LinkPort p1 = new BudaDefaultPort(BudaPortPosition.BORDER_EW_TOP,true);
+	    BudaBubbleLink lnk = new BudaBubbleLink(bbo,p0,bb,p1);
+	    root.addLink(lnk);
+	  }
        }
     }
 
@@ -963,25 +963,25 @@ private static class CompletionItemBump extends CompletionItem {
    @Override public String toString() {
       String comp = bump_completion.getCompletion();
       if (comp.indexOf(')') >= 0) {
-         comp = comp.substring(0,comp.length()-1);
-         comp += param_types + ") : " + return_type;
-         return comp;
+	 comp = comp.substring(0,comp.length()-1);
+	 comp += param_types + ") : " + return_type;
+	 return comp;
        }
       return comp;
     }
-   
+
    @Override int getStartIndex() {
       return bump_completion.getReplaceStart();
     }
-   
+
    @Override int getEndIndex() {
       return bump_completion.getReplaceEnd();
    }
-   
+
    @Override int getRelevance() {
       return bump_completion.getRelevance();
     }
-   
+
    @Override boolean canStartWith(String txt) {
       String compl = bump_completion.getCompletion();
       if (compl.startsWith(txt)) return true;
@@ -1002,8 +1002,8 @@ private static class CompletionItemBump extends CompletionItem {
       if (toreturn == null) return null;
       int ln = toreturn.length();
       if (ln > 1 && toreturn.charAt(ln-1) == ')' &&
-             (param_types != null && param_types.length() > 0)){
-         toreturn = toreturn.substring(0, toreturn.length()-1);
+	     (param_types != null && param_types.length() > 0)){
+	 toreturn = toreturn.substring(0, toreturn.length()-1);
        }
       return toreturn;
    }
@@ -1038,11 +1038,11 @@ private static class CompletionItemBumpCall extends CompletionItem {
    @Override int getStartIndex() {
       return bump_completion.getReplaceStart();
     }
-   
+
    @Override int getEndIndex() {
       return bump_completion.getReplaceEnd();
    }
-   
+
    @Override int getRelevance() {
       return bump_completion.getRelevance();
     }

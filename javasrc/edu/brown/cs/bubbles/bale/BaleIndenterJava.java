@@ -190,12 +190,7 @@ private void setupPreferences()
 @Override int getCurrentIndentation(int offset)
 {
    setupPreferences();
-
-   bale_document.readLock();
-   try {
-      return getLeadingWhitespaceLength(offset);
-    }
-   finally { bale_document.readUnlock(); }
+   return super.getCurrentIndentation(offset);
 }
 
 

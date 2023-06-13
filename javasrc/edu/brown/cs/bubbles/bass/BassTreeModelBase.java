@@ -43,7 +43,6 @@ import edu.brown.cs.ivy.swing.SwingEventListenerList;
 import javax.swing.Icon;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -836,102 +835,102 @@ private static class Branch extends BassTreeImpl {
       String [] comps = bn.getNameComponents();
       int cidx = 0;
       Branch parent = null;
-
+   
       Branch p = this;
       while (p != null && cidx < comps.length) {
-	 parent = p;
-	 Branch np = null;
-	 for (BassTreeImpl bt : p.child_nodes) {
-	    String comps1 = comps[cidx];
-	    if (bt.getLocalName().equals(comps1)) {
-	       if (bt instanceof Branch) {
-		  np = (Branch) bt;
-		  cidx++;
-		  break;
-		}
-	       else {
-		  if (cidx == comps.length-1 && !force) return bt;
-		  break;
-		}
-	     }
-	    else if (subsetName(bt.getLocalName(),comps1)) {
-	       String nm = comps[cidx];
-	       int fnd = -1;
-	       for (int i = cidx+1; i < comps.length; ++i) {
-		  if (nm.endsWith(":")) nm += comps[i];
-		  else nm += "." + comps[i];
-		  if (bt.getLocalName().equals(nm)) {
-		     np = (Branch) bt;
-		     fnd = i;
-		     break;
-		   }
-		}
-	       if (fnd >= 0) {
-		  cidx = fnd+1;
-		  break;
-		}
-	       // need to split the local name
-	       nm = comps[cidx];
-	       fnd = cidx;
-	       String nm1 = nm;
-	       for (int i = cidx+1; i < comps.length; ++i) {
-		  if (nm.endsWith(":")) nm += comps[i];
-		  else nm += "." + comps[i];
-		  if (!subsetName(bt.getLocalName(),nm)) {
-		     fnd = i;
-		     break;
-		   }
-		  nm1 += "." + comps[i];
-		}
-	       splitNode((Branch) bt,nm1);
-	       np = (Branch) bt;
-	       cidx = fnd;
-	     }
-	  }
-	 if (np == null) break;
-	 p = np;
+         parent = p;
+         Branch np = null;
+         for (BassTreeImpl bt : p.child_nodes) {
+            String comps1 = comps[cidx];
+            if (bt.getLocalName().equals(comps1)) {
+               if (bt instanceof Branch) {
+        	  np = (Branch) bt;
+        	  cidx++;
+        	  break;
+        	}
+               else {
+        	  if (cidx == comps.length-1 && !force) return bt;
+        	  break;
+        	}
+             }
+            else if (subsetName(bt.getLocalName(),comps1)) {
+               String nm = comps[cidx];
+               int fnd = -1;
+               for (int i = cidx+1; i < comps.length; ++i) {
+        	  if (nm.endsWith(":")) nm += comps[i];
+        	  else nm += "." + comps[i];
+        	  if (bt.getLocalName().equals(nm)) {
+        	     np = (Branch) bt;
+        	     fnd = i;
+        	     break;
+        	   }
+        	}
+               if (fnd >= 0) {
+        	  cidx = fnd+1;
+        	  break;
+        	}
+               // need to split the local name
+               nm = comps[cidx];
+               fnd = cidx;
+               String nm1 = nm;
+               for (int i = cidx+1; i < comps.length; ++i) {
+        	  if (nm.endsWith(":")) nm += comps[i];
+        	  else nm += "." + comps[i];
+        	  if (!subsetName(bt.getLocalName(),nm)) {
+        	     fnd = i;
+        	     break;
+        	   }
+        	  nm1 += "." + comps[i];
+        	}
+               splitNode((Branch) bt,nm1);
+               np = (Branch) bt;
+               cidx = fnd;
+             }
+          }
+         if (np == null) break;
+         p = np;
        }
       if (cidx == comps.length && bn.getNameType() == BassNameType.PROJECT && p != null) return p;
       if (cidx >= comps.length) return parent;
       if (cidx != comps.length -1 && !force) return null;
-
+   
       for (int i = cidx; parent != null && i < comps.length-1; ++i) {
-	 parent = parent.findNode(comps[i],BASS_DEFAULT_INTERIOR_PRIORITY);
+         parent = parent.findNode(comps[i],BASS_DEFAULT_INTERIOR_PRIORITY);
        }
-
+   
       if (!force && parent != null) {
-	 String txt = bn.getNameWithParameters();
-	 for (BassTreeImpl bt : parent.child_nodes) {
-	    if (txt.equals(bt.getLocalName())) return bt;
-	  }
-	 return null;
+         String txt = bn.getNameWithParameters();
+         for (BassTreeImpl bt : parent.child_nodes) {
+            if (txt.equals(bt.getLocalName())) return bt;
+          }
+         return null;
        }
       if (parent == null) return null;
-
+   
       if (bn.getNameType() == BassNameType.PROJECT) {
-	 String pat = comps[0] + ".";
-	 for (BassTreeImpl bti : parent.child_nodes) {
-	    String nm = bti.getFullName();
-	    if (nm.startsWith(pat)) return null;
-	  }
-	 Branch bb = new Branch(comps[0],parent);
-	 computeBranchType(bn,bb);
-	 parent.addChild(bb);
-	 return bb;
+         String pat = comps[0] + ".";
+         for (BassTreeImpl bti : parent.child_nodes) {
+            String nm = bti.getFullName();
+            if (nm.startsWith(pat)) return null;
+          }
+         Branch bb = new Branch(comps[0],parent);
+         computeBranchType(bn,bb);
+         parent.addChild(bb);
+         return bb;
        }
       else if ((bn.getNameType() == BassNameType.CLASS || bn.getNameType() == BassNameType.INTERFACE ||
-	    bn.getNameType() == BassNameType.ENUM || bn.getNameType() == BassNameType.ANNOTATION)
-	    && bn.getClassName() != null &&
-	    parent.getBranchType() == BranchNodeType.PACKAGE) {
-	 if (parent.getFullName().endsWith(bn.getName())) {
-	    computeBranchType(bn,parent);
-	  }
+            bn.getNameType() == BassNameType.ENUM || bn.getNameType() == BassNameType.ANNOTATION)
+            && bn.getClassName() != null &&
+            parent.getBranchType() == BranchNodeType.PACKAGE) {
+         if (parent.getFullName().endsWith(bn.getName())) {
+            computeBranchType(bn,parent);
+          }
        }
-
-
+   
+   
       TreeLeaf tl = parent.insertChild(bn);
       ++leaf_count;
-
+   
       return tl;
    }
 
@@ -952,7 +951,7 @@ private static class Branch extends BassTreeImpl {
       nd.full_name = nm;
       nd.local_name = nm.replace(":.", ":");
       nd.local_name = nd.local_name.replace("/.","/");
-
+   
       String orignm = nd.orig_name;
       int oidx = nm.lastIndexOf(".");
       nd.orig_name = nm.substring(oidx+1);
@@ -961,10 +960,10 @@ private static class Branch extends BassTreeImpl {
       else nd.setBranchType(BranchNodeType.PACKAGE);
       Branch b1 = new Branch(nm1,nd);
       b1.orig_name = orignm;
-
+   
       for (BassTreeImpl cn : nd.child_nodes) {
-	 b1.addChild(cn);
-	 cn.parent_node = b1;
+         b1.addChild(cn);
+         cn.parent_node = b1;
       }
       nd.child_nodes.clear();
       nd.addChild(b1);
