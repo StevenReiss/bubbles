@@ -873,15 +873,14 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrInt(xml,"DEMAND",0),
 	       IvyXml.getAttrInt(xml,"STATICDEMAND",0),
 	       IvyXml.getAttrString(xml,"ORDER"),
-	       IvyXml.getAttrString(xml,"ADD"),
-	       xw);;
+	       IvyXml.getAttrString(xml,"ADD"),xw);
 	       break;
       case "GETEXPECTEDTYPE" :
-         bedrock_editor.handleGetExpectedType(proj,
-               IvyXml.getAttrString(xml,"BID","*"),
-               IvyXml.getAttrString(xml,"FILE"),
-               IvyXml.getAttrInt(xml,"LINE"),xw); 
-         break;
+	 bedrock_editor.handleGetExpectedType(proj,
+	       IvyXml.getAttrString(xml,"BID","*"),
+	       IvyXml.getAttrString(xml,"FILE"),
+	       IvyXml.getAttrInt(xml,"LINE"),xw);
+	 break;
       case "PREFERENCES" :
 	 bedrock_project.handlePreferences(proj,xw);
 	 break;

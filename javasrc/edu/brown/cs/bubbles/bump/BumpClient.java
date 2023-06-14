@@ -2365,6 +2365,38 @@ public Element format(String proj,File file,int spos,int epos)
 }
 
 
+public Element computeIndent(String proj,File file,int eid,int spos,boolean split)
+{
+   waitForIDE();
+   String flds = "FILE='" + file.getPath() + "'";
+   if (eid >= 0) flds += " ID='" + eid + "'";
+   flds += " OFFSET='" + spos + "'";
+   if (split) flds += " SPLIT='true'";
+   
+   Element xml = getXmlReply("INDENT",proj,flds,null,100);
+   
+   if (!IvyXml.isElement(xml,"RESULT")) return null;
+   
+   return xml;
+}
+
+
+
+public Element fixIndents(String proj,File file,int eid,int spos)
+{
+   waitForIDE();
+   String flds = "FILE='" + file.getPath() + "'";
+   if (eid >= 0) flds += " ID='" + eid + "'";
+   flds += " OFFSET='" + spos + "'";
+   
+   Element xml = getXmlReply("FIXINDENTS",proj,flds,null,100);
+   
+   if (!IvyXml.isElement(xml,"RESULT")) return null;
+   
+   return xml;
+}
+
+
 
 public Element fixImports(String proj,File file,String order,int demand,int staticdemand,String add)
 {

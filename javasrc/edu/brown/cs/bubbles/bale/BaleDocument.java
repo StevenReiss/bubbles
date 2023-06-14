@@ -1041,7 +1041,6 @@ BaleIndenter getIndenter()
 	 case JAVA :
 	 case JAVA_IDEA :
 	 case REBUS :
-         case DART :
 	 default :
 	    our_indenter = new BaleIndenterJava(this);
 	    break;
@@ -1051,6 +1050,9 @@ BaleIndenter getIndenter()
 	 case JS :
 	    our_indenter = new BaleIndenterJS(this);
 	    break;
+         case DART :
+            our_indenter = new BaleIndenterLsp(this);
+            break;
        }
     }
 

@@ -133,28 +133,28 @@ BaleDocumentFragment(BaleDocumentIde base,BaleFragmentType typ,List<BaleRegion> 
 
 @Override public String getProjectName()	{ return base_document.getProjectName(); }
 
-@Override public File getFile()		{ return base_document.getFile(); }
+@Override public File getFile() 	{ return base_document.getFile(); }
 @Override public BoardLanguage getLanguage()	{ return base_document.getLanguage(); }
 
-@Override String getFragmentName()	        { return fragment_name; }
+@Override String getFragmentName()		{ return fragment_name; }
 
-@Override int getEditCounter()		        { return base_document.getEditCounter(); }
+@Override int getEditCounter()			{ return base_document.getEditCounter(); }
 
 @Override BaleFragmentType getFragmentType()	{ return fragment_type; }
 
-@Override boolean isEditable()		        { return base_document.isEditable(); }
+@Override boolean isEditable()			{ return base_document.isEditable(); }
 
 @Override BaleDocument getBaseEditDocument()
 {
    return base_document.getBaseEditDocument();
 }
 
-void setScaleFactor(double sf)		
+void setScaleFactor(double sf)
 {
    scale_factor = sf;
 }
 
-   
+
 
 /********************************************************************************/
 /*										*/
@@ -228,7 +228,7 @@ private void recomputeOffsets()
 /********************************************************************************/
 
 @Override void save()				{ base_document.save(); }
-@Override void revert()				{ base_document.revert(); }
+@Override void revert() 			{ base_document.revert(); }
 @Override void checkpoint()			{ base_document.checkpoint(); }
 
 @Override boolean canSave()			{ return base_document.canSave(); }
@@ -662,7 +662,7 @@ private boolean checkForNameChange(BaleElement be)
 	 fragment_name = id;
 	 return true;
        }
-    }
+    }		
    else if (be instanceof BaleElement.FieldDeclId && fragment_type == BaleFragmentType.FIELDS) {
       String id = be.getFullName();
       if (id != null) {
@@ -799,7 +799,7 @@ private void handleEvent(DocumentEvent e,BaleElementEvent ee)
 {
    baleReadLock();
    try {
-      if (getDefaultRootElement() instanceof BaleElement) 
+      if (getDefaultRootElement() instanceof BaleElement)
 	 checkForNameChange((BaleElement) getDefaultRootElement());
     }
    finally { baleReadUnlock(); }
@@ -853,7 +853,7 @@ private BaleElementEvent setupOrphanElement()
       BoardLog.logD("BALE","Attempt to set up orphan for unknown " + getDefaultRootElement());
       return null;
     }
-   
+
 }
 
 
