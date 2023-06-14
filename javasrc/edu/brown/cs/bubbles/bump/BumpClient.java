@@ -2382,12 +2382,13 @@ public Element computeIndent(String proj,File file,int eid,int spos,boolean spli
 
 
 
-public Element fixIndents(String proj,File file,int eid,int spos)
+public Element fixIndents(String proj,File file,int eid,int spos,int epos)
 {
    waitForIDE();
    String flds = "FILE='" + file.getPath() + "'";
    if (eid >= 0) flds += " ID='" + eid + "'";
    flds += " OFFSET='" + spos + "'";
+   flds += " ENDOFFSET='" + epos + "'";
    
    Element xml = getXmlReply("FIXINDENTS",proj,flds,null,100);
    

@@ -146,6 +146,7 @@ private static final Action autocomplete_action = new AutoCompleteAction();
 private static final Action rename_action = new RenameAction();
 private static final Action extract_method_action = new ExtractMethodAction();
 private static final Action format_action = new FormatAction();
+private static final Action fixindents_action = new FixIndentsAction();
 private static final Action expand_action = new ExpandAction();
 private static final Action expandxy_action = new ExpandXYAction(false);
 private static final Action expandxy_code_action = new ExpandXYAction(true);
@@ -226,6 +227,7 @@ private static final Action [] local_actions = {
    rename_action,
    extract_method_action,
    format_action,
+   fixindents_action,
    expand_action,
    expandxy_action,
    expandxy_code_action,
@@ -257,7 +259,7 @@ private static final SwingKey [] skey_defs = new SwingKey[] {
    new SwingKey("CODEEDIT",null,undo_action,"menu Z"),
    new SwingKey("CODEEDIT",null,redo_action,"menu Y"),
    new SwingKey("CODEEDIT",null,undo_selection_action,"menu shift Z"),
-   new SwingKey("CODEEDIT",null,redo_selection_action,"menu shift Z"),
+   new SwingKey("CODEEDIT",null,redo_selection_action,"menu shift Y"),
    new SwingKey("CODEEDIT",null,backspace_action,"BACK_SPACE"),
    new SwingKey("CODEEDIT",null,tab_action,"TAB","shift TAB"),
    new SwingKey("CODEEDIT",null,newline_action,"ENTER"),
@@ -296,6 +298,7 @@ private static final SwingKey [] skey_defs = new SwingKey[] {
    new SwingKey("CODEEDIT",null,select_line_action,"xalt shift W"),
    new SwingKey("CODEEDIT",null,select_paragraph_action,"menu alt B"),
    new SwingKey("CODEEDIT",null,format_action,"menu shift F"),
+   new SwingKey("CODEEDIT",null,fixindents_action,"menu shift I"),
    new SwingKey("CODEEDIT",null,expand_action,"xalt B"),
    new SwingKey("CODEEDIT",null,expandxy_action,"xalt shift B","menu shift B"),
    new SwingKey("CODEECIT",null,expandxy_code_action,"menu ctrl shift B"),
@@ -315,7 +318,7 @@ private static final SwingKey [] skey_defs = new SwingKey[] {
    new SwingKey("CODEEDIT",null,marquis_comment_action,"xalt shift Q"),
    new SwingKey("CODEEDIT",null,javadoc_comment_action,"xalt shift J"),
    new SwingKey("CODEEDIT",null,quick_fix_action,"menu 1","alt 1"),
-   new SwingKey("CODEEDIT",null,infer_decl_action,"menu shift I"),
+   new SwingKey("CODEEDIT",null,infer_decl_action,"menu shift W"),
    new SwingKey("CODEEDIT",null,smart_delete_next_character_action,"shift DELETE"),
 
 };
@@ -1098,6 +1101,8 @@ private static String doAutoClose(BaleDocument bd,BaleElement elt,int soff,int e
 	 right = BaleTokenType.RBRACKET;
 	 token = "]";
 	 break;
+      default : 
+         break;
     }
    if (right == null) return null;
 
@@ -1374,6 +1379,45 @@ private static class IndentLinesAction extends TextAction {
     }
 
 }	// end of inner class IndentLinesAction
+
+
+private static class FixIndentsAction extends TextAction {
+
+private static final long serialVersionUID = 1;
+
+
+FixIndentsAction() {
+   super("IndentLinesAction");
+}
+
+@Override public void actionPerformed(ActionEvent e) {
+   BaleEditorPane be = getBaleEditor(e);
+   if (!checkEditor(be)) return;
+   BaleDocument bd = be.getBaleDocument();
+   
+   bd.baleWriteLock();
+   try {
+      int soff = be.getSelectionStart();
+      int eoff = be.getSelectionEnd();
+      int dsoff = bd.mapOffsetToEclipse(soff);
+      int deoff = bd.mapOffsetToEclipse(eoff);
+      
+      BumpClient bc = BumpClient.getBump();
+      org.w3c.dom.Element edits = bc.fixIndents(bd.getProjectName(),bd.getFile(),bd.getEditCounter(),dsoff,deoff);
+      
+      if (edits != null) {
+         BaleApplyEdits bae = new BaleApplyEdits(bd);
+         bae.applyEdits(edits);
+       }
+      else {
+         bd.nextEditCounter();
+       }
+    
+    }
+   finally { bd.baleWriteUnlock(); }
+}
+
+}	// end of inner class FixIndentsAction
 
 
 
@@ -2261,131 +2305,133 @@ private static class FinishAction extends TextAction {
       // for example '(' with parenct >= 0, adds ')'
       //
       try {
-	 int eoff = target.getSelectionEnd();
-	 BaleElement elt = bd.getCharacterElement(eoff);
-	 int parenct = 0;
-	 int bracect = 0;
-	 int bracketct = 0;
-	 int semict = 0;
-	 int colonct = 0;
-	 List<BaleTokenType> totype = new ArrayList<>();
-	 loop: for (BaleElement e4 = elt.getPreviousCharacterElement();
-	    e4 != null;
-	    e4 = e4.getPreviousCharacterElement()) {
-	    switch (e4.getTokenType()) {
-	       case LBRACE :
-		  if (!totype.isEmpty()) break loop;
-		  if (bracect >= 0) totype.add(BaleTokenType.RBRACE);
-		  ++bracect;
-		  break;
-	       case RBRACE :
-		  --bracect;
-		  break;
-	       case LPAREN :
-		  if (parenct >= 0) totype.add(BaleTokenType.RPAREN);
-		  ++parenct;
-		  break;
-	       case RPAREN :
-		  --parenct;
-		  break;
-	       case LBRACKET :
-		  if (bracketct >= 0) totype.add(BaleTokenType.RBRACKET);
-		  ++bracketct;
-		  break;
-	       case RBRACKET :
-		  --bracketct;
-		  break;
-	       case FOR :
-		  if (!totype.isEmpty()) break loop;
-		  if (colonct == 0 && semict == 1) {
-		     totype.add(BaleTokenType.SEMICOLON);
-		     break loop;
-		   }
-		  break;
-	       case WHILE :
-	       case DO :
-	       case CASE :
-	       case CATCH :
-	       case THROWS :
-	       case KEYWORD :
-	       case FINALLY :
-	       case IF :
-	       case ELSE :
-	       case IMPORT :
-	       case PACKAGE :
-	       case RETURN :
-	       case SWITCH :
-	       case SYNCHRONIZED :
-	       case TRY :
-	       case BREAK :
-	       case CONTINUE :
-	       case FUNCTION :
-		  if (!totype.isEmpty()) break loop;
-		  break;
-	       case SEMICOLON :
-		  ++semict;
-		  if (!totype.isEmpty()) break loop;
-		  break;
-	       case COLON :
-		  ++colonct;
-		  break;
-	       case EOL :
-		  break;
-	       default :
-		  break;
-	     }
-	  }
-	 BoardLog.logD("BALE","FINISH " + parenct + " " + bracect + " " + bracketct + " " + totype);
-	 BaleElement e3 = elt;
-	 BaleElement start = elt;
-	 boolean haveeol = false;
-	 while (!totype.isEmpty()) {
-	    while (e3 != null) {
-	       if (e3.isEndOfLine()) haveeol = true;
-	       if (e3.isComment() || e3.isEmpty()) ;
-	       else break;
-	       e3 = e3.getNextCharacterElement();
-	     }
-	    if (e3 != null && e3.getTokenType() == totype.get(0)) {
-	       if (!haveeol || e3.getTokenType() == BaleTokenType.RBRACE) {
-		  totype.remove(0);
-		  start = e3;
-		}
-	       else break;
-	     }
-	    else break;
-	  }
-	 if (totype.isEmpty()) {
-	    if (e3 != null && e3.getTokenType() != BaleTokenType.SEMICOLON && !haveeol) {
-	       totype.add(BaleTokenType.SEMICOLON);
-	     }
-	  }
-	 else haveeol = true;
-	 if (!totype.isEmpty()) {
-	    String add = "";
-	    for (BaleTokenType tt : totype) {
-	       switch (tt) {
-		  case RBRACE :
-		     add += "}";
-		     break;
-		  case RPAREN :
-		     add += ")";
-		     break;
-		  case RBRACKET :
-		     add += "]";
-		     break;
-		  case SEMICOLON :
-		     add += ";";
-		     if (!haveeol) add += " ";
-		     break;
-		}
-	     }
-	    eoff = start.getStartOffset();
-	    int noff = eoff + add.length();
-	    bd.insertString(eoff,add,null);
-	    target.setSelectionStart(noff);
-	    target.setSelectionEnd(noff);
-	  }
+         int eoff = target.getSelectionEnd();
+         BaleElement elt = bd.getCharacterElement(eoff);
+         int parenct = 0;
+         int bracect = 0;
+         int bracketct = 0;
+         int semict = 0;
+         int colonct = 0;
+         List<BaleTokenType> totype = new ArrayList<>();
+         loop: for (BaleElement e4 = elt.getPreviousCharacterElement();
+            e4 != null;
+            e4 = e4.getPreviousCharacterElement()) {
+            switch (e4.getTokenType()) {
+               case LBRACE :
+                  if (!totype.isEmpty()) break loop;
+                  if (bracect >= 0) totype.add(BaleTokenType.RBRACE);
+                  ++bracect;
+                  break;
+               case RBRACE :
+                  --bracect;
+                  break;
+               case LPAREN :
+                  if (parenct >= 0) totype.add(BaleTokenType.RPAREN);
+                  ++parenct;
+                  break;
+               case RPAREN :
+                  --parenct;
+                  break;
+               case LBRACKET :
+                  if (bracketct >= 0) totype.add(BaleTokenType.RBRACKET);
+                  ++bracketct;
+                  break;
+               case RBRACKET :
+                  --bracketct;
+                  break;
+               case FOR :
+                  if (!totype.isEmpty()) break loop;
+                  if (colonct == 0 && semict == 1) {
+                     totype.add(BaleTokenType.SEMICOLON);
+                     break loop;
+                   }
+                  break;
+               case WHILE :
+               case DO :
+               case CASE :
+               case CATCH :
+               case THROWS :
+               case KEYWORD :
+               case FINALLY :
+               case IF :
+               case ELSE :
+               case IMPORT :
+               case PACKAGE :
+               case RETURN :
+               case SWITCH :
+               case SYNCHRONIZED :
+               case TRY :
+               case BREAK :
+               case CONTINUE :
+               case FUNCTION :
+                  if (!totype.isEmpty()) break loop;
+                  break;
+               case SEMICOLON :
+                  ++semict;
+                  if (!totype.isEmpty()) break loop;
+                  break;
+               case COLON :
+                  ++colonct;
+                  break;
+               case EOL :
+                  break;
+               default :
+                  break;
+             }
+          }
+         BoardLog.logD("BALE","FINISH " + parenct + " " + bracect + " " + bracketct + " " + totype);
+         BaleElement e3 = elt;
+         BaleElement start = elt;
+         boolean haveeol = false;
+         while (!totype.isEmpty()) {
+            while (e3 != null) {
+               if (e3.isEndOfLine()) haveeol = true;
+               if (e3.isComment() || e3.isEmpty()) ;
+               else break;
+               e3 = e3.getNextCharacterElement();
+             }
+            if (e3 != null && e3.getTokenType() == totype.get(0)) {
+               if (!haveeol || e3.getTokenType() == BaleTokenType.RBRACE) {
+                  totype.remove(0);
+                  start = e3;
+                }
+               else break;
+             }
+            else break;
+          }
+         if (totype.isEmpty()) {
+            if (e3 != null && e3.getTokenType() != BaleTokenType.SEMICOLON && !haveeol) {
+               totype.add(BaleTokenType.SEMICOLON);
+             }
+          }
+         else haveeol = true;
+         if (!totype.isEmpty()) {
+            String add = "";
+            for (BaleTokenType tt : totype) {
+               switch (tt) {
+                  case RBRACE :
+                     add += "}";
+                     break;
+                  case RPAREN :
+                     add += ")";
+                     break;
+                  case RBRACKET :
+                     add += "]";
+                     break;
+                  case SEMICOLON :
+                     add += ";";
+                     if (!haveeol) add += " ";
+                     break;
+                  default :
+                     break;
+                }
+             }
+            eoff = start.getStartOffset();
+            int noff = eoff + add.length();
+            bd.insertString(eoff,add,null);
+            target.setSelectionStart(noff);
+            target.setSelectionEnd(noff);
+          }
        }
       catch (BadLocationException ex) { }
       finally { bd.baleWriteUnlock(); }
@@ -2555,6 +2601,9 @@ private static class FormatAction extends TextAction {
 	    BaleApplyEdits bae = new BaleApplyEdits(bd);
 	    bae.applyEdits(edits);
 	  }
+         else {
+            bd.nextEditCounter();
+          }
        }
       finally { bd.baleWriteUnlock(); }
     }
@@ -3375,7 +3424,7 @@ private static class InferDeclarationAction extends TextAction {
       int insoff1 = bd.mapOffsetToJava(insoff);
       bd.baleWriteLock();
       try {
-	 bd.insertString(insoff1,ins,null);
+         bd.insertString(insoff1,ins,null);
        }
       catch (BadLocationException ex) { }
       finally { bd.baleWriteUnlock(); }
