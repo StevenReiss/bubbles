@@ -266,7 +266,7 @@ private double computePriority(double parprior,ASTNode base,double pass1prior)
    double p = down_priority.getPriority(parprior,base);
 
    if (pass1prior > p) p = pass1prior;
-   
+
    return p;
 }
 
@@ -472,6 +472,13 @@ private String getNodeType(ASTNode n)
 
 
 
+private String getFullName(ASTNode n)
+{
+   return null;
+}
+
+
+
 /********************************************************************************/
 /*										*/
 /*	Output information for hints						*/
@@ -520,7 +527,7 @@ private void outputHintData(ASTNode n,IvyXmlWriter xw)
        }
       catch (JavaModelException e) {
 	 return;
-       } 
+       }
       xw.begin("HINT");
       xw.field("KIND","METHOD");
       if (n instanceof ClassInstanceCreation) xw.field("CONSTRUCTOR",true);
@@ -730,6 +737,8 @@ private class ElidePass2 extends ASTVisitor {
 	 if (ttyp != null) xml_writer.field("NODE",ttyp);
 	 if ((n.getFlags() & ASTNode.MALFORMED) != 0) xml_writer.field("ERROR",true);
 	 if ((n.getFlags() & ASTNode.RECOVERED) != 0) xml_writer.field("RECOV",true);
+	 String fnm = getFullName(n);
+	 if (fnm != null) xml_writer.field("FULLNAME",fnm);
        }
     }
 
@@ -856,7 +865,7 @@ private abstract class ElideData {
       end_offset = eoff;
     }
 
-   boolean contains(int soff,int len) { 				
+   boolean contains(int soff,int len) { 			
       return (start_offset <= soff && end_offset >= soff+len-1);
     }
 

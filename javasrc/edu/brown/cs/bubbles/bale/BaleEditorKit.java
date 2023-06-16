@@ -1355,24 +1355,24 @@ private static class IndentLinesAction extends TextAction {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
       BaleDocument bd = be.getBaleDocument();
-
+   
       bd.baleWriteLock();
       try {
-	 int soff = be.getSelectionStart();
-	 int eoff = be.getSelectionEnd();
-
-	 int slno = bd.findLineNumber(soff);
-	 int elno = slno;
-	 if (eoff != soff) elno = bd.findLineNumber(eoff);
-	 if (elno < slno) {
-	    int x = elno;
-	    elno = slno;
-	    slno = x;
-	  }
-
-	 for (int i = slno; i <= elno; ++i) {
-	    bd.fixLineIndent(i);
-	  }
+         int soff = be.getSelectionStart();
+         int eoff = be.getSelectionEnd();
+   
+         int slno = bd.findLineNumber(soff);
+         int elno = slno;
+         if (eoff != soff) elno = bd.findLineNumber(eoff);
+         if (elno < slno) {
+            int x = elno;
+            elno = slno;
+            slno = x;
+          }
+   
+         for (int i = slno; i <= elno; ++i) {
+            bd.fixLineIndent(i);
+          }
        }
       finally { bd.baleWriteUnlock(); }
     }

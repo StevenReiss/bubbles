@@ -743,18 +743,18 @@ private static class CreateConfigAction extends AbstractAction {
       BumpRunModel brm = bc.getRunModel();
       BumpLaunchConfig blc = brm.createLaunchConfiguration(null,config_type);
       if (blc != null) {
-	 BumpLaunchConfig blc1 = blc.save();
-	 if (blc1 != null) blc = blc1;
-	 BddtLaunchBubble bb = new BddtLaunchBubble(blc);
-	 BudaBubbleArea bba = the_factory.buda_root.getCurrentBubbleArea();
-	 Rectangle r = bba.getVisibleRect();
-	 int xp = r.x + (r.width/2);
-	 int yp = r.y + (r.height/2);
-	 Dimension sz = bb.getPreferredSize();
-	 xp -= sz.width/2;
-	 yp -= sz.height/2;
-	 Point ctr = new Point(xp,yp);
-	 bba.addBubble(bb,null,ctr,PLACEMENT_NEW|PLACEMENT_USER|PLACEMENT_MOVETO);
+         BumpLaunchConfig blc1 = blc.save();
+         if (blc1 != null) blc = blc1;
+         BddtLaunchBubble bb = new BddtLaunchBubble(blc);
+         BudaBubbleArea bba = the_factory.buda_root.getCurrentBubbleArea();
+         Rectangle r = bba.getVisibleRect();
+         int xp = r.x + (r.width/2);
+         int yp = r.y + (r.height/2);
+         Dimension sz = bb.getPreferredSize();
+         xp -= sz.width/2;
+         yp -= sz.height/2;
+         Point ctr = new Point(xp,yp);
+         bba.addBubble(bb,null,ctr,PLACEMENT_NEW|PLACEMENT_USER|PLACEMENT_MOVETO);
        }
     }
 

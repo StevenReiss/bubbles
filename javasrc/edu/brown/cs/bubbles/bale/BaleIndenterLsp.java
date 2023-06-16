@@ -99,7 +99,8 @@ private int getIndent(int offset,boolean split)
 	 bale_document.getEditCounter(),
 	 eoff,split);
 
-   return IvyXml.getAttrInt(rslt,"TARGET");
+   Element ind = IvyXml.getChild(rslt,"INDENT"); 
+   return IvyXml.getAttrInt(ind,"TARGET");
 }
 
 

@@ -321,56 +321,56 @@ private class BubblePanel extends JPanel implements Runnable {
       int i, j, tmp;
       Dimension d = getSize();
       Color col;
-
+   
       drawSplash(g,this);
       // g.drawImage(splash_image,0,0,this);
-
+   
       if (bubble_count < MAX_BUBBLES || this_bubble < MAX_BUBBLES) {
-	 bubble_record[this_bubble][0]=(int)(Math.random() * d.width);
-	 bubble_record[this_bubble][1]=d.height+50;
-	 bubble_record[this_bubble][2]=(int)(Math.random() * d.width)/20;
-	 bubble_record[this_bubble][3]=(int)(Math.random() * 255);
-	 bubble_record[this_bubble][4]=(int)(Math.random() * 255);
-	 col = getBubbleColor(bubble_record[this_bubble][3],bubble_record[this_bubble][4]);
-	 g.setColor(col);
-	 g.fillOval(bubble_record[this_bubble][0]-bubble_record[this_bubble][2],
-		       bubble_record[this_bubble][1]-bubble_record[this_bubble][2],
-		       bubble_record[this_bubble][2]*2,bubble_record[this_bubble][2]*2);
-	 if (bubble_count < MAX_BUBBLES) {
-	    bubble_count++;
-	    this_bubble++;
-	  }
-	 else this_bubble = MAX_BUBBLES;
+         bubble_record[this_bubble][0]=(int)(Math.random() * d.width);
+         bubble_record[this_bubble][1]=d.height+50;
+         bubble_record[this_bubble][2]=(int)(Math.random() * d.width)/20;
+         bubble_record[this_bubble][3]=(int)(Math.random() * 255);
+         bubble_record[this_bubble][4]=(int)(Math.random() * 255);
+         col = getBubbleColor(bubble_record[this_bubble][3],bubble_record[this_bubble][4]);
+         g.setColor(col);
+         g.fillOval(bubble_record[this_bubble][0]-bubble_record[this_bubble][2],
+        	       bubble_record[this_bubble][1]-bubble_record[this_bubble][2],
+        	       bubble_record[this_bubble][2]*2,bubble_record[this_bubble][2]*2);
+         if (bubble_count < MAX_BUBBLES) {
+            bubble_count++;
+            this_bubble++;
+          }
+         else this_bubble = MAX_BUBBLES;
        }
-
+   
       for (i=0; i<bubble_count; i++) {
-	 if (i%5 <= bubble_stepper) { // Steps each bubble at a different speed
-	    bubble_record[i][1] -= 1;
-	    col = new Color(bubble_record[i][3], bubble_record[i][4], 255);
-	    g.setColor(col);
-	    move_bubble(bubble_record[i][0], bubble_record[i][1], bubble_record[i][2], 1, g);
-	    for (j=0; j<i; j++) {   // Checks for touching bubbles, pops one
-	       tmp = ( (bubble_record[i][1]-bubble_record[j][1])*(bubble_record[i][1]-bubble_record[j][1]) +
-			  (bubble_record[i][0]-bubble_record[j][0])*(bubble_record[i][0]-bubble_record[j][0]) );
-	       if (j != i && Math.sqrt(tmp) < bubble_record[i][2] + bubble_record[j][2]) {
-		  g.setColor(getBackground());
-		  for (tmp = bubble_record[i][2]; tmp >= -1; tmp = tmp - 2)
-		     g.fillOval(bubble_record[i][0]-(bubble_record[i][2]-tmp),
-				   bubble_record[i][1]-(bubble_record[i][2]-tmp),
-				   (bubble_record[i][2]-tmp)*2, (bubble_record[i][2]-tmp)*2);
-		  col = getBubbleColor(bubble_record[j][3],bubble_record[j][4]);
-		  g.setColor(col);
-		  g.fillOval(bubble_record[j][0]-bubble_record[j][2], bubble_record[j][1]-bubble_record[j][2],
-				bubble_record[j][2]*2, bubble_record[j][2]*2);
-		  bubble_record[i][1] = -1; bubble_record[i][2]=0;
-		}
-	     }
-	  }
-	 if (bubble_record[i][1]+bubble_record[i][2] < 0 && bubble_count >= MAX_BUBBLES) {
-	    this_bubble = i;
-	  }
-	 bubble_stepper=(int)(Math.random()*10);
-	 col = null;
+         if (i%5 <= bubble_stepper) { // Steps each bubble at a different speed
+            bubble_record[i][1] -= 1;
+            col = new Color(bubble_record[i][3], bubble_record[i][4], 255);
+            g.setColor(col);
+            move_bubble(bubble_record[i][0], bubble_record[i][1], bubble_record[i][2], 1, g);
+            for (j=0; j<i; j++) {   // Checks for touching bubbles, pops one
+               tmp = ( (bubble_record[i][1]-bubble_record[j][1])*(bubble_record[i][1]-bubble_record[j][1]) +
+        		  (bubble_record[i][0]-bubble_record[j][0])*(bubble_record[i][0]-bubble_record[j][0]) );
+               if (j != i && Math.sqrt(tmp) < bubble_record[i][2] + bubble_record[j][2]) {
+        	  g.setColor(getBackground());
+        	  for (tmp = bubble_record[i][2]; tmp >= -1; tmp = tmp - 2)
+        	     g.fillOval(bubble_record[i][0]-(bubble_record[i][2]-tmp),
+        			   bubble_record[i][1]-(bubble_record[i][2]-tmp),
+        			   (bubble_record[i][2]-tmp)*2, (bubble_record[i][2]-tmp)*2);
+        	  col = getBubbleColor(bubble_record[j][3],bubble_record[j][4]);
+        	  g.setColor(col);
+        	  g.fillOval(bubble_record[j][0]-bubble_record[j][2], bubble_record[j][1]-bubble_record[j][2],
+        			bubble_record[j][2]*2, bubble_record[j][2]*2);
+        	  bubble_record[i][1] = -1; bubble_record[i][2]=0;
+        	}
+             }
+          }
+         if (bubble_record[i][1]+bubble_record[i][2] < 0 && bubble_count >= MAX_BUBBLES) {
+            this_bubble = i;
+          }
+         bubble_stepper=(int)(Math.random()*10);
+         col = null;
        }
     }
 

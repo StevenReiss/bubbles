@@ -113,7 +113,7 @@ private BassTreeModelVirtual(BassTreeModelBase base,String proj,String clspfx)
       if (initial_project != null) pfx = "E:" + initial_project + " N:";
       if (initial_prefix != null) {
 	 if (pfx == null) pfx = initial_prefix;
-	 else pfx = pfx + " " + initial_prefix;
+	 else pfx = pfx + initial_prefix;
        }
       prune(pfx,false);
     }

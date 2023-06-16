@@ -193,9 +193,6 @@ protected BumpClient()
    progress_handlers = new SwingEventListenerList<>(BumpProgressHandler.class);
 
    debug_jvm_args = new ArrayList<>();
-   if (System.getProperty("os.name").startsWith("Mac")) {
-//    addJvmDebugArgument("-XstartOnFirstThread");
-    }
 
    collect_id = (int)(Math.random() * 10000);
 
