@@ -225,6 +225,17 @@ static void checkUpdate(String jarfile,List<String> javaargs)
       int updjava = getJavaVersion(ue);
       if (curjava < updjava) return;
 
+      forceUpdate(jarfile,javaargs);
+    }
+   catch (Throwable t) {
+      System.err.println("BOARD: Problem checking for update: " + t);
+    }
+}
+
+
+static void forceUpdate(String jarfile,List<String> javaargs)
+{
+   try {
       BoardUpdate bu = new BoardUpdate(jarfile,javaargs);
       bu.startUpdate();
     }

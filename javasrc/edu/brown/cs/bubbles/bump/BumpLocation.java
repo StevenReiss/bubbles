@@ -108,6 +108,7 @@ static {
    symbol_map.put("Import",BumpSymbolType.IMPORT);
    symbol_map.put("Export",BumpSymbolType.EXPORT);
    symbol_map.put("JSCode",BumpSymbolType.PROGRAM);
+   symbol_map.put("File",BumpSymbolType.MODULE);
 }
 
 
@@ -138,6 +139,21 @@ public static BumpLocation getLocationFromXml(Element xml)
    BumpLocation bl = new BumpLocation(pnm,fnm,offset,length,srctyp,mi);
 
    return bl;
+}
+
+
+public static BumpLocation getFileLocation(BumpLocation bl)
+{
+   String k = bl.getKey();
+   int idx = k.indexOf("#");
+   if (idx < 0) return bl;
+   k = k.substring(0,idx);
+   
+   File f = bl.getFile();
+   BumpLocation bl0 = new BumpLocation(bl.getProject(),f.getPath(),0,(int) f.length(),"File",null);
+   bl0.symbol_key = k;
+   
+   return bl0;
 }
 
 
@@ -213,6 +229,7 @@ BumpLocation(String proj,String file,int off,int len,String srctyp,Element itm)
       symbol_length = file_length;
     }
 }
+
 
 
 

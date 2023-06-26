@@ -578,11 +578,11 @@ private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 	 if (showClassFile(bn)) {
 	    BassNameLocation fnm = new BassNameLocation(bl,BassNameType.FILE,pfx);
 	    all_names.add(fnm);
-	  }
+	 }
 	 bn = new BassNameLocation(bl,BassNameType.HEADER,pfx);
 	 break;
       case PROJECT :
-         if (all_names.size() != 0) bn = null;
+	 if (all_names.size() != 0) bn = null;
 	 break;
       case MODULE :
 	 BassNameLocation fnm = new BassNameLocation(bl,BassNameType.FILE,pfx);
@@ -593,6 +593,7 @@ private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
     }
 
    if (bn != null) all_names.add(bn);
+
    file_names = null;
 }
 
@@ -603,6 +604,7 @@ private boolean showClassFile(BassNameLocation bn)
    if (bn.getKey().contains("$")) return false;
    switch (BoardSetup.getSetup().getLanguage()) {
       case PYTHON :
+      case DART :
 	 return false;
       default:
 	 break;
@@ -742,7 +744,10 @@ private void addNamesForFile(String proj,String file,boolean rem)
    Collection<BumpLocation> locs = BumpClient.getBump().findAllNames(proj,fls,true,0);
 
    synchronized (this) {
-      if (rem) removeNamesForFile(proj,file);
+      if (rem) {
+	 removeNamesForFile(proj,file);
+       }
+
       if (locs != null) {
 	 for (BumpLocation bl : locs) {
 	    addLocation(bl,usedmap);

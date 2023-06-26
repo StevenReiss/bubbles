@@ -40,6 +40,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
+import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import edu.brown.cs.ivy.swing.SwingComboBox;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
@@ -98,6 +99,7 @@ private JButton 		clone_button;
 private SwingComboBox<String>	project_name;
 private SwingComboBox<String>	start_class;
 private JCheckBox		stop_in_main;
+private JCheckBox		binary_starts;
 private JTextComponent		test_class;
 private JTextComponent		test_name;
 private JTextComponent		host_name;
@@ -106,7 +108,8 @@ private JTextComponent		working_directory;
 private SwingNumericField	port_number;
 private boolean 		doing_load;
 private Map<String,String>	project_map;
-
+private boolean 		library_main;
+private List<String>		all_mains;
 
 
 private static final long serialVersionUID = 1;
@@ -127,6 +130,8 @@ BddtLaunchBubble(BumpLaunchConfig cfg)
    edit_config = null;
    doing_load = false;
    project_map = null;
+   library_main = false;
+   all_mains = null;
 
    setupPanel();
 }
@@ -134,9 +139,9 @@ BddtLaunchBubble(BumpLaunchConfig cfg)
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Access methods                                                          */
-/*                                                                              */
+/*										*/
+/*	Access methods								*/
+/*										*/
 /********************************************************************************/
 
 BumpLaunchConfig getLaunchConfig()
@@ -186,6 +191,7 @@ private void setupPanel()
    arg_area = null;
    vmarg_area = null;
    stop_in_main = null;
+   binary_starts = null;
    test_class = null;
    test_name = null;
    host_name = null;
@@ -208,6 +214,7 @@ private void setupPanel()
 	     }
 	  }
 	 stop_in_main = pnl.addBoolean("Stop in Main",launch_config.getStopInMain(),this);
+	 binary_starts = pnl.addBoolean("Include Library Main Methods",library_main,this);
 	 arg_area = pnl.addTextArea("Arguments",launch_config.getArguments(),2,24,this);
 	 vmarg_area = pnl.addTextArea("VM Arguments",launch_config.getVMArguments(),1,24,this);
 	 break;
@@ -304,14 +311,39 @@ private void getStartClasses()
 
 private Collection<String> getStartClassesForProject()
 {
-   if (project_map == null) getStartClasses();
-   if (project_name == null) return project_map.keySet();
-   String pnm = (String) project_name.getSelectedItem();
-   if (pnm == null || pnm.length() == 0) return project_map.keySet();
+   Collection<String> rslt;
 
-   List<String> rslt = new ArrayList<>();
-   for (String s : project_map.keySet()) {
-      if (pnm.equals(project_map.get(s))) rslt.add(s);
+   if (project_map == null) getStartClasses();
+   if (project_name == null) rslt = project_map.keySet();
+   else {
+      String pnm = (String) project_name.getSelectedItem();
+      if (pnm == null || pnm.length() == 0) rslt = project_map.keySet();
+      else {
+	 rslt = new ArrayList<>();
+	 for (String s : project_map.keySet()) {
+	    if (pnm.equals(project_map.get(s))) rslt.add(s);
+	  }
+       }
+    }
+
+   if (library_main) {
+      if (all_mains == null) {
+	 all_mains = new ArrayList<>();
+	 BumpClient bc = BumpClient.getBump();
+	 List<BumpLocation> locs = bc.findMethods(null,"main(String[])void",false,true,false,true);
+	 for (BumpLocation bl : locs) {
+            String p = bl.getSymbolProject();
+            String nm = bl.getSymbolName();
+            int idx = nm.lastIndexOf(".");
+            String cnm = nm.substring(0,idx);
+            if (p == null || p.equals(project_map.get(cnm))) continue;                   // known
+            int mods = bl.getModifiers();
+            if (mods != Modifier.PUBLIC + Modifier.STATIC) continue;
+            all_mains.add(cnm);
+            
+	  }
+       }
+      rslt.addAll(all_mains);
     }
 
    return rslt;
@@ -496,6 +528,10 @@ private String getNewName()
 	 edit_config = edit_config.setStopInMain(stop_in_main.isSelected());
        }
     }
+   else if (cmd.equals("Include Library Main Methods")) {
+      library_main = binary_starts.isSelected();
+      recomputeStarts();
+    }
    else if (cmd.equals("Project")) {
       if (project_name == null) return;
       String pnm = (String) project_name.getSelectedItem();
@@ -506,26 +542,7 @@ private String getNewName()
       if (edit_config == null) edit_config = launch_config;
       if (edit_config != null) {
 	 edit_config = edit_config.setProject(pnm);
-	 if (start_class != null) {
-	    Collection<String> starts = getStartClassesForProject();
-	    String nm = edit_config.getMainClass();
-	    boolean fnd = false;
-	    start_class.removeAllItems();
-	    String st0 = null;
-	    for (String s : starts) {
-	       if (st0 == null) st0 = s;
-	       if (s.equals(nm)) {
-		  nm = s;		// so objects == in selection
-		  fnd = true;
-		}
-	       start_class.addItem(s);
-	     }
-	    if (!fnd) {
-	       nm = st0;
-	     }
-	    start_class.setSelectedItem(nm);
-	    start_class.repaint();
-	  }
+	 recomputeStarts();
        }
     }
    else if (cmd.equals("Remote Host")) { }
@@ -540,6 +557,36 @@ private String getNewName()
 
    fixButtons();
 }
+
+
+
+private void recomputeStarts()
+{
+   if (start_class != null) {
+      Collection<String> starts = getStartClassesForProject();
+      String nm = null;
+      if (edit_config != null) nm = edit_config.getMainClass();
+      boolean fnd = false;
+      start_class.removeAllItems();
+      String st0 = null;
+      for (String s : starts) {
+	 if (st0 == null) st0 = s;
+	 if (s.equals(nm)) {
+	    nm = s;		  // so objects == in selection
+	    fnd = true;
+	  }
+	 start_class.addItem(s);
+       }
+      if (!fnd) {
+	 nm = st0;
+       }
+      start_class.setSelectedItem(nm);
+      start_class.repaint();
+    }
+}
+
+
+
 
 
 @Override public void undoableEditHappened(UndoableEditEvent e)

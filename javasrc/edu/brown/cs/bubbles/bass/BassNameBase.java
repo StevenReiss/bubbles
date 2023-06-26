@@ -278,14 +278,13 @@ protected String getLocalName()
       buf.append(":.");
     }
    String nh = getNameHead();
-   if (nh != null) {
+   if (nh != null && !nh.isEmpty()) {
       buf.append(nh);
       buf.append(".");
       buf.append(getLocalName());
     }
    else {
       buf.append(getLocalName());
-      // BoardLog.logD("BASS","No name head for " + this + " " + getLocalName());
     }
 
    String nm = buf.toString();

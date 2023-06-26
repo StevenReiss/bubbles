@@ -124,6 +124,7 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
 	    key = key.substring(0,idx+1) + ".<FIELDS>";
 	    break;
          case GLOBAL :
+         case LOCAL :
             key = bl.getSymbolName();
 	    idx = key.lastIndexOf(".");
 	    key = key.substring(0,idx+1) + ".<VARIABLES>";

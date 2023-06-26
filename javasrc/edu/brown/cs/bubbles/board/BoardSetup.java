@@ -137,6 +137,7 @@ public static void main(String [] args)
 
 private BoardProperties system_properties;
 private boolean 	force_setup;
+private boolean         force_update;
 private boolean 	force_metrics;
 private boolean 	ask_workspace;
 private boolean 	workspace_given;
@@ -247,6 +248,7 @@ private BoardSetup()
    board_language = BoardLanguage.JAVA;
    palette_set = false;
    plugin_running = false;
+   force_update = false;
 
    baseide_directory = system_properties.getProperty(BOARD_PROP_BASE_IDE_DIR);
    if (baseide_directory == null) baseide_directory = system_properties.getProperty(BOARD_PROP_ECLIPSE_DIR);
@@ -422,6 +424,16 @@ public void setForceSetup(boolean fg)
 {
    force_setup = fg;
    if (fg) force_metrics = true;
+}
+
+
+/**
+ *      Set the flag to force a new bubbles version
+ **/
+
+public void setForceUpdate(boolean fg)
+{
+   force_update = fg;
 }
 
 
@@ -1540,7 +1552,8 @@ public boolean doSetup()
       setSplashTask("Checking for newer version");
       if (update_proxy != null) BoardUpdate.setupProxy(update_proxy);
       try {
-	 if (auto_update) BoardUpdate.checkUpdate(jar_file,java_args);
+         if (force_update) BoardUpdate.forceUpdate(jar_file,java_args);
+	 else if (auto_update) BoardUpdate.checkUpdate(jar_file,java_args);
 	 else BoardUpdate.setVersion();
        }
       catch (UnsupportedClassVersionError e) {

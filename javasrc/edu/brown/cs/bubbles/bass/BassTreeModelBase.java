@@ -295,17 +295,21 @@ private static class TreeSorter implements Comparator<BassName> {
       String b1spfx = b1.getSubProject();
       if (b1pfx != null && b1spfx != null) b1pfx += "@"  + b1spfx;
       String b1sfx = b1.getNameHead();
+      if (b1sfx != null && b1sfx.isEmpty()) b1sfx = null;
       if (b1pfx != null && b1sfx != null) b1pfx += ":" + b1sfx;
       else if (b1sfx != null) b1pfx = b1sfx;
       String b2pfx = b2.getProject();
       String b2spfx = b2.getSubProject();
       if (b2pfx != null && b2spfx != null) b2pfx += "@" + b2spfx;
       String b2sfx = b2.getNameHead();
+      if (b2sfx != null && b2sfx.isEmpty()) b2sfx = null;
       if (b2pfx != null && b2sfx != null) b2pfx += ":" + b2sfx;
       else if (b2sfx != null) b2pfx = b2sfx;
       if (b1pfx == null && b2pfx != null) return -1;
       if (b1pfx != null && b2pfx == null) return 1;
       else if (b1pfx != null && b2pfx != null) {
+	 b1pfx = b1pfx.replace(":.",":");
+	 b2pfx = b2pfx.replace(":.",":");
 	 int pd = b1pfx.compareTo(b2pfx);
 	 if (pd != 0) return pd;
       }

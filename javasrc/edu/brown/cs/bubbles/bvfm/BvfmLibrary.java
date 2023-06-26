@@ -328,7 +328,6 @@ private class CodeName extends BvfmRepoName {
    
    @Override public  String getSymbolName() {
       return code_prefix + "VirtualFile:" + virtual_file.getName();
-
     }
    
 }	// end of inner class GroupName

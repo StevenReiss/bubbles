@@ -196,7 +196,11 @@ void addLocation(BumpLocation bl)
 
 @Override public int getModifiers()			{ return base_location.getModifiers(); }
 
-@Override protected String getKey()			{ return base_location.getKey(); }
+@Override protected String getKey()			
+{ 
+   return base_location.getKey(); 
+}
+
 @Override protected String getSymbolName()		{ return base_location.getSymbolName(); }
 @Override protected String getParameters()		{ return method_params; }
 
@@ -214,7 +218,15 @@ int getEclipseStartOffset() {
    }
    return base_location.getDefinitionOffset();
 }
-int getEclipseEndOffset()				{ return base_location.getDefinitionEndOffset(); }
+int getEclipseEndOffset()				
+{ 
+   switch (name_type) {
+      case FILE :
+	 return (int) getFile().length();
+   }
+   return base_location.getDefinitionEndOffset(); 
+}
+
 BumpSymbolType getSymbolType()				{ return base_location.getSymbolType(); }
 
 @Override public BumpLocation getLocation()		{ return base_location; }
@@ -433,15 +445,9 @@ protected String getPrefix()
       default:
 	 break;
    }
-							
+						
    return null;
 }
-
-
-
-
-
-
 
 
 

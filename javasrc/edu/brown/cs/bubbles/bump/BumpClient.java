@@ -153,9 +153,9 @@ public synchronized static BumpClient getBump()
 	 case JS :
 	    default_client = new BumpClientJS();
 	    break;
-         case DART :
-            default_client = new BumpClientLsp("dart");
-            break;
+	 case DART :
+	    default_client = new BumpClientLsp("dart");
+	    break;
        }
       loadProperties();
     }
@@ -1420,7 +1420,8 @@ public List<BumpLocation> findFields(String proj,File file,String clsn)
    clsn = localFixupName(clsn);
    clsn = IvyXml.xmlSanitize(clsn);
 
-   String flds = "CLASS='" + clsn + "' FIELDS='T'";
+   String flds = "FIELDS='T'";
+   if (clsn != null) flds += " CLASS='" + clsn + "'";
    if (file != null) flds += " FILE='" + file.getAbsolutePath() + "'";
 
    Element xml = getXmlReply("FINDREGIONS",proj,flds,null,0);
@@ -1742,7 +1743,7 @@ public List<BumpLocation> findAllTypes(String nm)
 
 /**
  *	Return a list of BumpLocations containing the definitions of all annotations
- *	matching the given pattern.							
+ *	matching the given pattern.						
  *	@param proj the project to search in, null implies all projects
  *	@param nm the search pattern
  *	@param def if true, include definitions in the output set
@@ -2203,7 +2204,7 @@ public Collection<BumpCompletion> getCompletions(String proj,File file,int id,in
    Collection<BumpCompletion> rslt = new ArrayList<BumpCompletion>();
 
 // BoardLog.logD("BUMP","COMPLETIONS: " + IvyXml.convertXmlToString(xml));
-   
+
    Element root = IvyXml.getChild(xml,"COMPLETIONS");
    for (Element c : IvyXml.children(root,"COMPLETION")) {
       BumpCompletion bc = new BumpCompletionImpl(c);
@@ -2369,11 +2370,11 @@ public Element computeIndent(String proj,File file,int eid,int spos,boolean spli
    if (eid >= 0) flds += " ID='" + eid + "'";
    flds += " OFFSET='" + spos + "'";
    if (split) flds += " SPLIT='true'";
-   
+
    Element xml = getXmlReply("INDENT",proj,flds,null,100);
-   
+
    if (!IvyXml.isElement(xml,"RESULT")) return null;
-   
+
    return xml;
 }
 
@@ -2386,11 +2387,11 @@ public Element fixIndents(String proj,File file,int eid,int spos,int epos)
    if (eid >= 0) flds += " ID='" + eid + "'";
    flds += " OFFSET='" + spos + "'";
    flds += " ENDOFFSET='" + epos + "'";
-   
+
    Element xml = getXmlReply("FIXINDENTS",proj,flds,null,100);
-   
+
    if (!IvyXml.isElement(xml,"RESULT")) return null;
-   
+
    return xml;
 }
 
@@ -2942,9 +2943,9 @@ Element getThreadStack(BumpThread bt)
    String q = "LAUNCH='" + bt.getLaunch().getId() + "' THREAD='" + bt.getId() + "'";
 
    Element rslt = getXmlReply("GETSTACKFRAMES",null,q,null,5000);
-   
+
    BoardLog.logD("BUMP","Stack: " + IvyXml.convertXmlToString(rslt));
-   
+
    return rslt;
 }
 
@@ -3945,23 +3946,23 @@ protected static class NameCollector {
    synchronized void addNames(Element xml) {
       int ctr = 0;
       for (Element fe : IvyXml.children(xml,"FILE")) {
-         String path = IvyXml.getTextElement(fe,"PATH");
-         for (Element itm : IvyXml.children(fe,"ITEM")) {
-            int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
-            int length = IvyXml.getAttrInt(itm,"LENGTH");
-            String pnm = IvyXml.getAttrString(itm,"PROJECT");
-            BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
-            result_names.add(bl);
-            ++ctr;
-          }
+	 String path = IvyXml.getTextElement(fe,"PATH");
+	 for (Element itm : IvyXml.children(fe,"ITEM")) {
+	    int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
+	    int length = IvyXml.getAttrInt(itm,"LENGTH");
+	    String pnm = IvyXml.getAttrString(itm,"PROJECT");
+	    BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
+	    result_names.add(bl);
+	    ++ctr;
+	  }
        }
       BoardLog.logD("BUMP","Received " + ctr + " Names");
       for (Element itm : IvyXml.children(xml,"ITEM")) {
-         String pnm = IvyXml.getAttrString(itm,"PROJECT");
-         String pth = IvyXml.getAttrString(itm,"PATH");
-         BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
-         result_names.add(bl);
-         // BoardLog.logD("BUMP","Added project name " + bl);
+	 String pnm = IvyXml.getAttrString(itm,"PROJECT");
+	 String pth = IvyXml.getAttrString(itm,"PATH");
+	 BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
+	 result_names.add(bl);
+	 // BoardLog.logD("BUMP","Added project name " + bl);
        }
       BoardSetup.getSetup().noteNamesLoaded(result_names.size(),max_sym);
     }
@@ -3975,12 +3976,12 @@ protected static class NameCollector {
 
    synchronized Collection<BumpLocation> getNames() {
       while (!is_done) {
-         try {
-            wait();
-          }
-         catch (InterruptedException e) { }
+	 try {
+	    wait();
+	  }
+	 catch (InterruptedException e) { }
        }
-   
+
       return result_names;
     }
 

@@ -232,11 +232,19 @@ private synchronized void setFragmentName(String name,boolean dirty)
       force_rename = false;
       int parenidx = fragment_name.lastIndexOf("(");
       int idx;
-      if(parenidx < 0) idx = fragment_name.lastIndexOf(".");
+      if (parenidx < 0) idx = fragment_name.lastIndexOf(".");
       else idx = fragment_name.lastIndexOf(".", parenidx);
       String packclass;
       if (idx < 0) packclass = "";
       else packclass = fragment_name.substring(0, idx);
+      int fidx = packclass.indexOf(";");
+      String fnam = null;
+      if (fidx > 0) {
+         fnam = packclass.substring(0,fidx);
+         fnam = fnam.replace(".","$");
+         packclass = fnam + packclass.substring(fidx);
+       }
+      
       int numcomps = 0;
       int mobidx = 0;
       while (mobidx < packclass.length()) {
@@ -244,6 +252,8 @@ private synchronized void setFragmentName(String name,boolean dirty)
 	 mobidx = packclass.indexOf(".", mobidx + 1);
 	 if (mobidx < 0) break;
        }
+      if (fnam != null) ++numcomps;
+      
       removeAll();
       component_list = new LinkedList<>();
       mobidx = -1;

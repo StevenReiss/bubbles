@@ -121,11 +121,6 @@ private BassTreeModelVirtual(BassTreeModelBase base,String proj,String clspfx)
 
 
 
-
-
-
-
-
 /********************************************************************************/
 /*										*/
 /*	TreeModel methods							*/

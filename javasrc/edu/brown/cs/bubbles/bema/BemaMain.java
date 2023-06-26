@@ -132,6 +132,7 @@ public static void main(String [] args)
 private boolean 	restore_session;
 private boolean 	force_setup;
 private boolean 	force_metrics;
+private boolean         force_update;
 private boolean 	skip_setup;
 private boolean 	skip_splash;
 private boolean 	allow_debug;
@@ -166,6 +167,7 @@ private BemaMain(String [] args)
    restore_session = true;
    force_setup = false;
    force_metrics = false;
+   force_update = false;
    skip_setup = false;
    skip_splash = false;
    allow_debug = false;
@@ -218,6 +220,9 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-f")) {                   // -force
 	    force_setup = true;
 	  }
+         else if (args[i].startsWith("-F")) {                   // -FORCEUPDATE
+            force_update = true;
+          }
 	 else if (args[i].toLowerCase().startsWith("-py")) {    // -python
 	    usePython();
 	  }
@@ -365,6 +370,7 @@ private void start()
 
    if (skip_setup) bs.setSkipSetup();
    if (force_setup) bs.setForceSetup(true);
+   if (force_update) bs.setForceUpdate(true);
    if (force_metrics) bs.setForceMetrics(true);
    if (skip_splash) bs.setSkipSplash();
    if (allow_debug) bs.setAllowDebug();

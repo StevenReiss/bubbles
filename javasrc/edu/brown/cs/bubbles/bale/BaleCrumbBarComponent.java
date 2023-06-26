@@ -96,6 +96,8 @@ BaleCrumbBarComponent(BaleCrumbBar par, BaleCrumbBarComponent bro, String shotxt
       shown_text = shotxt;
       my_arrow = " ";
     }
+   shown_text = shown_text.replace("$",".");
+   
 
    //nat_width = getColumnWidth()*shotxt.length()/2;
    setText(shown_text);
@@ -281,7 +283,7 @@ int addedWidthIfGrown()
    super.paint(g);
    
    Graphics2D brush = (Graphics2D)g;
-   if (rolled_over && package_name!=null){
+   if (rolled_over && package_name != null){
       brush.setColor(BoardColors.getColor(BALE_CRUMB_ROLLOVER_COLOR_PROP));
       brush.fill(draw_oval);
    }
