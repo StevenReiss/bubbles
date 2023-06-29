@@ -196,36 +196,50 @@ Point getLocation(Dimension bsize, Dimension isize)
 /*										*/
 /********************************************************************************/
 
-static String getIndication(String proj,String from,String key)
+static String getIndication(String proj,String from0,String key)
 {
-   if (from == null) return null;
-
+   if (from0 == null) return null;
+   
+   String from = from0;
+   
+   int idx0 = from.indexOf(";");
+   if (idx0 > 0) {
+      from = from.substring(0,idx0);
+      if (BALE_PROPERTIES.getString(key).equals("package")) {
+	    int idx1 = from.lastIndexOf("/");
+	    if (idx1 < 0) from = "*";
+	    else from = from.substring(0,idx1);
+      }
+   }
+   else {
    // convert from to a class name
-   int idx = from.indexOf("(");
-   if (idx > 0) {
-      from = from.substring(0,idx);
-      idx = from.lastIndexOf(".");
-      if (idx > 0) from = from.substring(0,idx);
-    }
-    else {
-       idx = from.indexOf(".<");
-       if (idx > 0) {
-	  from = from.substring(0,idx);
-	}
-     }
-
-   if (BALE_PROPERTIES.getString(key).equals("package")) {
-      for ( ; ; ) {
-	 idx = from.lastIndexOf(".");
-	 if (idx < 0) return null;
+      int idx = from.indexOf("(");
+      if (idx > 0) {
 	 from = from.substring(0,idx);
-	 if (checkPackage(proj,from)) break;
-       }
-    }
+	 idx = from.lastIndexOf(".");
+	 if (idx > 0) from = from.substring(0,idx);
+      }
+      else {
+	 idx = from.indexOf(".<");
+	 if (idx > 0) {
+	    from = from.substring(0,idx);
+	 }
+      }
 
-   idx = from.lastIndexOf(".");
-   if (idx >= 0) from = from.substring(idx+1);
-   if (from.length() == 0) return null;
+      if (BALE_PROPERTIES.getString(key).equals("package")) {
+	 for ( ; ; ) {
+	    idx = from.lastIndexOf(".");
+	    if (idx < 0) return null;
+	    from = from.substring(0,idx);
+	    if (checkPackage(proj,from)) break;
+	 }
+      }
+
+      idx = from.lastIndexOf(".");
+      if (idx >= 0) from = from.substring(idx+1);
+   }
+      
+   if (from.length() == 0) from = "*";
 
    return from;
 }

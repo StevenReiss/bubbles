@@ -5,6 +5,8 @@
 <entry key="Bale.size">11</entry>
 <entry key="Bale.foreground">^</entry>
 <entry key="Bale.python.tabsize">8</entry>
+<entry key="Bale.tabsize">8</entry>
+<entry key="Bale.indent">4</entry>
 <entry key="DeclSet.parent">Bale</entry>
 <entry key="CompilationUnit.parent">Bale</entry>
 <entry key="Class.parent">Bale</entry>

@@ -1,6 +1,6 @@
 /********************************************************************************/
 /*										*/
-/*		BddtLaunchBubble.java						*/
+ /*		BddtLaunchBubble.java						*/
 /*										*/
 /*	Bubble Environment launch configuration bubble				*/
 /*										*/

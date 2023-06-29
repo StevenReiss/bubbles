@@ -632,7 +632,7 @@ private class ElidePass1 extends ASTVisitor {
       return q;
     }
 
-}	// end of innerclass ElidePass1
+}	// end of inner class ElidePass1
 
 
 
@@ -941,7 +941,7 @@ private class ElidePriority extends ElideData {
 
    double getPriority() 			{ return elide_priority; }
 
-}	// end of innerclass ElideData
+}	// end of inner class ElideData
 
 
 
@@ -1000,7 +1000,7 @@ private static class DefaultPrioritizer extends Prioritizer {
       return ppar * dv;
     }
 
-}	// end of innerclass DefaultPrioritizer
+}	// end of inner class DefaultPrioritizer
 
 
 
@@ -1050,7 +1050,7 @@ private static class NodePrioritizer extends Prioritizer {
       return p.getPriority(ppar,base);
     }
 
-}	// end of innerclass NodePrioritizer
+}	// end of inner class NodePrioritizer
 
 
 

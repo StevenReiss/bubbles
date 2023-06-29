@@ -226,24 +226,29 @@ private synchronized void setFragmentName(String name,boolean dirty)
    if (dirty == is_dirty && !force_rename) return;
 
    fragment_name = name;
+   String usename = name;
    is_dirty = dirty;
 
    if (!is_dirty || force_rename) {
-      force_rename = false;
-      int parenidx = fragment_name.lastIndexOf("(");
       int idx;
+      force_rename = false;
+      int parenidx = fragment_name.lastIndexOf("("); 
+      int fidx = fragment_name.indexOf(";");
       if (parenidx < 0) idx = fragment_name.lastIndexOf(".");
       else idx = fragment_name.lastIndexOf(".", parenidx);
-      String packclass;
-      if (idx < 0) packclass = "";
-      else packclass = fragment_name.substring(0, idx);
-      int fidx = packclass.indexOf(";");
+      if (idx < fidx) idx = -1;
+      String packclass = "";
       String fnam = null;
-      if (fidx > 0) {
-         fnam = packclass.substring(0,fidx);
-         fnam = fnam.replace(".","$");
-         packclass = fnam + packclass.substring(fidx);
-       }
+      if (fidx < 0) {
+	 if (idx >= 0) packclass = fragment_name.substring(0,idx);
+      }
+      else { 
+	 fnam = fragment_name.substring(0,fidx);
+	 fnam = fnam.replace(".", "$");
+	 usename = fragment_name.substring(fidx+1);
+	 if (idx > 0) packclass = fnam + fragment_name.substring(fidx+1,idx);
+	 else packclass = fnam;
+      }
       
       int numcomps = 0;
       int mobidx = 0;
@@ -252,7 +257,7 @@ private synchronized void setFragmentName(String name,boolean dirty)
 	 mobidx = packclass.indexOf(".", mobidx + 1);
 	 if (mobidx < 0) break;
        }
-      if (fnam != null) ++numcomps;
+//      if (fnam != null) ++numcomps;
       
       removeAll();
       component_list = new LinkedList<>();
@@ -276,7 +281,7 @@ private synchronized void setFragmentName(String name,boolean dirty)
 	 add(component_list.getLast());
        }
 
-      String lastcomp = fragment_name.substring(idx+1);
+      String lastcomp = usename.substring(idx+1);
       int parenloc = lastcomp.indexOf("(");
       boolean stoplast = false;
       if (parenloc >= 0) {

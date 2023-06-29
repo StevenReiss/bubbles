@@ -1,6 +1,6 @@
 /********************************************************************************/
 /*										*/
-/*		BassNameBase.java						*/
+ /*		BassNameBase.java						*/
 /*										*/
 /*	Bubble Augmented Search Strategies name base implementation		*/
 /*										*/

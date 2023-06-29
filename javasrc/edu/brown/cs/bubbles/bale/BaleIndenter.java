@@ -112,6 +112,9 @@ int getCurrentIndentationAtOffset(int offset)
 
 abstract int getSplitIndentationDelta(int offset);
 
+/**
+ * 	Get unindent spacing for PYTHON (for appropriate command)
+ */
 abstract int getUnindentSize();
 
 
