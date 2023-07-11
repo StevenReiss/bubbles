@@ -30,6 +30,7 @@
 
 package edu.brown.cs.bubbles.bump;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
