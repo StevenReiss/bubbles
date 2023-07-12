@@ -1074,6 +1074,18 @@ private class RunEventHandler implements BumpRunEventHandler {
 	    //$FALL-THROUGH$
 	 case THREAD_CHANGE :
 	    thread_states.put(bt,nst);
+	    switch (bt.getThreadDetails()) {
+	       case STEP_END :
+	       case STEP_INTO :
+	       case STEP_OVER :
+	       case STEP_RETURN :
+		  if (ost.isStopped() && nst.isStopped()) {
+		     // might not get a thread running event on a step request
+		     ost = ost.getRunState();
+		     handleThreadStateChange(bt,ost);
+		   }
+		  break;
+	     }
 	    if (nst != ost) {
 	       handleThreadStateChange(bt,ost);
 	       if (nst.isStopped()) last_stopped = bt;

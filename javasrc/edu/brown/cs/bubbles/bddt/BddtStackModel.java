@@ -562,7 +562,7 @@ protected abstract class AbstractNode implements ValueTreeNode, TreeNode {
 	 sorted_children = new TreeSet<AbstractNode>(new ValueSorter());
 	 expandChildren();
 	 if (sorted_children == null) return;
-	 child_nodes = new Vector<AbstractNode>(sorted_children);
+	 child_nodes = new Vector<>(sorted_children);
 	 sorted_children = null;
 	 children_known = true;
        }
@@ -1044,6 +1044,7 @@ private AbstractNode getValueNode(AbstractNode par,BumpRunValue val)
       case CLASS :
 	 return new ClassValueNode(par,val);
       case OBJECT :
+      case SCOPE :
 	 return new ObjectValueNode(par,val);
       case ARRAY :
 	 return new ArrayValueNode(par,val);
@@ -1174,6 +1175,9 @@ private class ObjectValueNode extends ValueNode {
    @Override public boolean getAllowsChildren() { return for_value.hasContents(); }
 
    @Override public Object getValue() {
+      if (for_value.getType() == null) {
+	 return for_value.getValue();
+      }
       if (for_value.getType().equals("null")) return "null";
       else if (for_value.getType().equals("java.lang.String")) {
 	 return "\"" + for_value.getValue() + "\"";

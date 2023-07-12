@@ -860,6 +860,9 @@ private void handleThreadEvent(Element xml,long when)
 	    td.setThreadState(BumpThreadState.STOPPED,dtl);
 	  }
 	 else if (dtl == BumpThreadStateDetail.EVALUATION_IMPLICIT) return;
+	 else if (td.getThreadState().isStopped()) {
+	    if (dtl != null) td.setThreadState(ost.getStopState(),dtl);
+	 }
 	 break;
       case TERMINATE :
 	 td.setThreadState(BumpThreadState.DEAD);
@@ -1702,7 +1705,8 @@ private class ThreadData implements BumpThread {
    
       if (IvyXml.getAttrBool(xml,"SYSTEM")) thread_type = BumpThreadType.SYSTEM;
       else {
-         BumpThreadType btt = known_threads.get(thread_name);
+	 BumpThreadType btt = null;
+         if (thread_name != null) btt = known_threads.get(thread_name);
          if (btt == null) btt = BumpThreadType.USER;
          thread_type = btt;             // don't allow thread_type to be null, even temporarily
        }
@@ -1847,7 +1851,7 @@ private class StackData implements BumpThreadStack {
 
    StackData(Element xml,String tid) {
       if (!IvyXml.isElement(xml,"STACKFRAMES")) xml = IvyXml.getChild(xml,"STACKFRAMES");
-      stack_frames = new ArrayList<StackFrame>();
+      stack_frames = new ArrayList<>();
       for (Element telt : IvyXml.children(xml,"THREAD")) {
          String teid = IvyXml.getAttrString(telt,"ID");
          if (tid.equals(teid)) {
@@ -2069,6 +2073,7 @@ private class ValueData implements BumpRunValue {
       is_static = IvyXml.getAttrBool(xml,"STATIC");
       decl_type = IvyXml.getAttrString(xml,"DECLTYPE");
       array_length = IvyXml.getAttrInt(xml,"LENGTH",0);
+      if (save_id == null) save_id = IvyXml.getAttrString(xml, "SAVEID");
       sub_values = null;
       var_detail = null;
       addValues(xml);
@@ -2107,7 +2112,7 @@ private class ValueData implements BumpRunValue {
 
    private void computeValues() {
       if (!has_values || sub_values != null) return;
-      Element xml = bump_client.getVariableValue(for_frame,val_name,1);
+      Element xml = bump_client.getVariableValue(for_frame,val_name,save_id,1);
       if (IvyXml.isElement(xml,"RESULT")) {
 	 Element root = IvyXml.getChild(xml,"VALUE");
 	 addValues(root);

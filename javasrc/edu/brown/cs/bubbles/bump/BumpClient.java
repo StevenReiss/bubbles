@@ -3186,11 +3186,12 @@ public boolean consoleInput(BumpLaunch bl,String txt)
 /*										*/
 /********************************************************************************/
 
-Element getVariableValue(BumpStackFrame frm,String var,int lvls)
+Element getVariableValue(BumpStackFrame frm,String var,String saveid,int lvls)
 {
    String q = "FRAME='" + frm.getId() + "'";
    if (frm.getThread() != null) q += " THREAD='" + frm.getThread().getId() + "'";
    if (lvls > 0) q += " DEPTH='" + lvls + "'";
+   if (saveid != null) q += " SAVEID='" + saveid + "'";
    String data = "<VAR>" + IvyXml.xmlSanitize(var) + "</VAR>";
 
    return getXmlReply("VARVAL",null,q,data,STACK_DELAY);

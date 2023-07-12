@@ -654,7 +654,8 @@ enum BumpValueKind {
    STRING,
    CLASS,
    OBJECT,
-   ARRAY
+   ARRAY,
+   SCOPE
 }
 
 

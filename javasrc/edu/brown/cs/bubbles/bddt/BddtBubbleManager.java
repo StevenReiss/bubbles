@@ -292,7 +292,9 @@ private BudaBubble createSourceBubble(BumpThreadStack stk,int frm,BubbleType typ
    if (frame.getFile() != null && (!frame.isSystem() || libbbl)) {
       String mthd = frame.getMethod();
       if (mthd != null && mthd.length() > 0) {
-	 String mid = mthd + frame.getSignature();
+	 String sgn = frame.getSignature();
+	 String mid = mthd;
+	 if (sgn != null) mid += sgn;
 	 if (frame.isSystem() && launch_control.frameFileExists(frame) && libbbl) {
 	    bb = BaleFactory.getFactory().createSystemMethodBubble(proj,mid,
 		  frame.getFile(),frame.getLineNumber());
