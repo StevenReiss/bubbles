@@ -2131,9 +2131,8 @@ private class ValueData implements BumpRunValue {
    @Override public String getDetail() {
       if (var_detail == null) {
 	 var_detail = bump_client.getVariableDetail(for_frame,getShortName());
-	 if (var_detail == null) var_detail = "<< UNKNOWN >>";
+	 if (var_detail == null) var_detail = val_value;
        }
-      if (var_detail == "<< UNKNOWN >>") return null;
 
       return var_detail;
     }
