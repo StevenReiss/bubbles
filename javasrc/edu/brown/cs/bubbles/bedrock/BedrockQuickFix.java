@@ -171,6 +171,9 @@ private class WJob extends WorkbenchJob {
 	    catch (CoreException e) {
 	       BedrockPlugin.logE("Problem running completion proposal",e);
 	     }
+	    catch (ClassCastException e) {
+	       BedrockPlugin.logI("Problem with eclipse: " + e);
+	     }			
 	  }
 	 for (IQuickAssistProcessor qp : getAssisters()) {
 	    try {
@@ -328,9 +331,9 @@ private void outputProposal(IJavaCompletionProposal p,IvyXmlWriter xw)
 	    TextChange tc = (TextChange) c;
 	    textedit = tc.getEdit();
 	  }
-         else if (c instanceof NullChange) ;
+	 else if (c instanceof NullChange) ;
 	 else {
-            BedrockPlugin.logE("Change proposal lacks test change: " + p + " " + c);
+	    BedrockPlugin.logE("Change proposal lacks test change: " + p + " " + c);
 	  }
        }
     }
