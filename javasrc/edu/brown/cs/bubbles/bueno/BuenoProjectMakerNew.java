@@ -92,7 +92,8 @@ BuenoProjectMakerNew()
 {
    String pnm = props.getString(PKG_NAME);
    if (pnm == null || pnm.length() == 0) return true;
-   if (!pkg_pat.matcher(pnm).matches()) return false;
+   if (!pkg_pat.matcher
+         (pnm).matches()) return false;
    return true;
 }
 

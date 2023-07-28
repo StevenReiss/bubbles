@@ -580,7 +580,9 @@ interface BumpRunModel {
    Iterable<BumpLaunchConfig> getLaunchConfigurations();
    BumpLaunchConfig getLaunchConfiguration(String id);
    BumpLaunchConfig createLaunchConfiguration(String name,BumpLaunchConfigType typ);
+   BumpLaunchConfig createLaunchConfiguration(String name,BumpLaunchType typ);
    Iterable<BumpProcess> getProcesses();
+   List<BumpLaunchType> getLaunchTypes();
    void addRunEventHandler(BumpRunEventHandler reh);
    void removeRunEventHandler(BumpRunEventHandler reh);
 
@@ -667,7 +669,7 @@ enum BumpLaunchConfigType {
    JS("JavaScript"),
    PYTHON("PYTHON");
 
-   private String eclipse_name;
+   private String eclipse_name;  
 
    BumpLaunchConfigType(String nm) {
       eclipse_name = nm;
@@ -677,6 +679,35 @@ enum BumpLaunchConfigType {
       return eclipse_name;
     }
 }
+
+interface BumpLaunchType {
+   String getName();
+   String getDescription();
+   List<BumpLaunchConfigField> getFields();
+
+}
+
+
+enum BumpLaunchConfigFieldType {
+   UNKNOWN,
+   BOOLEAN,
+   STRING,
+   INTEGER,
+   CHOICE,
+}
+
+interface BumpLaunchConfigField {
+   
+   String getFieldName();
+   String getDescription();
+   BumpLaunchConfigFieldType getType();
+   String getEvaluate();
+   String getArgField();
+   int getNumRows();
+   int getMin();
+   int getMax();
+   
+}       // end of interface BumpLaunchConfigField
 
 
 enum BumpConsoleMode {
@@ -697,7 +728,7 @@ interface BumpRunEventHandler extends EventListener {
 
 
 /**
- *	User-setup runnable
+ *	User-setup runnableREMOVE_
  **/
 
 interface BumpLaunchConfig {
@@ -710,6 +741,7 @@ interface BumpLaunchConfig {
    String getConfigName();
    String getId();
    BumpLaunchConfigType getConfigType();
+   BumpLaunchType getLaunchType();
    String getTestName();
    String getRemoteHost();
    int getRemotePort();
@@ -717,6 +749,9 @@ interface BumpLaunchConfig {
    String getContractArgs();
    String getLogFile();
    String getWorkingDirectory();
+   
+   String getAttribute(String name);
+   boolean getBoolAttribute(String name);
 
    BumpLaunchConfig clone(String name);
    BumpLaunchConfig save();
@@ -733,6 +768,8 @@ interface BumpLaunchConfig {
    BumpLaunchConfig setJunitKind(String kind);
 
    BumpLaunchConfig setRemoteHostPort(String host,int port);
+   BumpLaunchConfig setRemoteHost(String host);
+   BumpLaunchConfig setRemotePort(int port);
 
    BumpLaunchConfig setLogFile(String name);
    BumpLaunchConfig setWorkingDirectory(String name);

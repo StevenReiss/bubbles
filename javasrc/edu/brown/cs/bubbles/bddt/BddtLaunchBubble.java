@@ -28,7 +28,6 @@ package edu.brown.cs.bubbles.bddt;
 
 import edu.brown.cs.bubbles.bass.BassConstants;
 import edu.brown.cs.bubbles.bass.BassFactory;
-import edu.brown.cs.bubbles.bass.BassName;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardFileSystemView;
 import edu.brown.cs.bubbles.board.BoardLog;
@@ -40,7 +39,6 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
-import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import edu.brown.cs.ivy.swing.SwingComboBox;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
@@ -51,8 +49,10 @@ import org.w3c.dom.Element;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextArea;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileSystemView;
@@ -66,12 +66,10 @@ import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 
 
@@ -90,26 +88,15 @@ private BumpClient		bump_client;
 private BumpLaunchConfig	launch_config;
 private BumpLaunchConfig	edit_config;
 private JTextComponent		launch_name;
-private JTextComponent		arg_area;
-private JTextComponent		vmarg_area;
 private JButton 		debug_button;
 private JButton 		save_button;
 private JButton 		revert_button;
 private JButton 		clone_button;
 private SwingComboBox<String>	project_name;
-private SwingComboBox<String>	start_class;
-private JCheckBox		stop_in_main;
-private JCheckBox		binary_starts;
-private JTextComponent		test_class;
-private JTextComponent		test_name;
-private JTextComponent		host_name;
 private JTextComponent		log_file;
 private JTextComponent		working_directory;
-private SwingNumericField	port_number;
 private boolean 		doing_load;
-private Map<String,String>	project_map;
-private boolean 		library_main;
-private List<String>		all_mains;
+private Map<JComponent,String> component_items;
 
 
 private static final long serialVersionUID = 1;
@@ -119,7 +106,7 @@ private static final long serialVersionUID = 1;
 
 /********************************************************************************/
 /*										*/
-/*	Cnostructors								*/
+/*	Constructors								*/
 /*										*/
 /********************************************************************************/
 
@@ -129,10 +116,6 @@ BddtLaunchBubble(BumpLaunchConfig cfg)
    launch_config = cfg;
    edit_config = null;
    doing_load = false;
-   project_map = null;
-   library_main = false;
-   all_mains = null;
-
    setupPanel();
 }
 
@@ -160,7 +143,7 @@ BumpLaunchConfig getLaunchConfig()
 private void setupPanel()
 {
    doing_load = true;
-
+   
    SwingGridPanel pnl = new SwingGridPanel();
    BoardColors.setColors(pnl,"Bddt.launch.background");
    pnl.beginLayout();
@@ -184,67 +167,41 @@ private void setupPanel()
 	  }
        }
     }
-
-   Collection<String> starts = getStartClassesForProject();
-
-   start_class = null;
-   arg_area = null;
-   vmarg_area = null;
-   stop_in_main = null;
-   binary_starts = null;
-   test_class = null;
-   test_name = null;
-   host_name = null;
-   port_number = null;
-   log_file = null;
-   working_directory = null;
-
-   switch (launch_config.getConfigType()) {
-      case JAVA_APP :
-	 start_class = pnl.addChoice("Start Class",starts,launch_config.getMainClass(),false,this);
-	 // start_class.setEditable(true);
-	 start_class.setCaseSensitive(false);
-	 if (launch_config.getMainClass() == null) {
-	    String s = (String) start_class.getSelectedItem();
-	    if (s != null) {
-	       if (edit_config == null) edit_config = launch_config;
-	       if (edit_config != null && start_class != null) {
-		  edit_config = edit_config.setMainClass(s);
-		}
-	     }
-	  }
-	 stop_in_main = pnl.addBoolean("Stop in Main",launch_config.getStopInMain(),this);
-	 binary_starts = pnl.addBoolean("Include Library Main Methods",library_main,this);
-	 arg_area = pnl.addTextArea("Arguments",launch_config.getArguments(),2,24,this);
-	 vmarg_area = pnl.addTextArea("VM Arguments",launch_config.getVMArguments(),1,24,this);
-	 break;
-      case JUNIT_TEST :
-	 test_class = pnl.addTextField("Test Class",launch_config.getMainClass(),null,this);
-	 test_name = pnl.addTextField("Test Name",launch_config.getTestName(),null,this);
-	 arg_area = pnl.addTextArea("Arguments",launch_config.getArguments(),2,24,this);
-	 vmarg_area = pnl.addTextArea("VM Arguments",launch_config.getVMArguments(),1,24,this);
-	 break;
-      case REMOTE_JAVA :
-	 host_name = pnl.addTextField("Remote Host",launch_config.getRemoteHost(),null,this);
-	 port_number = pnl.addNumericField("Remote Port",
-	       1000,65536,launch_config.getRemotePort(),this);
-	 break;
-      case PYTHON :
-	 start_class = pnl.addChoice("Module to Run",starts,launch_config.getMainClass(),true,this);
-	 arg_area = pnl.addTextArea("Arguments",launch_config.getArguments(),2,24,this);
-	 vmarg_area = pnl.addTextArea("VM Arguments",launch_config.getVMArguments(),1,24,this);
-	 break;
-      case JS :
-	 start_class = pnl.addChoice("Module to Run",starts,launch_config.getMainClass(),true,this);
-	 if (launch_config.getMainClass() == null) {
-	    String s = (String) start_class.getSelectedItem();
-	    if (s != null) launch_config.setMainClass(s);
-	 }
-	 arg_area = pnl.addTextArea("Arguments",launch_config.getArguments(),2,24,this);
-	 vmarg_area = pnl.addTextArea("VM Arguments",launch_config.getVMArguments(),1,24,this);
-	 break;
-      default:
-	 break;
+   
+   component_items = new HashMap<>();
+   JComponent focus = null;
+   BumpLaunchType blt = launch_config.getLaunchType();
+   for (BumpLaunchConfigField fld : blt.getFields()) {
+      JComponent cmp = null;
+      String what = fld.getFieldName();
+      String val = launch_config.getAttribute(what);
+      switch (fld.getType()) {
+         case STRING :
+            JTextArea jta = pnl.addTextArea(fld.getDescription(),val,fld.getNumRows(),24,this); 
+            cmp = jta;
+            focus = jta;
+            break;
+         case INTEGER  :
+            int ivl = Integer.parseInt(val);
+            SwingNumericField snf = pnl.addNumericField(fld.getDescription(),
+                  fld.getMin(),fld.getMax(),ivl,this);
+            cmp = snf;
+            break;
+         case CHOICE :
+            List<ChoiceItem> vals = getChoiceValues(blt,fld);
+            SwingComboBox<ChoiceItem> cmb = pnl.addChoice(fld.getDescription(),
+                  vals,val,false,this);
+            cmp = cmb;
+            break;
+         case BOOLEAN :
+            boolean bvl = (val == null ? false : "Tt1Yy".indexOf(val.charAt(0)) >= 0);
+            JCheckBox cbx = pnl.addBoolean(fld.getDescription(),bvl,this);
+            cmp = cbx;
+            break;
+         default :
+            break;
+       }
+      if (cmp != null) component_items.put(cmp, what);
     }
 
    FileSystemView fsv = BoardFileSystemView.getFileSystemView();
@@ -262,92 +219,58 @@ private void setupPanel()
 
    doing_load = false;
 
-   setContentPane(pnl,arg_area);
+   setContentPane(pnl,focus);
 }
 
 
 
-private void getStartClasses()
+
+private List<ChoiceItem> getChoiceValues(BumpLaunchType lt,BumpLaunchConfigField fld)
 {
-   if (launch_config == null) return;
-
-   project_map = new TreeMap<>();
-
-   BassRepository br = BassFactory.getRepository(BassConstants.SearchType.SEARCH_CODE);
-   for (BassName bn : br.getAllNames()) {
-      switch (launch_config.getConfigType()) {
-	 case UNKNOWN :
-	    break;
-	 case JAVA_APP :
-	    if (bn.getName().endsWith(".main") &&
-		  bn.getNameType() == BassNameType.METHOD &&
-		  Modifier.isPublic(bn.getModifiers()) &&
-		  Modifier.isStatic(bn.getModifiers())) {
-	       String cn = bn.getClassName();
-	       String pn = bn.getPackageName();
-	       if (pn != null) cn = pn + "." + cn;
-	       project_map.put(cn,bn.getProject());
-	     }
-	    break;
-	 case JUNIT_TEST :
-	 case REMOTE_JAVA :
-	    break;
-	 case PYTHON :
-	    if (bn.getNameType() == BassNameType.MODULE) {
-	       String cn = bn.getPackageName();
-	       project_map.put(cn,bn.getProject());
-	     }
-	    break;
-	 case JS :
-	    if (bn.getNameType() == BassNameType.MODULE) {
-	       String cn = bn.getPackageName();
-	       project_map.put(cn,bn.getProject());
-	     }
-	    break;
-       }
-    }
-}
-
-
-private Collection<String> getStartClassesForProject()
-{
-   Collection<String> rslt;
-
-   if (project_map == null) getStartClasses();
-   if (project_name == null) rslt = project_map.keySet();
-   else {
-      String pnm = (String) project_name.getSelectedItem();
-      if (pnm == null || pnm.length() == 0) rslt = project_map.keySet();
-      else {
-	 rslt = new ArrayList<>();
-	 for (String s : project_map.keySet()) {
-	    if (pnm.equals(project_map.get(s))) rslt.add(s);
-	  }
-       }
-    }
-
-   if (library_main) {
-      if (all_mains == null) {
-	 all_mains = new ArrayList<>();
-	 BumpClient bc = BumpClient.getBump();
-	 List<BumpLocation> locs = bc.findMethods(null,"main(String[])void",false,true,false,true);
-	 for (BumpLocation bl : locs) {
-            String p = bl.getSymbolProject();
-            String nm = bl.getSymbolName();
-            int idx = nm.lastIndexOf(".");
-            String cnm = nm.substring(0,idx);
-            if (p == null || p.equals(project_map.get(cnm))) continue;                   // known
-            int mods = bl.getModifiers();
-            if (mods != Modifier.PUBLIC + Modifier.STATIC) continue;
-            all_mains.add(cnm);
-            
-	  }
-       }
-      rslt.addAll(all_mains);
-    }
-
+   List<ChoiceItem> rslt = new ArrayList<>();
+   
+   String eval = fld.getEvaluate();
+   String arg = fld.getArgField();
+   String argv = null;
+   if (arg != null) {
+      argv = launch_config.getAttribute(arg);
+   }
+   BumpClient bc = BumpClient.getBump();
+   String proj = launch_config.getProject();
+   Element xml = bc.doLaunchQuery(proj,eval,argv);
+   for (Element e : IvyXml.children(xml,"OPTION")) {
+      String v = IvyXml.getAttrString(e, "VALUE");
+      String d = IvyXml.getAttrString(e, "DISPLAY",v);
+      rslt.add(new ChoiceItem(d,v));
+   }
+   
    return rslt;
 }
+
+private static class ChoiceItem {
+
+   private String display_value;
+   private String use_value;
+   
+   ChoiceItem(String disp,String use) {
+      display_value = disp;
+      use_value = use;
+   }
+   
+   @Override public String toString()			{ return display_value; }
+   
+   public String getValue()				{ return use_value; }
+   
+   @Override public boolean equals(Object o) {
+      if (o instanceof ChoiceItem) return o == this;
+      else if (o instanceof String) {
+	 String s = (String) o;
+	 if (s.equals(display_value) || s.equals(use_value)) return true;
+      }
+      return false;
+   }
+}
+
 
 
 
@@ -369,16 +292,37 @@ private void fixButtons()
 private void reload()
 {
    doing_load = true;
-
+   
    if (launch_name != null) launch_name.setText(launch_config.getConfigName());
-   if (arg_area != null) arg_area.setText(launch_config.getArguments());
-   if (vmarg_area != null) vmarg_area.setText(launch_config.getVMArguments());
-   if (start_class != null) start_class.setSelectedItem(launch_config.getMainClass());
-   if (test_class != null) test_class.setText(launch_config.getMainClass());
-   if (test_name != null) test_name.setText(launch_config.getTestName());
-   if (host_name != null) host_name.setText(launch_config.getRemoteHost());
-   if (port_number != null) port_number.setValue(launch_config.getRemotePort());
-
+   if (project_name != null) project_name.setSelectedItem(launch_config.getProject());
+   if (log_file != null) log_file.setText(launch_config.getLogFile());
+   if (working_directory != null) working_directory.setText(launch_config.getWorkingDirectory());
+   
+   for (Map.Entry<JComponent,String> ent : component_items.entrySet()) {
+      String val = launch_config.getAttribute(ent.getValue());
+      JComponent cmp = ent.getKey();
+      if (cmp instanceof JTextArea) {
+	 JTextArea ta = (JTextArea) cmp;
+	 ta.setText(val);
+      }
+      else if (cmp instanceof SwingNumericField) {
+	 SwingNumericField snf = (SwingNumericField) cmp;
+	 int ival = Integer.parseInt(val);
+	 snf.setValue(ival);
+      }
+      else if (cmp instanceof JCheckBox) {
+	 JCheckBox cbx = (JCheckBox) cmp;
+	 boolean bvl = launch_config.getBoolAttribute(ent.getValue());
+	 cbx.setSelected(bvl);
+      }
+      else if (cmp instanceof SwingComboBox<?>) {
+	 SwingComboBox<?> cmbo = (SwingComboBox<?>) cmp;
+	 cmbo.setSelectedItem(val);
+      }
+   }
+   
+   recomputeStarts();
+   
    doing_load = false;
 }
 
@@ -412,10 +356,9 @@ private String getNewName()
 
 
 
-
 /********************************************************************************/
 /*										*/
-/*	Bubble outputer methods 						*/
+/*	Bubble output methods 							*/
 /*										*/
 /********************************************************************************/
 
@@ -427,7 +370,7 @@ private String getNewName()
 
 /********************************************************************************/
 /*										*/
-/*	Popup methods								*/
+/*	Pop-up methods								*/
 /*										*/
 /********************************************************************************/
 
@@ -459,6 +402,8 @@ private String getNewName()
 @Override public void actionPerformed(ActionEvent e)
 {
    String cmd = e.getActionCommand();
+   
+   String itm = component_items.get(e.getSource());
 
    if (cmd.equals("DEBUG")) {
       if (edit_config != null) {
@@ -505,33 +450,39 @@ private String getNewName()
        }
     }
    else if (doing_load) return;
-   else if (cmd.equals("Start Class")) {
+   else if (itm != null) {
       if (edit_config == null) edit_config = launch_config;
-      if (edit_config != null && start_class != null) {
-	 String cls = (String) start_class.getSelectedItem();
-	 edit_config = edit_config.setMainClass(cls);
-	 if (cls != null) {
-	    String proj = project_map.get(cls);
-	    if (proj != null && project_name != null) project_name.setSelectedItem(proj);
-	  }
-       }
-    }
-   else if (cmd.equals("Module to Run")) {
-      if (edit_config == null) edit_config = launch_config;
-      if (edit_config != null && start_class != null) {
-	 edit_config = edit_config.setMainClass((String) start_class.getSelectedItem());
-       }
-    }
-   else if (cmd.equals("Stop in Main")) {
-      if (edit_config == null) edit_config = launch_config;
-      if (edit_config != null && stop_in_main != null) {
-	 edit_config = edit_config.setStopInMain(stop_in_main.isSelected());
-       }
-    }
-   else if (cmd.equals("Include Library Main Methods")) {
-      library_main = binary_starts.isSelected();
-      recomputeStarts();
-    }
+      if (edit_config != null) {
+	 JComponent cmp = (JComponent) e.getSource();
+	 if (cmp instanceof JTextArea) {
+	    JTextArea ta = (JTextArea) cmp;
+	    String val = ta.getText();
+	    edit_config = edit_config.setAttribute(itm,val);
+	 }
+	 else if (cmp instanceof SwingNumericField) {
+	    SwingNumericField snf = (SwingNumericField) cmp;
+	    int ival = (int) snf.getValue();
+	    edit_config = edit_config.setAttribute(itm, Integer.toString(ival));
+	 }
+	 else if (cmp instanceof JCheckBox) {
+	    JCheckBox cbx = (JCheckBox) cmp;
+	    boolean bval = cbx.isSelected();
+	    edit_config = edit_config.setAttribute(itm, Boolean.toString(bval));
+	 }
+	 else if (cmp instanceof SwingComboBox<?>) {
+	    SwingComboBox<?> cmbo = (SwingComboBox<?>) cmp;
+	    ChoiceItem ci = (ChoiceItem) cmbo.getSelectedItem();
+	    edit_config = edit_config.setAttribute(itm, ci.getValue());
+	 } 
+         BumpLaunchType lt = edit_config.getLaunchType();
+         for (BumpLaunchConfigField fld : lt.getFields()) {
+            if (fld.getEvaluate() != null && fld.getEvaluate().equals("START") &&
+                  itm.equals(fld.getArgField())) {
+               recomputeStarts();
+             }
+          }
+      }
+   }
    else if (cmd.equals("Project")) {
       if (project_name == null) return;
       String pnm = (String) project_name.getSelectedItem();
@@ -545,13 +496,6 @@ private String getNewName()
 	 recomputeStarts();
        }
     }
-   else if (cmd.equals("Remote Host")) { }
-   else if (cmd.equals("Remote Port")) {
-      if (edit_config == null) edit_config = launch_config;
-      if (host_name != null && port_number != null) {
-	 edit_config = edit_config.setRemoteHostPort(host_name.getText(),(int) port_number.getValue());
-       }
-    }
    else if (cmd.equals("comboBoxEdited")) ;
    else BoardLog.logE("BDDT","Undefined launch config action: " + cmd);
 
@@ -560,29 +504,40 @@ private String getNewName()
 
 
 
+@SuppressWarnings("unchecked")
 private void recomputeStarts()
 {
-   if (start_class != null) {
-      Collection<String> starts = getStartClassesForProject();
-      String nm = null;
-      if (edit_config != null) nm = edit_config.getMainClass();
-      boolean fnd = false;
-      start_class.removeAllItems();
-      String st0 = null;
-      for (String s : starts) {
-	 if (st0 == null) st0 = s;
-	 if (s.equals(nm)) {
-	    nm = s;		  // so objects == in selection
-	    fnd = true;
-	  }
-	 start_class.addItem(s);
-       }
-      if (!fnd) {
-	 nm = st0;
-       }
-      start_class.setSelectedItem(nm);
-      start_class.repaint();
-    }
+   BumpLaunchType lt = edit_config.getLaunchType();
+   if (lt != null) {
+      for (BumpLaunchConfigField fld : lt.getFields()) {
+	 if (fld.getEvaluate() != null && fld.getEvaluate().equals("START")) {
+	    SwingComboBox<ChoiceItem> combo = null;
+	    for (JComponent cmp : component_items.keySet()) {
+	       if (component_items.get(cmp).equals(fld.getFieldName())) {
+		  combo = (SwingComboBox<ChoiceItem>) cmp;
+		  break;
+	       }
+	    }
+	    if (combo != null) {
+	       List<ChoiceItem> vals = getChoiceValues(lt,fld);
+	       String val = edit_config.getAttribute(fld.getFieldName());
+	       combo.removeAllItems();
+	       String st0 = null;
+	       boolean fnd = false;
+	       for (ChoiceItem itm : vals) {
+		  if (st0 == null) st0 = itm.toString();
+		  else if (itm.getValue().equals(val)) {
+		     fnd = true;
+		  }
+		  combo.addItem(itm);
+	       }
+	       if (!fnd) val = st0;
+	       combo.setSelectedItem(val);
+	       combo.repaint();
+	    }
+	 }
+      }
+   }
 }
 
 
@@ -594,30 +549,20 @@ private void recomputeStarts()
    Document doc = (Document) e.getSource();
 
    if (doing_load) return;
+   
+   for (JComponent cmp : component_items.keySet()) {
+      if (cmp instanceof JTextComponent) {
+	 JTextComponent tc = (JTextComponent) cmp;
+	 if (tc.getDocument() == doc) {
+	    String val = tc.getText();
+	    String itm = component_items.get(cmp);
+	    edit_config = edit_config.setAttribute(itm,val);
+	    break;
+	 }
+      }
+   }
 
-   if (isArea(arg_area,doc)) {
-      if (edit_config == null) edit_config = launch_config;
-      edit_config = edit_config.setArguments(arg_area.getText());
-    }
-   else if (isArea(vmarg_area,doc)) {
-      if (edit_config == null) edit_config = launch_config;
-      edit_config = edit_config.setVMArguments(vmarg_area.getText());
-    }
-   else if (isArea(test_name,doc)) {
-      if (edit_config == null) edit_config = launch_config;
-      edit_config = edit_config.setTestName(test_name.getText());
-    }
-   else if (isArea(test_class,doc)) {
-      if (edit_config == null) edit_config = launch_config;
-      edit_config = edit_config.setMainClass(test_class.getText());
-    }
-   else if (isArea(host_name,doc) || isArea(port_number,doc)) {
-      if (edit_config == null) edit_config = launch_config;
-      if (host_name != null && port_number != null) {
-	 edit_config = edit_config.setRemoteHostPort(host_name.getText(),(int) port_number.getValue());
-       }
-    }
-   else if (isArea(launch_name,doc)) {
+   if (isArea(launch_name,doc)) {
       if (edit_config == null) edit_config = launch_config;
       edit_config = edit_config.setConfigName(launch_name.getText().trim());
     }

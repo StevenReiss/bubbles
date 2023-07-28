@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -77,6 +78,49 @@ NobaseDebugManager(NobaseMain nm)
    loadBreakpoints();
 }
 
+
+
+/********************************************************************************/
+/*										*/
+/*	Configuration setup methods						*/
+/*										*/
+/********************************************************************************/
+
+void handleLanguageData(IvyXmlWriter xw)
+{
+   String nm = "resources/launches-js.xml";
+   InputStream ins = NobaseDebugManager.class.getClassLoader().getResourceAsStream(nm);
+   Element xml = IvyXml.loadXmlFromStream(ins);
+   xw.writeXml(xml);
+}
+
+
+void handleLaunchQuery(String proj,String query,boolean opt,IvyXmlWriter xw)
+	 throws NobaseException
+{
+   if (query.equals("START")) {
+      if (proj != null) {
+	 NobaseProject np = nobase_main.getProject(proj);
+	 outputProjectStarts(np,xw);
+      }
+      else {
+	 for (NobaseProject np : nobase_main.getProjectManager().getAllProjects()) {
+	    outputProjectStarts(np,xw);
+	 }
+      }
+   }
+}
+
+
+
+private void outputProjectStarts(NobaseProject np,IvyXmlWriter xw)
+{
+   for (NobaseFile nf : np.getAllFiles()) {
+      xw.begin("OPTION");
+      xw.field("VALUE", nf.getFile().getPath());
+      xw.end("OPTION");
+   }
+}
 
 
 /********************************************************************************/
@@ -469,8 +513,8 @@ void debugAction(String launchid,String targetid,String frameid,
 	 else ok = false;
 	 break;
       case DROP_TO_FRAME :
-         if (tgt.canDropToFrame()) tgt.dropToFrame(null);
-         else ok = false;
+	 if (tgt.canDropToFrame()) tgt.dropToFrame(null);
+	 else ok = false;
 	 break;
     }
    if (ok) xw.textElement("TARGET",tgt.getId());

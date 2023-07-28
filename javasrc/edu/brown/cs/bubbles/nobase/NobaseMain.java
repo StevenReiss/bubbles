@@ -444,6 +444,14 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
 	       IvyXml.getAttrString(xml,"FILE"),
 	       IvyXml.getAttrInt(xml,"OFFSET"),xw);
 	  break;
+      case "LAUNCHES" :
+      case "LANGUAGEDATA" :
+	 nobase_debug.handleLanguageData(xw);
+	 break;
+      case "LAUNCHQUERY" :
+	 nobase_debug.handleLaunchQuery(proj, IvyXml.getAttrString(xml,"QUERY"),
+		  IvyXml.getAttrBool(xml,"OPTION"),xw);
+	 break;
       case "GETRUNCONFIG" :
 	 nobase_debug.getRunConfigurations(xw);
 	 break;

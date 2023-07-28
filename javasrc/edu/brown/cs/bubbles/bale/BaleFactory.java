@@ -1387,7 +1387,7 @@ private List<BaleRegion> getRegionsFromLocations(List<BumpLocation> locs)
 	     }
 	  }
        }
-      if (lang == BoardLanguage.DART) {
+      else if (lang == BoardLanguage.DART) {
 	 // handle preliminary @<annotation>
 	 int decloff = soffset;
 	 boolean havekey = false;

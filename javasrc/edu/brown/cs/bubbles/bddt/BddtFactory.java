@@ -547,7 +547,16 @@ private class PanelHandler extends AbstractAction implements ActionListener {
     }
 
    private void createConfiguration() {
-      CreateConfigAction cca = new CreateConfigAction(BumpLaunchConfigType.JAVA_APP);
+      CreateConfigAction cca = null;
+      BumpClient bc = BumpClient.getBump();
+      BumpRunModel brm = bc.getRunModel();
+      for (BumpLaunchType blt : brm.getLaunchTypes()) {
+	 cca = new CreateConfigAction(blt);
+	 break;
+      }
+      if (cca == null) {
+	 cca = new CreateConfigAction(BumpLaunchConfigType.JAVA_APP);
+      }
       ActionEvent act = new ActionEvent(this,0,"NEW");
       cca.actionPerformed(act);
     }
@@ -662,25 +671,35 @@ private void createDebuggerWorkingSet(String label)
 
 void addNewConfigurationActions(JPopupMenu menu)
 {
-   switch (BoardSetup.getSetup().getLanguage()) {
-      case JAVA :
-      case JAVA_IDEA :
-	 menu.add(new CreateConfigAction(BumpLaunchConfigType.JAVA_APP));
-	 menu.add(new CreateConfigAction(BumpLaunchConfigType.REMOTE_JAVA));
-	 menu.add(new CreateConfigAction(BumpLaunchConfigType.JUNIT_TEST));
-	 break;
-      case PYTHON :
-	 menu.add(new CreateConfigAction(BumpLaunchConfigType.PYTHON));
-	 break;
-      case JS :
-	 menu.add(new CreateConfigAction(BumpLaunchConfigType.JS));
-	 break;
-      case DART :
-         // todo : add dart configuration actions
-         break;
-      case REBUS :
-	 break;
-    }
+   BumpClient bc = BumpClient.getBump();
+   BumpRunModel brm = bc.getRunModel();
+   boolean fnd = false;
+   for (BumpLaunchType lt : brm.getLaunchTypes()) {
+      menu.add(new CreateConfigAction(lt));
+      fnd = true;
+   }
+   
+   if (!fnd) {
+      switch (BoardSetup.getSetup().getLanguage()) {
+	 case JAVA :
+	 case JAVA_IDEA :
+	    menu.add(new CreateConfigAction(BumpLaunchConfigType.JAVA_APP));
+	    menu.add(new CreateConfigAction(BumpLaunchConfigType.REMOTE_JAVA));
+	    menu.add(new CreateConfigAction(BumpLaunchConfigType.JUNIT_TEST));
+	    break;
+	 case PYTHON :
+	    menu.add(new CreateConfigAction(BumpLaunchConfigType.PYTHON));
+	    break;
+	 case JS :
+	    menu.add(new CreateConfigAction(BumpLaunchConfigType.JS));
+	    break;
+	 case DART :
+	    // todo : add dart configuration actions
+	    break;
+	 case REBUS :
+	    break;
+      }
+   }
 }
 
 
@@ -732,16 +751,26 @@ private class ConfigAction extends AbstractAction {
 private static class CreateConfigAction extends AbstractAction {
 
    private BumpLaunchConfigType config_type;
+   private BumpLaunchType launch_type;
 
    CreateConfigAction(BumpLaunchConfigType typ) {
       super("Create New " + typ.getEclipseName() + " Configuration");
       config_type = typ;
+      launch_type = null;
     }
+   
+   CreateConfigAction(BumpLaunchType typ) {
+      super("Create new " + typ.getDescription() + " Configuration");
+      launch_type = typ;
+      config_type = null;
+   }
 
    @Override public void actionPerformed(ActionEvent e) {
       BumpClient bc = BumpClient.getBump();
       BumpRunModel brm = bc.getRunModel();
-      BumpLaunchConfig blc = brm.createLaunchConfiguration(null,config_type);
+      BumpLaunchConfig blc = null;
+      if (launch_type != null) blc = brm.createLaunchConfiguration(null,launch_type);
+      else blc = brm.createLaunchConfiguration(null,config_type);
       if (blc != null) {
          BumpLaunchConfig blc1 = blc.save();
          if (blc1 != null) blc = blc1;

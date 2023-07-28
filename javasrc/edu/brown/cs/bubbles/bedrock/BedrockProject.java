@@ -643,10 +643,30 @@ private static final class RunPropDialog implements Runnable {
 /*										*/
 /********************************************************************************/
 
-void createProject(String pnm,File pdir,Element props,IvyXmlWriter xw)
+void createProject(String pnm,File pdir,String type,Element props,IvyXmlWriter xw)
    throws BedrockException
 {
+   BedrockProjectCreator pc = new BedrockProjectCreator(pnm,pdir,type,props);
+   
+   if (!pc.setupProject()) return;
+   
+   try {
+      importExistingProject(pnm);
+    }
+   catch (BedrockException e) { 
+      throw e;
+    }
+   catch (Throwable t) {
+      throw new BedrockException("Problem importing project",t);
+    }
+   
+   xw.begin("PROJECT");
+   xw.field("NAME",pnm);
+   xw.end("PROJECT");
 }
+
+
+
 
 
 
@@ -682,7 +702,7 @@ IProject findProject(String name) throws BedrockException
 {
    setupProjects();
 
-   if (name == null) return null;
+   if (name == null || name.isEmpty()) return null;
    if (ignore_projects.contains(name)) return null;
 
    IWorkspace ws = ResourcesPlugin.getWorkspace();

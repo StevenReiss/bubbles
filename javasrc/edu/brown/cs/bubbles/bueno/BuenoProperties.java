@@ -27,23 +27,15 @@ package edu.brown.cs.bubbles.bueno;
 
 import edu.brown.cs.bubbles.bump.BumpClient;
 
+import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class BuenoProperties extends HashMap<BuenoConstants.BuenoKey,Object> implements BuenoConstants
+public class BuenoProperties extends HashMap<String,Object> implements BuenoConstants
 {
-
-
-/********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
-/********************************************************************************/
-
-
 
 
 /********************************************************************************/
@@ -67,9 +59,15 @@ public BuenoProperties()
 
 public String getStringProperty(BuenoKey k)
 {
+   return getStringProperty(k.toString());
+}
+
+
+public String getStringProperty(String k)
+{
    Object v = get(k);
    if (v == null) return null;
-
+   
    return v.toString();
 }
 
@@ -97,10 +95,13 @@ public String getPackageName()
 }
 
 
-
-
-
 public boolean getBooleanProperty(BuenoKey k)
+{
+   return getBooleanProperty(k.toString());
+}
+
+
+public boolean getBooleanProperty(String k)
 {
    Object v = get(k);
    if (v == null) return false;
@@ -110,6 +111,20 @@ public boolean getBooleanProperty(BuenoKey k)
    return true;
 }
 
+
+public File getFile(BuenoKey k)
+{
+   return getFile(k.toString());
+}
+
+public File getFile(String k)
+{
+   Object o = get(k);
+   if (o == null) return null;
+   else if (o instanceof File) return (File) o;
+   else if (o instanceof String) return new File(o.toString());
+   return null;
+}
 
 
 public int getModifiers()
@@ -153,7 +168,6 @@ private void addModifier(StringBuffer buf,String txt,boolean fg)
 }
 
 
-
 public String [] getParameters()        { return getArrayProperty(BuenoKey.KEY_PARAMETERS); }
 public String [] getExtends()		{ return getArrayProperty(BuenoKey.KEY_EXTENDS); }
 public String [] getImplements()	{ return getArrayProperty(BuenoKey.KEY_IMPLEMENTS); }
@@ -162,6 +176,12 @@ public String [] getImports()		{ return getArrayProperty(BuenoKey.KEY_IMPORTS); 
 
 
 public String [] getArrayProperty(BuenoKey k)
+{
+   return getArrayProperty(k.toString());
+}
+
+
+public String [] getArrayProperty(String k)
 {
    Object v = get(k);
    if (v == null) return null;
@@ -192,8 +212,13 @@ public String [] getArrayProperty(BuenoKey k)
 }
 
 
-
 public void addToArrayProperty(BuenoKey k,String v)
+{
+   addToArrayProperty(k.toString(),v);
+}
+
+
+public void addToArrayProperty(String k,String v)
 {
    List<String> rslt = null;
    Object ov = get(k);
@@ -229,6 +254,12 @@ String getInitialIndentString() 	{ return getIndentProperty(BuenoKey.KEY_INITIAL
 
 String getIndentProperty(BuenoKey k,int dflt)
 {
+   return getIndentProperty(k.toString(),dflt);
+}
+
+
+String getIndentProperty(String k,int dflt)
+{
    Object v = get(k);
 
    if (v != null && v instanceof String) return (String) v;
@@ -246,7 +277,28 @@ String getIndentProperty(BuenoKey k,int dflt)
 }
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Key access methods                                                      */
+/*                                                                              */
+/********************************************************************************/
 
+public void put(BuenoKey k,Object v) 
+{
+   put(k.toString(),v);
+}
+
+
+public Object get(BuenoKey k)
+{
+   return get(k.toString());
+}
+
+
+public Object remove(BuenoKey k)
+{
+   return remove(k.toString());
+}
 
 
 }	// end of class BuenoProperties

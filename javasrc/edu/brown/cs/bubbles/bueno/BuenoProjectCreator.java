@@ -167,7 +167,6 @@ private JPanel getJavaCreationPanel()
    name_field = pnl.addTextField("Project Name",projnm,24,cact,cact);
    pnl.addSeparator();
 
-
    int idx = 0;
    for (BuenoProjectMaker bpm : type_names.values()) {
       if (bpm == project_type) break;

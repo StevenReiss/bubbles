@@ -256,6 +256,7 @@ private class DefaultIndenter {
       return false;
    }
    
+   @SuppressWarnings("fallthrough")
    int computeIndent() {
       getLine();
       int x = 0;
@@ -331,7 +332,7 @@ private class DefaultIndenter {
                      !isPrototype(x+1)) {
                   fct_flag = true;
                 }
-   	    //$FALL-THROUGH$
+   	    // fall through
    	 case '{' :
                if (last_sig < 0 && last_semi < 0) case_flag = false;
                if (nest_level > 0) {

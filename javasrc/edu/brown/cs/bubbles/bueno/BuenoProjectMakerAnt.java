@@ -153,6 +153,8 @@ private class NewActions implements ActionListener, UndoableEditListener {
 }       // end of inner class NewActions
 
 
+
+
 /********************************************************************************/
 /*                                                                              */
 /*      Project Creation methods                                                */

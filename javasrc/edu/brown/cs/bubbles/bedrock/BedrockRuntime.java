@@ -31,6 +31,7 @@ import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
@@ -52,8 +53,19 @@ import org.eclipse.debug.core.model.IStreamsProxy;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.search.IJavaSearchConstants;
+import org.eclipse.jdt.core.search.IJavaSearchScope;
+import org.eclipse.jdt.core.search.SearchEngine;
+import org.eclipse.jdt.core.search.SearchMatch;
+import org.eclipse.jdt.core.search.SearchParticipant;
+import org.eclipse.jdt.core.search.SearchPattern;
+import org.eclipse.jdt.core.search.SearchRequestor;
 import org.eclipse.jdt.debug.core.IJavaArray;
 import org.eclipse.jdt.debug.core.IJavaClassType;
 import org.eclipse.jdt.debug.core.IJavaDebugTarget;
@@ -72,7 +84,10 @@ import org.eclipse.jdt.debug.eval.ICompiledExpression;
 import org.eclipse.jdt.debug.eval.IEvaluationListener;
 import org.eclipse.jdt.debug.eval.IEvaluationResult;
 
+import org.w3c.dom.Element;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -179,6 +194,113 @@ void start()
 }
 
 
+
+/********************************************************************************/
+/*										*/
+/*	Get launch definitions: LAUNCHES command				*/
+/*										*/
+/********************************************************************************/
+
+void handleLanguageData(IvyXmlWriter xw)
+   throws BedrockException
+{
+   String nm = "resources/launches-java.xml";
+   InputStream ins = BedrockRuntime.class.getClassLoader().getResourceAsStream(nm);
+   Element xml = IvyXml.loadXmlFromStream(ins);
+   xw.writeXml(xml);
+}
+
+
+/********************************************************************************/
+/*										*/
+/*	Launch Query command						       */
+/*										*/
+/********************************************************************************/
+
+void handleLaunchQuery(String proj,String query,boolean option,IvyXmlWriter xw)
+   throws BedrockException
+{
+   if (query.equals("START")) {
+       findJavaMainMethods(proj,option,xw);
+    }
+}
+
+
+
+private void findJavaMainMethods(String proj,boolean library,IvyXmlWriter xw)
+   throws BedrockException
+{
+   SearchPattern pat = SearchPattern.createPattern("main(String []) void",
+	 IJavaSearchConstants.METHOD,
+	 IJavaSearchConstants.DECLARATIONS,
+	 SearchPattern.R_EXACT_MATCH);
+
+   IJavaProject ijp = null;
+   try {
+      IProject ip = our_plugin.getProjectManager().findProject(proj);
+      if (ip != null) ijp = JavaCore.create(ip);
+    }
+   catch (BedrockException e) { }
+
+   int fg = IJavaSearchScope.SOURCES;
+   IJavaElement [] pelt;
+   if (ijp != null) {
+      pelt = new IJavaElement [] { ijp };
+    }
+   else {
+      pelt = BedrockJava.getAllProjects();
+    }
+
+   if (library) {
+      fg |= IJavaSearchScope.REFERENCED_PROJECTS | IJavaSearchScope.APPLICATION_LIBRARIES;
+    }
+   IJavaSearchScope scp = SearchEngine.createJavaSearchScope(pelt,fg);
+
+   SearchEngine se = new SearchEngine();
+   SearchParticipant [] parts = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
+   MainHandler fh = new MainHandler(xw,library);
+   try {
+      se.search(pat,parts,scp,fh,null);
+    }	
+   catch (Throwable e) {
+      throw new BedrockException("Problem doing search for main",e);
+    }
+}
+
+
+
+private static class MainHandler extends SearchRequestor {
+
+   private boolean use_library;
+   private IvyXmlWriter xml_writer;
+
+   MainHandler(IvyXmlWriter xw,boolean library) {
+      use_library = library;
+      xml_writer = xw;
+    }
+
+   @Override public void acceptSearchMatch(SearchMatch mat) {
+      BedrockPlugin.logD("FOUND MAIN METHOD " + mat);
+      Object elt = mat.getElement();
+      if (elt instanceof IMethod) {
+	 IMethod im = (IMethod) elt;
+	 try {
+	    if (im.isMainMethod()) {
+	       IResource irc = mat.getResource();
+	       if (!use_library) {
+		  if (irc.getType() != IResource.FILE)return;
+		}
+	       IType typ = (IType) im.getParent();
+	       xml_writer.begin("OPTION");
+	       xml_writer.field("VALUE",typ.getFullyQualifiedName());
+	       xml_writer.end("OPTION");
+	     }
+	  }
+	 catch (JavaModelException e) { }
+       }
+    }
+
+}	// end of inner class MainHandler
 
 /********************************************************************************/
 /*										*/

@@ -35,6 +35,7 @@ import org.eclipse.wst.jsdt.core.dom.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,6 +140,11 @@ List<ISemanticData> getAllSemanticData(String proj) throws NobaseException
 }
 
 
+Collection<NobaseProject> getAllProjects()
+{
+   return all_projects.values();
+}
+
 
 /********************************************************************************/
 /*										*/
@@ -180,6 +186,10 @@ void handleCreateProject(String name,String dir,IvyXmlWriter xw) throws NobaseEx
    loadProject(name,pdir);
 
    saveProjects();
+   
+   xw.begin("PROJECT");
+   xw.field("NAME",name);
+   xw.end("PROJECT");
 }
 
 

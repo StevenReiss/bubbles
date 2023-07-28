@@ -29,7 +29,6 @@ import edu.brown.cs.bubbles.bandaid.BandaidConstants;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
-
 import edu.brown.cs.ivy.exec.IvyExec;
 import edu.brown.cs.ivy.exec.IvyExecQuery;
 import edu.brown.cs.ivy.file.IvyFormat;
@@ -85,6 +84,7 @@ private Map<BumpThread,SwingEventListenerList<BumpThreadFilter>> thread_filters;
 private Map<String,File>	source_map;
 private ConcurrentMap<String,ProcessData> console_processes;
 private BumpTrieProcessor trie_processor;
+private List<BumpLaunchType> launch_types;
 
 private boolean 	use_debug_server;
 private String		server_host;
@@ -239,6 +239,8 @@ BumpRunManager()
 	BoardLog.logE("BUMP","Can't create perf output data file");
       }
    }
+  
+  launch_types = new ArrayList<>();
 }
 
 
@@ -312,6 +314,11 @@ void terminateAll()
 }
 
 
+@Override public List<BumpLaunchType> getLaunchTypes()
+{
+   return launch_types; 
+}
+
 
 /********************************************************************************/
 /*										*/
@@ -341,6 +348,16 @@ void terminateAll()
 }
 
 
+@Override public BumpLaunchConfig createLaunchConfiguration(String name,BumpLaunchType typ)
+{
+   Element e = bump_client.getNewRunConfiguration(name,null,typ);
+
+   return getLaunchResult(e);
+}
+
+
+
+
 
 private LaunchConfig getLaunchResult(Element x)
 {
@@ -350,6 +367,7 @@ private LaunchConfig getLaunchResult(Element x)
 	 String id = IvyXml.getAttrString(lc,"ID");
 	 LaunchConfig xlc = known_configs.get(id);
 	 if (xlc == null) xlc = new LaunchConfig(lc);
+         else xlc.update(lc);
 	 return xlc;
        }
     }
@@ -498,6 +516,13 @@ void setup()
 
    bump_client = BumpClient.getBump();
 
+   Element xml1 = bump_client.getLanguageData();
+   xml1 = IvyXml.getChild(xml1,"LAUNCHES");
+   for (Element launch : IvyXml.children(xml1,"LAUNCH")) {
+      LaunchType lt = new LaunchType(launch);
+      launch_types.add(lt);
+   }
+   
    Element xml = bump_client.getRunConfigurations();
    for (Element cnf : IvyXml.children(xml,"CONFIGURATION")) {
       LaunchConfig lc = new LaunchConfig(cnf);
@@ -1138,28 +1163,81 @@ void handleEvaluationResult(BumpStackFrame frm,Element xml,BumpEvaluationHandler
 
 /********************************************************************************/
 /*										*/
+/*	Launch types      							*/
+/*										*/
+/********************************************************************************/
+
+private class LaunchType implements BumpLaunchType {
+
+   private String type_name;
+   private String type_description;
+   private List<BumpLaunchConfigField> launch_fields;
+   
+   LaunchType(Element xml) {
+      type_name = IvyXml.getAttrString(xml, "NAME");
+      type_description = IvyXml.getAttrString(xml, "DESCRIPTION");
+      launch_fields = new ArrayList<>();
+      for (Element fld : IvyXml.children(xml,"ATTRIBUTE")) {
+	 launch_fields.add(new LaunchTypeField(fld));
+      }
+   }
+   
+   @Override public String getName()		{ return type_name; }
+   @Override public String getDescription()	{ return type_description; }
+   @Override public List<BumpLaunchConfigField> getFields() {
+      return launch_fields;
+   }
+   
+}	// end of inner class LaunchType
+
+
+private class LaunchTypeField implements BumpLaunchConfigField {
+
+   private String field_name;
+   private String field_description;
+   private BumpLaunchConfigFieldType field_type;
+   private String field_eval;
+   private String field_option;
+   private int num_rows;
+   private int min_value;
+   private int max_value;
+   
+   LaunchTypeField(Element xml) {
+      field_name = IvyXml.getAttrString(xml, "NAME");
+      field_description = IvyXml.getAttrString(xml, "DESCRIPTION");
+      field_type = IvyXml.getAttrEnum(xml, "TYPE", BumpLaunchConfigFieldType.UNKNOWN);
+      field_eval = IvyXml.getAttrString(xml, "EVAL");
+      field_option = IvyXml.getAttrString(xml,"ARG");
+      num_rows = IvyXml.getAttrInt(xml,"ROWS",1);
+      min_value = IvyXml.getAttrInt(xml, "MIN",0);
+      max_value = IvyXml.getAttrInt(xml, "MAX",min_value);
+   }
+   
+   @Override public String getFieldName()		{ return field_name; }
+   @Override public String getDescription()		{ return field_description; }
+   @Override public BumpLaunchConfigFieldType getType()	{ return field_type; }
+   @Override public String getEvaluate()		{ return field_eval; }
+   @Override public String getArgField()		{ return field_option; }
+   @Override public int getNumRows()			{ return num_rows; }
+   @Override public int getMin()			{ return min_value; }
+   @Override public int getMax()			{ return max_value; }
+   
+}	// end of inner class LaunchTypeField
+
+
+
+/********************************************************************************/
+/*										*/
 /*	Launch configuration information					*/
 /*										*/
 /********************************************************************************/
 
 private class LaunchConfig implements BumpLaunchConfig {
 
-   private String config_name;
-   private String project_name;
-   private String main_class;
-   private String program_args;
-   private String java_args;
    private String launch_id;
-   private String working_directory;
    private BumpLaunchConfigType config_type;
-   private String test_case;
-   private String remote_host;
-   private String log_file;
-   private int	  remote_port;
-   private boolean is_working;
-   private boolean stop_in_main;
-   private boolean use_contracts;
-   private boolean use_assertions;
+   private BumpLaunchType launch_type;
+   private Element launch_xml;
 
    LaunchConfig(Element xml) {
       launch_id = IvyXml.getAttrString(xml,"ID");
@@ -1168,72 +1246,119 @@ private class LaunchConfig implements BumpLaunchConfig {
 
    void update(Element xml) {
       BoardLog.logD("BUMP","Found Launch Config " + IvyXml.convertXmlToString(xml));
+      
+      launch_xml = xml;
    
+      String tnm = IvyXml.getAttrString(xml, "TYPE");
       config_type = IvyXml.getAttrEnum(xml,"TYPE",BumpLaunchConfigType.UNKNOWN);
       Element type = IvyXml.getChild(xml,"TYPE");
       if (type != null) {
-         String ctyp = IvyXml.getAttrString(type,"NAME");
+         tnm = IvyXml.getAttrString(type,"NAME");
          config_type = BumpLaunchConfigType.UNKNOWN;
          for (BumpLaunchConfigType bclt : BumpLaunchConfigType.values()) {
-            if (ctyp.equals(bclt.getEclipseName())) config_type = bclt;
-            else if (ctyp.equals(bclt.toString())) config_type = bclt;
+            if (tnm.equals(bclt.getEclipseName())) config_type = bclt;
+            else if (tnm.equals(bclt.toString())) config_type = bclt;
           }
        }
-      config_name = IvyXml.getAttrString(xml,"NAME");
-      is_working = IvyXml.getAttrBool(xml,"WORKING");
-      project_name = getAttribute(xml,"PROJECT_ATTR");
-      main_class = getAttribute(xml,"MAIN_TYPE");
-      program_args = getAttribute(xml,"PROGRAM_ARGUMENTS");
-      java_args = getAttribute(xml,"VM_ARGUMENTS");
-      test_case = getAttribute(xml,"TESTNAME");
-      log_file = getAttribute(xml,"CAPTURE_IN_FILE");
-      use_contracts = getBoolean(xml,"CONTRACTS",true);
-      use_assertions = getBoolean(xml,"ASSERTIONS",true);
-      working_directory = getAttribute(xml,"WORKING_DIRECTORY");
-      remote_host = IvyXml.getAttrString(xml,"HOST","localhost");
-      remote_port = IvyXml.getAttrInt(xml,"PORT",8000);
-      String hmap = getAttribute(xml,"CONNECT_MAP");
+      launch_type = null;
+      for (BumpLaunchType blt : launch_types) {
+	 if (blt.getName().equals(tnm) || blt.getDescription().equals(tnm)) {
+	    launch_type = blt;
+	    break;
+	 }
+      }
+    }
+
+   @Override public String getConfigName() {
+      return IvyXml.getAttrString(launch_xml,"NAME");
+    }	
+   @Override public String getProject() {
+      return getAttribute(launch_xml,"PROJECT_ATTR");
+    }	
+   @Override public String getMainClass() {
+      return getAttribute(launch_xml,"MAIN_TYPE");
+    }	
+   @Override public String getArguments() {
+      return getAttribute(launch_xml,"PROGRAM_ARGUMENTS");
+    }	
+   @Override public String getVMArguments() {
+      return getAttribute(launch_xml,"VM_ARGUMENTS");
+    }
+   @Override public String getTestName() {
+      return getAttribute(launch_xml,"TESTNAME");
+    }	
+   @Override public String getLogFile() {
+      return getAttribute(launch_xml,"CAPTURE_IN_FILE");
+    }
+   @Override public String getWorkingDirectory() {
+      return getAttribute(launch_xml,"WORKING_DIRECTORY");
+    }
+   @Override public String getRemoteHost() {
+      String h = getAttribute(launch_xml,"REMOTE_HOST");
+      if (h != null) return h;
+      String hmap = getAttribute(launch_xml,"CONNECT_MAP");
       if (hmap != null) {
          Matcher m1 = HOST_PATTERN.matcher(hmap);
          Matcher m2 = PORT_PATTERN.matcher(hmap);
          if (m1.find() && m2.find()) {
-            remote_host = m1.group(1);
-            remote_port = Integer.parseInt(m2.group(1));
+            return m1.group(1);
           }
        }
-      String sim = getAttribute(xml,"STOP_IN_MAIN");
-      if (sim == null || sim.length() == 0) stop_in_main = false;
-      else if ("1tTyY".indexOf(sim.charAt(0)) >= 0) stop_in_main = true;
-      else stop_in_main = false;
+      return null;
+    }	
+   @Override public int getRemotePort() {
+      Integer p = getInteger(launch_xml,"REMOTE_PORT");
+      if (p != null) return p;
+      String hmap = getAttribute(launch_xml,"CONNECT_MAP");
+      if (hmap != null) {
+         Matcher m1 = HOST_PATTERN.matcher(hmap);
+         Matcher m2 = PORT_PATTERN.matcher(hmap);
+         if (m1.find() && m2.find()) {
+            return Integer.parseInt(m2.group(1));
+          }
+       }
+      return 8000;
+    }	
+   @Override public boolean isWorkingCopy() {
+      return IvyXml.getAttrBool(launch_xml,"WORKING");
     }
-
-   @Override public String getConfigName()		{ return config_name; }
-   @Override public String getProject() 		{ return project_name; }
-   @Override public String getMainClass()		{ return main_class; }
-   @Override public String getArguments()		{ return program_args; }
-   @Override public String getVMArguments()		{ return java_args; }
-   @Override public String getId()			{ return launch_id; }
-   @Override public BumpLaunchConfigType getConfigType() { return config_type; }
-   @Override public String getTestName()		{ return test_case; }
-   @Override public String getRemoteHost()		{ return remote_host; }
-   @Override public String getLogFile() 		{ return log_file; }
-   @Override public String getWorkingDirectory()	{ return working_directory; }
-   @Override public int getRemotePort() 		{ return remote_port; }
-   @Override public boolean isWorkingCopy()		{ return is_working; }
-   @Override public boolean getStopInMain()		{ return stop_in_main; }
+   @Override public boolean getStopInMain() {
+      return getBoolean(launch_xml,"STOP_IN_MAIN",false);
+    }
+   
+   boolean useContracts() {
+      return getBoolean(launch_xml,"CONTRACTS",true);
+    }
+   
+   boolean useAssertions() {
+      return getBoolean(launch_xml,"ASSERTIONS",true);
+    }
+   
+   @Override public String getId()			        { return launch_id; }
+   @Override public BumpLaunchConfigType getConfigType()        { return config_type; }
+   @Override public BumpLaunchType getLaunchType()	        { return launch_type; }
+   
+   @Override public String getAttribute(String nm) {
+      return getAttribute(launch_xml,nm);
+   }
+   
+   @Override public boolean getBoolAttribute(String nm ) {
+      return getBoolean(launch_xml,nm,false);
+   }
+   
 
    @Override public String getContractArgs() {
       String args = null;
    
-      BumpContractType bct = bump_client.getContractType(project_name);
+      BumpContractType bct = bump_client.getContractType(getProject());
       if (bct == null) return null;
    
-      if (use_contracts && bct.useContractsForJava()) {
+      if (useContracts() && bct.useContractsForJava()) {
          String libf = BoardSetup.getSetup().getLibraryPath("cofoja.jar");
          args = "-javaagent:" + libf;
        }
    
-      if (use_assertions && bct.enableAssertions()) {
+      if (useAssertions() && bct.enableAssertions()) {
          if (args == null) args = "-ea";
          else args += " -ea";
        }
@@ -1303,7 +1428,19 @@ private class LaunchConfig implements BumpLaunchConfig {
       Element x = bump_client.editRunConfiguration(getId(),"CONNECT_MAP",val);
       return getLaunchResult(x);
     }
-
+   
+   @Override public BumpLaunchConfig setRemoteHost(String host) {
+      Element x = bump_client.editRunConfiguration(getId(),"REMOTE_HOST",host);
+      BumpLaunchConfig blc = getLaunchResult(x);
+      return blc.setRemoteHostPort(host,getRemotePort());
+   }
+   
+   @Override public BumpLaunchConfig setRemotePort(int port) {
+      Element x = bump_client.editRunConfiguration(getId(),"REMOTE_PORT",Integer.toString(port));
+      BumpLaunchConfig blc = getLaunchResult(x);
+      return blc.setRemoteHostPort(getRemoteHost(),port);
+   }
+   
    @Override public BumpLaunchConfig setLogFile(String arg) {
       Element x = bump_client.editRunConfiguration(getId(),"CAPTURE_IN_FILE",arg);
       return getLaunchResult(x);
@@ -1321,6 +1458,9 @@ private class LaunchConfig implements BumpLaunchConfig {
     }
 
    @Override public BumpLaunchConfig setAttribute(String attr,String arg) {
+      if (attr.equals("REMOTE_HOST")) return setRemoteHost(arg);
+      else if (attr.equals("REMOTE_PORT")) return setRemotePort(Integer.parseInt(arg));
+      
       Element x = bump_client.editRunConfiguration(getId(),attr,arg);
       return getLaunchResult(x);
     }
@@ -1340,6 +1480,16 @@ private class LaunchConfig implements BumpLaunchConfig {
       if (s == null || s.length() == 0) return dflt;
       if ("tT1yY".indexOf(s.charAt(0)) >= 0) return true;
       return false;
+    }
+   
+   private Integer getInteger(Element xml,String id) {
+      String s = getAttribute(xml,id);
+      if (s == null || s.isEmpty()) return null;
+      try {
+         return Integer.parseInt(s);
+       }
+      catch (NumberFormatException e) { }
+      return null;
     }
 
 }	// end of inner class LanuchConfig

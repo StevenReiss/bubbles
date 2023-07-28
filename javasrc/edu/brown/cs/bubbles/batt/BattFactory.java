@@ -741,8 +741,18 @@ public static BumpLaunchConfig getLaunchConfigurationForTest(BattTest btc)
        }
     }
    BoardLog.logD("BATT","Set launch project " + pnm + " " + locs.size());
+   
+   BumpLaunchConfig blc = null;
+   for (BumpLaunchType blt : brm.getLaunchTypes()) {
+      if (blt.getName().contains("TEST")) {
+	 blc = brm.createLaunchConfiguration(nm,blt);
+	 break;
+      }
+   }
 
-   BumpLaunchConfig blc = brm.createLaunchConfiguration(nm,BumpLaunchConfigType.JUNIT_TEST);
+   if (blc == null) { 
+      blc = brm.createLaunchConfiguration(nm,BumpLaunchConfigType.JUNIT_TEST);
+   }
    if (blc == null) return null;
 
    BumpLaunchConfig blc1 = blc;

@@ -60,6 +60,8 @@
 	 <fileset dir='${PRO}/ivy/java' includes= '**/*.class' />
 	 <fileset dir='${BUBBLES}/java' includes= '**/bedrock/*.class' />
 	 <fileset dir='${BUBBLES}/bedrock/src' includes='plugin.xml' />
+	 <fileset dir='${BUBBLES}' includes='resources/launches-java.xml' />
+	 <fileset dir='${BUBBLES}' includes='resources/templates/*.template' />
 	 <fileset dir='${BUBBLES}/images' includes='agt_web.png' />
       </jar>
       <copy file='bedrock.jar'

@@ -359,18 +359,18 @@ private class ConfigModel extends AbstractTableModel {
    @Override public Object getValueAt(int r,int c) {
       BumpLaunchConfig blc;
       synchronized (active_configs) {
-	 if (r < 0 || r >= active_configs.size()) return null;
-	 blc = active_configs.get(r);
+         if (r < 0 || r >= active_configs.size()) return null;
+         blc = active_configs.get(r);
        }
       switch (c) {
-	 case 0 :
-	    return blc.getConfigName();
-	 case 1 :
-	    return blc.getProject();
-	 case 2 :
-	    return blc.getMainClass();
-	 case 3 :
-	    return blc.getArguments();
+         case 0 :
+            return blc.getConfigName();
+         case 1 :
+            return blc.getProject();
+         case 2 :
+            return blc.getMainClass();
+         case 3 :
+            return blc.getArguments();
        }
       return null;
     }

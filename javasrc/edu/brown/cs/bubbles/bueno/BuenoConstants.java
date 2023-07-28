@@ -191,8 +191,8 @@ interface BuenoClassCreatorInstance {
    boolean useSeparateTypeButtons();
 
    boolean showClassDialogBubble(BudaBubble source,Point location,BuenoType typ,
-	 BuenoProperties known,BuenoLocation insert,String lbl,
-	 BuenoBubbleCreator newer);
+         BuenoProperties known,BuenoLocation insert,String lbl,
+         BuenoBubbleCreator newer);
 
 }	// end of interface BuenoClassCreatorInstance
 
@@ -226,6 +226,11 @@ String PROJ_PROP_LINKS = "ProjectLinks";
 String PROJ_PROP_ANDROID = "ProjectAndroid";
 String PROJ_PROP_ANDROID_PKG = "ProjectAndroidPackage";
 String PROJ_PROP_JUNIT = "ProjectJunit";
+String PROJ_PROP_JUNIT_PATH = "ProjectJunitPath";
+String PROJ_PROP_USE_ANDROID = "ProjectUseAndriod";
+String PROJ_PROP_CORE_OPTIONS = "ProjectCoreOptions";
+String PROJ_PROP_FORMAT_FILE = "ProjectFormatFile";
+String PROJ_PROP_TEMPLATE_DIR = "ProjectTemplateDirectory";
 
 interface BuenoProjectProps {
 

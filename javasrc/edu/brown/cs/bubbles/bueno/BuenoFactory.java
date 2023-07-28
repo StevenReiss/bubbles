@@ -469,6 +469,15 @@ boolean insertText(BuenoLocation loc,String text,boolean format)
 
 public BudaBubble getCreateProjectBubble()
 {
+   BumpClient bc = BumpClient.getBump();
+   Element ld = bc.getLanguageData();
+   ld = IvyXml.getChild(ld,"PROJECT");
+   if (ld != null) {
+      BuenoGenericProject gp = new BuenoGenericProject(ld);
+      BudaBubble bbl = gp.createProjectCreationBubble();
+      if (bbl != null) return bbl;
+    }
+   
    switch (BoardSetup.getSetup().getLanguage()) {
       case JAVA :
       case JAVA_IDEA :

@@ -1295,7 +1295,17 @@ public boolean createProject(String nm,File dir,String typ,Map<String,Object> pr
       xw.close();
     }
 
-   return getStatusReply("CREATEPROJECT",null,addWorkspace(q),cnts,0);
+   Element e = getXmlReply("CREATEPROJECT",null,addWorkspace(q),cnts,0);
+   if (e == null) return false;
+   if (IvyXml.isElement(e,"ERROR")) {
+      String txt = IvyXml.getText(e);
+      if (txt == null) txt = IvyXml.getTextElement(e,"MESSAGE");
+      BoardLog.logE("BUMP","Problem with command: " + txt);
+      return false;
+    }
+   Element pe = IvyXml.getChild(e,"PROJECT");
+   if (pe == null) return false;
+   return true;
 }
 
 
@@ -2877,6 +2887,27 @@ public BumpBreakModel getBreakModel()
 /*										*/
 /********************************************************************************/
 
+public Element getLanguageData()
+{
+   Element e = getXmlReply("LANGUAGEDATA",null,null,null,0);
+   if (IvyXml.isElement(e,"RESULT")) {
+      Element ld = IvyXml.getChild(e,"LANGUAGE");
+      if (ld != null) return ld;
+    }
+   return e;
+}
+
+
+public Element doLaunchQuery(String proj,String query,String option)
+{
+   String q = "QUERY='" + query + "'";
+   if (option != null) q += " OPTION='" + option + "'";
+   Element e = getXmlReply("LAUNCHQUERY",proj,q,null,0);
+   return e;
+}
+
+
+
 public BumpRunModel getRunModel()
 {
    return run_manager;
@@ -2908,6 +2939,21 @@ Element getNewRunConfiguration(String name,String clone,BumpLaunchConfigType typ
    Element e = getXmlReply("NEWRUNCONFIG",null,q,null,0);
    return e;
 }
+
+
+Element getNewRunConfiguration(String name,String clone,BumpLaunchType typ)
+{
+   String q = "";
+   if (name != null) q = "NAME='" + name + "'";
+   if (typ != null) q += " TYPE='" + typ.getName() + "'";
+   if (clone != null) { 	// must have a new name
+      q += " CLONE='" + clone + "'";
+    }
+
+   Element e = getXmlReply("NEWRUNCONFIG",null,q,null,0);
+   return e;
+}
+
 
 Element editRunConfiguration(String id,String prop,String val)
 {
