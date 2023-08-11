@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -260,7 +261,7 @@ private void addEclipseVersion(String v)
    String urltxt = IvyFile.expandName(ECLIPSE_URL,info);
 
    try {
-      URL url = new URL(urltxt);
+      URL url = new URI(urltxt).toURL();
       URLConnection uc = url.openConnection();
       long cll = uc.getContentLengthLong();
       if (cll <= 0) return;
@@ -448,7 +449,7 @@ private class EclipseDownloader extends Thread {
 
       if (urltxt != null) {
 	 try {
-	    URL url = new URL(urltxt);
+	    URL url = new URI(urltxt).toURL();
 	    URLConnection uc = url.openConnection();
 	    InputStream ins = uc.getInputStream();
 	    File fd = eclipse_directory;
@@ -474,7 +475,7 @@ private class EclipseDownloader extends Thread {
 	     }
 	    catch (IOException ex) { }
 	  }
-	 catch (IOException e) {
+	 catch (IOException | URISyntaxException e) {
 	    dlg.setVisible(false);
 	    BoardLog.logE("BOARD","Problem installing from " + urltxt,e);
 	    JOptionPane.showMessageDialog(null,e.getMessage(),

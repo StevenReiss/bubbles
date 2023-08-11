@@ -206,6 +206,7 @@ void handleLanguageData(IvyXmlWriter xw)
 {
    String nm = "resources/launches-java.xml";
    InputStream ins = BedrockRuntime.class.getClassLoader().getResourceAsStream(nm);
+   BedrockPlugin.logD("Language data " + nm + " " + ins);
    Element xml = IvyXml.loadXmlFromStream(ins);
    xw.writeXml(xml);
 }
@@ -261,7 +262,7 @@ private void findJavaMainMethods(String proj,boolean library,IvyXmlWriter xw)
    MainHandler fh = new MainHandler(xw,library);
    try {
       se.search(pat,parts,scp,fh,null);
-    }	
+    }
    catch (Throwable e) {
       throw new BedrockException("Problem doing search for main",e);
     }

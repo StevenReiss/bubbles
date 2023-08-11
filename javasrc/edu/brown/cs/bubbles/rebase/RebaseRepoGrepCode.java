@@ -197,14 +197,14 @@ private class GrepCodeFileSource extends BaseFileSource implements RebaseSource 
       try {
          String fref = GREPCODE_SCHEME + "://" + GREPCODE_AUTHORITY +
          "/file_/" + h1 + "/?v=source";
-         file_href = new URL(fref);
+         file_href = new URI(fref).toURL();
         
          project_name = pnam.replace("/","@").replace("&","_");
          project_id = proj.replace("/","@");
         
          file_name = "/REBUS/" + project_id + "/GREPCODE/" + h3;
        }
-      catch (MalformedURLException e) {
+      catch (URISyntaxException | MalformedURLException e) {
          file_href = null;
        }
     }

@@ -43,7 +43,6 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bueno.BuenoConstants;
 import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bueno.BuenoJsProject;
-import edu.brown.cs.bubbles.bueno.BuenoProjectCreator;
 import edu.brown.cs.bubbles.bueno.BuenoPythonProject;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
@@ -774,12 +773,9 @@ private static class NewProjectAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","CreateProject");
       BudaRoot.hideSearchBubble(e);
-      BuenoProjectCreator bpc = new BuenoProjectCreator();
-      BudaBubble bbl = bpc.createProjectCreationBubble();
+      BudaBubble bbl = BuenoFactory.getFactory().getCreateProjectBubble();
       if (bbl == null) return;
       BassFactory.getFactory().addNewBubble(rel_bubble,rel_point,bbl);
-      // BumpClient bc = BumpClient.getBump();
-      // bc.createProject();
     }
 
 }	// end of inner class ProjectAction

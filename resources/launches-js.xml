@@ -20,6 +20,10 @@
 	 <FIELD NAME='SOURCE_DIR' DESCRIPTION='HTML Directory' TYPE='DIRECTORY' EXISTS='TRUE' />
       </TYPE>
    </CREATE>
+   <EDIT>
+      <TAB LABEL='Packages' TYPE='PATH' />
+      <TAB LABEL='Libraries' TYPE='LIBRARY' />
+   </EDIT>
 </PROJECT>
 </LANGUAGE>
 

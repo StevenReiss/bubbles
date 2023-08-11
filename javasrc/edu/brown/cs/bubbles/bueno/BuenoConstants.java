@@ -297,6 +297,7 @@ enum PathType {
    BINARY,
    LIBRARY,
    EXCLUDE,
+   INCLUDE,
 }
 
 

@@ -37,7 +37,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.Set;
@@ -181,8 +182,8 @@ private void cacheScript(String src)
       String base = src.substring(idx+1);
       File f0 = new File(base_directory,"cache");
       File cfile = new File(f0,base);
-      URL u = new URL(src);
-      URLConnection uconn = u.openConnection();
+      URI u = new URI(src);
+      URLConnection uconn = u.toURL().openConnection();
       if (cfile.exists()) uconn.setIfModifiedSince(cfile.lastModified());
       InputStream ins = uconn.getInputStream();
       String cnts = IvyFile.loadFile(new InputStreamReader(ins,"utf-8"));
@@ -194,6 +195,7 @@ private void cacheScript(String src)
       ins.close();
     }
    catch (IOException e) { }
+   catch (URISyntaxException e) { }
 }
 
 

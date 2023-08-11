@@ -35,7 +35,7 @@ import org.jsoup.nodes.Element;
 import edu.brown.cs.bubbles.board.BoardLog;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +50,7 @@ class BdocDocPackage extends BdocDocItem implements BdocConstants
 /*										*/
 /********************************************************************************/
 
-BdocDocPackage(URL u) throws IOException
+BdocDocPackage(URI u) throws IOException
 {
    super(u);
 

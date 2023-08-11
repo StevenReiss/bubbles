@@ -42,7 +42,6 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URI;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,8 +150,8 @@ void startDebug() throws NobaseException
 
    for (int i = 0; i < 10; ++i) {
       try {
-	 URL u = new URL("http://localhost:" + port + "/json/list");
-	 HttpURLConnection hc = (HttpURLConnection) u.openConnection();
+	 URI u = new URI("http://localhost:" + port + "/json/list");
+	 HttpURLConnection hc = (HttpURLConnection) u.toURL().openConnection();
 	 InputStream is = hc.getInputStream();
 	 String cnts = IvyFile.loadFile(is);
 	 JSONArray jarr = new JSONArray(cnts);
@@ -161,8 +160,8 @@ void startDebug() throws NobaseException
 	 String id = jo.getString("id");
 	 hc.disconnect();
 
-	 URL u1 = new URL("http://localhost:" + port + "/json/version/" + id);
-	 HttpURLConnection hc1 = (HttpURLConnection) u1.openConnection();
+	 URI u1 = new URI("http://localhost:" + port + "/json/version/" + id);
+	 HttpURLConnection hc1 = (HttpURLConnection) u1.toURL().openConnection();
 	 InputStream is1 = hc1.getInputStream();
 	 cnts = IvyFile.loadFile(is1);
 	 hc1.disconnect();

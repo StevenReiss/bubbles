@@ -35,7 +35,7 @@ import edu.brown.cs.bubbles.bass.BassConstants;
 import edu.brown.cs.bubbles.board.BoardFont;
 
 import java.awt.Font;
-import java.net.URL;
+import java.net.URI;
 
 
 
@@ -105,7 +105,7 @@ interface SubItem {
 /**
  *	Return the URL that can be used to access the item.
  **/
-   URL getItemUrl();
+   URI getItemUrl();
 
 
 /**

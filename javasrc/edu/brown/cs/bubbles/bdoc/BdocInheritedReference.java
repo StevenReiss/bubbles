@@ -38,7 +38,7 @@ import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
-import java.net.URL;
+import java.net.URI;
 
 
 class BdocInheritedReference extends BassNameBase implements BdocConstants, BassConstants
@@ -130,7 +130,7 @@ String getDigestedName()	 { return bdoc_name; }
 /*										*/
 /********************************************************************************/
 
-URL getReferenceUrl()			{ return base_reference.getReferenceUrl(); }
+URI getReferenceUrl()			{ return base_reference.getReferenceUrl(); }
 
 
 @Override public String getDisplayName()
@@ -146,7 +146,7 @@ BdocReference findRelatedReference(String newurl)
 
 
 
-BdocReference findRelatedReference(URL u)
+BdocReference findRelatedReference(URI u)
 {
    return base_reference.findRelatedReference(u);
 }

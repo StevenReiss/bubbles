@@ -42,8 +42,8 @@ import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import org.w3c.dom.Element;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 class BdocReference extends BassNameBase implements BdocConstants, BassConstants
@@ -57,7 +57,7 @@ class BdocReference extends BassNameBase implements BdocConstants, BassConstants
 /*										*/
 /********************************************************************************/
 
-private URL	ref_url;
+private URI	ref_url;
 private String	bdoc_name;
 private String	name_parameters;
 private String	ref_description;
@@ -135,18 +135,13 @@ private static DescriptionData [] prefix_set = new DescriptionData [] {
 /*										*/
 /********************************************************************************/
 
-BdocReference(BdocRepository br,String proj,URL base,String ref,String desc) throws BdocException
+BdocReference(BdocRepository br,String proj,URI base,String ref,String desc) throws BdocException
 {
    for_repository = br;
    for_project = proj;
    ref = ref.replace(" ","+");
 
-   try {
-      ref_url = new URL(base,ref);
-    }
-   catch (MalformedURLException e) {
-      throw new BdocException("Bad URL for reference",e);
-    }
+   ref_url = base.resolve(ref);
 
    int idx = desc.indexOf("-");
    if (idx < 0) throw new BdocException("No break found in reference name");
@@ -195,9 +190,9 @@ BdocReference(BdocRepository br,Element xml)
    if (url == null) ref_url = null;
    else {
       try {
-	 ref_url = new URL(url);
+	 ref_url = new URI(url);
        }
-      catch (MalformedURLException e) { }
+      catch (URISyntaxException e) { }
     }
 }
 
@@ -224,9 +219,9 @@ BdocReference(BdocRepository br,String nt,String nm,String p,String d,String pro
    if (url == null) ref_url = null;
    else {
       try {
-	 ref_url = new URL(url);
+	 ref_url = new URI(url);
        }
-      catch (MalformedURLException e) { }
+      catch (URISyntaxException e) { }
     }
 }
 
@@ -238,7 +233,7 @@ BdocReference(BdocRepository br,String nt,String nm,String p,String d,String pro
 /*										*/
 /********************************************************************************/
 
-URL getReferenceUrl()			{ return ref_url; }
+URI getReferenceUrl()			{ return ref_url; }
 
 
 @Override public String getDisplayName()
@@ -249,18 +244,13 @@ URL getReferenceUrl()			{ return ref_url; }
 
 BdocReference findRelatedReference(String newurl)
 {
-   try {
-      URL u = new URL(ref_url,newurl);
-      return for_repository.findReference(u);
-    }
-   catch (MalformedURLException e) { }
-
-   return null;
+   URI u = ref_url.resolve(newurl); 
+   return for_repository.findReference(u);
 }
 
 
 
-BdocReference findRelatedReference(URL u)
+BdocReference findRelatedReference(URI u)
 {
    return for_repository.findReference(u);
 }
@@ -496,7 +486,7 @@ void outputXml(IvyXmlWriter xw)
    if (bdoc_name != null) xw.field("NAME",bdoc_name);
    if (name_parameters != null) xw.field("PARAMS",name_parameters);
    if (for_project != null) xw.field("PROJECT",for_project);
-   if (ref_url != null) xw.textElement("URL",ref_url.toExternalForm());
+   if (ref_url != null) xw.textElement("URL",ref_url.toString());
    if (ref_description != null) xw.textElement("DESCRIPTION",ref_description);
    xw.end("BDOC");
 }

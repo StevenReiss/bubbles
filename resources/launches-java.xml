@@ -22,7 +22,7 @@
    <CREATE>
       <TYPE NAME='NEW' DESCRIPTION='Completely New Project' DEFAULT='TRUE' RESULT='JAVA'>
 	 <FIELD NAME='PACKAGE_NAME' DESCRIPTION='Package Name' TYPE='STRING'
-	    PATTERN="(\\p{Alpha}\\w*\\.)*\\p{Alpha}\\w*" />
+	    PATTERN='(\p{Alpha}\w*\.)*\p{Alpha}\w*' />
       </TYPE>
       <TYPE NAME='SOURCE' DESCRIPTION='Create Project Using Existing Source' RESULT='JAVA'>
 	 <FIELD NAME='SOURCE_DIR' DESCRIPTION='Source Directory' TYPE='DIRECTORY'
@@ -33,33 +33,43 @@
 	    EXISTS='TRUE' />
       </TYPE>
       <TYPE NAME='GIT' DESCRIPTION='Create Project From GIT Repository' RESULT='JAVA' >
-	 <FIELD NAME='GIT_URL' DESCRIPTION='GIT Repo URL" TYPE='URL' />
+	 <FIELD NAME='GIT_URL' DESCRIPTION='GIT Repo URL' TYPE='URL' />
 	 <FIELD NAME='GIT_DIR' DESCRIPTION='Target Directory' TYPE='DIRECTORY'
 	    CANWRITE='TRUE' />
       </TYPE>
    </CREATE>
+   <EDIT>
+      <TAB LABEL='Libraries' TYPE='LIBRARY' />
+      <TAB LABEL='Source' TYPE='SOURCE' EXCLUDE='T' INCLUDE='T' NEST='F' />
+      <TAB LABEL='Compiler' DESCRIPTION='Compiler Problem Settings'>
+	 <FIELD NAME='ERROROPTS' DESCRIPTION='Option Set' TYPE='OPTIONSET' OPTION='Bueno.problem.set'
+		REFIX='org.eclipse.jdt.core.compiler.problem.' />
+	 <FIELD NAME='ERROR_OPTION' DESCRIPTION='Warnings as Errors' TYPE='BOOLEAN'
+		OPTION='org.eclipse.jdt.core.compiler.problem.fatalOptionalError'
+		TRUE='enabled' />
+	 <FIELD NAME='SOURCE_OPTION' DESCRIPTION='Java Source Version' TYPE='CHOICE'
+		OPTION='org.eclipse.jdt.core.compiler.source'
+		CHOICES='Bueno.option.COMPILER' />
+	 <FIELD NAME='TARGET_OPTION' DESCRIPTION='Java Target Version' TYPE='CHOICE'
+		OPTION='org.eclipse.jdt.core.compiler.codegen.targetPlatform'
+		CHOICES='Bueno.option.COMPILER' />
+	 <FIELD NAME='COMPLIANCE_OPTION' DESCRIPTION='Java Compliance Version' TYPE='CHOICE'
+		OPTION='org.eclipse.jdt.core.compiler.compliance'
+		CHOICES='Bueno.option.COMPILER' />
+      </TAB>
+      <TAB LABEL='References' TYPE='PROJECTS' />
+      <TAB LABEL='Contracts' DESCRIPTION='Contract Checking'>
+	 <FIELD NAME='JUNIT_OPTION' DESCRIPTION='Enable JUNIT Testing' TYPE='BOOLEAN'
+		OPTION='edu.brown.cs.bubbles.bedrock.useJunit' SETONLY='TRUE' >
+	    <PATH LIBRARY='junit.jar' CHECK='junit' />
+	 </FIELD>
+	 <FIELD NAME='TYPE_ANNOT_OPTION' DESCRIPTION='Enable Type Annotations' TYPE='BOOLEAN'
+		OPTION='edu.brown.cs.bubbles.bedrock.useTypeAnnotations' SETONLY='TRUE' >
+	    <PATH LIBRARY='annotations.jar' CHECK='annotations' />
+	 </FIELD>
+	 <FIELD NAME='ASSERT_OPTION' DESCRIPTION='Enable Assertions' TYPE='BOOLEAN'
+		OPTION='edu.brown.cs.bubbles.bedrock.useAssertions' />
+      </TAB>
+   </EDIT>
 </PROJECT>
 </LANGUAGE>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

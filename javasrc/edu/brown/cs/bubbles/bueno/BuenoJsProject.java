@@ -514,13 +514,13 @@ private class PackagePanel extends SwingGridPanel implements ActionListener, Lis
       List<BuenoPathEntry> sels = path_display.getSelectedValuesList();
       boolean edok = false;
       for (BuenoPathEntry pe : sels) {
-	 if (pe.isLibrary()) {
-	    if (edok) {
-	       edok = false;
-	       break;
-	     }
-	    edok = true;
-	  }
+         if (pe.isLibrary()) {
+            if (edok) {
+               edok = false;
+               break;
+             }
+            edok = true;
+          }
        }
       edit_button.setEnabled(edok);
       delete_button.setEnabled(sels.size() >= 1);

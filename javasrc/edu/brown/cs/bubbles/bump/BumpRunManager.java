@@ -1260,6 +1260,7 @@ private class LaunchConfig implements BumpLaunchConfig {
             else if (tnm.equals(bclt.toString())) config_type = bclt;
           }
        }
+      if (tnm.equals("JUnit")) tnm = "JUnit Test";
       launch_type = null;
       for (BumpLaunchType blt : launch_types) {
 	 if (blt.getName().equals(tnm) || blt.getDescription().equals(tnm)) {

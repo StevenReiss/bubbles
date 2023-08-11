@@ -41,8 +41,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.regex.Pattern;
 
 
@@ -105,9 +105,9 @@ BuenoProjectMakerGit()
    }
    else if (url.contains(":")) {
       try {
-         new URL(url);
+         new URI(url);
       }
-      catch (MalformedURLException e) { 
+      catch (URISyntaxException e) { 
          return false;
       }
    }

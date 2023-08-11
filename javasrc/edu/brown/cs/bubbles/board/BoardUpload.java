@@ -34,7 +34,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.util.Random;
 
@@ -222,9 +223,9 @@ private void setup(String url) throws IOException
    file_url = null;
 
    try {
-      url_connection = new URL(url).openConnection();
+      url_connection = new URI(url).toURL().openConnection();
     }
-   catch (MalformedURLException e) {
+   catch (MalformedURLException | URISyntaxException e) {
       BoardLog.logE("BOARD",
 		       "Failed to connect to server while uploading", e);
       throw new IOException("Failed to connect to upload server", e);

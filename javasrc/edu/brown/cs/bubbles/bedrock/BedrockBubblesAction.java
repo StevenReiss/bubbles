@@ -29,7 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLConnection;
 import java.util.Properties;
 
@@ -479,8 +479,8 @@ private class Downloader extends Thread {
       File f = new File(install_directory,"bubbles.jar");
       if (install_directory.exists() || install_directory.mkdirs()) {
          try {
-            URL u = new URL(BUBBLES_URL);
-            URLConnection conn = u.openConnection();
+            URI u = new URI(BUBBLES_URL);
+            URLConnection conn = u.toURL().openConnection();
             BufferedInputStream ins = new BufferedInputStream(conn.getInputStream());
             try (OutputStream ots = new FileOutputStream(f)) {
                byte [] buf = new byte[16384];

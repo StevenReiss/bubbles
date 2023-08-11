@@ -35,7 +35,7 @@ package edu.brown.cs.bubbles.bdoc;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 
 
 class BdocDocClass extends BdocDocItem implements BdocConstants
@@ -48,7 +48,7 @@ class BdocDocClass extends BdocDocItem implements BdocConstants
 /*										*/
 /********************************************************************************/
 
-BdocDocClass(URL u) throws IOException
+BdocDocClass(URI u) throws IOException
 {
    super(u);
 

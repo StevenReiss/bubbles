@@ -43,7 +43,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -175,24 +176,29 @@ private void loadDirectory(String file,String url,File dir,boolean crlf) throws 
       unzip(zipfile,dir,true);
     }
    else {
-      URL u = new URL(url);
-      HttpURLConnection c = (HttpURLConnection) u.openConnection();
-      if (c.getResponseCode() == HttpURLConnection.HTTP_OK) {
-	 InputStream ins = c.getInputStream();
-	 File tf = File.createTempFile("bubbles",".ws");
-	 tf.deleteOnExit();
-         try (FileOutputStream ots = new FileOutputStream(tf)) {
-            byte [] buf = new byte[16384];
-            for ( ; ; ) {
-               int ln = ins.read(buf);
-               if (ln <= 0) break;
-               ots.write(buf,0,ln);
-             }
-          }
-	 ins.close();
-	 unzip(tf,dir,true);
-	 tf.delete();
-       }
+      try {
+	 URI u = new URI(url);
+	 HttpURLConnection c = (HttpURLConnection) u.toURL().openConnection();
+	 if (c.getResponseCode() == HttpURLConnection.HTTP_OK) {
+	    InputStream ins = c.getInputStream();
+	    File tf = File.createTempFile("bubbles",".ws");
+	    tf.deleteOnExit();
+	    try (FileOutputStream ots = new FileOutputStream(tf)) {
+	       byte [] buf = new byte[16384];
+	       for ( ; ; ) {
+		  int ln = ins.read(buf);
+		  if (ln <= 0) break;
+		  ots.write(buf,0,ln);
+	       }
+	    }
+	    ins.close();
+	    unzip(tf,dir,true);
+	    tf.delete();
+	 }
+      }
+      catch (URISyntaxException e) {
+	 throw new IOException("BAD URI",e);
+      }
     }
 }
 

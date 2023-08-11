@@ -98,8 +98,8 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -542,18 +542,18 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 	 boolean optfg = IvyXml.getAttrBool(xml,"OPTIONAL");
 	 boolean export = IvyXml.getAttrBool(xml,"EXPORTED");
 	 IAccessRule [] rls = null;
-	 URL docu = null;
+	 URI docu = null;
 	 String doc = IvyXml.getTextElement(xml,"JAVADOC");
 	 if (doc != null) {
 	    try {
-	       docu = new URL(doc);
+	       docu = new URI(doc);
 	     }
-	    catch (MalformedURLException e) { }
+	    catch (URISyntaxException e) { }
 	    if (docu == null) {
 	       try {
-		  docu = new URL("file://" + doc);
+		  docu = new URI("file://" + doc);
 		}
-	       catch (MalformedURLException e) { }
+	       catch (URISyntaxException e) { }
 	     }
 	  }
 	 if (oent != null) {
@@ -643,32 +643,26 @@ private static final class RunPropDialog implements Runnable {
 /*										*/
 /********************************************************************************/
 
-void createProject(String pnm,File pdir,String type,Element props,IvyXmlWriter xw)
+void handleCreateProject(String pnm,File pdir,String type,Element props,IvyXmlWriter xw)
    throws BedrockException
 {
    BedrockProjectCreator pc = new BedrockProjectCreator(pnm,pdir,type,props);
-   
-   if (!pc.setupProject()) return;
-   
+
    try {
+      if (!pc.setupProject()) return;
       importExistingProject(pnm);
     }
-   catch (BedrockException e) { 
+   catch (BedrockException e) {
       throw e;
     }
    catch (Throwable t) {
-      throw new BedrockException("Problem importing project",t);
+      throw new BedrockException("Problem creating project",t);
     }
-   
+
    xw.begin("PROJECT");
    xw.field("NAME",pnm);
    xw.end("PROJECT");
 }
-
-
-
-
-
 
 
 
@@ -1388,7 +1382,7 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
       catch (JavaModelException e) { }
       xw.end("RAWPATH");
     }
-											
+										
    if (fil) {
       xw.begin("FILES");
       addSourceFiles(p,xw,null);

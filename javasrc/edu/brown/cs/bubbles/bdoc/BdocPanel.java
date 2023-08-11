@@ -78,9 +78,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
+import java.net.URISyntaxException;
 import java.util.List;
 
 
@@ -255,7 +254,7 @@ private void createNewBubble(BdocReference br)
 
 
 
-void createLinkBubble(String lbl,URL u)
+void createLinkBubble(String lbl,URI u)
 {
    if (lbl != null) {
       BdocReference br = ref_item.findRelatedReference(lbl);
@@ -266,10 +265,7 @@ void createLinkBubble(String lbl,URL u)
     }
 
    if (u == null && lbl != null) {
-      try {
-	 u = new URL(ref_item.getReferenceUrl(),lbl);
-       }
-      catch (MalformedURLException ex) { }
+      u = ref_item.getReferenceUrl().resolve(lbl);
     }
 
    if (u == null) {
@@ -465,9 +461,12 @@ private class DocLinker implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-	 URL u = e.getURL();
-	 String lbl = e.getDescription();
-	 createLinkBubble(lbl,u);
+	 try {
+	    URI u = e.getURL().toURI();
+	    String lbl = e.getDescription();
+	    createLinkBubble(lbl,u);
+	 }
+	 catch (URISyntaxException ex) { }
        }
       else if (e.getEventType() == HyperlinkEvent.EventType.ENTERED) {
 	 BudaCursorManager.setTemporaryCursor(desc_view, new Cursor(Cursor.HAND_CURSOR));
@@ -545,12 +544,10 @@ private class TitleMouser extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       try {
-	 URL u = ref_item.getReferenceUrl();
-	 if (u == null) return;
-	 URI ui = u.toURI();
+	 URI ui = ref_item.getReferenceUrl();
+	 if (ui == null) return;
 	 URI uin = new URI(ui.getScheme(),ui.getUserInfo(),ui.getHost(),ui.getPort(),ui.getPath(),null,null);
-	 URL un = uin.toURL();
-	 createLinkBubble(null,un);
+	 createLinkBubble(null,uin);
        }
       catch (Exception ex) {
 	 BoardLog.logE("BDOC","Problem handling title click",ex);

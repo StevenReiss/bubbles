@@ -86,7 +86,7 @@ enum BumpSymbolType {
    ENUM,
    THROWABLE,
    ANNOTATION,
-   FIELD,		
+   FIELD,	
    ENUM_CONSTANT,
    FUNCTION,
    CONSTRUCTOR,
@@ -402,7 +402,7 @@ interface BumpBreakModel {
    void toggleBreakpoint(String proj,File file,int line,BumpBreakMode mode);
 
    void addExceptionBreakpoint(String proj,String cls,BumpExceptionMode enmod,BumpBreakMode mode,
-        boolean subclasses);
+	boolean subclasses);
 
    void enableBreakpoint(File file,int line);
    void disableBreakpoint(File file,int line);
@@ -454,67 +454,67 @@ enum BumpThreadState {
 
    public BumpThreadState getStopState() {
       switch (this) {
-         case DEAD :
-         default :
-            return this;
-         case NONE :
-         case NEW :
-         case RUNNING :
-            return STOPPED;
-         case RUNNING_SYNC :
-            return STOPPED_SYNC;
-         case RUNNING_IO :
-            return STOPPED_IO;
-         case RUNNING_SYSTEM :
-            return STOPPED_SYSTEM;
-         case BLOCKED :
-            return STOPPED_BLOCKED;
-         case DEADLOCKED :
-            return STOPPED_DEADLOCK;
-         case WAITING :
-            return STOPPED_WAITING;
-         case TIMED_WAITING :
-            return STOPPED_TIMED;
-         case IDLE :
-            return STOPPED_IDLE;
+	 case DEAD :
+	 default :
+	    return this;
+	 case NONE :
+	 case NEW :
+	 case RUNNING :
+	    return STOPPED;
+	 case RUNNING_SYNC :
+	    return STOPPED_SYNC;
+	 case RUNNING_IO :
+	    return STOPPED_IO;
+	 case RUNNING_SYSTEM :
+	    return STOPPED_SYSTEM;
+	 case BLOCKED :
+	    return STOPPED_BLOCKED;
+	 case DEADLOCKED :
+	    return STOPPED_DEADLOCK;
+	 case WAITING :
+	    return STOPPED_WAITING;
+	 case TIMED_WAITING :
+	    return STOPPED_TIMED;
+	 case IDLE :
+	    return STOPPED_IDLE;
        }
     }
 
    public BumpThreadState getExceptionState() {
       switch (this) {
-         case DEAD :
-            return this;
-         default :
-            return EXCEPTION;
+	 case DEAD :
+	    return this;
+	 default :
+	    return EXCEPTION;
        }
     }
 
    public BumpThreadState getRunState() {
       switch (this) {
-         case DEAD :
-         default :
-            return this;
-         case NONE :
-         case NEW :
-         case STOPPED :
-         case EXCEPTION :
-            return RUNNING;
-         case STOPPED_SYNC :
-            return RUNNING_SYNC;
-         case STOPPED_IO :
-            return RUNNING_IO;
-         case STOPPED_SYSTEM :
-            return RUNNING_SYSTEM;
-         case STOPPED_BLOCKED :
-            return BLOCKED;
-         case STOPPED_WAITING :
-            return WAITING;
-         case STOPPED_TIMED :
-            return TIMED_WAITING;
-         case STOPPED_DEADLOCK :
-            return DEADLOCKED;
-         case STOPPED_IDLE :
-            return IDLE;
+	 case DEAD :
+	 default :
+	    return this;
+	 case NONE :
+	 case NEW :
+	 case STOPPED :
+	 case EXCEPTION :
+	    return RUNNING;
+	 case STOPPED_SYNC :
+	    return RUNNING_SYNC;
+	 case STOPPED_IO :
+	    return RUNNING_IO;
+	 case STOPPED_SYSTEM :
+	    return RUNNING_SYSTEM;
+	 case STOPPED_BLOCKED :
+	    return BLOCKED;
+	 case STOPPED_WAITING :
+	    return WAITING;
+	 case STOPPED_TIMED :
+	    return TIMED_WAITING;
+	 case STOPPED_DEADLOCK :
+	    return DEADLOCKED;
+	 case STOPPED_IDLE :
+	    return IDLE;
        }
     }
 
@@ -539,18 +539,18 @@ enum BumpThreadState {
 
    public boolean isStopped() {
       switch (this) {
-         case STOPPED :
-         case STOPPED_SYNC :
-         case STOPPED_IO :
-         case STOPPED_WAITING :
-         case STOPPED_SYSTEM :
-         case STOPPED_BLOCKED :
-         case STOPPED_TIMED :
-         case STOPPED_IDLE :
-         case EXCEPTION :
-            return true;
-         default :
-            break;
+	 case STOPPED :
+	 case STOPPED_SYNC :
+	 case STOPPED_IO :
+	 case STOPPED_WAITING :
+	 case STOPPED_SYSTEM :
+	 case STOPPED_BLOCKED :
+	 case STOPPED_TIMED :
+	 case STOPPED_IDLE :
+	 case EXCEPTION :
+	    return true;
+	 default :
+	    break;
        }
       return false;
     }
@@ -664,12 +664,12 @@ enum BumpValueKind {
 enum BumpLaunchConfigType {
    UNKNOWN(null),
    JAVA_APP("Java Application"),
-   JUNIT_TEST("JUnit"),
+   JUNIT_TEST("JUnit Test"),
    REMOTE_JAVA("Remote Java Application"),
    JS("JavaScript"),
    PYTHON("PYTHON");
 
-   private String eclipse_name;  
+   private String eclipse_name; 
 
    BumpLaunchConfigType(String nm) {
       eclipse_name = nm;
@@ -697,7 +697,7 @@ enum BumpLaunchConfigFieldType {
 }
 
 interface BumpLaunchConfigField {
-   
+
    String getFieldName();
    String getDescription();
    BumpLaunchConfigFieldType getType();
@@ -706,8 +706,8 @@ interface BumpLaunchConfigField {
    int getNumRows();
    int getMin();
    int getMax();
-   
-}       // end of interface BumpLaunchConfigField
+
+}	// end of interface BumpLaunchConfigField
 
 
 enum BumpConsoleMode {
@@ -716,13 +716,13 @@ enum BumpConsoleMode {
 
 interface BumpRunEventHandler extends EventListener {
 
-   default void handleLaunchEvent(BumpRunEvent evt)                     { }
-   default void handleProcessEvent(BumpRunEvent evt)                    { }
-   default void handleThreadEvent(BumpRunEvent evt)                     { }
-   
-   
+   default void handleLaunchEvent(BumpRunEvent evt)			{ }
+   default void handleProcessEvent(BumpRunEvent evt)			{ }
+   default void handleThreadEvent(BumpRunEvent evt)			{ }
+
+
    default void handleConsoleMessage(BumpProcess proc,
-         BumpConsoleMode mode,boolean iseof,String msg)                 { }
+	 BumpConsoleMode mode,boolean iseof,String msg) 		{ }
 
 }	// end of inner interface BumpRunEventHandler
 
@@ -749,7 +749,7 @@ interface BumpLaunchConfig {
    String getContractArgs();
    String getLogFile();
    String getWorkingDirectory();
-   
+
    String getAttribute(String name);
    boolean getBoolAttribute(String name);
 

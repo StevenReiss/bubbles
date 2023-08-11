@@ -53,7 +53,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -328,9 +329,12 @@ private class DocLinker implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-	 URL u = e.getURL();
-	 String lbl = e.getDescription();
-	 for_panel.createLinkBubble(lbl,u);
+	 try {
+	    URI u = e.getURL().toURI();
+	    String lbl = e.getDescription();
+	    for_panel.createLinkBubble(lbl,u);
+	 }
+	 catch (URISyntaxException ex) { }
        }
     }
 

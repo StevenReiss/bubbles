@@ -40,7 +40,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Random;
@@ -246,9 +247,9 @@ static String getRepoUrl()
 private void setupConnection(String url) throws IOException
 {
    try {
-      url_connection = new URL(url).openConnection();
+      url_connection = new URI(url).toURL().openConnection();
     }
-   catch (MalformedURLException e) {
+   catch (MalformedURLException | URISyntaxException e) {
       System.err.println("BVCR: Failed to connect to server while uploading: " + e);
       throw new IOException("Failed to connect to upload server",e);
     }

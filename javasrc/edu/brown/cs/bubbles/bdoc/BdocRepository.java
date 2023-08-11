@@ -55,7 +55,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -213,18 +212,18 @@ void addJavadoc(String url,boolean optional)
     }
    
    try {
-      URL u = new URL(url);
+      URI u = new URI(url);
       addJavadoc(u,null,optional);
     }
-   catch (MalformedURLException e) { }
+   catch (URISyntaxException e) { }
 }
 
 
 
-void addJavadoc(URL u)			{ addJavadoc(u,null,false); }
+void addJavadoc(URI u)			{ addJavadoc(u,null,false); }
 
 
-synchronized void addJavadoc(URL u,String proj,boolean optional)
+synchronized void addJavadoc(URI u,String proj,boolean optional)
 {
    BoardLog.logD("BDOC","Add javadoc for " + u);
    
@@ -293,11 +292,11 @@ private synchronized void waitForSearches()
 
 
 
-BdocReference findReference(URL u)
+BdocReference findReference(URI u)
 {
    waitForReady();
 
-   String uid = u.toExternalForm();
+   String uid = u.toString();
 
    return all_items.get(uid);
 }
@@ -339,32 +338,32 @@ synchronized void waitForReady()
 /*										*/
 /********************************************************************************/
 
-private void loadJavadoc(URL u,String p,boolean optional)
+private void loadJavadoc(URI u,String p,boolean optional)
 {
-   URL u1;
+   URI u1;
 
    try {
-      u1 = new URL(u,"index-all.html");
+      u1 = new URI(u.getScheme(),u.getAuthority(),u.getPath() + "/index-all.html");
       if (loadJavadocFile(u1,p,optional)) return;
     }
-   catch (MalformedURLException e) {
+   catch (URISyntaxException e) {
       BoardLog.logE("BDOC","Bad javadoc url: " + e);
       return;
     }
 
    for (int i = 1; i <= 27; ++i) {
       try {
-	 u1 = new URL(u,"index-files/index-" + i + ".html");
+	 u1 = new URI(u.getScheme(),u.getAuthority(),u.getPath() + "/index-files/index-" + i + ".html"); 
 	 loadJavadocFile(u1,p,optional);
        }
-      catch (MalformedURLException e) { }
+      catch (URISyntaxException e) { }
     }
 }
 
 
 
 
-private boolean loadJavadocFile(URL u,String p,boolean optional)
+private boolean loadJavadocFile(URI u,String p,boolean optional)
 {
    BoardLog.logD("BDOC","Load documentation from " + u);
    List<BdocReference> refs = BdocHtmlScanner.scanIndex(u,this,p);
@@ -380,7 +379,7 @@ private boolean loadJavadocFile(URL u,String p,boolean optional)
 
 private synchronized void addReference(BdocReference br)
 {
-   all_items.put(br.getReferenceUrl().toExternalForm(),br);
+   all_items.put(br.getReferenceUrl().toString(),br);
    if (ref_names != null) ref_names.add(br.toString());
 }
 
@@ -742,11 +741,11 @@ private void handleRemoteAccess()
 
 private class Searcher implements Runnable {
 
-   private URL base_url;
+   private URI base_url;
    private String for_project;
    private boolean is_optional;
 
-   Searcher(URL u,String p,boolean optional) {
+   Searcher(URI u,String p,boolean optional) {
       base_url = u;
       for_project = p;
       is_optional = optional;

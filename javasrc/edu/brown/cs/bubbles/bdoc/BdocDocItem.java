@@ -40,8 +40,7 @@ import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +62,7 @@ abstract class BdocDocItem implements BdocConstants
 protected StringBuffer		item_description;
 private   String		description_text;
 protected List<SubItemImpl>	sub_items;
-protected URL			ref_url;
+protected URI			ref_url;
 
 private static Map<String,ItemRelation> sub_types;
 
@@ -100,7 +99,7 @@ static {
 /*										*/
 /********************************************************************************/
 
-protected BdocDocItem(URL u)
+protected BdocDocItem(URI u)
 {
    ref_url = u;
 
@@ -160,22 +159,22 @@ List<SubItem> getItems(ItemRelation r)
 /*										*/
 /********************************************************************************/
 
-void loadUrl(URL u) throws IOException
+void loadUrl(URI u) throws IOException
 {
-   BoardLog.logD("BDOC","Work on " + u + " " + u.getRef());
+   BoardLog.logD("BDOC","Work on " + u + " " + u.getFragment());
    scanItem(u);
 }
 
 
-void scanItem(URL u)
+void scanItem(URI u)
 {
    Document doc = null;
    try {
-      doc = Jsoup.parse(u,10000);
+      doc = Jsoup.parse(u.toURL(),10000);
     }
    catch (IOException e) { }
    if (doc == null) return;
-   String id = u.getRef();
+   String id = u.getFragment();
    Element start = null;
    if (id != null) {
       start = doc.getElementById(id);
@@ -348,7 +347,7 @@ protected static class SubItemImpl implements SubItem {
 
    private StringBuffer item_name;
    private String relative_url;
-   private URL item_url;
+   private URI item_url;
    private ItemRelation item_relation;
    private StringBuffer item_desc;
 
@@ -359,15 +358,10 @@ protected static class SubItemImpl implements SubItem {
       item_desc = null;
     }
 
-   void setUrl(URL base,String offset) {
+   void setUrl(URI base,String offset) {
       offset = offset.replace(" ","+");
       relative_url = offset;
-      try {
-	 item_url = new URL(base,offset);
-       }
-      catch (MalformedURLException e) {
-	 BoardLog.logE("BDOC","Bad url " + offset);
-       }
+      item_url = base.resolve(offset);
     }
 
    void setName(String s) {
@@ -387,7 +381,7 @@ protected static class SubItemImpl implements SubItem {
       return item_name.toString();
     }
 
-   @Override public URL getItemUrl()		{ return item_url; }
+   @Override public URI getItemUrl()		{ return item_url; }
    @Override public String getRelativeUrl()	{ return relative_url; }
    @Override public String getDescription() {
       if (item_desc == null) return null;

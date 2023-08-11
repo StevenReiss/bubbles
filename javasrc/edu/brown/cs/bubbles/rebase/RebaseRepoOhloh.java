@@ -205,11 +205,11 @@ private class OhlohFileSource extends BaseFileSource implements RebaseSource {
             int idx2 = url.indexOf("?");
             String nurl = url.substring(0,idx2+1);
             nurl += "fid=" + fid + "&cid=" + cid + "&dl=undefined";
-            file_href = new URL(base,nurl);
+            file_href = base.toURI().resolve(nurl).toURL();
           }
          else file_href = null;
        }
-      catch (MalformedURLException e) {
+      catch (MalformedURLException | URISyntaxException e) {
          file_href = null;
        }
     }

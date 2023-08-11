@@ -279,6 +279,15 @@ public void createPackageDialog(BudaBubble src,Point loc,BuenoType type,
 
 public BudaBubble createProjectDialog(String proj)
 {
+   BumpClient bc = BumpClient.getBump();
+   Element ld = bc.getLanguageData();
+   ld = IvyXml.getChild(ld,"PROJECT");
+   if (ld != null) {
+      BuenoGenericProject gp = new BuenoGenericProject(ld);
+      BudaBubble bbl = gp.createProjectEditorBubble(proj);
+      if (bbl != null) return bbl;
+    }
+   
    BuenoProjectDialog dlg = new BuenoProjectDialog(proj);
    BudaBubble bb = dlg.createProjectEditor();
    return bb;
@@ -527,7 +536,7 @@ private static class TemplateImporter implements BudaConstants.ButtonListener {
       bba.addBubble(bbl,null,pt,BudaConstants.PLACEMENT_USER);
     }
 
-}	// end of inner calss TemplateImporter
+}	// end of inner class TemplateImporter
 
 
 

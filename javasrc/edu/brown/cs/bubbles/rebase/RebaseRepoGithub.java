@@ -146,7 +146,7 @@ private class GithubFileSource extends BaseFileSource implements RebaseSource {
       try {
          String fref = GITHUB_SCHEME + "://" + GITHUB_FILE_AUTHORITY +
             "/" + proj + "/" + rem;
-         file_href = new URL(fref);
+         file_href = new URI(fref).toURL();
         
          project_name = proj.replace("/","@").replace("&","_");
          project_id = proj;
@@ -155,7 +155,7 @@ private class GithubFileSource extends BaseFileSource implements RebaseSource {
         
          s6_source = "GITHUB:" + href;
        }
-      catch (MalformedURLException e) {
+      catch (URISyntaxException | MalformedURLException e) {
          file_href = null;
        }
     }

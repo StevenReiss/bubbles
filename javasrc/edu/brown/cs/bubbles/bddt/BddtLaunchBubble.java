@@ -143,7 +143,7 @@ BumpLaunchConfig getLaunchConfig()
 private void setupPanel()
 {
    doing_load = true;
-   
+
    SwingGridPanel pnl = new SwingGridPanel();
    BoardColors.setColors(pnl,"Bddt.launch.background");
    pnl.beginLayout();
@@ -167,7 +167,7 @@ private void setupPanel()
 	  }
        }
     }
-   
+
    component_items = new HashMap<>();
    JComponent focus = null;
    BumpLaunchType blt = launch_config.getLaunchType();
@@ -176,30 +176,30 @@ private void setupPanel()
       String what = fld.getFieldName();
       String val = launch_config.getAttribute(what);
       switch (fld.getType()) {
-         case STRING :
-            JTextArea jta = pnl.addTextArea(fld.getDescription(),val,fld.getNumRows(),24,this); 
-            cmp = jta;
-            focus = jta;
-            break;
-         case INTEGER  :
-            int ivl = Integer.parseInt(val);
-            SwingNumericField snf = pnl.addNumericField(fld.getDescription(),
-                  fld.getMin(),fld.getMax(),ivl,this);
-            cmp = snf;
-            break;
-         case CHOICE :
-            List<ChoiceItem> vals = getChoiceValues(blt,fld);
-            SwingComboBox<ChoiceItem> cmb = pnl.addChoice(fld.getDescription(),
-                  vals,val,false,this);
-            cmp = cmb;
-            break;
-         case BOOLEAN :
-            boolean bvl = (val == null ? false : "Tt1Yy".indexOf(val.charAt(0)) >= 0);
-            JCheckBox cbx = pnl.addBoolean(fld.getDescription(),bvl,this);
-            cmp = cbx;
-            break;
-         default :
-            break;
+	 case STRING :
+	    JTextArea jta = pnl.addTextArea(fld.getDescription(),val,fld.getNumRows(),24,this);
+	    cmp = jta;
+	    focus = jta;
+	    break;
+	 case INTEGER  :
+	    int ivl = Integer.parseInt(val);
+	    SwingNumericField snf = pnl.addNumericField(fld.getDescription(),
+		  fld.getMin(),fld.getMax(),ivl,this);
+	    cmp = snf;
+	    break;
+	 case CHOICE :
+	    List<ChoiceItem> vals = getChoiceValues(blt,fld);
+	    SwingComboBox<ChoiceItem> cmb = pnl.addChoice(fld.getDescription(),
+		  vals,val,false,this);
+	    cmp = cmb;
+	    break;
+	 case BOOLEAN :
+	    boolean bvl = (val == null ? false : "Tt1Yy".indexOf(val.charAt(0)) >= 0);
+	    JCheckBox cbx = pnl.addBoolean(fld.getDescription(),bvl,this);
+	    cmp = cbx;
+	    break;
+	 default :
+	    break;
        }
       if (cmp != null) component_items.put(cmp, what);
     }
@@ -228,7 +228,7 @@ private void setupPanel()
 private List<ChoiceItem> getChoiceValues(BumpLaunchType lt,BumpLaunchConfigField fld)
 {
    List<ChoiceItem> rslt = new ArrayList<>();
-   
+
    String eval = fld.getEvaluate();
    String arg = fld.getArgField();
    String argv = null;
@@ -243,7 +243,7 @@ private List<ChoiceItem> getChoiceValues(BumpLaunchType lt,BumpLaunchConfigField
       String d = IvyXml.getAttrString(e, "DISPLAY",v);
       rslt.add(new ChoiceItem(d,v));
    }
-   
+
    return rslt;
 }
 
@@ -251,16 +251,16 @@ private static class ChoiceItem {
 
    private String display_value;
    private String use_value;
-   
+
    ChoiceItem(String disp,String use) {
       display_value = disp;
       use_value = use;
    }
-   
+
    @Override public String toString()			{ return display_value; }
-   
+
    public String getValue()				{ return use_value; }
-   
+
    @Override public boolean equals(Object o) {
       if (o instanceof ChoiceItem) return o == this;
       else if (o instanceof String) {
@@ -292,12 +292,12 @@ private void fixButtons()
 private void reload()
 {
    doing_load = true;
-   
+
    if (launch_name != null) launch_name.setText(launch_config.getConfigName());
    if (project_name != null) project_name.setSelectedItem(launch_config.getProject());
    if (log_file != null) log_file.setText(launch_config.getLogFile());
    if (working_directory != null) working_directory.setText(launch_config.getWorkingDirectory());
-   
+
    for (Map.Entry<JComponent,String> ent : component_items.entrySet()) {
       String val = launch_config.getAttribute(ent.getValue());
       JComponent cmp = ent.getKey();
@@ -320,9 +320,9 @@ private void reload()
 	 cmbo.setSelectedItem(val);
       }
    }
-   
+
    recomputeStarts();
-   
+
    doing_load = false;
 }
 
@@ -358,7 +358,7 @@ private String getNewName()
 
 /********************************************************************************/
 /*										*/
-/*	Bubble output methods 							*/
+/*	Bubble output methods							*/
 /*										*/
 /********************************************************************************/
 
@@ -402,7 +402,7 @@ private String getNewName()
 @Override public void actionPerformed(ActionEvent e)
 {
    String cmd = e.getActionCommand();
-   
+
    String itm = component_items.get(e.getSource());
 
    if (cmd.equals("DEBUG")) {
@@ -472,15 +472,17 @@ private String getNewName()
 	 else if (cmp instanceof SwingComboBox<?>) {
 	    SwingComboBox<?> cmbo = (SwingComboBox<?>) cmp;
 	    ChoiceItem ci = (ChoiceItem) cmbo.getSelectedItem();
-	    edit_config = edit_config.setAttribute(itm, ci.getValue());
-	 } 
-         BumpLaunchType lt = edit_config.getLaunchType();
-         for (BumpLaunchConfigField fld : lt.getFields()) {
-            if (fld.getEvaluate() != null && fld.getEvaluate().equals("START") &&
-                  itm.equals(fld.getArgField())) {
-               recomputeStarts();
-             }
-          }
+	    if (ci != null) {
+	       edit_config = edit_config.setAttribute(itm, ci.getValue());
+	     }
+	 }
+	 BumpLaunchType lt = edit_config.getLaunchType();
+	 for (BumpLaunchConfigField fld : lt.getFields()) {
+	    if (fld.getEvaluate() != null && fld.getEvaluate().equals("START") &&
+		  itm.equals(fld.getArgField())) {
+	       recomputeStarts();
+	     }
+	  }
       }
    }
    else if (cmd.equals("Project")) {
@@ -507,7 +509,13 @@ private String getNewName()
 @SuppressWarnings("unchecked")
 private void recomputeStarts()
 {
-   BumpLaunchType lt = edit_config.getLaunchType();
+   BumpLaunchType lt = null;
+   BumpLaunchConfig cfg = edit_config;
+   if (cfg == null) cfg = launch_config;
+   if (cfg != null) {
+      lt = cfg.getLaunchType();
+    }
+
    if (lt != null) {
       for (BumpLaunchConfigField fld : lt.getFields()) {
 	 if (fld.getEvaluate() != null && fld.getEvaluate().equals("START")) {
@@ -520,19 +528,19 @@ private void recomputeStarts()
 	    }
 	    if (combo != null) {
 	       List<ChoiceItem> vals = getChoiceValues(lt,fld);
-	       String val = edit_config.getAttribute(fld.getFieldName());
+	       String val = cfg.getAttribute(fld.getFieldName());
 	       combo.removeAllItems();
-	       String st0 = null;
-	       boolean fnd = false;
+	       ChoiceItem st0 = null;
+	       ChoiceItem sel = null;
 	       for (ChoiceItem itm : vals) {
-		  if (st0 == null) st0 = itm.toString();
+		  if (st0 == null) st0 = itm;
 		  else if (itm.getValue().equals(val)) {
-		     fnd = true;
+		     sel = itm;
 		  }
 		  combo.addItem(itm);
 	       }
-	       if (!fnd) val = st0;
-	       combo.setSelectedItem(val);
+	       if (sel == null) sel = st0;
+	       combo.setSelectedItem(sel);
 	       combo.repaint();
 	    }
 	 }
@@ -542,21 +550,19 @@ private void recomputeStarts()
 
 
 
-
-
 @Override public void undoableEditHappened(UndoableEditEvent e)
 {
    Document doc = (Document) e.getSource();
 
    if (doing_load) return;
-   
+
    for (JComponent cmp : component_items.keySet()) {
       if (cmp instanceof JTextComponent) {
 	 JTextComponent tc = (JTextComponent) cmp;
 	 if (tc.getDocument() == doc) {
 	    String val = tc.getText();
 	    String itm = component_items.get(cmp);
-	    edit_config = edit_config.setAttribute(itm,val);
+	    if (edit_config != null) edit_config = edit_config.setAttribute(itm,val);
 	    break;
 	 }
       }

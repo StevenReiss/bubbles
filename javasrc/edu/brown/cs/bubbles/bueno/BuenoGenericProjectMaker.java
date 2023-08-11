@@ -25,8 +25,8 @@ package edu.brown.cs.bubbles.bueno;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
@@ -112,9 +112,9 @@ boolean checkStatus(BuenoProperties props)
              }
             else if (url.contains(":")) {
                try {
-                  new URL(url);
+                  new URI(url);
                 }
-               catch (MalformedURLException e) { 
+               catch (URISyntaxException e) { 
                   return false;
                 }
              }
@@ -170,7 +170,8 @@ void resetPanel(JPanel jpnl,BuenoProperties props)
             JTextField dfld = (JTextField) pnl.getComponentForLabel(lbl);
             if (dfld != null) {
                File fdir = props.getFile(pnm);
-               dfld.setText(fdir.getPath());
+               if (fdir == null) dfld.setText("");  
+               else dfld.setText(fdir.getPath());
              }
             break;
        }
@@ -196,13 +197,13 @@ JPanel createPanel(BuenoGenericProject bp,BuenoProperties props)
       switch (IvyXml.getAttrString(felt,"TYPE")) {
          case "STRING" :
          case "URL" :
-            TextAction tact = new TextAction(bp,props,pnm);
+            TextAction tact = new TextAction(bp,props,pnm,false);
             pnl.addTextField(
                   IvyXml.getAttrString(felt,"DESCRIPTION"),
                   props.getStringProperty(pnm),32,tact,tact); 
             break;
          case "DIRECTORY" :
-            TextAction dact = new TextAction(bp,props,pnm);
+            TextAction dact = new TextAction(bp,props,pnm,true);
             pnl.addFileField(
                   IvyXml.getAttrString(felt,"DESCRIPTION"),
                   props.getFile(pnm),JFileChooser.DIRECTORIES_ONLY,
@@ -220,16 +221,18 @@ private class TextAction implements ActionListener, UndoableEditListener {
    private BuenoGenericProject for_project;
    private BuenoProperties bueno_props;
    private String prop_name;
+   private boolean for_file;
    
-   TextAction(BuenoGenericProject bp,BuenoProperties props,String nm) {
+   TextAction(BuenoGenericProject bp,BuenoProperties props,String nm,boolean file) {
       for_project = bp;
       bueno_props = props;
       prop_name = nm;
+      for_file = file;
     }
    
    @Override public void actionPerformed(ActionEvent evt) {
       JTextField tfld = (JTextField) evt.getSource();
-      bueno_props.put(prop_name,tfld.getText());
+      setValue(tfld.getText());
       for_project.checkStatus();
     }
    
@@ -240,8 +243,20 @@ private class TextAction implements ActionListener, UndoableEditListener {
          txt = d.getText(0,d.getLength());
        }
       catch (BadLocationException e) { }
-      bueno_props.put(prop_name,txt);
+      setValue(txt);
       for_project.checkStatus();
+    }
+   
+   private void setValue(String txt) {
+      if (txt == null || txt.isEmpty()) {
+         bueno_props.put(prop_name,"");
+       }
+      else if (for_file) {
+         bueno_props.put(prop_name,new File(txt));
+       }
+      else {
+         bueno_props.put(prop_name,txt);
+       }
     }
 }
 

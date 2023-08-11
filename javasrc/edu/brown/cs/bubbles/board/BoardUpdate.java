@@ -62,6 +62,8 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -208,7 +210,7 @@ static void checkUpdate(String jarfile,List<String> javaargs)
       vins.close();
       bubbles_dir = getBubblesDir(ve);
 
-      URL u = new URL(bubbles_dir + VERSION_URL);
+      URL u = new URI(bubbles_dir + VERSION_URL).toURL();
       InputStream uins = u.openConnection(update_proxy).getInputStream();
       Element ue = getVersionXml(uins);
       if (ue == null) return;
@@ -419,11 +421,15 @@ private void startUpdate() throws IOException
 {
    HttpURLConnection.setFollowRedirects(true);  
    File f = File.createTempFile(UPDATER_PREFIX,UPDATER_SUFFIX);
-   OutputStream ots = new BufferedOutputStream(new FileOutputStream(f));
-   URL u = new URL(bubbles_dir + UPDATER_URL);
-   InputStream ins = u.openConnection(update_proxy).getInputStream();
-   copyFile(ins,ots);
-
+   try (OutputStream ots = new BufferedOutputStream(new FileOutputStream(f))) {
+      URL u = new URI(bubbles_dir + UPDATER_URL).toURL();
+      InputStream ins = u.openConnection(update_proxy).getInputStream();
+      copyFile(ins,ots);
+   }
+   catch (URISyntaxException e) {
+      throw new IOException("BAD URI",e);
+   }
+   
    System.err.println("BUBBLES: Starting update");
 
    if (java_args == null) java_args = new ArrayList<String>();
@@ -529,7 +535,7 @@ private void setupUpdate()
       usebackup = true;
 
       prog.setText("Downloading new version of bubbles");
-      URL u = new URL(bubbles_dir + BUBBLES_URL);
+      URL u = new URI(bubbles_dir + BUBBLES_URL).toURL();
       ins = u.openConnection(update_proxy).getInputStream();
       ots = new FileOutputStream(jf0);
       copyFile(ins,ots);
@@ -662,7 +668,7 @@ private Map<String,URL> getPluginData()
    Map<String,URL> rslt = new HashMap<>();
    
    try {
-      URL u = new URL(BUBBLES_DIR + "/plugins.xml");
+      URL u = new URI(BUBBLES_DIR + "/plugins.xml").toURL();
       InputStream uins = u.openConnection().getInputStream();
       Element xml = loadXmlFromStream(uins);
       NodeList nl = xml.getElementsByTagName("PLUGIN");
@@ -671,11 +677,11 @@ private Map<String,URL> getPluginData()
          String urls = pxml.getAttribute("URL");
          int idx = urls.lastIndexOf("/");
          String jar = urls.substring(idx+1);
-         URL pu = new URL(urls);
+         URL pu = new URI(urls).toURL();
          rslt.put(jar,pu);
        }
     }
-   catch (IOException e) {
+   catch (IOException | URISyntaxException e) {
       System.err.println("BOARDUPDATE: Problem getting plugin data");
       e.printStackTrace();
     }

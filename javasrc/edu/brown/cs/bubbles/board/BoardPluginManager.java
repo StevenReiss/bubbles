@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -418,7 +420,7 @@ private static synchronized void getPluginData()
    for (int i = 0; i < 2; ++i) {
       try {
          if (use_http) utxt = utxt.replace("https","http");
-         URL u = new URL(utxt);
+         URL u = new URI(utxt).toURL();
          HttpURLConnection hc = (HttpURLConnection) u.openConnection();
          int sts = hc.getResponseCode();
          if (sts > 300) {
@@ -438,7 +440,7 @@ private static synchronized void getPluginData()
          BoardLog.logE("BOARD","HTTPS Problem getting plugin data: " + e);
          // try again with http (different plugin file -- it also must use http ???
        }
-      catch (IOException e) { 
+      catch (IOException | URISyntaxException e) { 
          BoardLog.logE("BOARD","Problem getting plugin data: " + e);
          e.printStackTrace();
        }
@@ -523,7 +525,13 @@ private static class PluginData implements Comparable<PluginData> {
          p2.deleteOnExit();
        }
    
-      URL u = new URL(plugin_url);
+      URL u = null;
+      try { 
+	 u = new URI(plugin_url).toURL();
+      }
+      catch (URISyntaxException e) {
+	 throw new IOException("BAD URI",e);
+      }
       InputStream uins = u.openConnection().getInputStream();
       IvyFile.copyFile(uins,p1);
       plugin_file = p1;
@@ -582,7 +590,7 @@ private static class PluginData implements Comparable<PluginData> {
       long dlm = plugin_file.lastModified();
       URLConnection uc = null;
       try {
-         URL u = new URL(plugin_url);
+         URL u = new URI(plugin_url).toURL();
          uc = u.openConnection();
          long urldlm = uc.getLastModified();
          if (urldlm < dlm) return;

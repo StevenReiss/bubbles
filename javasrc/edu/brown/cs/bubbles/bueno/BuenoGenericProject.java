@@ -33,10 +33,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.text.BadLocationException;
@@ -44,6 +48,7 @@ import javax.swing.text.Document;
 
 import org.w3c.dom.Element;
 
+import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
@@ -71,6 +76,7 @@ private BuenoGenericProjectMaker create_type;
 private List<BuenoGenericProjectMaker> create_types;
 private BuenoGenericProjectMaker default_type;
 private Map<BuenoGenericProjectMaker,JPanel> panel_map;
+private BuenoGenericProjectEditor project_editor;
       
 private JButton         create_button;
 
@@ -136,7 +142,8 @@ private JPanel getCreationPanel()
 {
    SwingGridPanel pnl = new SwingGridPanel();
    pnl.beginLayout();
-   pnl.addBannerLabel("Bubbles " + IvyXml.getAttrString(project_data,"LANGUAGE"));
+   pnl.addBannerLabel("Bubbles " + IvyXml.getAttrString(project_data,"LANGUAGE") + 
+         " Project Creator");
    String projnm = create_props.getStringProperty(PROJ_PROP_NAME);
    NameAction na = new NameAction();
    pnl.addTextField("Project Name",projnm,24,na,na);
@@ -238,12 +245,14 @@ private class NameAction implements ActionListener, UndoableEditListener {
 private class CreateAction implements ActionListener {
    
    @Override public void actionPerformed(ActionEvent evt) {
-      if (createProject()) {
-         JComponent c = (JComponent) evt.getSource();
-         BudaBubble bb = BudaRoot.findBudaBubble(c);
-         if (bb != null) bb.setVisible(false);
-         // possibly bring up project editor dialog here
+      JComponent c = (JComponent) evt.getSource();
+      BudaBubble bb = BudaRoot.findBudaBubble(c);
+      if (bb != null) bb.setVisible(false);
+      if (!createProject()) {
+         bb.setVisible(true);
        }
+      // possibly bring up project editor dialog here on success
+      
       return;
     }
 }
@@ -259,6 +268,8 @@ private class TypeAction implements ActionListener {
       setVisibilities();
     }
 }
+
+
 
 
 /********************************************************************************/
@@ -295,7 +306,7 @@ private boolean createProject()
    create_props.put(PROJ_PROP_FORMAT_FILE,f2);
    
    BumpClient bc = BumpClient.getBump();
-   if (bc.createProject(pnm,pdir,create_type.getName(),create_props)) {
+   if (!bc.createProject(pnm,pdir,create_type.getName(),create_props)) {
       try {
 	 IvyFile.remove(pdir);
        }
@@ -333,6 +344,97 @@ private boolean gitClone(String giturl,File dir)
    
    return true;
 }
+
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Project editor                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+BudaBubble createProjectEditorBubble(String proj)
+{
+   Element editxml = IvyXml.getChild(project_data,"EDIT");
+   BumpClient bc = BumpClient.getBump();
+   Element pxml = bc.getProjectData(proj);
+   
+   create_props = new BuenoProperties();
+   
+   try {
+      return new EditorBubble(pxml,editxml);
+    }
+   catch (BuenoException e) {
+      return null;
+    }
+}
+
+
+private class EditorBubble extends BudaBubble {
+   
+   EditorBubble(Element projxml,Element editxml) throws BuenoException {
+      JPanel cnts = getEditorPanel(projxml,editxml);
+      setContentPane(cnts);
+    }
+   
+}	// end of inner class CreateBubble
+
+
+private JPanel getEditorPanel(Element projxml,Element editxml)
+{
+   SwingGridPanel pnl = new SwingGridPanel();
+   BoardColors.setColors(pnl,"Bueno.project.editor.background");
+   
+   String pnm = IvyXml.getAttrString(projxml,"NAME");
+   
+   JLabel lbl = new JLabel("Properties for Project " + pnm,SwingConstants.CENTER);
+   BoardColors.setTransparent(lbl,pnl);
+   pnl.addGBComponent(lbl,0,0,0,1,0,0);
+   
+   JTabbedPane tbp = new JTabbedPane(SwingConstants.TOP);
+   BoardColors.setColors(tbp,"Bueno.project.editor.background");
+   
+   project_editor = new BuenoGenericProjectEditor(editxml,projxml);
+   for (Element tabelt : IvyXml.children(editxml,"TAB")) {
+      BuenoGenericEditorPanel ep = project_editor.generateTabPanel(tabelt);
+      JPanel tpnl = ep.getPanel();
+      if (tpnl != null) {
+         String nm = IvyXml.getAttrString(tabelt,"LABEL");
+         tbp.addTab(nm,tpnl);
+       }
+    }
+   
+   pnl.addGBComponent(tbp, 0, 1, 0, 1, 1, 1);
+   
+   Box bx = Box.createHorizontalBox();
+   bx.add(Box.createHorizontalGlue());
+   JButton apply = new JButton("Apply Changes");
+   apply.addActionListener(new EditListener());
+   bx.add(apply);
+   bx.add(Box.createHorizontalGlue());
+   pnl.addGBComponent(bx,0,2,0,1,0,0);
+   
+   Dimension d = pnl.getPreferredSize();
+   if (d.width < 400) {
+      d.width = 400;
+      pnl.setPreferredSize(d);
+    }
+   
+   return pnl; 
+}
+
+
+
+private class EditListener implements ActionListener {
+
+   @Override public void actionPerformed(ActionEvent evt) {
+      project_editor.saveProject();
+    }
+}
+
+
+
 
 
 }       // end of class BuenoGenericProject

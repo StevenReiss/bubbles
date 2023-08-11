@@ -23,7 +23,7 @@
 package edu.brown.cs.bubbles.bdoc;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,12 +43,12 @@ class BdocHtmlScanner implements BdocConstants
 /*                                                                              */
 /********************************************************************************/
 
-static List<BdocReference> scanIndex(URL u,BdocRepository repo,String project)
+static List<BdocReference> scanIndex(URI u,BdocRepository repo,String project)
 {
    List<BdocReference> rslt = new ArrayList<>();
    Document doc = null;
    try {
-      doc = Jsoup.parse(u,10000);
+      doc = Jsoup.parse(u.toURL(),10000);
     }
    catch (IOException e) { }
    if (doc == null) return rslt;

@@ -108,6 +108,8 @@ private ContractPanel		contract_panel;
 private boolean 		force_update;
 private Set<String>		other_projects;
 
+
+
 private static File		last_directory;
 
 private static int	dialog_placement = BudaConstants.PLACEMENT_PREFER |
@@ -115,7 +117,7 @@ private static int	dialog_placement = BudaConstants.PLACEMENT_PREFER |
 						BudaConstants.PLACEMENT_GROUPED;
 
 private static String [] compiler_levels = new String[] {
-   "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "9", 
+   "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "9",
       "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"
 };
 
@@ -151,12 +153,12 @@ BuenoProjectDialog(String proj)
    project_name = proj;
    ref_projects = new ArrayList<String>();
    refby_projects = new HashSet<String>();
-   library_paths = new SwingListSet<BuenoPathEntry>(true);
-   source_paths = new HashSet<BuenoPathEntry>();
-   option_elements = new HashMap<String,String>();
-   option_sets = new HashMap<String,Map<String,String>>();
-   initial_paths = new HashSet<BuenoPathEntry>();
-   pref_entries = new HashSet<PrefEntry>();
+   library_paths = new SwingListSet<>(true);
+   source_paths = new HashSet<>();
+   option_elements = new HashMap<>();
+   option_sets = new HashMap<>();
+   initial_paths = new HashSet<>();
+   pref_entries = new HashSet<>();
    force_update = false;
 
    BumpClient bc = BumpClient.getBump();
@@ -177,7 +179,7 @@ BuenoProjectDialog(String proj)
       refby_projects.add(ref);
     }
 
-   for (Element e : IvyXml.children(xml,"OPTION")) {
+   for (Element e : IvyXml.children(xml,"OPTION")) {                                                                   .M
       String k = IvyXml.getAttrString(e,"NAME");
       String v = IvyXml.getAttrString(e,"VALUE");
       if (k != null && v != null) option_elements.put(k,v);
@@ -232,14 +234,14 @@ public BudaBubble createProjectEditor()
    SwingGridPanel pnl = new SwingGridPanel();
 
    BoardColors.setColors(pnl,"Bueno.project.editor.background");
-   
+
    JLabel lbl = new JLabel("Properties for Project " + project_name,SwingConstants.CENTER);
    BoardColors.setTransparent(lbl,pnl);
    pnl.addGBComponent(lbl,0,0,0,1,0,0);
 
    JTabbedPane tbp = new JTabbedPane(SwingConstants.TOP);
    BoardColors.setColors(tbp,"Bueno.project.editor.background");
-   
+
    tbp.addTab("Libraries",new PathPanel());
    problem_panel = new ProblemPanel();
    tbp.addTab("Compiler",problem_panel);
@@ -334,30 +336,30 @@ private class PathPanel extends SwingGridPanel implements ActionListener, ListSe
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
       if (cmd.equals("New Jar File")) {
-         askForNew(new FileNameExtensionFilter("Jar Files","jar"),JFileChooser.FILES_ONLY);
+	 askForNew(new FileNameExtensionFilter("Jar Files","jar"),JFileChooser.FILES_ONLY);
        }
       else if (cmd.equals("New Directory")) {
-         askForNew(new BinaryFileFilter(),JFileChooser.DIRECTORIES_ONLY);
+	 askForNew(new BinaryFileFilter(),JFileChooser.DIRECTORIES_ONLY);
        }
       else if (cmd.equals("Edit")) {
-         BuenoPathEntry pe = path_display.getSelectedValue();
-         if (pe == null) return;
-         BudaBubble bb = null;
-         if (BoardSetup.getSetup().getLanguage() == BoardLanguage.JS) {
-            bb = new EditJSPathEntryBubble(pe);
-          }
-         else {
-            bb = new EditPathEntryBubble(pe);
-          }
-         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
-         BudaBubble rbb = BudaRoot.findBudaBubble(this);
-         if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement);
+	 BuenoPathEntry pe = path_display.getSelectedValue();
+	 if (pe == null) return;
+	 BudaBubble bb = null;
+	 if (BoardSetup.getSetup().getLanguage() == BoardLanguage.JS) {
+	    bb = new EditJSPathEntryBubble(pe);
+	  }
+	 else {
+	    bb = new EditPathEntryBubble(pe);
+	  }
+	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
+	 BudaBubble rbb = BudaRoot.findBudaBubble(this);
+	 if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement);
        }
       else if (cmd.equals("Delete")) {
-         for (BuenoPathEntry pe : path_display.getSelectedValuesList()) {
-            library_paths.removeElement(pe);
-          }
-         force_update = true;
+	 for (BuenoPathEntry pe : path_display.getSelectedValuesList()) {
+	    library_paths.removeElement(pe);
+	  }
+	 force_update = true;
        }
       else BoardLog.logE("BUENO","Unknown path panel command " + cmd);
     }
@@ -419,25 +421,25 @@ private class NewPathEntryBubble extends BudaBubble implements ActionListener {
       String cmd = evt.getActionCommand();
       File dir = file_chooser.getCurrentDirectory();
       if (dir != null && !dir.equals(last_directory)) {
-         last_directory = dir;
-         BoardProperties bp = BoardProperties.getProperties("Bueno");
-         String dp = dir.getAbsolutePath();
-         bp.setProperty("Bueno.library.directory",dp);
-         try {
-            bp.save();
-          }
-         catch (IOException e) { }
+	 last_directory = dir;
+	 BoardProperties bp = BoardProperties.getProperties("Bueno");
+	 String dp = dir.getAbsolutePath();
+	 bp.setProperty("Bueno.library.directory",dp);
+	 try {
+	    bp.save();
+	  }
+	 catch (IOException e) { }
        }
-   
+
       if (cmd.equals(JFileChooser.APPROVE_SELECTION)) {
-         closeWindow(this);
-         for (File f : file_chooser.getSelectedFiles()) {
-            BuenoPathEntry pe = new BuenoPathEntry(f,PathType.LIBRARY,false);
-            library_paths.addElement(pe);
-          }
+	 closeWindow(this);
+	 for (File f : file_chooser.getSelectedFiles()) {
+	    BuenoPathEntry pe = new BuenoPathEntry(f,PathType.LIBRARY,false);
+	    library_paths.addElement(pe);
+	  }
        }
       else if (cmd.equals(JFileChooser.CANCEL_SELECTION)) {
-         closeWindow(this);
+	 closeWindow(this);
        }
     }
 }	// end of inner class NewPathEntryBubble
@@ -454,13 +456,7 @@ private static class BinaryFileFilter extends FileFilter {
       return true;
     }
 
-
-
 }	// end of inner class BinaryFileFilter
-
-
-
-
 
 
 
@@ -480,17 +476,17 @@ private static class EditPathEntryBubble extends BudaBubble implements ActionLis
       pnl.beginLayout();
       pnl.addBannerLabel("Edit Project Path Entry");
       switch (for_path.getPathType()) {
-         case LIBRARY :
-            pnl.addFileField("Library",for_path.getBinaryPath(),0,this,null);
-            pnl.addFileField("Source Attachment",for_path.getSourcePath(),0,this,null);
-            pnl.addFileField("Java Doc Attachment",for_path.getJavadocPath(),0,this,null);
-            break;
-         default:
-            break;
+	 case LIBRARY :
+	    pnl.addFileField("Library",for_path.getBinaryPath(),0,this,null);
+	    pnl.addFileField("Source Attachment",for_path.getSourcePath(),0,this,null);
+	    pnl.addFileField("Java Doc Attachment",for_path.getJavadocPath(),0,this,null);
+	    break;
+	 default:
+	    break;
        }
       pnl.addBoolean("Exported",for_path.isExported(),this);
       pnl.addBoolean("Optional",for_path.isOptional(),this);
-   
+
       pnl.addBottomButton("Close","Close",this);
       pnl.addBottomButtons();
       setContentPane(pnl);
@@ -531,7 +527,7 @@ private static class EditPathEntryBubble extends BudaBubble implements ActionLis
 private static class EditJSPathEntryBubble extends BudaBubble implements ActionListener {
 
    private BuenoPathEntry	for_path;
-   
+
    EditJSPathEntryBubble(BuenoPathEntry pp) {
       for_path = pp;
       SwingGridPanel pnl = new SwingGridPanel();
@@ -540,32 +536,32 @@ private static class EditJSPathEntryBubble extends BudaBubble implements ActionL
       pnl.addFileField("Directory",for_path.getSourcePath(),JFileChooser.DIRECTORIES_ONLY,null,null);
       pnl.addBoolean("Excluded",for_path.isExcluded(),this);
       pnl.addBoolean("Nested",for_path.isNested(),this);
-      
+
       pnl.addBottomButton("Close","Close",this);
       pnl.addBottomButtons();
       setContentPane(pnl);
     }
-   
+
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
       if (cmd.equals("Directory")) {
-         JTextField tf = (JTextField) evt.getSource();
-         for_path.setSourcePath(tf.getText());
+	 JTextField tf = (JTextField) evt.getSource();
+	 for_path.setSourcePath(tf.getText());
        }
       else if (cmd.equals("Excluded")) {
-         JCheckBox cbx = (JCheckBox) evt.getSource();
-         if (cbx.isSelected()) for_path.setType(PathType.EXCLUDE);
-         else if (for_path.getPathType() != PathType.LIBRARY) for_path.setType(PathType.SOURCE);
+	 JCheckBox cbx = (JCheckBox) evt.getSource();
+	 if (cbx.isSelected()) for_path.setType(PathType.EXCLUDE);
+	 else if (for_path.getPathType() != PathType.LIBRARY) for_path.setType(PathType.SOURCE);
        }
       else if (cmd.equals("Nested")) {
-         JCheckBox cbx = (JCheckBox) evt.getSource();
-         for_path.setNested(cbx.isSelected());
+	 JCheckBox cbx = (JCheckBox) evt.getSource();
+	 for_path.setNested(cbx.isSelected());
        }
       else if (cmd.equals("Close")) {
-         setVisible(false);
+	 setVisible(false);
        }
     }
-   
+
 }	// end of inner class EditJSPathEntryBubble
 
 
@@ -698,11 +694,11 @@ private class ProblemPanel extends SwingGridPanel implements ActionListener {
       addChoice("Option Set",option_sets.keySet(),current_optionset,this);
       addBoolean("Warnings as Errors",optional_error,this);
       addChoice("Java Source Version",compiler_levels,
-            option_elements.get(SOURCE_OPTION),this);
+	    option_elements.get(SOURCE_OPTION),this);
       addChoice("Java Target Version",compiler_levels,
-            option_elements.get(TARGET_OPTION),this);
+	    option_elements.get(TARGET_OPTION),this);
       addChoice("Java Compliance Version",compiler_levels,
-               option_elements.get(COMPLIANCE_OPTION),this);
+	       option_elements.get(COMPLIANCE_OPTION),this);
     }
 
    boolean needsUpdate()			{ return needs_update; }
@@ -710,46 +706,46 @@ private class ProblemPanel extends SwingGridPanel implements ActionListener {
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
       if (cmd.equals("Option Set")) {
-         JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
-         String nopt = (String) cbx.getSelectedItem();
-         if (nopt == null || nopt.equals(current_optionset)) return;
-         current_optionset = nopt;
-         Map<String,String> oval = option_sets.get(nopt);
-         for (Map.Entry<String,String> ent : oval.entrySet()) {
-            option_elements.put(ent.getKey(),ent.getValue());
-          }
-         needs_update = true;
+	 JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
+	 String nopt = (String) cbx.getSelectedItem();
+	 if (nopt == null || nopt.equals(current_optionset)) return;
+	 current_optionset = nopt;
+	 Map<String,String> oval = option_sets.get(nopt);
+	 for (Map.Entry<String,String> ent : oval.entrySet()) {
+	    option_elements.put(ent.getKey(),ent.getValue());
+	  }
+	 needs_update = true;
        }
       else if (cmd.equals("Warnings as Errors")) {
-         JCheckBox cbx = (JCheckBox) evt.getSource();
-         boolean fg = cbx.isSelected();
-         if (fg == optional_error) return;
-         optional_error = fg;
-         needs_update = true;
+	 JCheckBox cbx = (JCheckBox) evt.getSource();
+	 boolean fg = cbx.isSelected();
+	 if (fg == optional_error) return;
+	 optional_error = fg;
+	 needs_update = true;
        }
       else if (cmd.equals("Java Source Version")) {
-         JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
-         String nval = (String) cbx.getSelectedItem();
-         String oval = option_elements.get(SOURCE_OPTION);
-         if (nval == null || nval.equals(oval)) return;
-         option_elements.put(SOURCE_OPTION,nval);
-         needs_update = true;
+	 JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
+	 String nval = (String) cbx.getSelectedItem();
+	 String oval = option_elements.get(SOURCE_OPTION);
+	 if (nval == null || nval.equals(oval)) return;
+	 option_elements.put(SOURCE_OPTION,nval);
+	 needs_update = true;
        }
       else if (cmd.equals("Java Target Version")) {
-         JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
-         String nval = (String) cbx.getSelectedItem();
-         String oval = option_elements.get(TARGET_OPTION);
-         if (nval == null || nval.equals(oval)) return;
-         option_elements.put(TARGET_OPTION,nval);
-         needs_update = true;
+	 JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
+	 String nval = (String) cbx.getSelectedItem();
+	 String oval = option_elements.get(TARGET_OPTION);
+	 if (nval == null || nval.equals(oval)) return;
+	 option_elements.put(TARGET_OPTION,nval);
+	 needs_update = true;
        }
       else if (cmd.equals("Java Compliance Version")) {
-         JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
-         String nval = (String) cbx.getSelectedItem();
-         String oval = option_elements.get(COMPLIANCE_OPTION);
-         if (nval == null || nval.equals(oval)) return;
-         option_elements.put(COMPLIANCE_OPTION,nval);
-         needs_update = true;
+	 JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
+	 String nval = (String) cbx.getSelectedItem();
+	 String oval = option_elements.get(COMPLIANCE_OPTION);
+	 if (nval == null || nval.equals(oval)) return;
+	 option_elements.put(COMPLIANCE_OPTION,nval);
+	 needs_update = true;
        }
       else BoardLog.logE("BUENO","Unknown problem panel command " + cmd);
     }
@@ -874,17 +870,17 @@ private class ContractPanel extends SwingGridPanel implements ActionListener {
 //    cofoja_button.setEnabled(!option_elements.containsKey(COFOJA_OPTION));
 //    cofoja_button.addActionListener(this);
 //    addLabellessRawComponent("COFOJA",cofoja_button,true,false);
-   
+
       junit_button = new JButton("Enable JUNIT Testing");
       junit_button.setEnabled(!option_elements.containsKey(JUNIT_OPTION));
       junit_button.addActionListener(this);
       addLabellessRawComponent("JUNIT",junit_button,true,false);
-   
+
       annot_button = new JButton("Enable Type Annotations");
       annot_button.setEnabled(!option_elements.containsKey(TYPE_ANNOT_OPTION));
       annot_button.addActionListener(this);
       addLabellessRawComponent("ANNOT",annot_button,true,false);
-   
+
       assert_button = new JCheckBox("Enable Assertions");
       assert_button.setSelected(option_elements.containsKey(ASSERT_OPTION));
       assert_button.addActionListener(this);
@@ -928,7 +924,7 @@ private class ReferencesPanel extends SwingGridPanel implements ActionListener {
       beginLayout();
       use_refs = new HashSet<String>(ref_projects);
       for (String s : other_projects) {
-         addBoolean(s,use_refs.contains(s),this);
+	 addBoolean(s,use_refs.contains(s),this);
        }
     }
 
@@ -948,7 +944,7 @@ private class ReferencesPanel extends SwingGridPanel implements ActionListener {
 
 /********************************************************************************/
 /*										*/
-/*	<comment here>								*/
+/*	Check for changes							*/
 /*										*/
 /********************************************************************************/
 
@@ -972,70 +968,70 @@ private class ProjectEditor implements ActionListener {
       Set<BuenoPathEntry> dels = new HashSet<BuenoPathEntry>(initial_paths);
       dels.removeAll(source_paths);
       boolean chng = false;
-   
+
       if (contract_panel.setupCofoja()) {
-         setupContractsForJava();
+	 setupContractsForJava();
        }
       if (contract_panel.setupJunit()) {
-         setupJunit();
+	 setupJunit();
        }
       if (contract_panel.setupAnnoations()) {
-         setupAnnotations();
+	 setupAnnotations();
        }
       option_elements.put(ASSERT_OPTION,Boolean.toString(contract_panel.enableAssertions()));
-   
+
       IvyXmlWriter xw = new IvyXmlWriter();
       xw.begin("PROJECT");
       xw.field("NAME",project_name);
       for (BuenoPathEntry pe : library_paths) {
-         pe.outputXml(xw,false);
-         dels.remove(pe);
+	 pe.outputXml(xw,false);
+	 dels.remove(pe);
        }
       for (BuenoPathEntry pe : dels) {
-         pe.outputXml(xw,true);
+	 pe.outputXml(xw,true);
        }
-   
+
       for (Map.Entry<String,String> ent : option_elements.entrySet()) {
-         String k = ent.getKey();
-         String v = ent.getValue();
-         if (k == null || v == null) continue;
-         if (start_options != null) {
-            String ov = start_options.get(k);
-            if (v.equals(ov)) continue;
-          }
-         chng = true;
-         xw.begin("OPTION");
-         xw.field("NAME",k);
-         xw.field("VALUE",v);
-         xw.end("OPTION");
+	 String k = ent.getKey();
+	 String v = ent.getValue();
+	 if (k == null || v == null) continue;
+	 if (start_options != null) {
+	    String ov = start_options.get(k);
+	    if (v.equals(ov)) continue;
+	  }
+	 chng = true;
+	 xw.begin("OPTION");
+	 xw.field("NAME",k);
+	 xw.field("VALUE",v);
+	 xw.end("OPTION");
        }
-   
+
       for (PrefEntry pe : pref_entries) {
-          pe.outputXml(xw);
-          chng = true;
+	  pe.outputXml(xw);
+	  chng = true;
        }
-   
+
       if (references_panel != null) {
-         int ct = ref_projects.size();
-         xw.begin("REFERENCES");
-         for (String s : references_panel.getUsedReferences()) {
-            xw.textElement("PROJECT",s);
-            if (!ref_projects.contains(s)) chng = true;
-            --ct;
-          }
-         if (ct != 0) chng = true;
-         xw.end("REFERENCES");
+	 int ct = ref_projects.size();
+	 xw.begin("REFERENCES");
+	 for (String s : references_panel.getUsedReferences()) {
+	    xw.textElement("PROJECT",s);
+	    if (!ref_projects.contains(s)) chng = true;
+	    --ct;
+	  }
+	 if (ct != 0) chng = true;
+	 xw.end("REFERENCES");
        }
-   
+
       xw.end("PROJECT");
-   
+
       closeWindow(problem_panel);
-   
+
       BumpClient bc = BumpClient.getBump();
-   
+
       if (chng || anythingChanged())
-         bc.editProject(project_name,xw.toString());
-   
+	 bc.editProject(project_name,xw.toString());
+
       force_update = false;
     }
 

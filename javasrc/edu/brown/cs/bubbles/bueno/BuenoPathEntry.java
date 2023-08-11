@@ -55,7 +55,6 @@ private boolean is_optional;
 private boolean is_nested;
 private boolean is_new;
 private boolean is_modified;
-private boolean is_excluded;
 private int	   entry_id;
 
 private static BoardLanguage cur_language = null;
@@ -122,6 +121,21 @@ BuenoPathEntry(File f,PathType typ,boolean nest)
 }
 
 
+BuenoPathEntry(String pat,PathType typ)
+{
+   path_type = typ;
+   source_path = pat;
+   output_path = null;
+   binary_path = null;
+   is_exported = false;
+   is_optional = false;
+   is_nested = false;
+   is_new = true;
+   is_modified = true;
+   entry_id = 0;
+}
+
+
 
 /********************************************************************************/
 /*                                                                              */
@@ -136,11 +150,30 @@ String getSourcePath()				{ return source_path; }
 String getJavadocPath()			{ return javadoc_path; }
 boolean isExported() 				{ return is_exported; }
 boolean isOptional() 				{ return is_optional; }
-boolean isExcluded()                            { return is_excluded; }
-boolean hasChanged() 				{ return is_new || is_modified; }
+boolean isExcluded()                            { return path_type == PathType.EXCLUDE; }
+boolean isIncluded()                            { return path_type == PathType.INCLUDE; }
+boolean hasChanged()
+{
+   boolean chng = is_new || is_modified;
+   is_new = false;
+   is_modified = false;
+   return chng;
+}
 boolean isLibrary()                             { return path_type == PathType.LIBRARY; }
 boolean isRecursive()                           { return is_nested; }
+
+void setExcluded(boolean fg) 
+{
+   if (fg) setType(PathType.EXCLUDE);
+   else setType(PathType.INCLUDE);
+}
   
+void setIncluded(boolean fg) 
+{
+   if (fg) setType(PathType.INCLUDE);
+   else setType(PathType.EXCLUDE);
+}
+
 
 
 void setBinaryPath(String p)
@@ -204,6 +237,9 @@ void setNested(boolean fg)
 {
    int cmp = toString().compareTo(pe.toString());
    if (cmp == 0) {
+      if (binary_path == null && pe.binary_path == null) return cmp;
+      if (binary_path == null) return -1;
+      if (pe.binary_path == null) return 1;
       cmp = binary_path.compareTo(pe.binary_path);
     }
    return cmp;

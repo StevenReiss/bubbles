@@ -33,7 +33,7 @@ package edu.brown.cs.bubbles.bdoc;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 
 
 
@@ -47,7 +47,7 @@ class BdocDocField extends BdocDocItem implements BdocConstants
 /*										*/
 /********************************************************************************/
 
-BdocDocField(URL u) throws IOException
+BdocDocField(URI u) throws IOException
 {
    super(u);
 

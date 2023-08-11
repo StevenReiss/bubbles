@@ -800,7 +800,7 @@ public void save() throws IOException
 
 private void loadProperties(String id)
 {
-   // lock and unlock properites
+   // lock and unlock properties
    file_locker.lock();
    try {
       prop_file = loadIfPossible(id);

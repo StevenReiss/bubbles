@@ -52,6 +52,8 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -451,7 +453,7 @@ private Element sendMessageToS6(String cnts)
    Element rslt = null;
 
    try {
-      URL u = new URL("http://conifer2.cs.brown.edu/s6web/dosearch1.php");
+      URL u = new URI("http://conifer2.cs.brown.edu/s6web/dosearch1.php").toURL();
       HttpURLConnection huc = (HttpURLConnection) u.openConnection();
       huc.setDoInput(true);
       huc.setDoOutput(true);
@@ -468,7 +470,7 @@ private Element sendMessageToS6(String cnts)
       rslt = IvyXml.loadXmlFromStream(ins);
       ins.close();
     }
-   catch (IOException e) {
+   catch (IOException | URISyntaxException e) {
       BoardLog.logD("BUCS","Error sending to S6",e);
       return null;
     }

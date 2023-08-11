@@ -68,6 +68,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -405,8 +407,8 @@ private String checkVersionExists(String ver,String k1,String k2,String id)
    String v = ver.toLowerCase();
    url += v + "/" + k1 + "/eclipse-dsl-" + v + k2 + id + ".tar.gz";
    try {
-      URL u = new URL(url);
-      URLConnection uc = u.openConnection();
+      URI u = new URI(url);
+      URLConnection uc = u.toURL().openConnection();
       uc.getDate();
       long lm = uc.getLastModified();
       int len = uc.getContentLength();
@@ -741,8 +743,8 @@ private class EclipseDownloader extends Thread {
       String urltxt = eclipse_versions.get(eclipse_version);
       if (urltxt != null) {
          try {
-            URL url = new URL(urltxt);
-            URLConnection uc = url.openConnection();
+            URI url = new URI(urltxt);
+            URLConnection uc = url.toURL().openConnection();
             InputStream ins = uc.getInputStream();
             File fd = eclipse_directory;
             if (fd.getName().equals("eclipse")) {
@@ -762,11 +764,11 @@ private class EclipseDownloader extends Thread {
             catch (IOException ex) { }
             progress_panel.handleResult(false);
           }
-         catch (IOException e) {
+         catch (IOException | URISyntaxException e) {
             System.err.println("Problem installing: " + e);
             e.printStackTrace();
             progress_panel.handleResult(false);
-          }
+         }
        }
     }
 
@@ -983,8 +985,8 @@ private class Downloader extends Thread {
          return;
        }
       try {
-         URL u = new URL(BUBBLES_URL);
-         URLConnection conn = u.openConnection();
+         URI u = new URI(BUBBLES_URL);
+         URLConnection conn = u.toURL().openConnection();
          BufferedInputStream ins = new BufferedInputStream(conn.getInputStream());
          try (OutputStream ots = new FileOutputStream(f)) {
             long len = 0;
@@ -1118,10 +1120,10 @@ private static class SplashImage extends JPanel {
        }
       else {
 	 try {
-	    u1 = new URL(url);
+	    u1 = new URI(url).toURL();
 	    icn = new ImageIcon(u1,id);
 	  }
-	 catch (MalformedURLException e) {
+	 catch (MalformedURLException | URISyntaxException e) {
 	    return null;
 	  }
        }

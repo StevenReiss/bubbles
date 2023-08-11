@@ -67,6 +67,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -748,8 +750,8 @@ private void setupPackage(String nm,String load)
 	    String path = tok.nextToken();
 	    if (path.startsWith("/")) {
 	       String pnm = "jar:file:" + path + "!/";
-	       URL u = new URL(pnm);
-	       urls.add(u);
+	       URI u = new URI(pnm);
+	       urls.add(u.toURL());
 	     }
 	    else if (path.startsWith("lib/")) {
 	       String path1 = path.substring(4);
@@ -760,8 +762,8 @@ private void setupPackage(String nm,String load)
 		}
 	       if (path2 != null) {
 		  String pnm = "jar:file:" + path2 + "!/";
-		  URL u = new URL(pnm);
-		  urls.add(u);
+		  URI u = new URI(pnm);
+		  urls.add(u.toURL());
 		}
 	       else {
 		  URL ustr = cldr.getResource(path1);
@@ -779,6 +781,9 @@ private void setupPackage(String nm,String load)
 	 URL [] urlarr = urls.toArray(new URL[urls.size()]);
 	 cldr = new URLClassLoader(urlarr,cldr);
 	 class_loaders.put(nm,cldr);
+       }
+      catch (URISyntaxException e) {
+	 BoardLog.logE("BEMA","Can't load jar file " + load);
        }
       catch (MalformedURLException e) {
 	 BoardLog.logE("BEMA","Can't load jar file " + load);
