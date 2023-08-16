@@ -41,6 +41,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -61,6 +62,7 @@ import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
+import edu.brown.cs.ivy.swing.SwingListPanel;
 import edu.brown.cs.ivy.swing.SwingListSet;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -429,20 +431,21 @@ private class SourcePanel extends SwingGridPanel implements ActionListener, List
        }
       
       int y = 0;
-      JButton bn = new JButton("New Source Directory");
-      bn.addActionListener(this);
-      addGBComponent(bn,1,y++,1,1,0,0);
-      if (IvyXml.getAttrBool(tab_xml,"EXCLUDE")) {
-         bn = new JButton("New Source Pattern");
+      if (IvyXml.getAttrBool(tab_xml,"MULTIPLE")) {
+         JButton bn = new JButton("New Source Directory");
          bn.addActionListener(this);
          addGBComponent(bn,1,y++,1,1,0,0);
        }
       edit_button = new JButton("Edit");
       edit_button.addActionListener(this);
       addGBComponent(edit_button,1,y++,1,1,0,0);
-      delete_button = new JButton("Delete");
-      delete_button.addActionListener(this);
-      addGBComponent(delete_button,1,y++,1,1,0,0);
+      if (IvyXml.getAttrBool(tab_xml,"MULTIPLE")) {
+         delete_button = new JButton("Delete");
+         delete_button.addActionListener(this);
+         addGBComponent(delete_button,1,y++,1,1,0,0);
+       }
+      else delete_button = null;
+      
       ++y;
       
       path_display = new JList<>(panel_paths);
@@ -453,25 +456,13 @@ private class SourcePanel extends SwingGridPanel implements ActionListener, List
    
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
-      if (cmd.equals("New Source Pattern")) {
-         BudaBubble bb = new NewSourcePatternBubble();
-         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
-         BudaBubble rbb = BudaRoot.findBudaBubble(this);
-         if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement);
-       }
-      else if (cmd.equals("New Source Directory")) {
+      if (cmd.equals("New Source Directory")) {
          askForNew(new BinaryFileFilter(),JFileChooser.DIRECTORIES_ONLY);
        }
       else if (cmd.equals("Edit")) {
          BuenoPathEntry pe = path_display.getSelectedValue();
          if (pe == null) return;
-         BudaBubble bb = null;
-         if (pe.isExcluded() || pe.isIncluded()) {
-            bb = new EditSourcePatternBubble(pe);
-          }
-         else {
-            bb = new EditSourcePathEntryBubble(pe);
-          }
+         BudaBubble bb = new EditSourcePathEntryBubble(pe);
          BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
          BudaBubble rbb = BudaRoot.findBudaBubble(this);
          if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement);
@@ -503,7 +494,8 @@ private class SourcePanel extends SwingGridPanel implements ActionListener, List
       boolean edok = false;
       if (sels != null && !sels.isEmpty()) edok = true;
       edit_button.setEnabled(edok);
-      delete_button.setEnabled(sels.size() >= 1);
+      boolean candel = sels.size() >= 1 && panel_paths.getSize() > 1;
+      if (delete_button != null) delete_button.setEnabled(candel);
     }
 
 }	// end of inner class SourcePanel
@@ -511,62 +503,33 @@ private class SourcePanel extends SwingGridPanel implements ActionListener, List
 
 
 
-private class NewSourcePatternBubble extends BudaBubble implements ActionListener {
-
-   private JTextField pattern_field;
-   private JComboBox<PatternOptions> option_field;
-
-   NewSourcePatternBubble() {
-      SwingGridPanel pnl = new SwingGridPanel();
-      pnl.addTextField("Pattern",null,24,null,null);
-      if (IvyXml.getAttrBool(tab_xml,"EXCLUDE") && IvyXml.getAttrBool(tab_xml,"INCLUDE")) {
-         option_field = pnl.addChoice("Type",PatternOptions.EXCLUDE,this);
-       }
-      pnl.addBottomButton("ADD PATTERN","ADD PATTERN",this);
-      pnl.addBottomButton("CANCEL","CANCEL",this);
-      pnl.addBottomButtons();
-      
-      setContentPane(pnl);
-    }
-   
-   @Override public void actionPerformed(ActionEvent evt) {
-      String cmd = evt.getActionCommand();
-      if (cmd.equals("CANCEL")) {
-         closeWindow(this);
-       }
-      else if (cmd.startsWith("ADD")) {
-         closeWindow(this);
-         String txt = pattern_field.getText();
-         if (txt.isEmpty()) return;
-         PathType pt = PathType.EXCLUDE;
-         if (option_field != null) {
-            if (option_field.getSelectedItem() == PatternOptions.INCLUDE) pt = PathType.INCLUDE;
-          }
-         else if (IvyXml.getAttrBool(tab_xml,"INCLUDE")) pt = PathType.INCLUDE;
-         BuenoPathEntry pe = new BuenoPathEntry(txt,pt);
-         panel_paths.addElement(pe);
-         base_paths.add(pe);
-         force_update = true;
-       }
-    }
-   
-}	// end of inner class NewSourcePatternBubble
-
-
-
 private class EditSourcePathEntryBubble extends BudaBubble implements ActionListener {
 
-   private BuenoPathEntry	for_path;
+   private BuenoPathEntry for_path;
+   private SwingListSet<SourcePattern> source_patterns;
+   private PatternPanel pattern_panel;
+  
    
    EditSourcePathEntryBubble(BuenoPathEntry pp) {
       for_path = pp;
+      source_patterns = new SwingListSet<>();
+      for (String s : pp.getExcludes()) {
+         source_patterns.addElement(new SourcePattern(s,true));
+       }
+      for (String s : pp.getIncludes()) {
+         source_patterns.addElement(new SourcePattern(s,false));
+       }
+      
       SwingGridPanel pnl = new SwingGridPanel();
       pnl.beginLayout();
-      pnl.addBannerLabel("Edit Project Source Entry");
+      pnl.addBannerLabel("Edit Project Source Entry"); 
       pnl.addFileField("Directory",for_path.getSourcePath(),JFileChooser.DIRECTORIES_ONLY,null,null);
       if (IvyXml.getAttrBool(tab_xml,"NEST")) {
          pnl.addBoolean("Nested",for_path.isNested(),this);
        }
+      pattern_panel = new PatternPanel(for_path,source_patterns);
+      pnl.addLabellessRawComponent("PATTERNS",pattern_panel,true,true); 
+
       pnl.addBottomButton("Close","Close",this);
       pnl.addBottomButtons();
       setContentPane(pnl);
@@ -587,49 +550,127 @@ private class EditSourcePathEntryBubble extends BudaBubble implements ActionList
        }
     }
    
-}	// end of inner class EditJSPathEntryBubble
+}	// end of inner class EditSourcePathEntryBubble
 
 
 
-
-
-private class EditSourcePatternBubble extends BudaBubble implements ActionListener {
-
-   private BuenoPathEntry	for_path;
+private class SourcePattern {
    
-   EditSourcePatternBubble(BuenoPathEntry pp) {
-      for_path = pp;
-      SwingGridPanel pnl = new SwingGridPanel();
-      pnl.beginLayout();
-      pnl.addBannerLabel("Edit Project Source Pattern");
-      pnl.addTextField("Pattern",for_path.getSourcePath(),24,this,null);
+   private boolean is_exclude;
+   private String source_pattern;
+   
+   SourcePattern(String pat,boolean exc) {
+      source_pattern = pat;
+      is_exclude = exc;
+    }
+   
+   boolean isExclude()                          { return is_exclude; }
+   String getPattern()                          { return source_pattern; }
+   
+   @Override public int hashCode() {
+      int hc = source_pattern.hashCode();
+      if (is_exclude) hc += 100;
+      return hc;
+    }   
+   
+   @Override public boolean equals(Object v) {
+      if (v instanceof SourcePattern) {
+         SourcePattern sv = (SourcePattern) v;
+         return sv.source_pattern.equals(source_pattern) && sv.is_exclude == is_exclude;
+       }
+      return false;
+    }
+   
+   @Override public String toString() {
+      String what = is_exclude ? "Exclude" : "Include";
+      return "[" + what + "]  " + source_pattern;
+    }
+   
+}       // end of inner class SourcePattern
+
+
+
+private class PatternPanel extends SwingListPanel<SourcePattern> {
+   
+   private BuenoPathEntry for_path;
+   private SwingListSet<SourcePattern> source_patterns;
+   
+   PatternPanel(BuenoPathEntry path,SwingListSet<SourcePattern> pats) {
+      super(pats);
+      for_path = path;
+    }
+   
+   protected SourcePattern createNewItem() {
+      SourcePatternPanel spnl = new SourcePatternPanel(null);
+      int sts = JOptionPane.showOptionDialog(this,spnl,"New Source Pattern",
+            JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,
+            null,null,null);
+      if (sts == JOptionPane.OK_OPTION) {
+         SourcePattern npat = spnl.getResult();
+         source_patterns.addElement(npat);
+         for_path.addPattern(npat.getPattern(),npat.isExclude());
+         return npat;
+       }
+      return null;
+    }
+   
+   protected SourcePattern editItem(Object opat) {
+      if (opat instanceof SourcePattern) {
+         SourcePattern pat = (SourcePattern) opat;
+         SourcePatternPanel spnl = new SourcePatternPanel(pat);
+         int sts = JOptionPane.showOptionDialog(this,spnl,"Edit Source Pattern",
+               JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,
+               null,null,null);
+         if (sts == JOptionPane.OK_OPTION) {
+            SourcePattern npat = spnl.getResult();
+            source_patterns.removeElement(pat);
+            for_path.removePattern(pat.getPattern(),pat.isExclude());
+            source_patterns.addElement(npat);
+            for_path.addPattern(npat.getPattern(),npat.isExclude());
+            return npat;
+          }
+       }
+      return null;
+    }
+   
+   protected SourcePattern deleteItem(Object opat) {
+      if (opat != null && opat instanceof SourcePattern) {
+         SourcePattern pat = (SourcePattern) opat;
+         for_path.removePattern(pat.getPattern(),pat.isExclude());
+       }
+      return null;
+    }
+   
+}       // end of inner class PatternPanel
+
+
+
+private class SourcePatternPanel extends SwingGridPanel {
+
+   private JTextField pattern_field;
+   private JComboBox<PatternOptions> option_field;
+   
+   SourcePatternPanel(SourcePattern pat) {
+      String txt = pat == null ? null : pat.getPattern();
+      pattern_field = addTextField("Pattern",txt,24,null,null);
+      PatternOptions typ = PatternOptions.EXCLUDE;
+      if (pat != null && !pat.isExclude()) typ = PatternOptions.INCLUDE;
       if (IvyXml.getAttrBool(tab_xml,"EXCLUDE") && IvyXml.getAttrBool(tab_xml,"INCLUDE")) {
-         pnl.addChoice("Type",PatternOptions.EXCLUDE,this);
+         option_field =  addChoice("Type",typ,null);
        }
-      pnl.addBottomButton("Close","Close",this);
-      pnl.addBottomButtons();
-      setContentPane(pnl);
     }
    
-   @Override public void actionPerformed(ActionEvent evt) {
-      String cmd = evt.getActionCommand();
-      if (cmd.equals("Pattern")) {
-         JTextField tf = (JTextField) evt.getSource();
-         for_path.setSourcePath(tf.getText());
+   SourcePattern getResult() {
+      String txt = pattern_field.getText().trim();
+      if (txt.isEmpty()) return null;
+      boolean exl = true;
+      if (option_field != null) {
+         exl = option_field.getSelectedItem() == PatternOptions.EXCLUDE;
        }
-      else if (cmd.equals("Type")) {
-         JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
-         PatternOptions opt = (PatternOptions) cbx.getSelectedItem();
-         if (opt == PatternOptions.EXCLUDE) for_path.setExcluded(true);
-         else for_path.setIncluded(true);
-       }
-      else if (cmd.equals("Close")) {
-         setVisible(false);
-       }
+      return new SourcePattern(txt,exl);
     }
-
-}	// end of inner class EditJSPathEntryBubble
-
+   
+}	// end of inner class NewSourcePatternBubble
 
 
 

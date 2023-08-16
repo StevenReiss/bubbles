@@ -40,7 +40,7 @@
    </CREATE>
    <EDIT>
       <TAB LABEL='Libraries' TYPE='LIBRARY' />
-      <TAB LABEL='Source' TYPE='SOURCE' EXCLUDE='T' INCLUDE='T' NEST='F' />
+      <TAB LABEL='Source' TYPE='SOURCE' EXCLUDE='T' INCLUDE='T' MULTIPLE='T' />
       <TAB LABEL='Compiler' DESCRIPTION='Compiler Problem Settings'>
 	 <FIELD NAME='ERROROPTS' DESCRIPTION='Option Set' TYPE='OPTIONSET' OPTION='Bueno.problem.set'
 		REFIX='org.eclipse.jdt.core.compiler.problem.' />

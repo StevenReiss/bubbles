@@ -530,11 +530,16 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 
    BedrockPlugin.logD("UPDATE PATH ELEMENT " + oent + " " + IvyXml.convertXmlToString(xml));
 
-   if (IvyXml.getAttrString(xml,"TYPE").equals("LIBRARY")) {
-      if (IvyXml.getAttrBool(xml,"DELETE")) {
-	 if (oent != null) ents.remove(oent);
-       }
-      else if (IvyXml.getAttrBool(xml,"MODIFIED") || IvyXml.getAttrBool(xml,"NEW")) {
+   if (IvyXml.getAttrBool(xml,"DELETE")) {
+      if (oent != null) ents.remove(oent);
+      return;
+    }
+   if (!IvyXml.getAttrBool(xml,"MODIFIED") && !IvyXml.getAttrBool(xml,"NEW")) return;
+
+   String typ = IvyXml.getAttrString(xml,"TYPE");
+   switch (typ) {
+      case "LIBRARY" :
+      case "SOURCE" :
 	 String f = IvyXml.getTextElement(xml,"BINARY");
 	 IPath bin = (f == null ? null : Path.fromOSString(f));
 	 f = IvyXml.getTextElement(xml,"SOURCE");
@@ -571,12 +576,32 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 	    xatts = new IClasspathAttribute[els.size()];
 	    xatts = els.toArray(xatts);
 	  }
+         List<IPath> exclpaths = new ArrayList<>();
+         List<IPath> inclpaths = new ArrayList<>();
+         for (Element pat : IvyXml.children(xml,"EXCLUDE")) {
+            String f1 = IvyXml.getAttrString(pat,"PATH");
+            if (f1 == null) continue;
+            IPath fp = Path.fromOSString(f1);
+            exclpaths.add(fp);
+          }
+         for (Element pat : IvyXml.children(xml,"INCLUDE")) {
+            String f1 = IvyXml.getAttrString(pat,"PATH");
+            if (f1 == null) continue;
+            IPath fp = Path.fromOSString(f1);
+            inclpaths.add(fp);
+          }
+         IPath [] exclarr = new IPath[exclpaths.size()];
+         exclarr = exclpaths.toArray(exclarr);
+         IPath [] inclarr = new IPath[inclpaths.size()];
+         inclarr = exclpaths.toArray(inclarr); 
 
 	 IClasspathEntry nent = null;
-	 if (bin != null)
-	    nent = JavaCore.newLibraryEntry(bin,src,null,rls,xatts,export);
+	 if (bin != null && !typ.equals("SOURCE"))
+	    nent = JavaCore.newLibraryEntry(bin,src,null,
+		  rls,xatts,export);
 	 else
-	    nent = JavaCore.newSourceEntry(src,null,null,null,xatts);
+	    nent = JavaCore.newSourceEntry(src,inclarr,exclarr,
+                  null,xatts);
 
 	 if (IvyXml.getAttrBool(xml,"MODIFIED") && oent != null) {
 	    int idx = ents.indexOf(oent);
@@ -585,8 +610,9 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 	 else {
 	    ents.add(nent);
 	  }
-       }
+	 break;
     }
+
 }
 
 
@@ -1382,7 +1408,7 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
       catch (JavaModelException e) { }
       xw.end("RAWPATH");
     }
-										
+								
    if (fil) {
       xw.begin("FILES");
       addSourceFiles(p,xw,null);
@@ -1602,6 +1628,16 @@ private void addPath(IvyXmlWriter xw,IJavaProject jp,IClasspathEntry ent,boolean
    if (f3 != null) xw.textElement("SOURCE",f3.getAbsolutePath());
    if (jdp != null) xw.textElement("JAVADOC",jdp);
 
+   for (IPath path : ent.getExclusionPatterns()) {
+      xw.begin("EXCLUDE");
+      xw.field("PATH",path.toOSString());
+      xw.end("EXCLUDE");
+    }
+   for (IPath path : ent.getInclusionPatterns()) {
+      xw.begin("INCLUDE");
+      xw.field("PATH",path.toOSString());
+      xw.end("INCLUDE");
+    }
    IAccessRule [] rls = ent.getAccessRules();
    for (IAccessRule ar : rls) {
       xw.begin("ACCESS");

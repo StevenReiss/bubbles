@@ -3251,29 +3251,29 @@ private static class QuickFixAction extends TextAction {
       int soff = target.getSelectionStart();
       List<BumpProblem> probs = bd.getProblemsAtLocation(soff);
       if (probs == null) return;
-
+   
       List<BaleFixer> fixes = new ArrayList<BaleFixer>();
       for (BumpProblem bp : probs) {
-	 if (bp.getFixes() != null) {
-	    for (BumpFix bf : bp.getFixes()) {
-	       BaleFixer fixer = new BaleFixer(bp,bf);
-	       if (fixer.isValid()) fixes.add(fixer);
-	     }
-	  }
+         if (bp.getFixes() != null) {
+            for (BumpFix bf : bp.getFixes()) {
+               BaleFixer fixer = new BaleFixer(bp,bf);
+               if (fixer.isValid()) fixes.add(fixer);
+             }
+          }
        }
       if (fixes.isEmpty()) return;
-
+   
       BaleFixer fix = null;
       if (fixes.size() == 1) fix = fixes.get(0);
       else {
-	 Collections.sort(fixes);
-	 Object [] fixalts = fixes.toArray();
-	 fix = (BaleFixer) JOptionPane.showInputDialog(target,"Select Quick Fix","Quick Fix Selector",
-							  JOptionPane.QUESTION_MESSAGE,
-							  null,fixalts,fixes.get(0));
+         Collections.sort(fixes);
+         Object [] fixalts = fixes.toArray();
+         fix = (BaleFixer) JOptionPane.showInputDialog(target,"Select Quick Fix","Quick Fix Selector",
+        						  JOptionPane.QUESTION_MESSAGE,
+        						  null,fixalts,fixes.get(0));
        }
       if (fix == null) return;
-
+   
       fix.actionPerformed(e);
       BoardMetrics.noteCommand("BALE","QuickFix");
    }

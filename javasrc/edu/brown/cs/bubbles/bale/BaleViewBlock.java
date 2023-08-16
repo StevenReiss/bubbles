@@ -833,7 +833,7 @@ private void tryLayout(double priority,float width)
 	    view_data[i].setSizeAtPriority(v,priority,width);
 	    view_data[i].setPosition(0,ht);
 	    wid = Math.max(wid,view_data[i].getActualWidth());
-	    ht += view_data[i].getActualHeight();
+	    ht += (int) view_data[i].getActualHeight();
 	    v.setSize(view_data[i].getActualWidth(),view_data[i].getActualHeight());
 	  }
 	 break;

@@ -384,7 +384,7 @@ private Font getFont(View v)
    double sf = bb.getScaleFactor();
    if (sf != 0 && sf != 1) {
       float sz = fn.getSize2D();
-      sz *= sf;
+      sz *= (float) sf;
       fn = fn.deriveFont(sz);
     }
  

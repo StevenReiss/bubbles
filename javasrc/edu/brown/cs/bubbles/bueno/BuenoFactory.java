@@ -134,12 +134,6 @@ private BuenoFactory()
 
 public static void setup()
 {
-   new BuenoProjectMakerNew();		// default
-   new BuenoProjectMakerSource();
-   new BuenoProjectMakerTemplate();
-   new BuenoProjectMakerGit();
-   // new BuenoProjectMakerAnt();
-
    BudaRoot.registerMenuButton("Create New Project",new CreateListener());
 
    BudaRoot.registerMenuButton("Admin.Admin.Import Templates",new TemplateImporter());
@@ -269,7 +263,7 @@ public void createPackageDialog(BudaBubble src,Point loc,BuenoType type,
       if (package_creator.showPackageDialogBubble(src,loc,type,known,insert,lbl,newer))
 	 return;
     }
-   
+
    BuenoPackageDialog pd = new BuenoPackageDialog(src,loc,known,insert,newer);
    if (lbl != null) pd.setLabel(lbl);
    pd.showDialog();
@@ -287,10 +281,7 @@ public BudaBubble createProjectDialog(String proj)
       BudaBubble bbl = gp.createProjectEditorBubble(proj);
       if (bbl != null) return bbl;
     }
-   
-   BuenoProjectDialog dlg = new BuenoProjectDialog(proj);
-   BudaBubble bb = dlg.createProjectEditor();
-   return bb;
+   return null;
 }
 
 
@@ -332,11 +323,11 @@ public void createNew(BuenoType what,BuenoLocation where,BuenoProperties props)
 	 cur_creator.createPackage(where,props);
 	 break;
       case NEW_MODULE :
- 	 cur_creator.createModule(where,props);
+	 cur_creator.createModule(where,props);
 	 break;
       case NEW_FILE :
-         cur_creator.createFile(where,props);
-         break;
+	 cur_creator.createFile(where,props);
+	 break;
       case NEW_TYPE :
       case NEW_CLASS :
       case NEW_INTERFACE :
@@ -387,7 +378,7 @@ public CharSequence setupNew(BuenoType what,BuenoLocation where,BuenoProperties 
       case NEW_ANNOTATION :
       case NEW_FILE :
 	 throw new IllegalArgumentException("Can only setup internal items");
-	
+
       case NEW_INNER_TYPE :
       case NEW_INNER_CLASS :
       case NEW_INNER_INTERFACE :
@@ -437,7 +428,7 @@ private void fixupProps(BuenoType what,BuenoLocation where,BuenoProperties props
 	 case NEW_ENUM :
 	 case NEW_ANNOTATION :
 	 case NEW_MODULE :
-         case NEW_FILE :
+	 case NEW_FILE :
 	    break;
 	 default :
 	    props.put(BuenoKey.KEY_FILE,where.getFile().getPath());
@@ -486,24 +477,8 @@ public BudaBubble getCreateProjectBubble()
       BudaBubble bbl = gp.createProjectCreationBubble();
       if (bbl != null) return bbl;
     }
-   
-   switch (BoardSetup.getSetup().getLanguage()) {
-      case JAVA :
-      case JAVA_IDEA :
-	 BuenoProjectCreator bpc = new BuenoProjectCreator();
-	 return bpc.createProjectCreationBubble();
-      case PYTHON :
-	 return BuenoPythonProject.createNewPythonProjectBubble();
-      case JS :
-	 return BuenoJsProject.createNewJsProjectBubble();
-      case REBUS :
-	 return null;
-      case DART :
-         // TODO: set up new dart project bubble
-         return null;
-      default :
-	 return null;
-    }
+
+   return null;
 }
 
 
@@ -558,53 +533,53 @@ private static class TemplatePanel extends SwingGridPanel implements ActionListe
    private SwingComboBox<String> source_field;
    private SwingComboBox<String> forproject_field;
    private String target_project;
-   
+
    TemplatePanel() {
       beginLayout();
       addBannerLabel("Choose Templates to Import");
-      
+
       String ws = BoardSetup.getSetup().getDefaultWorkspace();
       int idx = ws.lastIndexOf(File.separator);
       if (idx > 0) ws = ws.substring(idx+1);
-      
+
       forproject_field = null;
       target_project = null;
       BumpClient bc = BumpClient.getBump();
       Element projects = bc.getAllProjects();
       if (projects != null) {
-         SortedSet<String> pset = new TreeSet<String>();
-         pset.add(WORKSPACE_NAME);
-         for (Element pe : IvyXml.children(projects,"PROJECT")) {
-            String pnm = IvyXml.getAttrString(pe,"NAME");
-            if (pnm.equals(ws)) continue;
-            pset.add(pnm);
-          }
-         if (pset.size() > 1) {
-            forproject_field = addChoice("Templates for Project",pset,pset.first(),null);
-          }
-         else if (pset.size() == 1) target_project = pset.first();
+	 SortedSet<String> pset = new TreeSet<String>();
+	 pset.add(WORKSPACE_NAME);
+	 for (Element pe : IvyXml.children(projects,"PROJECT")) {
+	    String pnm = IvyXml.getAttrString(pe,"NAME");
+	    if (pnm.equals(ws)) continue;
+	    pset.add(pnm);
+	  }
+	 if (pset.size() > 1) {
+	    forproject_field = addChoice("Templates for Project",pset,pset.first(),null);
+	  }
+	 else if (pset.size() == 1) target_project = pset.first();
        }
-      
+
       file_field = addFileField("From File/Directory",(File) null,JFileChooser.FILES_AND_DIRECTORIES,null,null);
       File f1 = BoardSetup.getPropertyBase();
       File f2 = new File(f1,"templates");
       List<String> alts = new ArrayList<>();
       alts.add("Use File Specified Above");
       if (f2 .exists() && f2.listFiles() != null) {
-         for (File f3 : f2.listFiles()) {
-            if (f3.isDirectory() && f3.listFiles() != null) {
-               boolean fnd = false;
-               for (File f4 : f3.listFiles()) {
-        	  if (f4.isFile() && f4.getName().endsWith(".template")) {
-        	     fnd = true;
-        	   }
-        	}
-               if (fnd) alts.add(f3.getName());
-             }
-          }
+	 for (File f3 : f2.listFiles()) {
+	    if (f3.isDirectory() && f3.listFiles() != null) {
+	       boolean fnd = false;
+	       for (File f4 : f3.listFiles()) {
+		  if (f4.isFile() && f4.getName().endsWith(".template")) {
+		     fnd = true;
+		   }
+		}
+	       if (fnd) alts.add(f3.getName());
+	     }
+	  }
        }
       if (alts.size() > 1) {
-         source_field = addChoice("Copy from Workspace ",alts,"None",null);
+	 source_field = addChoice("Copy from Workspace ",alts,"None",null);
        }
       else source_field = null;
       addBottomButton("Import","IMPORT",this);
@@ -615,21 +590,21 @@ private static class TemplatePanel extends SwingGridPanel implements ActionListe
       BudaBubble bbl = BudaRoot.findBudaBubble((Component) evt.getSource());
       bbl.setVisible(false);
       if (forproject_field != null) {
-         target_project = (String) forproject_field.getSelectedItem();
+	 target_project = (String) forproject_field.getSelectedItem();
        }
       if (source_field == null || source_field.getSelectedIndex() <= 0) {
-         String f = file_field.getText();
-         if (f == null) return;
-         if (f.length() == 0) return;
-         File f1 = new File(f);
-         if (!f1.exists()) f1 = new File(f.trim());
-         loadTemplates(f1);
+	 String f = file_field.getText();
+	 if (f == null) return;
+	 if (f.length() == 0) return;
+	 File f1 = new File(f);
+	 if (!f1.exists()) f1 = new File(f.trim());
+	 loadTemplates(f1);
        }
       else {
-         File f1 = BoardSetup.getPropertyBase();
-         File f2 = new File(f1,"templates");
-         File f3 = new File(f2,source_field.getSelectedItem().toString());
-         loadTemplates(f3);
+	 File f1 = BoardSetup.getPropertyBase();
+	 File f2 = new File(f1,"templates");
+	 File f3 = new File(f2,source_field.getSelectedItem().toString());
+	 loadTemplates(f3);
        }
     }
 
@@ -638,42 +613,42 @@ private static class TemplatePanel extends SwingGridPanel implements ActionListe
       File t = BoardSetup.getPropertyBase();
       File t1 = new File(t,"templates");
       if (target_project == null || target_project.equals(WORKSPACE_NAME)) {
-         String ws = BoardSetup.getSetup().getDefaultWorkspace();
-         int idx = ws.lastIndexOf(File.separator);
-         if (idx > 0) ws = ws.substring(idx+1);
-         target_project = ws;
+	 String ws = BoardSetup.getSetup().getDefaultWorkspace();
+	 int idx = ws.lastIndexOf(File.separator);
+	 if (idx > 0) ws = ws.substring(idx+1);
+	 target_project = ws;
        }
       target_project = target_project.toLowerCase();
       File t2 = new File(t1,target_project);
       t2.mkdirs();
       if (f.isDirectory()) {
-         for (File f1 : f.listFiles()) {
-            if (f1.getName().endsWith(".template")) {
-               File t3 = new File(t2,f1.getName());
-               try {
-                  IvyFile.copyFile(f1,t3);
-                }
-               catch (IOException e) { }
-             }
-          }
+	 for (File f1 : f.listFiles()) {
+	    if (f1.getName().endsWith(".template")) {
+	       File t3 = new File(t2,f1.getName());
+	       try {
+		  IvyFile.copyFile(f1,t3);
+		}
+	       catch (IOException e) { }
+	     }
+	  }
        }
       else if (f.getName().endsWith(".zip") || f.getName().endsWith(".jar")) {
-         try {
-            ZipFile zf = new ZipFile(f);
-            for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); ) {
-               ZipEntry ze = e.nextElement();
-               String nm = ze.getName();
-               if (nm.endsWith(".template")) {
-                  File t3 = new File(t2,nm);
-                  InputStream ins = zf.getInputStream(ze);
-                  IvyFile.copyFile(ins,t3);
-                }
-             }
-            zf.close();
-          }
-         catch (IOException e) { }
+	 try {
+	    ZipFile zf = new ZipFile(f);
+	    for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); ) {
+	       ZipEntry ze = e.nextElement();
+	       String nm = ze.getName();
+	       if (nm.endsWith(".template")) {
+		  File t3 = new File(t2,nm);
+		  InputStream ins = zf.getInputStream(ze);
+		  IvyFile.copyFile(ins,t3);
+		}
+	     }
+	    zf.close();
+	  }
+	 catch (IOException e) { }
        }
-   
+
     }
 
 }	// end of inner class TemplatePanel

@@ -536,7 +536,7 @@ public void setEditable(boolean ed)
    Font ft = beam_properties.getFont(NOTE_FONT_PROP,NOTE_FONT);
    float sz = ft.getSize2D();
    if (sf != 1.0) {
-      sz *= sf;
+      sz *= (float) sf;
       ft = ft.deriveFont(sz);
     }
    note_area.setFont(ft);
@@ -1028,11 +1028,11 @@ private class NameNote extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       NamePanel pnl =  new NamePanel();
       int sts = JOptionPane.showOptionDialog(BeamNoteBubble.this,pnl,
-	    "Set Note Name",JOptionPane.OK_CANCEL_OPTION,
-	    JOptionPane.PLAIN_MESSAGE,null,null,null);
+            "Set Note Name",JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.PLAIN_MESSAGE,null,null,null);
       if (sts == JOptionPane.OK_OPTION) {
-	 String nm = pnl.getNoteName();
-	 setNoteName(nm);
+         String nm = pnl.getNoteName();
+         setNoteName(nm);
        }
     }
 

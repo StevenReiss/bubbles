@@ -450,7 +450,7 @@ private void resetRegions()
    Font ft = style_context.getFont(attr);
    if (scale_factor == 0 || scale_factor == 1) return ft;
    float sz = ft.getSize2D();
-   sz *= scale_factor;
+   sz *= (float) scale_factor;
    ft = ft.deriveFont(sz);
    return ft;
 }

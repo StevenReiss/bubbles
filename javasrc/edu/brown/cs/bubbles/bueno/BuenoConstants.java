@@ -29,8 +29,6 @@ import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 
-import javax.swing.JPanel;
-
 import java.awt.Point;
 import java.io.File;
 import java.util.EventListener;
@@ -52,27 +50,27 @@ public interface BuenoConstants {
 enum BuenoType {
    NEW_PACKAGE,
    NEW_MODULE,			// python module
-   NEW_FILE,                    // JS file/module
-   
+   NEW_FILE,			// JS file/module
+
    NEW_CLASS,
    NEW_INTERFACE,
    NEW_ENUM,
    NEW_ANNOTATION,
    NEW_TYPE,			// any of the above
-   
+
    NEW_INNER_CLASS,
    NEW_INNER_INTERFACE,
    NEW_INNER_ENUM,
    NEW_INNER_TYPE,		// any of the above
-   
+
    NEW_CONSTRUCTOR,
    NEW_METHOD,
    NEW_GETTER,
    NEW_SETTER,
    NEW_GETTER_SETTER,
-   
+
    NEW_FIELD,
-   
+
    NEW_MARQUIS_COMMENT,
    NEW_BLOCK_COMMENT,
    NEW_JAVADOC_COMMENT,
@@ -106,9 +104,9 @@ enum BuenoKey {
    KEY_THROWS,			// String, String [], List<String>
    KEY_EXTENDS, 		// String
    KEY_IMPLEMENTS,		// String, String [], List<String>
-   KEY_CLASS_NAME,              // String
-   KEY_FIELD_NAME,              // String
-   KEY_FIELD_TYPE,              // String;
+   KEY_CLASS_NAME,		// String
+   KEY_FIELD_NAME,		// String
+   KEY_FIELD_TYPE,		// String;
    KEY_AUTHOR,			// String
    KEY_FILE,			// String
    KEY_FILETAIL,		// String
@@ -116,7 +114,7 @@ enum BuenoKey {
    KEY_RETURN_STMT,		// String
    KEY_ATTRIBUTES,		// String
    KEY_CREATE_INIT,		// Boolean (create __init__ module)
-   KEY_REFORMAT,                // Boolean (reformat after insertion)
+   KEY_REFORMAT,		// Boolean (reformat after insertion)
 }
 
 
@@ -178,10 +176,10 @@ interface BuenoBubbleCreator {
 interface BuenoMethodCreatorInstance {
 
    boolean showMethodDialogBubble(BudaBubble source,Point location,
-        			     BuenoProperties known,
-        			     BuenoLocation insert,
-        			     String label,
-        			     BuenoBubbleCreator newer);
+				     BuenoProperties known,
+				     BuenoLocation insert,
+				     String label,
+				     BuenoBubbleCreator newer);
 
 
 }	// end of interface BuenoMethodCreatorInstance
@@ -191,16 +189,16 @@ interface BuenoClassCreatorInstance {
    boolean useSeparateTypeButtons();
 
    boolean showClassDialogBubble(BudaBubble source,Point location,BuenoType typ,
-         BuenoProperties known,BuenoLocation insert,String lbl,
-         BuenoBubbleCreator newer);
+	 BuenoProperties known,BuenoLocation insert,String lbl,
+	 BuenoBubbleCreator newer);
 
 }	// end of interface BuenoClassCreatorInstance
 
 interface BuenoPackageCreatorInstance {
 
    boolean showPackageDialogBubble(BudaBubble source,Point location,BuenoType typ,
-         BuenoProperties known,BuenoLocation insert,String lbl,
-         BuenoBubbleCreator newer);
+	 BuenoProperties known,BuenoLocation insert,String lbl,
+	 BuenoBubbleCreator newer);
 
 }	// end of interface BuenoPackageCreatorInstance
 
@@ -246,15 +244,6 @@ interface BuenoProjectProps {
 }	// end of interface BuenoProjectProps
 
 
-interface BuenoProjectMaker {
-
-   String getLabel();
-   boolean checkStatus(BuenoProjectProps props);
-   JPanel createPanel(BuenoProjectCreationControl ctrl,BuenoProjectProps props);
-   void resetPanel(BuenoProjectProps props);
-   boolean setupProject(BuenoProjectCreationControl ctrl,BuenoProjectProps props);
-
-}	// end of inner interface BuenoProjectMaker
 
 interface BuenoProjectCreationControl {
 
@@ -286,9 +275,9 @@ interface BuenoValidatorCallback {
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Path inforamtion                                                        */
-/*                                                                              */
+/*										*/
+/*	Path inforamtion							*/
+/*										*/
 /********************************************************************************/
 
 enum PathType {
@@ -296,8 +285,6 @@ enum PathType {
    SOURCE,
    BINARY,
    LIBRARY,
-   EXCLUDE,
-   INCLUDE,
 }
 
 

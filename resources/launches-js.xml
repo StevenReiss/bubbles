@@ -22,6 +22,7 @@
    </CREATE>
    <EDIT>
       <TAB LABEL='Packages' TYPE='PATH' />
+      <TAB LABEL='Source' TYPE='SOURCE' EXCLUDE='t' INCLUDE='t' MULTIPLE='f' />
       <TAB LABEL='Libraries' TYPE='LIBRARY' />
    </EDIT>
 </PROJECT>

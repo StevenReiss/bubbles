@@ -346,7 +346,7 @@ void setDefaultText(String text)
    Font ft = bass_properties.getFontOption(BASS_TEXT_FONT_PROP,BASS_TEXT_FONT);
    float f = ft.getSize2D();
    if (f != 1.0) {
-      f *= sf;
+      f *= (float) sf;
       ft = ft.deriveFont(f);
     }
    Font ftb = ft.deriveFont(Font.BOLD);

@@ -146,7 +146,6 @@ void saveProject()
     }
    
    Set<BuenoPathEntry> dels = new HashSet<BuenoPathEntry>(initial_paths);
-   dels.removeAll(source_paths);
    
    String pnm = IvyXml.getAttrString(project_data,"NAME");
    
@@ -154,7 +153,11 @@ void saveProject()
    xw.begin("PROJECT");
    xw.field("NAME",pnm);
    for (BuenoPathEntry pe : library_paths) {
-      pe.outputXml(xw,false);
+      if (pe.resetChanged()) pe.outputXml(xw,false);
+      dels.remove(pe);
+    }
+   for (BuenoPathEntry pe : source_paths) {
+      if (pe.resetChanged()) pe.outputXml(xw,false);
       dels.remove(pe);
     }
    for (BuenoPathEntry pe : dels) {
@@ -188,6 +191,9 @@ void saveProject()
    
    bc.editProject(pnm,xw.toString());
    
+   initial_paths.removeAll(dels);
+   initial_paths.addAll(source_paths);
+   initial_paths.addAll(library_paths);
 }
 
 

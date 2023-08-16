@@ -42,9 +42,6 @@ import edu.brown.cs.bubbles.buda.BudaConstraint;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bueno.BuenoConstants;
 import edu.brown.cs.bubbles.bueno.BuenoFactory;
-import edu.brown.cs.bubbles.bueno.BuenoJsProject;
-import edu.brown.cs.bubbles.bueno.BuenoPythonProject;
-import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import edu.brown.cs.ivy.swing.SwingEventListenerList;
@@ -623,24 +620,11 @@ private static class ProjectProps implements BassPopupHandler {
       String proj = fullname.substring(0,idx);
    
       switch (BoardSetup.getSetup().getLanguage()) {
-         case JAVA :
-         case JAVA_IDEA :
-            // menu.add(new EclipseProjectAction(proj));
+         default :
             menu.add(new ProjectAction(proj,bb,where));
             menu.add(new NewProjectAction(bb,where));
             menu.add(new BassImportProjectAction());
             break;
-         case PYTHON :
-            menu.add(new PythonProjectAction(proj,bb,where));
-            menu.add(new NewPythonProjectAction(bb,where));
-            break;
-         case JS:
-            menu.add(new JSProjectAction(proj,bb,where));
-            menu.add(new NewJSProjectAction(bb,where));
-            break;
-         case DART :
-            // TOOD: add dart buttons for project
-            break;     
          case REBUS :
             break;
        }
@@ -649,30 +633,6 @@ private static class ProjectProps implements BassPopupHandler {
     }
 
 }	// end of inner class ProjectProps
-
-
-
-@SuppressWarnings("unused")
-private static class EclipseProjectAction extends AbstractAction {
-
-   private String for_project;
-
-   private static final long serialVersionUID = 1;
-
-   EclipseProjectAction(String proj) {
-      super("Eclipse Project Properties for " + proj);
-      for_project = proj;
-    }
-
-   @Override public void actionPerformed(ActionEvent e) {
-      BoardMetrics.noteCommand("BASS","EclipseProjectProperties");
-      BudaRoot.hideSearchBubble(e);
-      BumpClient bc = BumpClient.getBump();
-      bc.saveAll();
-      bc.editProject(for_project);
-    }
-
-}	// end of inner class EclipseProjectAction
 
 
 
@@ -703,60 +663,6 @@ private static class ProjectAction extends AbstractAction {
 
 
 
-private static class PythonProjectAction extends AbstractAction {
-
-   private String for_project;
-   private BudaBubble rel_bubble;
-   private Point rel_point;
-
-   private static final long serialVersionUID = 1;
-
-   PythonProjectAction(String proj,BudaBubble rel,Point pt) {
-      super("Edit Properties of Project " + proj);
-      for_project = proj;
-      rel_bubble = rel;
-      rel_point = pt;
-    }
-
-   @Override public void actionPerformed(ActionEvent e) {
-      BoardMetrics.noteCommand("BASS","EditPythonProjectProperties");
-      BudaRoot.hideSearchBubble(e);
-      BudaBubble bb = null;
-      bb = BuenoPythonProject.createEditPythonProjectBubble(for_project);
-      if (bb == null) return;
-      BassFactory.getFactory().addNewBubble(rel_bubble,rel_point,bb);
-    }
-
-}	// end of inner class PythonProjectAction
-
-
-private static class JSProjectAction extends AbstractAction {
-
-   private String for_project;
-   private BudaBubble rel_bubble;
-   private Point rel_point;
-
-   private static final long serialVersionUID = 1;
-
-   JSProjectAction(String proj,BudaBubble rel,Point pt) {
-      super("Edit Properties of Project " + proj);
-      for_project = proj;
-      rel_bubble = rel;
-      rel_point = pt;
-   }
-
-   @Override public void actionPerformed(ActionEvent e) {
-      BoardMetrics.noteCommand("BASS","EditJSProjectProperties");
-      BudaRoot.hideSearchBubble(e);
-      BudaBubble bb = BuenoFactory.getFactory().createProjectDialog(for_project);
-      if (bb == null) return;
-      BassFactory.getFactory().addNewBubble(rel_bubble,rel_point,bb);
-   }
-
-}	// end of inner class JSProjectAction
-
-
-
 private static class NewProjectAction extends AbstractAction {
 
    private BudaBubble rel_bubble;
@@ -780,59 +686,6 @@ private static class NewProjectAction extends AbstractAction {
 
 }	// end of inner class ProjectAction
 
-
-
-private static class NewPythonProjectAction extends AbstractAction {
-
-   private BudaBubble rel_bubble;
-   private Point rel_point;
-
-   private static final long serialVersionUID = 1;
-
-   NewPythonProjectAction(BudaBubble bb,Point pt) {
-      super("Create New Project");
-      rel_bubble = bb;
-      rel_point = pt;
-    }
-
-   @Override public void actionPerformed(ActionEvent e) {
-      BoardMetrics.noteCommand("BASS","CreatePythonProject");
-      BudaRoot.hideSearchBubble(e);
-
-      BudaBubble bb = null;
-      bb = BuenoPythonProject.createNewPythonProjectBubble();
-      if (bb != null) {
-	 BassFactory.getFactory().addNewBubble(rel_bubble,rel_point,bb);
-       }
-    }
-
-}	// end of inner class ProjectAction
-
-
-private static class NewJSProjectAction extends AbstractAction {
-
-   private BudaBubble rel_bubble;
-   private Point rel_point;
-
-   private static final long serialVersionUID = 1;
-
-   NewJSProjectAction(BudaBubble bb,Point pt) {
-      super("Create New Project");
-      rel_bubble = bb;
-      rel_point = pt;
-   }
-
-   @Override public void actionPerformed(ActionEvent e) {
-      BoardMetrics.noteCommand("BASS","CreateJSProject");
-      BudaRoot.hideSearchBubble(e);
-      BudaBubble bb = null;
-      bb = BuenoJsProject.createNewJsProjectBubble();
-      if (bb != null) {
-         BassFactory.getFactory().addNewBubble(rel_bubble,rel_point,bb);
-       }
-   }
-
-}	// end of inner class ProjectAction
 
 
 

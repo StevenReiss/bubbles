@@ -23,6 +23,9 @@
 package edu.brown.cs.bubbles.bueno;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -56,6 +59,8 @@ private boolean is_nested;
 private boolean is_new;
 private boolean is_modified;
 private int	   entry_id;
+private Set<String> exclude_patterns;
+private Set<String> include_patterns;
 
 private static BoardLanguage cur_language = null;
 private static final int PATH_LENGTH = 40;
@@ -94,9 +99,19 @@ BuenoPathEntry(Element e)
          // handle old style definitions
          source_path = IvyXml.getTextElement(e,"DIR");
          if (!IvyXml.getAttrBool(e,"USER")) path_type = PathType.LIBRARY;
-         else if (IvyXml.getAttrBool(e,"EXCLUDE")) path_type = PathType.EXCLUDE;
          else path_type = PathType.SOURCE;
        }
+    }
+   
+   exclude_patterns = new LinkedHashSet<>();
+   include_patterns = new LinkedHashSet<>();
+   for (Element pe : IvyXml.children(e,"EXCLUDE")) {
+      String p = IvyXml.getAttrString(pe,"PATH");
+      exclude_patterns.add(p);
+    }
+   for (Element pe : IvyXml.children(e,"INCLUDE")) {
+      String p = IvyXml.getAttrString(pe,"PATH");
+      include_patterns.add(p);
     }
 }
 
@@ -118,22 +133,10 @@ BuenoPathEntry(File f,PathType typ,boolean nest)
    is_new = true;
    is_modified = true;
    entry_id = 0;
+   include_patterns = new LinkedHashSet<>();
+   exclude_patterns = new LinkedHashSet<>();
 }
 
-
-BuenoPathEntry(String pat,PathType typ)
-{
-   path_type = typ;
-   source_path = pat;
-   output_path = null;
-   binary_path = null;
-   is_exported = false;
-   is_optional = false;
-   is_nested = false;
-   is_new = true;
-   is_modified = true;
-   entry_id = 0;
-}
 
 
 
@@ -150,30 +153,44 @@ String getSourcePath()				{ return source_path; }
 String getJavadocPath()			{ return javadoc_path; }
 boolean isExported() 				{ return is_exported; }
 boolean isOptional() 				{ return is_optional; }
-boolean isExcluded()                            { return path_type == PathType.EXCLUDE; }
-boolean isIncluded()                            { return path_type == PathType.INCLUDE; }
-boolean hasChanged()
+boolean resetChanged()     
 {
    boolean chng = is_new || is_modified;
    is_new = false;
    is_modified = false;
    return chng;
 }
+boolean hasChanged()
+{
+   return is_new || is_modified;
+}
 boolean isLibrary()                             { return path_type == PathType.LIBRARY; }
 boolean isRecursive()                           { return is_nested; }
 
-void setExcluded(boolean fg) 
+Collection<String> getIncludes()                { return include_patterns; }
+Collection<String> getExcludes()                { return exclude_patterns; }
+
+void addPattern(String pat,boolean exclude) 
 {
-   if (fg) setType(PathType.EXCLUDE);
-   else setType(PathType.INCLUDE);
-}
-  
-void setIncluded(boolean fg) 
-{
-   if (fg) setType(PathType.INCLUDE);
-   else setType(PathType.EXCLUDE);
+   if (pat == null || pat.isEmpty()) return;
+   if (exclude) {
+      is_modified |= exclude_patterns.add(pat);
+    }
+   else {
+      is_modified |= include_patterns.add(pat);
+    }
 }
 
+void removePattern(String pat,boolean exclude)
+{
+   if (pat == null || pat.isEmpty()) return;
+   if (exclude) {
+      is_modified |= exclude_patterns.remove(pat);
+    }
+   else {
+      is_modified |= include_patterns.remove(pat);
+    }
+}
 
 
 void setBinaryPath(String p)
@@ -268,6 +285,16 @@ void outputXml(IvyXmlWriter xw,boolean del)
    if (output_path != null) xw.textElement("OUTPUT",output_path);
    if (binary_path != null) xw.textElement("BINARY",binary_path);
    if (javadoc_path != null) xw.textElement("JAVADOC",javadoc_path);
+   for (String s : exclude_patterns) {
+      xw.begin("EXCLUDE");
+      xw.field("PATH",s);
+      xw.end("EXCLUDE");
+    }
+   for (String s : include_patterns) {
+      xw.begin("INCLUDE");
+      xw.field("PATH",s);
+      xw.end("INCLUDE");
+    }
    xw.end("PATH");
 }
 
