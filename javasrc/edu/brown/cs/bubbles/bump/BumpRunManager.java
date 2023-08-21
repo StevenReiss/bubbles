@@ -96,12 +96,12 @@ private SwingEventListenerList<BumpRunEventHandler> event_handlers;
 
 
 enum RunEventKind {
-   NONE, 
+   NONE,
    RESUME,
-   SUSPEND, 
-   CREATE, 
+   SUSPEND,
+   CREATE,
    TERMINATE,
-   CHANGE, 
+   CHANGE,
    MODEL_SPECIFIC,
    HOTCODE_SUCCESS,
    HOTCODE_FAILURE,
@@ -239,7 +239,7 @@ BumpRunManager()
 	BoardLog.logE("BUMP","Can't create perf output data file");
       }
    }
-  
+
   launch_types = new ArrayList<>();
 }
 
@@ -316,7 +316,7 @@ void terminateAll()
 
 @Override public List<BumpLaunchType> getLaunchTypes()
 {
-   return launch_types; 
+   return launch_types;
 }
 
 
@@ -367,7 +367,7 @@ private LaunchConfig getLaunchResult(Element x)
 	 String id = IvyXml.getAttrString(lc,"ID");
 	 LaunchConfig xlc = known_configs.get(id);
 	 if (xlc == null) xlc = new LaunchConfig(lc);
-         else xlc.update(lc);
+	 else xlc.update(lc);
 	 return xlc;
        }
     }
@@ -522,7 +522,7 @@ void setup()
       LaunchType lt = new LaunchType(launch);
       launch_types.add(lt);
    }
-   
+
    Element xml = bump_client.getRunConfigurations();
    for (Element cnf : IvyXml.children(xml,"CONFIGURATION")) {
       LaunchConfig lc = new LaunchConfig(cnf);
@@ -748,14 +748,14 @@ private void handleProcessEvent(Element xml)
 	 if (pd != null) {
 	    if (pd.getName() != null) named_processes.remove(pd.getName());
 	    evt = new ProcessEvent(BumpRunEventType.PROCESS_REMOVE,pd);
-            for (Iterator<ThreadData> it = active_threads.values().iterator(); it.hasNext(); ) {
-               ThreadData td = it.next();
-               if (td.getProcess() == pd) it.remove();
-             }
+	    for (Iterator<ThreadData> it = active_threads.values().iterator(); it.hasNext(); ) {
+	       ThreadData td = it.next();
+	       if (td.getProcess() == pd) it.remove();
+	     }
 	  }
-         else {
-            BoardLog.logE("BUMP","Terminate process not found " + id);
-          }
+	 else {
+	    BoardLog.logE("BUMP","Terminate process not found " + id);
+	  }
 	 break;
       case CREATE :
       case CHANGE :
@@ -874,7 +874,7 @@ private void handleThreadEvent(Element xml,long when)
 	 td.setThreadState(ost.getRunState(),dtl);
 	 break;
       case SUSPEND :
-         if (dtl == BumpThreadStateDetail.EVALUATION_IMPLICIT && iseval) return;
+	 if (dtl == BumpThreadStateDetail.EVALUATION_IMPLICIT && iseval) return;
 	 else if (checkException(td,thrd)) {
 	    td.setThreadState(ost.getExceptionState(),dtl);
 	  }
@@ -926,16 +926,16 @@ private void handleThreadEvent(Element xml,long when)
 	 else td.setBreakpoint(bbpt);
        }
       else {
-         String file = IvyXml.getAttrString(thrd,"LOCFILE");
-         if (file != null) {
-            int lno = IvyXml.getAttrInt(thrd,"LOCLINE");
-            bbpt = bbm.findBreakpoint(new File(file),lno);
-          }
+	 String file = IvyXml.getAttrString(thrd,"LOCFILE");
+	 if (file != null) {
+	    int lno = IvyXml.getAttrInt(thrd,"LOCLINE");
+	    bbpt = bbm.findBreakpoint(new File(file),lno);
+	  }
        }
       if (bbpt != null && bbpt.getBoolProperty("TRACEPOINT")) {
-         BoardLog.logD("BUMP","Trace point reached");
-         revt = new ThreadEvent(BumpRunEventType.THREAD_TRACE,td,revt.getWhen());
-         bump_client.resume(td);
+	 BoardLog.logD("BUMP","Trace point reached");
+	 revt = new ThreadEvent(BumpRunEventType.THREAD_TRACE,td,revt.getWhen());
+	 bump_client.resume(td);
        }
       else td.setBreakpoint(bbpt);
     }
@@ -958,13 +958,13 @@ private boolean checkException(ThreadData td,Element thrd)
 {
    boolean fnd = false;
    td.setException(null);
-   
+
    String exc = IvyXml.getAttrString(thrd,"EXCEPTION");
    if (exc != null) {
       td.setException(exc);
       return true;
     }
-   
+
    for (Element bpt : IvyXml.children(thrd,"BREAKPOINT")) {
       String btyp = IvyXml.getAttrString(bpt,"TYPE");
       if (btyp != null && btyp.equals("EXCEPTION")) {
@@ -1034,18 +1034,18 @@ private void handleTargetEvent(Element xml,long when)
    if (nm != null) pd.setProcessName(nm);
 
    if (dtl == BumpThreadStateDetail.CONTENT) return;
-   
+
    switch (kind) {
       case HOTCODE_SUCCESS :
-         ProcessEvent evts = new ProcessEvent(BumpRunEventType.HOTCODE_SUCCESS,pd);
-         sendProcessEvent(evts);
-         return;
+	 ProcessEvent evts = new ProcessEvent(BumpRunEventType.HOTCODE_SUCCESS,pd);
+	 sendProcessEvent(evts);
+	 return;
       case HOTCODE_FAILURE :
-         ProcessEvent evtf = new ProcessEvent(BumpRunEventType.HOTCODE_FAILURE,pd);
-         sendProcessEvent(evtf);
-         return;
+	 ProcessEvent evtf = new ProcessEvent(BumpRunEventType.HOTCODE_FAILURE,pd);
+	 sendProcessEvent(evtf);
+	 return;
       default :
-         break;
+	 break;
     }
 
    for (BumpThread bt : pd.getThreads()) {
@@ -1071,7 +1071,7 @@ private void handleTargetEvent(Element xml,long when)
       if (pd != null) {
 	 if (pd.getName() != null) named_processes.remove(pd.getName());
 	 ProcessEvent evt = new ProcessEvent(BumpRunEventType.PROCESS_REMOVE,pd);
-         sendProcessEvent(evt);
+	 sendProcessEvent(evt);
        }
     }
 }
@@ -1081,10 +1081,10 @@ private void sendProcessEvent(ProcessEvent evt)
 {
    for (BumpRunEventHandler reh : event_handlers) {
       try {
-         reh.handleProcessEvent(evt);
+	 reh.handleProcessEvent(evt);
        }
       catch (Throwable t) {
-         BoardLog.logE("BUMP","Problem handling process event",t);
+	 BoardLog.logE("BUMP","Problem handling process event",t);
        }
     }
 }
@@ -1163,7 +1163,7 @@ void handleEvaluationResult(BumpStackFrame frm,Element xml,BumpEvaluationHandler
 
 /********************************************************************************/
 /*										*/
-/*	Launch types      							*/
+/*	Launch types								*/
 /*										*/
 /********************************************************************************/
 
@@ -1172,7 +1172,7 @@ private class LaunchType implements BumpLaunchType {
    private String type_name;
    private String type_description;
    private List<BumpLaunchConfigField> launch_fields;
-   
+
    LaunchType(Element xml) {
       type_name = IvyXml.getAttrString(xml, "NAME");
       type_description = IvyXml.getAttrString(xml, "DESCRIPTION");
@@ -1181,13 +1181,13 @@ private class LaunchType implements BumpLaunchType {
 	 launch_fields.add(new LaunchTypeField(fld));
       }
    }
-   
+
    @Override public String getName()		{ return type_name; }
    @Override public String getDescription()	{ return type_description; }
    @Override public List<BumpLaunchConfigField> getFields() {
       return launch_fields;
    }
-   
+
 }	// end of inner class LaunchType
 
 
@@ -1201,7 +1201,7 @@ private class LaunchTypeField implements BumpLaunchConfigField {
    private int num_rows;
    private int min_value;
    private int max_value;
-   
+
    LaunchTypeField(Element xml) {
       field_name = IvyXml.getAttrString(xml, "NAME");
       field_description = IvyXml.getAttrString(xml, "DESCRIPTION");
@@ -1212,16 +1212,16 @@ private class LaunchTypeField implements BumpLaunchConfigField {
       min_value = IvyXml.getAttrInt(xml, "MIN",0);
       max_value = IvyXml.getAttrInt(xml, "MAX",min_value);
    }
-   
+
    @Override public String getFieldName()		{ return field_name; }
    @Override public String getDescription()		{ return field_description; }
-   @Override public BumpLaunchConfigFieldType getType()	{ return field_type; }
+   @Override public BumpLaunchConfigFieldType getType() { return field_type; }
    @Override public String getEvaluate()		{ return field_eval; }
    @Override public String getArgField()		{ return field_option; }
    @Override public int getNumRows()			{ return num_rows; }
    @Override public int getMin()			{ return min_value; }
    @Override public int getMax()			{ return max_value; }
-   
+
 }	// end of inner class LaunchTypeField
 
 
@@ -1246,24 +1246,26 @@ private class LaunchConfig implements BumpLaunchConfig {
 
    void update(Element xml) {
       BoardLog.logD("BUMP","Found Launch Config " + IvyXml.convertXmlToString(xml));
-      
+
       launch_xml = xml;
-   
+
       String tnm = IvyXml.getAttrString(xml, "TYPE");
       config_type = IvyXml.getAttrEnum(xml,"TYPE",BumpLaunchConfigType.UNKNOWN);
       Element type = IvyXml.getChild(xml,"TYPE");
       if (type != null) {
-         tnm = IvyXml.getAttrString(type,"NAME");
-         config_type = BumpLaunchConfigType.UNKNOWN;
-         for (BumpLaunchConfigType bclt : BumpLaunchConfigType.values()) {
-            if (tnm.equals(bclt.getEclipseName())) config_type = bclt;
-            else if (tnm.equals(bclt.toString())) config_type = bclt;
-          }
+	 tnm = IvyXml.getAttrString(type,"NAME");
+	 config_type = BumpLaunchConfigType.UNKNOWN;
+	 for (BumpLaunchConfigType bclt : BumpLaunchConfigType.values()) {
+	    if (tnm.equals(bclt.getEclipseName())) config_type = bclt;
+	    else if (tnm.equals(bclt.toString())) config_type = bclt;
+	  }
        }
-      if (tnm.equals("JUnit")) tnm = "JUnit Test";
+      String tnm1 = tnm;
+      if (tnm.equals("JUnit")) tnm1 = "JUnit Test";
       launch_type = null;
       for (BumpLaunchType blt : launch_types) {
-	 if (blt.getName().equals(tnm) || blt.getDescription().equals(tnm)) {
+	 if (blt.getName().equals(tnm) || blt.getDescription().equals(tnm) ||
+	       blt.getName().equals(tnm1) || blt.getDescription().equals(tnm1)) {
 	    launch_type = blt;
 	    break;
 	 }
@@ -1272,22 +1274,22 @@ private class LaunchConfig implements BumpLaunchConfig {
 
    @Override public String getConfigName() {
       return IvyXml.getAttrString(launch_xml,"NAME");
-    }	
+    }
    @Override public String getProject() {
       return getAttribute(launch_xml,"PROJECT_ATTR");
-    }	
+    }
    @Override public String getMainClass() {
       return getAttribute(launch_xml,"MAIN_TYPE");
-    }	
+    }
    @Override public String getArguments() {
       return getAttribute(launch_xml,"PROGRAM_ARGUMENTS");
-    }	
+    }
    @Override public String getVMArguments() {
       return getAttribute(launch_xml,"VM_ARGUMENTS");
     }
    @Override public String getTestName() {
       return getAttribute(launch_xml,"TESTNAME");
-    }	
+    }
    @Override public String getLogFile() {
       return getAttribute(launch_xml,"CAPTURE_IN_FILE");
     }
@@ -1299,71 +1301,71 @@ private class LaunchConfig implements BumpLaunchConfig {
       if (h != null) return h;
       String hmap = getAttribute(launch_xml,"CONNECT_MAP");
       if (hmap != null) {
-         Matcher m1 = HOST_PATTERN.matcher(hmap);
-         Matcher m2 = PORT_PATTERN.matcher(hmap);
-         if (m1.find() && m2.find()) {
-            return m1.group(1);
-          }
+	 Matcher m1 = HOST_PATTERN.matcher(hmap);
+	 Matcher m2 = PORT_PATTERN.matcher(hmap);
+	 if (m1.find() && m2.find()) {
+	    return m1.group(1);
+	  }
        }
       return null;
-    }	
+    }
    @Override public int getRemotePort() {
       Integer p = getInteger(launch_xml,"REMOTE_PORT");
       if (p != null) return p;
       String hmap = getAttribute(launch_xml,"CONNECT_MAP");
       if (hmap != null) {
-         Matcher m1 = HOST_PATTERN.matcher(hmap);
-         Matcher m2 = PORT_PATTERN.matcher(hmap);
-         if (m1.find() && m2.find()) {
-            return Integer.parseInt(m2.group(1));
-          }
+	 Matcher m1 = HOST_PATTERN.matcher(hmap);
+	 Matcher m2 = PORT_PATTERN.matcher(hmap);
+	 if (m1.find() && m2.find()) {
+	    return Integer.parseInt(m2.group(1));
+	  }
        }
       return 8000;
-    }	
+    }
    @Override public boolean isWorkingCopy() {
       return IvyXml.getAttrBool(launch_xml,"WORKING");
     }
    @Override public boolean getStopInMain() {
       return getBoolean(launch_xml,"STOP_IN_MAIN",false);
     }
-   
+
    boolean useContracts() {
       return getBoolean(launch_xml,"CONTRACTS",true);
     }
-   
+
    boolean useAssertions() {
       return getBoolean(launch_xml,"ASSERTIONS",true);
     }
-   
-   @Override public String getId()			        { return launch_id; }
-   @Override public BumpLaunchConfigType getConfigType()        { return config_type; }
-   @Override public BumpLaunchType getLaunchType()	        { return launch_type; }
-   
+
+   @Override public String getId()				{ return launch_id; }
+   @Override public BumpLaunchConfigType getConfigType()	{ return config_type; }
+   @Override public BumpLaunchType getLaunchType()		{ return launch_type; }
+
    @Override public String getAttribute(String nm) {
       return getAttribute(launch_xml,nm);
    }
-   
+
    @Override public boolean getBoolAttribute(String nm ) {
       return getBoolean(launch_xml,nm,false);
    }
-   
+
 
    @Override public String getContractArgs() {
       String args = null;
-   
+
       BumpContractType bct = bump_client.getContractType(getProject());
       if (bct == null) return null;
-   
+
       if (useContracts() && bct.useContractsForJava()) {
-         String libf = BoardSetup.getSetup().getLibraryPath("cofoja.jar");
-         args = "-javaagent:" + libf;
+	 String libf = BoardSetup.getSetup().getLibraryPath("cofoja.jar");
+	 args = "-javaagent:" + libf;
        }
-   
+
       if (useAssertions() && bct.enableAssertions()) {
-         if (args == null) args = "-ea";
-         else args += " -ea";
+	 if (args == null) args = "-ea";
+	 else args += " -ea";
        }
-   
+
       return null;
     }
 
@@ -1429,19 +1431,19 @@ private class LaunchConfig implements BumpLaunchConfig {
       Element x = bump_client.editRunConfiguration(getId(),"CONNECT_MAP",val);
       return getLaunchResult(x);
     }
-   
+
    @Override public BumpLaunchConfig setRemoteHost(String host) {
       Element x = bump_client.editRunConfiguration(getId(),"REMOTE_HOST",host);
       BumpLaunchConfig blc = getLaunchResult(x);
       return blc.setRemoteHostPort(host,getRemotePort());
    }
-   
+
    @Override public BumpLaunchConfig setRemotePort(int port) {
       Element x = bump_client.editRunConfiguration(getId(),"REMOTE_PORT",Integer.toString(port));
       BumpLaunchConfig blc = getLaunchResult(x);
       return blc.setRemoteHostPort(getRemoteHost(),port);
    }
-   
+
    @Override public BumpLaunchConfig setLogFile(String arg) {
       Element x = bump_client.editRunConfiguration(getId(),"CAPTURE_IN_FILE",arg);
       return getLaunchResult(x);
@@ -1461,17 +1463,17 @@ private class LaunchConfig implements BumpLaunchConfig {
    @Override public BumpLaunchConfig setAttribute(String attr,String arg) {
       if (attr.equals("REMOTE_HOST")) return setRemoteHost(arg);
       else if (attr.equals("REMOTE_PORT")) return setRemotePort(Integer.parseInt(arg));
-      
+
       Element x = bump_client.editRunConfiguration(getId(),attr,arg);
       return getLaunchResult(x);
     }
 
    private String getAttribute(Element xml,String id) {
       for (Element ae : IvyXml.children(xml,"ATTRIBUTE")) {
-         String anm = IvyXml.getAttrString(ae,"NAME");
-         if (id.equals(anm)) {
-            return IvyXml.getText(ae);
-          }
+	 String anm = IvyXml.getAttrString(ae,"NAME");
+	 if (id.equals(anm)) {
+	    return IvyXml.getText(ae);
+	  }
        }
       return null;
     }
@@ -1482,12 +1484,12 @@ private class LaunchConfig implements BumpLaunchConfig {
       if ("tT1yY".indexOf(s.charAt(0)) >= 0) return true;
       return false;
     }
-   
+
    private Integer getInteger(Element xml,String id) {
       String s = getAttribute(xml,id);
       if (s == null || s.isEmpty()) return null;
       try {
-         return Integer.parseInt(s);
+	 return Integer.parseInt(s);
        }
       catch (NumberFormatException e) { }
       return null;
@@ -1568,7 +1570,7 @@ private class LaunchData implements BumpLaunch {
 
    synchronized ProcessData getDefaultProcess() {
       if (default_process == null) {
-         default_process = createDefaultProcess(this);
+	 default_process = createDefaultProcess(this);
        }
       return default_process;
     }
@@ -1632,7 +1634,7 @@ private class ProcessData implements BumpProcess {
    @Override public Iterable<BumpThread> getThreads() {
       List<BumpThread> rslt = new ArrayList<BumpThread>();
       for (ThreadData td : active_threads.values()) {
-         if (td.getProcess() == this && !td.isInternal()) rslt.add(td);
+	 if (td.getProcess() == this && !td.isInternal()) rslt.add(td);
        }
       return rslt;
     }
@@ -1667,8 +1669,8 @@ private class ProcessData implements BumpProcess {
       if (is_running && IvyXml.getAttrBool(xml,"TERMINATED")) is_running = false;
       for_launch = findLaunch(IvyXml.getChild(xml,"LAUNCH"));
       if (process_name == null) {
-         String nm = IvyXml.getAttrString(xml,"NAME");
-         if (nm != null) setProcessName(nm);
+	 String nm = IvyXml.getAttrString(xml,"NAME");
+	 if (nm != null) setProcessName(nm);
        }
     }
 
@@ -1697,96 +1699,96 @@ private class ProcessData implements BumpProcess {
    void handleBandaidData(long when,Element xml) {
       Map<String,ThreadData> ths = new HashMap<String,ThreadData>();
       for (ThreadData td : active_threads.values()) {
-         // management thread id and eclipse thread id don't match -- need to use names
-         // this has problems when there are threads with identical names
-         if (td.getProcess() == this) ths.put(td.getName(),td);
+	 // management thread id and eclipse thread id don't match -- need to use names
+	 // this has problems when there are threads with identical names
+	 if (td.getProcess() == this) ths.put(td.getName(),td);
        }
-   
+
       Element x = IvyXml.getChild(xml,"STATES");
       for (Element tc : IvyXml.children(x,"THREAD")) {
-         String id = IvyXml.getAttrString(tc,"NAME");
-         ThreadData td = ths.get(id);
-         if (td != null && td.handleBandaidData(tc)) {
-            ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
-            for (BumpRunEventHandler reh : event_handlers) {
-               try {
-                  reh.handleThreadEvent(evt);
-                }
-               catch (Throwable t) {
-                  BoardLog.logE("BUMP","Problem handling state event",t);
-                }
-             }
-          }
-         else if (td == null) {
-            BoardLog.logD("BUMP","Can't find thread " + id + " " + IvyXml.convertXmlToString(tc));
-          }
+	 String id = IvyXml.getAttrString(tc,"NAME");
+	 ThreadData td = ths.get(id);
+	 if (td != null && td.handleBandaidData(tc)) {
+	    ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
+	    for (BumpRunEventHandler reh : event_handlers) {
+	       try {
+		  reh.handleThreadEvent(evt);
+		}
+	       catch (Throwable t) {
+		  BoardLog.logE("BUMP","Problem handling state event",t);
+		}
+	     }
+	  }
+	 else if (td == null) {
+	    BoardLog.logD("BUMP","Can't find thread " + id + " " + IvyXml.convertXmlToString(tc));
+	  }
        }
-      
+
       Element dx = IvyXml.getChild(xml,"DEADLOCKS");
       if (dx != null) {
-         for (Element de : IvyXml.children(dx,"DEADLOCK")) {
-            for (Element te : IvyXml.children(de,"THREAD")) {
-               String id = IvyXml.getAttrString(te,"NAME");
-               ThreadData td = ths.get(id);
-               if (td != null && td.handleBandaidDeadlock()) {
-                  ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
-                  for (BumpRunEventHandler reh : event_handlers) {
-                     try {
-                        reh.handleThreadEvent(evt);
-                      }
-                     catch (Throwable t) {
-                        BoardLog.logE("BUMP","Problem handling deadlock state event",t);
-                      }
-                   }
-                }
-             }
-          }
+	 for (Element de : IvyXml.children(dx,"DEADLOCK")) {
+	    for (Element te : IvyXml.children(de,"THREAD")) {
+	       String id = IvyXml.getAttrString(te,"NAME");
+	       ThreadData td = ths.get(id);
+	       if (td != null && td.handleBandaidDeadlock()) {
+		  ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
+		  for (BumpRunEventHandler reh : event_handlers) {
+		     try {
+			reh.handleThreadEvent(evt);
+		      }
+		     catch (Throwable t) {
+			BoardLog.logE("BUMP","Problem handling deadlock state event",t);
+		      }
+		   }
+		}
+	     }
+	  }
        }
-   
+
       Element px = IvyXml.getChild(xml,"CPUPERF");
       if (px != null) {
-         if (perf_writer != null) {
-            perf_writer.println(IvyXml.convertXmlToString(px));
-            perf_writer.flush();
-          }
-         ProcessPerfEvent ppe = new ProcessPerfEvent(this,px);
-         for (BumpRunEventHandler reh : event_handlers) {
-            try {
-               reh.handleProcessEvent(ppe);
-             }
-            catch (Throwable t) {
-               BoardLog.logE("BUMP","Problem handling performance event",t);
-             }
-          }
+	 if (perf_writer != null) {
+	    perf_writer.println(IvyXml.convertXmlToString(px));
+	    perf_writer.flush();
+	  }
+	 ProcessPerfEvent ppe = new ProcessPerfEvent(this,px);
+	 for (BumpRunEventHandler reh : event_handlers) {
+	    try {
+	       reh.handleProcessEvent(ppe);
+	     }
+	    catch (Throwable t) {
+	       BoardLog.logE("BUMP","Problem handling performance event",t);
+	     }
+	  }
        }
       Element tx = IvyXml.getChild(xml,"TRIE");
       if (tx != null) {
-         if (trie_writer != null) {
-            trie_writer.println(IvyXml.convertXmlToString(tx));
-            trie_writer.flush();
-          }
-         ProcessTrieEvent pte = new ProcessTrieEvent(this,tx);
-         for (BumpRunEventHandler reh : event_handlers) {
-            try {
-               reh.handleProcessEvent(pte);
-             }
-            catch (Throwable t) {
-               BoardLog.logE("BUMP","Problem handling trie event",t);
-             }
-          }
+	 if (trie_writer != null) {
+	    trie_writer.println(IvyXml.convertXmlToString(tx));
+	    trie_writer.flush();
+	  }
+	 ProcessTrieEvent pte = new ProcessTrieEvent(this,tx);
+	 for (BumpRunEventHandler reh : event_handlers) {
+	    try {
+	       reh.handleProcessEvent(pte);
+	     }
+	    catch (Throwable t) {
+	       BoardLog.logE("BUMP","Problem handling trie event",t);
+	     }
+	  }
        }
       Element rx = IvyXml.getChild(xml,"TRACE");
       if (rx != null) {
-         // BoardLog.logD("BUMP","TRACE DATA: " + IvyXml.convertXmlToString(rx));
-         ProcessTraceEvent pre = new ProcessTraceEvent(this,rx);
-         for (BumpRunEventHandler reh : event_handlers) {
-            try {
-               reh.handleProcessEvent(pre);
-             }
-            catch (Throwable t) {
-               BoardLog.logE("BUMP","Problem handling trace event",t);
-             }
-          }   
+	 // BoardLog.logD("BUMP","TRACE DATA: " + IvyXml.convertXmlToString(rx));
+	 ProcessTraceEvent pre = new ProcessTraceEvent(this,rx);
+	 for (BumpRunEventHandler reh : event_handlers) {
+	    try {
+	       reh.handleProcessEvent(pre);
+	     }
+	    catch (Throwable t) {
+	       BoardLog.logE("BUMP","Problem handling trace event",t);
+	     }
+	  }
        }
    }
 
@@ -1853,15 +1855,15 @@ private class ThreadData implements BumpThread {
       if (val != null) thread_name = val;
       val = IvyXml.getAttrString(xml,"GROUP");
       if (val != null) thread_group = val;
-   
+
       if (IvyXml.getAttrBool(xml,"SYSTEM")) thread_type = BumpThreadType.SYSTEM;
       else {
 	 BumpThreadType btt = null;
-         if (thread_name != null) btt = known_threads.get(thread_name);
-         if (btt == null) btt = BumpThreadType.USER;
-         thread_type = btt;             // don't allow thread_type to be null, even temporarily
+	 if (thread_name != null) btt = known_threads.get(thread_name);
+	 if (btt == null) btt = BumpThreadType.USER;
+	 thread_type = btt;		// don't allow thread_type to be null, even temporarily
        }
-   
+
       is_daemon = IvyXml.getAttrBool(xml,"DAEMON");
       if (IvyXml.getAttrBool(xml,"STACK")) num_frames = IvyXml.getAttrInt(xml,"FRAMES",1);
       else num_frames = -1;
@@ -1870,7 +1872,7 @@ private class ThreadData implements BumpThread {
       for_launch = findLaunch(IvyXml.getChild(xml,"LAUNCH"));
       for_process = findProcess(xml);
       if (for_process == null && !IvyXml.getAttrPresent(xml,"PID") && for_launch != null) {
-         for_process = for_launch.getDefaultProcess();
+	 for_process = for_launch.getDefaultProcess();
        }
       exception_type = null;
       current_breakpoint = null;
@@ -1909,12 +1911,12 @@ private class ThreadData implements BumpThread {
    void resetStack() {
       Element xml = bump_client.getThreadStack(this);
       if (xml == null) {
-         stack_data = null;
-         num_frames = -1;
+	 stack_data = null;
+	 num_frames = -1;
        }
       else {
-         stack_data = new StackData(xml,thread_id);
-         num_frames = stack_data.getNumFrames();
+	 stack_data = new StackData(xml,thread_id);
+	 num_frames = stack_data.getNumFrames();
        }
       current_breakpoint = null;
     }
@@ -1922,13 +1924,13 @@ private class ThreadData implements BumpThread {
    @Override public BumpThreadStack getStack() {
       if (num_frames <= 0) return null;
       if (stack_data == null) {
-         Element xml = bump_client.getThreadStack(this);
-         if (xml != null) {
-            stack_data = new StackData(xml,thread_id);
-            num_frames = stack_data.getNumFrames();
-          }
+	 Element xml = bump_client.getThreadStack(this);
+	 if (xml != null) {
+	    stack_data = new StackData(xml,thread_id);
+	    num_frames = stack_data.getNumFrames();
+	  }
        }
-   
+
       return stack_data;
     }
 
@@ -1941,18 +1943,18 @@ private class ThreadData implements BumpThread {
       boolean chng = false;
       BumpThreadState state = IvyXml.getAttrEnum(xml,"STATE",thread_state);
       if (state == BumpThreadState.BLOCKED &&
-            thread_state == BumpThreadState.DEADLOCKED)
-         state = thread_state;
+	    thread_state == BumpThreadState.DEADLOCKED)
+	 state = thread_state;
       else if (state == BumpThreadState.STOPPED_BLOCKED &&
-            thread_state == BumpThreadState.STOPPED_DEADLOCK)
-         state = thread_state;
-   
+	    thread_state == BumpThreadState.STOPPED_DEADLOCK)
+	 state = thread_state;
+
       if (state != thread_state) {
-         if (state.isRunning() == thread_state.isRunning() && !thread_state.isException()) {
-            chng = true;
-            thread_state = state;
-            // System.err.println("SET BANDAID STATE OF " + thread_name + " TO " + state);
-         }
+	 if (state.isRunning() == thread_state.isRunning() && !thread_state.isException()) {
+	    chng = true;
+	    thread_state = state;
+	    // System.err.println("SET BANDAID STATE OF " + thread_name + " TO " + state);
+	 }
        }
       cpu_time = IvyXml.getAttrLong(xml,"CPUTM");
       user_time = IvyXml.getAttrLong(xml,"USERTM");
@@ -2004,14 +2006,14 @@ private class StackData implements BumpThreadStack {
       if (!IvyXml.isElement(xml,"STACKFRAMES")) xml = IvyXml.getChild(xml,"STACKFRAMES");
       stack_frames = new ArrayList<>();
       for (Element telt : IvyXml.children(xml,"THREAD")) {
-         String teid = IvyXml.getAttrString(telt,"ID");
-         if (tid.equals(teid)) {
-            for_thread = findThread(tid);
-            for (Element e : IvyXml.children(telt,"STACKFRAME")) {
-               stack_frames.add(new StackFrame(for_thread,e,stack_frames.size()));
-             }
-            break;
-          }
+	 String teid = IvyXml.getAttrString(telt,"ID");
+	 if (tid.equals(teid)) {
+	    for_thread = findThread(tid);
+	    for (Element e : IvyXml.children(telt,"STACKFRAME")) {
+	       stack_frames.add(new StackFrame(for_thread,e,stack_frames.size()));
+	     }
+	    break;
+	  }
        }
     }
 
@@ -2051,70 +2053,70 @@ private class StackFrame implements BumpStackFrame {
       method_name = IvyXml.getAttrString(xml,"METHOD");
       String fnm = IvyXml.getAttrString(xml,"FILE");
       if (fnm == null) {
-         for_file = null;
-         is_classfile = true;
+	 for_file = null;
+	 is_classfile = true;
        }
       else if (IvyXml.getAttrString(xml,"FILETYPE").equals("CLASSFILE")) {
-         is_classfile = true;
-         for_file = null;
-         int soff = IvyXml.getAttrInt(xml,"SOURCEOFF",-1);
-         int slen = IvyXml.getAttrInt(xml,"SOURCELEN",-1);
-         if (soff >= 0 && slen >= 0) {
-            synchronized (source_map) {
-               for_file = source_map.get(fnm);
-               if (for_file == null) {
-        	  try {
-        	     String xnm = fnm;
-        	     int idx = xnm.indexOf("<");
-        	     if (idx >= 0) xnm = xnm.substring(0,idx);
-        	     for_file = File.createTempFile("BUBBLES_" + xnm,".java");
-        	     source_map.put(fnm,for_file);
-        	     byte [] data = IvyXml.stringToByteArray(IvyXml.getTextElement(xml,"SOURCE"));
-        	     if (data == null) for_file = null;
-        	     else {
-        		FileOutputStream fos = new FileOutputStream(for_file);
-        		fos.write(data);
-        		fos.close();
-        	      }
-        	   }
-        	  catch (IOException e) {
-        	     BoardLog.logE("BUMP","Problem writing source file: " + e,e);
-        	   }
-        	  if (for_file != null) for_file.deleteOnExit();
-        	}
-             }
-          }
+	 is_classfile = true;
+	 for_file = null;
+	 int soff = IvyXml.getAttrInt(xml,"SOURCEOFF",-1);
+	 int slen = IvyXml.getAttrInt(xml,"SOURCELEN",-1);
+	 if (soff >= 0 && slen >= 0) {
+	    synchronized (source_map) {
+	       for_file = source_map.get(fnm);
+	       if (for_file == null) {
+		  try {
+		     String xnm = fnm;
+		     int idx = xnm.indexOf("<");
+		     if (idx >= 0) xnm = xnm.substring(0,idx);
+		     for_file = File.createTempFile("BUBBLES_" + xnm,".java");
+		     source_map.put(fnm,for_file);
+		     byte [] data = IvyXml.stringToByteArray(IvyXml.getTextElement(xml,"SOURCE"));
+		     if (data == null) for_file = null;
+		     else {
+			FileOutputStream fos = new FileOutputStream(for_file);
+			fos.write(data);
+			fos.close();
+		      }
+		   }
+		  catch (IOException e) {
+		     BoardLog.logE("BUMP","Problem writing source file: " + e,e);
+		   }
+		  if (for_file != null) for_file.deleteOnExit();
+		}
+	     }
+	  }
        }
       else {
-         for_file = new File(fnm);
-         is_classfile = false;
+	 for_file = new File(fnm);
+	 is_classfile = false;
        }
-   
+
       line_number = IvyXml.getAttrInt(xml,"LINENO");
       is_static = IvyXml.getAttrBool(xml,"STATIC");
       is_synthetic = IvyXml.getAttrBool(xml,"SYNTHETIC");
       String sgn = IvyXml.getAttrString(xml,"SIGNATURE");
       if (sgn != null) {
-         raw_signature = sgn;
-         int sidx = sgn.lastIndexOf(")");
-         if (sidx > 0) sgn = sgn.substring(0,sidx+1);
-         method_signature = IvyFormat.formatTypeName(sgn);
+	 raw_signature = sgn;
+	 int sidx = sgn.lastIndexOf(")");
+	 if (sidx > 0) sgn = sgn.substring(0,sidx+1);
+	 method_signature = IvyFormat.formatTypeName(sgn);
       }
       frame_level = lvl;
-   
+
       variable_map = new HashMap<String,ValueData>();
       for (Element e : IvyXml.children(xml,"VALUE")) {
-         ValueData vd = new ValueData(this,e,null);
-         variable_map.put(vd.getName(),vd);
+	 ValueData vd = new ValueData(this,e,null);
+	 variable_map.put(vd.getName(),vd);
        }
     }
 
    @Override public BumpThread getThread()		{ return for_thread; }
    @Override public String getFrameClass()		{ return class_name; }
    @Override public String getMethod()			{ return method_name; }
-   
+
    @Override public String getSignature()		{ return method_signature; }
-   @Override public String getRawSignature()            { return raw_signature; }
+   @Override public String getRawSignature()		{ return raw_signature; }
    @Override public File getFile()			{ return for_file; }
    @Override public int getLineNumber() 		{ return line_number; }
    @Override public String getId()			{ return frame_id; }
@@ -2154,7 +2156,7 @@ private class StackFrame implements BumpStackFrame {
 
       return true;
     }
-   
+
    @Override public boolean sameFrame(BumpStackFrame frm) {
       if (frm == null) return false;
       if (frame_id.equals(frm.getId())) return true;
@@ -2273,9 +2275,9 @@ private class ValueData implements BumpRunValue {
    private void addValues(Element xml) {
       if (xml == null) return;
       for (Element e : IvyXml.children(xml,"VALUE")) {
-         if (sub_values == null) sub_values = new HashMap<>();
-         ValueData vd = new ValueData(this,e);
-         sub_values.put(vd.getName(),vd);
+	 if (sub_values == null) sub_values = new HashMap<>();
+	 ValueData vd = new ValueData(this,e);
+	 sub_values.put(vd.getName(),vd);
        }
     }
 
@@ -2312,60 +2314,60 @@ private class StepUserFilter implements BumpThreadFilter {
       if (evt == null || evt.getEventType() != BumpRunEventType.THREAD_CHANGE) return evt;
       if (!bt.getThreadState().isStopped()) return evt;
       BumpThreadStack stk = bt.getStack();
-      if (stk == null || stk.getNumFrames() == 0 || initial_stack == null || 
-            stk.getNumFrames() < initial_stack.getNumFrames()) {
-         removeThreadFilter(bt,this);
-         return evt;
+      if (stk == null || stk.getNumFrames() == 0 || initial_stack == null ||
+	    stk.getNumFrames() < initial_stack.getNumFrames()) {
+	 removeThreadFilter(bt,this);
+	 return evt;
        }
       BumpStackFrame frm = stk.getFrame(0);
       BumpStackFrame frm0 = initial_stack.getFrame(0);
-   
+
       BoardLog.logD("BUMP","STEP FILTER " + frm.getMethod());
-   
+
       if (stk.getNumFrames() == initial_stack.getNumFrames()) {
-         if (frm.getMethod().equals(frm0.getMethod()) &&
-        	(frm.getLineNumber() == frm0.getLineNumber() || frm.getLineNumber() == 1) &&
-        	frm.getClass().equals(frm0.getClass()) &&
-           bt.getExceptionType() == null)  {
-            bump_client.stepInto(bt);
-            return null;
-          }
-         removeThreadFilter(bt,this);
-         return evt;
+	 if (frm.getMethod().equals(frm0.getMethod()) &&
+		(frm.getLineNumber() == frm0.getLineNumber() || frm.getLineNumber() == 1) &&
+		frm.getClass().equals(frm0.getClass()) &&
+	   bt.getExceptionType() == null)  {
+	    bump_client.stepInto(bt);
+	    return null;
+	  }
+	 removeThreadFilter(bt,this);
+	 return evt;
        }
-   
+
       File f = frm.getFile();
       if (f != null) {
-         boolean ex = f.exists();
-         if (BoardSetup.getSetup().getRunMode() == BoardSetup.RunMode.CLIENT) ex = true;
-         if (ex && frm.getLineNumber() > 1 && !isTempFile(f) && !isIgnore(frm)) {
-            String mnm = frm.getMethod();
-            int idx = mnm.lastIndexOf(".");
-            if (idx >= 0) mnm = mnm.substring(idx+1);
-            if (!mnm.contains("$") || mnm.startsWith("lambda$")) {
-               removeThreadFilter(bt,this);
-               return evt;
-             }
-          }
+	 boolean ex = f.exists();
+	 if (BoardSetup.getSetup().getRunMode() == BoardSetup.RunMode.CLIENT) ex = true;
+	 if (ex && frm.getLineNumber() > 1 && !isTempFile(f) && !isIgnore(frm)) {
+	    String mnm = frm.getMethod();
+	    int idx = mnm.lastIndexOf(".");
+	    if (idx >= 0) mnm = mnm.substring(idx+1);
+	    if (!mnm.contains("$") || mnm.startsWith("lambda$")) {
+	       removeThreadFilter(bt,this);
+	       return evt;
+	     }
+	  }
        }
       if (bt.getThreadDetails() == BumpThreadStateDetail.BREAKPOINT) {
-         removeThreadFilter(bt,this);
-         return evt;
+	 removeThreadFilter(bt,this);
+	 return evt;
        }
-   
+
       if (frm0 != null) {
-         BoardLog.logD("BUMP","USER_STEP " + frm.getMethod() + " " + stk.getNumFrames() + " " +
-               initial_stack.getNumFrames() + " " + frm0.getMethod() + " " +
-               frm.getLineNumber() + " " + frm0.getLineNumber() + " " +
-               frm.getFrameClass() + " " + frm0.getFrameClass());
+	 BoardLog.logD("BUMP","USER_STEP " + frm.getMethod() + " " + stk.getNumFrames() + " " +
+	       initial_stack.getNumFrames() + " " + frm0.getMethod() + " " +
+	       frm.getLineNumber() + " " + frm0.getLineNumber() + " " +
+	       frm.getFrameClass() + " " + frm0.getFrameClass());
        }
       else {
-         BoardLog.logD("BUMP","USER_STEP_NOPREV " + frm.getMethod() + " " + stk.getNumFrames() + " " +
-               initial_stack.getNumFrames() + " " + 
-               frm.getLineNumber() + " " + 
-               frm.getFrameClass());
+	 BoardLog.logD("BUMP","USER_STEP_NOPREV " + frm.getMethod() + " " + stk.getNumFrames() + " " +
+	       initial_stack.getNumFrames() + " " +
+	       frm.getLineNumber() + " " +
+	       frm.getFrameClass());
        }
-      
+
       if (frm.getFrameClass().startsWith("java.lang.invoke")) bump_client.stepInto(bt);
       else if (frm.getMethod().contains("access$")) bump_client.stepInto(bt);
       else bump_client.stepReturn(bt);
@@ -2407,7 +2409,7 @@ private class BandaidHandler implements MintHandler {
       long now = args.getLongArgument(1);
       Element xml = args.getXmlArgument(2);
       ProcessData pd = named_processes.get(pid);
-   
+
       if (pd == null) return;
       pd.handleBandaidData(now,xml);
     }
@@ -2423,22 +2425,22 @@ private class BandaidHistoryHandler implements MintHandler {
       String pid = args.getArgument(0);
       String tnm = args.getArgument(1);
       Element xml = msg.getXml();
-   
+
       ProcessData pd = named_processes.get(pid);
       if (pd == null) return;
       for (ThreadData td : active_threads.values()) {
-         if (td.getProcess() == pd && !td.isInternal() && td.getName().equals(tnm)) {
-            ThreadHistoryEvent the = new ThreadHistoryEvent(td,xml);
-            for (BumpRunEventHandler reh : event_handlers) {
-               try {
-        	  reh.handleThreadEvent(the);
-        	}
-               catch (Throwable t) {
-        	  BoardLog.logE("BUMP","Problem handling history event",t);
-        	}
-             }
-            break;
-          }
+	 if (td.getProcess() == pd && !td.isInternal() && td.getName().equals(tnm)) {
+	    ThreadHistoryEvent the = new ThreadHistoryEvent(td,xml);
+	    for (BumpRunEventHandler reh : event_handlers) {
+	       try {
+		  reh.handleThreadEvent(the);
+		}
+	       catch (Throwable t) {
+		  BoardLog.logE("BUMP","Problem handling history event",t);
+		}
+	     }
+	    break;
+	  }
        }
     }
 

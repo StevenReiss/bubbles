@@ -86,7 +86,7 @@ enum BumpSymbolType {
    ENUM,
    THROWABLE,
    ANNOTATION,
-   FIELD,	
+   FIELD,
    ENUM_CONSTANT,
    FUNCTION,
    CONSTRUCTOR,
@@ -664,12 +664,12 @@ enum BumpValueKind {
 enum BumpLaunchConfigType {
    UNKNOWN(null),
    JAVA_APP("Java Application"),
-   JUNIT_TEST("JUnit Test"),
+   JUNIT_TEST("JUnit"),
    REMOTE_JAVA("Remote Java Application"),
    JS("JavaScript"),
    PYTHON("PYTHON");
 
-   private String eclipse_name; 
+   private String eclipse_name;
 
    BumpLaunchConfigType(String nm) {
       eclipse_name = nm;

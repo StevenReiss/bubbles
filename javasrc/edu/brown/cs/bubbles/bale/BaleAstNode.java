@@ -117,6 +117,7 @@ static {
    id_types.put("CLASSDECLL",BaleAstIdType.CLASS_DECL);
    id_types.put("CLASSDECLM",BaleAstIdType.CLASS_DECL_MEMBER);
    id_types.put("EXCEPTIONDECL",BaleAstIdType.EXCEPTION_DECL);
+   id_types.put("VARDECL",BaleAstIdType.FIELD_DECL);
    id_types.put("FIELDDECL",BaleAstIdType.FIELD_DECL);
    id_types.put("PARAMDECL",BaleAstIdType.LOCAL_DECL);
    id_types.put("LOCALDECL",BaleAstIdType.LOCAL_DECL);

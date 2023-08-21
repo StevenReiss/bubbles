@@ -54,6 +54,7 @@ class BuenoGenericProjectMaker implements BuenoConstants
 /********************************************************************************/
 
 private Element         type_data;
+private String		project_language;
 
 private static final Pattern SSH_PAT = Pattern.compile("\\w+@\\w+(\\.\\w+)*\\:\\w+(\\/\\w+)*");
 
@@ -65,6 +66,7 @@ private static final Pattern SSH_PAT = Pattern.compile("\\w+@\\w+(\\.\\w+)*\\:\\
 
 BuenoGenericProjectMaker(Element pdata,Element tdata)
 {
+   project_language = IvyXml.getAttrString(pdata,"LANGUAGE");
    type_data = tdata;
 }
 
@@ -84,6 +86,11 @@ String getName()
 @Override public String toString()
 {
    return IvyXml.getAttrString(type_data,"DESCRIPTION");
+}
+
+String getLanguage()
+{
+   return project_language;
 }
 
 
@@ -123,6 +130,7 @@ boolean checkStatus(BuenoProperties props)
          case "DIRECTORY" :
             File dir = props.getFile(pnm);
             if (IvyXml.getAttrBool(felt,"EXISTS")) {
+               if (dir == null) return false;
                if (!dir.exists()) return false;
                if (!dir.isDirectory()) return false;
              }

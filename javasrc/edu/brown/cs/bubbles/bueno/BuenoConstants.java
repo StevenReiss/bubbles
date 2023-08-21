@@ -229,6 +229,8 @@ String PROJ_PROP_USE_ANDROID = "ProjectUseAndriod";
 String PROJ_PROP_CORE_OPTIONS = "ProjectCoreOptions";
 String PROJ_PROP_FORMAT_FILE = "ProjectFormatFile";
 String PROJ_PROP_TEMPLATE_DIR = "ProjectTemplateDirectory";
+String PROJ_PROP_LANGUAGE = "ProjectLanguage";
+String PROJ_PROP_TYPE = "ProjectType";
 
 interface BuenoProjectProps {
 

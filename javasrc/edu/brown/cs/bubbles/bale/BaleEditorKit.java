@@ -847,7 +847,7 @@ private static class BackspaceAction extends TextAction {
       else if (target.getOverwriteMode()) backward_action.actionPerformed(e);
       else {
 	 BaleDocument bd = target.getBaleDocument();
-	 int soff = target.getSelectionStart();
+	 int soff = target.getSelectionStart();	 
 	 int eoff = target.getSelectionEnd();
 	 if (soff == eoff && BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_CLOSE)) {
 	    try {
@@ -2829,8 +2829,7 @@ private static class GotoReferenceAction extends TextAction {
 
    @Override public void actionPerformed(ActionEvent e) {
       BowiFactory.startTask();
-      try {
-	 BaleEditorPane target = getBaleEditor(e);
+      try {	 BaleEditorPane target = getBaleEditor(e);
 	 if (!checkReadEditor(target)) return;
 	 BaleDocument bd = target.getBaleDocument();
 	 int soff = target.getSelectionStart();

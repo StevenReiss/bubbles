@@ -1838,8 +1838,8 @@ private static List<BumpLocation> getSearchResults(String proj,Element xml,boole
 	 String pnm = IvyXml.getAttrString(me,"PROJECT");
 	 if (pnm == null) pnm = IvyXml.getAttrString(mi,"PROJECT");
 	 if (pnm == null) pnm = proj;
-	 int acc = IvyXml.getAttrInt(me,"ACCURACY");
-	 if (acc > 0) continue;
+//	 int acc = IvyXml.getAttrInt(me,"ACCURACY");
+//	 if (acc > 0) continue;
 	 BumpLocation bl = new BumpLocation(pnm,fnm,offset,length,srctyp,mi);
 	 rslt.add(bl);
        }

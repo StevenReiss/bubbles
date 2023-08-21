@@ -52,6 +52,7 @@ import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
+import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bump.BumpClient;
@@ -242,20 +243,26 @@ private class NameAction implements ActionListener, UndoableEditListener {
 
 
 
-private class CreateAction implements ActionListener {
+private class CreateAction implements ActionListener, Runnable {
    
    @Override public void actionPerformed(ActionEvent evt) {
       JComponent c = (JComponent) evt.getSource();
       BudaBubble bb = BudaRoot.findBudaBubble(c);
       if (bb != null) bb.setVisible(false);
-      if (!createProject()) {
-         bb.setVisible(true);
-       }
-      // possibly bring up project editor dialog here on success
-      
-      return;
+      BoardThreadPool.start(this);
     }
-}
+   
+   @Override public void run() {
+      if (!createProject()) {
+         // put up error message
+       }
+      else {
+	 // possibly bring up project editor dialog here on success
+      }
+   }
+   
+   
+}	// end of inner class CreateAction
 
 
 private class TypeAction implements ActionListener {
@@ -304,6 +311,8 @@ private boolean createProject()
    File f1 = BoardSetup.getPropertyBase();
    File f2 = new File(f1,"formats.xml");
    create_props.put(PROJ_PROP_FORMAT_FILE,f2);
+   create_props.put(PROJ_PROP_LANGUAGE,create_type.getLanguage());
+   create_props.put(PROJ_PROP_TYPE,create_type.getName());
    
    BumpClient bc = BumpClient.getBump();
    if (!bc.createProject(pnm,pdir,create_type.getName(),create_props)) {
