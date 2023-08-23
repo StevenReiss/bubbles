@@ -197,7 +197,7 @@ void start()
 
 /********************************************************************************/
 /*										*/
-/*	Get launch definitions: LAUNCHES command				*/
+/*	Get LAUNCH and PROJECT configuration data LANGUAGEDATA command		*/
 /*										*/
 /********************************************************************************/
 

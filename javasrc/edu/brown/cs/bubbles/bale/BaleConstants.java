@@ -1058,30 +1058,30 @@ interface BaleAnnotation {
  *	Return the icon for the annotation area associated with this annotation. This
  *	returns null if there is no associated icon (e.g. line highlighting only).
  **/
-   Icon getIcon(BudaBubble bbl);
+   default Icon getIcon(BudaBubble bbl) 			{ return null; }
 
 /**
  *	Return the tool tip associated with this annotation.
  **/
-   String getToolTip();
+   default String getToolTip()					{ return null; }
 
 /**
  *	Return the background color for highlighting the line associated with this
  *	annotation.  This returns null if there is no line highlighting (e.g. icon only).
  **/
-   Color getLineColor(BudaBubble bbl);
+   default Color getLineColor(BudaBubble bbl)			{ return null; }
 
 /**
  *	Return the background annotation area color or null if none.
  **/
-   Color getBackgroundColor();
+   default Color getBackgroundColor()				{ return null; }
 
 
 /**
  *	Check if adding this annotation should ensure that the given location is
  *	not elided and visible
  **/
-   boolean getForceVisible(BudaBubble bbl);
+   default boolean getForceVisible(BudaBubble bbl)		{ return false; }
 
 /**
  *	Return the priority for the annotation.  Annotations of higher priority are
@@ -1092,7 +1092,7 @@ interface BaleAnnotation {
 /**
  *	Add buttons to the context menu for this annotation
  **/
-   void addPopupButtons(Component base,JPopupMenu menu);
+   default void addPopupButtons(Component base,JPopupMenu menu) { }
 
 }	// end of interface BaleAnnotation
 

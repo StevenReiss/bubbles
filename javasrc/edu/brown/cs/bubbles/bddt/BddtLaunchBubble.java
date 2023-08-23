@@ -198,6 +198,7 @@ private void setupPanel()
 	    JCheckBox cbx = pnl.addBoolean(fld.getDescription(),bvl,this);
 	    cmp = cbx;
 	    break;
+         case PRESET :
 	 default :
 	    break;
        }

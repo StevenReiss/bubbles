@@ -236,20 +236,20 @@ private void scanArgs(String [] args)
 	  }
 	 else if (args[i].startsWith("-ws") && i+1 < args.length) {     // -ws <workspace>
 	    work_directory = new File(args[++i]);
-            work_directory = IvyFile.getCanonical(work_directory);
+	    work_directory = IvyFile.getCanonical(work_directory);
 	  }
-         else if (args[i].startsWith("-log") && i+1 < args.length) {     // -log <logfile>
-            try {
-               log_file = new PrintStream(new FileOutputStream(args[++i]));
-               use_stderr = false;
-             }
-            catch (IOException e) {
-               System.err.println("NOBASE: Can't open log file " + args[i]);
-             }
-          }
-         else if (args[i].startsWith("-err")) {                         // -err
-            use_stderr = true;
-          }
+	 else if (args[i].startsWith("-log") && i+1 < args.length) {     // -log <logfile>
+	    try {
+	       log_file = new PrintStream(new FileOutputStream(args[++i]));
+	       use_stderr = false;
+	     }
+	    catch (IOException e) {
+	       System.err.println("NOBASE: Can't open log file " + args[i]);
+	     }
+	  }
+	 else if (args[i].startsWith("-err")) {                         // -err
+	    use_stderr = true;
+	  }
 	 else badArgs();
        }
       else badArgs();
@@ -311,7 +311,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
 {
    logI("Handle command " + cmd + " for " + proj);
    logD("Full command " + IvyXml.convertXmlToString(xml));
-   
+
    IvyXmlWriter xw = new IvyXmlWriter();
    xw.begin("RESULT");
 
@@ -444,7 +444,6 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
 	       IvyXml.getAttrString(xml,"FILE"),
 	       IvyXml.getAttrInt(xml,"OFFSET"),xw);
 	  break;
-      case "LAUNCHES" :
       case "LANGUAGEDATA" :
 	 nobase_debug.handleLanguageData(xw);
 	 break;
@@ -539,7 +538,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
 	       IvyXml.getAttrString(xml,"REPLYID"),xw);
 	 break;
       case "RENAME" :
-         nobase_editor.handleRename(proj,IvyXml.getAttrString(xml,"BID","*"),
+	 nobase_editor.handleRename(proj,IvyXml.getAttrString(xml,"BID","*"),
 	       IvyXml.getAttrString(xml,"FILE"),
 	       IvyXml.getAttrInt(xml,"START"),IvyXml.getAttrInt(xml,"END"),
 	       IvyXml.getAttrString(xml,"NAME"),IvyXml.getAttrString(xml,"HANDLE"),
@@ -547,15 +546,15 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
 	       IvyXml.getAttrBool(xml,"UPDATEREFS",true),
 	       IvyXml.getAttrBool(xml,"DOEDIT",false),
 	       IvyXml.getAttrString(xml,"FILES"),xw);
-         break;
+	 break;
       case "FORMATCODE" :
-         xw.close();
+	 xw.close();
 	 throw new NobaseException("Unimplemented NOBASE command " + cmd);
-         
-      case "RENAMERESOURCE" :                   // only used for java 
+	
+      case "RENAMERESOURCE" :                   // only used for java
       case "FILEELIDE" :                        // only used for system files in Java
       case "MOVEELEMENT" :                      // only used for java
-         xw.close();
+	 xw.close();
 	 throw new NobaseException("Unimplemented NOBASE command " + cmd);
       case "ENTER" :
 	 if (num_clients == 0 && nobase_pinger == null) {
@@ -592,9 +591,9 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
       case "REMOVEPRIVATE" :
 	 break;
       case "SAVEWORKSPACE" :
-         xw.text("SAVED");
-         break;
-         
+	 xw.text("SAVED");
+	 break;
+	
       default :
 	 xw.close();
 	 throw new NobaseException("Unknown NOBASE command " + cmd);
@@ -676,7 +675,7 @@ private static class EditDataImpl implements IEditData {
       end_offset = IvyXml.getAttrInt(e,"END",start_offset);
       edit_text = IvyXml.getText(e);
       if (IvyXml.getAttrBool(e,"ENCODE")) {
-         edit_text = new String(IvyXml.stringToByteArray(edit_text));
+	 edit_text = new String(IvyXml.stringToByteArray(edit_text));
        }
       if (edit_text != null && edit_text.length() == 0) edit_text = null;
     }
@@ -701,37 +700,37 @@ private class CommandHandler implements MintHandler {
       String cmd = args.getArgument(1);
       Element xml = msg.getXml();
       String proj = IvyXml.getAttrString(xml,"PROJECT");
-   
+
       String rslt = null;
-   
+
       try {
-         rslt = handleCommand(cmd,proj,xml);
+	 rslt = handleCommand(cmd,proj,xml);
        }
       catch (NobaseException e) {
-         String xmsg = "Error in command " + cmd + ": " + e;
-         logE(xmsg,e);
-         rslt = "<ERROR><![CDATA[NOBASE: " + xmsg + "]]></ERROR>";
+	 String xmsg = "Error in command " + cmd + ": " + e;
+	 logE(xmsg,e);
+	 rslt = "<ERROR><![CDATA[NOBASE: " + xmsg + "]]></ERROR>";
        }
       catch (Throwable t) {
-         String xmsg = "Problem processing command " + cmd + ": " + t;
-         logE(xmsg,t);
-         StringWriter sw = new StringWriter();
-         PrintWriter pw = new PrintWriter(sw);
-         t.printStackTrace(pw);
-         rslt = "<ERROR>";
-         rslt += "<MESSAGE>NOBASE: " + xmsg + "</MESSAGE>";
-         rslt += "<EXCEPTION><![CDATA[" + t.toString() + "]]></EXCEPTION>";
-         rslt += "<STACK><![CDATA[" + sw.toString() + "]]></STACK>";
-         rslt += "</ERROR>";
+	 String xmsg = "Problem processing command " + cmd + ": " + t;
+	 logE(xmsg,t);
+	 StringWriter sw = new StringWriter();
+	 PrintWriter pw = new PrintWriter(sw);
+	 t.printStackTrace(pw);
+	 rslt = "<ERROR>";
+	 rslt += "<MESSAGE>NOBASE: " + xmsg + "</MESSAGE>";
+	 rslt += "<EXCEPTION><![CDATA[" + t.toString() + "]]></EXCEPTION>";
+	 rslt += "<STACK><![CDATA[" + sw.toString() + "]]></STACK>";
+	 rslt += "</ERROR>";
        }
-   
+
       msg.replyTo(rslt);
-   
+
       if (shutdown_mint) {
-         mint_control.shutDown();
-         synchronized (NobaseMain.this) {
-            NobaseMain.this.notifyAll();
-          }
+	 mint_control.shutDown();
+	 synchronized (NobaseMain.this) {
+	    NobaseMain.this.notifyAll();
+	  }
        }
     }
 
@@ -790,7 +789,7 @@ static public void log(NobaseLogLevel lvl,String msg,Throwable t)
       dumpTrace(null,t);
       System.err.flush();
     }
-  
+
    if (log_file != null) log_file.flush();
 }
 

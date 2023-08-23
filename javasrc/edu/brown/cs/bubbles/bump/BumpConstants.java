@@ -579,7 +579,6 @@ interface BumpRunModel {
 
    Iterable<BumpLaunchConfig> getLaunchConfigurations();
    BumpLaunchConfig getLaunchConfiguration(String id);
-   BumpLaunchConfig createLaunchConfiguration(String name,BumpLaunchConfigType typ);
    BumpLaunchConfig createLaunchConfiguration(String name,BumpLaunchType typ);
    Iterable<BumpProcess> getProcesses();
    List<BumpLaunchType> getLaunchTypes();
@@ -661,30 +660,14 @@ enum BumpValueKind {
 }
 
 
-enum BumpLaunchConfigType {
-   UNKNOWN(null),
-   JAVA_APP("Java Application"),
-   JUNIT_TEST("JUnit"),
-   REMOTE_JAVA("Remote Java Application"),
-   JS("JavaScript"),
-   PYTHON("PYTHON");
 
-   private String eclipse_name;
-
-   BumpLaunchConfigType(String nm) {
-      eclipse_name = nm;
-    }
-
-   public String getEclipseName() {
-      return eclipse_name;
-    }
-}
 
 interface BumpLaunchType {
    String getName();
    String getDescription();
    List<BumpLaunchConfigField> getFields();
-
+   boolean useDebugArgs();
+   boolean isTestCase();
 }
 
 
@@ -694,6 +677,7 @@ enum BumpLaunchConfigFieldType {
    STRING,
    INTEGER,
    CHOICE,
+   PRESET,
 }
 
 interface BumpLaunchConfigField {
@@ -706,6 +690,7 @@ interface BumpLaunchConfigField {
    int getNumRows();
    int getMin();
    int getMax();
+   String getDefaultValue();
 
 }	// end of interface BumpLaunchConfigField
 
@@ -728,7 +713,7 @@ interface BumpRunEventHandler extends EventListener {
 
 
 /**
- *	User-setup runnableREMOVE_
+ *	User-setup runnable
  **/
 
 interface BumpLaunchConfig {
@@ -740,7 +725,6 @@ interface BumpLaunchConfig {
    boolean getStopInMain();
    String getConfigName();
    String getId();
-   BumpLaunchConfigType getConfigType();
    BumpLaunchType getLaunchType();
    String getTestName();
    String getRemoteHost();
@@ -765,7 +749,6 @@ interface BumpLaunchConfig {
    BumpLaunchConfig setStopInMain(boolean fg);
 
    BumpLaunchConfig setTestName(String name);
-   BumpLaunchConfig setJunitKind(String kind);
 
    BumpLaunchConfig setRemoteHostPort(String host,int port);
    BumpLaunchConfig setRemoteHost(String host);

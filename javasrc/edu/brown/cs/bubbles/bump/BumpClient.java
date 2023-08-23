@@ -2927,25 +2927,17 @@ Element getRunConfigurations()
 }
 
 
-Element getNewRunConfiguration(String name,String clone,BumpLaunchConfigType typ)
-{
-   String q = "";
-   if (name != null) q = "NAME='" + name + "'";
-   if (typ != null) q += " TYPE='" + typ.getEclipseName() + "'";
-   if (clone != null) { 	// must have a new name
-      q += " CLONE='" + clone + "'";
-    }
 
-   Element e = getXmlReply("NEWRUNCONFIG",null,q,null,0);
-   return e;
-}
 
 
 Element getNewRunConfiguration(String name,String clone,BumpLaunchType typ)
 {
    String q = "";
    if (name != null) q = "NAME='" + name + "'";
-   if (typ != null) q += " TYPE='" + typ.getName() + "'";
+   if (typ != null) {
+      q += " TYPE='" + typ.getDescription() + "'";
+      q += " KIND='" + typ.getName() + "'";
+    }
    if (clone != null) { 	// must have a new name
       q += " CLONE='" + clone + "'";
     }
@@ -3021,20 +3013,7 @@ public BumpProcess startDebug(BumpLaunchConfig cfg,String id)
    String q = "NAME='" + cfg.getId() +"' MODE='debug'";
 
    String xtr = null;
-   switch (cfg.getConfigType()) {
-      case JAVA_APP :
-      case JUNIT_TEST :
-	 xtr = getDebugArgs(id);
-	 break;
-      case REMOTE_JAVA :
-	 break;
-      case PYTHON :
-	 break;
-      case UNKNOWN :
-	 break;
-      case JS :
-	 break;
-   }
+   if (cfg.getLaunchType().useDebugArgs()) xtr = getDebugArgs(id); 
 
    String ctr = cfg.getContractArgs();
    if (ctr != null) {

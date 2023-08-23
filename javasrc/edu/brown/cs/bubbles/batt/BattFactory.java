@@ -720,7 +720,7 @@ public static BumpLaunchConfig getLaunchConfigurationForTest(BattTest btc)
    BumpRunModel brm = bc.getRunModel();
 
    for (BumpLaunchConfig blc : brm.getLaunchConfigurations()) {
-      if (!blc.isWorkingCopy() && blc.getConfigType() == BumpLaunchConfigType.JUNIT_TEST) {
+      if (!blc.isWorkingCopy() && blc.getLaunchType().isTestCase()) {
 	 if (blc.getTestName() != null && blc.getTestName().equals(btc.getMethodName()) &&
 	       btc.getClassName().equals(blc.getMainClass()))
 	    return blc;
@@ -744,14 +744,10 @@ public static BumpLaunchConfig getLaunchConfigurationForTest(BattTest btc)
    
    BumpLaunchConfig blc = null;
    for (BumpLaunchType blt : brm.getLaunchTypes()) {
-      if (blt.getName().contains("TEST")) {
+      if (blt.isTestCase()) {
 	 blc = brm.createLaunchConfiguration(nm,blt);
 	 break;
       }
-   }
-
-   if (blc == null) { 
-      blc = brm.createLaunchConfiguration(nm,BumpLaunchConfigType.JUNIT_TEST);
    }
    if (blc == null) return null;
 
@@ -759,9 +755,15 @@ public static BumpLaunchConfig getLaunchConfigurationForTest(BattTest btc)
    if (pnm != null) blc1 = blc1.setProject(pnm);
    blc1 = blc1.setMainClass(btc.getClassName());
    blc1 = blc1.setTestName(btc.getMethodName());
-   blc1 = blc1.setJunitKind("junit4");
-   blc1 = blc1.setAttribute("org.eclipse.debug.core.preferred_launchers",
-	 "{[debug]=org.eclipse.jdt.junit.launchconfig}");
+   for (BumpLaunchConfigField blf : blc.getLaunchType().getFields()) {
+      switch (blf.getType()) {
+         case PRESET :
+            String fnm = blf.getFieldName();
+            String vl = blf.getDefaultValue();
+            if (nm != null && vl != null) blc1 = blc1.setAttribute(fnm,vl);
+            break;
+       }
+    }
    blc = blc1.save();
 
    return blc;

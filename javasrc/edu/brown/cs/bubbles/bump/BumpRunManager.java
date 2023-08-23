@@ -340,12 +340,7 @@ void terminateAll()
 
 
 
-@Override public BumpLaunchConfig createLaunchConfiguration(String name,BumpLaunchConfigType typ)
-{
-   Element e = bump_client.getNewRunConfiguration(name,null,typ);
 
-   return getLaunchResult(e);
-}
 
 
 @Override public BumpLaunchConfig createLaunchConfiguration(String name,BumpLaunchType typ)
@@ -1172,13 +1167,17 @@ private class LaunchType implements BumpLaunchType {
    private String type_name;
    private String type_description;
    private List<BumpLaunchConfigField> launch_fields;
+   private boolean use_debug_args;
+   private boolean test_case;
 
    LaunchType(Element xml) {
       type_name = IvyXml.getAttrString(xml, "NAME");
       type_description = IvyXml.getAttrString(xml, "DESCRIPTION");
+      use_debug_args = IvyXml.getAttrBool(xml,"DEBUGARGS");
+      test_case = IvyXml.getAttrBool(xml,"TESTCASE");
       launch_fields = new ArrayList<>();
       for (Element fld : IvyXml.children(xml,"ATTRIBUTE")) {
-	 launch_fields.add(new LaunchTypeField(fld));
+         launch_fields.add(new LaunchTypeField(fld));
       }
    }
 
@@ -1187,6 +1186,8 @@ private class LaunchType implements BumpLaunchType {
    @Override public List<BumpLaunchConfigField> getFields() {
       return launch_fields;
    }
+   @Override public boolean useDebugArgs()      { return use_debug_args; }
+   @Override public boolean isTestCase()        { return test_case; }
 
 }	// end of inner class LaunchType
 
@@ -1201,16 +1202,18 @@ private class LaunchTypeField implements BumpLaunchConfigField {
    private int num_rows;
    private int min_value;
    private int max_value;
+   private String default_value;
 
    LaunchTypeField(Element xml) {
       field_name = IvyXml.getAttrString(xml, "NAME");
-      field_description = IvyXml.getAttrString(xml, "DESCRIPTION");
+      field_description = IvyXml.getAttrString(xml, "DESCRIPTION",field_name);
       field_type = IvyXml.getAttrEnum(xml, "TYPE", BumpLaunchConfigFieldType.UNKNOWN);
       field_eval = IvyXml.getAttrString(xml, "EVAL");
       field_option = IvyXml.getAttrString(xml,"ARG");
       num_rows = IvyXml.getAttrInt(xml,"ROWS",1);
       min_value = IvyXml.getAttrInt(xml, "MIN",0);
       max_value = IvyXml.getAttrInt(xml, "MAX",min_value);
+      default_value = IvyXml.getAttrString(xml,"VALUE");
    }
 
    @Override public String getFieldName()		{ return field_name; }
@@ -1221,6 +1224,7 @@ private class LaunchTypeField implements BumpLaunchConfigField {
    @Override public int getNumRows()			{ return num_rows; }
    @Override public int getMin()			{ return min_value; }
    @Override public int getMax()			{ return max_value; }
+   @Override public String getDefaultValue()            { return default_value; }
 
 }	// end of inner class LaunchTypeField
 
@@ -1235,7 +1239,6 @@ private class LaunchTypeField implements BumpLaunchConfigField {
 private class LaunchConfig implements BumpLaunchConfig {
 
    private String launch_id;
-   private BumpLaunchConfigType config_type;
    private BumpLaunchType launch_type;
    private Element launch_xml;
 
@@ -1246,29 +1249,23 @@ private class LaunchConfig implements BumpLaunchConfig {
 
    void update(Element xml) {
       BoardLog.logD("BUMP","Found Launch Config " + IvyXml.convertXmlToString(xml));
-
+   
       launch_xml = xml;
-
+   
       String tnm = IvyXml.getAttrString(xml, "TYPE");
-      config_type = IvyXml.getAttrEnum(xml,"TYPE",BumpLaunchConfigType.UNKNOWN);
       Element type = IvyXml.getChild(xml,"TYPE");
       if (type != null) {
-	 tnm = IvyXml.getAttrString(type,"NAME");
-	 config_type = BumpLaunchConfigType.UNKNOWN;
-	 for (BumpLaunchConfigType bclt : BumpLaunchConfigType.values()) {
-	    if (tnm.equals(bclt.getEclipseName())) config_type = bclt;
-	    else if (tnm.equals(bclt.toString())) config_type = bclt;
-	  }
+         tnm = IvyXml.getAttrString(type,"NAME");
        }
       String tnm1 = tnm;
       if (tnm.equals("JUnit")) tnm1 = "JUnit Test";
       launch_type = null;
       for (BumpLaunchType blt : launch_types) {
-	 if (blt.getName().equals(tnm) || blt.getDescription().equals(tnm) ||
-	       blt.getName().equals(tnm1) || blt.getDescription().equals(tnm1)) {
-	    launch_type = blt;
-	    break;
-	 }
+         if (blt.getName().equals(tnm) || blt.getDescription().equals(tnm) ||
+               blt.getName().equals(tnm1) || blt.getDescription().equals(tnm1)) {
+            launch_type = blt;
+            break;
+         }
       }
     }
 
@@ -1338,7 +1335,6 @@ private class LaunchConfig implements BumpLaunchConfig {
     }
 
    @Override public String getId()				{ return launch_id; }
-   @Override public BumpLaunchConfigType getConfigType()	{ return config_type; }
    @Override public BumpLaunchType getLaunchType()		{ return launch_type; }
 
    @Override public String getAttribute(String nm) {
@@ -1370,7 +1366,7 @@ private class LaunchConfig implements BumpLaunchConfig {
     }
 
    @Override public BumpLaunchConfig clone(String name) {
-      Element x = bump_client.getNewRunConfiguration(name,getId(),getConfigType());
+      Element x = bump_client.getNewRunConfiguration(name,getId(),getLaunchType());
       return getLaunchResult(x);
     }
 
@@ -1420,11 +1416,7 @@ private class LaunchConfig implements BumpLaunchConfig {
       return getLaunchResult(x);
     }
 
-   @Override public BumpLaunchConfig setJunitKind(String name) {
-      if (name == null) name = "";
-      Element x = bump_client.editRunConfiguration(getId(),"TEST_KIND","org.eclipse.jdt.junit.loader." + name);
-      return getLaunchResult(x);
-    }
+   
 
    @Override public BumpLaunchConfig setRemoteHostPort(String host,int port) {
       String val = "{port=" + port + ", hostname=" + host + "}";
@@ -1463,7 +1455,7 @@ private class LaunchConfig implements BumpLaunchConfig {
    @Override public BumpLaunchConfig setAttribute(String attr,String arg) {
       if (attr.equals("REMOTE_HOST")) return setRemoteHost(arg);
       else if (attr.equals("REMOTE_PORT")) return setRemotePort(Integer.parseInt(arg));
-
+   
       Element x = bump_client.editRunConfiguration(getId(),attr,arg);
       return getLaunchResult(x);
     }
