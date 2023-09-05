@@ -32,7 +32,9 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -119,6 +121,9 @@ private BattAgent(String args,Instrumentation inst)
 	 System.err.println("BATTAGENT: Problem adding instrumenter: " + t);
        }
     }
+   else {
+      System.err.println("BATTAGENT: No Instrumenter");
+   }
 }
 
 
@@ -202,6 +207,36 @@ private static String fixHost(String h)
 
 
 
+public static void reload(String nm)
+{
+   if (the_agent == null) return;
+   the_agent.handleReload(nm);
+}
+
+public static void doneLoad()
+{
+   if (the_agent == null) return;
+   the_agent.our_instrumenter.clearCache();
+}
+
+
+private void handleReload(String nm)
+{
+   byte [] data = our_instrumenter.getTransform(nm);
+   if (data == null) return;
+   try {
+      Class<?> c1 = Class.forName(nm);
+      ClassDefinition cd = new ClassDefinition(c1,data);
+      class_inst.redefineClasses(cd);
+   }
+   catch (ClassNotFoundException e) {
+      System.err.println("BATTAGENT: Class to reload not found: " + nm);
+   }
+   catch (UnmodifiableClassException e) {
+      System.err.println("BATTAGENT: Problem reloading class: " + nm + ": " + e);
+   }
+}
+
 
 /********************************************************************************/
 /*										*/
@@ -272,6 +307,8 @@ private void startTest(String test)
 private void finishTest(String test)
 {
    if (active_test == null || result_stream == null) return;
+   
+   System.err.println("BATTAGENT: Finish test " + test);
 
    XMLOutputFactory xof = XMLOutputFactory.newInstance();
    XMLStreamWriter xw = null;
@@ -314,6 +351,7 @@ private void finishRun()
 private void enterMethod(int id)
 {
    if (active_test != null) {
+//      System.err.println("BATTAGENT: ENTER METHOD " + id);
       RtMethod rm = index_table.getMethod(id);
       rm.markEntry();
       if (!simple_stats) {
@@ -330,6 +368,7 @@ private void enterMethod(int id)
 private void exitMethod(int id)
 {
    if (active_test != null) {
+//      System.err.println("BATTAGENT: ENTER METHOD " + id);
       if (!simple_stats) {
          ThreadData td = getThreadData();
          td.exitMethod();
@@ -341,6 +380,7 @@ private void exitMethod(int id)
 private void enterBlock(int id)
 {
    if (active_test != null) {
+//      System.err.println("BATTAGENT: ENTER BLOCK " + id);
       RtBlock rb = index_table.getBlock(id);
       rb.markEntry();
       if (!simple_stats) {

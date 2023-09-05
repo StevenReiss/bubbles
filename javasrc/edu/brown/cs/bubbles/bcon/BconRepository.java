@@ -32,7 +32,6 @@ import edu.brown.cs.bubbles.bass.BassName;
 import edu.brown.cs.bubbles.bass.BassNameBase;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardProperties;
-import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaRoot;
@@ -76,45 +75,36 @@ private Map<String,BconName> active_names;
 BconRepository()
 {
    active_names = new HashMap<>();
-
-   switch (BoardSetup.getSetup().getLanguage()) {
-      case JAVA :
-      case JAVA_IDEA :
-      case REBUS :
-	 BassRepository br = BassFactory.getRepository(BudaConstants.SearchType.SEARCH_CODE);
-	 BassUpdatingRepository bur = (BassUpdatingRepository) br;
-	 if (bur == null) return;
-	 bur.addUpdateRepository(this);
-
-	 synchronized (active_names) {
-	    for (BassName bn : br.getAllNames()) {
-	       switch (bn.getNameType()) {
-		  case CLASS :
-		  case INTERFACE :
-		  case ENUM :
-		  case THROWABLE :
-		  case MODULE :
-		  case ANNOTATION :
-		     break;
-		  default :
-		     continue;
-		}
-
-	       BumpLocation bl = bn.getLocation();
-	       if (bl == null) continue;
-	       String ky = bl.getKey();
-	       if (active_names.containsKey(ky)) continue;
-	       BconName bcn = new BconName(bl,bn.getSubProject());
-	       active_names.put(ky,bcn);
-	     }
-	  }
-	 break;
-      default :
-	 break;
+   
+   BassRepository br = BassFactory.getRepository(BudaConstants.SearchType.SEARCH_CODE);
+   BassUpdatingRepository bur = (BassUpdatingRepository) br;
+   if (bur == null) return;
+   bur.addUpdateRepository(this);
+   
+   synchronized (active_names) {
+      for (BassName bn : br.getAllNames()) {
+         switch (bn.getNameType()) {
+            case CLASS :
+            case INTERFACE :
+            case ENUM :
+            case THROWABLE :
+            case MODULE :
+            case ANNOTATION :
+               break;
+            default :
+               continue;
+          }
+         
+         BumpLocation bl = bn.getLocation();
+         if (bl == null) continue;
+         String ky = bl.getKey();
+         if (active_names.containsKey(ky)) continue;
+         BconName bcn = new BconName(bl,bn.getSubProject());
+         active_names.put(ky,bcn);
+       }
     }
-
+   
    BassFactory.getFactory().addPopupHandler(this);
-   // BumpClient.getBump().addChangeHandler(this);
 }
 
 
@@ -129,7 +119,7 @@ BconRepository()
 @Override public Iterable<BassName> getAllNames()
 {
    synchronized (active_names) {
-      return new ArrayList<BassName>(active_names.values());
+      return new ArrayList<>(active_names.values());
     }
 }
 
@@ -195,7 +185,7 @@ private static class BconName extends BassNameBase {
     }
 
    @Override public String createPreviewString() {
-      return "Create class overview panel for " + getUserSymbolName();
+      return "Create overview panel for " + getUserSymbolName();
     }
 
    boolean update(BumpLocation bl) {

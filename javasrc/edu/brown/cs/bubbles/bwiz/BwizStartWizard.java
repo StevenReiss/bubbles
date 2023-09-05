@@ -27,7 +27,7 @@ package edu.brown.cs.bubbles.bwiz;
 import edu.brown.cs.bubbles.bedu.BeduConstants.Assignment;
 import edu.brown.cs.bubbles.bedu.BeduFactory;
 import edu.brown.cs.bubbles.board.BoardColors;
-import edu.brown.cs.bubbles.board.BoardSetup;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -37,14 +37,28 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import org.w3c.dom.Element;
+
 import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 class BwizStartWizard extends JPanel implements BwizConstants
 {
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Private Fields                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+private Element         wizard_data;
+
 
 
 /********************************************************************************/
@@ -53,8 +67,10 @@ class BwizStartWizard extends JPanel implements BwizConstants
 /*										*/
 /********************************************************************************/
 
-BwizStartWizard()
+BwizStartWizard(Element wdata)
 {
+   wizard_data = wdata;
+   
    setup();
 }
 
@@ -87,62 +103,60 @@ private void setup()
    // gridpanel.setPreferredSize(new Dimension(140,85));
 
    add(gridpanel);
+   
+   Map<String,Element> types = new HashMap<>();
+   for (Element btn : IvyXml.children(wizard_data,"BUTTON")) {
+      String typ = IvyXml.getAttrString(btn,"TYPE");
+      types.put(typ,btn);
+    }
 
+   JButton classpanel = null;
+   JButton interfacepanel = null;
+   JButton enumpanel = null;
+   JButton assignmentpanel = null;
+   
    //UI Panel creating a new class
-   JButton classpanel = new WizardButton(new CreateClassAction());
+   Element bdata = types.get("NEWCLASS");
+   if (bdata != null) {
+      classpanel = new WizardButton(new CreateClassAction(bdata));
+    }
    //UI Panel creating a new interface
-   JButton interfacepanel = new WizardButton(new CreateInterfaceAction());
+   bdata = types.get("NEWINTERFACE");
+   if (bdata != null) {
+      interfacepanel = new WizardButton(new CreateInterfaceAction(bdata));
+    }
    //UI Panel creating a new enum
-   JButton enumpanel = new WizardButton(new CreateEnumAction());
+   bdata = types.get("NEWENUM");
+   if (bdata != null) {
+      enumpanel = new WizardButton(new CreateEnumAction(bdata));
+    }
    //UI Panel for opening an assignment
    List<Assignment> asgs = BeduFactory.getFactory().getCreatableAssignments();
-   JButton assignmentpanel = null;
-   if (asgs != null && asgs.size() > 0) {
-      assignmentpanel = new WizardButton(new OpenAssignmentAction());
+   bdata = types.get("NEWASSIGNMENT");
+   if (asgs != null && asgs.size() > 0 && bdata != null) {
+      assignmentpanel = new WizardButton(new OpenAssignmentAction(bdata));
     }
 
    //UI layout
    
    GroupLayout.SequentialGroup sg = layout.createSequentialGroup();
    GroupLayout.ParallelGroup pg = layout.createParallelGroup();
-   switch (BoardSetup.getSetup().getLanguage()) {
-      case JAVA :
-      case JAVA_IDEA :
-         pg.addComponent(classpanel);
-         pg.addComponent(interfacepanel);
-         pg.addComponent(enumpanel);   
-         break;
-      case PYTHON :
-      case JS :
-         // possibly add a new file button
-         break;
-      case DART :
-         // TODO: add Dart buttons
-         break;
-      default :
-         break;
-    }
+   if (classpanel != null) pg.addComponent(classpanel);
+   if (interfacepanel != null) pg.addComponent(interfacepanel);
+   if (enumpanel != null) pg.addComponent(enumpanel);
    if (assignmentpanel != null) pg.addComponent(assignmentpanel);
    sg.addGroup(pg);
    layout.setHorizontalGroup(sg);
    
    sg = layout.createSequentialGroup();
-   switch (BoardSetup.getSetup().getLanguage()) {
-      case JAVA :
-      case JAVA_IDEA :
-         sg.addGroup(layout.createParallelGroup().addComponent(classpanel));
-         sg.addGroup(layout.createParallelGroup().addComponent(interfacepanel));
-         sg.addGroup(layout.createParallelGroup().addComponent(enumpanel));
-         break;
-      case PYTHON :
-      case JS :
-         // possibly add a new file button
-         break;
-      case DART :
-         // TODO: add dart buttons
-         break;
-      default :
-         break;
+   if (classpanel != null) {
+      sg.addGroup(layout.createParallelGroup().addComponent(classpanel));
+    }
+   if (interfacepanel != null) {
+      sg.addGroup(layout.createParallelGroup().addComponent(interfacepanel));
+    }
+   if (enumpanel != null) {
+      sg.addGroup(layout.createParallelGroup().addComponent(enumpanel));
     }
    if (assignmentpanel != null) {
       sg.addGroup(layout.createParallelGroup().addComponent(assignmentpanel));
@@ -180,9 +194,13 @@ private class WizardButton extends JButton {
 
 private class CreateClassAction extends AbstractAction {
 
-   CreateClassAction() {
+   CreateClassAction(Element bdata) {
       super(CREATE_CLASS_TEXT);
-      putValue(SHORT_DESCRIPTION,"Create a new top-level class");
+      String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
+            "Create a new top-level class");
+      putValue(SHORT_DESCRIPTION,desc);
+      String lbl = IvyXml.getAttrString(bdata,"LABEL");
+      if (lbl != null) putValue(NAME,lbl);
     }
 
    @Override public void actionPerformed(ActionEvent evt) {
@@ -195,10 +213,14 @@ private class CreateClassAction extends AbstractAction {
 
 private class CreateInterfaceAction extends AbstractAction {
 
-CreateInterfaceAction() {
+CreateInterfaceAction(Element bdata) {
    super(CREATE_INTERFACE_TEXT);
-   putValue(SHORT_DESCRIPTION,"Create a new top-level interface");
- }
+   String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
+         "Create a new top-level interface");
+   putValue(SHORT_DESCRIPTION,desc);
+   String lbl = IvyXml.getAttrString(bdata,"LABEL");
+   if (lbl != null) putValue(NAME,lbl);
+}
 
 @Override public void actionPerformed(ActionEvent evt) {
    BwizNewWizard bcwiz = new BwizNewInterfaceWizard(null);
@@ -210,10 +232,14 @@ CreateInterfaceAction() {
 
 private class CreateEnumAction extends AbstractAction {
 
-CreateEnumAction() {
+CreateEnumAction(Element bdata) {
    super(CREATE_ENUM_TEXT);
-   putValue(SHORT_DESCRIPTION,"Create a new top-level enumeration");
- }
+   String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
+         "Create a new top-level enumeration");
+   putValue(SHORT_DESCRIPTION,desc);
+   String lbl = IvyXml.getAttrString(bdata,"LABEL");
+   if (lbl != null) putValue(NAME,lbl);
+}
 
 @Override public void actionPerformed(ActionEvent evt) {
    BwizNewWizard bcwiz = new BwizNewEnumWizard(null);
@@ -225,10 +251,14 @@ CreateEnumAction() {
 
 private class OpenAssignmentAction extends AbstractAction {
 
-OpenAssignmentAction() {
+OpenAssignmentAction(Element bdata) {
    super(OPEN_ASSIGNMENT_TEXT);
-   putValue(SHORT_DESCRIPTION,"Create a new assignment");
- }
+   String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
+         "Create a new course assignment");
+   putValue(SHORT_DESCRIPTION,desc);
+   String lbl = IvyXml.getAttrString(bdata,"LABEL");
+   if (lbl != null) putValue(NAME,lbl);
+}
 
 @Override public void actionPerformed(ActionEvent evt) {
    BwizAssignmentWizard bcwiz = new BwizAssignmentWizard();

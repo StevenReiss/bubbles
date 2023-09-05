@@ -101,6 +101,7 @@ private Map<BumpChangeHandler,Boolean> change_handlers;
 private SwingEventListenerList<BumpOpenEditorBubbleHandler> open_editor_bubble_handlers;
 private SwingEventListenerList<BumpProgressHandler> progress_handlers;
 private List<String>	debug_jvm_args;
+private Element         language_data;
 
 private boolean 	ide_active;
 private boolean 	doing_exit;
@@ -180,6 +181,7 @@ protected BumpClient()
    doing_exit = false;
    same_host = true;
    ide_active = false;
+   language_data = null;
 
    mint_control = BoardSetup.getSetup().getMintControl();
    mint_name = BoardSetup.getSetup().getMintName();
@@ -308,40 +310,7 @@ private void startIDE(BoardSetup bs)
 
 
 
-@SuppressWarnings("unused")
-private void createInitialProject()
-{
-   BoardSetup bs = BoardSetup.getSetup();
-   switch (bs.getLanguage()) {
-      case JAVA :
-      case JAVA_IDEA :
-	 // Right now we ignore name/dir of project for eclipse
-	 sendMessage("CREATEPROJECT",null,null,null);
-	 return;
-      case REBUS :
-	 return;
-      default:
-	 break;
-    }
 
-   String pnm = null;
-   while (pnm == null) {
-      pnm = JOptionPane.showInputDialog("Initial project name");
-      if (pnm != null && pnm.length() == 0) pnm = null;
-      if (pnm == null) {
-	 JOptionPane.showMessageDialog(null,"Must specify initial project name");
-       }
-    }
-   File f = new File(bs.getDefaultWorkspace());
-   File f2 = new File(f,pnm);
-
-   String q = "NAME='" + pnm +"'";
-   if (f2 != null) {
-      q += " DIR='" + f2.getPath() + "'";
-    }
-
-   sendMessage("CREATEPROJECT",null,addWorkspace(q),null);
-}
 
 
 abstract void localStartIDE();
@@ -2889,12 +2858,15 @@ public BumpBreakModel getBreakModel()
 
 public Element getLanguageData()
 {
-   Element e = getXmlReply("LANGUAGEDATA",null,null,null,0);
-   if (IvyXml.isElement(e,"RESULT")) {
-      Element ld = IvyXml.getChild(e,"LANGUAGE");
-      if (ld != null) return ld;
+   if (language_data == null) {
+      Element e = getXmlReply("LANGUAGEDATA",null,null,null,0);
+      if (IvyXml.isElement(e,"RESULT")) {
+         Element ld = IvyXml.getChild(e,"LANGUAGE");
+         e = ld;
+       }
+      language_data = e;
     }
-   return e;
+   return language_data;
 }
 
 
@@ -3013,7 +2985,9 @@ public BumpProcess startDebug(BumpLaunchConfig cfg,String id)
    String q = "NAME='" + cfg.getId() +"' MODE='debug'";
 
    String xtr = null;
-   if (cfg.getLaunchType().useDebugArgs()) xtr = getDebugArgs(id); 
+   if (cfg.getLaunchType() != null && cfg.getLaunchType().useDebugArgs()) {
+      xtr = getDebugArgs(id); 
+    }
 
    String ctr = cfg.getContractArgs();
    if (ctr != null) {

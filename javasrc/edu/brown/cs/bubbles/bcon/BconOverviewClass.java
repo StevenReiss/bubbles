@@ -93,7 +93,7 @@ BconOverviewClass(BconOverviewPanel pnl,String proj,File f,String cls,boolean ve
 
    setupLines();
 
-   region_set = new ArrayList<BconRegion>();
+   region_set = new ArrayList<>();
    bump_client = BumpClient.getBump();
 
    addAllRegions(proj,cls);

@@ -25,10 +25,10 @@
 package edu.brown.cs.bubbles.bueno;
 
 import edu.brown.cs.bubbles.board.BoardLog;
-import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 import java.io.IOException;
 import java.io.StreamTokenizer;
@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.w3c.dom.Element;
 
 
 public class BuenoValidator implements BuenoConstants
@@ -59,12 +61,8 @@ private BuenoType		create_type;
 private BuenoProperties 	property_set;
 private BuenoLocation		insertion_point;
 
-private static final Pattern package_pattern =
-   Pattern.compile("[A-Za-z_]\\w*(\\.[A-Za-z_]\\w*)*");
-
-private static final Pattern module_pattern =
-   Pattern.compile("[A-Za-z_]\\w*");
-
+private static Pattern package_pattern = null;
+private static Pattern module_pattern = null;
 
 
 
@@ -80,6 +78,18 @@ public BuenoValidator(BuenoValidatorCallback cb,BuenoProperties known,
    callback_handler = cb;
    create_type = typ;
    check_lock = new Object();
+   
+   if (package_pattern == null) {
+      Element xml = BumpClient.getBump().getLanguageData();
+      Element pdata = IvyXml.getChild(xml,"PROJECT");
+      Element vdata = IvyXml.getChild(pdata,"VALIDATION");
+      String pat = IvyXml.getTextElement(vdata,"PACKAGE");
+      if (pat == null) pat = "[A-Za-z_]\\w*(\\.[A-Za-z_]\\w*)*";
+      package_pattern = Pattern.compile(pat);
+      pat = IvyXml.getTextElement(vdata,"MODULE");
+      if (pat == null) pat = "[A-Za-z_]\\w*";
+      module_pattern = Pattern.compile(pat);
+    }
 
    if (known == null) known = new BuenoProperties();
    property_set = known;
@@ -117,7 +127,6 @@ public String getClassName()
 public String getMethodName()
 {
    // get the full method name for a new method
-
    StringBuffer buf = new StringBuffer();
    String cls = insertion_point.getClassName();
    buf.append(cls);
@@ -342,24 +351,7 @@ private class ParseCheck implements Runnable {
                   fg = checkClassParsing();
                   break;
                case NEW_PACKAGE :
-                  switch (BoardSetup.getSetup().getLanguage()) {
-                     case JAVA :
-                     case JAVA_IDEA :
-                     case REBUS :
-                        fg = checkPackageParsing();
-                        break;
-                     case PYTHON :
-                        fg = checkPythonPackageParsing();
-                        break;
-                     case JS :
-                        // fg = checkJSPackageParsing();
-                        fg = false;
-                        break;
-                     case DART :
-                        // TOOD: check dart package parsing
-                        fg = false;
-                        break;
-                   }
+                  fg = checkPackageParsing();
                   break;
                case NEW_METHOD :
                case NEW_CONSTRUCTOR :
@@ -383,10 +375,10 @@ private class ParseCheck implements Runnable {
                case NEW_SETTER :
                   break;
                case NEW_MODULE :
-                  fg = checkPythonModuleParsing();
+                  fg = checkModuleParsing();
                   break;
                case NEW_FILE :
-                  fg = checkJSModuleParsing();
+                  fg = checkModuleParsing();
                   break;
              }
           }
@@ -424,7 +416,7 @@ private boolean checkPackageParsing()
    String pkg = property_set.getStringProperty(BuenoKey.KEY_PACKAGE);
 
    if (pkg == null || pkg.length() == 0) return false;
-
+   
    Matcher m = package_pattern.matcher(pkg);
    if (!m.matches()) return false;
 
@@ -541,58 +533,14 @@ private boolean checkFieldParsing()
 }
 
 
-/********************************************************************************/
-/*										*/
-/*	Parse checking methods :: PYTHON					*/
-/*										*/
-/********************************************************************************/
 
-private boolean checkPythonModuleParsing()
+private boolean checkModuleParsing()
 {
    String mod = property_set.getStringProperty(BuenoKey.KEY_NAME);
    if (mod == null || mod.length() == 0) return false;
    Matcher m = module_pattern.matcher(mod);
    if (!m.matches()) return false;
 
-   return true;
-}
-
-
-
-
-private boolean checkPythonPackageParsing()
-{
-   String pkg = property_set.getStringProperty(BuenoKey.KEY_PACKAGE);
-
-   if (pkg == null || pkg.length() == 0) return false;
-
-   Matcher m = package_pattern.matcher(pkg);
-   if (!m.matches()) return false;
-
-   String mod = property_set.getStringProperty(BuenoKey.KEY_NAME);
-   if (mod == null || mod.length() == 0) return false;
-   m = module_pattern.matcher(mod);
-   if (!m.matches()) return false;
-
-   return true;
-}
-
-
-
-
-/********************************************************************************/
-/*                                                                              */
-/*      Parse checking methods :: JS                                            */
-/*                                                                              */
-/********************************************************************************/
-
-private boolean checkJSModuleParsing()
-{
-   String mod = property_set.getStringProperty(BuenoKey.KEY_NAME);
-   if (mod == null || mod.length() == 0) return false;
-   Matcher m = module_pattern.matcher(mod);
-   if (!m.matches()) return false;
-   
    return true;
 }
 

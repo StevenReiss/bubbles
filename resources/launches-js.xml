@@ -25,6 +25,12 @@
       <TAB LABEL='Source' TYPE='SOURCE' EXCLUDE='t' INCLUDE='t' MULTIPLE='f' />
       <TAB LABEL='Libraries' TYPE='LIBRARY' />
    </EDIT>
+   <BUTTONS>
+      <BUTTON TYPE='NEWMETHOD' LABEL='New Function ...' />
+      <BUTTON TYPE='NEWFIELD' LABEL='New Variable ...' />
+      <BUTTON TYPE='NEWINNERTYPE' LABEL='New Class ...' />
+      <BUTTON TYPE='NEWFILE' />
+   </BUTTONS>
 </PROJECT>
 </LANGUAGE>
 

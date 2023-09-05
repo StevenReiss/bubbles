@@ -28,12 +28,7 @@ import edu.brown.cs.bubbles.bale.BaleConstants;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleContextConfig;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindow;
 import edu.brown.cs.bubbles.bale.BaleFactory;
-import edu.brown.cs.bubbles.bass.BassConstants;
-import edu.brown.cs.bubbles.bass.BassFactory;
-import edu.brown.cs.bubbles.bass.BassName;
 import edu.brown.cs.bubbles.batt.BattConstants;
-import edu.brown.cs.bubbles.board.BoardLog;
-import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -44,7 +39,6 @@ import edu.brown.cs.bubbles.bump.BumpLocation;
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
@@ -96,30 +90,17 @@ public synchronized static BucsFactory getFactory()
 
 
 private BucsFactory()
-{
-}
+{ }
 
 
 
 private void setupCallbacks()
 {
-   BoardLog.logD("BUCS","Setup for " + BoardSetup.getSetup().getLanguage());
-
-   switch (BoardSetup.getSetup().getLanguage()) {
-      case JAVA :
-      case JAVA_IDEA :
-	 BaleFactory.getFactory().addContextListener(new BucsContexter());
-	 break;
-      case REBUS :
-	 BassFactory.getFactory().addPopupHandler(new BucsRebusContext());
-	 break;
-      case PYTHON :
-	 break;
-      case JS :
-	 break;
-      case DART :
-         break;
-    }
+   BumpClient bc = BumpClient.getBump();
+   boolean useS6 = bc.getOptionBool("bubbles.useS6");
+   if (!useS6) return;
+   
+   BaleFactory.getFactory().addContextListener(new BucsContexter());
 }
 
 
@@ -148,8 +129,6 @@ private boolean createTestCaseBubble(BaleContextConfig cfg,BattConstants.NewTest
 
    return true;
 }
-
-
 
 
 
@@ -185,89 +164,6 @@ private class BucsContexter implements BaleConstants.BaleContextListener {
 
 }	// end of inner class BucsContexter
 
-
-
-
-/********************************************************************************/
-/*										*/
-/*	Handle Rebus requests							*/
-/*										*/
-/********************************************************************************/
-
-private class BucsRebusContext implements BassConstants.BassPopupHandler {
-
-   @Override public void addButtons(BudaBubble bb,Point where,JPopupMenu menu,
-         String name,BassName forname) {
-      BumpLocation loc = null;
-      if (forname == null) {
-         String proj = null;
-         int idx = name.indexOf(":");
-         if (idx > 0) {
-            proj = name.substring(0,idx);
-            name = name.substring(idx+1);
-          }
-         List<BumpLocation> locs = null;
-         if (name.length() > 0)
-            locs = BumpClient.getBump().findClassDefinition(proj,name);
-         if (locs != null && locs.size() > 0) loc = locs.get(0);
-         else {
-            locs = BumpClient.getBump().findClassDefinition(proj,name + ".*");
-            if (locs != null && locs.size() > 0) loc = locs.get(0);
-          }
-       }
-      else {
-         switch (forname.getNameType()) {
-            case FILE :
-            case CLASS :
-               loc = forname.getLocation();
-               break;
-            default :
-               break;
-          }
-       }
-   
-      BoardLog.logD("BUCS","Rebus context attempt " + loc);
-   
-      if (loc != null && loc.getFile() != null && loc.getS6Source() != null) {
-         BaleConstants.BaleFileOverview fov =  BaleFactory.getFactory().getFileOverview(loc.getProject(),loc.getFile());
-         try {
-            String ftext = fov.getText(0,fov.getLength());
-            boolean swingfg = ftext.contains("javax.swing");
-            BoardLog.logD("BUCS","Rebus context check " + swingfg);
-   
-            if (swingfg) menu.add(new BucsUIAction(bb,loc));
-          }
-         catch (javax.swing.text.BadLocationException e) { }
-       }
-    }
-
-}	// end of inner class BucsRebusContext
-
-
-
-private static class BucsUIAction extends AbstractAction {
-
-   private transient BumpLocation for_location;
-   private BudaBubble source_bubble;
-
-   private static final long serialVersionUID = 1;
-
-   BucsUIAction(BudaBubble bb,BumpLocation loc) {
-      super("Show User Interfaces");
-      for_location = loc;
-      source_bubble = bb;
-    }
-
-   @Override public void actionPerformed(ActionEvent evt) {
-      BucsUserInterfaceBubble bbl = new BucsUserInterfaceBubble(for_location);
-      BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(source_bubble);
-      if (bba != null) {
-	 bba.addBubble(bbl,source_bubble,null,
-		  BudaConstants.PLACEMENT_LOGICAL|BudaConstants.PLACEMENT_MOVETO|BudaConstants.PLACEMENT_NEW);
-      }
-    }
-
-}	// end of inner class BucsUIAction
 
 
 

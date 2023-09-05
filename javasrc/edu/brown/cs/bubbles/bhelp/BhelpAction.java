@@ -66,8 +66,7 @@ static List<BhelpAction> createAction(Element xml)
 	 res.add(new MousePressAction(xml));
 	 break;
       case "SPEECH":
-         res.add(new MarySpeechAction(xml));
-	 // res.add(new SpeechAction(xml));
+	 res.add(new MarySpeechAction(xml));
 	 break;
       case "BACKGROUND":
 	 res.add(new FindBackgroundAction(xml));
@@ -134,7 +133,7 @@ static PauseAction speechToPause(BhelpAction ba)
 /********************************************************************************/
 
 private static double	speed_delta = 1.0;
-private static String   native_command = null;
+private static String	native_command = null;
 
 private final static double	MAC_DELTA = 2.0;
 
@@ -144,7 +143,7 @@ static {
    if (osv.startsWith("Mac")) {
       speed_delta = MAC_DELTA;
       native_command = props.getString("Bhelp.say.command","/usr/bin/say \"@@@\"");
-    }  
+    }
    else {
       native_command = props.getString("Bhelp.say.command");
     }
@@ -615,9 +614,9 @@ private static class MoveMouseAction extends BhelpAction {
       is_jump = IvyXml.getAttrBool(xml,"JUMP");
       point_list = null;
       for (Element pe : IvyXml.children(xml,"POINT")) {
-         if (point_list == null) point_list = new ArrayList<Point>();
-         Point p = new Point(IvyXml.getAttrInt(pe,"X"),IvyXml.getAttrInt(pe,"Y"));
-         point_list.add(p);
+	 if (point_list == null) point_list = new ArrayList<Point>();
+	 Point p = new Point(IvyXml.getAttrInt(pe,"X"),IvyXml.getAttrInt(pe,"Y"));
+	 point_list.add(p);
       }
     }
 
@@ -629,65 +628,65 @@ private static class MoveMouseAction extends BhelpAction {
    @Override void executeAction(BhelpContext ctx) throws BhelpException {
       Point st = ctx.getMouse();
       Point tg = ctx.getPoint(target_name);
-   
+
       Path2D.Float path = new Path2D.Float();
       path.moveTo(st.getX(),st.getY());
       if (point_list != null) {
-         for (Point p : point_list) {
-            path.lineTo(st.getX() + p.x, st.getY() + p.y);
-         }
+	 for (Point p : point_list) {
+	    path.lineTo(st.getX() + p.x, st.getY() + p.y);
+	 }
       }
       if (tg != null) path.lineTo(tg.getX(),tg.getY());
-   
+
       double x0 = 0;
       double y0 = 0;
       double [] coords = new double[6];
       for (PathIterator pi = path.getPathIterator(null,1); !pi.isDone(); pi.next()) {
-         switch (pi.currentSegment(coords)) {
-            case PathIterator.SEG_MOVETO :
-               x0 = coords[0];
-               y0 = coords[1];
-               break;
-            case PathIterator.SEG_LINETO :
-               moveMouse(ctx,x0,y0,coords[0],coords[1]);
-               x0 = coords[0];
-               y0 = coords[1];
-               break;
-            case PathIterator.SEG_CLOSE :
-               break;
-            default :
-               break;
-          }
+	 switch (pi.currentSegment(coords)) {
+	    case PathIterator.SEG_MOVETO :
+	       x0 = coords[0];
+	       y0 = coords[1];
+	       break;
+	    case PathIterator.SEG_LINETO :
+	       moveMouse(ctx,x0,y0,coords[0],coords[1]);
+	       x0 = coords[0];
+	       y0 = coords[1];
+	       break;
+	    case PathIterator.SEG_CLOSE :
+	       break;
+	    default :
+	       break;
+	  }
        }
     }
 
    private void moveMouse(BhelpContext ctx,double x0,double y0,double x1,double y1)
-        throws BhelpException {
+	throws BhelpException {
       if (is_jump) {
-         ctx.mouseMove((int) x1,(int) y1);
-         return;
+	 ctx.mouseMove((int) x1,(int) y1);
+	 return;
        }
-   
+
       double len = Point2D.distance(x0,y0,x1,y1);
       double steps = Math.ceil(len);
       long starttime = System.currentTimeMillis();
       double tottim = 0;
       int ctr = 0;
       for (int i = 0; i <= steps; ++i) {
-         double d = i;
-         if (steps > 0) d /= steps;
-         double x = x0 + d * (x1-x0);
-         double y = y0 + d * (y1-y0);
-         ctx.mouseMove((int) x,(int) y);
-         tottim = System.currentTimeMillis() - starttime;
-         ctr++;
-         double actual = delay_time * ctr - tottim;
-   //    System.err.println("DELAY " + tottim + " " + actual);
-         if (actual >= 20) {
-            int di = (int) actual;
-            ctx.delay(di);
-          }
-         if (ctx.isStopped()) break;
+	 double d = i;
+	 if (steps > 0) d /= steps;
+	 double x = x0 + d * (x1-x0);
+	 double y = y0 + d * (y1-y0);
+	 ctx.mouseMove((int) x,(int) y);
+	 tottim = System.currentTimeMillis() - starttime;
+	 ctr++;
+	 double actual = delay_time * ctr - tottim;
+   //	 System.err.println("DELAY " + tottim + " " + actual);
+	 if (actual >= 20) {
+	    int di = (int) actual;
+	    ctx.delay(di);
+	  }
+	 if (ctx.isStopped()) break;
        }
     }
 
@@ -711,13 +710,13 @@ private static class MousePressAction extends BhelpAction {
       super(xml);
       String btns = IvyXml.getAttrString(xml,"BUTTON");
       if (btns != null && btns.length() > 0 && Character.isDigit(btns.charAt(0))) {
-         mouse_buttons = IvyXml.getAttrInt(xml,"BUTTON",1);
+	 mouse_buttons = IvyXml.getAttrInt(xml,"BUTTON",1);
        }
       else if (btns != null) {
-         mouse_buttons = 0;
-         if (btns.contains("LEFT")) mouse_buttons |= InputEvent.BUTTON1_DOWN_MASK;
-         if (btns.contains("RIGHT")) mouse_buttons |= InputEvent.BUTTON3_DOWN_MASK;
-         if (btns.contains("MIDDLE")) mouse_buttons |= InputEvent.BUTTON2_DOWN_MASK;
+	 mouse_buttons = 0;
+	 if (btns.contains("LEFT")) mouse_buttons |= InputEvent.BUTTON1_DOWN_MASK;
+	 if (btns.contains("RIGHT")) mouse_buttons |= InputEvent.BUTTON3_DOWN_MASK;
+	 if (btns.contains("MIDDLE")) mouse_buttons |= InputEvent.BUTTON2_DOWN_MASK;
        }
       mouse_up = IvyXml.getAttrBool(xml,"UP");
       mouse_down = IvyXml.getAttrBool(xml,"DOWN",!mouse_up);
@@ -764,28 +763,28 @@ private static class KeyAction extends BhelpAction {
       do_meta = IvyXml.getAttrBool(xml,"META");
       boolean domenu = IvyXml.getAttrBool(xml,"MENU");
       if (domenu) {
-         int mask = SwingText.getMenuShortcutKeyMaskEx();
-         if (mask == InputEvent.META_DOWN_MASK) do_meta |= true;
-         else do_control |= true;
+	 int mask = SwingText.getMenuShortcutKeyMaskEx();
+	 if (mask == InputEvent.META_DOWN_MASK) do_meta |= true;
+	 else do_control |= true;
        }
-   
+
       key_code = IvyXml.getAttrInt(xml,"CODE",0);
       do_press = IvyXml.getAttrBool(xml,"DOWN");
       do_release = IvyXml.getAttrBool(xml,"UP");
       if (!do_press && !do_release) {
-         do_press = true;
-         do_release = true;
+	 do_press = true;
+	 do_release = true;
        }
       String knm = IvyXml.getAttrString(xml,"KEY");
       if (key_code == 0 && knm != null) {
-         if (!knm.startsWith("VK_")) knm = "VK_" + knm;
-         try {
-            Field f = KeyEvent.class.getField(knm);
-            key_code = f.getInt(null);
-          }
-         catch (Throwable t) {
-            BoardLog.logE("BHELP","Problem with key name: " + knm + ": " + t);
-          }
+	 if (!knm.startsWith("VK_")) knm = "VK_" + knm;
+	 try {
+	    Field f = KeyEvent.class.getField(knm);
+	    key_code = f.getInt(null);
+	  }
+	 catch (Throwable t) {
+	    BoardLog.logE("BHELP","Problem with key name: " + knm + ": " + t);
+	  }
        }
     }
 
@@ -837,43 +836,43 @@ private static class TypeAction extends BhelpAction {
       pause(50);
       String knm = "";
       for (char c : (text_to_enter).toCharArray()) {
-         if (Character.isLowerCase(c)) {  //Lowercase letters
-            knm = "VK_" + (char)(c - 32);
-          }
-         else if (Character.isUpperCase(c)) {	    //Uppercase letters
-            knm = "VK_" + c;
-            upper_case = true;
-          }
-         else if (Character.isSpaceChar(c)) {	    //Space
-            knm = "VK_SPACE";
-          }
-         try {
-            Field f = KeyEvent.class.getField(knm);
-            key_code = f.getInt(null);
-          }
-         catch (Throwable t) {
-            BoardLog.logE("BHELP", "(TypeAction) Problem with key name: " + knm + ": " + t);
-          }
-   
-         if (upper_case) ctx.keyPress(KeyEvent.VK_SHIFT);
-         if (key_code != 0) ctx.keyPress(key_code);
-   
-         pause(20);
-   
-         if (upper_case) ctx.keyRelease(KeyEvent.VK_SHIFT);
-         if (key_code != 0) ctx.keyRelease(key_code);
-   
-         pause(delay_milis);
+	 if (Character.isLowerCase(c)) {  //Lowercase letters
+	    knm = "VK_" + (char)(c - 32);
+	  }
+	 else if (Character.isUpperCase(c)) {	    //Uppercase letters
+	    knm = "VK_" + c;
+	    upper_case = true;
+	  }
+	 else if (Character.isSpaceChar(c)) {	    //Space
+	    knm = "VK_SPACE";
+	  }
+	 try {
+	    Field f = KeyEvent.class.getField(knm);
+	    key_code = f.getInt(null);
+	  }
+	 catch (Throwable t) {
+	    BoardLog.logE("BHELP", "(TypeAction) Problem with key name: " + knm + ": " + t);
+	  }
+
+	 if (upper_case) ctx.keyPress(KeyEvent.VK_SHIFT);
+	 if (key_code != 0) ctx.keyPress(key_code);
+
+	 pause(20);
+
+	 if (upper_case) ctx.keyRelease(KeyEvent.VK_SHIFT);
+	 if (key_code != 0) ctx.keyRelease(key_code);
+
+	 pause(delay_milis);
        }
-   
+
       pause(500);
-   
+
       if (back_space) {
-         for(int i = 0; i < text_to_enter.length(); ++i) {
-            ctx.keyPress(KeyEvent.VK_BACK_SPACE);
-            pause(20);
-            ctx.keyRelease(KeyEvent.VK_BACK_SPACE);
-          }
+	 for(int i = 0; i < text_to_enter.length(); ++i) {
+	    ctx.keyPress(KeyEvent.VK_BACK_SPACE);
+	    pause(20);
+	    ctx.keyRelease(KeyEvent.VK_BACK_SPACE);
+	  }
        }
     }
 
@@ -933,7 +932,7 @@ private static class MarySpeechAction extends BhelpAction {
    private int	equiv_pause;
    private String speech_text;
    private AudioPlayer audio_player = null;
-   
+
    private static LocalMaryInterface speech_synth = null;
 
    MarySpeechAction(Element xml) {
@@ -942,32 +941,32 @@ private static class MarySpeechAction extends BhelpAction {
       equiv_pause = IvyXml.getAttrInt(xml,"PAUSEFOR",1);
       speech_text = IvyXml.getTextElement(xml,"TEXT");
       if (speech_text != null) {
-         speech_text = speech_text.replace("\n"," ");
-         speech_text = speech_text.replace("\t"," ");
-         while (speech_text.contains("  ")) {
-            speech_text = speech_text.replace("  "," ");
-          }
+	 speech_text = speech_text.replace("\n"," ");
+	 speech_text = speech_text.replace("\t"," ");
+	 while (speech_text.contains("  ")) {
+	    speech_text = speech_text.replace("  "," ");
+	  }
        }
-   
-      try {  
-         if (speech_synth == null) {
-            BoardSetup bs = BoardSetup.getSetup();
-            String marybase = bs.getLibraryPath("marytts");
-            String jver = System.getProperty("java.version");
-            if (!jver.startsWith("1.")) { 
-               // this gets around a bug in mary checking for java version
-               System.setProperty("java.version","1.9");
-             }
-            else jver = null;
-            System.setProperty("mary.base",marybase);
-            System.setProperty("de.phonemiser.logunknown","false");
-            speech_synth = new LocalMaryInterface();
-            if (jver != null) System.setProperty("java.version",jver);
-          } 
+
+      try {
+	 if (speech_synth == null) {
+	    BoardSetup bs = BoardSetup.getSetup();
+	    String marybase = bs.getLibraryPath("marytts");
+	    String jver = System.getProperty("java.version");
+	    if (!jver.startsWith("1.")) {
+	       // this gets around a bug in mary checking for java version
+	       System.setProperty("java.version","1.9");
+	     }
+	    else jver = null;
+	    System.setProperty("mary.base",marybase);
+	    System.setProperty("de.phonemiser.logunknown","false");
+	    speech_synth = new LocalMaryInterface();
+	    if (jver != null) System.setProperty("java.version",jver);
+	  }
        }
       catch (Exception e) {
-         BoardLog.logE("BHELP","Problem setting up speech synthesizer",e);
-         speech_synth = null;
+	 BoardLog.logE("BHELP","Problem setting up speech synthesizer",e);
+	 speech_synth = null;
        }
     }
 
@@ -976,55 +975,55 @@ private static class MarySpeechAction extends BhelpAction {
    @Override void executeAction(BhelpContext ctx) throws BhelpException {
       if (speech_synth == null) return;
       try {
-         waitFor();
-         if (!ctx.checkMouse()) return;
-         if (speech_text != null) {
-            if (!speakNative()) {
-               AudioInputStream audio = speech_synth.generateAudio(speech_text);
-               audio_player = new AudioPlayer(audio);
-               audio_player.start();
-               if (wait_for) waitFor();
-             }
-          }
+	 waitFor();
+	 if (!ctx.checkMouse()) return;
+	 if (speech_text != null) {
+	    if (!speakNative()) {
+	       AudioInputStream audio = speech_synth.generateAudio(speech_text);
+	       audio_player = new AudioPlayer(audio);
+	       audio_player.start();
+	       if (wait_for) waitFor();
+	     }
+	  }
        }
       catch (Exception e) {
-         throw new BhelpException("Problem with speech",e);
+	 throw new BhelpException("Problem with speech",e);
        }
     }
-   
+
    private boolean speakNative() {
       if (native_command == null) return false;
       String txt = speech_text;
    // txt = speech_text.replace(".",", ");
-      
+
       txt = txt.replace("\n"," ");
       txt = txt.replace("\t"," ");
       for (int i = 0; i < 10;  ++i) {
-         txt = txt.replace("  "," ");
+	 txt = txt.replace("  "," ");
        }
       String cmd = native_command.replace("@@@",txt);
       BoardLog.logD("BHELP","Speak command: " + cmd);
       try {
-         IvyExec exec = new IvyExec(cmd);
-         if (wait_for) {
-            int sts = exec.waitFor();
-            if (sts != 0) return false;
-          }
+	 IvyExec exec = new IvyExec(cmd);
+	 if (wait_for) {
+	    int sts = exec.waitFor();
+	    if (sts != 0) return false;
+	  }
        }
       catch (IOException e) {
-         return false;
+	 return false;
        }
-      return true; 
+      return true;
     }
 
    private void waitFor() throws Exception {
       AudioPlayer ap = audio_player;
       if (ap != null) {
-         try {
-            audio_player.join();
-          }
-         catch (InterruptedException e) { }
-         audio_player = null;
+	 try {
+	    audio_player.join();
+	  }
+	 catch (InterruptedException e) { }
+	 audio_player = null;
        }
     }
 

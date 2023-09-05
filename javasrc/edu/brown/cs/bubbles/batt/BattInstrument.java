@@ -35,10 +35,15 @@ import edu.brown.cs.bubbles.org.objectweb.asm.commons.CodeSizeEvaluator;
 import edu.brown.cs.bubbles.org.objectweb.asm.util.Textifier;
 import edu.brown.cs.bubbles.org.objectweb.asm.util.TraceMethodVisitor;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.reflect.Modifier;
 import java.security.ProtectionDomain;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -61,9 +66,11 @@ private int		method_id;
 private int		block_id;
 private CodeSizeEvaluator size_eval;
 private Set<String>	user_classes;
+private Map<String,byte []> transform_map;
 
 private static boolean	do_debug = false;
-
+private static boolean	pre_load = false;
+private static boolean	write_output = false;
 
 private static final String [] SYSTEM_PACKAGES = new String [] {
    "java/",
@@ -92,6 +99,7 @@ BattInstrument(BattAgent agt)
    for_agent = agt;
    class_name = null;
    user_classes = null;
+   transform_map = new HashMap<>();
 }
 
 
@@ -118,24 +126,41 @@ void setClasses(String [] clsset)
 //    System.err.println("BATTAGENT: ADD CLASS " + s);
     }
 
+   if (!pre_load) return;
    for (String s : user_classes) {
       String s1 = s.replace("/",".");
       String s2 = s1.replace("$",".");
+      Class<?> cc = null;
       try {
-//       System.err.println("BATTAGENT: TRY " + s1);
-	 Class.forName(s1);
+//	 System.err.println("BATTAGENT: TRY " + s1);
+	 cc = Class.forName(s1);
        }
       catch (Throwable t) {
-//       System.err.println("BATTAGENT: NOT FOUND: " + s1 + " " + t);
+//	 System.err.println("BATTAGENT: NOT FOUND: " + s1 + " " + t);
 	 try {
-	    Class.forName(s2);
-//          System.err.println("BATTAGENT: FOUND: " + s2);
+	    cc = Class.forName(s2);
+//	    System.err.println("BATTAGENT: FOUND: " + s2);
 	  }
 	 catch (Throwable xt) { }
        }
+      if (cc == null) {
+	 System.err.println("BATTAGENT: Class " + s + " not found");
+      }
     }
 }
 
+
+
+void clearCache()
+{
+   transform_map.clear();
+}
+
+
+byte [] getTransform(String name)
+{
+   return transform_map.get(name);
+}
 
 
 /********************************************************************************/
@@ -150,29 +175,43 @@ void setClasses(String [] clsset)
    if (do_debug) {
       System.err.println("BATTAGENT: CHECK " + name + " " + Thread.currentThread().getName() + " " + cls);
       if (name.contains("SesameExecRunner$MasterThread")) {
-         Thread.dumpStack();
+	 Thread.dumpStack();
 	 // TODO: Determine why this trys to load the class from within the class
 	 return null;
        }
     }
 
-   if (cls != null && Modifier.isAbstract(cls.getModifiers())) return null;
+   if (cls != null && Modifier.isAbstract(cls.getModifiers())) {
+      System.err.println("BATTAGENT: SKIP ABSTRACT CLASS " + name);
+      return null;
+   }
 
    if (user_classes == null) {
       if (isBattClass(name) || isSystemClass(name)) {
-         if (do_debug) {
-            System.err.println("BATTAGENT: SKIP " + isBattClass(name) + " " + isSystemClass(name));
-          }
-         return null;
+	 if (do_debug) {
+	    System.err.println("BATTAGENT: SKIP " + isBattClass(name) + " " + isSystemClass(name));
+	  }
+	 return null;
        }
     }
-   else if (!user_classes.contains(name)) return null;
-
+   else {
+      int idx = name.indexOf("$");
+      String name1 = name;
+      if (idx > 0) name1 = name.substring(0,idx);
+      if (!user_classes.contains(name) && !user_classes.contains(name1)) {
+	 if (isBattClass(name) || isSystemClass(name)) return null;
+	 System.err.println("BATTAGENT: Skip user class " + name);
+	 return null;
+      }
+   }
+   
    try {
-      return instrument(name,buf);
+      byte [] rslt = instrument(name,buf);
+      transform_map.put(name.replace("/","."), rslt);
+      return rslt;
     }
    catch (Throwable t) {
-      System.err.println("BATT: Instrumentation issue: " + t);
+      System.err.println("BATTAGENT: Instrumentation issue: " + t);
     }
 
    return null;
@@ -182,7 +221,7 @@ void setClasses(String [] clsset)
 
 private byte [] instrument(String name,byte [] buf)
 {
-// System.err.println("BATTAGENT: INSTRUMENT " + name + " " + buf.length);
+   System.err.println("BATTAGENT: INSTRUMENT " + name + " " + buf.length);
 
    byte [] rsltcode;
    try {
@@ -198,7 +237,24 @@ private byte [] instrument(String name,byte [] buf)
       return null;
     }
 
-// System.err.println("BATTAGENT: INSTRUMENT RETURN " + name + " " + rsltcode.length);
+   System.err.println("BATTAGENT: INSTRUMENT RETURN " + name + " " + rsltcode.length);
+   
+   if (write_output) {
+      File f = new File("/Users/spr/test");
+      int idx = name.lastIndexOf("/");
+      String dir = name.substring(0,idx);
+      File f2 = new File(f,dir);
+      f2.mkdirs();
+      String n1 = name + ".class";
+      File f1 = new File(f,n1);
+      try (FileOutputStream ots = new FileOutputStream(f1)) {
+	 ots.write(rsltcode); 
+      }
+      catch (IOException e) {
+	 System.err.println("BATTAGENT: Problem writing class file: " + e);
+      }
+   }
+   
 
    return rsltcode;
 }
@@ -259,26 +315,26 @@ private class BattTransformer extends ClassVisitor {
    boolean isAbstract() 		{ return is_abstract; }
 
    @Override public MethodVisitor visitMethod(int acc,String name,String desc,String sgn,
-        					 String [] exc) {
+						 String [] exc) {
       method_id = for_agent.getMethodId(class_name,name,desc);
-   
+
       MethodVisitor mv = super.visitMethod(acc,name,desc,sgn,exc);
       if (name.equals("<clinit>")) return mv;
-   
+
       if (do_debug) {
-         Textifier output = new Textifier();
-         mv = new TraceMethodVisitor(mv,output);
-         mv = new Tracer(mv,name,output);
+	 Textifier output = new Textifier();
+	 mv = new TraceMethodVisitor(mv,output);
+	 mv = new Tracer(mv,name,output);
        }
-   
+
       String sup = null;
       if (name.equals("<init>")) sup = super_name;
-   
+
       mv = new CoverageSetup(mv,sup);
-   
+
       size_eval = new CodeSizeEvaluator(mv);
       mv = size_eval;
-   
+
       return mv;
     }
 

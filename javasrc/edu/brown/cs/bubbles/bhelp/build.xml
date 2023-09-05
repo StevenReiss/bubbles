@@ -19,11 +19,15 @@
 	 <pathelement location='${BUBBLES}/java' />
 	 <pathelement location='${IVYBIN}' />
 	 <pathelement location='${BUBBLES}/lib/marytts/marytts.jar' />
+	 <pathelement location='${BUBBLES}/lib/marytts/marytts-lang-en.jar' />
+	 <pathelement location='${BUBBLES}/lib/marytts/voice-cmu-sit-hsmm.jar' />
       </path>
       <path id='test.classpath'>
 	 <pathelement location='${BUBBLES}/java' />
 	 <pathelement location='${IVYBIN}' />
 	 <pathelement location='${BUBBLES}/lib/marytts/marytts.jar' />
+	 <pathelement location='${BUBBLES}/lib/marytts/marytts-lang-en.jar' />
+	 <pathelement location='${BUBBLES}/lib/marytts/voice-cmu-sit-hsmm.jar' />
       </path>
    </target>
 

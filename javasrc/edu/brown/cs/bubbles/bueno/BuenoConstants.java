@@ -51,26 +51,26 @@ enum BuenoType {
    NEW_PACKAGE,
    NEW_MODULE,			// python module
    NEW_FILE,			// JS file/module
-
+   
    NEW_CLASS,
    NEW_INTERFACE,
    NEW_ENUM,
    NEW_ANNOTATION,
    NEW_TYPE,			// any of the above
-
+   
    NEW_INNER_CLASS,
    NEW_INNER_INTERFACE,
    NEW_INNER_ENUM,
    NEW_INNER_TYPE,		// any of the above
-
+   
    NEW_CONSTRUCTOR,
    NEW_METHOD,
    NEW_GETTER,
    NEW_SETTER,
    NEW_GETTER_SETTER,
-
+   
    NEW_FIELD,
-
+   
    NEW_MARQUIS_COMMENT,
    NEW_BLOCK_COMMENT,
    NEW_JAVADOC_COMMENT,
@@ -278,7 +278,7 @@ interface BuenoValidatorCallback {
 
 /********************************************************************************/
 /*										*/
-/*	Path inforamtion							*/
+/*	Path information							*/
 /*										*/
 /********************************************************************************/
 

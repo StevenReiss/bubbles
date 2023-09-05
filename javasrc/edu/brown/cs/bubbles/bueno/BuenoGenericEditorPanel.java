@@ -248,6 +248,7 @@ private class PathPanel extends SwingGridPanel implements ActionListener, ListSe
       ++y;
 
       path_display = new JList<>(panel_paths);
+      path_display.setFixedCellWidth(-1);
       path_display.setVisibleRowCount(10);
       path_display.addListSelectionListener(this);
       addGBComponent(new JScrollPane(path_display),0,0,1,y++,1,1);

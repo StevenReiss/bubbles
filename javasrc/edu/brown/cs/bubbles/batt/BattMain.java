@@ -88,6 +88,7 @@ private List<String>	java_args;
 private ServerSocket	server_socket;
 private Map<String,BattTestCase> test_cases;
 private Set<BattTestCase> run_tests;
+private boolean		run_all;
 private boolean 	test_request;
 private boolean 	test_busy;
 private boolean 	find_new;
@@ -125,6 +126,7 @@ private BattMain(String [] args)
    java_args = new ArrayList<String>();
    test_cases = new HashMap<String,BattTestCase>();
    run_tests = new HashSet<BattTestCase>();
+   run_all = false;
    server_thread = null;
    test_request = false;
    test_busy = false;
@@ -182,7 +184,7 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-l") && i+1 < args.length) {      // -l <junit.jar>
 	    junit_jar = args[++i];
 	  }
-	 else if (args[i].startsWith("-b") && i+1 < args.length) {      // -j <java arg>
+	 else if (args[i].startsWith("-b") && i+1 < args.length) {      // -j <java argument>
 	    java_args.add(args[++i]);
 	  }
 	 else if (args[i].startsWith("-C")) {                           // -Continuous
@@ -292,7 +294,7 @@ void runAllTests()
       all = test_cases.values();
     }
 
-   addTestCases(all);
+   addTestCases(all,true);
 }
 
 
@@ -301,7 +303,7 @@ void runSelectedTests(Collection<BattTestCase> tests)
 {
    if (tests == null || tests.size() == 0) return;
 
-   addTestCases(tests);
+   addTestCases(tests,false);
 }
 
 
@@ -435,12 +437,13 @@ String showSelectedTests(Collection<BattTestCase> tests)
 /*										*/
 /********************************************************************************/
 
-void addTestCases(Collection<BattTestCase> tests)
+void addTestCases(Collection<BattTestCase> tests,boolean all)
 {
    if (tests == null || tests.size() == 0) return;
 
    synchronized (run_tests) {
       run_tests.addAll(tests);
+      if (all) run_all = true;
       if (server_thread != null) run_tests.notifyAll();
     }
 }
@@ -457,7 +460,7 @@ void processTests() throws InterruptedException
       rpt = false;
       boolean listonly = false;
       synchronized (run_tests) {
-	 System.err.println("BATT: Process tests " + run_tests.size());
+	 System.err.println("BATT: Process tests " + run_tests.size() + " " + run_all + " " + find_new);
 	 if (run_tests.size() == 0 && server_thread == null && !find_new) return;
 	 int ct = 0;
 	 while (!canRunAny(run_tests)) {
@@ -545,7 +548,7 @@ private boolean canRunAny(Collection<BattTestCase> tests)
 
 private void processRun(boolean listonly,Set<String> testclss,Set<BattTestCase> cases)
 {
-   if (cases != null && !listonly && testclss != null) {
+   if (cases != null && !listonly && testclss != null && !run_all) {
       synchronized (run_tests) {
 	 for (BattTestCase btc : cases) {
 	    run_tests.remove(btc);
@@ -571,6 +574,18 @@ private void processRun(boolean listonly,Set<String> testclss)
       System.err.println("BATT: Run all tests in " + testclss.size() + " classes");
    else
       System.err.println("BATT: Run all tests in all classes");
+   
+   if (!listonly) {
+      synchronized (run_tests) {
+	 for (BattTestCase btc : test_cases.values()) {
+	    btc.setStatus(TestStatus.UNKNOWN);
+	    btc.setState(TestState.RUNNING);
+	    btc.handleTestCounts(null); 
+	 }
+	 run_tests.clear();
+	 run_all = false; 
+      }
+   }
    
    for (BattProject bp : batt_monitor.getProjects()) {
       boolean err = false;
@@ -630,6 +645,7 @@ private void processRun(boolean listonly,Set<String> testclss)
 
       args.add("-cp");
       args.add(buf.toString());
+//      args.add("-verbose");
       args.add("edu.brown.cs.bubbles.batt.BattJUnit");
       if (testclss == null) args.add("-all");
       if (listonly) args.add("-list");
@@ -765,6 +781,7 @@ private boolean runOneTest(BattTestCase testcase)
 
       args.add("-cp");
       args.add(buf.toString());
+//      args.add("-verbose");
       args.add("edu.brown.cs.bubbles.batt.BattJUnit");
       if (server_socket != null) args.add("-socket");
       else args.add("-output");
@@ -781,8 +798,6 @@ private boolean runOneTest(BattTestCase testcase)
 	  }
 	 args.add(s);
        }
-//    run.add(testclss);
-//    args.add("@" + testclss);
 
       synchronized (this) {
 	 testcase.setStatus(TestStatus.UNKNOWN);
@@ -939,7 +954,7 @@ void updateTestsForClasses(Map<String,FileState> chng)
        }
     }
 
-   if (server_thread != null && !rslt.isEmpty()) addTestCases(rslt);
+   if (server_thread != null && !rslt.isEmpty()) addTestCases(rslt,false);
    if (upd) reportTestStatus(false);
 }
 

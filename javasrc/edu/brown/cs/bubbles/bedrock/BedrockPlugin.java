@@ -31,6 +31,7 @@
 package edu.brown.cs.bubbles.bedrock;
 
 import edu.brown.cs.ivy.exec.IvySetup;
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.mint.MintArguments;
 import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
@@ -64,6 +65,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -522,7 +524,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getChild(xml,"PROJECT"),xw);
 	 break;
       case "CREATEPROJECT" :
-	 bedrock_project.handleCreateProject(IvyXml.getAttrString(xml,"NAME"), 
+	 bedrock_project.handleCreateProject(IvyXml.getAttrString(xml,"NAME"),
 	       new File(IvyXml.getAttrString(xml,"DIR")),
 	       IvyXml.getAttrString(xml,"TYPE"),
 	       IvyXml.getChild(xml,"PROPS"),xw);
@@ -613,9 +615,6 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 bedrock_java.handleFindHierarchy(proj,IvyXml.getAttrString(xml,"PACKAGE"),
 	       IvyXml.getAttrString(xml,"CLASS"),
 	       IvyXml.getAttrBool(xml,"ALL",false), xw);
-	 break;
-      case "LANGUAGEDATA" :
-	 bedrock_runtime.handleLanguageData(xw);
 	 break;
       case "LAUNCHQUERY" :
 	 bedrock_runtime.handleLaunchQuery(proj,IvyXml.getAttrString(xml,"QUERY"),
@@ -935,6 +934,10 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 ++num_clients;
 	 xw.text(Integer.toString(num_clients));
 	 break;
+      case "LANGUAGEDATA" :
+	 handleLanguageData(xw);
+	 break;
+
       case "SAVEWORKSPACE" :
 	 saveEclipse();
 	 xw.text("SAVED");
@@ -1059,9 +1062,46 @@ private static class EditDataImpl implements EditData {
 
 
 
+/********************************************************************************/
+/*										*/
+/*	Get language data							*/
+/*										*/
+/********************************************************************************/
+
+private void handleLanguageData(IvyXmlWriter xw)
+{
+   Element xml = getLanguageData();
+   logD("LANGUAGE DATA " + IvyXml.convertXmlToString(xml));
+   xw.writeXml(xml);
+}
 
 
 
+Element getLanguageData()
+{
+   String nm = "resources/launches-java.xml";
+   InputStream ins = BedrockPlugin.class.getClassLoader().getResourceAsStream(nm);
+   BedrockPlugin.logD("Language data " + nm + " " + ins);
+   Element xml = IvyXml.loadXmlFromStream(ins);
+   if (xml == null) {
+      String nm1 = "launches-java.xml";
+      ins = BedrockRuntime.class.getClassLoader().getResourceAsStream(nm1);
+      BedrockPlugin.logD("Language data " + nm1 + " " + ins);
+      xml = IvyXml.loadXmlFromStream(ins);
+    }
+   if (xml == null) {
+      ins = BedrockPlugin.class.getClassLoader().getResourceAsStream(nm);
+      try {
+	 String txt = IvyFile.loadFile(ins);
+	 BedrockPlugin.logE("BAD resource file " + txt);
+      }
+      catch (IOException e) {
+	 BedrockPlugin.logE("Bad resource read " + e);
+      }
+    }
+
+   return xml;
+}
 
 
 

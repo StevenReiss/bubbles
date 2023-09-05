@@ -28,7 +28,7 @@ package edu.brown.cs.bubbles.banal;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaRoot;
-
+import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.ivy.exec.IvyExec;
 import edu.brown.cs.ivy.exec.IvyExecQuery;
 import edu.brown.cs.ivy.mint.MintConstants;
@@ -98,17 +98,10 @@ public static void setup()
 
 public static void initialize(BudaRoot br)
 {
-   switch (BoardSetup.getSetup().getLanguage()) {
-      case JAVA :
-      case JAVA_IDEA :
-      case REBUS : 
-         break;
-      case JS :
-      case PYTHON :
-      case DART :
-         return;
-    }
-   
+   BumpClient bc = BumpClient.getBump();
+   boolean useBanal = bc.getOptionBool("bubbles.useBanal");
+   if (!useBanal) return;
+
    switch (BoardSetup.getSetup().getRunMode()) {
       case NORMAL :
       case SERVER :

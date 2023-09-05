@@ -58,12 +58,14 @@ private boolean is_optional;
 private boolean is_nested;
 private boolean is_new;
 private boolean is_modified;
+private boolean is_module;
+private boolean is_system;
 private int	   entry_id;
 private Set<String> exclude_patterns;
 private Set<String> include_patterns;
 
 private static BoardLanguage cur_language = null;
-private static final int PATH_LENGTH = 40;
+private static final int PATH_LENGTH = 64;
 
 
 /********************************************************************************/
@@ -87,6 +89,8 @@ BuenoPathEntry(Element e)
    is_exported = IvyXml.getAttrBool(e,"EXPORTED");
    is_nested = IvyXml.getAttrBool(e,"NEST");
    is_optional = IvyXml.getAttrBool(e,"OPTIONAL");
+   is_module = IvyXml.getAttrBool(e, "MODULE");
+   is_system = IvyXml.getAttrBool(e, "SYSTEM");
    is_new = false;
    is_modified = false;
    
@@ -150,9 +154,11 @@ boolean isNested()				{ return is_nested; }
 PathType getPathType()				{ return path_type; }
 String getBinaryPath()				{ return binary_path; }
 String getSourcePath()				{ return source_path; }
-String getJavadocPath()			{ return javadoc_path; }
+String getJavadocPath()				{ return javadoc_path; }
 boolean isExported() 				{ return is_exported; }
 boolean isOptional() 				{ return is_optional; }
+boolean isSystem()				{ return is_system; }
+boolean isModule()				{ return is_module; }
 boolean resetChanged()     
 {
    boolean chng = is_new || is_modified;
@@ -281,6 +287,8 @@ void outputXml(IvyXmlWriter xw,boolean del)
    xw.field("EXPORTED",is_exported);
    xw.field("OPTIONAL",is_optional);
    xw.field("NEST",is_nested);
+   if (is_system) xw.field("SYSTEM", true);
+   if (is_module) xw.field("MODULE", true);
    if (source_path != null) xw.textElement("SOURCE",source_path);
    if (output_path != null) xw.textElement("OUTPUT",output_path);
    if (binary_path != null) xw.textElement("BINARY",binary_path);
@@ -307,23 +315,6 @@ void outputXml(IvyXmlWriter xw,boolean del)
 /********************************************************************************/
 
 @Override public String toString() {
-   switch (cur_language) {
-      default :
-      case JAVA :
-      case JAVA_IDEA :
-      case REBUS: 
-         return javaToString();
-      case JS :
-         return jsToString();
-      case PYTHON :
-         return pythonToString();
-      case DART :
-         return dartToString();
-    }
-}
-
-private String javaToString()
-{
    FileSystemView fsv = FileSystemView.getFileSystemView();
    switch (path_type) {
       case LIBRARY :
@@ -360,33 +351,6 @@ private String javaToString()
    return path_type.toString() + " " + source_path + " " + output_path + " " + binary_path;
 }
 
-
-private String pythonToString() 
-{
-   return javaToString();
-}
-
-
-private String jsToString()
-{
-   FileSystemView fsv = FileSystemView.getFileSystemView();
-   File f2 = fsv.createFileObject(source_path);
-   String rslt = path_type.toString() + " " + f2.getName(); 
-   if (is_nested) rslt += " (NESTED)";
-   return rslt;
-}
-
-
-
-private String dartToString()
-{
-   // TODO: this should set up a dart path entry
-   FileSystemView fsv = FileSystemView.getFileSystemView();
-   File f2 = fsv.createFileObject(source_path);
-   String rslt = path_type.toString() + " " + f2.getName(); 
-   if (is_nested) rslt += " (NESTED)";
-   return rslt;
-}
 
 
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+Bicex version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <entry key='Bicex.seede.class.path'>seede.jar:asm.jar:eclipsejar:junit.jar:ivy.jar</entry>

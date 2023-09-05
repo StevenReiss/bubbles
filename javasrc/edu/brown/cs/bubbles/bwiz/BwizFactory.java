@@ -35,6 +35,8 @@ import edu.brown.cs.bubbles.bueno.BuenoConstants.BuenoClassCreatorInstance;
 import edu.brown.cs.bubbles.bueno.BuenoConstants.BuenoMethodCreatorInstance;
 import edu.brown.cs.bubbles.bueno.BuenoConstants.BuenoPackageCreatorInstance;
 import edu.brown.cs.bubbles.bueno.BuenoConstants.BuenoType;
+import edu.brown.cs.bubbles.bump.BumpClient;
+import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bueno.BuenoLocation;
 import edu.brown.cs.bubbles.bueno.BuenoProperties;
@@ -42,6 +44,8 @@ import edu.brown.cs.bubbles.bueno.BuenoProperties;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
+
+import org.w3c.dom.Element;
 
 
 
@@ -114,11 +118,15 @@ private void setupWizards(BudaRoot br)
 {
    buda_root = br;
 
-   BwizStartWizard pnl = new BwizStartWizard();
+   Element data = BumpClient.getBump().getLanguageData();
+   Element pdata = IvyXml.getChild(data,"PROJECT");
+   Element wdata = IvyXml.getChild(pdata,"WIZARDS");
+   if (wdata != null) {
+      BwizStartWizard pnl = new BwizStartWizard(wdata);
+      br.addPanel(pnl,false);
+    }
 
-   br.addPanel(pnl,false);
-
-   CreatorWizard mc = new CreatorWizard();
+   CreatorWizard mc = new CreatorWizard(wdata);
    BuenoFactory.getFactory().setMethodDialog(mc);
    BuenoFactory.getFactory().setClassDialog(mc);
    BuenoFactory.getFactory().setPackageDialog(mc);
@@ -163,13 +171,19 @@ private class CreatorWizard implements BuenoMethodCreatorInstance,
 	BuenoClassCreatorInstance, BuenoPackageCreatorInstance {
 
 
+   private Element wizard_data;
+   
+   CreatorWizard(Element wdata) {
+      wizard_data = wdata;
+    }
+   
    @Override public boolean showMethodDialogBubble(BudaBubble src,Point loc,
         					      BuenoProperties known,
         					      BuenoLocation insert,
         					      String lbl,
         					      BuenoBubbleCreator newer) {
       BoardProperties bp = BoardProperties.getProperties("Bwiz");
-      if (!bp.getBoolean("Bwiz.use.method.dialog")) return false;
+      if (!bp.getBoolean("Bwiz.use.method.dialog") || wizard_data == null) return false;
    
       BwizNewWizard bcwiz = new BwizNewMethodWizard(insert);
       bcwiz.setBubbleCreator(newer);
@@ -189,7 +203,7 @@ private class CreatorWizard implements BuenoMethodCreatorInstance,
 	 String lbl,
 	 BuenoBubbleCreator newer) {
       BoardProperties bp = BoardProperties.getProperties("Bwiz");
-      if (!bp.getBoolean("Bwiz.use.class.dialog")) return false;
+      if (!bp.getBoolean("Bwiz.use.class.dialog") || wizard_data == null) return false;
 
       BwizNewWizard ccwiz = null;
       switch (typ) {
@@ -223,7 +237,7 @@ private class CreatorWizard implements BuenoMethodCreatorInstance,
         String lbl,
         BuenoBubbleCreator newer) {
      BoardProperties bp = BoardProperties.getProperties("Bwiz");
-     if (!bp.getBoolean("Bwiz.use.package.dialog")) return false;
+     if (!bp.getBoolean("Bwiz.use.package.dialog") || wizard_data == null) return false;
      
      BwizNewWizard ccwiz = new BwizNewPackageWizard(insert);
      Dimension d = ccwiz.getPreferredSize();
@@ -241,8 +255,8 @@ private class CreatorWizard implements BuenoMethodCreatorInstance,
    }
   
   @Override public boolean useSeparateTypeButtons() {
-      return true;
-    }
+     return IvyXml.getAttrBool(wizard_data,"SEPARATE_TYPES");
+   }
 
 }	// end of inner class MethodCreator
 

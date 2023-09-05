@@ -1267,6 +1267,9 @@ private class LaunchConfig implements BumpLaunchConfig {
             break;
          }
       }
+      if (launch_type == null) {
+         BoardLog.logE("BUMP","Can't find launch type " + tnm + " " + tnm1);
+       }
     }
 
    @Override public String getConfigName() {

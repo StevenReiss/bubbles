@@ -285,15 +285,6 @@ void listProjects(IvyXmlWriter xw)
       for (int j = 0; j < up.length; ++j) {
 	 xw.textElement("USEDBY",up[j].getName());
        }
-//    try {
-//	for (IBuildConfiguration ibcfg : projs[i].getBuildConfigs()) {
-//	   xw.begin("BUILDCONFIG");
-//	   xw.field("NAME",ibcfg.getName());
-//	   xw.field("CLASS",ibcfg.getClass().getName());
-//	   xw.end("BUILDCONFIG");
-//	 }
-//     }
-//    catch (CoreException e) { }
       xw.end("PROJECT");
     }
 }
@@ -441,7 +432,7 @@ void localEditProject(Element pxml,IvyXmlWriter xw) throws BedrockException
    String pnm = IvyXml.getAttrString(pxml,"NAME");
    IProject ip = findProject(pnm);
    IJavaProject ijp = JavaCore.create(ip);
-   List<IClasspathEntry> ents = new ArrayList<IClasspathEntry>();
+   List<IClasspathEntry> ents = new ArrayList<>();
    try {
       for (Element oe : IvyXml.children(pxml,"OPTION")) {
 	 String k = IvyXml.getAttrString(oe,"NAME");
@@ -528,8 +519,6 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
        }
     }
 
-   BedrockPlugin.logD("UPDATE PATH ELEMENT " + oent + " " + IvyXml.convertXmlToString(xml));
-
    if (IvyXml.getAttrBool(xml,"DELETE")) {
       if (oent != null) ents.remove(oent);
       return;
@@ -540,10 +529,12 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
    switch (typ) {
       case "LIBRARY" :
       case "SOURCE" :
+	 BedrockPlugin.logD("START WROK ON ELEMENT");
 	 String f = IvyXml.getTextElement(xml,"BINARY");
 	 IPath bin = (f == null ? null : Path.fromOSString(f));
 	 f = IvyXml.getTextElement(xml,"SOURCE");
 	 IPath src = (f == null ? null : Path.fromOSString(f));
+	 BedrockPlugin.logD("PATHS " + bin + " " + src);
 	 boolean optfg = IvyXml.getAttrBool(xml,"OPTIONAL");
 	 boolean export = IvyXml.getAttrBool(xml,"EXPORTED");
 	 IAccessRule [] rls = null;
@@ -576,24 +567,24 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 	    xatts = new IClasspathAttribute[els.size()];
 	    xatts = els.toArray(xatts);
 	  }
-         List<IPath> exclpaths = new ArrayList<>();
-         List<IPath> inclpaths = new ArrayList<>();
-         for (Element pat : IvyXml.children(xml,"EXCLUDE")) {
-            String f1 = IvyXml.getAttrString(pat,"PATH");
-            if (f1 == null) continue;
-            IPath fp = Path.fromOSString(f1);
-            exclpaths.add(fp);
-          }
-         for (Element pat : IvyXml.children(xml,"INCLUDE")) {
-            String f1 = IvyXml.getAttrString(pat,"PATH");
-            if (f1 == null) continue;
-            IPath fp = Path.fromOSString(f1);
-            inclpaths.add(fp);
-          }
-         IPath [] exclarr = new IPath[exclpaths.size()];
-         exclarr = exclpaths.toArray(exclarr);
-         IPath [] inclarr = new IPath[inclpaths.size()];
-         inclarr = exclpaths.toArray(inclarr); 
+	 List<IPath> exclpaths = new ArrayList<>();
+	 List<IPath> inclpaths = new ArrayList<>();
+	 for (Element pat : IvyXml.children(xml,"EXCLUDE")) {
+	    String f1 = IvyXml.getAttrString(pat,"PATH");
+	    if (f1 == null) continue;
+	    IPath fp = Path.fromOSString(f1);
+	    exclpaths.add(fp);
+	  }
+	 for (Element pat : IvyXml.children(xml,"INCLUDE")) {
+	    String f1 = IvyXml.getAttrString(pat,"PATH");
+	    if (f1 == null) continue;
+	    IPath fp = Path.fromOSString(f1);
+	    inclpaths.add(fp);
+	  }
+	 IPath [] exclarr = new IPath[exclpaths.size()];
+	 exclarr = exclpaths.toArray(exclarr);
+	 IPath [] inclarr = new IPath[inclpaths.size()];
+	 inclarr = exclpaths.toArray(inclarr);
 
 	 IClasspathEntry nent = null;
 	 if (bin != null && !typ.equals("SOURCE"))
@@ -601,7 +592,7 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 		  rls,xatts,export);
 	 else
 	    nent = JavaCore.newSourceEntry(src,inclarr,exclarr,
-                  null,xatts);
+		  null,xatts);
 
 	 if (IvyXml.getAttrBool(xml,"MODIFIED") && oent != null) {
 	    int idx = ents.indexOf(oent);
@@ -1031,6 +1022,18 @@ void handlePreferences(String proj,IvyXmlWriter xw)
 {
    xw.begin("PREFERENCES");
 
+   Element xml = our_plugin.getLanguageData();
+   Element eopts = IvyXml.getChild(xml,"OPTIONS");
+   for (Element eopt : IvyXml.children(eopts,"OPTION")) {
+      String k = IvyXml.getAttrString(eopt,"NAME");
+      String v = IvyXml.getAttrString(eopt,"VALUE");
+      xw.begin("PREF");
+      xw.field("NAME",k);
+      xw.field("VALUE",v);
+      xw.field("OPTS",true);
+      xw.end("PREF");
+    }
+
    Map<?,?> opts;
    if (proj == null) {
       opts = JavaCore.getOptions();
@@ -1408,7 +1411,7 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
       catch (JavaModelException e) { }
       xw.end("RAWPATH");
     }
-								
+	
    if (fil) {
       xw.begin("FILES");
       addSourceFiles(p,xw,null);

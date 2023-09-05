@@ -78,7 +78,7 @@ BuenoGenericProjectEditor(Element edata,Element projdata)
    Element cxml = IvyXml.getChild(project_data,"RAWPATH");
    for (Element e : IvyXml.children(cxml,"PATH")) {
       BuenoPathEntry pe = new BuenoPathEntry(e);
-      initial_paths.add(pe);
+      if (pe.getPathType() != PathType.BINARY) initial_paths.add(pe);
       if (!pe.isNested() && pe.getPathType() == PathType.LIBRARY) {
 	 library_paths.add(pe);
        }
@@ -153,11 +153,13 @@ void saveProject()
    xw.begin("PROJECT");
    xw.field("NAME",pnm);
    for (BuenoPathEntry pe : library_paths) {
-      if (pe.resetChanged()) pe.outputXml(xw,false);
+      if (pe.hasChanged()) pe.outputXml(xw,false);
+      pe.resetChanged();
       dels.remove(pe);
     }
    for (BuenoPathEntry pe : source_paths) {
-      if (pe.resetChanged()) pe.outputXml(xw,false);
+      if (pe.hasChanged()) pe.outputXml(xw,false);
+      pe.resetChanged();
       dels.remove(pe);
     }
    for (BuenoPathEntry pe : dels) {

@@ -411,7 +411,7 @@ String BOARD_RESOURCE_CHECK  = "resources/Bale.props";    // check to see if usi
 String [] BOARD_RESOURCE_PROPS =  new String [] {
    "Bale.props", "Bale.x86.props", "Bdoc.props", "Bema.props", "Beam.props",
    "Bgta.props", "Buda.props", "Bass.props", "Bted.props", "Board.props",
-   "Board.x86.props", "Bddt.props", "Bcon.props", 
+   "Board.x86.props", "Bddt.props", "Bcon.props",
    "Bueno.props", "Bueno.java.props",
    "Bvcr.props",
    "Batt.props", "Bedu.props", "Bnote.props", "Bbook.props", "Buda.python.props",
@@ -532,8 +532,8 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
    "cocker.jar",
 
    "marytts/marytts.jar",
-   "marytts/marytts-lang-en-5.2.jar",
-   "marytts/voice-cmu-slt-hsmm-5.2.jar",
+   "marytts/marytts-lang-en.jar",
+   "marytts/voice-cmu-sit-hsmm.jar",
 };
 
 

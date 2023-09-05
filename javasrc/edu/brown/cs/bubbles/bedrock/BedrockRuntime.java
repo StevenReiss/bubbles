@@ -84,10 +84,8 @@ import org.eclipse.jdt.debug.eval.ICompiledExpression;
 import org.eclipse.jdt.debug.eval.IEvaluationListener;
 import org.eclipse.jdt.debug.eval.IEvaluationResult;
 
-import org.w3c.dom.Element;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -195,21 +193,7 @@ void start()
 
 
 
-/********************************************************************************/
-/*										*/
-/*	Get LAUNCH and PROJECT configuration data LANGUAGEDATA command		*/
-/*										*/
-/********************************************************************************/
 
-void handleLanguageData(IvyXmlWriter xw)
-   throws BedrockException
-{
-   String nm = "resources/launches-java.xml";
-   InputStream ins = BedrockRuntime.class.getClassLoader().getResourceAsStream(nm);
-   BedrockPlugin.logD("Language data " + nm + " " + ins);
-   Element xml = IvyXml.loadXmlFromStream(ins);
-   xw.writeXml(xml);
-}
 
 
 /********************************************************************************/
@@ -361,8 +345,12 @@ void getNewRunConfiguration(String proj,String name,String clone,String typ,IvyX
 	 String ltid = null;
 	 ILaunchManager lm = debug_plugin.getLaunchManager();
 	 ILaunchConfigurationType [] typs = lm.getLaunchConfigurationTypes();
+	 String tnm1 = typ;
+	 if (typ.equals("JUnit")) tnm1 = "JUnit Test";
+	 else if (typ.equals("JUnit Test")) tnm1 = "JUnit";
 	 for (ILaunchConfigurationType lct : typs) {
-	    if (lct.getName().equals(typ)) {
+	    BedrockPlugin.logD("CHECK CONFIG " + lct.getName() + " " + typ);
+	    if (lct.getName().equals(typ) || lct.getName().equals(tnm1)) {
 	       ltid = lct.getIdentifier();
 	       break;
 	     }
@@ -372,6 +360,9 @@ void getNewRunConfiguration(String proj,String name,String clone,String typ,IvyX
 	    IProject ip = our_plugin.getProjectManager().findProject(proj);
 	    config = lct.newInstance(ip,name);
 	  }
+	 else {
+	    BedrockPlugin.logE("Can't create launch config " + ltid + " " + name);
+	 }
        }
     }
    catch (CoreException e) {

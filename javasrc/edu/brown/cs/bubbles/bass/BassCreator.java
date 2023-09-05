@@ -33,7 +33,6 @@ package edu.brown.cs.bubbles.bass;
 import edu.brown.cs.bubbles.bale.BaleConstants;
 import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.board.BoardMetrics;
-import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
@@ -47,11 +46,11 @@ import edu.brown.cs.bubbles.bueno.BuenoInnerClassDialog;
 import edu.brown.cs.bubbles.bueno.BuenoJsModuleDialog;
 import edu.brown.cs.bubbles.bueno.BuenoLocation;
 import edu.brown.cs.bubbles.bueno.BuenoProperties;
-import edu.brown.cs.bubbles.bueno.BuenoPythonModuleDialog;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 
 import edu.brown.cs.ivy.swing.SwingComboBox;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
 
@@ -67,7 +66,9 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -85,6 +86,8 @@ class BassCreator implements BassConstants, BuenoConstants, BassConstants.BassPo
 private BudaBubble	search_bubble;
 private Point		access_point;
 
+private static Element  button_data;
+
 
 
 /********************************************************************************/
@@ -97,6 +100,12 @@ BassCreator()
 {
    search_bubble = null;
    access_point = null;
+   
+   if (button_data == null) {
+      Element xml = BumpClient.getBump().getLanguageData();
+      Element pdata = IvyXml.getChild(xml, "PROJECT");
+      button_data = IvyXml.getChild(pdata,"BUTTONS");
+    }
 }
 
 
@@ -110,53 +119,47 @@ BassCreator()
 
 @Override public void addButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname)
 {
-   switch (BoardSetup.getSetup().getLanguage()) {
-      case JAVA :
-      case JAVA_IDEA :
-      case REBUS :
-	 addJavaButtons(bb,where,menu,fullname,forname);
-	 break;
-      case PYTHON :
-	 addPythonButtons(bb,where,menu,fullname,forname);
-	 break;
-      case JS :
-         addJSButtons(bb,where,menu,fullname,forname);
-         break;
-      case DART :
-         addDartButtons(bb,where,menu,fullname,forname);
-         break;
-      default :
-	 break;
-    }
+   addGenericButtons(bb,where,menu,fullname,forname);
 }
 
 
 
-private void addJavaButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname)
+private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname)
 {
+   Map<String,Object> actions = new HashMap<>();
+   Element bdata;
    search_bubble = bb;
    access_point = where;
-
    if (fullname.startsWith("@")) return;
    if (forname != null && !(forname instanceof BassNameLocation)) return;
-
    List<BuenoLocation> memblocs = new ArrayList<BuenoLocation>();
    BuenoLocation clsloc = null;
-   Action delact = null;
-   Action delact1 = null;
-   Action movact = null;
-   Action importact = null;
-
-   // TODO: if forname == null and it represents an inner class, create alternatives for before/after the inner class
-
+   
    if (forname != null && forname.getNameType() == BassNameType.PROJECT) {
-      BuenoLocation dfltloc = BuenoFactory.getFactory().createLocation(fullname,null,null,true);
-      menu.add(new NewPackageAction(dfltloc));
-      delact = new DeleteProjectAction(fullname,bb);
-      if (bass_properties.getBoolean("Bass.fix.imports") && forname.getProject() != null) {
-         importact = new FixImportsAction("Project " + forname.getProject(),forname.getProject(),fullname,bb);
-       } 
-      forname = null;
+      bdata = getButtonData("NEWPACKAGE");
+      if (bdata != null) {
+         BuenoLocation dfltloc = BuenoFactory.getFactory().createLocation(fullname,
+               null,null,true);
+         actions.put("NEWPACKAGE",new NewPackageAction(dfltloc));
+       }
+      bdata = getButtonData("DELETEPROJECT");
+      if (bdata != null) {
+         actions.put("DELETEPROJECT",new DeleteProjectAction(fullname,bb));
+       }
+      bdata = getButtonData("FIXIMPORTS");
+      if (bdata != null) {
+         if (bass_properties.getBoolean("Bass.fix.imports") && forname.getProject() != null) {
+            Action act = new FixImportsAction("Project " + forname.getProject(),
+                  forname.getProject(),fullname,bb);
+            actions.put("FIXIMPORTS",act);
+          }
+       }
+      bdata = getButtonData("FORMAT");
+      if (bdata != null && bass_properties.getBoolean("Bass.fix.format")) {
+         Action act = new FormatAction("Project " + forname.getProject(),
+               forname.getProject(),fullname,bb);
+         actions.put("FORMAT",act);
+       }
     }
    else if (forname == null) {
       String proj = null;
@@ -165,258 +168,209 @@ private void addJavaButtons(BudaBubble bb,Point where,JPopupMenu menu,String ful
 	 proj = fullname.substring(0,idx);
 	 fullname = fullname.substring(idx+1);
        }
-      BuenoLocation loc = BuenoFactory.getFactory().createLocation(proj,fullname,null,true);
+      BuenoLocation loc = BuenoFactory.getFactory().createLocation(proj,
+            fullname,null,true);
+      String inner = null;
       if (loc.getClassName() != null) {
-	 memblocs.add(loc);
-	 String cnm = loc.getClassName();
-	 String pnm = loc.getPackage();
-	 String outer;
-	 String inner = null;
-	 if (pnm == null) outer = "";
-	 else outer = cnm.substring(pnm.length() + 1);
-	 if (outer.contains(".") || outer.contains("$")) {
-	    int xidx = outer.indexOf(".");
-	    inner = outer.replace(".", "$");
-	    outer = pnm + "." + outer.substring(0,xidx);
-	    memblocs.add(BuenoFactory.getFactory().createLocation(proj,outer,inner,false));
-	    memblocs.add(BuenoFactory.getFactory().createLocation(proj,outer,inner,true));
-	  }
-	 if (bass_properties.getBoolean("Bass.delete.class")) {
+     	 memblocs.add(loc);
+         if (loc.getPackage() != null) clsloc = loc;
+         String cnm = loc.getClassName();
+         String pnm = loc.getPackage();
+         if (IvyXml.getAttrBool(button_data,"PACKAGED")) {
+            String outer;
+            if (pnm == null) outer = "";
+            else outer = cnm.substring(pnm.length() + 1);
+            if (outer.contains(".") || outer.contains("$")) {
+               int xidx = outer.indexOf(".");
+               inner = outer.replace(".", "$");
+               outer = pnm + "." + outer.substring(0,xidx);
+               memblocs.add(BuenoFactory.getFactory().createLocation(proj,outer,
+                     inner,false));
+               memblocs.add(BuenoFactory.getFactory().createLocation(proj,outer,
+                     inner,true));
+             }
+          }
+         bdata = getButtonData("NEWFILE");
+         if (bdata != null) {
+            actions.put("NEWFILE",new NewFileAction(loc));
+          }
+         bdata = getButtonData("DELETECLASS");
+	 if (bdata != null && bass_properties.getBoolean("Bass.delete.class")) {
 	    if (pnm != null) {
 	       cnm = cnm.substring(pnm.length()+1);
 	       if (!cnm.contains(".")) {
-		  delact = new DeleteClassAction(proj,loc.getClassName(),bb);
+                  actions.put("DELETECLASS",new DeleteClassAction(proj,loc.getClassName(),bb));
 		}
 	     }
-	    else {
-	       if (cnm != null) {
-		  delact = new DeleteClassAction(proj,cnm,bb);
-		}
+	    else if (cnm != null) {
+               actions.put("DELETECLASS",new DeleteClassAction(proj,cnm,bb));
 	     }
 	  }
-	 if (delact == null && bass_properties.getBoolean("Bass.delete.file")) {
-	    File f = loc.getFile();
-	    if (f != null) {
-	       delact = new DeleteFileAction(proj,f,bb);
-	     }
+         bdata = getButtonData("DELETEFILE");
+	 if (bdata != null && bass_properties.getBoolean("Bass.delete.file")) {
+            if (!IvyXml.getAttrBool(bdata,"NOCLASS") || actions.get("DELETECLASS") == null) {
+               File f = loc.getFile();
+               if (f != null) {
+                  actions.put("DELETEFILE",new DeleteFileAction(proj,f,bb));
+                }
+             }
 	  }
-	 if (bass_properties.getBoolean("Bass.move.class")) {
+         bdata = getButtonData("MOVECLASS");
+	 if (bdata != null && bass_properties.getBoolean("Bass.move.class")) {
 	    if (pnm != null && inner == null) {
-	       movact = new MoveClassAction(proj,loc.getClassName(),pnm,bb);
+               actions.put("MOVECLASS",new MoveClassAction(proj,loc.getClassName(),pnm,bb));
 	     }
-	 }
-	 if (importact == null && bass_properties.getBoolean("Bass.fix.imports")) {
+          }
+         bdata = getButtonData("FIXIMPORTS");
+	 if (bdata != null  && bass_properties.getBoolean("Bass.fix.imports")) {
 	    if (pnm != null && inner == null) {
 	       File f = loc.getFile();
 	       if (f != null) {
-		  importact = new FixImportsAction(proj,f,bb);
+                  actions.put("FIXIMPORTS",new FixImportsAction(proj,f,bb));
 		}
 	     }
 	  }
+         bdata = getButtonData("FORMAT");
+         if (bdata != null && bass_properties.getBoolean("Bass.fix.format")) {
+            if (pnm != null && inner == null) {
+	       File f = loc.getFile();
+	       if (f != null) {
+                  actions.put("FORMAT",new FormatAction(proj,f,bb));
+		}
+	     }
+          }
        }
       else if (!fullname.contains("@")) {
-	 if (bass_properties.getBoolean("Bass.delete.package"))
-	    delact = new DeletePackageAction(proj,fullname,bb);
-	 if (bass_properties.getBoolean("Bass.delete.project")) {
-	    delact1 = new DeleteProjectAction(proj,bb);
+         bdata = getButtonData("DELETEPACKAGE");
+	 if (bdata != null && bass_properties.getBoolean("Bass.delete.package"))
+	    actions.put("DELETEPACKAGE",new DeletePackageAction(proj,fullname,bb));
+         bdata = getButtonData("DELETEPROJECT");
+	 if (bdata != null && bass_properties.getBoolean("Bass.delete.project")) {
+	    actions.put("DELETEPROJECT",new DeleteProjectAction(proj,bb));
 	  }
-         if (bass_properties.getBoolean("Bass.fix.imports")) {
-            importact = new FixImportsAction("Package " + fullname,proj,fullname,bb);
+         bdata = getButtonData("FIXIMPORTS");
+         if (bdata != null && bass_properties.getBoolean("Bass.fix.imports")) {
+            actions.put("FIXIMPORTS",new FixImportsAction("Package " + fullname,proj,fullname,bb));
+          }
+         bdata = getButtonData("FORMAT");
+         if (bdata != null && bass_properties.getBoolean("Bass.fix.format")) {
+            actions.put("FORMAT",new FixImportsAction("Package " + fullname,proj,fullname,bb));
           }
        }
       if (loc.getPackage() != null && clsloc == null) clsloc = loc;
-    }
+    }  
    else if (forname.getNameType() != BassNameType.PROJECT) {
       BuenoLocation loc = new BassNewLocation(forname,false,false);
       memblocs.add(new BassNewLocation(forname,false,true));
       memblocs.add(new BassNewLocation(forname,true,false));
       memblocs.add(loc);
       if (loc.getPackage() != null) clsloc = loc;
-      if (bass_properties.getBoolean("Bass.delete.method")) {
+      bdata = getButtonData("DELETEMETHOD");
+      if (bdata != null && bass_properties.getBoolean("Bass.delete.method")) {
 	 switch (forname.getNameType()) {
 	    case METHOD :
 	    case CONSTRUCTOR :
 	       File f = forname.getLocation().getFile();
 	       if (f != null) {
-		  delact = new DeleteMethodAction(forname,bb);
-	       }
+		  actions.put("DELETEMETHOD",new DeleteMethodAction(forname,bb));
+                }
 	       break;
 	    default :
 	       break;
 	  }
        }
     }
-
    if (memblocs.size() > 0) {
-      JMenu m1 = (JMenu) menu.add(new JMenu("New Method ..."));
-      for (BuenoLocation bl : memblocs) {
-	 m1.add(new NewMethodAction(bl));
+      bdata = getButtonData("NEWMETHOD");
+      if (bdata != null) {
+         List<Action> acts = new ArrayList<>();
+         for (BuenoLocation bl : memblocs) {
+            acts.add(new NewMethodAction(bl));
+          }
+         actions.put("NEWMETHOD",acts);
        }
-      m1 = (JMenu) menu.add(new JMenu("New Field ..."));
-      for (BuenoLocation bl : memblocs) {
-	 m1.add(new NewFieldAction(bl));
+      bdata = getButtonData("NEWFIELD");
+      if (bdata != null) {
+         List<Action> acts = new ArrayList<>();
+         for (BuenoLocation bl : memblocs) {
+            acts.add(new NewFieldAction(bl));
+          }
+         actions.put("NEWMETHOD",acts);
        }
-      m1 = (JMenu) menu.add(new JMenu("New Inner Class/Interface/Enum ..."));
-      for (BuenoLocation bl : memblocs) {
-	 m1.add(new NewInnerTypeAction(bl));
+      bdata = getButtonData("NEWINNERTYPE");
+      if (bdata != null) {
+         List<Action> acts = new ArrayList<>();
+         for (BuenoLocation bl : memblocs) {
+            acts.add(new NewInnerTypeAction(bl));
+          }
+         actions.put("NEWINNERTYPE",acts);
        }
     }
    if (clsloc != null) {
       if (BuenoFactory.getFactory().useSeparateTypeButtons()) {
-	 menu.add(new NewTypeAction(BuenoType.NEW_CLASS,clsloc));
-	 menu.add(new NewTypeAction(BuenoType.NEW_ENUM,clsloc));
-	 menu.add(new NewTypeAction(BuenoType.NEW_INTERFACE,clsloc));
+         bdata = getButtonData("NEWCLASS");
+         if (bdata != null) {
+            actions.put("NEWCLASS",new NewTypeAction(BuenoType.NEW_CLASS,clsloc));
+          }
+         bdata = getButtonData("NEWENUM");
+         if (bdata != null) {
+            actions.put("NEWENUM",new NewTypeAction(BuenoType.NEW_ENUM,clsloc));
+          }
+         bdata = getButtonData("NEWINTERFACE");
+         if (bdata != null) {
+            actions.put("NEWINTERFACE",new NewTypeAction(BuenoType.NEW_INTERFACE,clsloc));
+          }
        }
       else {
-	 menu.add(new NewTypeAction(clsloc));
+         bdata = getButtonData("NEWTYPE");
+         if (bdata != null) {
+            actions.put("NEWTYPE",new NewTypeAction(clsloc));
+          }
        }
-
-      if (clsloc.getPackage() != null) {
-	 menu.add(new NewPackageAction(clsloc));
-       }
-    }
-   if (movact != null) {
-      menu.add(movact);
-   }
-   if (delact != null) {
-      menu.add(delact);
-    }
-   if (delact1 != null) {
-      menu.add(delact1);
-    }
-   if (importact != null) {
-      menu.add(importact);
-    }
-}
-
-
-
-
-private void addPythonButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname)
-{
-   search_bubble = bb;
-   access_point = where;
-
-   if (fullname.startsWith("@")) return;
-   if (forname != null && !(forname instanceof BassNameLocation)) return;
-
-   List<BuenoLocation> memblocs = new ArrayList<BuenoLocation>();
-   BuenoLocation clsloc = null;
-
-   if (forname != null && forname.getNameType() == BassNameType.PROJECT) {
-      forname = null;
-      BuenoLocation dfltloc = BuenoFactory.getFactory().createLocation(fullname,null,null,true);
-      menu.add(new NewPackageAction(dfltloc));
-    }
-   else if (forname == null) {
-      String proj = null;
-      int idx = fullname.indexOf(":");
-      if (idx > 0) {
-	 proj = fullname.substring(0,idx);
-	 fullname = fullname.substring(idx+1);
-       }
-      BuenoLocation loc = BuenoFactory.getFactory().createLocation(proj,fullname,null,true);	// this needs to be python-specialized
-      if (loc.getClassName() != null) memblocs.add(loc);
-      if (loc.getPackage() != null) clsloc = loc;
-    }
-   else {
-      BuenoLocation loc = new BassNewLocation(forname,false,false);
-      memblocs.add(new BassNewLocation(forname,false,true));
-      memblocs.add(new BassNewLocation(forname,true,false));
-      memblocs.add(loc);
-      if (loc.getPackage() != null) clsloc = loc;
-    }
-
-   if (memblocs.size() > 0) {
-      JMenu m1 = (JMenu) menu.add(new JMenu("New Function ..."));
-      for (BuenoLocation bl : memblocs) {
-	 m1.add(new NewMethodAction(bl));
-       }
-      m1 = (JMenu) menu.add(new JMenu("New Attribute ..."));
-      for (BuenoLocation bl : memblocs) {
-	 m1.add(new NewFieldAction(bl));
-       }
-      m1 = (JMenu) menu.add(new JMenu("New Class ..."));
-      for (BuenoLocation bl : memblocs) {
-	 m1.add(new NewInnerTypeAction(bl));
+      bdata = getButtonData("NEWPACKAGE");
+      if (bdata != null) {
+         actions.put("NEWPACKAGE",new NewPackageAction(clsloc));
        }
     }
-   if (clsloc != null) {
-      menu.add(new NewPythonModuleAction(clsloc));
-      if (clsloc.getPackage() != null) {
-	 menu.add(new NewPackageAction(clsloc));
+   
+   for (Element btn : IvyXml.children(button_data,"BUTTON")) {
+      String btyp = IvyXml.getAttrString(btn,"TYPE");
+      Object v = actions.get(btyp);
+      if (v != null) {
+         if (v instanceof Action) {
+            Action act = (Action) v;
+            String lbl = IvyXml.getAttrString(btn,"LABEL");
+            if (lbl != null) {
+               act.putValue(Action.NAME,lbl);
+             }
+            menu.add(act);
+          }
+         else if (v instanceof Collection<?>) {
+            Collection<?> itms = (Collection<?>) v;
+            String mname = IvyXml.getAttrString(btn,"MENU");
+            JMenu m1 = new JMenu(mname);
+            for (Object o : itms) {
+               Action act = (Action) o;
+               m1.add(act);
+             }
+            menu.add(m1);
+          }
        }
     }
 }
 
 
-
-
-private void addJSButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname)
+private Element getButtonData(String type) 
 {
-   search_bubble = bb;
-   access_point = where;
-   
-   if (fullname.startsWith("@")) return;
-   if (forname != null && !(forname instanceof BassNameLocation)) return;
-   
-   List<BuenoLocation> memblocs = new ArrayList<BuenoLocation>();
-   BuenoLocation clsloc = null;
-   BuenoLocation projloc = null;
-   
-   if (forname != null && forname.getNameType() == BassNameType.PROJECT) {
-      forname = null;
-    }
-   if (forname == null) {
-      String proj = null;
-      int idx = fullname.indexOf(":");
-      if (idx > 0) {
-	 proj = fullname.substring(0,idx);
-	 fullname = fullname.substring(idx+1);
-       }
-      BuenoLocation loc = BuenoFactory.getFactory().createLocation(proj,fullname,null,true);	// this needs to be python-specialized
-      if (loc.getClassName() != null) memblocs.add(loc);
-      if (loc.getPackage() != null) clsloc = loc;
-      projloc = loc;
-    }
-   else {
-      BuenoLocation loc = new BassNewLocation(forname,false,false);
-      memblocs.add(new BassNewLocation(forname,false,true));
-      memblocs.add(new BassNewLocation(forname,true,false));
-      memblocs.add(loc);
-      if (loc.getPackage() != null) clsloc = loc;
-      projloc = loc;
-    }
-   
-   if (memblocs.size() > 0) {
-      JMenu m1 = (JMenu) menu.add(new JMenu("New Function ..."));
-      for (BuenoLocation bl : memblocs) {
-	 m1.add(new NewMethodAction(bl));
-       }
-      m1 = (JMenu) menu.add(new JMenu("New Variable ..."));
-      for (BuenoLocation bl : memblocs) {
-	 m1.add(new NewFieldAction(bl));
-       }
-      m1 = (JMenu) menu.add(new JMenu("New Class ..."));
-      for (BuenoLocation bl : memblocs) {
-	 m1.add(new NewInnerTypeAction(bl));
+   for (Element bdata : IvyXml.children(button_data,"BUTTON")) {
+      if (type.equals(IvyXml.getAttrString(bdata,"TYPE"))) {
+         return bdata;
        }
     }
-   if (clsloc != null) {
-      // add class related items
-    }
-   if (projloc != null) {
-      menu.add(new NewJSModuleAction(projloc));
-    }
+   return null;
 }
 
 
-
-private void addDartButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname)
-{
-   // TODO: fill this in
-   return;
-} 
 
 
 
@@ -608,36 +562,13 @@ private class NewPackageAction extends NewAction implements BuenoConstants.Bueno
 
 
 
-private class NewPythonModuleAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
-
-   private final static long serialVersionUID = 1;
-
-   NewPythonModuleAction(BuenoLocation loc) {
-      super(BuenoType.NEW_MODULE,loc);
-    }
-
-   @Override public void actionPerformed(ActionEvent e) {
-      BoardMetrics.noteCommand("BASS","NewModule");
-      BudaRoot.hideSearchBubble(e);
-      BuenoPythonModuleDialog bpd = new BuenoPythonModuleDialog(search_bubble,access_point,
-        					 property_set,for_location,this);
-      bpd.showDialog();
-    }
-
-   @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
-      BudaBubble bb = BaleFactory.getFactory().createFileBubble(proj,null,name);
-      addNewBubble(bb,bba,p);
-   }
-
-}	// end of inner class NewPythonModuleAction
 
 
-
-private class NewJSModuleAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
+private class NewFileAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
 
    private final static long serialVersionUID = 1;
    
-   NewJSModuleAction(BuenoLocation loc) {
+   NewFileAction(BuenoLocation loc) {
       super(BuenoType.NEW_FILE,loc);
     }
    
@@ -655,7 +586,7 @@ private class NewJSModuleAction extends NewAction implements BuenoConstants.Buen
       addNewBubble(bb,bba,p);
     }
    
-}	// end of inner class NewJSModuleAction
+}	// end of inner class NewFileAction
 
 
 
@@ -849,6 +780,47 @@ private static class FixImportsAction extends AbstractAction {
 }	// end of inner class FixImportsAction
 
 
+
+private static class FormatAction extends AbstractAction {
+
+   private String project_name;
+   private File file_name;
+   private String name_prefix;
+   
+   private static final long serialVersionUID = 1;
+   
+   FormatAction(String proj,File fil,BudaBubble bb) {
+      super("Format " + fil.getName());
+      project_name = proj;
+      file_name = fil;
+      name_prefix = null;
+    }
+   
+   FormatAction(String desc,String proj,String pfx,BudaBubble bb) {
+      super("Format " + desc);
+      project_name = proj;
+      name_prefix = pfx;
+      file_name = null;
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      if (file_name != null) {
+	 Formatter fixer = new Formatter(project_name,file_name);
+	 BoardThreadPool.start(fixer);
+       }
+      else if (name_prefix != null) {
+	 BassFactory bf = BassFactory.getFactory();
+	 Collection<File> files = bf.findAssociatedFiles(project_name,name_prefix);
+	 for (File f : files) {
+	    Formatter fixer = new Formatter(project_name,f);
+	    BoardThreadPool.start(fixer);
+	 }
+      }
+    }
+
+}	// end of inner class FormatAction
+
+
 private static class ImportFixer implements Runnable  {
    
    private String project_name;
@@ -878,7 +850,39 @@ private static class ImportFixer implements Runnable  {
          edit_result = null;
        }
     }
-}
+   
+}	// end of inner class ImportFixer
+
+
+private static class Formatter implements Runnable  {
+
+   private String project_name;
+   private File file_name;
+   private Element edit_result;
+
+   Formatter(String proj,File file) {
+      project_name = proj;
+      file_name = file;
+      edit_result = null;
+   }
+
+   @Override public void run() {
+      if (edit_result == null) {
+	 BumpClient bc = BumpClient.getBump();
+	 Element edits = bc.format(project_name,file_name,0,(int) file_name.length());
+	 if (edits != null) {
+	    edit_result = edits;
+	    SwingUtilities.invokeLater(this);
+	 }
+      }
+      else {
+	 BaleFactory.getFactory().applyEdits(file_name,edit_result);
+	 edit_result = null;
+      }
+   }
+   
+}	// end of inner class Formatter
+
 
 
 

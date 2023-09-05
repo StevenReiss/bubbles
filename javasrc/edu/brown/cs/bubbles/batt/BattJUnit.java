@@ -42,6 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.InetAddress;
@@ -103,6 +104,7 @@ private static final JunitTestStatus STATUS_UNKNOWN;
 private static final JunitTestStatus STATUS_SUCCESS;
 private static final JunitTestStatus STATUS_IGNORED;
 private static final JunitTestStatus STATUS_LISTING;
+private static final JunitTestStatus STATUS_FAILURE;
 
 
 enum StatusType {
@@ -120,6 +122,7 @@ static {
    STATUS_LISTING = new JunitTestStatus(StatusType.LISTING);
    STATUS_SUCCESS = new JunitTestStatus(StatusType.SUCCESS);
    STATUS_IGNORED = new JunitTestStatus(StatusType.IGNORED);
+   STATUS_FAILURE = new JunitTestStatus(StatusType.FAILURE);
 }
 
 
@@ -171,7 +174,7 @@ private void scanArgs(String [] args)
 
    boolean havecls = false;
    boolean useall = false;
-   ExecutorService service = Executors.newFixedThreadPool(8);
+   ExecutorService service = Executors.newFixedThreadPool(1);
 
    for (int i = 0; i < args.length; ++i) {
       if (!havecls && args[i].startsWith("-")) {
@@ -209,6 +212,7 @@ private void scanArgs(String [] args)
        }
     }
 
+   long time0 = System.currentTimeMillis();
    try {
       Class<?> ac = Class.forName("edu.brown.cs.bubbles.batt.BattAgent");
       Method mac = ac.getMethod("handleUserClasses",String [].class);
@@ -216,67 +220,22 @@ private void scanArgs(String [] args)
       strarr = clsstr.toArray(strarr);
       mac.invoke(null,(Object) strarr);
     }
-   catch (ClassNotFoundException e) { }
+   catch (ClassNotFoundException e) { 
+      System.err.println("BATTJ: No agent found");
+   }
    catch (Throwable t) {
       System.err.println("BATTJ: Problem with agent: " + t);
       t.printStackTrace();
     }
+   
+   long time1 = System.currentTimeMillis();
 
    for (String cnm : tststr) {
-      System.err.println("BATTJ: Work on " + cnm);
-      System.err.flush();
-      try {
-	 // TODO: if this can be done without actually calling the static initializer
-	 // it would be better
-	 // An infinite loop or problem in the static initializer creates problems here
-	 Class<?> c = null;
-	 // c = Class.forName(cnm);
-	 Future<Class<?>> future = service.submit(new FindClass(cnm));
-	 try {
-	    c = future.get(2000,TimeUnit.MILLISECONDS);
-	  }
-	 catch (ExecutionException e) {
-	    throw e.getCause();
-	  }
-	 catch (TimeoutException e) {
-	    // System.err.println("Initialization problem with " + cnm);
-	   future.cancel(true);
-	  }
-	 if (c == null) continue;
-	 TestClass tcls = new TestClass(c);
-	 tcls.getOnlyConstructor();
-	 boolean valid = tcls.isPublic();
-	 if (tcls.isANonStaticInnerClass()) valid = false;
-	 if (valid) {
-	    clss.add(c);
-	  }
-       }
-      catch (AssertionError e) {
-	 System.err.println("Assertion error: " + e);
-       }
-      catch (IllegalArgumentException e) {
-	 // System.err.println("Arg exception: " + e);
-	 // e.printStackTrace();
-       }
-      catch (ExceptionInInitializerError e) {
-	 // System.err.println("Init exception: " + e);
-	 // e.printStackTrace();
-       }
-      // catch (NoSuchMethodException e) {
-	 // System.err.println("No construtor: " + e);
-       // }
-      catch (NoClassDefFoundError e) {
-	 System.err.println("BATTJ: Class " + cnm + " not found");
-       }
-      catch (ClassNotFoundException e) {
-	 System.err.println("BATTJ: Class " + cnm + " not found");
-       }
-      catch (Throwable t) {
-	 System.err.println("BATTJ: Class " + cnm + " can't be loaded: " + t);
-       }
-
-      System.err.println("BATTJ: DONE: " + cnm);
+      Class<?> c1 = setupClass(cnm,service);
+      addClass(c1,clss);
     }
+   
+   long time2 = System.currentTimeMillis();
 
    class_set = new Class<?>[clss.size()];
    class_set = clss.toArray(class_set);
@@ -290,7 +249,128 @@ private void scanArgs(String [] args)
 	 System.exit(1);
        }
     }
+
+   System.err.println("BATTJ: Timings " + (time1-time0) + " " + (time2 - time1) + " " + tststr.size() + " " +
+	clss.size() + " " + clsstr.size());
 }
+
+
+private void addClass(Class<?> c,List<Class<?>> clss)
+{
+   if (c == null) return;
+   TestClass tcls = new TestClass(c);
+   tcls.getOnlyConstructor();
+   boolean valid = tcls.isPublic();
+   if (tcls.isANonStaticInnerClass()) valid = false;
+   if (valid) {
+      clss.add(c);
+   }
+}
+
+
+
+private Class<?> setupClass(String cnm,ExecutorService service) 
+{
+   System.err.println("BATTJ: SET UP CLASS " + cnm);
+   System.err.flush();
+   
+   Class<?> rslt = null;
+   
+   boolean retry = true;
+   while (retry && rslt == null) {
+      retry = false;
+      try {
+	 // TODO: if this can be done without actually calling the static initializer
+	 // it would be better
+	 // An infinite loop or problem in the static initializer creates problems here
+	 Class<?> c = null;
+	 Future<Class<?>> future = service.submit(new FindClass(cnm));
+	 try {
+	    c = future.get(2000,TimeUnit.MILLISECONDS);
+	 }
+	 catch (ExecutionException e) {
+	    System.err.println("BATTJ: Find class " + cnm + " threw " + e);
+	    throw e.getCause();
+	 }
+	 catch (TimeoutException | InterruptedException e) {
+	    // System.err.println("Initialization problem with " + cnm);
+	    future.cancel(true);
+	 }
+	 if (c == null) return null;
+	 System.err.println("BATTJ: Preload test class " + cnm);
+
+	 TestClass tcls = new TestClass(c);
+	 tcls.getOnlyConstructor();
+	 boolean valid = tcls.isPublic();
+	 if (tcls.isANonStaticInnerClass()) valid = false;
+	 if (valid) {
+	    rslt = c;
+	 }
+      }
+      catch (AssertionError e) {
+	 System.err.println("Assertion error: " + e);
+      }
+      catch (IllegalArgumentException e) {
+	 // System.err.println("Argument exception: " + e);
+	 // e.printStackTrace();
+      }
+      catch (ExceptionInInitializerError e) {
+	 // System.err.println("Initialization exception: " + e);
+	 // e.printStackTrace();
+      }
+      // catch (NoSuchMethodException e) {
+      // System.err.println("No constructor: " + e);
+      // }
+      catch (NoClassDefFoundError e) {
+	 System.err.println("BATTJ: Class " + cnm + " not found");
+      }
+      catch (ClassNotFoundException e) {
+	 System.err.println("BATTJ: Class " + cnm + " not found");
+      }
+      catch (LinkageError e) {
+	 System.err.println("BATTJ: Linkage error for " + cnm);
+	 e.printStackTrace();
+	 retry = true;
+	 String msg = e.getMessage();
+	 if (msg.contains("duplicate class definition for")) {
+	   int idx = msg.indexOf (" for ");  
+	   String txt = msg.substring(idx+5);
+	   int idx1 = txt.indexOf(". (");
+	   txt = txt.substring(0,idx1).trim();
+	   System.err.println("BATTJ: Need to change " + txt);
+	   try {
+	      Class<?> ac = Class.forName("edu.brown.cs.bubbles.batt.BattAgent");
+	      Method mac = ac.getMethod("reload",String.class);
+	      mac.invoke(null,txt);
+	    }
+	   catch (ClassNotFoundException e1) { 
+	      System.err.println("BATTJ: No agent found");
+	   }
+	   catch (Throwable t) {
+	      System.err.println("BATTJ: Problem with agent: " + t);
+	      t.printStackTrace();
+	    }   
+	 }
+      }
+      catch (Throwable t) {
+	 System.err.println("BATTJ: Class " + cnm + " can't be loaded: " + t);
+      }
+   }
+   
+   try {
+      Class<?> ac = Class.forName("edu.brown.cs.bubbles.batt.BattAgent");
+      Method mac = ac.getMethod("doneLoad");
+      mac.invoke(null);
+    }
+   catch (Throwable e1) { 
+      System.err.println("BATTJ: problem with doneLoad: " + e1);
+   }
+
+   System.err.println("BATTJ: DONE: " + cnm);
+   
+   return rslt;
+}
+
 
 
 private static class FindClass implements Callable<Class<?>> {
@@ -310,7 +390,7 @@ private static class FindClass implements Callable<Class<?>> {
        }
     }
 
-}
+}	// end of inner class FindClass
 
 
 
@@ -386,7 +466,7 @@ private void process()
       int idx2 = single_test.indexOf(")");
       String mnm = single_test.substring(0,idx1);
       String cnm = single_test.substring(idx1+1,idx2);
-      System.err.println("WORK ON TEST " + single_test + " " + cnm + " " + mnm);
+      System.err.println("BATTJ: WORK ON TEST " + single_test + " " + cnm + " " + mnm);
       try {
 	 Class<?> clz = Class.forName(cnm);
 	 rq = Request.method(clz,mnm);
@@ -409,11 +489,13 @@ private void process()
    TestListener ll = new TestListener();
    juc.addListener(ll);
 
+   long time0 = System.currentTimeMillis();
    System.err.println("BATTJ: START RUN: " + list_only + " " + rq);
 
    juc.run(rq);
 
-   System.err.println("BATTJ: FINISH RUN: " + list_only);
+   long time1 = System.currentTimeMillis();
+   System.err.println("BATTJ: FINISH RUN: " + list_only + " " + (time1-time0));
 
    if (result_stream != null) {
       try {
@@ -535,18 +617,22 @@ void noteDone()
 
 private void outputSingleTest(JunitTest jt)
 {
-   XMLStreamWriter xw = null;
-   try {
-      XMLOutputFactory xof = XMLOutputFactory.newInstance();
-      xw = xof.createXMLStreamWriter(result_stream);
-      outputTestCase(jt,xw);
-      xw.flush();
-      System.err.println("BATTJ: Finish writing test case " + jt.getDescription() + " " + jt.getStatus());
-    }
-   catch (XMLStreamException e) {
-      System.err.println("BATTJ: Problem writing output file " + result_file + ": " + e);
-      System.exit(1);
-    }
+   if (result_stream ==  null) return;
+   
+   synchronized (result_stream) {
+      XMLStreamWriter xw = null;
+      try {
+	 XMLOutputFactory xof = XMLOutputFactory.newInstance();
+	 xw = xof.createXMLStreamWriter(result_stream);
+	 outputTestCase(jt,xw);
+	 xw.flush();
+	 System.err.println("BATTJ: Finish writing test case " + jt.getDescription() + " " + jt.getStatus());
+      }
+      catch (XMLStreamException e) {
+	 System.err.println("BATTJ: Problem writing output file " + result_file + ": " + e);
+	 System.exit(1);
+      }
+   }
 }
 
 
@@ -677,6 +763,7 @@ private class TestListener extends RunListener {
       JunitTestStatus bts = getTestStatus(d);
       JunitTest jt = addTestCase(d,STATUS_RUNNING);
       noteStart(d);
+      System.err.println("BATTJ: TEST " + bts + " " + jt.getDescription() + " " + bts.getType());
       switch (bts.getType()) {
 	 case FAILURE :
 	 case SUCCESS :
@@ -689,6 +776,7 @@ private class TestListener extends RunListener {
     }
 
    @Override public void testIgnored(Description d) {
+      System.err.println("BATTJ: IGNORED " + d);
       addTestCase(d,STATUS_IGNORED);
     }
 
@@ -703,10 +791,15 @@ private class TestListener extends RunListener {
       noteFinish(d);
 
       JunitTestStatus bts = getTestStatus(d);
+      System.err.println("BATTJ: STATUS " + bts.getType() + " " + result_stream
+	       );
+      
       switch (bts.getType()) {
-	 case FAILURE :
 	 case IGNORED :
 	 case LISTING :
+	    break;
+	 case FAILURE :
+	    setTestStatus(d,STATUS_FAILURE);
 	    break;
 	 default :
 	    setTestStatus(d,STATUS_SUCCESS);
@@ -731,7 +824,8 @@ private class TestListener extends RunListener {
       System.err.println("BATTJ: Test failure: " + f);
       // Throwable t = f.getException();
       // if (t != null) t.printStackTrace();
-
+      setTestStatus(f.getDescription(),STATUS_FAILURE);
+      
       if (f.getMessage() != null && bad_messages.contains(f.getMessage())) {
 	 removeTestCase(f.getDescription());
        }
@@ -748,6 +842,9 @@ private class TestListener extends RunListener {
 
       JunitTest jt = test_cases.get(f.getDescription());
       if (jt != null) outputSingleTest(jt);
+      else {
+	 System.err.println("Can't find failing test case " + f.getDescription());
+      }
     }
 
 }	// end of inner class TestListener
@@ -827,6 +924,8 @@ private static class JunitTestStatus {
 
    StatusType getType() 			{ return status_type; }
    Failure getFailure() 			{ return fail_data; }
+   
+   @Override public String toString()		{ return status_type.toString(); }
 
 }	// end of inner class JunitTestStatus
 
