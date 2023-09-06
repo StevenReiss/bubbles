@@ -645,7 +645,7 @@ private void processRun(boolean listonly,Set<String> testclss)
 
       args.add("-cp");
       args.add(buf.toString());
-//      args.add("-verbose");
+//    args.add("-verbose");
       args.add("edu.brown.cs.bubbles.batt.BattJUnit");
       if (testclss == null) args.add("-all");
       if (listonly) args.add("-list");

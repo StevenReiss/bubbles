@@ -42,7 +42,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.InetAddress;
@@ -52,6 +51,7 @@ import java.security.Permission;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -151,7 +151,7 @@ private BattJUnit(String [] args)
    class_set = null;
    result_file = "batt.out";
    result_stream = null;
-   test_cases = new HashMap<Description,JunitTest>();
+   test_cases = new HashMap<>();
    single_test = null;
 
    scanArgs(args);
@@ -169,7 +169,7 @@ private BattJUnit(String [] args)
 private void scanArgs(String [] args)
 {
    List<String> clsstr = new ArrayList<String>();
-   List<String> tststr = new ArrayList<String>();
+   Set<String> tststr = new LinkedHashSet<String>();
    List<Class<?>> clss = new ArrayList<Class<?>>();
 
    boolean havecls = false;
@@ -229,7 +229,16 @@ private void scanArgs(String [] args)
     }
    
    long time1 = System.currentTimeMillis();
-
+   
+   if (!list_only) {
+      for (String s : clsstr) {
+         if (!tststr.contains(s)) {
+            setupClass(s,service);
+          }
+       }
+    }
+   
+   
    for (String cnm : tststr) {
       Class<?> c1 = setupClass(cnm,service);
       addClass(c1,clss);
@@ -249,7 +258,19 @@ private void scanArgs(String [] args)
 	 System.exit(1);
        }
     }
+   
 
+   if (!list_only) {
+      try {
+	 Class<?> ac = Class.forName("edu.brown.cs.bubbles.batt.BattAgent");
+	 Method mac = ac.getMethod("doneLoad");
+	 mac.invoke(null);
+       }
+      catch (Throwable e1) { 
+	 System.err.println("BATTJ: problem with doneLoad: " + e1);
+       }
+    }
+   
    System.err.println("BATTJ: Timings " + (time1-time0) + " " + (time2 - time1) + " " + tststr.size() + " " +
 	clss.size() + " " + clsstr.size());
 }
@@ -287,84 +308,53 @@ private Class<?> setupClass(String cnm,ExecutorService service)
 	 Future<Class<?>> future = service.submit(new FindClass(cnm));
 	 try {
 	    c = future.get(2000,TimeUnit.MILLISECONDS);
-	 }
+          }
 	 catch (ExecutionException e) {
 	    System.err.println("BATTJ: Find class " + cnm + " threw " + e);
 	    throw e.getCause();
-	 }
+          }
 	 catch (TimeoutException | InterruptedException e) {
 	    // System.err.println("Initialization problem with " + cnm);
 	    future.cancel(true);
-	 }
+          }
 	 if (c == null) return null;
 	 System.err.println("BATTJ: Preload test class " + cnm);
-
+         
 	 TestClass tcls = new TestClass(c);
 	 tcls.getOnlyConstructor();
 	 boolean valid = tcls.isPublic();
 	 if (tcls.isANonStaticInnerClass()) valid = false;
 	 if (valid) {
 	    rslt = c;
-	 }
-      }
+          }
+       }
       catch (AssertionError e) {
 	 System.err.println("Assertion error: " + e);
-      }
+       }
       catch (IllegalArgumentException e) {
 	 // System.err.println("Argument exception: " + e);
 	 // e.printStackTrace();
-      }
+       }
       catch (ExceptionInInitializerError e) {
 	 // System.err.println("Initialization exception: " + e);
 	 // e.printStackTrace();
-      }
+       }
       // catch (NoSuchMethodException e) {
       // System.err.println("No constructor: " + e);
       // }
       catch (NoClassDefFoundError e) {
 	 System.err.println("BATTJ: Class " + cnm + " not found");
-      }
+       }
       catch (ClassNotFoundException e) {
 	 System.err.println("BATTJ: Class " + cnm + " not found");
-      }
+       }
       catch (LinkageError e) {
-	 System.err.println("BATTJ: Linkage error for " + cnm);
-	 e.printStackTrace();
 	 retry = true;
-	 String msg = e.getMessage();
-	 if (msg.contains("duplicate class definition for")) {
-	   int idx = msg.indexOf (" for ");  
-	   String txt = msg.substring(idx+5);
-	   int idx1 = txt.indexOf(". (");
-	   txt = txt.substring(0,idx1).trim();
-	   System.err.println("BATTJ: Need to change " + txt);
-	   try {
-	      Class<?> ac = Class.forName("edu.brown.cs.bubbles.batt.BattAgent");
-	      Method mac = ac.getMethod("reload",String.class);
-	      mac.invoke(null,txt);
-	    }
-	   catch (ClassNotFoundException e1) { 
-	      System.err.println("BATTJ: No agent found");
-	   }
-	   catch (Throwable t) {
-	      System.err.println("BATTJ: Problem with agent: " + t);
-	      t.printStackTrace();
-	    }   
-	 }
-      }
+       }
       catch (Throwable t) {
 	 System.err.println("BATTJ: Class " + cnm + " can't be loaded: " + t);
-      }
-   }
-   
-   try {
-      Class<?> ac = Class.forName("edu.brown.cs.bubbles.batt.BattAgent");
-      Method mac = ac.getMethod("doneLoad");
-      mac.invoke(null);
+       }
     }
-   catch (Throwable e1) { 
-      System.err.println("BATTJ: problem with doneLoad: " + e1);
-   }
 
    System.err.println("BATTJ: DONE: " + cnm);
    

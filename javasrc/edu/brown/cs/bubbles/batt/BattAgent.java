@@ -207,34 +207,37 @@ private static String fixHost(String h)
 
 
 
-public static void reload(String nm)
-{
-   if (the_agent == null) return;
-   the_agent.handleReload(nm);
-}
+
 
 public static void doneLoad()
 {
    if (the_agent == null) return;
-   the_agent.our_instrumenter.clearCache();
+   the_agent.handleProblemLoads();
 }
 
 
-private void handleReload(String nm)
+
+private void handleProblemLoads()
 {
-   byte [] data = our_instrumenter.getTransform(nm);
-   if (data == null) return;
-   try {
-      Class<?> c1 = Class.forName(nm);
-      ClassDefinition cd = new ClassDefinition(c1,data);
-      class_inst.redefineClasses(cd);
-   }
-   catch (ClassNotFoundException e) {
-      System.err.println("BATTAGENT: Class to reload not found: " + nm);
-   }
-   catch (UnmodifiableClassException e) {
-      System.err.println("BATTAGENT: Problem reloading class: " + nm + ": " + e);
-   }
+   Map<String,byte []> problems = our_instrumenter.getProblemTransforms();
+   for (Map.Entry<String,byte []> ent : problems.entrySet()) {
+      byte [] data = ent.getValue();
+      String nm = ent.getKey();
+      try {
+         Class<?> c1 = Class.forName(nm);
+         ClassDefinition cd = new ClassDefinition(c1,data);
+         class_inst.redefineClasses(cd);
+         System.err.println("BATTAGENT: RELOAD " + nm);
+       }
+      catch (ClassNotFoundException e) {
+         System.err.println("BATTAGENT: Class to reload not found: " + nm);
+       }
+      catch (UnmodifiableClassException e) {
+         System.err.println("BATTAGENT: Problem reloading class: " + nm + ": " + e);
+       }
+    }
+      
+   our_instrumenter.clearProblemTransforms();
 }
 
 

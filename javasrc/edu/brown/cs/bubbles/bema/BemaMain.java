@@ -134,7 +134,7 @@ public static void main(String [] args)
 private boolean 	restore_session;
 private boolean 	force_setup;
 private boolean 	force_metrics;
-private boolean         force_update;
+private boolean 	force_update;
 private boolean 	skip_setup;
 private boolean 	skip_splash;
 private boolean 	allow_debug;
@@ -222,16 +222,16 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-f")) {                   // -force
 	    force_setup = true;
 	  }
-         else if (args[i].startsWith("-F")) {                   // -FORCEUPDATE
-            force_update = true;
-          }
+	 else if (args[i].startsWith("-F")) {                   // -FORCEUPDATE
+	    force_update = true;
+	  }
 	 else if (args[i].toLowerCase().startsWith("-py")) {    // -python
 	    usePython();
 	  }
 	 else if (args[i].toLowerCase().startsWith("-js")) {     // -js (javascript)
 	    useJavaScript();
 	  }
-         else if (args[i].toLowerCase().startsWith("-da")) {     // -dart
+	 else if (args[i].toLowerCase().startsWith("-da")) {     // -dart
 	    useDart();
 	  }
 	 else if (args[i].startsWith("-rebus")) {               // -rebus
@@ -359,12 +359,12 @@ private void start()
       bs.doInstall();
       return;
     }
-   
+
    if (for_language != null) {
       // should be done first since it can change system properties
       bs.setLanguage(for_language);
     }
-   
+
    if (new_workspace) bs.setCreateWorkspace(use_workspace);
    else if (use_workspace != null) bs.setDefaultWorkspace(use_workspace);
 
@@ -561,28 +561,28 @@ private static class ProjectBubbleAdder implements Runnable {
    @Override public void run() {
       BudaBubble bb = null;
       switch (BoardSetup.getSetup().getLanguage()) {
-         default :
-            bb = BuenoFactory.getFactory().getCreateProjectBubble();
-            break;
-         case REBUS :
-            try {
-               Class<?> c = Class.forName("edu.brown.cs.bubbles.rebus.RebusFactory");
-               Method m = c.getMethod("createSearchBubble");
-               bb = (BudaBubble) m.invoke(null);
-             }
-            catch (Throwable t) {
-               BoardLog.logE("BEMA","Problem creating rebus bubble",t);
-             }
-            break;
+	 default :
+	    bb = BuenoFactory.getFactory().getCreateProjectBubble();
+	    break;
+	 case REBUS :
+	    try {
+	       Class<?> c = Class.forName("edu.brown.cs.bubbles.rebus.RebusFactory");
+	       Method m = c.getMethod("createSearchBubble");
+	       bb = (BudaBubble) m.invoke(null);
+	     }
+	    catch (Throwable t) {
+	       BoardLog.logE("BEMA","Problem creating rebus bubble",t);
+	     }
+	    break;
        }
       if (bb != null) {
-         buda_root.waitForSetup();
-         BudaBubbleArea bba = buda_root.getCurrentBubbleArea();
-         Dimension d = bb.getSize();
-         Rectangle r = bba.getViewport();
-         int x0 = r.x + r.width/2 - d.width/2;
-         int y0 = r.y + r.height/2 - d.height/2;
-         bba.addBubble(bb, x0, y0);
+	 buda_root.waitForSetup();
+	 BudaBubbleArea bba = buda_root.getCurrentBubbleArea();
+	 Dimension d = bb.getSize();
+	 Rectangle r = bba.getViewport();
+	 int x0 = r.x + r.width/2 - d.width/2;
+	 int y0 = r.y + r.height/2 - d.height/2;
+	 bba.addBubble(bb, x0, y0);
        }
     }
 
@@ -677,17 +677,17 @@ private void loadPlugins(File dir,BudaRoot root,List<String> names)
 		     ClassLoader cldr = class_loaders.get(basename);
 		     URL u = cldr.getResource(palette);
 		     if (u != null) {
-                        BoardLog.logD("BEMA","Add plugin palette " + u);
-                        BoardColors.addPalette(u);
-                      }
+			BoardLog.logD("BEMA","Add plugin palette " + u);
+			BoardColors.addPalette(u);
+		      }
 		   }
 		}
 	     }
 	    catch (IOException e) {
-               BoardLog.logE("BEMA","Can't access plugin jar file " + jfn,e);
-               JOptionPane.showMessageDialog(null,
-                     "Problem loading plugin " + jfn,
-                     "Bubbles Plugin Problem",JOptionPane.WARNING_MESSAGE);
+	       BoardLog.logE("BEMA","Can't access plugin jar file " + jfn,e);
+	       JOptionPane.showMessageDialog(null,
+		     "Problem loading plugin " + jfn,
+		     "Bubbles Plugin Problem",JOptionPane.WARNING_MESSAGE);
 	     }
 	  }
        }
@@ -708,7 +708,7 @@ private void setupPluginResource(JarFile jf,String res)
       BoardSetup.getSetup().checkResourceFile(res);
     }
    catch (IOException ex) {
-      BoardLog.logE("BEMA","Problem loading plugin resource file " + res);
+      BoardLog.logE("BEMA","Problem loading plugin resource file " + res,ex); 
     }
 }
 
@@ -725,7 +725,7 @@ private void setupPluginLibrary(JarFile jf,String res)
       IvyFile.copyFile(ins,tgt);
     }
    catch (IOException ex) {
-      BoardLog.logE("BEMA","Problem loading plugin resource file " + res);
+      BoardLog.logE("BEMA","Problem loading plugin library file " + res,ex);
     }
 }
 
@@ -950,8 +950,8 @@ private void checkDefaultLanguage()
 	 break;
        }
       else if (elt.equals("dartbubbles.jar")) {
-         useDart();
-         break;
+	 useDart();
+	 break;
        }
     }
 }

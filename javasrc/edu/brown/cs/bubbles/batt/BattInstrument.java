@@ -28,6 +28,7 @@ package edu.brown.cs.bubbles.batt;
 import edu.brown.cs.bubbles.org.objectweb.asm.ClassReader;
 import edu.brown.cs.bubbles.org.objectweb.asm.ClassVisitor;
 import edu.brown.cs.bubbles.org.objectweb.asm.ClassWriter;
+import edu.brown.cs.bubbles.org.objectweb.asm.FieldVisitor;
 import edu.brown.cs.bubbles.org.objectweb.asm.Label;
 import edu.brown.cs.bubbles.org.objectweb.asm.MethodVisitor;
 import edu.brown.cs.bubbles.org.objectweb.asm.Opcodes;
@@ -46,6 +47,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
 
 
 
@@ -136,12 +138,14 @@ void setClasses(String [] clsset)
 	 cc = Class.forName(s1);
        }
       catch (Throwable t) {
-//	 System.err.println("BATTAGENT: NOT FOUND: " + s1 + " " + t);
+	 System.err.println("BATTAGENT: NOT FOUND: " + s1 + " " + t);
 	 try {
 	    cc = Class.forName(s2);
-//	    System.err.println("BATTAGENT: FOUND: " + s2);
+	    System.err.println("BATTAGENT: FOUND: " + s2);
 	  }
-	 catch (Throwable xt) { }
+	 catch (Throwable xt) { 
+	    System.err.println("BATTAGENT: Problem loading " + s + " " + xt);
+	 }
        }
       if (cc == null) {
 	 System.err.println("BATTAGENT: Class " + s + " not found");
@@ -151,15 +155,15 @@ void setClasses(String [] clsset)
 
 
 
-void clearCache()
+void clearProblemTransforms()
 {
    transform_map.clear();
 }
 
 
-byte [] getTransform(String name)
+Map<String,byte []> getProblemTransforms()
 {
-   return transform_map.get(name);
+   return transform_map;
 }
 
 
@@ -207,7 +211,6 @@ byte [] getTransform(String name)
    
    try {
       byte [] rslt = instrument(name,buf);
-      transform_map.put(name.replace("/","."), rslt);
       return rslt;
     }
    catch (Throwable t) {
@@ -227,9 +230,14 @@ private byte [] instrument(String name,byte [] buf)
    try {
       ClassReader reader = new ClassReader(buf);
       ClassWriter writer = new ClassWriter(reader,ClassWriter.COMPUTE_MAXS|ClassWriter.COMPUTE_FRAMES);
-      ClassVisitor ins = new BattTransformer(name,writer);
+      BattTransformer ins = new BattTransformer(name,writer);
       reader.accept(ins,ClassReader.SKIP_FRAMES);
       rsltcode = writer.toByteArray();
+      if (ins.hasProblemField()) {
+         String cnm = name.replace("/",".");
+         cnm = cnm.replace("$",".");
+         transform_map.put(cnm,rsltcode);
+       }
     }
    catch (Throwable t) {
       System.err.println("BATT: Problem doing instrumentation: " + t);
@@ -297,23 +305,35 @@ private boolean isSystemClass(String name)
 private class BattTransformer extends ClassVisitor {
 
    private String super_name;
-   private boolean is_abstract;
+   private String match_name;
+   private boolean problem_field;
 
    BattTransformer(String name,ClassVisitor v) {
       super(ASM_API,v);
       class_name = name;
-      is_abstract = false;
+      match_name = "L" + name + ";";
+      problem_field = false;
     }
 
    @Override public void visit(int v,int a,String nm,String sgn,String sup,String [] ifc) {
       super.visit(v,a,nm,sgn,sup,ifc);
       super_name = sup;
-      is_abstract = (a & Opcodes.ACC_ABSTRACT) != 0;
     }
-
-   @SuppressWarnings("unused")
-   boolean isAbstract() 		{ return is_abstract; }
-
+   
+   boolean hasProblemField()                    { return problem_field; }
+   
+   @Override public FieldVisitor visitField(int acc,String name,String desc,String sgn,
+         Object val) {
+      if ((acc & Opcodes.ACC_STATIC) != 0) {
+         if (match_name.equals(desc)) {
+            problem_field = true;
+            System.err.println("BATTAGENT: Problem field found for " + class_name);
+          }
+       }
+      
+      return super.visitField(acc,name,desc,sgn,val);
+    }
+   
    @Override public MethodVisitor visitMethod(int acc,String name,String desc,String sgn,
 						 String [] exc) {
       method_id = for_agent.getMethodId(class_name,name,desc);
