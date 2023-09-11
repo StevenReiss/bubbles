@@ -84,15 +84,15 @@ enum BaleFragmentType {
    METHOD,
    CLASS,
    FILE,
-   FIELDS,				// set of fields (python attributes, javascript vars)
-   STATICS,				// static initializers (python evaluations)
+   FIELDS,			// set of fields (python attributes, javascript vars)
+   STATICS,			// static initializers (python evaluations)
    MAIN,				// python main program
-   HEADER,				// class header
-   IMPORTS,				// set of import statements
-   EXPORTS,				// set of export statements
+   HEADER,			// class header
+   IMPORTS,			// set of import statements
+   EXPORTS,			// set of export statements
    CODE,				// set of evaluations
-   ROFILE,				// Read-only file (not in IDE)
-   ROMETHOD,				// read-only method (not in IDE)
+   ROFILE,			// Read-only file (not in IDE)
+   ROMETHOD,			// read-only method (not in IDE)
 }
 
 

@@ -138,25 +138,18 @@ public synchronized static BumpClient getBump()
        }
       // choose client based on language
       switch (bl) {
-	 default :
 	 case JAVA :
 	    default_client = new BumpClientEclipse();
 	    break;
 	 case JAVA_IDEA :
 	    default_client = new BumpClientIdea();
 	    break;
-	 case PYTHON :
-	    default_client = new BumpClientPython();
-	    break;
-	 case REBUS :
-	    default_client = new BumpClientRebus();
-	    break;
 	 case JS :
 	    default_client = new BumpClientJS();
 	    break;
-	 case DART :
-	    default_client = new BumpClientLsp("dart");
-	    break;
+         default :
+            default_client = new BumpClientLsp(bl.getName());
+            break;
        }
       loadProperties();
     }
@@ -2858,8 +2851,16 @@ public BumpBreakModel getBreakModel()
 
 public Element getLanguageData()
 {
+   return getLanguageData(null);
+}
+
+
+public Element getLanguageData(BoardLanguage lang)
+{
    if (language_data == null) {
-      Element e = getXmlReply("LANGUAGEDATA",null,null,null,0);
+      String q = null;
+      if (lang != null) q = "LANGUAGE='" + lang.toString() + "'";
+      Element e = getXmlReply("LANGUAGEDATA",null,q,null,0);
       if (IvyXml.isElement(e,"RESULT")) {
          Element ld = IvyXml.getChild(e,"LANGUAGE");
          e = ld;

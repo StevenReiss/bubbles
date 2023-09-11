@@ -104,36 +104,10 @@ private void setupLogger()
    String jar = bp.getProperty(BOARD_PROP_JAR_DIR);
    use_stderr = bp.getBoolean(BOARD_PROP_USE_STDERR,(jar == null));
 
-   String logname = "bubbles";
-   String lgnm = "bedrock";
-   switch (BoardSetup.getSetup().getLanguage()) {
-      default :
-      case JAVA :
-	 logname = "bubbles";
-	 lgnm = "bedrock";
-	 break;
-      case JAVA_IDEA :
-         logname = "bibbles";
-         lgnm = "bubjet";
-         break;
-      case PYTHON :
-	 logname = "pybles";
-	 lgnm = "pybase";
-	 break;
-      case JS :
-	 logname = "nobbles";
-	 lgnm = "nobase";
-	 break;
-      case REBUS :
-	 logname = "rebus";
-	 lgnm = "rebase";
-	 break;
-      case DART :
-         logname = "dartbub";
-         lgnm = "lspbase";
-         break;
-    }
-
+   BoardLanguage bl = BoardSetup.getSetup().getLanguage();
+   String logname = bl.getLogName();
+   String lgnm = bl.getBackendLogName();
+   
    File wsd = null;
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :

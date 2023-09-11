@@ -280,26 +280,10 @@ void setBudaTitle()
    if (!version.startsWith("Build")) {
       title += " - " + version;
     }
-   switch (BoardSetup.getSetup().getLanguage()) {
-      case JAVA :
-         title += " (Eclipse)";
-         break;
-      case JAVA_IDEA : 
-         title += " (IDEA)";
-         break;
-      case JS :
-         title += " (JavaScript)";
-         break;
-      case PYTHON :
-         title += " (Python)";
-         break;
-      case REBUS :
-         title += " (Code Search)";
-         break;
-      case DART :
-         title += " (Dart)";
-         break;
-    }
+       
+   String ttl = BoardSetup.getSetup().getLanguage().getTitle();
+   title += " (" + ttl + ")";
+   
    String ws = BoardSetup.getSetup().getDefaultWorkspace();
    if (ws != null) {
       int idx = ws.lastIndexOf(File.separator);

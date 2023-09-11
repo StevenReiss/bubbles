@@ -75,7 +75,9 @@ private static final long		   serialVersionUID = 1;
 static {
    prop_base = System.getProperty("edu.brown.cs.bubbles.BASE");
    if (prop_base == null) prop_base = System.getenv("BUBBLES_PROPBASE");
-   if (prop_base == null) prop_base = BOARD_PROP_BASE;
+   if (prop_base == null) {
+      prop_base = System.getProperty("user.home") + File.separator + BOARD_PROP_BASE;
+    }
 
    base_directory = new File(prop_base);
    if (!base_directory.exists()) base_directory.mkdir();
@@ -247,10 +249,17 @@ public String getName()
 
 public static void setPropertyDirectory(String dir)
 {
-   File base = new File(dir);
+   if (dir == null) return;
+   
+   setPropertyDirectory(new File(dir));
+}
+
+
+public static void setPropertyDirectory(File base)
+{
    if (!base.exists()) {
       if (!base.mkdirs()) {
-	 BoardLog.logE("BOARD", "Unable to use user property directory " + dir);
+	 BoardLog.logE("BOARD", "Unable to use user property directory " + base);
 	 return;
        }
     }
@@ -261,7 +270,7 @@ public static void setPropertyDirectory(String dir)
 
    loaded_properties = new HashMap<>();
 
-   BoardLog.logD("BOARD","Set property directory " + dir);
+   BoardLog.logD("BOARD","Set property directory " + base);
 }
 
 

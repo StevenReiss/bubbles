@@ -168,6 +168,8 @@ private static final Action fix_errors_action = new FixErrorsAction();
 private static final Action finish_action = new FinishAction();
 private static final Action infer_decl_action = new InferDeclarationAction();
 private static final Action smart_delete_next_character_action = new SmartDeleteNextCharacterAction();
+public static final Action python_unindent_action = new PythonUnindentAction();
+public static final Action python_backspace_action = new PythonBackspaceAction();
 
 
 
@@ -363,22 +365,7 @@ BaleEditorKit(BoardLanguage lang)
 {
    if (lang == null) language_kit = null;
    else {
-      switch (lang) {
-	 case JAVA :
-	 case JAVA_IDEA :
-	 case REBUS :
-	    language_kit = new BaleEditorKitJava();
-	    break;
-	 case PYTHON :
-	    language_kit = new BaleEditorKitPython();
-	    break;
-	 case JS :
-	    language_kit = new BaleEditorKitJS();
-	    break;
-	 case DART :
-	    language_kit = new BaleEditorKitLsp();
-	    break;
-       }
+      language_kit = BaleLanguageKitDefault.getKitForLanguage(lang);
     }
 
    if (language_kit != null) {
@@ -451,20 +438,7 @@ static Action findAction(String name,BoardLanguage lang)
 {
    BaleLanguageKit lkit = null;
    if (lang != null) {
-      switch (lang) {
-	 case REBUS :
-	 case JAVA :
-	 case JAVA_IDEA :
-	 case DART :
-	    lkit = new BaleEditorKitJava();
-	    break;
-	 case PYTHON :
-	    lkit = new BaleEditorKitPython();
-	    break;
-	 case JS :
-	    lkit = new BaleEditorKitJS();
-	    break;
-       }
+      lkit = BaleLanguageKitDefault.getKitForLanguage(lang);
     }
    if (lkit != null) {
       Action [] langacts = lkit.getActions();
@@ -847,7 +821,7 @@ private static class BackspaceAction extends TextAction {
       else if (target.getOverwriteMode()) backward_action.actionPerformed(e);
       else {
 	 BaleDocument bd = target.getBaleDocument();
-	 int soff = target.getSelectionStart();	 
+	 int soff = target.getSelectionStart(); 
 	 int eoff = target.getSelectionEnd();
 	 if (soff == eoff && BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_CLOSE)) {
 	    try {
@@ -1355,24 +1329,24 @@ private static class IndentLinesAction extends TextAction {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
       BaleDocument bd = be.getBaleDocument();
-   
+
       bd.baleWriteLock();
       try {
-         int soff = be.getSelectionStart();
-         int eoff = be.getSelectionEnd();
-   
-         int slno = bd.findLineNumber(soff);
-         int elno = slno;
-         if (eoff != soff) elno = bd.findLineNumber(eoff);
-         if (elno < slno) {
-            int x = elno;
-            elno = slno;
-            slno = x;
-          }
-   
-         for (int i = slno; i <= elno; ++i) {
-            bd.fixLineIndent(i);
-          }
+	 int soff = be.getSelectionStart();
+	 int eoff = be.getSelectionEnd();
+
+	 int slno = bd.findLineNumber(soff);
+	 int elno = slno;
+	 if (eoff != soff) elno = bd.findLineNumber(eoff);
+	 if (elno < slno) {
+	    int x = elno;
+	    elno = slno;
+	    slno = x;
+	  }
+
+	 for (int i = slno; i <= elno; ++i) {
+	    bd.fixLineIndent(i);
+	  }
        }
       finally { bd.baleWriteUnlock(); }
     }
@@ -3250,29 +3224,29 @@ private static class QuickFixAction extends TextAction {
       int soff = target.getSelectionStart();
       List<BumpProblem> probs = bd.getProblemsAtLocation(soff);
       if (probs == null) return;
-   
+
       List<BaleFixer> fixes = new ArrayList<BaleFixer>();
       for (BumpProblem bp : probs) {
-         if (bp.getFixes() != null) {
-            for (BumpFix bf : bp.getFixes()) {
-               BaleFixer fixer = new BaleFixer(bp,bf);
-               if (fixer.isValid()) fixes.add(fixer);
-             }
-          }
+	 if (bp.getFixes() != null) {
+	    for (BumpFix bf : bp.getFixes()) {
+	       BaleFixer fixer = new BaleFixer(bp,bf);
+	       if (fixer.isValid()) fixes.add(fixer);
+	     }
+	  }
        }
       if (fixes.isEmpty()) return;
-   
+
       BaleFixer fix = null;
       if (fixes.size() == 1) fix = fixes.get(0);
       else {
-         Collections.sort(fixes);
-         Object [] fixalts = fixes.toArray();
-         fix = (BaleFixer) JOptionPane.showInputDialog(target,"Select Quick Fix","Quick Fix Selector",
-        						  JOptionPane.QUESTION_MESSAGE,
-        						  null,fixalts,fixes.get(0));
+	 Collections.sort(fixes);
+	 Object [] fixalts = fixes.toArray();
+	 fix = (BaleFixer) JOptionPane.showInputDialog(target,"Select Quick Fix","Quick Fix Selector",
+							  JOptionPane.QUESTION_MESSAGE,
+							  null,fixalts,fixes.get(0));
        }
       if (fix == null) return;
-   
+
       fix.actionPerformed(e);
       BoardMetrics.noteCommand("BALE","QuickFix");
    }
@@ -3429,6 +3403,118 @@ private static class InferDeclarationAction extends TextAction {
 
 }	// end of inner class InferDeclarationAction
 
+
+
+/********************************************************************************/
+/*										*/
+/*	Python backspace action 						*/
+/*										*/
+/********************************************************************************/
+
+private static class PythonBackspaceAction extends TextAction {
+
+   private static final long serialVersionUID = 1;
+   
+   private transient Action use_backspace_action;
+   
+   PythonBackspaceAction() {
+      super("PythonBackspaceAction");
+      use_backspace_action = null;
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      if (use_backspace_action == null) {
+         use_backspace_action = BaleEditorKit.findAction("BackspaceAction");
+       }
+      BaleEditorPane target = BaleEditorKit.getBaleEditor(e);
+      if (!BaleEditorKit.checkReadEditor(target)) return;
+      BaleDocument bd = target.getBaleDocument();
+      int soff = target.getSelectionStart();
+      int lno = bd.findLineNumber(soff);
+      int lsoff = bd.findLineOffset(lno);
+      
+      boolean start = false;
+      try {
+         if (lsoff == soff) start = true;
+         else {
+            String txt = bd.getText(lsoff,soff-lsoff);
+            txt = txt.trim();
+            if (txt.equals("")) start = true;
+          }
+       }
+      catch (BadLocationException ex) { }
+      
+      if (!start) {
+         use_backspace_action.actionPerformed(e);
+         return;
+       }
+      
+      BaleIndenter bind = bd.getIndenter();
+      int oind = bind.getCurrentIndentationAtOffset(soff);
+      int tind = bind.getDesiredIndentation(soff);
+      
+      if (tind != oind || oind == 0) {
+         use_backspace_action.actionPerformed(e);
+         return;
+       }
+      int delta = bind.getUnindentSize();
+      if (delta > oind) delta = oind;
+      for (int i = 0; i < delta; ++i) {
+         use_backspace_action.actionPerformed(e);
+       }
+    }
+
+}	// end of inner class PythonBackspaceAction
+
+
+/********************************************************************************/
+/*										*/
+/*	Unindent action 							*/
+/*										*/
+/********************************************************************************/
+
+private static class PythonUnindentAction extends TextAction {
+
+   private static final long serialVersionUID = 1;
+
+   private transient Action forward_action;
+
+   PythonUnindentAction() {
+      super("PythonUnindentAction");
+      forward_action = null;
+    }
+
+   @Override public void actionPerformed(ActionEvent e) {
+      if (forward_action == null)
+	 forward_action = BaleEditorKit.findAction(DefaultEditorKit.forwardAction);
+      BaleEditorPane target = BaleEditorKit.getBaleEditor(e);
+      if (!BaleEditorKit.checkReadEditor(target)) return;
+      BaleDocument bd = target.getBaleDocument();
+      int soff = target.getSelectionStart();
+      BaleIndenter bind = bd.getIndenter();
+      int slno = bd.findLineNumber(soff);
+      int lpos = bd.findLineOffset(slno);
+      int oind = bind.getCurrentIndentationAtOffset(soff);
+      int tind = bind.getDesiredIndentation(soff);
+      int delta = bind.getUnindentSize();
+      int pos = tind-delta;
+      if (pos < oind) {
+	 for (int i = oind; i > pos; --i) {
+	    forward_action.actionPerformed(e);
+	  }
+       }
+      else {
+	 try {
+	    for (int i = oind; i < pos; ++i) {
+	       bd.insertString(lpos," ",null);
+	     }
+	    target.setSelectionStart(lpos + pos);
+	  }
+	 catch (BadLocationException ex) { }
+       }
+    }
+
+}	// end of inner class PythonUnindentAction
 
 
 

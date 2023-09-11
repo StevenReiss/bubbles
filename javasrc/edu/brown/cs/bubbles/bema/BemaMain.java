@@ -225,33 +225,6 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-F")) {                   // -FORCEUPDATE
 	    force_update = true;
 	  }
-	 else if (args[i].toLowerCase().startsWith("-py")) {    // -python
-	    usePython();
-	  }
-	 else if (args[i].toLowerCase().startsWith("-js")) {     // -js (javascript)
-	    useJavaScript();
-	  }
-	 else if (args[i].toLowerCase().startsWith("-da")) {     // -dart
-	    useDart();
-	  }
-	 else if (args[i].startsWith("-rebus")) {               // -rebus
-	    for_language = BoardLanguage.REBUS;
-	    File fa = new File(System.getProperty("user.home"));
-	    File fb = new File(fa,".rebus");
-	    if (!fb.exists()) fb.mkdir();
-	    File fc = new File(fb,".metadata");
-	    if (!fc.exists()) fc.mkdir();
-
-	    BoardProperties.setPropertyDirectory(fb.getPath());
-	    if (use_workspace == null) {
-	       use_workspace = fb.getPath();
-	       new_workspace = true;
-	       ask_workspace = false;
-	     }
-	  }
-	 else if (args[i].startsWith("-idea")) {                // -idea
-	    useJavaIdea();
-	  }
 	 else if (args[i].startsWith("-course") && i+1 < ln) {  // -course <course>
 	    course_name = args[++i];
 	    File fa = new File(System.getProperty("user.home"));
@@ -322,7 +295,23 @@ private void scanArgs(String [] args)
 	     }
 	    else palette_name = "inverse_" + palette_name;
 	  }
-	 else badArgs();
+         else {
+            boolean fnd = false;
+            if (args[i].length() >= 3) {
+               String match = args[i].toLowerCase();
+               for (BoardLanguage bl : BoardLanguage.values()) {
+                  String arg = bl.getBubblesArg();
+                  if (arg != null) {
+                     if (arg.startsWith(match)) {
+                        setLanguage(bl);
+                        fnd = true;
+                        break;
+                      }
+                   }
+                }
+             }
+            if (!fnd) badArgs();
+          }
        }
       else if (args[i].equals("")) ;
       else if (args[i].equals("edu.brown.cs.bubbles.bema.BemaMain")) ;
@@ -559,30 +548,15 @@ private static class ProjectBubbleAdder implements Runnable {
     }
 
    @Override public void run() {
-      BudaBubble bb = null;
-      switch (BoardSetup.getSetup().getLanguage()) {
-	 default :
-	    bb = BuenoFactory.getFactory().getCreateProjectBubble();
-	    break;
-	 case REBUS :
-	    try {
-	       Class<?> c = Class.forName("edu.brown.cs.bubbles.rebus.RebusFactory");
-	       Method m = c.getMethod("createSearchBubble");
-	       bb = (BudaBubble) m.invoke(null);
-	     }
-	    catch (Throwable t) {
-	       BoardLog.logE("BEMA","Problem creating rebus bubble",t);
-	     }
-	    break;
-       }
+      BudaBubble bb = BuenoFactory.getFactory().getCreateProjectBubble();
       if (bb != null) {
-	 buda_root.waitForSetup();
-	 BudaBubbleArea bba = buda_root.getCurrentBubbleArea();
-	 Dimension d = bb.getSize();
-	 Rectangle r = bba.getViewport();
-	 int x0 = r.x + r.width/2 - d.width/2;
-	 int y0 = r.y + r.height/2 - d.height/2;
-	 bba.addBubble(bb, x0, y0);
+         buda_root.waitForSetup();
+         BudaBubbleArea bba = buda_root.getCurrentBubbleArea();
+         Dimension d = bb.getSize();
+         Rectangle r = bba.getViewport();
+         int x0 = r.x + r.width/2 - d.width/2;
+         int y0 = r.y + r.height/2 - d.height/2;
+         bba.addBubble(bb, x0, y0);
        }
     }
 
@@ -933,66 +907,31 @@ private void checkDefaultLanguage()
       String elt = tok.nextToken();
       int idx = elt.lastIndexOf(File.separator);
       if (idx > 0) elt = elt.substring(idx+1);
-      if (elt.equals("nobbles.jar")) {
-	 useJavaScript();
-	 break;
+      if (elt.equals("cloudbb.jar")) {
+         useCloud();
+         break;
        }
-      else if (elt.equals("pybbles.jar") || elt.equals("pybles.jar")) {
-	 usePython();
-	 break;
-       }
-      else if (elt.equals("cloudbb.jar")) {
-	 useCloud();
-	 break;
-       }
-      else if (elt.equals("bibbles.jar")) {
-	 useJavaIdea();
-	 break;
-       }
-      else if (elt.equals("dartbubbles.jar")) {
-	 useDart();
-	 break;
+      else if (elt.endsWith(".jar")) {
+         boolean fnd = false;
+         for (BoardLanguage bl : BoardLanguage.values()) {
+            if (elt.equals(bl.getJarRunner())) {
+               setLanguage(bl);
+               fnd = true;
+             }
+          }
+         if (fnd) break;
        }
     }
 }
 
 
-private void usePython()
+private void setLanguage(BoardLanguage bl)
 {
-   for_language = BoardLanguage.PYTHON;
-   File fa = new File(System.getProperty("user.home"));
-   fa = new File(fa,".pybles");
-   // Don't use IvyFile here since it trys to use ivy without initializing it
-   BoardProperties.setPropertyDirectory(fa.getPath());
+   for_language = bl;
+   File pd = bl.getPropertyDirectory();
+   BoardProperties.setPropertyDirectory(pd);
 }
 
-
-private void useJavaScript()
-{
-   for_language = BoardLanguage.JS;
-   File fa = new File(System.getProperty("user.home"));
-   fa = new File(fa,".nobbles");
-   BoardProperties.setPropertyDirectory(fa.getPath());
-}
-
-
-
-private void useDart()
-{
-   for_language = BoardLanguage.DART;
-   File fa = new File(System.getProperty("user.home"));
-   fa = new File(fa,".dartbubbles");
-   BoardProperties.setPropertyDirectory(fa.getPath());
-}
-
-
-private void useJavaIdea()
-{
-   for_language = BoardLanguage.JAVA_IDEA;
-   File fa = new File(System.getProperty("user.home"));
-   fa = new File(fa,".bibbles");
-   BoardProperties.setPropertyDirectory(fa.getPath());
-}
 
 
 private void useCloud()

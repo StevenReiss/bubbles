@@ -38,9 +38,6 @@
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bfix" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bpare" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bvfm" />
-      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/rebus" />
-      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/rebase" />
-      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/pybase" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bema" target='jar' />
    </target>
 
@@ -97,7 +94,6 @@
 	 <package name='edu.brown.cs.bubbles.buss' />
 	 <package name='edu.brown.cs.bubbles.bvcr' />
 	 <package name='edu.brown.cs.bubbles.bwiz' />
-	 <package name='edu.brown.cs.bubbles.rebus' />
 	 <package name='edu.brown.cs.ivy.exec' />
 	 <package name='edu.brown.cs.ivy.exec' />
 	 <package name='edu.brown.cs.ivy.file' />

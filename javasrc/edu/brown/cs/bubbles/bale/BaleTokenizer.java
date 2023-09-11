@@ -39,6 +39,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
+
+import org.w3c.dom.Element;
+
+import edu.brown.cs.bubbles.bump.BumpClient;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 
 abstract class BaleTokenizer implements BaleConstants
@@ -61,15 +67,16 @@ private boolean 	ignore_white;
 private char		cur_delim;
 private int		delim_count;
 protected int		cur_flags;
+protected Map<String,BaleTokenType> keyword_map;
+protected Set<String>	op_set;
+private int		multiline_count;
+private char		multiline_string;
+private String		string_chars;
+private boolean 	slashslash_comments;
+private boolean 	slashstar_comments;
+private boolean 	hash_comments;
 
-private static Map<String,BaleTokenType> java_keyword_map;
-private static Set<String>	java_op_set;
-private static Map<String,BaleTokenType> python_keyword_map;
-private static Set<String>	python_op_set;
-private static Map<String,BaleTokenType> js_keyword_map;
-private static Set<String>	js_op_set;
-private static Map<String,BaleTokenType> dart_keyword_map;
-private static Set<String>	dart_op_set;
+private static Map<BoardLanguage,BaleTokenizer> default_tokenizers = new HashMap<>();
 
 private static final String OP_CHARS = "=<!~?:>|&+-*/^%\\";
 
@@ -86,16 +93,12 @@ static BaleTokenizer create(String text,BaleTokenState start,BoardLanguage bl)
 {
    switch (bl) {
       default :
-      case REBUS :
       case JAVA :
       case JAVA_IDEA :
-	 return new JavaTokenizer(text,start);
-      case PYTHON :
-	 return new PythonTokenizer(text,start);
+      case DART :
+	 return new DefaultTokenizer(text,start);
       case JS :
 	 return new JSTokenizer(text,start);
-      case DART :
-	 return new DartTokenizer(text,start);
     }
 }
 
@@ -111,6 +114,44 @@ private BaleTokenizer(String text,BaleTokenState start)
    cur_delim = 0;
    delim_count = 0;
    cur_flags = 0;
+
+   keyword_map = new HashMap<>();
+   Element xml = BumpClient.getBump().getLanguageData();
+   Element exml = IvyXml.getChild(xml,"EDITING");
+   Element kxml = IvyXml.getChild(exml,"KEYWORDS");
+   for (Element kwd : IvyXml.children(kxml,"KEYWORD")) {
+      String nm = IvyXml.getAttrString(kwd,"NAME");
+      String typ = IvyXml.getAttrString(kwd,"TYPE");
+      BaleTokenType bt = BaleTokenType.valueOf(typ);
+      keyword_map.put(nm,bt);
+    }
+   op_set = new HashSet<>();
+   Element oxml = IvyXml.getChild(exml,"OPERATORS");
+   String opset = IvyXml.getText(oxml);
+   if (opset != null) {
+      StringTokenizer tok = new StringTokenizer(opset);
+      while (tok.hasMoreTokens()) {
+	 op_set.add(tok.nextToken());
+       }
+    }
+   Element txml = IvyXml.getChild(exml,"TOKENS");
+   String mls = IvyXml.getTextElement(txml,"MUTLILINE");
+   if (mls != null) {
+      mls = mls.trim();
+      if (mls.isEmpty()) mls = null;
+    }
+   multiline_count = 0;
+   multiline_string = (char) 0;
+   if (mls != null && mls.length() > 1) multiline_count = mls.length();
+   else if (mls != null) multiline_string = mls.charAt(0);
+   String sc = IvyXml.getTextElement(txml,"STRING");
+   if (sc == null || sc.isBlank()) string_chars = "\"";
+   else string_chars = sc.trim();
+   String cmmts = IvyXml.getTextElement(txml,"COMMENTS");
+   if (cmmts == null) cmmts = "// /*";
+   slashslash_comments = cmmts.contains("//");
+   slashstar_comments = cmmts.contains("/*");
+   hash_comments = cmmts.contains("#");
 }
 
 
@@ -122,33 +163,28 @@ private BaleTokenizer(String text,BaleTokenState start)
 /*										*/
 /********************************************************************************/
 
-void setIgnoreWhitespace(boolean fg)		{ ignore_white = fg; }
+void setIgnoreWhitespace(boolean fg)			{ ignore_white = fg; }
 
-abstract protected BaleTokenType getKeyword(String s);
-abstract protected boolean isOperator(String s);
-protected boolean useSlashStarComments()		{ return true; }
-protected boolean useSlashSlashComments()		{ return true; }
-protected boolean useHashComments()			{ return false; }
-protected int useMultilineCount()			{ return 0; }
-protected boolean isStringStart(char c) 		{ return c == '"'; }
-protected boolean isMultilineStringStart(char c)	{ return false; }
+protected boolean useSlashStarComments()		{ return slashstar_comments; }
+protected boolean useSlashSlashComments()		{ return slashslash_comments; }
+protected boolean useHashComments()			{ return hash_comments; }
+protected boolean isStringStart(char c) 		{ return string_chars.indexOf(c) >= 0; }
 
 static Collection<String> getKeywords(BoardLanguage bl)
 {
-   switch (bl) {
-      default :
-      case JAVA :
-      case JAVA_IDEA :
-      case REBUS :
-	 return java_keyword_map.keySet();
-      case PYTHON :
-	 return python_keyword_map.keySet();
-      case JS :
-	 return js_keyword_map.keySet();
-      case DART:
-	 return dart_keyword_map.keySet();
+   BaleTokenizer bt = default_tokenizers.get(bl);
+   if (bt == null) {
+      bt = create(null,BaleTokenState.NORMAL,bl);
+      default_tokenizers.put(bl,bt);
     }
+   return bt.keyword_map.keySet();
 }
+
+
+protected BaleTokenType getKeyword(String s)		{ return keyword_map.get(s); }
+protected boolean isOperator(String s)			{ return op_set.contains(s); }
+protected int useMultilineCount()			{ return multiline_count; }
+protected boolean isMultilineStringStart(char c)	{ return c != 0 && c == multiline_string; }
 
 
 
@@ -677,224 +713,25 @@ private static class Token implements BaleToken {
 
 /********************************************************************************/
 /*										*/
-/*	Java tokenizer								*/
+/*	Default tokenizer -- use language data					*/
 /*										*/
 /********************************************************************************/
 
-private static class JavaTokenizer extends BaleTokenizer {
+private static class DefaultTokenizer extends BaleTokenizer {
 
-   JavaTokenizer(String text,BaleTokenState start) {
+   DefaultTokenizer(String text,BaleTokenState start) {
       super(text,start);
     }
-
-   @Override protected BaleTokenType getKeyword(String s) { return java_keyword_map.get(s); }
-   @Override protected boolean isOperator(String s)	{ return java_op_set.contains(s); }
-   @Override protected int useMultilineCount()		{ return 3; }
 
 }	// end of inner class JavaTokenizer
 
 
-static {
-   java_keyword_map = new HashMap<String,BaleTokenType>();
-   java_keyword_map.put("abstract",BaleTokenType.KEYWORD);
-   java_keyword_map.put("assert",BaleTokenType.KEYWORD);
-   java_keyword_map.put("boolean",BaleTokenType.TYPEKEY);
-   java_keyword_map.put("break",BaleTokenType.BREAK);
-   java_keyword_map.put("byte",BaleTokenType.TYPEKEY);
-   java_keyword_map.put("case",BaleTokenType.CASE);
-   java_keyword_map.put("catch",BaleTokenType.CATCH);
-   java_keyword_map.put("char",BaleTokenType.TYPEKEY);
-   java_keyword_map.put("class",BaleTokenType.CLASS);
-   java_keyword_map.put("const",BaleTokenType.KEYWORD);
-   java_keyword_map.put("continue",BaleTokenType.KEYWORD);
-   java_keyword_map.put("default",BaleTokenType.DEFAULT);
-   java_keyword_map.put("do",BaleTokenType.DO);
-   java_keyword_map.put("double",BaleTokenType.TYPEKEY);
-   java_keyword_map.put("else",BaleTokenType.ELSE);
-   java_keyword_map.put("enum",BaleTokenType.ENUM);
-   java_keyword_map.put("extends",BaleTokenType.KEYWORD);
-   java_keyword_map.put("false",BaleTokenType.KEYWORD);
-   java_keyword_map.put("final",BaleTokenType.KEYWORD);
-   java_keyword_map.put("finally",BaleTokenType.FINALLY);
-   java_keyword_map.put("float",BaleTokenType.TYPEKEY);
-   java_keyword_map.put("for",BaleTokenType.FOR);
-   java_keyword_map.put("goto",BaleTokenType.GOTO);
-   java_keyword_map.put("if",BaleTokenType.IF);
-   java_keyword_map.put("implements",BaleTokenType.KEYWORD);
-   java_keyword_map.put("import",BaleTokenType.IMPORT);
-   java_keyword_map.put("instanceof",BaleTokenType.KEYWORD);
-   java_keyword_map.put("int",BaleTokenType.TYPEKEY);
-   java_keyword_map.put("interface",BaleTokenType.INTERFACE);
-   java_keyword_map.put("long",BaleTokenType.TYPEKEY);
-   java_keyword_map.put("native",BaleTokenType.KEYWORD);
-   java_keyword_map.put("new",BaleTokenType.NEW);
-   java_keyword_map.put("null",BaleTokenType.KEYWORD);
-   java_keyword_map.put("package",BaleTokenType.PACKAGE);
-   java_keyword_map.put("private",BaleTokenType.KEYWORD);
-   java_keyword_map.put("protected",BaleTokenType.KEYWORD);
-   java_keyword_map.put("public",BaleTokenType.KEYWORD);
-   java_keyword_map.put("return",BaleTokenType.RETURN);
-   java_keyword_map.put("short",BaleTokenType.TYPEKEY);
-   java_keyword_map.put("static",BaleTokenType.STATIC);
-   java_keyword_map.put("strictfp",BaleTokenType.KEYWORD);
-   java_keyword_map.put("super",BaleTokenType.KEYWORD);
-   java_keyword_map.put("switch",BaleTokenType.SWITCH);
-   java_keyword_map.put("synchronized",BaleTokenType.SYNCHRONIZED);
-   java_keyword_map.put("this",BaleTokenType.KEYWORD);
-   java_keyword_map.put("throw",BaleTokenType.KEYWORD);
-   java_keyword_map.put("throws",BaleTokenType.THROWS);
-   java_keyword_map.put("transient",BaleTokenType.KEYWORD);
-   java_keyword_map.put("true",BaleTokenType.KEYWORD);
-   java_keyword_map.put("try",BaleTokenType.TRY);
-   java_keyword_map.put("void",BaleTokenType.TYPEKEY);
-   java_keyword_map.put("volatile",BaleTokenType.KEYWORD);
-   java_keyword_map.put("while",BaleTokenType.WHILE);
-
-   java_op_set = new HashSet<String>();
-   java_op_set.add("=");
-   java_op_set.add("<");
-   java_op_set.add("!");
-   java_op_set.add("~");
-   java_op_set.add("?");
-   java_op_set.add(":");
-   java_op_set.add("==");
-   java_op_set.add("<=");
-   java_op_set.add(">=");
-   java_op_set.add("!=");
-   java_op_set.add("||");
-   java_op_set.add("&&");
-   java_op_set.add("++");
-   java_op_set.add("--");
-   java_op_set.add("+");
-   java_op_set.add("-");
-   java_op_set.add("*");
-   java_op_set.add("/");
-   java_op_set.add("&");
-   java_op_set.add("|");
-   java_op_set.add("^");
-   java_op_set.add("%");
-   java_op_set.add("<<");
-   java_op_set.add("+=");
-   java_op_set.add("-=");
-   java_op_set.add("*=");
-   java_op_set.add("/=");
-   java_op_set.add("&=");
-   java_op_set.add("|=");
-   java_op_set.add("^=");
-   java_op_set.add("%=");
-   java_op_set.add("<<=");
-   java_op_set.add(">>=");
-   java_op_set.add(">>>=");
-   java_op_set.add(">>");
-   java_op_set.add(">>>");
-   java_op_set.add(">");
-   java_op_set.add("::");
-   java_op_set.add("->");
-}
 
 
 
 
-/********************************************************************************/
-/*										*/
-/*	Python tokenizer							*/
-/*										*/
-/********************************************************************************/
-
-private static class PythonTokenizer extends BaleTokenizer {
-
-   PythonTokenizer(String text,BaleTokenState start) {
-      super(text,start);
-    }
-
-   @Override protected BaleTokenType getKeyword(String s) { return python_keyword_map.get(s); }
-   @Override protected boolean isOperator(String s)	{ return python_op_set.contains(s); }
-   @Override protected boolean useSlashSlashComments()	{ return false; }
-   @Override protected boolean useSlashStarComments()	{ return false; }
-   @Override protected boolean useHashComments()	{ return true; }
-   @Override protected int useMultilineCount()		{ return 3; }
-   @Override protected boolean isStringStart(char c) {
-      return c == '"' || c == '\'';
-    }
-
-}	// end of inner class PythonTokenizer
 
 
-
-static {
-   python_keyword_map = new HashMap<String,BaleTokenType>();
-   python_keyword_map.put("and",BaleTokenType.KEYWORD);
-   python_keyword_map.put("as",BaleTokenType.KEYWORD);
-   python_keyword_map.put("assert",BaleTokenType.KEYWORD);
-   python_keyword_map.put("break",BaleTokenType.BREAK);
-   python_keyword_map.put("class",BaleTokenType.CLASS);
-   python_keyword_map.put("continue",BaleTokenType.CONTINUE);
-   python_keyword_map.put("def",BaleTokenType.KEYWORD);
-   python_keyword_map.put("del",BaleTokenType.KEYWORD);
-   python_keyword_map.put("elif",BaleTokenType.ELSE);
-   python_keyword_map.put("else",BaleTokenType.ELSE);
-   python_keyword_map.put("except",BaleTokenType.KEYWORD);
-   python_keyword_map.put("False",BaleTokenType.KEYWORD);
-   python_keyword_map.put("finally",BaleTokenType.FINALLY);
-   python_keyword_map.put("for",BaleTokenType.FOR);
-   python_keyword_map.put("from",BaleTokenType.KEYWORD);
-   python_keyword_map.put("global",BaleTokenType.KEYWORD);
-   python_keyword_map.put("if",BaleTokenType.IF);
-   python_keyword_map.put("import",BaleTokenType.KEYWORD);
-   python_keyword_map.put("in",BaleTokenType.KEYWORD);
-   python_keyword_map.put("is",BaleTokenType.KEYWORD);
-   python_keyword_map.put("lambda",BaleTokenType.KEYWORD);
-   python_keyword_map.put("None",BaleTokenType.KEYWORD);
-   python_keyword_map.put("nonlocal",BaleTokenType.KEYWORD);
-   python_keyword_map.put("not",BaleTokenType.KEYWORD);
-   python_keyword_map.put("or",BaleTokenType.KEYWORD);
-   python_keyword_map.put("pass",BaleTokenType.PASS);
-   python_keyword_map.put("raise",BaleTokenType.RAISE);
-   python_keyword_map.put("return",BaleTokenType.RETURN);
-   python_keyword_map.put("True",BaleTokenType.KEYWORD);
-   python_keyword_map.put("try",BaleTokenType.TRY);
-   python_keyword_map.put("while",BaleTokenType.WHILE);
-   python_keyword_map.put("with",BaleTokenType.KEYWORD);
-   python_keyword_map.put("yield",BaleTokenType.KEYWORD);
-
-   python_op_set = new HashSet<String>();
-   python_op_set.add("=");
-   python_op_set.add("<");
-   python_op_set.add("~");
-   python_op_set.add(":");
-   python_op_set.add("==");
-   python_op_set.add("<=");
-   python_op_set.add(">=");
-   python_op_set.add("!=");
-   python_op_set.add("+");
-   python_op_set.add("-");
-   python_op_set.add("*");
-   python_op_set.add("/");
-   python_op_set.add("&");
-   python_op_set.add("|");
-   python_op_set.add("^");
-   python_op_set.add("%");
-   python_op_set.add("<<");
-   python_op_set.add("+=");
-   python_op_set.add("-=");
-   python_op_set.add("*=");
-   python_op_set.add("/=");
-   python_op_set.add("&=");
-   python_op_set.add("|=");
-   python_op_set.add("^=");
-   python_op_set.add("%=");
-   python_op_set.add("<<=");
-   python_op_set.add(">>=");
-   python_op_set.add(">>>=");
-   python_op_set.add(">>");
-   python_op_set.add(">");
-   python_op_set.add("//");
-   python_op_set.add("**");
-   python_op_set.add("->");
-   python_op_set.add("//=");
-   python_op_set.add("**=");
-   python_op_set.add("\\");
-}
 
 
 
@@ -925,270 +762,10 @@ private static class JSTokenizer extends BaleTokenizer {
 	    if (s.equals("as") || s.equals("from")) return BaleTokenType.KEYWORD;
 	    break;
        }
-      return js_keyword_map.get(s);
-    }
-
-   @Override protected boolean isOperator(String s)	{ return js_op_set.contains(s); }
-   @Override protected boolean isStringStart(char c) {
-      return c == '"' || c == '\'';
-    }
-   @Override protected boolean isMultilineStringStart(char c) {
-      return c == '`';
+      return super.getKeyword(s);
     }
 
 }	// end of inner class JSTokenizer
-
-
-static {
-   js_keyword_map = new HashMap<String,BaleTokenType>();
-   js_keyword_map.put("abstract",BaleTokenType.KEYWORD);
-   js_keyword_map.put("arguments",BaleTokenType.KEYWORD);
-   js_keyword_map.put("async",BaleTokenType.KEYWORD);
-   js_keyword_map.put("await",BaleTokenType.KEYWORD);
-   js_keyword_map.put("boolean",BaleTokenType.TYPEKEY);
-   js_keyword_map.put("break",BaleTokenType.BREAK);
-   js_keyword_map.put("byte",BaleTokenType.TYPEKEY);
-   js_keyword_map.put("case",BaleTokenType.CASE);
-   js_keyword_map.put("catch",BaleTokenType.CATCH);
-   js_keyword_map.put("char",BaleTokenType.TYPEKEY);
-   js_keyword_map.put("class",BaleTokenType.CLASS);
-   js_keyword_map.put("const",BaleTokenType.KEYWORD);
-   js_keyword_map.put("continue",BaleTokenType.KEYWORD);
-   js_keyword_map.put("debugger",BaleTokenType.KEYWORD);
-   js_keyword_map.put("default",BaleTokenType.DEFAULT);
-   js_keyword_map.put("delete",BaleTokenType.KEYWORD);
-   js_keyword_map.put("do",BaleTokenType.DO);
-   js_keyword_map.put("double",BaleTokenType.TYPEKEY);
-   js_keyword_map.put("else",BaleTokenType.ELSE);
-   js_keyword_map.put("enum",BaleTokenType.ENUM);
-   js_keyword_map.put("eval",BaleTokenType.KEYWORD);
-   js_keyword_map.put("export",BaleTokenType.KEYWORD);
-   js_keyword_map.put("extends",BaleTokenType.KEYWORD);
-   js_keyword_map.put("false",BaleTokenType.KEYWORD);
-   js_keyword_map.put("final",BaleTokenType.FINALLY);
-   js_keyword_map.put("finally",BaleTokenType.FINALLY);
-   js_keyword_map.put("float",BaleTokenType.TYPEKEY);
-   js_keyword_map.put("for",BaleTokenType.FOR);
-   js_keyword_map.put("function",BaleTokenType.FUNCTION);
-   js_keyword_map.put("goto",BaleTokenType.IF);
-   js_keyword_map.put("if",BaleTokenType.IF);
-   js_keyword_map.put("implements",BaleTokenType.KEYWORD);
-   js_keyword_map.put("import",BaleTokenType.KEYWORD);
-   js_keyword_map.put("in",BaleTokenType.KEYWORD);
-   js_keyword_map.put("instanceof",BaleTokenType.KEYWORD);
-   js_keyword_map.put("int",BaleTokenType.TYPEKEY);
-   js_keyword_map.put("interface",BaleTokenType.INTERFACE);
-   js_keyword_map.put("let",BaleTokenType.KEYWORD);
-   js_keyword_map.put("long",BaleTokenType.TYPEKEY);
-   js_keyword_map.put("native",BaleTokenType.KEYWORD);
-   js_keyword_map.put("new",BaleTokenType.NEW);
-   js_keyword_map.put("null",BaleTokenType.KEYWORD);
-   js_keyword_map.put("package",BaleTokenType.KEYWORD);
-   js_keyword_map.put("private",BaleTokenType.KEYWORD);
-   js_keyword_map.put("protected",BaleTokenType.KEYWORD);
-   js_keyword_map.put("public",BaleTokenType.KEYWORD);
-   js_keyword_map.put("return",BaleTokenType.RETURN);
-   js_keyword_map.put("short",BaleTokenType.TYPEKEY);
-   js_keyword_map.put("static",BaleTokenType.STATIC);
-   js_keyword_map.put("super",BaleTokenType.KEYWORD);
-   js_keyword_map.put("switch",BaleTokenType.SWITCH);
-   js_keyword_map.put("synchronized",BaleTokenType.KEYWORD);
-   js_keyword_map.put("this",BaleTokenType.KEYWORD);
-   js_keyword_map.put("throw",BaleTokenType.KEYWORD);
-   js_keyword_map.put("throws",BaleTokenType.THROWS);
-   js_keyword_map.put("transient",BaleTokenType.KEYWORD);
-   js_keyword_map.put("true",BaleTokenType.KEYWORD);
-   js_keyword_map.put("try",BaleTokenType.TRY);
-   js_keyword_map.put("typeof",BaleTokenType.KEYWORD);
-   js_keyword_map.put("var",BaleTokenType.KEYWORD);
-   js_keyword_map.put("void",BaleTokenType.TYPEKEY);
-   js_keyword_map.put("volatile",BaleTokenType.KEYWORD);
-   js_keyword_map.put("while",BaleTokenType.WHILE);
-   js_keyword_map.put("with",BaleTokenType.KEYWORD);
-   js_keyword_map.put("yield",BaleTokenType.KEYWORD);
-
-   js_op_set = new HashSet<String>();
-   js_op_set.add("=");
-   js_op_set.add("<");
-   js_op_set.add("!");
-   js_op_set.add("~");
-   js_op_set.add("?");
-   js_op_set.add(":");
-   js_op_set.add("==");
-   js_op_set.add("===");
-   js_op_set.add("<=");
-   js_op_set.add(">=");
-   js_op_set.add("!=");
-   js_op_set.add("!==");
-   js_op_set.add("||");
-   js_op_set.add("&&");
-   js_op_set.add("++");
-   js_op_set.add("--");
-   js_op_set.add("+");
-   js_op_set.add("-");
-   js_op_set.add("*");
-   js_op_set.add("/");
-   js_op_set.add("&");
-   js_op_set.add("|");
-   js_op_set.add("^");
-   js_op_set.add("%");
-   js_op_set.add("<<");
-   js_op_set.add("+=");
-   js_op_set.add("-=");
-   js_op_set.add("*=");
-   js_op_set.add("/=");
-   js_op_set.add("&=");
-   js_op_set.add("|=");
-   js_op_set.add("^=");
-   js_op_set.add("%=");
-   js_op_set.add("<<=");
-   js_op_set.add(">>=");
-   js_op_set.add(">>>=");
-   js_op_set.add(">>");
-   js_op_set.add(">>>");
-   js_op_set.add(">");
-}
-
-
-
-/********************************************************************************/
-/*										*/
-/*	Dart tokenizer								*/
-/*										*/
-/********************************************************************************/
-
-private static class DartTokenizer extends BaleTokenizer {
-
-   DartTokenizer(String text,BaleTokenState start) {
-      super(text,start);
-    }
-
-   @Override protected BaleTokenType getKeyword(String s) {
-      // need to handle case 1 and case 2 keywords in context
-      return dart_keyword_map.get(s);
-    }
-   @Override protected boolean isOperator(String s)	{ return dart_op_set.contains(s); }
-   @Override protected int useMultilineCount()		{ return 3; }
-
-}	// end of inner class JavaTokenizer
-
-
-static {
-   dart_keyword_map = new HashMap<String,BaleTokenType>();
-   dart_keyword_map.put("abstract",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("as",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("assert",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("async",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("await",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("base",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("break",BaleTokenType.BREAK);
-   dart_keyword_map.put("case",BaleTokenType.CASE);
-   dart_keyword_map.put("catch",BaleTokenType.CATCH);
-   dart_keyword_map.put("class",BaleTokenType.CLASS);
-   dart_keyword_map.put("const",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("continue",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("covariant",BaleTokenType.TYPEKEY);
-   dart_keyword_map.put("default",BaleTokenType.DEFAULT);
-   dart_keyword_map.put("deferred",BaleTokenType.DEFAULT);
-   dart_keyword_map.put("do",BaleTokenType.DO);
-   dart_keyword_map.put("dynamic",BaleTokenType.TYPEKEY);
-   dart_keyword_map.put("else",BaleTokenType.ELSE);
-   dart_keyword_map.put("enum",BaleTokenType.ENUM);
-   dart_keyword_map.put("export",BaleTokenType.ENUM);
-   dart_keyword_map.put("extends",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("extension",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("external",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("factory",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("false",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("final",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("finally",BaleTokenType.FINALLY);
-   dart_keyword_map.put("for",BaleTokenType.FOR);
-   dart_keyword_map.put("Function",BaleTokenType.TYPEKEY);
-   dart_keyword_map.put("get",BaleTokenType.TYPEKEY);
-   dart_keyword_map.put("hide",BaleTokenType.GOTO);
-   dart_keyword_map.put("if",BaleTokenType.IF);
-   dart_keyword_map.put("implements",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("import",BaleTokenType.IMPORT);
-   dart_keyword_map.put("in",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("interface",BaleTokenType.INTERFACE);
-   dart_keyword_map.put("is",BaleTokenType.TYPEKEY);
-   dart_keyword_map.put("late",BaleTokenType.TYPEKEY);
-   dart_keyword_map.put("library",BaleTokenType.TYPEKEY);
-   dart_keyword_map.put("mixin",BaleTokenType.TYPEKEY);
-   dart_keyword_map.put("new",BaleTokenType.NEW);
-   dart_keyword_map.put("null",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("on",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("operator",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("part",BaleTokenType.PACKAGE);
-   dart_keyword_map.put("required",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("rethrow",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("return",BaleTokenType.RETURN);
-   dart_keyword_map.put("sealed",BaleTokenType.TYPEKEY);
-   dart_keyword_map.put("set",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("show",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("static",BaleTokenType.STATIC);
-   dart_keyword_map.put("super",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("switch",BaleTokenType.SWITCH);
-   dart_keyword_map.put("sync",BaleTokenType.SYNCHRONIZED);
-   dart_keyword_map.put("this",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("throw",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("true",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("try",BaleTokenType.TRY);
-   dart_keyword_map.put("typedef",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("var",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("void",BaleTokenType.TYPEKEY);
-   dart_keyword_map.put("when",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("while",BaleTokenType.WHILE);
-   dart_keyword_map.put("with",BaleTokenType.KEYWORD);
-   dart_keyword_map.put("yield",BaleTokenType.KEYWORD);
-
-   dart_op_set = new HashSet<String>();
-   dart_op_set.add("=");
-   dart_op_set.add("<");
-   dart_op_set.add("!");
-   dart_op_set.add("~");
-   dart_op_set.add("?");
-   dart_op_set.add(":");
-   dart_op_set.add("==");
-   dart_op_set.add("<=");
-   dart_op_set.add(">=");
-   dart_op_set.add("!=");
-   dart_op_set.add("||");
-   dart_op_set.add("&&");
-   dart_op_set.add("++");
-   dart_op_set.add("--");
-   dart_op_set.add("+");
-   dart_op_set.add("-");
-   dart_op_set.add("*");
-   dart_op_set.add("/");
-   dart_op_set.add("&");
-   dart_op_set.add("|");
-   dart_op_set.add("^");
-   dart_op_set.add("%");
-   dart_op_set.add("<<");
-   dart_op_set.add("+=");
-   dart_op_set.add("-=");
-   dart_op_set.add("*=");
-   dart_op_set.add("/=");
-   dart_op_set.add("&=");
-   dart_op_set.add("|=");
-   dart_op_set.add("^=");
-   dart_op_set.add("%=");
-   dart_op_set.add("<<=");
-   dart_op_set.add(">>=");
-   dart_op_set.add(">>>=");
-   dart_op_set.add(">>");
-   dart_op_set.add(">>>");
-   dart_op_set.add(">");
-   dart_op_set.add("::");
-   dart_op_set.add("->");
-   dart_op_set.add("~/");
-   dart_op_set.add("??");
-   dart_op_set.add("..");
-   dart_op_set.add("?..");
-   dart_op_set.add("?.");
-}
-
 
 
 

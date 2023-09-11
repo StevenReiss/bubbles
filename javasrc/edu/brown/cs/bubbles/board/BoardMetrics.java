@@ -497,9 +497,6 @@ private String getUserId()
       String xpfx = bp.getProperty("Board.prefix." + cnm);
       if (xpfx != null) pfx = xpfx;
     }
-   else if (BoardSetup.getSetup().getLanguage() == BoardLanguage.REBUS) {
-      pfx = "R";
-    }
 
    return pfx + Integer.toString(rslt);
 }

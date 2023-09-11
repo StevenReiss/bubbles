@@ -660,12 +660,9 @@ BaleFragmentType getFragmentType()		{ return BaleFragmentType.NONE; }
 @Override public BoardLanguage getLanguage()
 {
    String f = getFile().getName();
-   if (f == null) return BoardLanguage.JAVA;
-   if (f.startsWith("/REBUS/")) return BoardLanguage.REBUS;
-   if (f.endsWith(".py") || f.endsWith(".PY")) return BoardLanguage.PYTHON;
-   if (f.endsWith(".js") || f.endsWith(".JS")) return BoardLanguage.JS;
-   if (f.endsWith(".java")) return BoardLanguage.JAVA;
-   if (f.endsWith(".dart")) return BoardLanguage.DART;
+   for (BoardLanguage bl : BoardLanguage.values()) {
+       if (bl.isSourceFile(f)) return bl;
+    }
    return BoardLanguage.JAVA;
 }
 
@@ -1040,12 +1037,8 @@ BaleIndenter getIndenter()
       switch (getLanguage()) {
 	 case JAVA :
 	 case JAVA_IDEA :
-	 case REBUS :
 	 default :
 	    our_indenter = new BaleIndenterJava(this);
-	    break;
-	 case PYTHON :
-	    our_indenter = new BaleIndenterPython(this);
 	    break;
 	 case JS :
 	    our_indenter = new BaleIndenterJS(this);

@@ -355,30 +355,7 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-nosp")) {                        // -nosplash
 	    show_splash = false;
 	  }
-	 else if (args[i].startsWith("-java")) {                        // -java
-	    setLanguage(BoardLanguage.JAVA);
-	  }
-	 else if (args[i].startsWith("-py")) {                          // -python
-	    setLanguage(BoardLanguage.PYTHON);
-	  }
-	 else if (args[i].startsWith("-node")) {                        // -node
-	    setLanguage(BoardLanguage.JS);
-	  }
-	 else if (args[i].startsWith("-js")) {                          // -js
-	    setLanguage(BoardLanguage.JS);
-	  }
-	 else if (args[i].startsWith("-JS")) {                          // -JS
-	    setLanguage(BoardLanguage.JS);
-	  }
-	 else if (args[i].startsWith("-rebus")) {                       // -rebus
-	    setLanguage(BoardLanguage.REBUS);
-	  }
-	 else if (args[i].startsWith("-idea")) {                        // -idea
-	    setLanguage(BoardLanguage.JAVA_IDEA);
-	  }
-         else if (args[i].startsWith("-dart")) {                        // -dart
-	    setLanguage(BoardLanguage.DART);
-	  }
+	
 	 else if (args[i].startsWith("-p") && i+1 < args.length) {      // -prop <propdir>
 	    BoardProperties.setPropertyDirectory(args[++i]);
 	  }
@@ -391,7 +368,23 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-X")) {                           // -X <run args...>
 	    javaargs = new ArrayList<String>();
 	  }
-	 else badArgs();
+         else {
+            boolean fnd = false;
+            if (args[i].length() >= 3) {
+               String match = args[i].toLowerCase();
+               for (BoardLanguage bl : BoardLanguage.values()) {
+                  String arg = bl.getBubblesArg();
+                  if (arg != null) {
+                     if (arg.startsWith(match)) {
+                        setLanguage(bl);
+                        fnd = true;
+                        break;
+                      }
+                   }
+                }
+             }
+            if (!fnd) badArgs();
+          }
        }
       else badArgs();
     }
@@ -751,7 +744,6 @@ public static File getBubblesPluginDirectory()
    File pdir = null;
 
    switch (bs.board_language) {
-      default:
       case JAVA :
 	 File f1 = new File(wsd,".metadata");
 	 File f2 = new File(f1,".plugins");
@@ -761,16 +753,7 @@ public static File getBubblesPluginDirectory()
 	 pdir = new File(wsd,".idea");
 	 pdir = new File(pdir,"bubjet");
 	 break;
-      case PYTHON :
-	 pdir = new File(wsd,".metadata");
-	 break;
-      case JS :
-	 pdir = new File(wsd,".metadata");
-	 break;
-      case REBUS :
-	 pdir = new File(wsd,".metadata");
-	 break;
-      case DART :
+      default :
 	 pdir = new File(wsd,".metadata");
 	 break;
     }
@@ -1191,27 +1174,7 @@ public void setLanguage(BoardLanguage bl)
 
    String pb = System.getProperty("edu.brown.cs.bubbles.BASE");
    if (pb == null) {
-      switch (bl) {
-	 case PYTHON :
-	    BoardProperties.setPropertyDirectory(BOARD_PYTHON_PROP_BASE);
-	    break;
-	 case JAVA :
-	    if (course_name != null) BoardProperties.setPropertyDirectory(BOARD_SUDS_PROP_BASE);
-	    BoardProperties.setPropertyDirectory(BOARD_PROP_BASE);
-	    break;
-	 case JAVA_IDEA :
-	    BoardProperties.setPropertyDirectory(BOARD_IDEA_PROP_BASE);
-	    break;
-	 case JS :
-	    BoardProperties.setPropertyDirectory(BOARD_NODEJS_PROP_BASE);
-	    break;
-	 case REBUS :
-	    BoardProperties.setPropertyDirectory(BOARD_REBUS_PROP_BASE);
-	    break;
-         case DART :
-            BoardProperties.setPropertyDirectory(BOARD_DART_PROP_BASE);
-	    break;
-       }
+      BoardProperties.setPropertyDirectory(bl.getPropertyDirectory());
     }
 
    system_properties = BoardProperties.getProperties("System");
@@ -1494,13 +1457,7 @@ public boolean doSetup()
       case JAVA_IDEA :
 	 thru &= baseide_directory != null;
 	 break;
-      case PYTHON :
-	 break;
-      case JS :
-	 break;
-      case REBUS :
-	 break;
-      case DART :
+      default : 
          break;
    }
    if (thru) {
@@ -1524,26 +1481,16 @@ public boolean doSetup()
       case JAVA :
 	 needsetup |= !checkEclipse();
 	 needsetup |= !checkEclipsePlugin();
-	 needsetup |= !checkInstall() && !install_jar;
 	 break;
       case JAVA_IDEA :
 	 needsetup |= !checkIntelliJ();
 	 needsetup |= !checkIdeaPlugin();
-	 needsetup |= !checkInstall() && !install_jar;
 	 break;
-      case PYTHON :
-	 needsetup |= !checkInstall() && !install_jar;
-	 break;
-      case JS :
-	 needsetup |= !checkInstall() && !install_jar;
-	 break;
-      case REBUS :
-	 needsetup |= !checkInstall() && !install_jar;
-	 break;
-      case DART :
-	 needsetup |= !checkInstall() && !install_jar;
-	 break;
+      default :
+         break;
     }
+   needsetup |= !checkInstall() && !install_jar;
+   
    askworkspace |= !checkWorkspace();
 
    BoardLog.logD("BOARD","In setup " + needsetup + " " + install_jar + " " + update_setup);
@@ -1620,13 +1567,7 @@ public boolean doSetup()
 	    updateIdeaPlugin();
 	  }
 	 break;
-      case PYTHON :
-	 break;
-      case JS :
-	 break;
-      case REBUS :
-	 break;
-      case DART :
+      default :
          break;
     }
 
@@ -1840,20 +1781,8 @@ private void saveProperties()
 
    String vmargs = system_properties.getProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS);
    if (vmargs == null) {
-      switch (board_language) {
-	 case JAVA :
-	 case PYTHON :
-	 case REBUS :
-//	    system_properties.setProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS,"-Xmx512m");
-	    break;
-	 case JS :
-	    system_properties.setProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS,"-Xmx1536m");
-	    break;
-	 case JAVA_IDEA :
-	    break;
-         case DART :
-            break;
-       }
+      String vmo = board_language.getVMOptions();
+      if (vmo != null) system_properties.setProperty(BOARD_PROP_ECLIPSE_VM_OPTIONS,vmo);
     }
 
    try {
@@ -3179,25 +3108,9 @@ private void restartBubbles()
 	 args.add(idx++,"-course");
 	 args.add(idx++,cnm);
        }
-      switch (board_language) {
-	 case PYTHON :
-	    args.add(idx++,"-python");
-	    break;
-	 case REBUS :
-	    args.add(idx++,"-rebus");
-	    break;
-	 case JS :
-	    args.add(idx++,"-js");
-	    break;
-	 case JAVA :
-	    break;
-	 case JAVA_IDEA :
-	    args.add(idx++,"-idea");
-	    break;
-         case DART :
-            args.add(idx++,"-dart");
-            break;
-       }
+      String arg = board_language.getBubblesArg();
+      if (arg != null) args.add(idx++,arg);
+      
       switch (run_mode) {
 	 case CLIENT :
 	    // args.add(idx++,"-CLIENT");
@@ -3244,25 +3157,8 @@ public boolean restartForNewWorkspace()
    args.add(System.getProperty("java.class.path"));
    args.add(BOARD_RESTART_CLASS);
    if (force_metrics) args.add("-collect");
-   switch (board_language) {
-      case PYTHON :
-	 args.add("-python");
-	 break;
-      case REBUS :
-	 args.add("-rebus");
-	 break;
-      case JS :
-	 args.add("-js");
-	 break;
-      case JAVA :
-	 break;
-      case JAVA_IDEA :
-	 args.add("-idea");
-	 break;
-      case DART :
-         args.add("-dart");
-         break;
-    }
+   String arg = board_language.getBubblesArg();
+   if (arg != null) args.add(arg);
    args.add("-ask");
 
    ProcessBuilder pb = new ProcessBuilder(args);
@@ -3416,13 +3312,7 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
             baseide_warning.setForeground(WARNING_COLOR);
             pnl.add(baseide_warning);
             break;
-         case PYTHON :
-            break;
-         case REBUS :
-            break;
-         case JS :
-            break;
-         case DART :
+         default :
             break;
        }
    
@@ -3447,22 +3337,6 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
          auto_update = false;
        }
    
-      switch (board_language) {
-         case JAVA :
-   //	    pnl.addBoolean("Run Eclipse in Foreground",run_foreground,this);
-            break;
-         case JAVA_IDEA :
-            break;
-         case PYTHON :
-            break;
-         case REBUS :
-            break;
-         case JS :
-            break;
-         case DART :
-            break;
-       }
-   
       pnl.addSeparator();
    
       switch (board_language) {
@@ -3470,13 +3344,7 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
          case JAVA_IDEA :
             install_button = pnl.addBottomButton("INSTALL BUBBLES","INSTALL",this);
             break;
-         case PYTHON :
-            break;
-         case REBUS :
-            break;
-         case JS :
-            break;
-         case DART :
+         default :
             break;
        }
    
@@ -3566,13 +3434,7 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
                baseide_warning.setVisible(true);
              }
             break;
-         case PYTHON :
-            break;
-         case REBUS :
-            break;
-         case JS :
-            break;
-         case DART :
+         default :
             break;
        }
    
@@ -3587,49 +3449,49 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if (cmd.equals("Eclipse Installation Directory")) {
-	 // will update in checkStatus()
+         // will update in checkStatus()
        }
       else if (cmd.equals("Bubbles Installation Directory")) {
-	 // will update in checkStatus()
+         // will update in checkStatus()
        }
       else if (cmd.equals("Automatically Update Bubbles")) {
-	 JCheckBox cbx = (JCheckBox) e.getSource();
-	 auto_update = cbx.isSelected();
-	 has_changed = true;
+         JCheckBox cbx = (JCheckBox) e.getSource();
+         auto_update = cbx.isSelected();
+         has_changed = true;
        }
       else if (cmd.equals("Run Eclipse in Foreground")) {
-	 JCheckBox cbx = (JCheckBox) e.getSource();
-	 run_foreground = cbx.isSelected();
-	 has_changed = true;
+         JCheckBox cbx = (JCheckBox) e.getSource();
+         run_foreground = cbx.isSelected();
+         has_changed = true;
        }
       else if (cmd.equals("INSTALL")) {
-	 switch (board_language) {
-	    case JAVA_IDEA :
-	       updateIdeaPlugin();
-	       break;
-	    case JAVA :
-	       updateEclipsePlugin();
-	       break;
-	  }
-	 force_setup = false;
+         switch (board_language) {
+            case JAVA_IDEA :
+               updateIdeaPlugin();
+               break;
+            case JAVA :
+               updateEclipsePlugin();
+               break;
+          }
+         force_setup = false;
        }
       else if (cmd.equals("ECLIPSE")) {
-	 BoardEclipse eclip = new BoardEclipse(new File(jar_directory));
-	 String dir = eclip.installEclipse();
-	 if (dir != null) {
-	    baseide_field.setText(dir);
-	  }
+         BoardEclipse eclip = new BoardEclipse(new File(jar_directory));
+         String dir = eclip.installEclipse();
+         if (dir != null) {
+            baseide_field.setText(dir);
+          }
        }
       else if (cmd.equals("OK")) {
-	 result_status = true;
-	 working_dialog.setVisible(false);
+         result_status = true;
+         working_dialog.setVisible(false);
        }
       else if (cmd.equals("CANCEL")) {
-	 result_status = false;
-	 working_dialog.setVisible(false);
+         result_status = false;
+         working_dialog.setVisible(false);
        }
       else {
-	 BoardLog.logE("BOARD","Unknown SETUP DIALOG command: " + cmd);
+         BoardLog.logE("BOARD","Unknown SETUP DIALOG command: " + cmd);
        }
       checkStatus();
     }
@@ -3711,54 +3573,18 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
       pnl.addSeparator();
    
       workspace_field = null;
-      workspace_warning = new JLabel("Warning");//added by amc6
+      workspace_warning = new JLabel("Warning");
    
-      switch (board_language) {
-         default:
-         case JAVA :
-            workspace_field = pnl.addFileField("Eclipse Workspace",default_workspace,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new WorkspaceDirectoryFilter(),this,null);
-            workspace_warning.setToolTipText("Not a valid Eclipse Workspace");
-            break;
-         case JAVA_IDEA :
-            workspace_field = pnl.addFileField("Idea Project Directory",default_workspace,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new WorkspaceDirectoryFilter(),this,null);
-            workspace_warning.setToolTipText("Not a valid Intellij Project Directory");
-            break;
-         case PYTHON :
-            workspace_field = pnl.addFileField("Python Workspace",default_workspace,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new WorkspaceDirectoryFilter(),this,null);
-            workspace_warning.setToolTipText("Not a vaid Python Workspace");
-            break;
-         case JS :
-            workspace_field = pnl.addFileField("Node/JS Workspace",default_workspace,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new WorkspaceDirectoryFilter(),this,null);
-            workspace_warning.setToolTipText("Not a vaid Node/JS Workspace");
-            break;
-         case REBUS :
-            workspace_field = pnl.addFileField("Rebus Workspace",default_workspace,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new WorkspaceDirectoryFilter(),this,null);
-            workspace_warning.setToolTipText("Not a vaid Rebus Workspace");
-            break;
-         case DART :
-            workspace_field = pnl.addFileField("Dart Workspace",default_workspace,
-                  JFileChooser.DIRECTORIES_ONLY,
-                  new WorkspaceDirectoryFilter(),this,null);
-            // TODO: need to validate dart directory (yaml file, lib subdirectory)
-            workspace_warning.setToolTipText("Not a vaid Dart Workspace");
-            break;
-       }
-      if (workspace_field != null) workspace_field.addKeyListener(this);
-   
+      String lbl = board_language.getWorkspaceLabel();
+      workspace_field = pnl.addFileField(lbl,default_workspace,
+            JFileChooser.DIRECTORIES_ONLY,
+            new WorkspaceDirectoryFilter(),this,null);
+      workspace_field.addKeyListener(this);
+      workspace_warning.setToolTipText("Not a valid " + lbl); 
       workspace_warning.setForeground(WARNING_COLOR);
       pnl.add(workspace_warning);
-   
       pnl.addSeparator();
+      
       if (recent_workspaces.size() > 0) {
          List<String> recents = new ArrayList<String>(recent_workspaces);
          recents.add(0,RECENT_HEADER);

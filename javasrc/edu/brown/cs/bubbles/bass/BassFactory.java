@@ -619,15 +619,9 @@ private static class ProjectProps implements BassPopupHandler {
       if (idx <= 0) return;
       String proj = fullname.substring(0,idx);
    
-      switch (BoardSetup.getSetup().getLanguage()) {
-         default :
-            menu.add(new ProjectAction(proj,bb,where));
-            menu.add(new NewProjectAction(bb,where));
-            menu.add(new BassImportProjectAction());
-            break;
-         case REBUS :
-            break;
-       }
+      menu.add(new ProjectAction(proj,bb,where));
+      menu.add(new NewProjectAction(bb,where));
+      menu.add(new BassImportProjectAction());
       
       menu.add(new TextSearchButton(proj));
     }

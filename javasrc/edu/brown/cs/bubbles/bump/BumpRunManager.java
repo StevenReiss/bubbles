@@ -182,9 +182,10 @@ BumpRunManager()
    server_host = null;
    server_port = null;
    source_map = new HashMap<>();
-   use_debug_server = true;
    trie_processor = null;
-
+   BoardProperties bp = BoardProperties.getProperties("Bddt");
+   use_debug_server = bp.getBoolean("Bddt.debug.server");
+   
    thread_filters = new HashMap<>();
 
    switch (BoardSetup.getSetup().getRunMode()) {
@@ -192,32 +193,18 @@ BumpRunManager()
 	 use_debug_server = false;
 	 break;
       case SERVER :
-	 BoardProperties bp = BoardProperties.getProperties("Bddt");
 	 use_debug_server = bp.getBoolean("Bddt.cloud.performance");
 	 break;
       default:
 	 break;
     }
 
-   switch (BoardSetup.getSetup().getLanguage()) {
-      case JAVA :
-      case JAVA_IDEA :
-	 break;
-      case PYTHON :
-      case JS :
-      case DART :
-	 use_debug_server = false;
-	 break;
-      case REBUS :
-	 break;
-      default :
-	 break;
-   }
+   
 
   trie_writer = null;
   perf_writer = null;
-  BoardProperties bp = BoardProperties.getProperties("Bandaid");
-  if (bp.getBoolean("bandaid.record.trie")) {
+  BoardProperties bpa = BoardProperties.getProperties("Bandaid");
+  if (bpa.getBoolean("bandaid.record.trie")) {
      File f1 = BoardLog.getBubblesLogFile();
      File f2 = f1.getParentFile();
      File f3 = new File(f2,f1.getName() + ".trie");
@@ -228,7 +215,7 @@ BumpRunManager()
 	BoardLog.logE("BUMP","Can't create trie output data file");
       }
    }
-  if (bp.getBoolean("bandaid.record.perf")) {
+  if (bpa.getBoolean("bandaid.record.perf")) {
      File f1 = BoardLog.getBubblesLogFile();
      File f2 = f1.getParentFile();
      File f3 = new File(f2,f1.getName() + ".perf");

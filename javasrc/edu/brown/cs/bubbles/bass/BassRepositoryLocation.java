@@ -602,15 +602,7 @@ private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 private boolean showClassFile(BassNameLocation bn)
 {
    if (bn.getKey().contains("$")) return false;
-   switch (BoardSetup.getSetup().getLanguage()) {
-      case PYTHON :
-      case DART :
-	 return false;
-      default:
-	 break;
-    }
-
-   return true;
+   return BoardSetup.getSetup().getLanguage().getShowClassFile();
 }
 
 

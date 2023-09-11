@@ -363,14 +363,16 @@ private void setLocalFile(String proj,File file)
 
 private void setLanguage()
 {
-   String f = file_name.getName();
    file_language = BoardLanguage.JAVA;
+   
+   String f = file_name.getName();
    if (f != null) {
-      if (f.startsWith("/REBUS/")) file_language = BoardLanguage.REBUS;
-      if (f.endsWith(".py") || f.endsWith(".PY")) file_language = BoardLanguage.PYTHON;
-      if (f.endsWith(".java")) file_language = BoardLanguage.JAVA;
-      if (f.endsWith(".js")) file_language = BoardLanguage.JS;
-      if (f.endsWith(".dart")) file_language = BoardLanguage.DART;
+      for (BoardLanguage bl : BoardLanguage.values()) {
+         if (bl.isSourceFile(f)) {
+            file_language = bl;
+            break;
+          }
+       }
     }
 }
 

@@ -32,7 +32,389 @@
       <BUTTON TYPE='NEWFILE' />
    </BUTTONS>
 </PROJECT>
+<EDITING>
+   <NAMES FIELDS='VARIABLES' />
+   <KEYPAIRS>
+      <KEY START='{' END='}' />
+      <KEY START='(' END=')' />
+      <KEY START='[' END=']' />
+      <KEY START="'" END="'" />
+      <KEY START='"' END='"' />
+   </KEYPAIRS>
+   <TOKENS MULTILINE='`' COMMENTS='/* //'>
+      <STRING>'"</STRING>
+   </TOKENS>
+   <KEYWORDS>
+      <KEYWORD NAME="abstract" TYPE="KEYWORD" />
+      <KEYWORD NAME="arguments" TYPE="KEYWORD" />
+      <KEYWORD NAME="async" TYPE="KEYWORD" />
+      <KEYWORD NAME="await" TYPE="KEYWORD" />
+      <KEYWORD NAME="boolean" TYPE="TYPEKEY" />
+      <KEYWORD NAME="break" TYPE="BREAK" />
+      <KEYWORD NAME="byte" TYPE="TYPEKEY" />
+      <KEYWORD NAME="case" TYPE="CASE" />
+      <KEYWORD NAME="catch" TYPE="CATCH" />
+      <KEYWORD NAME="char" TYPE="TYPEKEY" />
+      <KEYWORD NAME="class" TYPE="CLASS" />
+      <KEYWORD NAME="const" TYPE="KEYWORD" />
+      <KEYWORD NAME="continue" TYPE="KEYWORD" />
+      <KEYWORD NAME="debugger" TYPE="KEYWORD" />
+      <KEYWORD NAME="default" TYPE="DEFAULT" />
+      <KEYWORD NAME="delete" TYPE="KEYWORD" />
+      <KEYWORD NAME="do" TYPE="DO" />
+      <KEYWORD NAME="double" TYPE="TYPEKEY" />
+      <KEYWORD NAME="else" TYPE="ELSE" />
+      <KEYWORD NAME="enum" TYPE="ENUM" />
+      <KEYWORD NAME="eval" TYPE="KEYWORD" />
+      <KEYWORD NAME="export" TYPE="KEYWORD" />
+      <KEYWORD NAME="extends" TYPE="KEYWORD" />
+      <KEYWORD NAME="false" TYPE="KEYWORD" />
+      <KEYWORD NAME="final" TYPE="FINALLY" />
+      <KEYWORD NAME="finally" TYPE="FINALLY" />
+      <KEYWORD NAME="float" TYPE="TYPEKEY" />
+      <KEYWORD NAME="for" TYPE="FOR" />
+      <KEYWORD NAME="function" TYPE="FUNCTION" />
+      <KEYWORD NAME="goto" TYPE="IF" />
+      <KEYWORD NAME="if" TYPE="IF" />
+      <KEYWORD NAME="implements" TYPE="KEYWORD" />
+      <KEYWORD NAME="import" TYPE="KEYWORD" />
+      <KEYWORD NAME="in" TYPE="KEYWORD" />
+      <KEYWORD NAME="instanceof" TYPE="KEYWORD" />
+      <KEYWORD NAME="int" TYPE="TYPEKEY" />
+      <KEYWORD NAME="interface" TYPE="INTERFACE" />
+      <KEYWORD NAME="let" TYPE="KEYWORD" />
+      <KEYWORD NAME="long" TYPE="TYPEKEY" />
+      <KEYWORD NAME="native" TYPE="KEYWORD" />
+      <KEYWORD NAME="new" TYPE="NEW" />
+      <KEYWORD NAME="null" TYPE="KEYWORD" />
+      <KEYWORD NAME="package" TYPE="KEYWORD" />
+      <KEYWORD NAME="private" TYPE="KEYWORD" />
+      <KEYWORD NAME="protected" TYPE="KEYWORD" />
+      <KEYWORD NAME="public" TYPE="KEYWORD" />
+      <KEYWORD NAME="return" TYPE="RETURN" />
+      <KEYWORD NAME="short" TYPE="TYPEKEY" />
+      <KEYWORD NAME="static" TYPE="STATIC" />
+      <KEYWORD NAME="super" TYPE="KEYWORD" />
+      <KEYWORD NAME="switch" TYPE="SWITCH" />
+      <KEYWORD NAME="synchronized" TYPE="KEYWORD" />
+      <KEYWORD NAME="this" TYPE="KEYWORD" />
+      <KEYWORD NAME="throw" TYPE="KEYWORD" />
+      <KEYWORD NAME="throws" TYPE="THROWS" />
+      <KEYWORD NAME="transient" TYPE="KEYWORD" />
+      <KEYWORD NAME="true" TYPE="KEYWORD" />
+      <KEYWORD NAME="try" TYPE="TRY" />
+      <KEYWORD NAME="typeof" TYPE="KEYWORD" />
+      <KEYWORD NAME="var" TYPE="KEYWORD" />
+      <KEYWORD NAME="void" TYPE="TYPEKEY" />
+      <KEYWORD NAME="volatile" TYPE="KEYWORD" />
+      <KEYWORD NAME="while" TYPE="WHILE" />
+      <KEYWORD NAME="with" TYPE="KEYWORD" />
+      <KEYWORD NAME="yield" TYPE="KEYWORD" />
+   </KEYWORDS>
+   <OPERATORS><![CDATA[
+      = < ! ~ ? : == === <= >= != !== || && ++ -- + - * / & | ^ % << += -= *= /= &= |= ^= %=
+      <<= >>= >>>= >> >>> >
+   ]]></OPERATORS>
+</EDITING>
 </LANGUAGE>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

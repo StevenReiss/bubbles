@@ -66,7 +66,7 @@ private static String [] lspbase_libs = new String [] {
 
 BumpClientLsp(String lang)
 {
-   for_language = lang;
+   for_language = lang.toLowerCase();
    lspbase_starting = false;
    
    mint_control.register("<LSPBASE SOURCE='LSPBASE' TYPE='_VAR_0' />",

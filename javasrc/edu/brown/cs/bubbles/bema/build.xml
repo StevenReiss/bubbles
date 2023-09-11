@@ -49,36 +49,12 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='derby*.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='postgresql.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='mysql.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='pydev.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='wikitext*.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='org.eclipse.*.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
-	 <pathelement location='${BUBBLES}/lib/bubblesasm.jar' />
-	 <fileset dir='${BUBBLES}/lib' includes='marytts/*.jar' />
-	 <fileset dir='${BUBBLES}/eclipsejar/' includes='*.jar' />
-      </path>
-      <path id='pybles.classpath'>
-	 <pathelement location='${BUBBLES}/java' />
-	 <pathelement location='${IVYBIN}' />
-	 <fileset dir='${BUBBLES}/lib/' includes='smack*.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='jsyntaxpane.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='gnujpdf.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='jmf/**/*.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='javax.servlet.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='joscar*.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='jsocks-klea.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='ColorPicker.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='derby*.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='postgresql.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='mysql.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='pydev.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='wikitext*.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <pathelement location='${BUBBLES}/lib/bubblesasm.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='marytts/*.jar' />
 	 <fileset dir='${BUBBLES}/eclipsejar/' includes='*.jar' />
@@ -108,39 +84,7 @@
 	 <fileset dir='${BUBBLES}/lib' includes='marytts/*.jar' />
 	 <fileset dir='${BUBBLES}/eclipsejar/' includes='*.jar' />
       </path>
-      <path id='pyblesorig.classpath'>
-	 <pathelement location='${BUBBLES}/java' />
-	 <pathelement location='${IVYBIN}' />
-	 <fileset dir='${BUBBLES}/lib/' includes='smack*.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='jsyntaxpane.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='gnujpdf.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='jmf/**/*.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='javax.servlet.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='joscar*.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='jsocks-klea.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='ColorPicker.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='derby*.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='postgresql.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='mysql.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='pydev.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='wikitext*.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
-	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
-	 <pathelement location='${BUBBLES}/lib/bubblesasm.jar' />
-	 <fileset dir='${BUBBLES}/lib' includes='marytts/*.jar' />
-	 <fileset dir='${BUBBLES}/eclipsejar/' includes='*.jar' />
-      </path>
    </target>
-
-   <path id='pybles1'>
-      <fileset dir='${BUBBLES}/pybles' includes='**/*' />
-   </path>
-
-   <path id='pybles2'>
-      <fileset dir='${BUBBLES}/eclipsejar/' includes='*.jar' />
-   </path>
 
    <target name='compile' depends='init'>
       <javac srcdir='.' destdir='${BUBBLES}/java' debug='on'
@@ -154,7 +98,7 @@
       <delete dir='${BUBBLES}/java/edu/brown/cs/bubbles/bema' />
    </target>
 
-   <target name='jar' depends='compile,plist'>
+   <target name='jar' depends='compile'>
       <jar destfile="bubbles.jar" manifest='manifest.mf'>
 	 <fileset dir='${IVYJAR1}' includes= '${IVYJAR2}' />
 	 <fileset dir='${BUBBLES}/java' includes= '**/*.class' />
@@ -162,7 +106,6 @@
 	 <fileset dir='${BUBBLES}/lib' includes='bedrock.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='ivy.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='version.xml' />
-	 <fileset dir='${BUBBLES}/lib' includes='rebusprops.xml' />
 	 <fileset dir='${BUBBLES}/lib/' includes='gnujpdf.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsyntaxpane.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='smack*.jar' />
@@ -202,9 +145,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='wikitext*.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='annotations.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='cofoja.jar' />
-	 <fileset dir='${BUBBLES}/pybles' includes='**/*' />
 	 <fileset dir='${BUBBLES}/lib/JSFiles' includes='*.js' />
-	 <fileset dir='${BUBBLES}/lib/' includes='pydev.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='commons-compress.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='asm.jar' />
@@ -217,9 +158,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='reports.xml' />
 	 <fileset dir='${BUBBLES}/eclipsejar/' includes='*.jar' />
-	 <fileset dir='.' includes='pyblesfiles.txt' />
 	 <fileset dir='.' includes='jsfiles.txt' />
-	 <fileset dir='${BUBBLES}/lib' includes='rebusprops.xml' />
 	 <fileset dir='${BUBBLES}/lib' includes='marytts/*.jar' />
 	 <fileset dir='${BUBBLES}/lib' includes='words' />
 	 <fileset dir='${BUBBLES}/bin' includes='cloud*' />
@@ -249,19 +188,6 @@
       <copy file='${BUBBLES}/lib/version.xml' tofile='/pro/web/web/people/spr/bubbles/version.xml' />
       <copy file='updater.jar' tofile='/pro/web/web/people/spr/bubbles/updater.jar' />
       <antcall target='installplugins' />
-   </target>
-
-   <target name='plist' depends='init'>
-       <exec executable='echo' output='pyblesfiles.txt' >
-	  <arg path='${BUBBLES}/pybles' />
-	  <arg path='${BUBBLES}/eclipsejar' />
-       </exec>
-       <exec executable='echo' output='pyblesfiles.txt' append='true' >
-	  <arg pathref='pybles1' />
-       </exec>
-       <exec executable='echo' output='pyblesfiles.txt' append='true' >
-	  <arg pathref='pybles2' />
-       </exec>
    </target>
 
    <target name ='installplugins' depends='init'>

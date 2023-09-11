@@ -27,6 +27,9 @@ package edu.brown.cs.bubbles.board;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 
 
@@ -68,13 +71,75 @@ enum BoardHighlightStyle {
  **/
 
 enum BoardLanguage {
-   JAVA,
-   JAVA_IDEA,
-   PYTHON,
-   JS,
-   REBUS,
-   DART
-}
+   JAVA("java","Eclipse",".bubbles","bubbles","bedrock","-java",null,true,
+         ".java.","bubbles.jar","Eclipse Workspace"),
+   JAVA_IDEA("idea","IDEA",".bibbles","bibbles","bubjet","-idea",null,true
+         ,".java.","bibbles.jar","Idea Project Directory"),
+   JS("js","JavaScript",".nobbles","nobbles","nobase","-js","-Xmx1536m",false,
+         ".js.","nobbles.jar","Node/JS Workspace"),
+   DART("dart","Dart",".dartbubbles","dartbub","dartbase","-dart",null,false,
+         ".dart.","dartbubbles.jar","Dart Workspace");
+   
+   private String language_name;
+   private String language_title;
+   private String property_directory;
+   private String log_name;
+   private String backend_log_name;
+   private String bubbles_arg;
+   private String vm_options;
+   private boolean show_class_file;
+   private Set<String> language_extensions;
+   private String jar_runner;
+   private String workspace_label;
+   
+   BoardLanguage(String name,String ttl,String dir,String log,String backlog,String arg,
+         String vm,boolean showclass,String exts,String jar,String ws) {
+      language_name = name;
+      language_title = ttl;
+      property_directory = dir;
+      log_name = log;
+      backend_log_name = backlog;
+      bubbles_arg = arg;
+      vm_options = vm;
+      show_class_file = showclass;
+      language_extensions = new HashSet<>();
+      StringTokenizer tok = new StringTokenizer(exts,".");
+      while (tok.hasMoreTokens()) {
+         language_extensions.add("." + tok.nextToken());
+       }
+      jar_runner = jar;
+      workspace_label = ws;
+    }
+
+   public String getName()                      { return language_name; }
+   public String getTitle()                     { return language_title; }
+   public String getLogName()                   { return log_name; }
+   public String getBackendLogName()            { return backend_log_name; }
+   public String getBubblesArg()                { return bubbles_arg; }
+   public String getVMOptions()                 { return vm_options; }
+   public boolean getShowClassFile()            { return show_class_file; }
+   public String getJarRunner()                 { return jar_runner; }
+   public String getWorkspaceLabel()            { return workspace_label; }
+   
+   public File getPropertyDirectory() {
+      File f1 = new File(System.getProperty("user.home"));
+      File f2 = new File(f1,property_directory);
+      return f2;
+    }
+   
+   public boolean isSourceFile(File file) {
+      return isSourceFile(file.getName());
+    }
+   public boolean isSourceFile(String name) {
+      if (name == null) return false;
+      int idx = name.lastIndexOf(".");
+      if (idx < 0) return false;
+      String ext = name.substring(idx);
+      if (language_extensions.contains(ext)) return true;
+      return false;
+    }              
+   
+}       // end of inner enum BoardLanguage
 
 
 
@@ -88,13 +153,10 @@ enum BoardLanguage {
  *	Location of the user's copies of the bubbles property files.
  **/
 
-String BOARD_PROP_BASE = System.getProperty("user.home") + File.separator + ".bubbles";
-String BOARD_SUDS_PROP_BASE = System.getProperty("user.home") + File.separator + ".suds";
-String BOARD_PYTHON_PROP_BASE = System.getProperty("user.home") + File.separator + ".pybles";
-String BOARD_NODEJS_PROP_BASE = System.getProperty("user.home") + File.separator + ".nobbles";
-String BOARD_REBUS_PROP_BASE = System.getProperty("user.home") + File.separator + ".rebus";
-String BOARD_IDEA_PROP_BASE = System.getProperty("user.home") + File.separator + ".bibbles";
-String BOARD_DART_PROP_BASE = System.getProperty("user.home") + File.separator + ".dartbubbles";
+String BOARD_PROP_BASE = ".bubbles";
+String BOARD_SUDS_PROP_BASE = ".suds";
+String BOARD_NODEJS_PROP_BASE = ".nobbles";
+String BOARD_IDEA_PROP_BASE = ".bibbles";
 
 
 
@@ -411,15 +473,14 @@ String BOARD_RESOURCE_CHECK  = "resources/Bale.props";    // check to see if usi
 String [] BOARD_RESOURCE_PROPS =  new String [] {
    "Bale.props", "Bale.x86.props", "Bdoc.props", "Bema.props", "Beam.props",
    "Bgta.props", "Buda.props", "Bass.props", "Bted.props", "Board.props",
-   "Board.x86.props", "Bddt.props", "Bcon.props",
+   "Board.x86.props", "Bddt.props", "Bddt.java.props", "Bcon.props",
    "Bueno.props", "Bueno.java.props",
    "Bvcr.props",
-   "Batt.props", "Bedu.props", "Bnote.props", "Bbook.props", "Buda.python.props",
+   "Batt.props", "Bedu.props", "Bnote.props", "Bbook.props",
    "Buda.js.props",
-   "Bandaid.props","Barr.props","Bass.props","Bdoc.java.props","Bdoc.python.props",
-   "Bhelp.props", "Bwiz.props", "Rebus.props", "Buss.props",
-   "Bema.rebus.props","Buda.rebus.props", "Bass.rebus.props", "Bale.rebus.props",
-   "Beam.rebus.props","Bcon.rebus.props","Bfix.props", "Brepair.props",
+   "Bandaid.props","Barr.props","Bass.props","Bdoc.java.props",
+   "Bhelp.props", "Bwiz.props", "Buss.props",
+   "Bfix.props", "Brepair.props",
 };
 
 
@@ -502,8 +563,6 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
    "org.eclipse.ui.workbench.jar",
    "org.eclipse.wst.jsdt.core.jar",
    "org.eclipse.wst.jsdt.debug.core.jar",
-   "org.python.pydev.core.core.jar",
-   "org.python.pydev.parser.parser.jar",
 // "org.eclipse.pde.ui.jar",
 // "org.eclipse.pde.api.tools.ui.jar",
 
@@ -539,8 +598,6 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
 
 String [] BOARD_RESOURCE_EXTRAS = new String [] {
       "bbookbkg.gif",
-      "rebusprops.xml",
-
 };
 
 
@@ -561,8 +618,8 @@ String [] BOARD_CLASSPATH_FILES = new String [] {
    "freetts/mbrola.jar",
 ***********/
    "marytts/marytts.jar",
-   "marytts/marytts-lang-en-5.2.jar",
-   "marytts/voice-cmu-slt-hsmm-5.2.jar",
+   "marytts/marytts-lang-en.jar",
+   "marytts/voice-cmu-slt-hsmm.jar",
 };
 
 

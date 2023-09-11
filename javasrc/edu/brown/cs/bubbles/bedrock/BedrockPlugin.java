@@ -1081,22 +1081,24 @@ Element getLanguageData()
 {
    String nm = "resources/launches-java.xml";
    InputStream ins = BedrockPlugin.class.getClassLoader().getResourceAsStream(nm);
-   BedrockPlugin.logD("Language data " + nm + " " + ins);
+   BedrockPlugin.logD("Language data " + nm + " " + ins + " " +
+			 BedrockPlugin.class.getClassLoader().getResource(nm));
    Element xml = IvyXml.loadXmlFromStream(ins);
    if (xml == null) {
       String nm1 = "launches-java.xml";
-      ins = BedrockRuntime.class.getClassLoader().getResourceAsStream(nm1);
-      BedrockPlugin.logD("Language data " + nm1 + " " + ins);
+      ins = BedrockPlugin.class.getClassLoader().getResourceAsStream(nm1);
+      BedrockPlugin.logD("Language data " + nm1 + " " + ins + " " +
+			    BedrockPlugin.class.getClassLoader().getResource(nm1));
       xml = IvyXml.loadXmlFromStream(ins);
     }
    if (xml == null) {
       ins = BedrockPlugin.class.getClassLoader().getResourceAsStream(nm);
       try {
 	 String txt = IvyFile.loadFile(ins);
-	 BedrockPlugin.logE("BAD resource file " + txt);
+	 BedrockPlugin.logE("BAD language resource file:\n" + txt);
       }
       catch (IOException e) {
-	 BedrockPlugin.logE("Bad resource read " + e);
+	 BedrockPlugin.logE("Bad language resource read " + e);
       }
     }
 

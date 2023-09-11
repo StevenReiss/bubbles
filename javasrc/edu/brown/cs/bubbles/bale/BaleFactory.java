@@ -112,6 +112,8 @@ private SwingEventListenerList<BaleAnnotationListener> annot_listeners;
 private Set<BaleAnnotation>		active_annotations;
 private SwingEventListenerList<BaleContextListener> context_listeners;
 private BudaRoot			buda_root;
+private String                          fields_name;
+private boolean                         slashslash_comments;
 
 private static BaleFactory	the_factory;
 
@@ -143,6 +145,14 @@ private BaleFactory()
    bump_client.addChangeHandler(this);
 
    addContextListener(new ProblemHover());
+   
+   Element xml = bump_client.getLanguageData();
+   Element exml = IvyXml.getChild(xml,"EDITING");
+   Element nxml = IvyXml.getChild(exml,"NAMES");
+   fields_name = IvyXml.getAttrString(nxml,"FIELDS","FIELDS");
+   Element txml = IvyXml.getChild(exml,"TOKENS");
+   String cmmts = IvyXml.getAttrString(txml,"COMMENTS","// /*");
+   slashslash_comments = cmmts.contains("//");
 }
 
 
@@ -195,11 +205,11 @@ public static void initialize(BudaRoot br)
 
    bump_client.addOpenEditorBubbleHandler(new BaleOpenEditorHandler(br));
    getFactory().buda_root = br;
-
+   
    // force key definitions
-   new BaleEditorKit(BoardLanguage.JAVA);
-   new BaleEditorKit(BoardLanguage.PYTHON);
-   new BaleEditorKit(BoardLanguage.JS);
+   for (BoardLanguage bl : BoardLanguage.values()) {
+      new BaleEditorKit(bl);
+    }
 }
 
 
@@ -1325,14 +1335,8 @@ private BaleFragmentEditor getEditorFromLocations(List<BumpLocation> locs)
 
 public static String getFieldsName()
 {
-   switch (BoardSetup.getSetup().getLanguage()) {
-      default :
-	 return "FIELDS";
-      case JS :
-      case PYTHON :
-      case DART :
-	 return "VARIABLES";
-    }
+   BaleFactory bf = getFactory();
+   return bf.fields_name;
 }
 
 
@@ -1427,26 +1431,11 @@ private List<BaleRegion> getRegionsFromLocations(List<BumpLocation> locs)
 	     }
 	    else if (havecmmt) ;
 	    else if (Character.isWhitespace(s.charAt(eoffset))) ;
-	    else if ((lang == BoardLanguage.JAVA || lang == BoardLanguage.JAVA_IDEA) &&
-		  s.charAt(eoffset) == '/' && s.charAt(eoffset+1) == '/') {
-	       havecmmt = true;
-	     }
-	    else if (lang == BoardLanguage.JS &&
-		  s.charAt(eoffset) == '/' && s.charAt(eoffset+1) == '/') {
-	       havecmmt = true;
-	     }
-	    else if (lang == BoardLanguage.DART &&
+            else if (slashslash_comments &&
 		  s.charAt(eoffset) == '/' && s.charAt(eoffset+1) == '/') {
 	       havecmmt = true;
 	     }
 	    else if (lang == BoardLanguage.JS && s.charAt(eoffset) == ';') ;
-	    else if (lang == BoardLanguage.REBUS &&
-		  s.charAt(eoffset) == '/' && s.charAt(eoffset+1) == '/') {
-	       havecmmt = true;
-	     }
-	    else if (lang == BoardLanguage.PYTHON && s.charAt(eoffset) == '#') {
-	       havecmmt = true;
-	     }
 	    else break;
 	    ++eoffset;
 	  }
