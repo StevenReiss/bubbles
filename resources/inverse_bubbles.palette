@@ -96,6 +96,7 @@ Bddt.LaunchOverviewColor	:	0xffb4b4ff
 Bale.EditorPaneBackground	:	0xffffff
 Bcon.class.header.color	:	0xffffffff
 Bale.FindReplaceTopColor	:	0xff000000
+Bale.readonly.background.bottom	:	0xff000000
 Buda.RootGroupColor.1	:	0xff626200
 Bale.compact.hilite	:	0xff444400
 Bddt.HistoryBackground	:	0xff000000
@@ -255,6 +256,7 @@ Bwiz.TextFieldError	:	0xffffdede
 Bale.BudImageBackground	:	0xffffff
 Buda.OverviewFakeBottomColor	:	0xff000000
 Bdoc.TopColor	:	0xff7070ff
+Bale.readonly.background.top	:	0xff007777
 Buda.topbar.color	:	0xff78ddff
 Bddt.ThreadSelectionBackground	:	0xff000000
 Bale.attr.typeid.foreground	:	0xfff3f2ff

@@ -493,6 +493,12 @@ String BALE_CARET_COLOR_PROP = "Bale.CaretColor";
 String BALE_ERROR_BACKGROUND_PROP = "Bale.error.background";
 String BALE_ERROR_USE_BKG = "Bale.error.use.background";
 
+/**
+ *      Background color to use for a read-only editor
+ **/
+String BALE_READONLY_BACKGROUND_TOP = "Bale.readonly.background.top";
+String BALE_READONLY_BACKGROUND_BOTTOM = "Bale.readonly.background.bottom";
+
 
 /**
  *	The normal top color of the editor.

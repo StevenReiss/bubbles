@@ -154,9 +154,6 @@ enum BoardLanguage {
  **/
 
 String BOARD_PROP_BASE = ".bubbles";
-String BOARD_SUDS_PROP_BASE = ".suds";
-String BOARD_NODEJS_PROP_BASE = ".nobbles";
-String BOARD_IDEA_PROP_BASE = ".bibbles";
 
 
 

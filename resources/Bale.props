@@ -129,6 +129,7 @@
 <entry key="Bale.annot.font">LucindaSansRegular.ttf/0/11</entry>
 <entry key="Bale.show.line.numbers">false</entry>
 <entry key="Bale.show.hints">true</entry>
+<entry key="Bale.format.onsave">false</entry>
 </properties>
 
 

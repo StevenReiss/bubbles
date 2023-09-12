@@ -134,6 +134,8 @@ Bale.PortAnnotColor	:	0x20ff00ff
 Bale.RenameBorderColor	:	200,200,200,0
 
 Bale.error.background	:	0xffffe0e0
+Bale.readonly.background.top :	    153,255,255
+Bale.readonly.background.bottom :   white
 Bale.BudLineColor	:	gray
 Bale.BudImageBackground :	0,0,0,0
 Bale.BudImageColor	:	black

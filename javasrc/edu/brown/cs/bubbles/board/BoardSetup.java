@@ -2057,7 +2057,12 @@ public boolean checkInstall()
 	 checkBinFiles();
          
      	 Path jarpath = f.toPath();
-         String [] links = new String [] { "nobbles.jar", "pybles.jar", "cloudbb.jar", "dartbubbles.jar" };
+         List<String> links = new ArrayList<>();
+         links.add("cloudbb.jar");
+         for (BoardLanguage bl : BoardLanguage.values()) {
+            String jar = bl.getJarRunner();
+            if (jar != null && !jar.equals("bubbles.jar")) links.add(jar);
+          }
          for (String link : links) {
             File linkf = new File(f.getParentFile(),link);
             Path linkp = linkf.toPath();
@@ -2241,9 +2246,6 @@ private void checkJarLibraries()
       extractLibraryResource(s,rest,auto_update);
     }
 
-   File pyd = libd.getParentFile();
-   File pyd1 = new File(pyd,"pybles");
-   extractPybles(pyd1,libd,update_setup);
    extractNobbles(libd,update_setup);
 }
 
@@ -2344,78 +2346,7 @@ private boolean extractResourceFile(String s,File resd,boolean force)
 
 
 
-private void extractPybles(File pyd,File libd,boolean force)
-{
-   String pfx1 = null;
-   String pfx2 = null;
-   String pyblesfiles = null;
-   String libfiles = null;
 
-   try (InputStream ins = BoardSetup.class.getClassLoader().getResourceAsStream("pyblesfiles.txt")) {
-      if (ins == null) return;
-      BufferedReader br = new BufferedReader(new InputStreamReader(ins));
-      String s = br.readLine();
-      if (s != null) {
-	 StringTokenizer tok = new StringTokenizer(s);
-	 pfx1 = tok.nextToken();
-	 pfx2 = tok.nextToken();
-       }
-      pyblesfiles = br.readLine();
-      libfiles = br.readLine();
-    }
-   catch (IOException e) {
-      return;
-    }
-   if (pfx1 == null || pfx2 == null || pyblesfiles == null || libfiles == null) return;
-
-   if (!pyd.exists()) pyd.mkdir();
-
-   for (StringTokenizer tok = new StringTokenizer(pyblesfiles,":"); tok.hasMoreTokens(); ) {
-      String pyf = tok.nextToken();
-      if (!pyf.startsWith(pfx1)) continue;
-      pyf = pyf.substring(pfx1.length());
-      while (pyf.startsWith("/")) pyf = pyf.substring(1);
-      File f1 = pyd;
-      for (StringTokenizer t1 = new StringTokenizer(pyf,"/"); t1.hasMoreTokens(); ) {
-	 String comp = t1.nextToken();
-	 if (!f1.exists()) f1.mkdir();
-	 f1 = new File(f1,comp);
-       }
-      if (!force && f1.exists()) continue;
-      try {
-	 InputStream ins = BoardSetup.class.getClassLoader().getResourceAsStream(pyf);
-	 if (ins != null) {
-	    FileOutputStream ots = new FileOutputStream(f1);
-	    copyFile(ins,ots);
-	  }
-       }
-      catch (IOException e) {
-	 BoardLog.logE("BOARD","Problem setting up pybles files: " + e);
-       }
-    }
-
-   for (StringTokenizer tok = new StringTokenizer(libfiles,":"); tok.hasMoreTokens(); ) {
-      String pyf = tok.nextToken();
-      if (!pyf.startsWith(pfx2)) continue;
-      pyf = pyf.substring(pfx2.length());
-      while (pyf.startsWith("/")) pyf = pyf.substring(1);
-      int idx = pyf.lastIndexOf("/");
-      String f1 = pyf;
-      if (idx >= 0) f1 = pyf.substring(idx+1);
-      File of = new File(libd,f1);
-      if (!force && of.exists()) continue;
-      try {
-	 InputStream ins = BoardSetup.class.getClassLoader().getResourceAsStream(pyf);
-	 if (ins != null) {
-	    FileOutputStream ots = new FileOutputStream(of);
-	    copyFile(ins,ots);
-	  }
-       }
-      catch (IOException e) {
-	 BoardLog.logE("BOARD","Problem setting up pybles library files: " + e);
-       }
-    }
-}
 
 
 
@@ -3579,6 +3510,7 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
       workspace_field = pnl.addFileField(lbl,default_workspace,
             JFileChooser.DIRECTORIES_ONLY,
             new WorkspaceDirectoryFilter(),this,null);
+      workspace_field.setActionCommand("WORKSPACE");
       workspace_field.addKeyListener(this);
       workspace_warning.setToolTipText("Not a valid " + lbl); 
       workspace_warning.setForeground(WARNING_COLOR);
@@ -3631,46 +3563,43 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
-      if (cmd.equals("Eclipse Workspace") || cmd.equals("Python Workspace") ||
-	    cmd.equals("Rebus Workspace") || cmd.equals("Node/JS Workspace") ||
-            cmd.equals("Dart Workspace") ||
-	    cmd.equals("Idea Project Directory")) {
-	 JTextField tf = (JTextField) e.getSource();
-	 File ef = new File(tf.getText());
-	 String np = ef.getPath();
-	 if (!np.equals(default_workspace)) ws_changed = true;
-	 default_workspace = np;
+      if (cmd.equals("WORKSPACE")) {
+         JTextField tf = (JTextField) e.getSource();
+         File ef = new File(tf.getText());
+         String np = ef.getPath();
+         if (!np.equals(default_workspace)) ws_changed = true;
+         default_workspace = np;
        }
       else if (cmd.equals("Always Ask for Workspace")) {
-	 JCheckBox cbx = (JCheckBox) e.getSource();
-	 if (ask_workspace != cbx.isSelected()) ws_changed = true;
-	 ask_workspace = cbx.isSelected();
+         JCheckBox cbx = (JCheckBox) e.getSource();
+         if (ask_workspace != cbx.isSelected()) ws_changed = true;
+         ask_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Create New Workspace")) {
-	 JCheckBox cbx = (JCheckBox) e.getSource();
-	 create_workspace = cbx.isSelected();
+         JCheckBox cbx = (JCheckBox) e.getSource();
+         create_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Recent Workspaces")) {
-	 JComboBox<?> cbx = (JComboBox<?>) e.getSource();
-	 String rslt = (String) cbx.getSelectedItem();
-	 if (rslt != null && !rslt.trim().equals("") && !rslt.trim().equals(RECENT_HEADER)) {
-	    if (!rslt.equals(default_workspace)) {
-	       ws_changed = true;
-	       default_workspace = rslt;
-	       workspace_field.setText(rslt);
-	     }
-	  }
+         JComboBox<?> cbx = (JComboBox<?>) e.getSource();
+         String rslt = (String) cbx.getSelectedItem();
+         if (rslt != null && !rslt.trim().equals("") && !rslt.trim().equals(RECENT_HEADER)) {
+            if (!rslt.equals(default_workspace)) {
+               ws_changed = true;
+               default_workspace = rslt;
+               workspace_field.setText(rslt);
+             }
+          }
        }
       else if (cmd.equals("OK")) {
-	 result_status = true;
-	 working_dialog.setVisible(false);
+         result_status = true;
+         working_dialog.setVisible(false);
        }
       else if (cmd.equals("CANCEL")) {
-	 result_status = false;
-	 working_dialog.setVisible(false);
+         result_status = false;
+         working_dialog.setVisible(false);
        }
       else {
-	 BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
+         BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
        }
       checkStatus();
     }

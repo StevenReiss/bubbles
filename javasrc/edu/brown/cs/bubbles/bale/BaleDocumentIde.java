@@ -243,6 +243,7 @@ void setReadonly()
 }
 
 
+
 private void setFile(String proj,File file)
 {
    String cnts = null;
@@ -393,6 +394,22 @@ private void setLanguage()
 @Override void save()
 {
    BowiFactory.startTask();
+   if (is_dirty && BALE_PROPERTIES.getBoolean("Bale.format.onsave")) {
+      boolean err = false;
+      for (BumpProblem bp : problem_set) {
+         switch (bp.getErrorType()) {
+            case FATAL :
+            case ERROR :
+               err = true;
+               break;
+            default :
+               break;
+          }
+       }
+      if (!err) {
+         format(0,0);
+       }
+    }
    try {
       bump_client.saveFile(project_name,file_name);
       is_dirty = false;

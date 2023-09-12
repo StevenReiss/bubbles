@@ -358,6 +358,7 @@ private synchronized void loadNames()
    File f1 = BoardSetup.getBubblesWorkingDirectory();
    File f2 = new File(f1,"bass.symbols");
    int maxsym = 0;
+   // get number of names last time to provide % complete
    try (BufferedReader br = new BufferedReader(new FileReader(f2))) {
       for ( ; ; ) {
 	 String ln = br.readLine();

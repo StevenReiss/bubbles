@@ -71,6 +71,7 @@ private String			fragment_name;
 private transient BaleRegion	cursor_region;
 private boolean 		is_orphan;
 private double			scale_factor;
+private boolean                 is_editable;
 
 private static final long serialVersionUID = 1;
 
@@ -94,6 +95,7 @@ BaleDocumentFragment(BaleDocumentIde base,BaleFragmentType typ,List<BaleRegion> 
    fragment_name = null;
    is_orphan = false;
    scale_factor = 1.0;
+   is_editable = base.isEditable();
 
    style_context = BaleFactory.getFactory().getStyleContext();
 
@@ -133,7 +135,7 @@ BaleDocumentFragment(BaleDocumentIde base,BaleFragmentType typ,List<BaleRegion> 
 
 @Override public String getProjectName()	{ return base_document.getProjectName(); }
 
-@Override public File getFile() 	{ return base_document.getFile(); }
+@Override public File getFile() 	        { return base_document.getFile(); }
 @Override public BoardLanguage getLanguage()	{ return base_document.getLanguage(); }
 
 @Override String getFragmentName()		{ return fragment_name; }
@@ -142,7 +144,19 @@ BaleDocumentFragment(BaleDocumentIde base,BaleFragmentType typ,List<BaleRegion> 
 
 @Override BaleFragmentType getFragmentType()	{ return fragment_type; }
 
-@Override boolean isEditable()			{ return base_document.isEditable(); }
+@Override boolean isEditable()			{ return is_editable; }
+
+boolean canSetEditable()
+{
+   return base_document.isEditable();
+}
+
+void setEditable(boolean fg) 
+{
+   if (fg && base_document.isEditable()) is_editable = true;
+   else if (!fg) is_editable = false;
+}
+
 
 @Override BaleDocument getBaseEditDocument()
 {

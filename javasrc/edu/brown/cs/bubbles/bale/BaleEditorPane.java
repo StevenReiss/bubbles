@@ -357,6 +357,8 @@ static {
    context_names.put("Open Eclipse Editor","OpenEclipseEditorAction");
    context_names.put("Rename","RenameAction");
    context_names.put("Extract Code into New Method","ExtractMethodAction");
+   context_names.put("Make Read-Only","ToggleEditableAction");
+   context_names.put("Make Editable","ToggleEditableAction");
 }
 
 
@@ -395,6 +397,12 @@ void handleContextMenu(MouseEvent evt)
    addButton(menu,"Rename",idok,hdlr,null);
    boolean extr = (getSelectionStart() != getSelectionEnd());
    addButton(menu,"Extract Code into New Method",extr,hdlr,null);
+   
+   if (bd instanceof BaleDocumentFragment) {
+      BaleDocumentFragment bdf = (BaleDocumentFragment) bd;
+      if (bdf.isEditable()) addButton(menu,"Make Read-Only",true,hdlr,null);
+      else if (bdf.canSetEditable()) addButton(menu,"Make Editable",true,hdlr,null);
+    }
 
    BaleContextConfig bcc = new ContextData(loc,be);
    BaleFactory.getFactory().addContextMenuItems(bcc,menu);
@@ -583,7 +591,14 @@ private String getIndication(String key)
 
    // paint the background
    Paint p;
-   if (BALE_PROPERTIES.getBoolean(VISUALIZATION_GRADIENT_ENABLE)) {
+   if (!isEditable() || !getBaleDocument().isEditable()) {
+      Color tc = BoardColors.getColor(BALE_READONLY_BACKGROUND_TOP);
+      Color bc = BoardColors.getColor(BALE_READONLY_BACKGROUND_BOTTOM);
+      if (!BALE_PROPERTIES.getBoolean(BALE_EDITOR_DO_GRADIENT)) bc = tc;
+      if (tc.getRGB() == bc.getRGB()) p = tc;
+      else p = new GradientPaint(0f,0f,tc,0f,sz.height,bc);
+    }
+   else if (BALE_PROPERTIES.getBoolean(VISUALIZATION_GRADIENT_ENABLE)) {
        p = visual_kit.getGradientPaint(sz, getGradientIndication());
    }
    else {
@@ -727,7 +742,7 @@ private static class BaleTextUI extends TextUI {
    @Override public void paint(Graphics g,JComponent c) {
       readLock(c);
       try {
-	 base_ui.paint(g,c);
+         base_ui.paint(g,c);
        }
       finally { readUnlock(c); }
     }

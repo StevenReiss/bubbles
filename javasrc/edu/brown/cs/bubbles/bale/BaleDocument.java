@@ -416,6 +416,39 @@ void setupDummyEditor() 				{ }
 
 
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      Formatting methods                                                      */
+/*                                                                              */
+/********************************************************************************/
+
+void format(int soff,int eoff)
+{
+  baleWriteLock();
+  try {
+     if (soff == eoff) {
+        soff = 0;
+        eoff = getLength();
+      }
+     if (soff == eoff) return;
+     int dsoff = mapOffsetToEclipse(soff);
+     int deoff = mapOffsetToEclipse(eoff);
+     BumpClient bc = BumpClient.getBump();
+     org.w3c.dom.Element edits = bc.format(getProjectName(),getFile(),dsoff,deoff);
+     if (edits != null) {
+        BaleApplyEdits bae = new BaleApplyEdits(this);
+        bae.applyEdits(edits);
+      }
+     else {
+        nextEditCounter();
+      }
+   }
+  finally { baleWriteUnlock(); }
+}
+
+
+
 /********************************************************************************/
 /*										*/
 /*	Methods for external use of documents					*/

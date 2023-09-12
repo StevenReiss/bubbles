@@ -105,7 +105,7 @@ static BussBubble createBubbles(Component src,Position p,Point pt,boolean near,B
 	 it.remove();
 	 continue;
        }
-      if (!f.exists() && !f.getPath().startsWith("/REBUS/")) {
+      if (!f.exists()) {
 	 it.remove();
 	 continue;
        }

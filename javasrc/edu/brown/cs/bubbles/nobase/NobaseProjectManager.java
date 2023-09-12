@@ -40,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 
@@ -612,15 +611,6 @@ void handleSetPreferences(String proj,Element xml)
 
 private NobaseProject getProject(String proj,String file)
 {
-   if (proj == null && file != null) {
-      StringTokenizer tok = new StringTokenizer(file,"/");
-      if (tok.countTokens() > 3) {	// File is /REBUS/<project>/<Engine>/...
-	 String rebus = tok.nextToken();
-	 if (rebus.equals("REBUS")) {
-            proj = tok.nextToken();
-          }
-       }
-    }
    if (proj == null && file != null) {
       File f = new File(file);
       for (NobaseProject p : all_projects.values()) {

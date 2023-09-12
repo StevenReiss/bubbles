@@ -1879,7 +1879,7 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 	    xw.field("KIND","STRING");
             if (txt.contains("\\")) {
                String txt0 = IvyFormat.getLiteralValue(txt);
-               BedrockPlugin.logD("Convert sting " + txt + " " + txt0);
+               BedrockPlugin.logD("Convert string " + txt + " " + txt0);
                txt = txt0;
              }
 	    // txt is not quite right here if the string is complex

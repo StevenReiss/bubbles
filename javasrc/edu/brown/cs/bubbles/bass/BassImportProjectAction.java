@@ -147,17 +147,17 @@ private class WorkingSetConfirmDialog extends BudaBubble implements ActionListen
       private static final long serialVersionUID = 1L;
 
       private ConfirmContentPane() {
-	 add(new JLabel("Load and display working sets from project?"));
-	 JButton okB = new JButton("Yes");
-	 okB.setActionCommand("Yes");
-	 okB.addActionListener(WorkingSetConfirmDialog.this);
-
-	 JButton noB = new JButton("No");
-	 noB.setActionCommand("No");
-	 noB.addActionListener(WorkingSetConfirmDialog.this);
-
-	 add(okB);
-	 add(noB);
+         add(new JLabel("Load and display working sets from project?"));
+         JButton okB = new JButton("Yes");
+         okB.setActionCommand("Yes");
+         okB.addActionListener(WorkingSetConfirmDialog.this);
+      
+         JButton noB = new JButton("No");
+         noB.setActionCommand("No");
+         noB.addActionListener(WorkingSetConfirmDialog.this);
+      
+         add(okB);
+         add(noB);
        }
 
     }	    // end of inner class ConfirmContentPane
