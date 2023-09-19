@@ -56,6 +56,7 @@ private Set<String>     other_projects;
 private Map<String,String> option_elements;
 private List<BuenoGenericEditorPanel> editor_panels;
 private Map<String,String> start_options;
+private boolean         default_subdirs;
 
 
 
@@ -70,19 +71,22 @@ BuenoGenericProjectEditor(Element edata,Element projdata)
 {
    project_data = projdata;
    editor_panels = new ArrayList<>();
+   default_subdirs = IvyXml.getAttrBool(edata,"SUBDIRS");
    
    String name = IvyXml.getAttrString(project_data,"NAME");
    library_paths = new HashSet<>();
    source_paths = new HashSet<>();
    initial_paths = new HashSet<>();
+   
    Element cxml = IvyXml.getChild(project_data,"RAWPATH");
+   if (cxml == null) cxml = project_data;
    for (Element e : IvyXml.children(cxml,"PATH")) {
       BuenoPathEntry pe = new BuenoPathEntry(e);
       if (pe.getPathType() != PathType.BINARY) initial_paths.add(pe);
-      if (!pe.isNested() && pe.getPathType() == PathType.LIBRARY) {
+      if (!pe.isIndirect() && pe.getPathType() == PathType.LIBRARY) {
 	 library_paths.add(pe);
        }
-      else if (!pe.isNested() && pe.getPathType() == PathType.SOURCE) {
+      else if (!pe.isIndirect() && pe.getPathType() == PathType.SOURCE) {
 	 source_paths.add(pe);
        }
     }
@@ -249,7 +253,10 @@ Map<String,String> getOptions()
    return option_elements;
 }
 
-
+boolean useSubdirectories()
+{
+   return default_subdirs;
+}
 
 }       // end of class BuenoGenericProjectEditor
 

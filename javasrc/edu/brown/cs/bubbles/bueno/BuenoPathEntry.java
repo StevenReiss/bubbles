@@ -55,7 +55,8 @@ private String binary_path;
 private String javadoc_path;
 private boolean is_exported;
 private boolean is_optional;
-private boolean is_nested;
+private boolean use_subdirs;
+private boolean is_indirect;
 private boolean is_new;
 private boolean is_modified;
 private boolean is_module;
@@ -87,7 +88,8 @@ BuenoPathEntry(Element e)
    javadoc_path = IvyXml.getTextElement(e,"JAVADOC");
    entry_id = IvyXml.getAttrInt(e,"ID",0);
    is_exported = IvyXml.getAttrBool(e,"EXPORTED");
-   is_nested = IvyXml.getAttrBool(e,"NEST");
+   use_subdirs = IvyXml.getAttrBool(e,"SUBDIRS");
+   is_indirect = IvyXml.getAttrBool(e,"INDIRECT");
    is_optional = IvyXml.getAttrBool(e,"OPTIONAL");
    is_module = IvyXml.getAttrBool(e, "MODULE");
    is_system = IvyXml.getAttrBool(e, "SYSTEM");
@@ -120,7 +122,7 @@ BuenoPathEntry(Element e)
 }
 
 
-BuenoPathEntry(File f,PathType typ,boolean nest)
+BuenoPathEntry(File f,PathType typ,boolean subdirs)
 {
    path_type = typ;
    source_path = null;
@@ -133,7 +135,8 @@ BuenoPathEntry(File f,PathType typ,boolean nest)
     }
    is_exported = false;
    is_optional = false;
-   is_nested = nest;
+   use_subdirs = false;
+   is_indirect = subdirs;
    is_new = true;
    is_modified = true;
    entry_id = 0;
@@ -150,11 +153,11 @@ BuenoPathEntry(File f,PathType typ,boolean nest)
 /*                                                                              */
 /********************************************************************************/
 
-boolean isNested()				{ return is_nested; }
+boolean isIndirect()				{ return is_indirect; }
 PathType getPathType()				{ return path_type; }
 String getBinaryPath()				{ return binary_path; }
 String getSourcePath()				{ return source_path; }
-String getJavadocPath()				{ return javadoc_path; }
+String getJavadocPath()			{ return javadoc_path; }
 boolean isExported() 				{ return is_exported; }
 boolean isOptional() 				{ return is_optional; }
 boolean isSystem()				{ return is_system; }
@@ -171,7 +174,7 @@ boolean hasChanged()
    return is_new || is_modified;
 }
 boolean isLibrary()                             { return path_type == PathType.LIBRARY; }
-boolean isRecursive()                           { return is_nested; }
+boolean isRecursive()                           { return use_subdirs; }
 
 Collection<String> getIncludes()                { return include_patterns; }
 Collection<String> getExcludes()                { return exclude_patterns; }
@@ -241,10 +244,10 @@ void setType(PathType typ)
    is_modified = true;
 }
 
-void setNested(boolean fg) 
+void setUseSubdirs(boolean fg) 
 {
-   if (fg == is_nested) return;
-   is_nested = fg;
+   if (fg == use_subdirs) return;
+   use_subdirs = fg;
    is_modified = true;
 }
 
@@ -286,7 +289,8 @@ void outputXml(IvyXmlWriter xw,boolean del)
    xw.field("MODIFIED",is_modified);
    xw.field("EXPORTED",is_exported);
    xw.field("OPTIONAL",is_optional);
-   xw.field("NEST",is_nested);
+   xw.field("SUBDIRS",use_subdirs);
+   xw.field("INDIRECT",is_indirect);
    if (is_system) xw.field("SYSTEM", true);
    if (is_module) xw.field("MODULE", true);
    if (source_path != null) xw.textElement("SOURCE",source_path);

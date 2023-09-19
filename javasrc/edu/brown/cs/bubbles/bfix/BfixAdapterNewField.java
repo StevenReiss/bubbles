@@ -30,17 +30,19 @@ import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bueno.BuenoProperties;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.w3c.dom.Element;
 
 
 class BfixAdapterNewField extends BfixAdapter implements BfixConstants
@@ -56,11 +58,7 @@ class BfixAdapterNewField extends BfixAdapter implements BfixConstants
 
 private Map<File,FileData> file_map;
 
-private static Pattern field_msg;
-
-static {
-   field_msg = Pattern.compile("The value of the field ([A-Za-z0-9$_.]+) is not used");
-}
+private static List<BfixErrorPattern> field_patterns;
 
 
 /********************************************************************************/
@@ -74,6 +72,14 @@ BfixAdapterNewField()
    super("New Field Chorer");
 
    file_map = new HashMap<File,FileData>();
+   if (field_patterns == null) {
+      field_patterns = new ArrayList<>();
+      Element xml = BumpClient.getBump().getLanguageData();
+      Element fxml = IvyXml.getChild(xml,"FIXES");
+      for (Element cxml : IvyXml.children(fxml,"NEWFIELD")) {
+         field_patterns.add(new BfixErrorPattern(cxml));
+       }
+    }
 }
 
 
@@ -124,12 +130,11 @@ BfixAdapterNewField()
 private String getFieldName(BfixCorrector corr,BumpProblem bp)
 {
    String msg = bp.getMessage();
-   Matcher match = field_msg.matcher(msg);
-   if (!match.matches()) return null;
-
-   String fld = match.group(1);
-
-   return fld;
+   for (BfixErrorPattern pat : field_patterns) {
+      String fld = pat.getMatchResult(msg);
+      if (fld != null) return fld;
+    }
+   return null;
 }
 
 

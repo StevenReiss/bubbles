@@ -2844,8 +2844,26 @@ public BumpBreakModel getBreakModel()
 
 
 /********************************************************************************/
+/*                                                                              */
+/*      Handle hover data                                                       */
+/*                                                                              */
+/********************************************************************************/
+
+public Element getHoverData(String proj,File file,int soff,int eoff,int delay)
+{
+   waitForIDE();
+   
+   String flds = "FILE='" + file.getPath() + "' START='" + soff + "' END='" + eoff + "'";
+   Element xml = getXmlReply("HOVERDATA",proj,flds,null,delay);
+   
+   return xml;
+}
+
+
+
+/********************************************************************************/
 /*										*/
-/*	Debugger action methods 						*/
+/*	Language data methods   						*/
 /*										*/
 /********************************************************************************/
 
@@ -2870,6 +2888,13 @@ public Element getLanguageData(BoardLanguage lang)
    return language_data;
 }
 
+
+
+/********************************************************************************/
+/*										*/
+/*	Debugger action methods 						*/
+/*										*/
+/********************************************************************************/
 
 public Element doLaunchQuery(String proj,String query,String option)
 {

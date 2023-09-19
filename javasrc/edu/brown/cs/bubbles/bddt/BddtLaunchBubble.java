@@ -144,10 +144,13 @@ private void setupPanel()
 {
    doing_load = true;
 
+   component_items = new HashMap<>();
+   
    SwingGridPanel pnl = new SwingGridPanel();
    BoardColors.setColors(pnl,"Bddt.launch.background");
    pnl.beginLayout();
-   launch_name = pnl.addTextField("Launch Name",launch_config.getConfigName(),null,this);
+   launch_name = pnl.addTextField("Launch Name",launch_config.getConfigName(),this,this);
+   component_items.put(launch_name,"NAME");
 
    String lp = launch_config.getProject();
    Element pxml = bump_client.getAllProjects();
@@ -168,7 +171,6 @@ private void setupPanel()
        }
     }
 
-   component_items = new HashMap<>();
    JComponent focus = null;
    BumpLaunchType blt = launch_config.getLaunchType();
    for (BumpLaunchConfigField fld : blt.getFields()) {
@@ -207,9 +209,10 @@ private void setupPanel()
 
    FileSystemView fsv = BoardFileSystemView.getFileSystemView();
    log_file = pnl.addFileField("Record Output",launch_config.getLogFile(),
-				  JFileChooser.FILES_ONLY,null,fsv,null,null,this);
+				  JFileChooser.FILES_ONLY,null,fsv,this,null,this);
+   component_items.put(log_file,"CAPTURE_IN_FILE");
    working_directory = pnl.addFileField("Working Directory",launch_config.getWorkingDirectory(),
-					   JFileChooser.DIRECTORIES_ONLY,null,fsv,null,null,this);
+					   JFileChooser.DIRECTORIES_ONLY,null,fsv,this,null,this);
    pnl.addSeparator();
    debug_button = pnl.addBottomButton("Debug","DEBUG",this);
    save_button = pnl.addBottomButton("Save","SAVE",this);
@@ -403,9 +406,9 @@ private String getNewName()
 @Override public void actionPerformed(ActionEvent e)
 {
    String cmd = e.getActionCommand();
-
+   
    String itm = component_items.get(e.getSource());
-
+   
    if (cmd.equals("DEBUG")) {
       if (edit_config != null) {
 	 BumpLaunchConfig blc = edit_config.save();
@@ -459,24 +462,24 @@ private String getNewName()
 	    JTextArea ta = (JTextArea) cmp;
 	    String val = ta.getText();
 	    edit_config = edit_config.setAttribute(itm,val);
-	 }
+          }
 	 else if (cmp instanceof SwingNumericField) {
 	    SwingNumericField snf = (SwingNumericField) cmp;
 	    int ival = (int) snf.getValue();
 	    edit_config = edit_config.setAttribute(itm, Integer.toString(ival));
-	 }
+          }
 	 else if (cmp instanceof JCheckBox) {
 	    JCheckBox cbx = (JCheckBox) cmp;
 	    boolean bval = cbx.isSelected();
 	    edit_config = edit_config.setAttribute(itm, Boolean.toString(bval));
-	 }
+          }
 	 else if (cmp instanceof SwingComboBox<?>) {
 	    SwingComboBox<?> cmbo = (SwingComboBox<?>) cmp;
 	    ChoiceItem ci = (ChoiceItem) cmbo.getSelectedItem();
 	    if (ci != null) {
 	       edit_config = edit_config.setAttribute(itm, ci.getValue());
 	     }
-	 }
+          }
 	 BumpLaunchType lt = edit_config.getLaunchType();
 	 for (BumpLaunchConfigField fld : lt.getFields()) {
 	    if (fld.getEvaluate() != null && fld.getEvaluate().equals("START") &&
@@ -484,15 +487,15 @@ private String getNewName()
 	       recomputeStarts();
 	     }
 	  }
-      }
-   }
+       }
+    }
    else if (cmd.equals("Project")) {
       if (project_name == null) return;
       String pnm = (String) project_name.getSelectedItem();
       if (pnm != null && edit_config != null && edit_config.getProject().equals(pnm)) return;
       if (pnm != null && edit_config == null && launch_config != null &&
 	    launch_config.getProject().equals(pnm)) return;
-
+      
       if (edit_config == null) edit_config = launch_config;
       if (edit_config != null) {
 	 edit_config = edit_config.setProject(pnm);
@@ -501,7 +504,7 @@ private String getNewName()
     }
    else if (cmd.equals("comboBoxEdited")) ;
    else BoardLog.logE("BDDT","Undefined launch config action: " + cmd);
-
+   
    fixButtons();
 }
 
@@ -557,6 +560,7 @@ private void recomputeStarts()
 
    if (doing_load) return;
 
+   boolean fnd = false;
    for (JComponent cmp : component_items.keySet()) {
       if (cmp instanceof JTextComponent) {
 	 JTextComponent tc = (JTextComponent) cmp;
@@ -564,15 +568,13 @@ private void recomputeStarts()
 	    String val = tc.getText();
 	    String itm = component_items.get(cmp);
 	    if (edit_config != null) edit_config = edit_config.setAttribute(itm,val);
+            fnd = true;
 	    break;
 	 }
       }
    }
 
-   if (isArea(launch_name,doc)) {
-      if (edit_config == null) edit_config = launch_config;
-      edit_config = edit_config.setConfigName(launch_name.getText().trim());
-    }
+   if (fnd) ; 
    else if (isArea(log_file,doc)) {
       if (edit_config == null) edit_config = launch_config;
       String nm = log_file.getText().trim();

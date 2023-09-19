@@ -1635,16 +1635,16 @@ private BaleRegion mergeRegions(BaleRegion r1,BaleRegion r2,Segment txt)
 
 private static class ProblemHover implements BaleContextListener {
 
-   @Override public BudaBubble getHoverBubble(BaleContextConfig cfg)	{ return null; }
+   
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       if (cfg.inAnnotationArea()) return;
       BaleDocument bd = (BaleDocument) cfg.getDocument();
       List<BumpProblem> probs = bd.getProblemsAtLocation(cfg.getOffset());
       if (probs != null) {
-	 for (BumpProblem bp : probs) {
-	    menu.add(new QuickFix(cfg.getEditor(),bp));
-	  }
+         for (BumpProblem bp : probs) {
+            menu.add(new QuickFix(cfg.getEditor(),bp));
+          }
        }
     }
 
@@ -1652,17 +1652,17 @@ private static class ProblemHover implements BaleContextListener {
       BaleDocument bd = (BaleDocument) cfg.getDocument();
       List<BumpProblem> probs = bd.getProblemsAtLocation(cfg.getOffset());
       if (probs == null || probs.size() == 0) return null;
-
+   
       StringBuffer buf = new StringBuffer();
       for (BumpProblem bp : probs) {
-	 buf.append("<p>");
-	 buf.append(bp.getMessage());
+         buf.append("<p>");
+         buf.append(bp.getMessage());
        }
       return buf.toString();
     }
 
-   @Override public void noteEditorAdded(BaleWindow cfg) { }
-   @Override public void noteEditorRemoved(BaleWindow cfg) { }
+   
+   
 
 }	// end of inner class ProblemHover
 

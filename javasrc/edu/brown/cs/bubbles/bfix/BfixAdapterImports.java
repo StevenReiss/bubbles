@@ -37,6 +37,7 @@ import org.w3c.dom.Element;
 import javax.swing.text.BadLocationException;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,6 +59,7 @@ class BfixAdapterImports extends BfixAdapter implements BfixConstants
 /*										*/
 /********************************************************************************/
 
+private static List<BfixErrorPattern> ignore_patterns;
 private static Map<String,ImportChecker> import_checkers;
 private static Map<BfixCorrector,Set<String>> imports_added;
 
@@ -77,6 +79,16 @@ static {
 BfixAdapterImports()
 {
    super("Import adder");
+   if (ignore_patterns == null) {
+      ignore_patterns = new ArrayList<>();
+      Element xml = BumpClient.getBump().getLanguageData();
+      Element fxml = IvyXml.getChild(xml,"FIXES");
+      for (Element cxml : IvyXml.children(fxml,"IMPORT")) {
+         if (IvyXml.getAttrBool(cxml,"IGNORE")) {
+            ignore_patterns.add(new BfixErrorPattern(cxml));
+          }
+       }
+    }
 }
 
 
@@ -119,7 +131,11 @@ String getImportCandidate(BfixCorrector corr,BumpProblem bp)
    BoardLog.logD("BFIX","IMPORT problem " + bp.getMessage());
    int soff = document.mapOffsetToJava(bp.getStart());
    int eoff = document.mapOffsetToJava(bp.getEnd());
-   if (eoff == soff && bp.getMessage().startsWith("Syntax error")) return null;
+   if (eoff == soff) {
+      for (BfixErrorPattern pat : ignore_patterns) {
+         if (pat.testMatch(bp.getMessage())) return null;
+       }
+    }
 
    BaleWindowElement elt = document.getCharacterElement(soff);
    // need to have an identifier to correct

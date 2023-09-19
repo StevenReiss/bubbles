@@ -27,11 +27,14 @@ package edu.brown.cs.bubbles.bfix;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpClient;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.w3c.dom.Element;
 
 
 
@@ -45,6 +48,7 @@ class BfixAdapterQuotes extends BfixAdapter implements BfixConstants
 /*										*/
 /********************************************************************************/
 
+private static List<BfixErrorPattern> quote_patterns;
 
 
 /********************************************************************************/
@@ -56,6 +60,14 @@ class BfixAdapterQuotes extends BfixAdapter implements BfixConstants
 BfixAdapterQuotes()
 {
     super("Quote fixer");
+    if (quote_patterns == null) {
+       quote_patterns = new ArrayList<>();
+       Element xml = BumpClient.getBump().getLanguageData();
+       Element fxml = IvyXml.getChild(xml,"FIXES");
+       for (Element cxml : IvyXml.children(fxml,"QUOTE")) {
+          quote_patterns.add(new BfixErrorPattern(cxml));
+        }
+     }
 }
 
 
@@ -117,25 +129,28 @@ private List<QuoteFix> findFixes(BfixCorrector corr,BumpProblem bp)
       if (idx >= 0) text = text.substring(0,idx);
     }
 
-   if (msg.startsWith("Invalid character constant")) {   // 'xxxxx"
-      int idx = text.indexOf("\"");
-      if (idx > 0 && (lnocur > lnoerr || soff + idx + 2 < corr.getCaretPosition())) {
-	 QuoteFix qf = new QuoteFix(soff,soff+1,"\"","'");
-	 rslt.add(qf);
+   for (BfixErrorPattern pat : quote_patterns) {
+      String mrslt = pat.getMatchResult(msg);
+      if (mrslt == null) continue;
+      if (mrslt.equals("'")) {
+         int idx = text.indexOf("\"");
+         if (idx > 0 && (lnocur > lnoerr || soff + idx + 2 < corr.getCaretPosition())) {
+            QuoteFix qf = new QuoteFix(soff,soff+1,"\"","'");
+            rslt.add(qf);
+          }
        }
-    }
-
-   if (msg.startsWith("String literal is not properly closed")) {
-      for (int i = 1; i < text.length(); ++i) {
-	 char c = text.charAt(i);
-	 if (c == '\'') {
-	    QuoteFix qf = new QuoteFix(soff+i,soff+i+1,"\"","'");
-	    rslt.add(qf);
-	  }
-	 else if (";:+)\n".indexOf(c) >= 0) {
-	    QuoteFix qf = new QuoteFix(soff+i-1,soff+i-1,"\"",null);
-	    rslt.add(qf);
-	  }
+      else if (mrslt.equals("\"")) {
+         for (int i = 1; i < text.length(); ++i) {
+            char c = text.charAt(i);
+            if (c == '\'') {
+               QuoteFix qf = new QuoteFix(soff+i,soff+i+1,"\"","'");
+               rslt.add(qf);
+             }
+            else if (";:+)\n".indexOf(c) >= 0) {
+               QuoteFix qf = new QuoteFix(soff+i-1,soff+i-1,"\"",null);
+               rslt.add(qf);
+             }
+          }
        }
     }
 

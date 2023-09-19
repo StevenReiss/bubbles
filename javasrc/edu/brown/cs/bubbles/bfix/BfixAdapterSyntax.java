@@ -27,12 +27,17 @@ package edu.brown.cs.bubbles.bfix;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpClient;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.w3c.dom.Element;
 
 
 class BfixAdapterSyntax extends BfixAdapter implements BfixConstants
@@ -45,6 +50,7 @@ class BfixAdapterSyntax extends BfixAdapter implements BfixConstants
 /*										*/
 /********************************************************************************/
 
+private static Map<BfixErrorPattern,String> syntax_patterns;
 private static Pattern CONTAINS_TOKEN;
 
 static {
@@ -62,6 +68,18 @@ static {
 BfixAdapterSyntax()
 {
    super("Syntax fixer");
+   
+   if (syntax_patterns == null) {
+      syntax_patterns = new LinkedHashMap<>();
+      Element xml = BumpClient.getBump().getLanguageData();
+      Element fxml = IvyXml.getChild(xml,"FIXES");
+      for (Element cxml : IvyXml.children(fxml,"SYNTAX")) {
+         String typ = IvyXml.getAttrString(fxml,"TYPE");
+         if (typ != null) {
+            syntax_patterns.put(new BfixErrorPattern(cxml),typ);
+          }
+       }
+    }
 }
 
 
@@ -104,7 +122,14 @@ private boolean trySyntaxProblem(BfixCorrector corr,BumpProblem bp)
 {
    if (bp.getErrorType() != BumpErrorType.ERROR) return false;
    String msg = bp.getMessage();
-   if (!msg.startsWith("Syntax error") && !msg.startsWith("Invalid character constant")) return false;
+   boolean fnd = false;
+   for (BfixErrorPattern pat : syntax_patterns.keySet()) {
+      if (pat.testMatch(msg)) {
+         fnd = true;
+         break;
+       }
+    }
+   if (!fnd) return false;
 
    BaleWindow win = corr.getEditor();
    BaleWindowDocument doc = win.getWindowDocument();
@@ -137,7 +162,7 @@ private boolean trySyntaxProblem(BfixCorrector corr,BumpProblem bp)
 
 private class SyntaxFixer extends BfixFixer {
 
-   private long initial_time;
+   private long initial_time; 
 
    SyntaxFixer(BfixCorrector corr,BumpProblem bp) {
       super(corr,bp);
@@ -149,34 +174,36 @@ private class SyntaxFixer extends BfixFixer {
       int soff = for_problem.getStart();
       int eoff = for_problem.getEnd()+1;
       String ins = null;
-      if (msg.startsWith("Syntax error, insert ")) {
-	 int i0 = msg.indexOf("\"");
-	 int i1 = msg.lastIndexOf("\"");
-	 ins = msg.substring(i0+1,i1);
-	 soff = eoff;
+      
+      BfixErrorPattern usepat = null;
+      for (Map.Entry<BfixErrorPattern,String> ent : syntax_patterns.entrySet()) {
+         BfixErrorPattern pat = ent.getKey();
+         String what = pat.getMatchResult(msg);
+         if (what == null) continue;
+         switch (ent.getValue()) {
+            case "INSERT" :
+              ins = what;
+              soff = eoff;
+              break;
+            case "BEFORE" :
+               ins = what;
+               eoff = soff;
+               break;
+            case "DELETE" :
+               ins = null;
+               break;
+            case "REPLACE" :
+               ins = what;
+               break;
+          }
+         usepat = pat;
+         break;     
        }
-      else if (msg.startsWith("Syntax error on token") && msg.contains("delete this token")) {
-	 ins = null;
-       }
-      else if (msg.startsWith("Syntax error on token") && msg.contains("expected")) {
-	 int idx = msg.indexOf("\", ");
-	 idx += 3;
-	 int idx1 = msg.indexOf(" ",idx);
-	 ins = msg.substring(idx,idx1);
-       }
-      else if (msg.startsWith("Syntax error on token") && msg.contains("AssignmentOperator")) {
-	 ins = "=";
-       }
-      else if (msg.startsWith("Invalid character constant")) {
-	 ins = ";";
-       }
-      else return null;
+      if (usepat == null) return null;
 
       // ensure we cover complete input token
       if (ins != null && ins.length() == 2 && eoff-soff == 1) {
-	 int idx = msg.indexOf("\"");
-	 int idx1 = msg.indexOf("\"",idx+1);
-	 String tok = msg.substring(idx+1,idx1);
+         String tok = usepat.getAltResult(msg);
 	 if (ins.startsWith(tok)) ++eoff;
        }
 

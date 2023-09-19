@@ -82,7 +82,7 @@ NobasePathSpec(Element xml)
        }
     }
    directory_file = new File(fnm);
-   is_nested = IvyXml.getAttrBool(xml,"NEST");
+   is_nested = IvyXml.getAttrBool(xml,"SUBDIRS");
 }
 
 
@@ -158,7 +158,7 @@ public void outputXml(IvyXmlWriter xw)
    if (!is_user) xw.field("TYPE","LIBRARY");
    else if (is_exclude) xw.field("TYPE","EXCLUDE");
    else xw.field("TYPE","INCLUDE");
-   xw.field("NESTED",is_nested);
+   xw.field("SUBDIRS",is_nested);
    xw.end("PATH");
 }
 

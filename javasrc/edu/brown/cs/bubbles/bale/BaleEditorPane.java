@@ -62,6 +62,8 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.View;
 
+import org.w3c.dom.Element;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -110,7 +112,7 @@ private transient BaleCompletionContext completion_context;
 private transient BaleRenameContext rename_context;
 private transient BaleHighlightContext highlight_context;
 private boolean 	      fixed_size;
-private transient BaleVisualizationKit  visual_kit = BaleVisualizationKit.getVisualizationKit();
+private transient BaleVisualizationKit	visual_kit = BaleVisualizationKit.getVisualizationKit();
 
 private transient Map<BaleHighlightType,HighlightData> hilite_map;
 
@@ -397,7 +399,7 @@ void handleContextMenu(MouseEvent evt)
    addButton(menu,"Rename",idok,hdlr,null);
    boolean extr = (getSelectionStart() != getSelectionEnd());
    addButton(menu,"Extract Code into New Method",extr,hdlr,null);
-   
+
    if (bd instanceof BaleDocumentFragment) {
       BaleDocumentFragment bdf = (BaleDocumentFragment) bd;
       if (bdf.isEditable()) addButton(menu,"Make Read-Only",true,hdlr,null);
@@ -461,7 +463,7 @@ private class RemoveBubbleHandler implements ActionListener {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BaleEditorPane.this);
       BudaBubble bbl = BudaRoot.findBudaBubble(BaleEditorPane.this);
       if (bbl != null && bba != null) {
-         bba.userRemoveBubble(bbl);
+	 bba.userRemoveBubble(bbl);
        }
     }
 
@@ -722,7 +724,7 @@ private static class BaleTextUI extends TextUI {
    public int viewToModel2D(JTextComponent t,Point2D pt,Position.Bias [] bret) {
       readLock(t);
       try {
-         return SwingText.viewToModel2D(base_ui,t,pt,bret);
+	 return SwingText.viewToModel2D(base_ui,t,pt,bret);
        }
       finally { readUnlock(t); }
     }
@@ -742,7 +744,7 @@ private static class BaleTextUI extends TextUI {
    @Override public void paint(Graphics g,JComponent c) {
       readLock(c);
       try {
-         base_ui.paint(g,c);
+	 base_ui.paint(g,c);
        }
       finally { readUnlock(c); }
     }
@@ -754,7 +756,7 @@ private static class BaleTextUI extends TextUI {
    @Override public Dimension getPreferredSize(JComponent c) {
       readLock(c);
       try {
-         return base_ui.getPreferredSize(c);
+	 return base_ui.getPreferredSize(c);
        }
       finally { readUnlock(c); }
     }
@@ -1022,6 +1024,19 @@ private String getHoverText(MouseEvent e)
       if (fullnm != null) txt = fullnm;
     }
 
+   if (txt == null) {
+      BumpClient bc = BumpClient.getBump();
+      Element rslt = bc.getHoverData(bd.getProjectName(),bd.getFile(),
+	    bd.mapOffsetToEclipse(loc),
+	    bd.mapOffsetToEclipse(loc),4000);
+      BoardLog.logD("BALE","HOVERDATA result: " + IvyXml.convertXmlToString(rslt));
+      String hovertext = IvyXml.getTextElement(rslt,"HOVER");
+      if (hovertext != null && hovertext.startsWith("<") && !hovertext.startsWith("<html>")) {
+	 hovertext = "<html>" + hovertext;
+       }
+      if (hovertext != null && !hovertext.isEmpty()) txt = hovertext;
+    }
+
    return txt;
 }
 
@@ -1038,9 +1053,9 @@ BudaBubble getHoverBubble(MouseEvent e)
    int loc = SwingText.viewToModel2D(this,e.getPoint());
    BaleDocument bd = getBaleDocument();
    BudaBubble bb = null;
+   BumpClient bc = BumpClient.getBump();
 
    if (be != null && be.isIdentifier() && be.getName().contains("CallId")) {
-      BumpClient bc = BumpClient.getBump();
       String fullnm = null;
       fullnm  = bc.getFullyQualifiedName(bd.getProjectName(),bd.getFile(),
 					    bd.mapOffsetToEclipse(loc),
@@ -1060,6 +1075,14 @@ BudaBubble getHoverBubble(MouseEvent e)
       bb = BaleFactory.getFactory().getContextHoverBubble(bcc);
     }
 
+// if (bb == null) {
+//    Element rslt = bc.getHoverData(bd.getProjectName(),bd.getFile(),
+//	    bd.mapOffsetToEclipse(loc),
+//	    bd.mapOffsetToEclipse(loc),4000);
+//    BoardLog.logD("BALE","HOVERDATA result: " + IvyXml.convertXmlToString(rslt));
+//    String text = IvyXml.getTextElement(rslt,"HOVER");
+//    if (text.startsWith("<") && !text.startsWith("<html>")) text = "<html>" + text;
+//  }
 
    return bb;
 }
@@ -1272,8 +1295,8 @@ private class ContextData implements BaleContextConfig {
 
    @Override public String getMethodName() {
       if (editor_element == null) {
-         BoardLog.logD("BALE","No editor element for getMethodName");
-         return null;
+	 BoardLog.logD("BALE","No editor element for getMethodName");
+	 return null;
        }
       return editor_element.getMethodName();
     }

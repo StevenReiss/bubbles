@@ -27,11 +27,9 @@ package edu.brown.cs.bubbles.bpare;
 import edu.brown.cs.bubbles.bale.BaleConstants;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleContextConfig;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleFileOverview;
-import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindow;
 import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardSetup;
-import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 
 import edu.brown.cs.ivy.exec.IvyExec;
@@ -260,22 +258,18 @@ void startBpareServer()
 
 private static class BpareContexter implements BaleConstants.BaleContextListener {
 
-   @Override public BudaBubble getHoverBubble(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       if (cfg.inAnnotationArea()) return;
-
+   
       menu.add(new BpareAction(cfg));
     }
 
-   @Override public String getToolTipHtml(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
-   @Override public void noteEditorAdded(BaleWindow win)       { }
-   @Override public void noteEditorRemoved(BaleWindow win)     { }
+   
+   
 
 }	// end of inner class BpareContexter
 

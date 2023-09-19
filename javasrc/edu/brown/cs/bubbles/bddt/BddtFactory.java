@@ -777,24 +777,20 @@ private static class ConfigComparator implements Comparator<BumpLaunchConfig> {
 
 private static class DebugContextListener implements BaleContextListener {
 
-   @Override public BudaBubble getHoverBubble(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu m) {
       if (cfg.inAnnotationArea()) {
-	 // check if line has code that can be breakpointed
-	 m.add(new BreakpointAction(cfg,true));
-	 m.add(new BreakpointAction(cfg,false));
+         // check if line has code that can be breakpointed
+         m.add(new BreakpointAction(cfg,true));
+         m.add(new BreakpointAction(cfg,false));
        }
     }
 
-   @Override public String getToolTipHtml(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
-   @Override public void noteEditorAdded(BaleWindow win)	{ }
-   @Override public void noteEditorRemoved(BaleWindow win)	{ }
+   
+   
 
 }	// end of inner class EditorContextListener
 

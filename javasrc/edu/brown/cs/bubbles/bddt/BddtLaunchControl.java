@@ -1629,9 +1629,7 @@ private static String formatRunValue(BumpRunValue rv,int lvl)
 
 private class EditorContextListener implements BaleFactory.BaleContextListener {
 
-   @Override public BudaBubble getHoverBubble(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu m) {
       if (isRelevant(cfg)) m.add(new ValueAction(cfg));
@@ -1639,48 +1637,48 @@ private class EditorContextListener implements BaleFactory.BaleContextListener {
 
    @Override public String getToolTipHtml(BaleContextConfig cfg) {
       if (isRelevant(cfg)) {
-	 String id = cfg.getToken();
-	 BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
-	 if (frm != null) {
-	    BumpRunValue rv = null;
-	    switch (cfg.getTokenType()) {
-	       case FIELD_ID :
-	       case FIELD_DECL_ID :
-		  BumpRunValue rv1 = frm.getValue("this");
-		  if (rv1 != null) {
-		     rv = rv1.getValue("this?" + id);
-		   }
-		  break;
-	       case STATIC_FIELD_ID :
-		  BumpRunValue rv2 = frm.getValue("this");
-		  if (rv2 != null) {
-		     String typ = rv2.getType();
-		     typ = typ.replace("$",".");
-		     // TODO: need to get static value here
-		   }
-		  break;
-	       default :
-		  break;
-	     }
-	    if (rv == null) rv = frm.getValue(id);
-	    String st = getEvaluationString(frm,rv,id);
-	    return st;
-	  }
+         String id = cfg.getToken();
+         BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
+         if (frm != null) {
+            BumpRunValue rv = null;
+            switch (cfg.getTokenType()) {
+               case FIELD_ID :
+               case FIELD_DECL_ID :
+        	  BumpRunValue rv1 = frm.getValue("this");
+        	  if (rv1 != null) {
+        	     rv = rv1.getValue("this?" + id);
+        	   }
+        	  break;
+               case STATIC_FIELD_ID :
+        	  BumpRunValue rv2 = frm.getValue("this");
+        	  if (rv2 != null) {
+        	     String typ = rv2.getType();
+        	     typ = typ.replace("$",".");
+        	     // TODO: need to get static value here
+        	   }
+        	  break;
+               default :
+        	  break;
+             }
+            if (rv == null) rv = frm.getValue(id);
+            String st = getEvaluationString(frm,rv,id);
+            return st;
+          }
        }
       else if (isRelevantFrame(cfg)) {
-	 BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
-	 if (frm != null) {
-	    StringBuffer buf = new StringBuffer();
-	    buf.append("Thread: " + frm.getThread().getName());
-	    buf.append("<br>Line: " + frm.getLineNumber());
-	    return buf.toString();
-	  }
+         BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
+         if (frm != null) {
+            StringBuffer buf = new StringBuffer();
+            buf.append("Thread: " + frm.getThread().getName());
+            buf.append("<br>Line: " + frm.getLineNumber());
+            return buf.toString();
+          }
        }
       return null;
     }
 
-   @Override public void noteEditorAdded(BaleWindow win)	{ }
-   @Override public void noteEditorRemoved(BaleWindow win)	{ }
+   
+   
 
    private boolean isRelevant(BaleContextConfig cfg) {
       BudaBubble bb = cfg.getEditor();

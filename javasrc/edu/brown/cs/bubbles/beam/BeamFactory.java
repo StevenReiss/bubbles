@@ -33,7 +33,6 @@ package edu.brown.cs.bubbles.beam;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleContextConfig;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleContextListener;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleFileOverview;
-import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindow;
 import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.bass.BassConstants.BassFlag;
 import edu.brown.cs.bubbles.bass.BassConstants.BassFlagger;
@@ -464,22 +463,18 @@ private static class NoteHandler implements BaleContextListener {
    NoteHandler() {
     }
 
-   @Override public BudaBubble getHoverBubble(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
-   @Override public String getToolTipHtml(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       if (cfg.getOffset() >= 0) {
-	 menu.add(new NoteAction(cfg));
+         menu.add(new NoteAction(cfg));
        }
     }
 
-   @Override public void noteEditorAdded(BaleWindow win)	{ }
-   @Override public void noteEditorRemoved(BaleWindow win)	{ }
+   
+   
 
 }	// end of inner class NoteHandler
 

@@ -1332,15 +1332,15 @@ interface BaleContextConfig {
 
 interface BaleContextListener extends EventListener {
 
-   BudaBubble getHoverBubble(BaleContextConfig cfg);
+   default BudaBubble getHoverBubble(BaleContextConfig cfg)     { return null; }
 
-   void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu);
+   default void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) { }
 
-   String getToolTipHtml(BaleContextConfig cfg);
+   default String getToolTipHtml(BaleContextConfig cfg)         { return null; }
 
-   void noteEditorAdded(BaleWindow win);
+   default void noteEditorAdded(BaleWindow win)                 { }
 
-   void noteEditorRemoved(BaleWindow win);
+   default void noteEditorRemoved(BaleWindow win)               { }
 
 }	// end of inner interface BaleContextHandler
 

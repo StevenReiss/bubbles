@@ -502,13 +502,9 @@ private static class BattContexter implements BaleContextListener {
       batt_model = bf.batt_model;
     }
 
-   @Override public BudaBubble getHoverBubble(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
-   @Override public String getToolTipHtml(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       String mthd = cfg.getMethodName();
@@ -605,8 +601,8 @@ private static class BattContexter implements BaleContextListener {
         }
     }
 
-   @Override public void noteEditorAdded(BaleWindow cfg)	{ }
-   @Override public void noteEditorRemoved(BaleWindow cfg)	{ }
+   
+   
 
 }	// end of inner class BattContexter
 

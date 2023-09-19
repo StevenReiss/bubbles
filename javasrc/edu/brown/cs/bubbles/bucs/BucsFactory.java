@@ -26,7 +26,6 @@ package edu.brown.cs.bubbles.bucs;
 
 import edu.brown.cs.bubbles.bale.BaleConstants;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleContextConfig;
-import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindow;
 import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.batt.BattConstants;
 import edu.brown.cs.bubbles.buda.BudaBubble;
@@ -141,26 +140,22 @@ private boolean createTestCaseBubble(BaleContextConfig cfg,BattConstants.NewTest
 
 private class BucsContexter implements BaleConstants.BaleContextListener {
 
-   @Override public BudaBubble getHoverBubble(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       switch (cfg.getTokenType()) {
-	 case METHOD_DECL_ID :
-	    menu.add(new BucsAction(cfg));
-	    break;
-	 default :
-	    break;
+         case METHOD_DECL_ID :
+            menu.add(new BucsAction(cfg));
+            break;
+         default :
+            break;
        }
     }
 
-   @Override public String getToolTipHtml(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
-   @Override public void noteEditorAdded(BaleWindow win) { }
-   @Override public void noteEditorRemoved(BaleWindow win) { }
+   
+   
 
 }	// end of inner class BucsContexter
 

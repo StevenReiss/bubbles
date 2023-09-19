@@ -48,6 +48,6 @@ if (-e ~/commands/java10) then
 #  set JAVA = ~/commands/java10
 endif
 
-echo $JAVA -cp $CP -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain $*
+# echo $JAVA -cp $CP -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain $*
 $JAVA -cp $CP -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain $* >&! ~/runlog.log &
 

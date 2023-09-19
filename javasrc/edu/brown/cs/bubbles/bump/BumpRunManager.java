@@ -185,7 +185,7 @@ BumpRunManager()
    trie_processor = null;
    BoardProperties bp = BoardProperties.getProperties("Bddt");
    use_debug_server = bp.getBoolean("Bddt.debug.server");
-   
+
    thread_filters = new HashMap<>();
 
    switch (BoardSetup.getSetup().getRunMode()) {
@@ -199,7 +199,7 @@ BumpRunManager()
 	 break;
     }
 
-   
+
 
   trie_writer = null;
   perf_writer = null;
@@ -328,16 +328,12 @@ void terminateAll()
 
 
 
-
-
 @Override public BumpLaunchConfig createLaunchConfiguration(String name,BumpLaunchType typ)
 {
    Element e = bump_client.getNewRunConfiguration(name,null,typ);
 
    return getLaunchResult(e);
 }
-
-
 
 
 
@@ -1164,7 +1160,7 @@ private class LaunchType implements BumpLaunchType {
       test_case = IvyXml.getAttrBool(xml,"TESTCASE");
       launch_fields = new ArrayList<>();
       for (Element fld : IvyXml.children(xml,"ATTRIBUTE")) {
-         launch_fields.add(new LaunchTypeField(fld));
+	 launch_fields.add(new LaunchTypeField(fld));
       }
    }
 
@@ -1173,8 +1169,8 @@ private class LaunchType implements BumpLaunchType {
    @Override public List<BumpLaunchConfigField> getFields() {
       return launch_fields;
    }
-   @Override public boolean useDebugArgs()      { return use_debug_args; }
-   @Override public boolean isTestCase()        { return test_case; }
+   @Override public boolean useDebugArgs()	{ return use_debug_args; }
+   @Override public boolean isTestCase()	{ return test_case; }
 
 }	// end of inner class LaunchType
 
@@ -1211,7 +1207,7 @@ private class LaunchTypeField implements BumpLaunchConfigField {
    @Override public int getNumRows()			{ return num_rows; }
    @Override public int getMin()			{ return min_value; }
    @Override public int getMax()			{ return max_value; }
-   @Override public String getDefaultValue()            { return default_value; }
+   @Override public String getDefaultValue()		{ return default_value; }
 
 }	// end of inner class LaunchTypeField
 
@@ -1236,26 +1232,26 @@ private class LaunchConfig implements BumpLaunchConfig {
 
    void update(Element xml) {
       BoardLog.logD("BUMP","Found Launch Config " + IvyXml.convertXmlToString(xml));
-   
+
       launch_xml = xml;
-   
+
       String tnm = IvyXml.getAttrString(xml, "TYPE");
       Element type = IvyXml.getChild(xml,"TYPE");
       if (type != null) {
-         tnm = IvyXml.getAttrString(type,"NAME");
+	 tnm = IvyXml.getAttrString(type,"NAME");
        }
       String tnm1 = tnm;
       if (tnm.equals("JUnit")) tnm1 = "JUnit Test";
       launch_type = null;
       for (BumpLaunchType blt : launch_types) {
-         if (blt.getName().equals(tnm) || blt.getDescription().equals(tnm) ||
-               blt.getName().equals(tnm1) || blt.getDescription().equals(tnm1)) {
-            launch_type = blt;
-            break;
-         }
+	 if (blt.getName().equals(tnm) || blt.getDescription().equals(tnm) ||
+	       blt.getName().equals(tnm1) || blt.getDescription().equals(tnm1)) {
+	    launch_type = blt;
+	    break;
+	 }
       }
       if (launch_type == null) {
-         BoardLog.logE("BUMP","Can't find launch type " + tnm + " " + tnm1);
+	 BoardLog.logE("BUMP","Can't find launch type " + tnm + " " + tnm1);
        }
     }
 
@@ -1406,7 +1402,7 @@ private class LaunchConfig implements BumpLaunchConfig {
       return getLaunchResult(x);
     }
 
-   
+
 
    @Override public BumpLaunchConfig setRemoteHostPort(String host,int port) {
       String val = "{port=" + port + ", hostname=" + host + "}";

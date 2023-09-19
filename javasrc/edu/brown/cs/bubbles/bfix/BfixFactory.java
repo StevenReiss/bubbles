@@ -284,13 +284,9 @@ public static void fixErrorsInRegion(BaleWindowDocument doc,int soff,int eoff)
 
 private class Contexter implements BaleContextListener {
 
-   @Override public BudaBubble getHoverBubble(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
-   @Override public String getToolTipHtml(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
 
    @Override public void addPopupMenuItems(BaleContextConfig ctx,JPopupMenu menu) {

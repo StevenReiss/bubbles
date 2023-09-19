@@ -352,13 +352,9 @@ private static class BvcrStarter implements Runnable {
 
 private class BvcrContexter implements BaleContextListener, BassConstants.BassPopupHandler {
 
-   @Override public BudaBubble getHoverBubble(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
-   @Override public String getToolTipHtml(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       // only if bvcr is running (i.e. under version management)
@@ -407,8 +403,8 @@ private class BvcrContexter implements BaleContextListener, BassConstants.BassPo
        }
     }
 
-   @Override public void noteEditorAdded(BaleWindow win)	{ }
-   @Override public void noteEditorRemoved(BaleWindow win)	{ }
+   
+   
 
 }	// end of inner class BvcrContexter
 

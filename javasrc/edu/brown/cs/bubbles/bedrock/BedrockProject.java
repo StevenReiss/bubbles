@@ -1485,7 +1485,7 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
 
 
 
-private void addClassPaths(IJavaProject jp,IvyXmlWriter xw,Set<IProject> done,boolean nest)
+private void addClassPaths(IJavaProject jp,IvyXmlWriter xw,Set<IProject> done,boolean refd)
 {
    if (done == null) done = new HashSet<IProject>();
    done.add(jp.getProject());
@@ -1494,7 +1494,7 @@ private void addClassPaths(IJavaProject jp,IvyXmlWriter xw,Set<IProject> done,bo
    try {
       IClasspathEntry[] ents = jp.getResolvedClasspath(true);
       for (IClasspathEntry ent : ents) {
-	 addPath(xw,jp,ent,nest);
+	 addPath(xw,jp,ent,refd);
        }
       IPath op = jp.getOutputLocation();
       if (op != null) {
@@ -1518,7 +1518,7 @@ private void addClassPaths(IJavaProject jp,IvyXmlWriter xw,Set<IProject> done,bo
 
 
 
-private void addPath(IvyXmlWriter xw,IJavaProject jp,IClasspathEntry ent,boolean nest)
+private void addPath(IvyXmlWriter xw,IJavaProject jp,IClasspathEntry ent,boolean refd)
 {
    IPath p = ent.getPath();
    IPath op = ent.getOutputLocation();
@@ -1581,7 +1581,7 @@ private void addPath(IvyXmlWriter xw,IJavaProject jp,IClasspathEntry ent,boolean
 	       File entf4 = new File(entf3,nm1 + ".jmod");
 	       // BedrockPlugin.logD("Add Module path " + entf4);
 	       xw.begin("PATH");
-	       if (nest) xw.field("NESTED",true);
+	       if (refd) xw.field("INDIRECT",true);
 	       xw.field("TYPE","BINARY");
 	       xw.field("MODULE",true);
 	       xw.field("BINARY",entf4.getAbsolutePath());
@@ -1608,11 +1608,12 @@ private void addPath(IvyXmlWriter xw,IJavaProject jp,IClasspathEntry ent,boolean
 
    xw.begin("PATH");
    xw.field("ID",ent.hashCode());
-   if (nest) xw.field("NESTED","TRUE");
+   if (refd) xw.field("INDIRECT","TRUE");
 
    switch (ent.getEntryKind()) {
       case IClasspathEntry.CPE_SOURCE :
 	 xw.field("TYPE","SOURCE");
+         xw.field("SUBDIRS",true);
 	 f3 = f1;
 	 f1 = null;
 	 break;

@@ -27,7 +27,6 @@ package edu.brown.cs.bubbles.bcon;
 
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleContextConfig;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleContextListener;
-import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindow;
 import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.bass.BassFactory;
 import edu.brown.cs.bubbles.buda.BudaBubble;
@@ -221,22 +220,18 @@ private static class ContextHandler implements BaleContextListener {
 
    ContextHandler() { }
 
-   @Override public BudaBubble getHoverBubble(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
-   @Override public String getToolTipHtml(BaleContextConfig cfg) {
-      return null;
-    }
+   
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       if (cfg.getOffset() >= 0) {
-	 menu.add(new ContextAction(cfg));
+         menu.add(new ContextAction(cfg));
        }
     }
 
-   @Override public void noteEditorAdded(BaleWindow win)		{ }
-   @Override public void noteEditorRemoved(BaleWindow win)		{ }
+   
+   
 
 }	// end of inner class ContextHandler
 

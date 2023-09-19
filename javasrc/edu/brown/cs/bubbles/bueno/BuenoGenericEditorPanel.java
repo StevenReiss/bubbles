@@ -56,7 +56,6 @@ import org.w3c.dom.Element;
 import edu.brown.cs.bubbles.board.BoardFileSystemView;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
-import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -77,7 +76,7 @@ class BuenoGenericEditorPanel implements BuenoConstants
 /********************************************************************************/
 
 private BuenoGenericProjectEditor project_editor;
-private JPanel edit_panel;
+private EditPanel edit_panel;
 private Element tab_xml;
 private SwingListSet<BuenoPathEntry> panel_paths;
 private Set<BuenoPathEntry> base_paths;
@@ -132,7 +131,7 @@ JPanel getPanel()
    return edit_panel;
 }
 
-boolean hasChanged()		
+boolean hasChanged()	
 {
    boolean chng = force_update;
    if (base_paths != null) {
@@ -149,31 +148,9 @@ boolean hasChanged()
 
 void doUpdate()
 {
-   for (Element fxml : IvyXml.children(tab_xml,"FIELD")) {
-       String opt = IvyXml.getAttrString(fxml,"OPTION");
-       if (opt == null) continue;
-       String val = project_editor.getOptions().get(opt);
-       if (val == null || val.isEmpty()) continue;
-       if ("1tTyY".indexOf(val.substring(0,1)) >= 0) {
-	  for (Element pxml : IvyXml.children(fxml,"PATH")) {
-	     String lib = IvyXml.getAttrString(pxml,"LIBRARY");
-	     String check = IvyXml.getAttrString(pxml,"CHECK");
-	     if (lib != null) {
-		if (check == null) check = lib;
-		boolean fnd = false;
-		for (BuenoPathEntry pe : base_paths) {
-		   if (pe.getBinaryPath() != null && pe.getBinaryPath().contains(check)) fnd = true;
-		 }
-		if (fnd) continue;
-		String path = BoardSetup.getSetup().getRemoteLibraryPath(lib);
-		FileSystemView fsv = BoardFileSystemView.getFileSystemView();
-		BuenoPathEntry pe = new BuenoPathEntry(fsv.createFileObject(path),PathType.LIBRARY,false);
-		base_paths.add(pe);
-		panel_paths.addElement(pe);
-	      }
-	   }
-	}
-    }
+   // Updates are done as they are found.  This call can do anything else that
+   // is needed
+   if (edit_panel != null) edit_panel.doUpdate();
 }
 
 
@@ -207,19 +184,34 @@ private void createPanel()
 
 
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      Generic panel                                                           */
+/*                                                                              */
+/********************************************************************************/
+
+private abstract class EditPanel extends SwingGridPanel {
+   
+   void doUpdate()                              { }
+   
+}       // end of inner class EditPanel
+
+
+
 /********************************************************************************/
 /*										*/
 /*	Path Panel								*/
 /*										*/
 /********************************************************************************/
 
-private JPanel createPathPanel()
+private EditPanel createPathPanel()
 {
    return new PathPanel();
 }
 
 
-private class PathPanel extends SwingGridPanel implements ActionListener, ListSelectionListener {
+private class PathPanel extends EditPanel implements ActionListener, ListSelectionListener {
 
    private JButton edit_button;
    private JButton delete_button;
@@ -330,26 +322,27 @@ private class NewPathEntryBubble extends BudaBubble implements ActionListener {
       String cmd = evt.getActionCommand();
       File dir = file_chooser.getCurrentDirectory();
       if (dir != null && !dir.equals(last_directory)) {
-	 last_directory = dir;
-	 BoardProperties bp = BoardProperties.getProperties("Bueno");
-	 String dp = dir.getAbsolutePath();
-	 bp.setProperty("Bueno.library.directory",dp);
-	 try {
-	    bp.save();
-	  }
-	 catch (IOException e) { }
+         last_directory = dir;
+         BoardProperties bp = BoardProperties.getProperties("Bueno");
+         String dp = dir.getAbsolutePath();
+         bp.setProperty("Bueno.library.directory",dp);
+         try {
+            bp.save();
+          }
+         catch (IOException e) { }
        }
-
+   
       if (cmd.equals(JFileChooser.APPROVE_SELECTION)) {
-	 closeWindow(this);
-	 for (File f : file_chooser.getSelectedFiles()) {
-	    BuenoPathEntry pe = new BuenoPathEntry(f,PathType.LIBRARY,false);
-	    panel_paths.addElement(pe);
-	    base_paths.add(pe);
-	  }
+         closeWindow(this);
+         boolean subdirs = project_editor.useSubdirectories();
+         for (File f : file_chooser.getSelectedFiles()) {
+            BuenoPathEntry pe = new BuenoPathEntry(f,PathType.LIBRARY,subdirs);
+            panel_paths.addElement(pe);
+            base_paths.add(pe);
+          }
        }
       else if (cmd.equals(JFileChooser.CANCEL_SELECTION)) {
-	 closeWindow(this);
+         closeWindow(this);
        }
     }
 }	// end of inner class NewPathEntryBubble
@@ -414,13 +407,13 @@ private class EditLibraryPathEntryBubble extends BudaBubble implements ActionLis
 /*										*/
 /********************************************************************************/
 
-private JPanel createSourcePanel()
+private EditPanel createSourcePanel()
 {
    return new SourcePanel();
 }
 
 
-private class SourcePanel extends SwingGridPanel implements ActionListener, ListSelectionListener {
+private class SourcePanel extends EditPanel implements ActionListener, ListSelectionListener {
 
    private JButton edit_button;
    private JButton delete_button;
@@ -430,27 +423,27 @@ private class SourcePanel extends SwingGridPanel implements ActionListener, List
       base_paths = project_editor.getSourcePaths();
       panel_paths = new SwingListSet<>(true);
       for (BuenoPathEntry pe : base_paths) {
-	 panel_paths.addElement(pe);
+         panel_paths.addElement(pe);
        }
-
+   
       int y = 0;
       if (IvyXml.getAttrBool(tab_xml,"MULTIPLE")) {
-	 JButton bn = new JButton("New Source Directory");
-	 bn.addActionListener(this);
-	 addGBComponent(bn,1,y++,1,1,0,0);
+         JButton bn = new JButton("New Source Directory");
+         bn.addActionListener(this);
+         addGBComponent(bn,1,y++,1,1,0,0);
        }
       edit_button = new JButton("Edit");
       edit_button.addActionListener(this);
       addGBComponent(edit_button,1,y++,1,1,0,0);
       if (IvyXml.getAttrBool(tab_xml,"MULTIPLE")) {
-	 delete_button = new JButton("Delete");
-	 delete_button.addActionListener(this);
-	 addGBComponent(delete_button,1,y++,1,1,0,0);
+         delete_button = new JButton("Delete");
+         delete_button.addActionListener(this);
+         addGBComponent(delete_button,1,y++,1,1,0,0);
        }
       else delete_button = null;
-
+   
       ++y;
-
+   
       path_display = new JList<>(panel_paths);
       path_display.setVisibleRowCount(10);
       path_display.addListSelectionListener(this);
@@ -527,8 +520,8 @@ private class EditSourcePathEntryBubble extends BudaBubble implements ActionList
       pnl.beginLayout();
       pnl.addBannerLabel("Edit Project Source Entry");
       pnl.addFileField("Directory",for_path.getSourcePath(),JFileChooser.DIRECTORIES_ONLY,null,null);
-      if (IvyXml.getAttrBool(tab_xml,"NEST")) {
-	 pnl.addBoolean("Nested",for_path.isNested(),this);
+      if (IvyXml.getAttrBool(tab_xml,"SUBDIRS")) {
+	 pnl.addBoolean("Include Subdirectories",for_path.isRecursive(),this);
        }
       pattern_panel = new PatternPanel(for_path,source_patterns);
       pnl.addLabellessRawComponent("PATTERNS",pattern_panel,true,true);
@@ -544,9 +537,9 @@ private class EditSourcePathEntryBubble extends BudaBubble implements ActionList
 	 JTextField tf = (JTextField) evt.getSource();
 	 for_path.setSourcePath(tf.getText());
        }
-      else if (cmd.equals("Nested")) {
+      else if (cmd.equals("Include Subdirectories")) {
 	 JCheckBox cbx = (JCheckBox) evt.getSource();
-	 for_path.setNested(cbx.isSelected());
+	 for_path.setUseSubdirs(cbx.isSelected());
        }
       else if (cmd.equals("Close")) {
 	 setVisible(false);
@@ -684,7 +677,7 @@ private class SourcePatternPanel extends SwingGridPanel {
 /*										*/
 /********************************************************************************/
 
-private JPanel createProjectPanel()
+private EditPanel createProjectPanel()
 {
    if (project_editor.getOtherProjects().isEmpty()) return null;
 
@@ -692,7 +685,7 @@ private JPanel createProjectPanel()
 }
 
 
-private class ReferencesPanel extends SwingGridPanel implements ActionListener {
+private class ReferencesPanel extends EditPanel implements ActionListener {
 
 
    ReferencesPanel() {
@@ -723,13 +716,13 @@ private class ReferencesPanel extends SwingGridPanel implements ActionListener {
 /*										*/
 /********************************************************************************/
 
-private JPanel createFieldsPanel()
+private EditPanel createFieldsPanel()
 {
    return new FieldsPanel();
 }
 
 
-private class FieldsPanel extends SwingGridPanel implements ActionListener {
+private class FieldsPanel extends EditPanel implements ActionListener {
 
     private Map<String,Map<String,String>> option_sets;
     private Map<String,Object> cur_values;

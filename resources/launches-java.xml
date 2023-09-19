@@ -2,13 +2,36 @@
 <OPTIONS>
    <OPTION NAME='bubbles.useBanal' VALUE='TRUE' />
    <OPTION NAME='bubbles.useS6' VALUE='TRUE' />
+   <OPTION NAME='bubbles.useFait' VALUE='TRUE' />
+   <OPTION NAME='bubbles.useRose' VALUE='TRUE' />
+   <OPTION NAME='bubbles.useSeede' VALUE='TRUE' />
 </OPTIONS>
+<FIXES>
+   <SYNTAX TYPE='REPLACE' USE='1' ALT='0'>Syntax error on token "{0}", {1} expected</SYNTAX>
+   <SYNTAX TYPE='REPLACE' USE='1' ALT='0'>Syntax error on keyword "{0}"; {1} expected</SYNTAX>
+   <SYNTAX TYPE='INSERT' USE='1' ALT='0'>Syntax error on token "{0}", {1} expected after this token</SYNTAX>
+   <SYNTAX TYPE='BEFORE' USE='1' ALT='0'>Syntax error on token "{0}", {1} expected before this token</SYNTAX>
+   <SYNTAX TYPE='DELETE' ALT='0'>Syntax' error on token "{0}", delete this token</SYNTAX>
+   <SYNTAX TYPE='REPLACE' USE='0'>Syntax error on tokens, they can be merged to form {0}</SYNTAX>
+   <SYNTAX TYPE='REPLACE' USE='0'>Syntax error on tokens, {0} expected instead</SYNTAX>
+   <SYNTAX TYPE='DELETE' ALT='0'>Syntax' error, unexpected {0}</SYNTAX>
+   <SYNTAX TYPE='REPLACE' WITH=';'>Invalid character constant</SYNTAX>
+   <QUOTE WITH="'">Invalid character constant</QUOTE>
+   <QUOTE WITH='"'>String literal is not properly closed by a double-quote</QUOTE>
+   <VISIBILITY USE='0'>Cannot reduce the visibility of the inherited method from {0}</VISIBILITY>
+   <CATCH WITH='*'>Syntax error. insert "Finally" to complete TryStatement</CATCH>
+   <CATCH USE='0'>Unhandled exception type {0}</CATCH>
+   <SPELL IGNORE='T' ANYWHERE='T'>Syntax error</SPELL>
+   <IMPORT IGNORE='T' ANYWHERE='T'>Syntax error</IMPORT>
+   <NEWFIELD USE='0'>The value of the field {0} is not used</NEWFIELD>
+   <RETURN USE='0'>This method must return a result of type {0}</RETURN>
+</FIXES>
 <LAUNCHES>
    <LAUNCH NAME='JAVA' DESCRIPTION='Java Application' DEBUGARGS='T'>
       <ATTRIBUTE NAME='MAIN_TYPE' DESCRIPTION='Start Class' TYPE='CHOICE' EVAL='START' ARG='INCLUDE_LIBRARIES' />
       <ATTRIBUTE NAME='STOP_IN_MAIN' DESCRIPTION='Stop in Main' TYPE='BOOLEAN' />
       <ATTRIBUTE NAME='INCLUDE_LIBRARIES' DESCRIPTION='Include Library Main Methods' TYPE='BOOLEAN' />
-      <ATTRIBUTE NAME='PROGRAM_ARGUMENTS' DESCRIPTION='Arguments' TYPE='STRING' ROWF='2' />
+      <ATTRIBUTE NAME='PROGRAM_ARGUMENTS' DESCRIPTION='Arguments' TYPE='STRING' ROWS='2' />
       <ATTRIBUTE NAME='VM_ARGUMENTS' DESCRIPTION='VM Arguments' TYPE='STRING' />
    </LAUNCH>
    <LAUNCH NAME='JAVA_TEST' DESCRIPTION='JUnit' DEBUGARGS='T' TESTCASE='T'>
@@ -25,7 +48,7 @@
       <ATTRIBUTE NAME='REMOTE_PORT' DESCRIPTION='Remote Port' TYPE='INTEGER' MIN='1000' MAX='99999' />
    </LAUNCH>
 </LAUNCHES>
-<PROJECT LANGUAGE='Java'>
+<PROJECT LANGUAGE='Java' SUBDIRS='TRUE'>
    <CREATE>
       <TYPE NAME='NEW' DESCRIPTION='Completely New Project' DEFAULT='TRUE' RESULT='JAVA'>
 	 <FIELD NAME='PACKAGE_NAME' DESCRIPTION='Package Name' TYPE='STRING'
@@ -131,7 +154,7 @@
      <KEYWORD NAME="class" TYPE="CLASS" />
      <KEYWORD NAME="const" TYPE="KEYWORD" />
      <KEYWORD NAME="continue" TYPE="KEYWORD" />
-     <KEYWORD NAME="default" TYPE="DEFAULT" />
+     <KEYWORD NAME="default" TYPE="DEFAULT" />                                                                 4
      <KEYWORD NAME="do" TYPE="DO" />
      <KEYWORD NAME="double" TYPE="TYPEKEY" />
      <KEYWORD NAME="else" TYPE="ELSE" />

@@ -384,7 +384,7 @@ void editProject(Element pxml)
       else {
          boolean usr = true;
          boolean exc = false;
-         boolean nest = IvyXml.getAttrBool(pelt,"NEST");
+         boolean nest = IvyXml.getAttrBool(pelt,"SUBDIRS");
          String typ = IvyXml.getAttrString(pelt,"TYPE");
          if (typ != null) {
             switch (typ) {

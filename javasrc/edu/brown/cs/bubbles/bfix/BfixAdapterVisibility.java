@@ -29,13 +29,15 @@ import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.w3c.dom.Element;
 
 class BfixAdapterVisibility extends BfixAdapter implements BfixConstants
 {
@@ -47,11 +49,9 @@ class BfixAdapterVisibility extends BfixAdapter implements BfixConstants
 /*										*/
 /********************************************************************************/
 
-private static Pattern		method_visibility_pattern;
+private static List<BfixErrorPattern> visibility_patterns;
 
-static {
-   method_visibility_pattern = Pattern.compile("Cannot reduce the visibility of the inherited method from ([A-Za-z0-9_.$]+)");
-}
+
 
 /********************************************************************************/
 /*										*/
@@ -62,6 +62,15 @@ static {
 BfixAdapterVisibility()
 {
    super("Fix reduced visibility issues");
+   
+   if (visibility_patterns == null) {
+      visibility_patterns = new ArrayList<>();
+      Element xml = BumpClient.getBump().getLanguageData();
+      Element fxml = IvyXml.getChild(xml,"FIXES");
+      for (Element cxml : IvyXml.children(fxml,"VISIBILITY")) {
+         visibility_patterns.add(new BfixErrorPattern(cxml));
+       }
+    }
 }
 
 
@@ -93,9 +102,11 @@ BfixAdapterVisibility()
 private String getSuperClass(BfixCorrector corr,BumpProblem bp)
 {
    if (bp.getErrorType() != BumpErrorType.ERROR) return null;
-   Matcher m = method_visibility_pattern.matcher(bp.getMessage());
-   if (!m.matches()) return null;
-   return m.group(1);
+   for (BfixErrorPattern pat : visibility_patterns) {
+      String rslt = pat.getMatchResult(bp.getMessage());
+      if (rslt != null) return rslt;
+    }
+  return null;
 }
 
 

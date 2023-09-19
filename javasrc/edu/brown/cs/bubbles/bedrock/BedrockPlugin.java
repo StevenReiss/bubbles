@@ -929,6 +929,8 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrString(xml,"FILE"),IvyXml.getAttrString(xml,"ID"),
 	       xml,xw);
 	 break;
+      case "HOVERDATA" :
+         break;
       case "ENTER" :
 	 BedrockApplication.enterApplication();
 	 ++num_clients;

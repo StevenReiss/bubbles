@@ -506,23 +506,23 @@ private class Hoverer extends BudaHover {
 
    @Override public void handleHover(MouseEvent e) {
       if (!BALE_PROPERTIES.getBoolean(BALE_PREVIEW_ENABLE)) return;
-
+      
       preview_bubble = editor_pane.getHoverBubble(e);
-
+      
       if (preview_bubble != null && editor_pane.isShowing()) {
-	 Component c0 = (Component) e.getSource();
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(c0);
-	 if (bba == null) return;
-	 try {
-	    Point pt = SwingUtilities.convertPoint(c0,e.getPoint(),bba);
-	    createPreview(preview_bubble, pt.x, pt.y);
-	  }
-	 catch (Throwable t) {
-	    // we can get here is the bubble went away in the interim
-	  }
-      }
+         Component c0 = (Component) e.getSource();
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(c0);
+         if (bba == null) return;
+         try {
+            Point pt = SwingUtilities.convertPoint(c0,e.getPoint(),bba);
+            createPreview(preview_bubble, pt.x, pt.y);
+          }
+         catch (Throwable t) {
+            // we can get here is the bubble went away in the interim
+          }
+       }
     }
-
+   
    @Override public void endHover(MouseEvent e) {
       if (preview_bubble != null){
 	 preview_bubble.setVisible(false);

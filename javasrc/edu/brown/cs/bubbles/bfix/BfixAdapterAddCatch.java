@@ -27,12 +27,14 @@ package edu.brown.cs.bubbles.bfix;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpClient;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.w3c.dom.Element;
 
 
 
@@ -47,13 +49,7 @@ class BfixAdapterAddCatch extends BfixAdapter implements BfixConstants
 /*                                                                              */
 /********************************************************************************/
 
-private static Pattern          empty_throw_pattern;
-private static Pattern          missing_catch_pattern;
-
-static {
-   empty_throw_pattern = Pattern.compile("Syntax error. insert \"Finally\" to complete TryStatement");
-   missing_catch_pattern = Pattern.compile("Unhandled exception type ([A-Za-z0-9_$.]+)");
-}
+private static List<BfixErrorPattern>  catch_patterns;
 
 
 
@@ -66,6 +62,15 @@ static {
 BfixAdapterAddCatch()
 {
    super("Insert Catch Clauses");
+   
+   if (catch_patterns == null) {
+      catch_patterns = new ArrayList<>();
+      Element xml = BumpClient.getBump().getLanguageData();
+      Element fxml = IvyXml.getChild(xml,"FIXES");
+      for (Element cxml : IvyXml.children(fxml,"CATCH")) {
+         catch_patterns.add(new BfixErrorPattern(cxml));
+       }
+    }
 }
 
 
@@ -101,15 +106,13 @@ BfixAdapterAddCatch()
 private String getCatchType(BfixCorrector corr,BumpProblem bp)
 {
    if (bp.getErrorType() != BumpErrorType.ERROR) return null;
-   Matcher m = empty_throw_pattern.matcher(bp.getMessage());
-   if (m.find()) return "*";
    
-   m = missing_catch_pattern.matcher(bp.getMessage());
-   if (!m.matches()) return null;
+   for (BfixErrorPattern pat : catch_patterns) {
+      String rslt = pat.getMatchResult(bp.getMessage());
+      if (rslt != null) return rslt;
+    }
    
-   String rtyp = m.group(1);
-   
-   return rtyp;
+   return null;
 }
 
 
@@ -199,10 +202,12 @@ private static class CatchFixer extends BfixFixer {
          probs = bc.getPrivateProblems(filename,pid);
          for (BumpProblem bp : probs) {
             if (bp.getStart() >= spos && bp.getStart() <= inspos) {
-               Matcher m = missing_catch_pattern.matcher(bp.getMessage());
-               if (m.matches()) {
-                  for_type = m.group(1);
-                  return;
+               for (BfixErrorPattern pat : catch_patterns) {
+                  String rslt = pat.getMatchResult(bp.getMessage());
+                  if (rslt != null && !rslt.equals("*")) {
+                     for_type = rslt;
+                     return;
+                   }
                 }
              }
           }
