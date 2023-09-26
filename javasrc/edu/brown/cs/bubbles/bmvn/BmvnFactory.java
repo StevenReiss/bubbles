@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,6 +61,8 @@ private Map<String,BmvnProject> known_projects;
 private List<BmvnTool>          available_tools;
 
 private static BmvnFactory      the_factory = null;
+
+
 
 
 
@@ -139,26 +142,46 @@ private class ModelSetup implements Runnable {
       for (Element pe : IvyXml.children(pelt,"PROJECT")) {
          String pnm = IvyXml.getAttrString(pe,"NAME");
          Set<File> files = new HashSet<>();
+         Set<File> libs = new LinkedHashSet<>();
          Element pdef = bc.getProjectData(pnm);
          Element cxml = IvyXml.getChild(pdef,"RAWPATH");
          if (cxml == null) cxml = pdef;
          for (Element e : IvyXml.children(cxml,"PATH")) {
             String typ = IvyXml.getAttrString(e,"TYPE");
-            if (typ == null || !typ.equals("SOURCE")) continue;
-            String src = IvyXml.getTextElement(e,"SOURCE");
-            if (src == null) continue;
-            File f = new File(src);
-            while (f.exists() && f.isDirectory() && f.canWrite()) {
-               boolean fnd = false;
-               for (BmvnTool tool : available_tools) {
-                  fnd |= addFiles(tool,f,true,files);
-                }
-               if (fnd) break;
-               f = f.getParentFile();
+            if (typ == null) continue;
+            switch (typ) {
+               case "SOURCE" :
+                  String src = IvyXml.getTextElement(e,"SOURCE");
+                  if (src != null) {
+                     File f = new File(src);
+                     while (f.exists() && f.isDirectory() && f.canWrite()) {
+                        boolean fnd = false;
+                        for (BmvnTool tool : available_tools) {
+                           fnd |= addFiles(tool,f,true,files);
+                         }
+                        if (fnd) break;
+                        f = f.getParentFile();
+                      }
+                   }
+                  break;
+               case "LIBRARY" :
+                  String lib = IvyXml.getTextElement(e,"BINARY");
+                  if (lib != null) {
+                     File flib = new File(lib);
+                     if (flib.exists() && flib.canRead()) {
+                        flib = IvyFile.getCanonical(flib);
+                        libs.add(flib);
+                      }
+                   }
+                  break;
+               default :
+               case "BINARY" :
+                  break;
              }
+           
           }
          if (files.isEmpty()) continue;
-         BmvnProject bp = new BmvnProject(pnm,files);
+         BmvnProject bp = new BmvnProject(pnm,files,libs);
          known_projects.put(pnm,bp);
        }
     }

@@ -440,3 +440,7 @@ Bqst.Background 	:	white
 
 
 Bueno.project.editor.background : lightgray
+
+
+Bmvn.status.top 	: lightgray
+Bmvn.status.bottom	: white

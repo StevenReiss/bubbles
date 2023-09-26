@@ -215,6 +215,7 @@ Bddt.ConfigBottomColor	:	0xff000000
 Batt.BarType.STOPPED	:	0xffcaab00
 Bucs.TestCaseFailed	:	0xffffdede
 Bucs.SolutionTopColor	:	0xffc09800
+Bmvn.status.top	:	0xff9f9f9f
 Bwiz.PanelOverviewColor	:	0xff6c9900
 Bcon.class.initializer.color	:	0xffe3bb00
 Bale.editor.bottom.color	:	0xff00a2a2
@@ -260,6 +261,7 @@ Bale.readonly.background.top	:	0xff007777
 Buda.topbar.color	:	0xff78ddff
 Bddt.ThreadSelectionBackground	:	0xff000000
 Bale.attr.typeid.foreground	:	0xfff3f2ff
+Bmvn.status.bottom	:	0xff000000
 Bale.error.background	:	0xfff80000
 Bddt.ExecutionAnnotation.color	:	0x4000a900
 Bddt.attr.stdout.foreground	:	0xff000000

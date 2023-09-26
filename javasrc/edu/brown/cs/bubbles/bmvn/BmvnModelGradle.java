@@ -23,13 +23,19 @@
 package edu.brown.cs.bubbles.bmvn;
 
 import java.awt.Point;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.ivy.exec.IvyExec;
 
 
 class BmvnModelGradle extends BmvnModel
@@ -42,11 +48,23 @@ class BmvnModelGradle extends BmvnModel
 /*                                                                              */
 /********************************************************************************/
 
+private static List<String> gradle_commands;
+
+
 private static final String [] GRADLE_COMMANDS = {
-   "build", "clean", "jar", "publish"
+   "build", "clean", "jar", "publish", "test", "check", "distZip"
 };
 
-private static List<String> gradle_commands;
+private static final Set<String> gradle_uses;
+
+static {
+   gradle_uses = new HashSet<>();
+   for (String s : GRADLE_COMMANDS) {
+      gradle_uses.add(s);
+    }
+   // possibly add commands from properties file
+}
+
 
 
 
@@ -59,12 +77,56 @@ private static List<String> gradle_commands;
 BmvnModelGradle(BmvnProject proj,File grad)
 {
    super(proj,grad,"Gradle");
+  
+   gradle_commands = new ArrayList<>();
    
+   setupTasks();
    // might want to run gradle tasks to get list of available tasks
    // then restrict to viable subset using GRADLE_COMMANDS
-   gradle_commands = new ArrayList<>();
    for (String s : GRADLE_COMMANDS) {
       gradle_commands.add(s);
+    }
+}
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Find appropriate tasks                                                  */
+/*                                                                              */
+/********************************************************************************/
+
+private void setupTasks() 
+{
+   SetupTasks st = new SetupTasks();
+   st.start();
+}
+
+
+private class SetupTasks extends Thread {
+
+   SetupTasks() {
+      super("Setup Gradle for " + getFile().getParentFile().getName());
+    }
+   
+   @Override public void run() {
+      
+      File wd = getFile().getParentFile();
+      try {
+         IvyExec exec = new IvyExec("gradle tasks",wd,IvyExec.READ_OUTPUT);
+         BufferedReader br = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+         for ( ; ; ) {
+            String ln = br.readLine();
+            if (ln == null) break;
+            int idx = ln.indexOf(" - ");
+            if (idx < 0) continue;
+            String cmd = ln.substring(0,idx);
+            if (gradle_uses.contains(cmd)) gradle_commands.add(cmd);
+          }
+         br.close();
+         exec.waitFor();
+       }
+      catch (IOException e) { }
     }
 }
 
@@ -83,6 +145,8 @@ BmvnModelGradle(BmvnProject proj,File grad)
    for (String s : gradle_commands) {
       rslt.add(new GradleCommand(s,relbbl,where));
     }
+   
+   if (rslt.isEmpty()) return null;
    
    return rslt;
 }
@@ -105,8 +169,9 @@ private class GradleCommand extends AbstractAction implements BmvnCommand {
    @Override public BmvnModel getModel()        { return BmvnModelGradle.this; }
    
    @Override public void execute() { 
-      //in wd of the model file, execute "gradle <goal>"
-      // put up a bubble if there are errors/warnings to display
+      File wd = getFile().getParentFile();
+      String cmd = "mvn " + gradle_task;
+      runCommand(cmd,wd,ExecMode.USE_STDOUT_STDERR,relative_bubble,relative_point);
     }
    
 }       // end of inner class MavenCommand

@@ -155,10 +155,7 @@ private class AntCommand extends AbstractAction implements BmvnCommand {
    @Override public void execute() { 
       File wd = getFile().getParentFile();
       String cmd = "ant " + ant_goal;
-      
-      // in wd of the model file, execute "ant <goal>"
-      // put up a bubble if there are errors/warnings to display
-      // the latter should be in superclass
+      runCommand(cmd,wd,ExecMode.USE_STDERR,relative_bubble,relative_point);
     }
    
 }       // end of inner class AntCommand

@@ -148,7 +148,7 @@ void addButtons(BudaBubble relbbl,Point where,JPopupMenu menu)
     }
    
    List<BmvnCommand> cmds = getCommands(relbbl,where);
-   if (cmds != null && cmds != null) {
+   if (cmds != null && !cmds.isEmpty()) {
       JMenu menu2 = new JMenu("Execute " + model_name + "...");
       for (BmvnCommand cmd : cmds) {
          cmd.putValue(Action.NAME,cmd.getName());
@@ -326,8 +326,11 @@ private class CommandRunner implements Runnable {
             for ( ; ; ) {
                String ln = br.readLine();
                if (ln == null) break;
-               buf.append(ln);
-               buf.append("\n");
+               ln = filterOutputLine(ln);
+               if (ln != null) {
+                  buf.append(ln);
+                  buf.append("\n");
+                }
              }
             rslt = buf.toString();
           }
@@ -347,8 +350,8 @@ private class CommandRunner implements Runnable {
       BeamNoteBubble bb = bf.createNoteBubble(show_result);
       if (bb == null) return;
       bb.setEditable(false);
-      bb.setNoteColor(BoardColors.getColor("Bmvn.Status.Top"),
-            BoardColors.getColor("Bmvn.Status.Bottom"));
+      bb.setNoteColor(BoardColors.getColor("Bmvn.status.top"),
+            BoardColors.getColor("Bmvn.status.bottom"));
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(relative_bubble);
       if (bba != null) {
          bba.addBubble(bb,relative_bubble,relative_point,
@@ -360,6 +363,11 @@ private class CommandRunner implements Runnable {
 
 
 
+
+protected String filterOutputLine(String line)
+{
+   return line;
+}
 
 
 protected String filterCommandOutput(int sts,String cnts)

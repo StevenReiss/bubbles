@@ -25,12 +25,18 @@ package edu.brown.cs.bubbles.bmvn;
 import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.swing.JPopupMenu;
 
+import org.w3c.dom.Element;
+
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.bubbles.bump.BumpClient;
+import edu.brown.cs.ivy.file.IvyFile;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 class BmvnProject implements BmvnConstants
 {
@@ -42,8 +48,10 @@ class BmvnProject implements BmvnConstants
 /*                                                                              */
 /********************************************************************************/
 
+private String project_name;
 private Set<File> basis_files;
 private List<BmvnModel> project_models;
+private Set<File> library_files;
 
 
 /********************************************************************************/
@@ -52,9 +60,11 @@ private List<BmvnModel> project_models;
 /*                                                                              */
 /********************************************************************************/
 
-BmvnProject(String name,Set<File> files)
+BmvnProject(String name,Set<File> files,Set<File> libs)
 {
+   project_name = name;
    basis_files = files;
+   library_files = libs;
    project_models = new ArrayList<>();
    for (File f : basis_files) {
       for (BmvnTool tool : BmvnTool.values()) {
@@ -81,6 +91,59 @@ BmvnProject(String name,Set<File> files)
        }
     }
 }
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+Set<File> getLibraries()                { return library_files; }
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Maintain library files                                                  */
+/*                                                                              */
+/********************************************************************************/
+
+protected void updateLibraryFiles()
+{
+   BumpClient bc = BumpClient.getBump();
+   Element pdef = bc.getProjectData(project_name);
+   Element cxml = IvyXml.getChild(pdef,"RAWPATH");
+   if (cxml == null) cxml = pdef;
+   
+   Set<File> libs = new LinkedHashSet<>();
+   
+   for (Element e : IvyXml.children(cxml,"PATH")) {
+      String typ = IvyXml.getAttrString(e,"TYPE");
+      if (typ == null) continue; 
+      switch (typ) {
+         case "LIBRARY" :
+            String lib = IvyXml.getTextElement(e,"BINARY");
+            if (lib != null) {
+               File flib = new File(lib);
+               if (flib.exists() && flib.canRead()) {
+                  flib = IvyFile.getCanonical(flib); 
+                  libs.add(flib);
+                }
+             }
+            break;
+         default :
+         case "BINARY" :
+         case "SOURCE" :
+            break;
+       }
+      
+    }
+   
+   library_files = libs;
+}
+
 
 
 /********************************************************************************/

@@ -27,7 +27,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 
@@ -38,6 +40,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.ivy.file.IvyFile;
 
 class BmvnModelMaven extends BmvnModel
 {
@@ -50,8 +53,6 @@ class BmvnModelMaven extends BmvnModel
 /********************************************************************************/
 
 private Model   maven_model;
-
-private static final String [] MODEL_FILES = { "pom.xml" };
 
 private static final String [] MAVEN_COMMANDS = {
    "clean",
@@ -112,6 +113,30 @@ BmvnModelMaven(BmvnProject proj,File pom)
 
 @Override void doCheckLibraries(BudaBubble bbl,Point pt)
 {
+   Set<File> origlibs = getProject().getLibraries();
+   Set<File> found = new LinkedHashSet<>();
+   Set<File> added = new LinkedHashSet<>();
+   Set<File> removed = new LinkedHashSet<>();
+  
+   for (Dependency dep : maven_model.getDependencies()) {
+      System.err.println("DEPEND " + dep.getArtifactId() + " " + dep.getClassifier() + " " +
+            dep.getGroupId() + " " + dep.getManagementKey() + " " + dep.getOptional() + " " +
+            dep.getScope() + " " + dep.getSystemPath() + " " + dep.getType() + " " +
+            dep.getVersion() + " " + dep.isOptional() + " " + dep);
+      if (!"jar".equals(dep.getType())) continue;
+      String jname = dep.getSystemPath();
+      if (jname == null) continue;
+      File jfil = new File(jname);
+      if (!jfil.exists() || !jfil.canRead()) continue;
+      jfil = IvyFile.getCanonical(jfil);
+      if (origlibs.contains(jfil)) {
+         found.add(jfil);
+       }
+      else {
+         
+       }
+         
+    }
    // get class path
    // for each dependency
    //     find on class path
@@ -195,11 +220,19 @@ private class MavenCommand extends AbstractAction implements BmvnCommand {
    @Override public BmvnModel getModel()        { return BmvnModelMaven.this; }
    
    @Override public void execute() { 
-      //in wd of the model file, execute "mvn <goal>"
-      // put up a bubble if there are errors/warnings to display
+      File wd = getFile().getParentFile();
+      String cmd = "mvn " + maven_goal;
+      runCommand(cmd,wd,ExecMode.USE_STDOUT_STDERR,relative_bubble,relative_point);
     }
    
 }       // end of inner class MavenCommand
+
+
+@Override protected String filterOutputLine(String ln)
+{
+   if (ln.startsWith("[ERROR]")) return ln.substring(8);
+   else return null;   
+}
 
 
 }       // end of class BmvnMavenModel
