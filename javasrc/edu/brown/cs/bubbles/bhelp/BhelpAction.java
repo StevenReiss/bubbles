@@ -134,6 +134,7 @@ static PauseAction speechToPause(BhelpAction ba)
 
 private static double	speed_delta = 1.0;
 private static String	native_command = null;
+private static LocalMaryInterface speech_synth = null;
 
 private final static double	MAC_DELTA = 2.0;
 
@@ -159,6 +160,46 @@ static {
 
 protected BhelpAction(Element xml)
 {
+}
+
+
+
+static void setup()
+{
+   SynthSetup ss = new SynthSetup();
+   ss.start();
+}
+
+
+
+private static class SynthSetup extends Thread {
+   
+   SynthSetup() {
+      super("Setup Speech Synthesizer");
+    }
+   
+   @Override public void run() {
+      try {
+         if (speech_synth == null) {
+            BoardSetup bs = BoardSetup.getSetup();
+            String marybase = bs.getLibraryPath("marytts");
+            String jver = System.getProperty("java.version");
+            if (!jver.startsWith("1.")) {
+               // this gets around a bug in mary checking for java version
+               System.setProperty("java.version","1.9");
+             }
+            else jver = null;
+            System.setProperty("mary.base",marybase);
+            System.setProperty("de.phonemiser.logunknown","false");
+            speech_synth = new LocalMaryInterface();
+            if (jver != null) System.setProperty("java.version",jver);
+          }
+       }
+      catch (Throwable e) {
+         BoardLog.logE("BHELP","Problem setting up speech synthesizer",e);
+         speech_synth = null;
+       }
+    }
 }
 
 
@@ -933,40 +974,17 @@ private static class MarySpeechAction extends BhelpAction {
    private String speech_text;
    private AudioPlayer audio_player = null;
 
-   private static LocalMaryInterface speech_synth = null;
-
    MarySpeechAction(Element xml) {
       super(xml);
       wait_for = IvyXml.getAttrBool(xml,"WAIT");
       equiv_pause = IvyXml.getAttrInt(xml,"PAUSEFOR",1);
       speech_text = IvyXml.getTextElement(xml,"TEXT");
       if (speech_text != null) {
-	 speech_text = speech_text.replace("\n"," ");
-	 speech_text = speech_text.replace("\t"," ");
-	 while (speech_text.contains("  ")) {
-	    speech_text = speech_text.replace("  "," ");
-	  }
-       }
-
-      try {
-	 if (speech_synth == null) {
-	    BoardSetup bs = BoardSetup.getSetup();
-	    String marybase = bs.getLibraryPath("marytts");
-	    String jver = System.getProperty("java.version");
-	    if (!jver.startsWith("1.")) {
-	       // this gets around a bug in mary checking for java version
-	       System.setProperty("java.version","1.9");
-	     }
-	    else jver = null;
-	    System.setProperty("mary.base",marybase);
-	    System.setProperty("de.phonemiser.logunknown","false");
-	    speech_synth = new LocalMaryInterface();
-	    if (jver != null) System.setProperty("java.version",jver);
-	  }
-       }
-      catch (Exception e) {
-	 BoardLog.logE("BHELP","Problem setting up speech synthesizer",e);
-	 speech_synth = null;
+         speech_text = speech_text.replace("\n"," ");
+         speech_text = speech_text.replace("\t"," ");
+         while (speech_text.contains("  ")) {
+            speech_text = speech_text.replace("  "," ");
+          }
        }
     }
 

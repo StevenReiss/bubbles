@@ -82,6 +82,8 @@ private BhelpFactory(BudaRoot br)
 {
    buda_root = br;
    demo_map = new HashMap<String,BhelpDemo>();
+   BhelpAction.setup();
+   
    InputStream ins = BoardProperties.getResourceFile(HELP_RESOURCE);
    if (ins != null) {
       Element xml = IvyXml.loadXmlFromStream(ins);

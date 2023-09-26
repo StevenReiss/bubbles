@@ -29,6 +29,7 @@
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bddt" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bted" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/batt" />
+      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bmvn" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bedu" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bbook" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bdyn" />
@@ -81,6 +82,7 @@
 	 <package name='edu.brown.cs.bubbles.bema' />
 	 <package name='edu.brown.cs.bubbles.bgta' />
 	 <package name='edu.brown.cs.bubbles.bhelp' />
+	 <package name='edu.brown.cs.bubbles.bmvn' />
 	 <package name='edu.brown.cs.bubbles.bnote' />
 	 <package name='edu.brown.cs.bubbles.board' />
 	 <package name='edu.brown.cs.bubbles.bopp' />

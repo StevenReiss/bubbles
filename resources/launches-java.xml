@@ -5,6 +5,7 @@
    <OPTION NAME='bubbles.useFait' VALUE='TRUE' />
    <OPTION NAME='bubbles.useRose' VALUE='TRUE' />
    <OPTION NAME='bubbles.useSeede' VALUE='TRUE' />
+   <OPTION NAME='bubbles.useMaven' VALUE='TRUE' />
 </OPTIONS>
 <FIXES>
    <SYNTAX TYPE='REPLACE' USE='1' ALT='0'>Syntax error on token "{0}", {1} expected</SYNTAX>
@@ -122,7 +123,7 @@
       <BUTTON TYPE='FORMAT' />
    </BUTTONS>
    <VALIDATION>
-      <PACKAGE>[A-Za-z_]\\w*(\\.[A-Za-z_]\\w*)*</PACKAGE>
+     <PACKAGE>[A-Za-z_]\w*(\.[A-Za-z_]\w*)*</PACKAGE>
    </VALIDATION>
    <WIZARDS SEPARATE_TYPES='TRUE'>
       <BUTTON TYPE='NEWCLASS' />
@@ -130,6 +131,7 @@
       <BUTTON TYPE='NEWENUM' />
       <BUTTON TYPE='NEWASSIGNMENT' />
    </WIZARDS>
+   <LIBRARIES MAVEN='T' GRADLE='T' ANT='T' />
 </PROJECT>
 <EDITING>
    <HINTER>edu.brown.cs.bubbles.bale.BaleJavaHinter</HINTER>

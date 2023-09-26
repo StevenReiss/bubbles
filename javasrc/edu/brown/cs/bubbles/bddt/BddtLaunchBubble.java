@@ -567,6 +567,7 @@ private void recomputeStarts()
 	 if (tc.getDocument() == doc) {
 	    String val = tc.getText();
 	    String itm = component_items.get(cmp);
+            if (edit_config == null) edit_config = launch_config;
 	    if (edit_config != null) edit_config = edit_config.setAttribute(itm,val);
             fnd = true;
 	    break;

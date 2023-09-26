@@ -145,6 +145,8 @@ BwizNewPackageWizard(BuenoLocation loc)
    super.updateSignature();
 }
 
+
+
 /********************************************************************************/
 /*                                                                              */
 /*      Package creator                                                         */

@@ -85,9 +85,12 @@ public BuenoValidator(BuenoValidatorCallback cb,BuenoProperties known,
       Element vdata = IvyXml.getChild(pdata,"VALIDATION");
       String pat = IvyXml.getTextElement(vdata,"PACKAGE");
       if (pat == null) pat = "[A-Za-z_]\\w*(\\.[A-Za-z_]\\w*)*";
+      else pat = pat.trim();
       package_pattern = Pattern.compile(pat);
       pat = IvyXml.getTextElement(vdata,"MODULE");
-      if (pat == null) pat = "[A-Za-z_]\\w*";
+      if (pat == null){
+         pat = "[A-Za-z_]\\w*";
+       }
       module_pattern = Pattern.compile(pat);
     }
 
@@ -418,7 +421,9 @@ private boolean checkPackageParsing()
    if (pkg == null || pkg.length() == 0) return false;
    
    Matcher m = package_pattern.matcher(pkg);
-   if (!m.matches()) return false;
+   if (!m.matches()){
+      return false;
+    }
 
    String sgn = property_set.getStringProperty(BuenoKey.KEY_SIGNATURE);
    if (sgn != null) {

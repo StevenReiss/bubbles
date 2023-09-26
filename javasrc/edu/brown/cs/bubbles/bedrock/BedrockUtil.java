@@ -1877,8 +1877,8 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 	  }
 	 else if (typ.equals("Ljava/lang/String;") || typ.equals("java.lang.String")) {
 	    xw.field("KIND","STRING");
-            if (txt.contains("\\")) {
-               String txt0 = IvyFormat.getLiteralValue(txt);
+            if (txt.contains("\\U") || txt.contains("\\u")) {
+               String txt0 = IvyFormat.getRawLiteralValue(txt);
                BedrockPlugin.logD("Convert string " + txt + " " + txt0);
                txt = txt0;
              }

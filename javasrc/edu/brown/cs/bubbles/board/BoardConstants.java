@@ -72,14 +72,14 @@ enum BoardHighlightStyle {
 
 enum BoardLanguage {
    JAVA("java","Eclipse",".bubbles","bubbles","bedrock","-java",null,true,
-         ".java.","bubbles.jar","Eclipse Workspace"),
+	 ".java.","bubbles.jar","Eclipse Workspace"),
    JAVA_IDEA("idea","IDEA",".bibbles","bibbles","bubjet","-idea",null,true
-         ,".java.","bibbles.jar","Idea Project Directory"),
+	 ,".java.","bibbles.jar","Idea Project Directory"),
    JS("js","JavaScript",".nobbles","nobbles","nobase","-js","-Xmx1536m",false,
-         ".js.","nobbles.jar","Node/JS Workspace"),
+	 ".js.","nobbles.jar","Node/JS Workspace"),
    DART("dart","Dart",".dartbubbles","dartbub","dartbase","-dart",null,false,
-         ".dart.","dartbubbles.jar","Dart Workspace");
-   
+	 ".dart.","dartbubbles.jar","Dart Workspace");
+
    private String language_name;
    private String language_title;
    private String property_directory;
@@ -91,9 +91,9 @@ enum BoardLanguage {
    private Set<String> language_extensions;
    private String jar_runner;
    private String workspace_label;
-   
+
    BoardLanguage(String name,String ttl,String dir,String log,String backlog,String arg,
-         String vm,boolean showclass,String exts,String jar,String ws) {
+	 String vm,boolean showclass,String exts,String jar,String ws) {
       language_name = name;
       language_title = ttl;
       property_directory = dir;
@@ -105,28 +105,28 @@ enum BoardLanguage {
       language_extensions = new HashSet<>();
       StringTokenizer tok = new StringTokenizer(exts,".");
       while (tok.hasMoreTokens()) {
-         language_extensions.add("." + tok.nextToken());
+	 language_extensions.add("." + tok.nextToken());
        }
       jar_runner = jar;
       workspace_label = ws;
     }
 
-   public String getName()                      { return language_name; }
-   public String getTitle()                     { return language_title; }
-   public String getLogName()                   { return log_name; }
-   public String getBackendLogName()            { return backend_log_name; }
-   public String getBubblesArg()                { return bubbles_arg; }
-   public String getVMOptions()                 { return vm_options; }
-   public boolean getShowClassFile()            { return show_class_file; }
-   public String getJarRunner()                 { return jar_runner; }
-   public String getWorkspaceLabel()            { return workspace_label; }
-   
+   public String getName()			{ return language_name; }
+   public String getTitle()			{ return language_title; }
+   public String getLogName()			{ return log_name; }
+   public String getBackendLogName()		{ return backend_log_name; }
+   public String getBubblesArg()		{ return bubbles_arg; }
+   public String getVMOptions() 		{ return vm_options; }
+   public boolean getShowClassFile()		{ return show_class_file; }
+   public String getJarRunner() 		{ return jar_runner; }
+   public String getWorkspaceLabel()		{ return workspace_label; }
+
    public File getPropertyDirectory() {
       File f1 = new File(System.getProperty("user.home"));
       File f2 = new File(f1,property_directory);
       return f2;
     }
-   
+
    public boolean isSourceFile(File file) {
       return isSourceFile(file.getName());
     }
@@ -137,9 +137,9 @@ enum BoardLanguage {
       String ext = name.substring(idx);
       if (language_extensions.contains(ext)) return true;
       return false;
-    }              
-   
-}       // end of inner enum BoardLanguage
+    }		
+
+}	// end of inner enum BoardLanguage
 
 
 
@@ -515,7 +515,6 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
    "LiLaConfiguration.ini",
    "annotations.jar",
    "cofoja.jar",
-   "pydev.jar",
    "jsoup.jar",
    "commons-compress.jar",
 /*********************

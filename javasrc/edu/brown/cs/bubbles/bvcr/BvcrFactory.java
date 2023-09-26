@@ -128,6 +128,7 @@ public static void initialize(BudaRoot br)
 }
 
 
+
 private void setupCallbacks()
 {
    BvcrContexter bc = new BvcrContexter();
@@ -352,10 +353,6 @@ private static class BvcrStarter implements Runnable {
 
 private class BvcrContexter implements BaleContextListener, BassConstants.BassPopupHandler {
 
-   
-
-   
-
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       // only if bvcr is running (i.e. under version management)
       menu.add(new HistoryAction(cfg));
@@ -363,43 +360,43 @@ private class BvcrContexter implements BaleContextListener, BassConstants.BassPo
     }
 
    @Override public void addButtons(BudaBubble bb,Point where,JPopupMenu menu,String name,
-		BassName forname) {
+        	BassName forname) {
       BumpLocation loc = null;
       String proj = null;
       if (forname == null) {
-	 int idx = name.indexOf(":");
-	 if (idx > 0) {
-	    proj = name.substring(0,idx);
-	    name = name.substring(idx+1);
-	 }
-	 List<BumpLocation> locs = null;
-	 if (name.length() > 0)
-	    locs = BumpClient.getBump().findClassDefinition(proj,name);
-	 if (locs != null && locs.size() > 0) {
-	    loc = locs.get(0);
-	 }
+         int idx = name.indexOf(":");
+         if (idx > 0) {
+            proj = name.substring(0,idx);
+            name = name.substring(idx+1);
+         }
+         List<BumpLocation> locs = null;
+         if (name.length() > 0)
+            locs = BumpClient.getBump().findClassDefinition(proj,name);
+         if (locs != null && locs.size() > 0) {
+            loc = locs.get(0);
+         }
       }
       else {
-	 switch (forname.getNameType()) {
-	    case FILE :
-	    case CLASS :
-	       loc = forname.getLocation();
-	       break;
-	    default :
-	       break;
-	 }
+         switch (forname.getNameType()) {
+            case FILE :
+            case CLASS :
+               loc = forname.getLocation();
+               break;
+            default :
+               break;
+         }
       }
       if (loc != null) {
-	 if (loc.getProject() != null && loc.getFile() != null) {
-	    menu.add(new HistoryAction(bb,where,loc));
-	    menu.add(new DiffAction(bb,where,loc));
-	  }
+         if (loc.getProject() != null && loc.getFile() != null) {
+            menu.add(new HistoryAction(bb,where,loc));
+            menu.add(new DiffAction(bb,where,loc));
+          }
        }
       else if (proj != null) {
-	 BvcrControlPanel pnl = control_panels.get(proj);
-	 if (pnl != null) {
-	    menu.add(new ControlAction(bb,where,loc,pnl));
-	  }
+         BvcrControlPanel pnl = control_panels.get(proj);
+         if (pnl != null) {
+            menu.add(new ControlAction(bb,where,loc,pnl));
+          }
        }
     }
 

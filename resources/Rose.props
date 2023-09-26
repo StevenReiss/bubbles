@@ -21,6 +21,7 @@
 <entry key="Rose.processor.9">edu.brown.cs.rose.sepal.SepalArgOrder</entry>
 <entry key="Rose.processor.10">edu.brown.cs.rose.sepal.SepalSequencer</entry>
 <entry key="Rose.processor.11">edu.brown.cs.rose.sepal.SepalUseSetter</entry>
+<entry key="Rose.processor.13">edu.brown.cs.rose.sepal.SepalChatGPT</entry>
 <entry key="Differences.family">Monospaced</entry>
 <entry key="Differences.size">11</entry>
 <entry key="Differences.tabsize">8</entry>

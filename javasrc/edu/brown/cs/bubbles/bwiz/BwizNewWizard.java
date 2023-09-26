@@ -156,6 +156,7 @@ void setInitialName(String nm)
    main_name.setText(nm);
 }
 
+
 /********************************************************************************/
 /*										*/
 /*	Panel setup methods							*/
