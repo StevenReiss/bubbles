@@ -55,7 +55,7 @@ private static final String [] NPM_COMMANDS = {
 
 BmvnModelNpm(BmvnProject proj,File file)
 {
-   super(proj,file,"Npm");
+   super(proj,file,BmvnTool.NPM);
 }
 
 
@@ -65,7 +65,7 @@ BmvnModelNpm(BmvnProject proj,File file)
 /*                                                                              */
 /********************************************************************************/
 
-@Override List<BmvnCommand> getCommands(BudaBubble relbbl,Point where)
+@Override List<BmvnCommand> getCommands(String name,BudaBubble relbbl,Point where)
 {
    List<BmvnCommand> rslt = new ArrayList<>();
    

@@ -627,8 +627,8 @@ private static class ControlPanelBubble extends BudaBubble implements BvcrProjec
 
 private class FileChangeManager implements BumpConstants.BumpChangeHandler {
 
-   @Override public void handleFileStarted(String proj,String file) { }
-   @Override public void handleProjectOpened(String proj) { }
+   
+   
 
    @Override public void handleFileChanged(String proj,String file) {
       startUpdate();

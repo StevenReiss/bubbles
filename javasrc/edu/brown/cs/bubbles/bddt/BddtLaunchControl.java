@@ -200,6 +200,9 @@ private void setProcess(BumpProcess p)
 {
    cur_process = p;
    hotswap_fail = null;
+   
+   BoardLog.logD("BDDT","SET PROCESS " + p);
+
 
    BddtFactory.getFactory().setProcess(BddtLaunchControl.this,p);
 
@@ -464,25 +467,26 @@ private class PlayAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    BoardMetrics.noteCommand("BDDT","StartDebug");
-	    setProcess(null);
-	    setLaunchState(LaunchState.STARTING);
-	    bubble_manager.restart();
-	    BoardThreadPool.start(new StartDebug());
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	    break;
-	 case PAUSED :
-	 case PARTIAL_PAUSE :
-	    if (cur_process != null) {
-	       BoardMetrics.noteCommand("BDDT","ResumeDebug");
-	       waitForFreeze();
-	       bump_client.resume(cur_process);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            BoardMetrics.noteCommand("BDDT","StartDebug");
+            BoardLog.logD("BDDT","PLAY ACTION " + launch_state);
+            setProcess(null);
+            setLaunchState(LaunchState.STARTING);
+            bubble_manager.restart();
+            BoardThreadPool.start(new StartDebug());
+            break;
+         case STARTING :
+         case RUNNING :
+            break;
+         case PAUSED :
+         case PARTIAL_PAUSE :
+            if (cur_process != null) {
+               BoardMetrics.noteCommand("BDDT","ResumeDebug");
+               waitForFreeze();
+               bump_client.resume(cur_process);
+             }
+            break;
        }
     }
 
@@ -1021,6 +1025,8 @@ private class RunEventHandler implements BumpRunEventHandler {
 
    @Override synchronized public void handleProcessEvent(BumpRunEvent evt) {
       BumpLaunchConfig elc = evt.getLaunchConfiguration();
+      BoardLog.logD("BDDT","PROCESS EVENT " + evt.getEventType() + " " + elc + " " +
+            launch_config + " " + launch_state);
       switch (evt.getEventType()) {
          case PROCESS_ADD :
             if (cur_process == null && launch_state == LaunchState.STARTING &&
@@ -1034,6 +1040,7 @@ private class RunEventHandler implements BumpRunEventHandler {
             break;
          case PROCESS_REMOVE :
             if (cur_process == evt.getProcess()) {
+               BoardLog.logD("BDDT","TERMINATE PROCESS " + cur_process);
                setLaunchState(LaunchState.TERMINATED);
                thread_states.clear();
                setProcess(null);
@@ -1046,7 +1053,13 @@ private class RunEventHandler implements BumpRunEventHandler {
                last_stopped = null;
              }
             else {
-               BoardLog.logE("BDDT","Spurrious process remove event " + evt.getProcess().getName());
+               BoardLog.logE("BDDT","Spurrious process remove event " + evt.getProcess().getName() +
+                     " " + cur_process + " " + evt.getProcess() + " " + launch_state + " " +
+                     evt.getProcess().getId());
+               if (cur_process != null) {
+                  BoardLog.logD("BDDT","Current process " + cur_process.getId() + " " +
+                        cur_process.getName());
+                }
              }
             break;
          case HOTCODE_FAILURE :
@@ -1689,15 +1702,15 @@ private class EditorContextListener implements BaleFactory.BaleContextListener {
       if (cur_process == null || !cur_process.isRunning()) return false;
       if (cfg.getToken() == null) return false;
       switch (cfg.getTokenType()) {
-	 case FIELD_ID :
-	 case LOCAL_ID :
-	 case STATIC_FIELD_ID :
-	 case LOCAL_DECL_ID :
-	 case FIELD_DECL_ID :
-	 case CONST_ID :
-	    break;
-	 default :
-	    return false;
+         case FIELD_ID :
+         case LOCAL_ID :
+         case STATIC_FIELD_ID :
+         case LOCAL_DECL_ID :
+         case FIELD_DECL_ID :
+         case CONST_ID :
+            break;
+         default :
+            return false;
        }
       return true;
     }

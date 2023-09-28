@@ -27,7 +27,6 @@ import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -36,7 +35,6 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenu;
-import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
 import edu.brown.cs.bubbles.beam.BeamFactory;
@@ -47,7 +45,6 @@ import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaRoot;
-import edu.brown.cs.bubbles.buda.BudaConstants.BudaBubblePosition;
 import edu.brown.cs.ivy.exec.IvyExec;
 
 abstract class BmvnModel implements BmvnConstants
@@ -63,6 +60,8 @@ abstract class BmvnModel implements BmvnConstants
 private BmvnProject     for_project;
 private File            basis_file;
 private String          model_name;
+private long            last_modified;
+private boolean         is_root;
 
 protected enum ExecMode {
    NO_OUTPUT,
@@ -78,11 +77,20 @@ protected enum ExecMode {
 /*                                                                              */
 /********************************************************************************/
 
-protected BmvnModel(BmvnProject proj,File basis,String name)
+protected BmvnModel(BmvnProject proj,File basis,BmvnTool tool)
 {
    for_project = proj;
    basis_file = basis;
-   model_name = name;
+   last_modified = basis.lastModified();
+   model_name = tool.getToolName();
+   
+   is_root = true;
+   File basedir = basis.getParentFile();
+   for (File dir = basedir.getParentFile(); dir != null; dir = dir.getParentFile()) {
+      if (!dir.canWrite()) break;
+      File f1 = new File(dir,tool.getFileName());
+      if (f1.exists() && f1.canWrite()) is_root = false;
+    }
 }
 
 
@@ -94,8 +102,40 @@ protected BmvnModel(BmvnProject proj,File basis,String name)
 /********************************************************************************/
 
 protected BmvnProject getProject()              { return for_project; }
-
 protected File getFile()                        { return basis_file; }
+protected String getName()                      { return model_name; }
+
+protected String getLabel()     
+{
+   String lbl = model_name;
+   if (!is_root) lbl += " in " + getFile().getParentFile().getName(); 
+   return lbl; 
+}
+
+protected boolean isRoot()                      { return is_root; }
+
+protected boolean isRelevant(String name)       
+{
+   String path = basis_file.getPath();
+   String n1 = name.replace(".",File.separator);
+   if (path.contains(n1)) return true;
+   if (!is_root) return false;
+   int idx = name.lastIndexOf(".");
+   if (idx < 0) return true;
+   String n2 = name.substring(0,idx);
+   n2 = n2.replace(".",File.separator);
+   if (path.contains(n2)) return false;
+   return true;
+}
+
+
+protected boolean needsUpdate()
+{
+   long now = basis_file.lastModified();
+   if (now <= last_modified) return false;
+   last_modified = now;
+   return true;
+}
 
 
 
@@ -111,10 +151,11 @@ void doCheckLibraries(BudaBubble b,Point w)     { }
 boolean canUpdateLibraries()                    { return false; }
 void doUpdateLibraries(BudaBubble b,Point w)    { }
 
-List<BmvnCommand> getCommands(BudaBubble b,Point w) 
+List<BmvnCommand> getCommands(String name,BudaBubble b,Point w) 
 { 
    return new ArrayList<>(); 
 }
+
 void executeCommand(BmvnCommand cmd)            { }
 
 boolean canAddLibrary()                         { return false; }
@@ -132,7 +173,7 @@ void doRemoveLibrary(BudaBubble b,Point w)      { }
 /*                                                                              */
 /********************************************************************************/
 
-void addButtons(BudaBubble relbbl,Point where,JPopupMenu menu)
+void addButtons(String name,BudaBubble relbbl,Point where,JMenu menu)
 {
    if (canAddLibrary()) {
       menu.add(new AddLibraryAction(relbbl,where));
@@ -147,9 +188,10 @@ void addButtons(BudaBubble relbbl,Point where,JPopupMenu menu)
       menu.add(new UpdateLibraryAction(relbbl,where));
     }
    
-   List<BmvnCommand> cmds = getCommands(relbbl,where);
+   List<BmvnCommand> cmds = getCommands(name,relbbl,where);
    if (cmds != null && !cmds.isEmpty()) {
-      JMenu menu2 = new JMenu("Execute " + model_name + "...");
+      String lbl = "Execute " + getLabel() + "...";
+      JMenu menu2 = new JMenu(lbl);
       for (BmvnCommand cmd : cmds) {
          cmd.putValue(Action.NAME,cmd.getName());
          menu2.add(cmd);
@@ -157,6 +199,10 @@ void addButtons(BudaBubble relbbl,Point where,JPopupMenu menu)
       menu.add(menu2);
     }
 }
+
+
+
+
 
 
 

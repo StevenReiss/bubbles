@@ -732,7 +732,8 @@ private void handleProcessEvent(Element xml)
 	     }
 	  }
 	 else {
-	    BoardLog.logE("BUMP","Terminate process not found " + id);
+	    BoardLog.logE("BUMP","Terminate process not found " + id + " " +
+                  active_processes);
 	  }
 	 break;
       case CREATE :
@@ -1045,12 +1046,13 @@ private void handleTargetEvent(Element xml,long when)
     }
 
    if (kind == RunEventKind.TERMINATE) {
-      pd = active_processes.remove(pd.getId());
-      if (pd != null) {
-	 if (pd.getName() != null) named_processes.remove(pd.getName());
-	 ProcessEvent evt = new ProcessEvent(BumpRunEventType.PROCESS_REMOVE,pd);
-	 sendProcessEvent(evt);
-       }
+//    pd = active_processes.remove(pd.getId());
+//    if (pd != null) {
+// 	 if (pd.getName() != null) named_processes.remove(pd.getName());
+// 	 ProcessEvent evt = new ProcessEvent(BumpRunEventType.PROCESS_REMOVE,pd);
+//       we should actually get a RUNEVENT for the process separately
+// 	 sendProcessEvent(evt);
+//     }
     }
 }
 
@@ -1663,12 +1665,12 @@ private class ProcessData implements BumpProcess {
       String host = nm.substring(0,idx);
       String port = nm.substring(idx+1);
       if (host.equals("localhost") || host.equals("127.0.0.1") || host.equals("0.0.0.0")) {
-	 try {
-	    host = InetAddress.getLocalHost().getHostName();
-	  }
-	 catch (UnknownHostException e) {
-	    host = "localhost";
-	  }
+         try {
+            host = InetAddress.getLocalHost().getHostName();
+          }
+         catch (UnknownHostException e) {
+            host = "localhost";
+          }
        }
       process_name = port + "@" + host;
       named_processes.put(process_name,this);

@@ -513,7 +513,7 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
    if (id != 0) {
       for (IClasspathEntry ent : ents) {
 	 if (ent.hashCode() == id) {
-	    oent = ent;
+            oent = ent;
 	    break;
 	  }
        }
@@ -535,6 +535,7 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 	 f = IvyXml.getTextElement(xml,"SOURCE");
 	 IPath src = (f == null ? null : Path.fromOSString(f));
 	 BedrockPlugin.logD("PATHS " + bin + " " + src);
+         
 	 boolean optfg = IvyXml.getAttrBool(xml,"OPTIONAL");
 	 boolean export = IvyXml.getAttrBool(xml,"EXPORTED");
 	 IAccessRule [] rls = null;
@@ -587,12 +588,14 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 	 inclarr = exclpaths.toArray(inclarr);
 
 	 IClasspathEntry nent = null;
-	 if (bin != null && !typ.equals("SOURCE"))
+	 if (bin != null && !typ.equals("SOURCE")) {
 	    nent = JavaCore.newLibraryEntry(bin,src,null,
 		  rls,xatts,export);
-	 else
+          }
+	 else {
 	    nent = JavaCore.newSourceEntry(src,inclarr,exclarr,
 		  null,xatts);
+          }
 
 	 if (IvyXml.getAttrBool(xml,"MODIFIED") && oent != null) {
 	    int idx = ents.indexOf(oent);

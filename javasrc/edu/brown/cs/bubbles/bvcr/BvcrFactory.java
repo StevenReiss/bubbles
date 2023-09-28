@@ -121,7 +121,6 @@ public static void setup()
 public static void initialize(BudaRoot br)
 {
    BoardThreadPool.start(new BvcrStarter());
-   // getFactory().startBvcrServer();
    getFactory().setupCallbacks();
    
    BvcrControlFilePanel.registerKeys();

@@ -200,12 +200,10 @@ private void handleProjectUpdated()
 
 private class FileChangeManager implements BumpConstants.BumpChangeHandler {
    
-   @Override public void handleFileStarted(String proj,String file) { }
-   @Override public void handleProjectOpened(String proj) { }
    
-   @Override public void handleFileChanged(String proj,String file) {
-     
-    }
+   
+   
+   
    @Override public void handleFileAdded(String proj,String file) {
       if (proj.equals(control_panel.getProject())) {
          if (files_added == null) files_added = new HashSet<>();

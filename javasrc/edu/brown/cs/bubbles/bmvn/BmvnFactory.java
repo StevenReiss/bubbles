@@ -246,6 +246,7 @@ private class BmvnButtons implements BassPopupHandler {
          switch (forname.getNameType()) {
             case PACKAGE :
             case PROJECT :
+               name = forname.getName();
                break;
             default :
                return;
@@ -254,7 +255,7 @@ private class BmvnButtons implements BassPopupHandler {
       if (pnm == null) return;
       BmvnProject bp = known_projects.get(pnm);
       if (bp == null) return;
-      bp.addButtons(bb,where,menu);
+      bp.addButtons(name,bb,where,menu);
     }
    
 }       // end of inner class BmvnButtons

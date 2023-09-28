@@ -85,7 +85,8 @@ public class BassFactory implements BudaRoot.SearchBoxCreator, BassConstants, Bu
 /*										*/
 /********************************************************************************/
 
-private SwingEventListenerList<BassPopupHandler> popup_handlers;
+// this is a list to ensure button order matches registration order
+private List<BassPopupHandler>          popup_handlers;
 private SwingEventListenerList<BassFlagger> flag_checkers;
 
 
@@ -116,7 +117,7 @@ public static BassFactory getFactory()
 
 private BassFactory()
 {
-   popup_handlers = new SwingEventListenerList<>(BassPopupHandler.class);
+   popup_handlers = new ArrayList<>();
    flag_checkers = new SwingEventListenerList<>(BassFlagger.class);
 }
 

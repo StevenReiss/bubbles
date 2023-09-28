@@ -86,7 +86,7 @@ private Map<String,BvcrProject> project_map;
 enum ProcessMode {
    SERVER,			// act as a server
    CHANGESET,			// just list changes
-   UPDATE
+   UPDATE,
 }
 
 
@@ -145,6 +145,9 @@ private void scanArgs(String [] args)
 	    update_files.add(args[++i]);
 	  }
 	 else badArgs();
+       }
+      else if (process_mode == ProcessMode.UPDATE) {
+         update_files.add(args[i]);
        }
       else badArgs();
     }

@@ -76,7 +76,7 @@ static {
 
 BmvnModelGradle(BmvnProject proj,File grad)
 {
-   super(proj,grad,"Gradle");
+   super(proj,grad,BmvnTool.GRADLE);
   
    gradle_commands = new ArrayList<>();
    
@@ -138,7 +138,7 @@ private class SetupTasks extends Thread {
 /*                                                                              */
 /********************************************************************************/
 
-@Override List<BmvnCommand> getCommands(BudaBubble relbbl,Point where)
+@Override List<BmvnCommand> getCommands(String name,BudaBubble relbbl,Point where)
 {
    List<BmvnCommand> rslt = new ArrayList<>();
    

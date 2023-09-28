@@ -83,6 +83,11 @@ enum BmvnTool {
    
    String getFileName()                 { return file_name; }
    boolean useSubdirectories()          { return use_subdirectories; }
+   String getToolName() {
+      String s = toString();
+      s = s.substring(0,1) + s.substring(1).toLowerCase();
+      return s;
+    }
    
    
 }       // end of inner enum BmvnTool

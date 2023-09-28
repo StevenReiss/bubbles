@@ -746,10 +746,10 @@ private void noteSave(File file)
 
 private class ChangeHandler implements BumpConstants.BumpChangeHandler {
 
-   @Override public void handleFileAdded(String proj,String file)		{ }
-   @Override public void handleFileRemoved(String proj,String file)		{ }
-   @Override public void handleFileStarted(String proj,String file)		{ }
-   @Override public void handleProjectOpened(String proj)			{ }
+   
+   
+   
+   
 
    @Override public void handleFileChanged(String proj,String file) {
       noteSave(new File(file));

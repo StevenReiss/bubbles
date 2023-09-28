@@ -1455,9 +1455,9 @@ private class TypeCreator extends AbstractCreator implements BuenoBubbleCreator 
 }
 
 
-@Override public void handleFileAdded(String proj,String file)		{ }
-@Override public void handleFileStarted(String proj,String file)	{ }
-@Override public void handleProjectOpened(String proj)			{ }
+
+
+
 
 @Override public void handleFileRemoved(String proj,String file)
 {

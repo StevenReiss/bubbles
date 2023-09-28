@@ -105,11 +105,6 @@ BvcrFileManager()
 }
 
 
-@Override public void handleFileChanged(String proj,String file)	{ }
-@Override public void handleFileAdded(String proj,String file)		{ }
-@Override public void handleFileRemoved(String proj,String file)	{ }
-@Override public void handleProjectOpened(String proj)			{ }
-
 
 
 
@@ -261,8 +256,8 @@ private class DifferenceMap extends HashMap<File,Map<String,BvcrDifferenceFile>>
       if (dif == null) return;
       Map<String,BvcrDifferenceFile> m1 = get(file);
       if (m1 == null) {
-	 m1 = new HashMap<String,BvcrDifferenceFile>();
-	 put(file,m1);
+         m1 = new HashMap<String,BvcrDifferenceFile>();
+         put(file,m1);
        }
       m1.put(user,dif);
     }

@@ -976,17 +976,13 @@ BaleDocumentIde getDocument(String proj,File f,boolean lcl)
 
 
 
-@Override public void handleFileStarted(String proj,String file)
-{ }
 
-@Override public void handleFileChanged(String proj,String file)
-{ }
 
-@Override public void handleFileAdded(String proj,String file)
-{ }
 
-@Override public void handleProjectOpened(String proj)
-{ }
+
+
+
+
 
 @Override public void handleFileRemoved(String proj,String file)
 {

@@ -469,155 +469,155 @@ private class CommandHandler implements MintHandler {
       String cmd = args.getArgument(0);
       Element e = msg.getXml();
       String rply = null;
-
+      
       System.err.println("BVCR: RECEIVED COMMAND " + cmd + ": " + msg.getText());
-
+      
       try {
-	 if (cmd == null) return;
-	 IvyXmlWriter xw = new IvyXmlWriter();
-	 switch (cmd) {
-	    case "FINDCHANGES" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  String file = IvyXml.getAttrString(e,"FILE");
-		  findChanges(proj,file,xw);
-		}
-	       break;
-	    case "HISTORY" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  String file = IvyXml.getAttrString(e,"FILE");
-		  findHistory(proj,file,xw);
-		}
-	       break;
-	    case "FILEDIFFS" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  String file = IvyXml.getAttrString(e,"FILE");
-		  String vfrom = IvyXml.getAttrString(e,"FROM");
-		  String vto = IvyXml.getAttrString(e,"TO");
-		  findFileDiffs(proj,file,vfrom,vto,xw);
-		}
-	       break;
-	    case "PROJECTS" :
-	       synchronized (this) {
-		  handleListProjects(xw);
-		}
-	       break;
-	    case "CHANGES" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  boolean ign = IvyXml.getAttrBool(e,"IGNORED");
-		  handleShowChangedFiles(xw,proj,ign);
-		}
-	       break;
-	    case "FILEIGNORE" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  List<String> files = new ArrayList<String>();
-		  for (Element fe : IvyXml.children(e,"FILE")) {
-		     String s = IvyXml.getText(fe);
-		     if (s == null || s.trim().length() == 0) {
-			s = IvyXml.getAttrString(fe,"NAME");
-		      }
-		     if (s != null) files.add(s);
-		   }
-		  handleIgnoreFiles(xw,proj,files);
-		}
-	       break;
-	    case "FILEADD" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  List<String> files = new ArrayList<String>();
-		  for (Element fe : IvyXml.children(e,"FILE")) {
-		     String s = IvyXml.getText(e);
-		     if (s == null || s.length() <= 0) {
-			s = IvyXml.getAttrString(fe,"NAME");
-		      }
-		     if (s != null) files.add(s);
-		   }
-		  handleAddFiles(xw,proj,files);
-		}
-	       break;
-	    case "FILERM" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  List<String> files = new ArrayList<String>();
-		  for (Element fe : IvyXml.children(e,"FILE")) {
-		     String s = IvyXml.getText(e);
-		     if (s == null || s.length() <= 0) {
-			s = IvyXml.getAttrString(fe,"NAME");
-		      }
-		     if (s != null) files.add(s);
-		   }
-		  handleRemoveFiles(xw,proj,files);
-		}
-	       break;
-	    case "VERSIONS" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  handleListVersions(xw,proj);
-		}
-	       break;
-	    case "COMMIT" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  String cmsg = IvyXml.getAttrString(e,"MESSAGE");
-		  handleCommit(xw,proj,cmsg);
-		}
-	       break;
-	    case "STASH" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  String smsg = IvyXml.getAttrString(e,"MESSAGE");
-		  handleStash(xw,proj,smsg);
-		}
-	       break;
-	    case "PUSH" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  handlePush(xw,proj);
-		}
-	       break;
-	    case "UPDATE" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  boolean keep = IvyXml.getAttrBool(e,"KEEP");
-		  boolean remove = IvyXml.getAttrBool(e,"DISCARD");
-		  handleUpdate(xw,proj,keep,remove);
-		}
-	       break;
-	    case "SETVERSION" :
-	       synchronized (this) {
-		  String proj = IvyXml.getAttrString(e,"PROJECT");
-		  String name = IvyXml.getAttrString(e,"VERSION");
-		  handleStash(xw,proj,name);
-		}
-	       break;
-	    case "PING" :
-	       rply = "PONG";
-	       break;
-	    case "EXIT" :
-	       xw.close();
-	       xw = null;
-	       serverDone();
-	       break;
-	  }
-	 if (rply == null && xw != null) rply = xw.toString();
+         if (cmd == null) return;
+         IvyXmlWriter xw = new IvyXmlWriter();
+         switch (cmd) {
+            case "FINDCHANGES" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  String file = IvyXml.getAttrString(e,"FILE");
+                  findChanges(proj,file,xw);
+                }
+               break;
+            case "HISTORY" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  String file = IvyXml.getAttrString(e,"FILE");
+                  findHistory(proj,file,xw);
+                }
+               break;
+            case "FILEDIFFS" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  String file = IvyXml.getAttrString(e,"FILE");
+                  String vfrom = IvyXml.getAttrString(e,"FROM");
+                  String vto = IvyXml.getAttrString(e,"TO");
+                  findFileDiffs(proj,file,vfrom,vto,xw);
+                }
+               break;
+            case "PROJECTS" :
+               synchronized (this) {
+                  handleListProjects(xw);
+                }
+               break;
+            case "CHANGES" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  boolean ign = IvyXml.getAttrBool(e,"IGNORED");
+                  handleShowChangedFiles(xw,proj,ign);
+                }
+               break;
+            case "FILEIGNORE" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  List<String> files = new ArrayList<String>();
+                  for (Element fe : IvyXml.children(e,"FILE")) {
+                     String s = IvyXml.getText(fe);
+                     if (s == null || s.trim().length() == 0) {
+                        s = IvyXml.getAttrString(fe,"NAME");
+                      }
+                     if (s != null) files.add(s);
+                   }
+                  handleIgnoreFiles(xw,proj,files);
+                }
+               break;
+            case "FILEADD" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  List<String> files = new ArrayList<String>();
+                  for (Element fe : IvyXml.children(e,"FILE")) {
+                     String s = IvyXml.getText(e);
+                     if (s == null || s.length() <= 0) {
+                        s = IvyXml.getAttrString(fe,"NAME");
+                      }
+                     if (s != null) files.add(s);
+                   }
+                  handleAddFiles(xw,proj,files);
+                }
+               break;
+            case "FILERM" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  List<String> files = new ArrayList<String>();
+                  for (Element fe : IvyXml.children(e,"FILE")) {
+                     String s = IvyXml.getText(e);
+                     if (s == null || s.length() <= 0) {
+                        s = IvyXml.getAttrString(fe,"NAME");
+                      }
+                     if (s != null) files.add(s);
+                   }
+                  handleRemoveFiles(xw,proj,files);
+                }
+               break;
+            case "VERSIONS" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  handleListVersions(xw,proj);
+                }
+               break;
+            case "COMMIT" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  String cmsg = IvyXml.getAttrString(e,"MESSAGE");
+                  handleCommit(xw,proj,cmsg);
+                }
+               break;
+            case "STASH" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  String smsg = IvyXml.getAttrString(e,"MESSAGE");
+                  handleStash(xw,proj,smsg);
+                }
+               break;
+            case "PUSH" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  handlePush(xw,proj);
+                }
+               break;
+            case "UPDATE" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  boolean keep = IvyXml.getAttrBool(e,"KEEP");
+                  boolean remove = IvyXml.getAttrBool(e,"DISCARD");
+                  handleUpdate(xw,proj,keep,remove);
+                }
+               break;
+            case "SETVERSION" :
+               synchronized (this) {
+                  String proj = IvyXml.getAttrString(e,"PROJECT");
+                  String name = IvyXml.getAttrString(e,"VERSION");
+                  handleStash(xw,proj,name);
+                }
+               break;
+            case "PING" :
+               rply = "PONG";
+               break;
+            case "EXIT" :
+               xw.close();
+               xw = null;
+               serverDone();
+               break;
+          }
+         if (rply == null && xw != null) rply = xw.toString();
        }
       catch (Throwable t) {
-	 System.err.println("BVCR: Problem processing BVCR command: " + t);
-	 t.printStackTrace();
+         System.err.println("BVCR: Problem processing BVCR command: " + t);
+         t.printStackTrace();
        }
-
+      
       if (rply != null) {
-	 rply = "<RESULT>" + rply + "</RESULT>";
+         rply = "<RESULT>" + rply + "</RESULT>";
        }
-
+      
       System.err.println("BVCR: RESULT: " + rply);
-
+      
       msg.replyTo(rply);
-    }
+   }
 
 }	// end of inner class CommandHandler
 

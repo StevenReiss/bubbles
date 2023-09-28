@@ -38,20 +38,14 @@
 package edu.brown.cs.bubbles.bbook;
 
 import edu.brown.cs.bubbles.bnote.BnoteFactory;
-import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardSetup;
-
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
-
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
 
 import javax.imageio.ImageIO;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -603,20 +597,10 @@ private String fixTextBlock(String s)
 {
    if (s == null) return null;
 
-   try {
-      MarkupParser mp = new MarkupParser();
-      mp.setMarkupLanguage(new TracWikiLanguage());
-      StringWriter sw = new StringWriter();
-      HtmlDocumentBuilder bld = new HtmlDocumentBuilder(sw);
-      bld.setEmitAsDocument(false);
-      mp.setBuilder(bld);
-      mp.parse(s);
-      return sw.toString();
-    }
-   catch (Exception e) {
-      BoardLog.logE("BBOOK","Problem parsing wiki text",e);
-    }
-
+   String mdt = IvyFile.parseMarkdown(s);
+   
+   if (mdt != null) return mdt;
+  
    return IvyXml.htmlSanitize(s);
 }
 

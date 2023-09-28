@@ -682,7 +682,7 @@ private class Searcher implements Runnable {
    handleUpdated();
 }
 
-@Override public void handleFileStarted(String proj,String file)		{ }
+
 
 
 private void removeNamesForFile(String proj,String file)

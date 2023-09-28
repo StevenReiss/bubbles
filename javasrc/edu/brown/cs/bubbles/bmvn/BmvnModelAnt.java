@@ -47,7 +47,6 @@ class BmvnModelAnt extends BmvnModel
 /*                                                                              */
 /********************************************************************************/
 
-private boolean         is_root;
 private Element         ant_xml;
 
 private static Set<String> ant_tasks;
@@ -78,14 +77,7 @@ static {
 
 BmvnModelAnt(BmvnProject proj,File file)
 {
-   super(proj,file,"Ant");
-   
-   is_root = true;
-   for (File dir = file.getParentFile(); dir != null; dir = dir.getParentFile()) {
-      if (!dir.canWrite()) break;
-      File f1 = new File(dir,"build.xml");
-      if (f1.exists() && f1.canWrite()) is_root = false;
-    }
+   super(proj,file,BmvnTool.ANT);
    
    ant_xml = IvyXml.loadXmlFromFile(file);
    
@@ -101,7 +93,7 @@ BmvnModelAnt(BmvnProject proj,File file)
 /*                                                                              */
 /********************************************************************************/
 
-@Override List<BmvnCommand> getCommands(BudaBubble relbbl,Point where)
+@Override List<BmvnCommand> getCommands(String name,BudaBubble relbbl,Point where)
 {
    List<BmvnCommand> rslt = new ArrayList<>();
    
@@ -113,14 +105,13 @@ BmvnModelAnt(BmvnProject proj,File file)
       for (Element task : IvyXml.children(target)) {
          if (isRelevantTask(task)) {
             rslt.add(new AntCommand(nm,relbbl,where));
+            break;
           }
        }
     }
    
    return rslt;
 }
-
-
 
 private boolean isRelevantTask(Element task)
 {
@@ -145,7 +136,7 @@ private class AntCommand extends AbstractAction implements BmvnCommand {
     }
    
    @Override public String getName() { 
-      if (is_root) return "Ant " + ant_goal;   
+      if (isRoot()) return "Ant " + ant_goal;   
       String f = getFile().getParentFile().getName();
       return "Ant " + ant_goal + " in " + f; 
     }

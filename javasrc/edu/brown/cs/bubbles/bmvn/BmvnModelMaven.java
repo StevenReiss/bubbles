@@ -23,23 +23,23 @@
 package edu.brown.cs.bubbles.bmvn;
 
 import java.awt.Point;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
-import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.ivy.exec.IvyExec;
 import edu.brown.cs.ivy.file.IvyFile;
 
 class BmvnModelMaven extends BmvnModel
@@ -52,7 +52,7 @@ class BmvnModelMaven extends BmvnModel
 /*                                                                              */
 /********************************************************************************/
 
-private Model   maven_model;
+private List<Dependency>        known_dependencies;
 
 private static final String [] MAVEN_COMMANDS = {
    "clean",
@@ -62,8 +62,12 @@ private static final String [] MAVEN_COMMANDS = {
    "install",
 };
 
+private static Pattern DEP_PATTERN = 
+   Pattern.compile("^([-A-Za-z0-9_.]+)\\:([-A-Za-z0-9_.]*)\\:([-A-Za-z0-9_.]*)\\:([-A-Za-z0-9_.]*)\\:" + 
+         "([-A-Za-z0-9_.]*)\\:(.*) -- module (.*) (");
 
 
+         
 /********************************************************************************/
 /*                                                                              */
 /*      Constructors                                                            */
@@ -72,18 +76,9 @@ private static final String [] MAVEN_COMMANDS = {
 
 BmvnModelMaven(BmvnProject proj,File pom)
 {
-   super(proj,pom,"Maven");
+   super(proj,pom,BmvnTool.MAVEN);
    
-   try (FileReader fr = new FileReader(pom)) {
-      MavenXpp3Reader rdr = new MavenXpp3Reader();
-      maven_model = rdr.read(fr);
-    }
-   catch (XmlPullParserException e) { 
-    }
-   catch (IOException e) {
-    }
-   
-   BoardLog.logD("BMVN","Build maven model " + maven_model);
+   updateDependencies();
 }
 
 
@@ -93,6 +88,37 @@ BmvnModelMaven(BmvnProject proj,File pom)
 /*      Setup methods                                                           */
 /*                                                                              */
 /********************************************************************************/
+
+private void updateDependencies()
+{
+   List<Dependency> newdeps = new ArrayList<>();
+   String cmd =  "mvn dependency:list -DoutputFile=AAAA " +
+      "-Dsilent=true -DoutputAbsoluteArtifactFilename=true --log-file BBBB -q";
+   File wd = getFile().getParentFile();
+   try {
+      File t1 = File.createTempFile("mvn",".output");
+      File t2 = File.createTempFile("mvn",".log");
+      t1.deleteOnExit();
+      t2.deleteOnExit();
+      cmd.replace("AAAA",t1.getPath());
+      cmd.replace("BBBB",t2.getPath());
+      IvyExec exec = new IvyExec(cmd,wd,IvyExec.IGNORE_OUTPUT);
+      exec.waitFor();
+      t2.delete();
+      try (BufferedReader br = new BufferedReader(new FileReader(t1))) {
+         for ( ; ; ) {
+            String ln = br.readLine();
+            if (ln == null) break;
+            Dependency dep = new Dependency(ln);
+            if (dep.isValid()) newdeps.add(dep);
+          }
+       }
+      t1.delete();
+    }
+   catch (IOException e) {
+    }
+   known_dependencies = newdeps;
+}
 
 
 
@@ -104,8 +130,7 @@ BmvnModelMaven(BmvnProject proj,File pom)
 
 @Override boolean canCheckLibraries()
 {
-   List<Dependency> deps = maven_model.getDependencies();
-   if (deps == null || deps.isEmpty()) return false;
+   if (known_dependencies == null || known_dependencies.isEmpty()) return false;
    
    return true;
 }
@@ -114,34 +139,28 @@ BmvnModelMaven(BmvnProject proj,File pom)
 @Override void doCheckLibraries(BudaBubble bbl,Point pt)
 {
    Set<File> origlibs = getProject().getLibraries();
-   Set<File> found = new LinkedHashSet<>();
+   Map<File,File> updated = new LinkedHashMap<>();
    Set<File> added = new LinkedHashSet<>();
-   Set<File> removed = new LinkedHashSet<>();
-  
-   for (Dependency dep : maven_model.getDependencies()) {
-      System.err.println("DEPEND " + dep.getArtifactId() + " " + dep.getClassifier() + " " +
-            dep.getGroupId() + " " + dep.getManagementKey() + " " + dep.getOptional() + " " +
-            dep.getScope() + " " + dep.getSystemPath() + " " + dep.getType() + " " +
-            dep.getVersion() + " " + dep.isOptional() + " " + dep);
-      if (!"jar".equals(dep.getType())) continue;
+   Set<File> removed = new LinkedHashSet<>(); 
+   
+   for (Dependency dep : known_dependencies) {
       String jname = dep.getSystemPath();
       if (jname == null) continue;
       File jfil = new File(jname);
       if (!jfil.exists() || !jfil.canRead()) continue;
       jfil = IvyFile.getCanonical(jfil);
-      if (origlibs.contains(jfil)) {
-         found.add(jfil);
+      if (!origlibs.contains(jfil)) {
+         for (File f1 : origlibs) {
+            String fnm = f1.getName();
+            if (fnm.startsWith(dep.getJarName()) && fnm.endsWith("." + dep.getType())) {
+               updated.put(f1,jfil);
+               break;
+             }
+          }
+         added.add(jfil);
        }
-      else {
-         
-       }
-         
-    }
-   // get class path
-   // for each dependency
-   //     find on class path
-   //     update if wrong jar file
-   //     OR add if missing jar file
+    }  
+   getProject().updateLibraries(updated,added,removed);
 }
 
 
@@ -152,14 +171,8 @@ BmvnModelMaven(BmvnProject proj,File pom)
 /*                                                                              */
 /********************************************************************************/
 
-@Override boolean canAddLibrary()                       { return true; }
-
-@Override void doAddLibrary(BudaBubble bbl,Point pt)
-{
-   // create a JOptionPane asking for Library name and version
-   // on getting name -- update list of versions available
-   // on accept -- add to class path, add dependency, rewrite model
-}
+// need to be able to write pom.xml files
+@Override boolean canAddLibrary()                       { return false; }
 
 
 /********************************************************************************/
@@ -168,19 +181,10 @@ BmvnModelMaven(BmvnProject proj,File pom)
 /*                                                                              */
 /********************************************************************************/
 
+// need to be able to write pom.xml files
 @Override boolean canRemoveLibrary()
 {
-   List<Dependency> deps = maven_model.getDependencies();
-   if (deps == null || deps.isEmpty()) return false;
-   
-   return true;
-}
-
-@Override void doRemoveLibrary(BudaBubble bbl,Point pt)
-{
-   // create a JOptionPane with list of current dependencies
-   //   allow user to choose one or more of these
-   //   on accept -- remove dependencies and rewrite model and update classpath
+   return false;
 }
 
 
@@ -191,7 +195,7 @@ BmvnModelMaven(BmvnProject proj,File pom)
 /*                                                                              */
 /********************************************************************************/
 
-@Override List<BmvnCommand> getCommands(BudaBubble relbbl,Point where)
+@Override List<BmvnCommand> getCommands(String name,BudaBubble relbbl,Point where)
 {
    List<BmvnCommand> rslt = new ArrayList<>();
    
@@ -233,6 +237,56 @@ private class MavenCommand extends AbstractAction implements BmvnCommand {
    if (ln.startsWith("[ERROR]")) return ln.substring(8);
    else return null;   
 }
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Dependency Information                                                  */
+/*                                                                              */
+/********************************************************************************/
+
+@SuppressWarnings("unused")
+private class Dependency {
+   
+   private String dep_name;
+   private String dep_jar;
+   private String dep_type;
+   private String dep_version;
+   private String dep_state;
+   private String dep_path;
+   private String dep_module;
+         
+   Dependency(String depinfo) {
+      depinfo = depinfo.trim();
+      Matcher m = DEP_PATTERN.matcher(depinfo);
+      if (m.find()) {
+         dep_name = m.group(1);
+         dep_jar = m.group(2);
+         dep_type = m.group(3);
+         dep_version = m.group(4);
+         dep_state = m.group(5);
+         dep_path = m.group(6);
+         dep_module = m.group(7);
+         if (dep_type == null || !dep_type.equals("jar")) dep_name = null;
+       }
+      else { 
+         dep_name = null;
+       }
+    }
+   
+   boolean isValid()                            { return dep_name != null; }
+   
+   String getSystemPath()                       { return dep_path; }
+   String getJarName()                          { return dep_jar; }
+   String getType()                             { return dep_type; }
+   String getVersion()                          { return dep_version; }
+   String getState()                            { return dep_state; }
+   String getModule()                           { return dep_module; }
+   
+}       // end of inner class Depenency
+
+
 
 
 }       // end of class BmvnMavenModel

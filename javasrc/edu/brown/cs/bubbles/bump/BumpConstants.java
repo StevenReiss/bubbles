@@ -986,11 +986,11 @@ interface BumpCompletion {
 
 interface BumpChangeHandler extends EventListener {
 
-   void handleFileStarted(String proj,String file);
-   void handleFileChanged(String project,String file);
-   void handleFileAdded(String project,String file);
-   void handleFileRemoved(String project,String file);
-   void handleProjectOpened(String project);
+   default void handleFileStarted(String proj,String file)              { }
+   default void handleFileChanged(String project,String file)           { }
+   default void handleFileAdded(String project,String file)             { }
+   default void handleFileRemoved(String project,String file)           { }
+   default void handleProjectOpened(String project)                     { }
 
 }
 

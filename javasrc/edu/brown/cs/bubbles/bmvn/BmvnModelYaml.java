@@ -44,7 +44,7 @@ class BmvnModelYaml extends BmvnModel
 
 BmvnModelYaml(BmvnProject proj,File file)
 {
-   super(proj,file,"Yaml");
+   super(proj,file,BmvnTool.YAML);
 }
 
 }       // end of class BmvnModelYaml

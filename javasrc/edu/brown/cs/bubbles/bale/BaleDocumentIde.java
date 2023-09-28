@@ -1353,7 +1353,7 @@ private class EclipseUpdater implements DocumentListener {
 }
 
 
-@Override public void handleFileAdded(String proj,String file)		{ }
+
 
 
 
@@ -1363,8 +1363,8 @@ private class EclipseUpdater implements DocumentListener {
 }
 
 
-@Override public void handleFileStarted(String proj,String file)	{ }
-@Override public void handleProjectOpened(String proj)			{ }
+
+
 
 
 

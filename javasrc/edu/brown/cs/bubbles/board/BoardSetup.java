@@ -157,7 +157,6 @@ private boolean 	update_setup;
 private boolean 	must_restart;
 private boolean 	show_splash;
 private boolean 	allow_debug;
-private boolean 	use_lila;
 private List<String>	java_args;
 private BoardSplash	splash_screen;
 private long		run_size;
@@ -237,7 +236,6 @@ private BoardSetup()
    show_splash = true;
    splash_screen = null;
    allow_debug = false;
-   use_lila = false;
    run_mode = RunMode.NORMAL;
    mint_name = null;
    mint_control = null;
@@ -477,16 +475,6 @@ public void setAllowDebug()
    allow_debug = true;
 }
 
-
-
-/**
- *	Runs with lila monitor
- **/
-
-public void setUseLila()
-{
-   use_lila = true;
-}
 
 
 /**
@@ -2961,7 +2949,6 @@ private void restartBubbles()
 
    saveProperties();
 
-   File dir1 = new File(jar_directory);
    File dir = getLibraryDirectory();
 
    StringBuffer cp = new StringBuffer();
@@ -2994,24 +2981,6 @@ private void restartBubbles()
    try {
       int idx = 0;
       args.add(idx++,jpath);
-      if (use_lila) {
-	 File lf = new File(dir,"LagHunter-4.jar");
-	 if (lf.exists()) {
-	    File f2 = new File(dir1,"LiLaConfiguration.ini");
-	    File f3 = new File(dir,"LiLaConfiguration.ini");
-	    if (!f2.exists() && f3.exists()) {
-	       try {
-		  FileInputStream fis = new FileInputStream(f3);
-		  FileOutputStream fos = new FileOutputStream(f2);
-		  copyFile(fis,fos);
-		}
-	       catch (IOException e) { }
-	     }
-	    String lc = "-javaagent:" + lf.getPath() + "=/useLiLaConfigurationFile";
-	    args.add(idx++,lc);
-//	    BoardLog.logD("BOARD","Use lila: " + lc);
-	  }
-       }
 
       File pf = BoardProperties.getPropertyDirectory();
       if (pf != null) {

@@ -221,18 +221,18 @@ private class ProblemHandler implements BumpConstants.BumpProblemHandler {
 
 private class ChangeHandler implements BumpConstants.BumpChangeHandler {
    
-   @Override public void handleFileStarted(String proj,String file) { }
+   
    
    @Override public void handleFileChanged(String proj,String file) {
       File f = new File(file);
       validate(f,true);
     }
    
-   @Override public void handleFileAdded(String proj,String file) { }
    
-   @Override public void handleFileRemoved(String proj,String file) { }
    
-   @Override public void handleProjectOpened(String proj)       { }
+   
+   
+   
    
    
 }

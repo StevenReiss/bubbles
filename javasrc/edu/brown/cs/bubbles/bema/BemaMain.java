@@ -138,7 +138,6 @@ private boolean 	force_update;
 private boolean 	skip_setup;
 private boolean 	skip_splash;
 private boolean 	allow_debug;
-private boolean 	use_lila;
 private boolean 	use_web;
 private boolean 	use_cloud;
 private Boolean 	auto_update;
@@ -179,7 +178,6 @@ private BemaMain(String [] args)
    use_web = false;
    use_cloud = false;
    java_args = args;
-   use_lila = false;
    run_mode = RunMode.NORMAL;
    course_name = null;
    for_language = null;
@@ -263,16 +261,12 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-W")) {                   // -WEB
 	    use_web = true;
 	  }
-	 else if (args[i].startsWith("-lila")) {                // -lila
-	    use_lila = true;
-	  }
 	 else if (args[i].startsWith("-C")) {                   // -Client
 	    run_mode = RunMode.CLIENT;
 	  }
 	 else if (args[i].startsWith("-S")) {                   // -Server
 	    run_mode = RunMode.SERVER;
 	    skip_splash = true;
-	    use_lila = false;
 	    restore_session = false;
 	  }
 	 else if (args[i].startsWith("-Dfile.encoding")) ;
@@ -365,7 +359,6 @@ private void start()
    if (force_metrics) bs.setForceMetrics(true);
    if (skip_splash) bs.setSkipSplash();
    if (allow_debug) bs.setAllowDebug();
-   if (use_lila) bs.setUseLila();
    if (ask_workspace != null) bs.setAskWorkspace(ask_workspace);
    if (run_mode != null) bs.setRunMode(run_mode);
    bs.setJavaArgs(java_args);
