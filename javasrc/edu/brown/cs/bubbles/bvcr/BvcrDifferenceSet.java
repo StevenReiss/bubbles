@@ -257,6 +257,8 @@ void outputXml(IvyXmlWriter xw)
    xw.field("PROJECT",for_project.getName());
    xw.field("USER",System.getProperty("user.name"));
    xw.field("ROOT",bvcr_main.getRootDirectory(for_project.getName()));
+   if (start_version != null) xw.field("STARTVERSION",start_version);
+   if (end_version != null) xw.field("ENDVERSION",end_version);
 
    for (FileData fd : file_set.values()) {
       fd.outputXml(xw);

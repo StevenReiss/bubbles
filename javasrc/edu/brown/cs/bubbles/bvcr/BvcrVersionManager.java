@@ -360,75 +360,75 @@ protected class DiffAnalyzer implements CommandCallback {
       if (ln.length() == 0) return;
       char ch = ln.charAt(0);
       switch (ch) {
-	 case 'I' :                     // skip Index: lines and ========
-	 case '=' :
-	    source_line = 0;
-	    break;
-	 case 'i' :                     // git index line
-	    source_line = 0;
-	    Matcher m3 = GIT_INDEX.matcher(ln);
-	    if (m3.matches()) {
-	       base_version = m3.group(1);
-	     }
-	    break;
-	 case '\\' :
-	    break;
-	 case '@' :
-	    Matcher m4 = LINE_PAT.matcher(ln);
-	    Matcher m5 = LINE_PAT1.matcher(ln);
-	    Matcher m6 = LINE_PAT2.matcher(ln);
-	    if (m4.matches()) {
-	       source_line = Integer.parseInt(m4.group(1));
-	       target_line = Integer.parseInt(m4.group(3));
-	       del_count = 0;
-	     }
-	    else if (m5.matches()) {
-	       source_line = Integer.parseInt(m5.group(1));
-	       target_line = Integer.parseInt(m5.group(2));
-	       del_count = 0;
-	     }
-	    else if (m6.matches()) {
-	       source_line = Integer.parseInt(m6.group(1));
-	       target_line = Integer.parseInt(m6.group(5));
-	       del_count = 0;
-	     }
-	    else source_line = 0;
-	    break;
-	 case '-' :
-	    if (source_line == 0) {
-	       Matcher m1 = SOURCE_PAT.matcher(ln);
-	       Matcher m2 = GIT_SOURCE.matcher(ln);
-	       if (m1.matches()) {
-		  String fil = m1.group(1);
-		  String ver = m1.group(2);
-		  // System.err.println("BVCR: start file " + fil + " " + ver);
-		  diff_set.beginFile(fil,ver);
-		}
-	       else if (m2.matches()) {
-		  String fil = m2.group(1);
-		  File f = new File(getRootDirectory(),fil);
-		  // System.err.println("BVCR: start git file " + fil + " " + getRootDirectory() + " " + f);
-		  diff_set.beginFile(f.getPath(),base_version);
-		}
-	     }
-	    else {
-	       diff_set.noteDelete(source_line,target_line,ln.substring(1));
-	       ++source_line;
-	       ++del_count;
-	     }
-	    break;
-	 case ' ' :
-	    if (source_line != 0) {
-	       ++source_line;
-	       ++target_line;
-	     }
-	    break;
-	 case '+' :
-	    if (source_line != 0) {
-	       diff_set.noteInsert(source_line - del_count,target_line,ln.substring(1));
-	       ++target_line;
-	     }
-	    break;
+         case 'I' :                     // skip Index: lines and ========
+         case '=' :
+            source_line = 0;
+            break;
+         case 'i' :                     // git index line
+            source_line = 0;
+            Matcher m3 = GIT_INDEX.matcher(ln);
+            if (m3.matches()) {
+               base_version = m3.group(1);
+             }
+            break;
+         case '\\' :
+            break;
+         case '@' :
+            Matcher m4 = LINE_PAT.matcher(ln);
+            Matcher m5 = LINE_PAT1.matcher(ln);
+            Matcher m6 = LINE_PAT2.matcher(ln);
+            if (m4.matches()) {
+               source_line = Integer.parseInt(m4.group(1));
+               target_line = Integer.parseInt(m4.group(3));
+               del_count = 0;
+             }
+            else if (m5.matches()) {
+               source_line = Integer.parseInt(m5.group(1));
+               target_line = Integer.parseInt(m5.group(2));
+               del_count = 0;
+             }
+            else if (m6.matches()) {
+               source_line = Integer.parseInt(m6.group(1));
+               target_line = Integer.parseInt(m6.group(5));
+               del_count = 0;
+             }
+            else source_line = 0;
+            break;
+         case '-' :
+            if (source_line == 0) {
+               Matcher m1 = SOURCE_PAT.matcher(ln);
+               Matcher m2 = GIT_SOURCE.matcher(ln);
+               if (m1.matches()) {
+        	  String fil = m1.group(1);
+        	  String ver = m1.group(2);
+        	  // System.err.println("BVCR: start file " + fil + " " + ver);
+        	  diff_set.beginFile(fil,ver);
+        	}
+               else if (m2.matches()) {
+        	  String fil = m2.group(1);
+        	  File f = new File(getRootDirectory(),fil);
+        	  // System.err.println("BVCR: start git file " + fil + " " + getRootDirectory() + " " + f);
+        	  diff_set.beginFile(f.getPath(),base_version);
+        	}
+             }
+            else {
+               diff_set.noteDelete(source_line,target_line,ln.substring(1));
+               ++source_line;
+               ++del_count;
+             }
+            break;
+         case ' ' :
+            if (source_line != 0) {
+               ++source_line;
+               ++target_line;
+             }
+            break;
+         case '+' :
+            if (source_line != 0) {
+               diff_set.noteInsert(source_line - del_count,target_line,ln.substring(1));
+               ++target_line;
+             }
+            break;
        }
     }
 

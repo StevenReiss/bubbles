@@ -198,6 +198,9 @@ private String computeToolTipText(String proj,File f,int lno)
 
    return null;
 }
+
+
+
 /********************************************************************************/
 /*										*/
 /*	Handle getting update information on a file				*/

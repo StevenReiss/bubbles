@@ -84,7 +84,7 @@ BvcrChangeSet(BvcrMain bm,String proj,String rid,String uid,SecretKey sk)
    repo_key = sk;
 
    last_update = 0;
-   change_map = new HashMap<File,FileChanges>();
+   change_map = new HashMap<>();
 }
 
 
@@ -250,7 +250,6 @@ private void addChanges(Element xml)
 	 fc = new FileChanges();
 	 change_map.put(f1,fc);
        }
-      // should record original version
       BvcrDifferenceFile df = new BvcrDifferenceFile(fe);
       fc.addChange(user,oroot,df);
     }

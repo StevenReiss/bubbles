@@ -156,7 +156,7 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
 @Override void getDifferences(BvcrDifferenceSet ds)
 {
-   String cmd = git_command  + " diff -b -r";
+   String cmd = git_command  + " diff -w -r";
 
    String v0 = ds.getStartVersion();
    String v1 = ds.getEndVersion();

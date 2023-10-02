@@ -76,13 +76,14 @@ class BumpRunManager implements BumpConstants, BumpConstants.BumpRunModel, Banda
 
 private BumpClient	bump_client;
 private Map<String,LaunchConfig> known_configs;
-private ConcurrentMap<String,LaunchData> active_launches;
-private ConcurrentMap<String,ProcessData> active_processes;
+private Map<String,LaunchData> active_launches;
+private Map<String,ProcessData> active_processes;
+private Map<String,ProcessData> terminated_processes;
 private ConcurrentMap<String,ProcessData> named_processes;
 private ConcurrentMap<String,ThreadData> active_threads;
 private Map<BumpThread,SwingEventListenerList<BumpThreadFilter>> thread_filters;
 private Map<String,File>	source_map;
-private ConcurrentMap<String,ProcessData> console_processes;
+private Map<String,ProcessData> console_processes;
 private BumpTrieProcessor trie_processor;
 private List<BumpLaunchType> launch_types;
 
@@ -178,6 +179,7 @@ BumpRunManager()
    console_processes = new ConcurrentHashMap<>();
    named_processes = new ConcurrentHashMap<>();
    active_threads = new ConcurrentHashMap<>();
+   terminated_processes = new ConcurrentHashMap<>();
    event_handlers = new SwingEventListenerList<>(BumpRunEventHandler.class);
    server_host = null;
    server_port = null;
@@ -649,7 +651,7 @@ synchronized void handleRunEvent(Element xml,long when)
       case NONE :
 	 return;
       case PROCESS :
-	 handleProcessEvent(xml);
+	 handleProcessEvent(xml,when);
 	 break;
       case THREAD :
 	 handleThreadEvent(xml,when);
@@ -706,7 +708,7 @@ void handleConsoleEvent(Element xml)
 /*										*/
 /********************************************************************************/
 
-private void handleProcessEvent(Element xml)
+private void handleProcessEvent(Element xml,long when)
 {
    RunEventKind kind = IvyXml.getAttrEnum(xml,"KIND",RunEventKind.NONE);
    Element proc = IvyXml.getChild(xml,"PROCESS");
@@ -722,19 +724,7 @@ private void handleProcessEvent(Element xml)
 
    switch (kind) {
       case TERMINATE :
-	 pd = active_processes.remove(id);
-	 if (pd != null) {
-	    if (pd.getName() != null) named_processes.remove(pd.getName());
-	    evt = new ProcessEvent(BumpRunEventType.PROCESS_REMOVE,pd);
-	    for (Iterator<ThreadData> it = active_threads.values().iterator(); it.hasNext(); ) {
-	       ThreadData td = it.next();
-	       if (td.getProcess() == pd) it.remove();
-	     }
-	  }
-	 else {
-	    BoardLog.logE("BUMP","Terminate process not found " + id + " " +
-                  active_processes);
-	  }
+         evt = terminateProcess(id,when);
 	 break;
       case CREATE :
       case CHANGE :
@@ -768,6 +758,34 @@ private void handleProcessEvent(Element xml)
 	  }
        }
     }
+}
+
+
+private ProcessEvent terminateProcess(String id,long when)
+{
+   if (terminated_processes.remove(id) != null) {
+      return null;
+    }
+   ProcessEvent evt = null;
+   ProcessData pd = active_processes.remove(id);
+   if (pd != null) {
+      terminated_processes.put(id,pd);
+      if (pd.getName() != null) named_processes.remove(pd.getName());
+      evt = new ProcessEvent(BumpRunEventType.PROCESS_REMOVE,pd);
+      for (Iterator<ThreadData> it = active_threads.values().iterator(); it.hasNext(); ) {
+         ThreadData td = it.next();
+         if (td.getProcess() == pd) {
+            handleTargetThreadState(td,BumpThreadState.DEAD,
+                  BumpThreadStateDetail.NONE,when);
+            it.remove();
+          }
+       }
+    }
+   else {
+      BoardLog.logE("BUMP","Terminate process not found " + id + " " +
+            active_processes);
+    }
+   return evt;
 }
 
 
@@ -1037,22 +1055,14 @@ private void handleTargetEvent(Element xml,long when)
 	 case RESUME :
 	    handleTargetThreadState(td,ost.getRunState(),dtl,when);
 	    break;
-	 case TERMINATE :
-	    handleTargetThreadState(td,BumpThreadState.DEAD,dtl,when);
-	    break;
 	 default:
 	    break;
        }
     }
 
    if (kind == RunEventKind.TERMINATE) {
-//    pd = active_processes.remove(pd.getId());
-//    if (pd != null) {
-// 	 if (pd.getName() != null) named_processes.remove(pd.getName());
-// 	 ProcessEvent evt = new ProcessEvent(BumpRunEventType.PROCESS_REMOVE,pd);
-//       we should actually get a RUNEVENT for the process separately
-// 	 sendProcessEvent(evt);
-//     }
+      ProcessEvent evt = terminateProcess(pd.getId(),when);
+      if (evt != null) sendProcessEvent(evt);
     }
 }
 
@@ -1614,7 +1624,7 @@ private class ProcessData implements BumpProcess {
    @Override public Iterable<BumpThread> getThreads() {
       List<BumpThread> rslt = new ArrayList<BumpThread>();
       for (ThreadData td : active_threads.values()) {
-	 if (td.getProcess() == this && !td.isInternal()) rslt.add(td);
+         if (td.getProcess() == this && !td.isInternal()) rslt.add(td);
        }
       return rslt;
     }
@@ -1649,8 +1659,8 @@ private class ProcessData implements BumpProcess {
       if (is_running && IvyXml.getAttrBool(xml,"TERMINATED")) is_running = false;
       for_launch = findLaunch(IvyXml.getChild(xml,"LAUNCH"));
       if (process_name == null) {
-	 String nm = IvyXml.getAttrString(xml,"NAME");
-	 if (nm != null) setProcessName(nm);
+         String nm = IvyXml.getAttrString(xml,"NAME");
+         if (nm != null) setProcessName(nm);
        }
     }
 

@@ -57,7 +57,7 @@ private String			base_version;
 
 BvcrDifferenceFile(String ver)
 {
-   change_set = new ArrayList<FileChange>();
+   change_set = new ArrayList<>();
    base_version = ver;
 }
 
@@ -163,20 +163,20 @@ private static class FileChange implements BvcrFileChange {
       int dct = 0;
       for (Element ce : IvyXml.children(e,"DELETE")) ++dct;
       if (dct > 0) {
-	 delete_lines = new String[dct];
-	 int i = 0;
-	 for (Element ce : IvyXml.children(e,"DELETE")) {
-	    delete_lines[i++] = IvyXml.getText(ce);
-	  }
+         delete_lines = new String[dct];
+         int i = 0;
+         for (Element ce : IvyXml.children(e,"DELETE")) {
+            delete_lines[i++] = IvyXml.getText(ce);
+          }
        }
       int act = 0;
       for (Element ce : IvyXml.children(e,"INSERT")) ++act;
       if (act > 0) {
-	 add_lines = new String[act];
-	 int i = 0;
-	 for (Element ce : IvyXml.children(e,"INSERT")) {
-	    add_lines[i++] = IvyXml.getText(ce);
-	  }
+         add_lines = new String[act];
+         int i = 0;
+         for (Element ce : IvyXml.children(e,"INSERT")) {
+            add_lines[i++] = IvyXml.getText(ce);
+          }
        }
     }
 
