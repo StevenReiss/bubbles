@@ -242,7 +242,7 @@ BumpRunManager()
 
 @Override public Iterable<BumpProcess> getProcesses()
 {
-   return new ArrayList<BumpProcess>(active_processes.values());
+   return new ArrayList<>(active_processes.values());
 }
 
 
@@ -724,7 +724,7 @@ private void handleProcessEvent(Element xml,long when)
 
    switch (kind) {
       case TERMINATE :
-         evt = terminateProcess(id,when);
+	 evt = terminateProcess(id,when);
 	 break;
       case CREATE :
       case CHANGE :
@@ -773,17 +773,17 @@ private ProcessEvent terminateProcess(String id,long when)
       if (pd.getName() != null) named_processes.remove(pd.getName());
       evt = new ProcessEvent(BumpRunEventType.PROCESS_REMOVE,pd);
       for (Iterator<ThreadData> it = active_threads.values().iterator(); it.hasNext(); ) {
-         ThreadData td = it.next();
-         if (td.getProcess() == pd) {
-            handleTargetThreadState(td,BumpThreadState.DEAD,
-                  BumpThreadStateDetail.NONE,when);
-            it.remove();
-          }
+	 ThreadData td = it.next();
+	 if (td.getProcess() == pd) {
+	    handleTargetThreadState(td,BumpThreadState.DEAD,
+		  BumpThreadStateDetail.NONE,when);
+	    it.remove();
+	  }
        }
     }
    else {
       BoardLog.logE("BUMP","Terminate process not found " + id + " " +
-            active_processes);
+	    active_processes);
     }
    return evt;
 }
@@ -1453,7 +1453,7 @@ private class LaunchConfig implements BumpLaunchConfig {
    @Override public BumpLaunchConfig setAttribute(String attr,String arg) {
       if (attr.equals("REMOTE_HOST")) return setRemoteHost(arg);
       else if (attr.equals("REMOTE_PORT")) return setRemotePort(Integer.parseInt(arg));
-   
+
       Element x = bump_client.editRunConfiguration(getId(),attr,arg);
       return getLaunchResult(x);
     }
@@ -1624,7 +1624,7 @@ private class ProcessData implements BumpProcess {
    @Override public Iterable<BumpThread> getThreads() {
       List<BumpThread> rslt = new ArrayList<BumpThread>();
       for (ThreadData td : active_threads.values()) {
-         if (td.getProcess() == this && !td.isInternal()) rslt.add(td);
+	 if (td.getProcess() == this && !td.isInternal()) rslt.add(td);
        }
       return rslt;
     }
@@ -1659,8 +1659,8 @@ private class ProcessData implements BumpProcess {
       if (is_running && IvyXml.getAttrBool(xml,"TERMINATED")) is_running = false;
       for_launch = findLaunch(IvyXml.getChild(xml,"LAUNCH"));
       if (process_name == null) {
-         String nm = IvyXml.getAttrString(xml,"NAME");
-         if (nm != null) setProcessName(nm);
+	 String nm = IvyXml.getAttrString(xml,"NAME");
+	 if (nm != null) setProcessName(nm);
        }
     }
 
@@ -1675,12 +1675,12 @@ private class ProcessData implements BumpProcess {
       String host = nm.substring(0,idx);
       String port = nm.substring(idx+1);
       if (host.equals("localhost") || host.equals("127.0.0.1") || host.equals("0.0.0.0")) {
-         try {
-            host = InetAddress.getLocalHost().getHostName();
-          }
-         catch (UnknownHostException e) {
-            host = "localhost";
-          }
+	 try {
+	    host = InetAddress.getLocalHost().getHostName();
+	  }
+	 catch (UnknownHostException e) {
+	    host = "localhost";
+	  }
        }
       process_name = port + "@" + host;
       named_processes.put(process_name,this);

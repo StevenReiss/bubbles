@@ -107,7 +107,7 @@ private void setupLogger()
    BoardLanguage bl = BoardSetup.getSetup().getLanguage();
    String logname = bl.getLogName();
    String lgnm = bl.getBackendLogName();
-   
+
    File wsd = null;
    switch (BoardSetup.getSetup().getRunMode()) {
       case CLIENT :
@@ -241,11 +241,8 @@ public static void logE(String src,String msg,String id,String trace)
 
 public static void logX(String src,String msg)
 {
-   the_logger.log(LogLevel.ERROR,src,msg,null);
-
    Throwable t = new Throwable(msg);
-   t.fillInStackTrace();
-   BoardMetrics.generateBugReport(src,msg,t);
+   the_logger.log(LogLevel.ERROR,src,msg,t);
 }
 
 
@@ -352,7 +349,7 @@ private void log(LogLevel lvl,String src,String msg,Throwable t)
       if (use_stderr) System.err.println(txt);
 
       String pfx = ":EX: ";
-      for ( ; t != null; t = t.getCause()) { 
+      for ( ; t != null; t = t.getCause()) {
 	 txt = src + pfx + t.getMessage();
 	 if (debug_writer != null) {
 	    debug_writer.println(txt);
@@ -362,7 +359,7 @@ private void log(LogLevel lvl,String src,String msg,Throwable t)
 	    System.err.println(txt);
 	    t.printStackTrace();
 	  }
-         pfx = ":EC: ";
+	 pfx = ":EC: ";
        }
     }
 }

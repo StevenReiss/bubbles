@@ -668,8 +668,8 @@ private void setupPluginResource(JarFile jf,String res)
    try {
       ZipEntry ze = jf.getEntry(res);
       if (ze == null) return;
-      File libdir = BoardSetup.getSetup().getResourceDirectory();
-      File tgt = new File(libdir,res);
+      File resdir = BoardSetup.getSetup().getResourceDirectory();
+      File tgt = new File(resdir,res);
       InputStream ins = jf.getInputStream(ze);
       IvyFile.copyFile(ins,tgt);
       BoardSetup.getSetup().checkResourceFile(res);

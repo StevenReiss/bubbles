@@ -37,7 +37,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.Properties;
 
 
@@ -250,7 +253,7 @@ public String getName()
 public static void setPropertyDirectory(String dir)
 {
    if (dir == null) return;
-   
+
    setPropertyDirectory(new File(dir));
 }
 
@@ -540,6 +543,20 @@ public <T extends Enum<T>> T getEnum(String prop,String prefix,T dflt)
    return (T) v;
 }
 
+
+public Set<String> getStringSet(String prop)
+{
+   Set<String> rslt = new HashSet<>();
+   String s = getProperty(prop);
+   if (s != null) {
+      for (StringTokenizer tok = new StringTokenizer(s," \t\n,;:"); tok.hasMoreTokens(); ) {
+	 String p = tok.nextToken();
+	 rslt.add(p);
+       }
+    }
+
+   return rslt;
+}
 
 
 /********************************************************************************/
@@ -876,3 +893,136 @@ private boolean loadFileProps(File f)
 
 
 /* end of BoardProperties.java */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
