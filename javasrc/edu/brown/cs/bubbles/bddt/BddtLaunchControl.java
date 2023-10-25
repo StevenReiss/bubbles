@@ -1092,7 +1092,7 @@ private class RunEventHandler implements BumpRunEventHandler {
                case STEP_INTO :
                case STEP_OVER :
                case STEP_RETURN :
-        	  if (ost.isStopped() && nst.isStopped()) {
+        	  if (ost != null && ost.isStopped() && nst.isStopped()) {
         	     // might not get a thread running event on a step request
         	     ost = ost.getRunState();
         	     handleThreadStateChange(bt,ost);

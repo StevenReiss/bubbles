@@ -90,7 +90,7 @@ private BaleLanguageKitDefault(BoardLanguage lang)
 {
    Element xml = BumpClient.getBump().getLanguageData(lang);
    
-   String lng = IvyXml.getAttrString(xml,"NAME");
+   String lng = IvyXml.getAttrString(xml,"NAME"); 
    command_base = lng.toUpperCase() + "EDIT";
 
    content_map = new HashMap<>();

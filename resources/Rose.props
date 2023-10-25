@@ -10,6 +10,7 @@
 <entry key="Rose.seede.class.path">seede.jar:asm.jar:eclipsejar:junit.jar:ivy.jar:poppy.jar</entry>
 <entry key="Rose.seede.debug">true</entry>
 <entry key="Rose.seede.trace">true</entry>
+<entry key="Rose.seede.jvm.args">-Xmx16000m</entry>
 <entry key="Rose.processor.1">edu.brown.cs.rose.sepal.SepalWrongVariable</entry>
 <entry key="Rose.processor.2">edu.brown.cs.rose.sepal.SepalForLoopIndex</entry>
 <entry key="Rose.processor.3">edu.brown.cs.rose.sepal.SepalCommonProblems</entry>
@@ -32,4 +33,8 @@
 <entry key="Rose.max.up">1</entry>
 <entry key="Rose.ask.driver">true</entry>
 <entry key="Rose.no.autostart">fait bubbles ivy seede</entry>
+<entry key="Rose.chatgpt.host">https://XXXXXX</entry>
+<entry key="Rose.chatgpt.key">XXXXXX</entry>
 </properties>
+
+

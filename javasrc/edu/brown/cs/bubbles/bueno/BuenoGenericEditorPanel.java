@@ -734,32 +734,32 @@ private class FieldsPanel extends EditPanel implements ActionListener {
        String desc = IvyXml.getAttrString(tab_xml,"DESCRIPTION");
        if (desc != null) addBannerLabel(desc);
        for (Element felt : IvyXml.children(tab_xml,"FIELD")) {
-	  String typ = IvyXml.getAttrString(felt,"TYPE");
-	  String name = IvyXml.getAttrString(felt,"NAME");
-	  String lbl = IvyXml.getAttrString(felt,"DESCRIPTION");
-	  if (name == null) name = lbl;
-	  JCheckBox cbx = null;
-	  switch (typ) {
-	     case "OPTIONSET" :
-		addOptionSet(name,lbl,felt);
-		break;
-	     case "BOOLEAN" :
-		cbx = addBoolean(name,lbl,felt);
-		break;
-	     case "CHOICE" :
-		addChoice(name,lbl,felt);
-		break;
-	   }
-	  if (IvyXml.getAttrBool(felt,"SETONLY")) {
-	     String opt = IvyXml.getAttrString(felt,"OPTION");
-	     if (opt == null) continue;
-	     String val = project_editor.getOptions().get(opt);
-	     if (val == null || val.isEmpty()) continue;
-	     if ("1tTyY".indexOf(val.substring(0,1)) >= 0) {
-		if (cbx != null) cbx.setEnabled(false);
-	      }
-	   }
-	}
+          String typ = IvyXml.getAttrString(felt,"TYPE");
+          String name = IvyXml.getAttrString(felt,"NAME");
+          String lbl = IvyXml.getAttrString(felt,"DESCRIPTION");
+          if (name == null) name = lbl;
+          JCheckBox cbx = null;
+          switch (typ) {
+             case "OPTIONSET" :
+        	addOptionSet(name,lbl,felt);
+        	break;
+             case "BOOLEAN" :
+        	cbx = addBoolean(name,lbl,felt);
+        	break;
+             case "CHOICE" :
+        	addChoice(name,lbl,felt);
+        	break;
+           }
+          if (IvyXml.getAttrBool(felt,"SETONLY")) {
+             String opt = IvyXml.getAttrString(felt,"OPTION");
+             if (opt == null) continue;
+             String val = project_editor.getOptions().get(opt);
+             if (val == null || val.isEmpty()) continue;
+             if ("1tTyY".indexOf(val.substring(0,1)) >= 0) {
+        	if (cbx != null) cbx.setEnabled(false);
+              }
+           }
+        }
        addExpander();
      }
 

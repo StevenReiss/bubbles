@@ -33,7 +33,6 @@
 package edu.brown.cs.bubbles.bedrock;
 
 
-import edu.brown.cs.ivy.file.IvyFormat;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -1877,13 +1876,18 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 	  }
 	 else if (typ.equals("Ljava/lang/String;") || typ.equals("java.lang.String")) {
 	    xw.field("KIND","STRING");
-            if (txt.contains("\\U") || txt.contains("\\u")) {
-               String txt0 = IvyFormat.getRawLiteralValue(txt);
-               BedrockPlugin.logD("Convert string " + txt + " " + txt0);
-               txt = txt0;
-             }
-	    // txt is not quite right here if the string is complex
-	    // e.g \UD83D\UDE30" gets mapped to "\u07D8\u00B0"
+	    boolean chars = false;
+	    for (int i = 0; i < txt.length(); ++i) {
+	       if (isBadChar(txt.charAt(i))) {
+		  chars = true;
+		  break;
+		}
+	     }
+	    if (chars) {
+	       xw.field("CHARS",true);
+	       xw.field("LENGTH",txt.length());
+	       txt = IvyXml.encodeCharacters(txt);
+	     }
 	  }
 
 	 else if (val instanceof IJavaObject) {
@@ -1899,7 +1903,10 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 			IJavaVariable nvj = (IJavaVariable) nvar;
 			outputValue(nvj.getValue(),nvj,null,lvls-1,arraysz,donestatics,xw);
 		      }
-		     else outputValue(nvar.getValue(),null,nvar.getName(),lvls-1,arraysz,donestatics,xw);
+		     else {
+			outputValue(nvar.getValue(),null,nvar.getName(),
+			   lvls-1,arraysz,donestatics,xw);
+		      }
 		   }
 		  catch (DebugException e) { }
 		}
@@ -1920,10 +1927,13 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
     }
 }
 
-
-
-
-
+private static boolean isBadChar(char ch)
+{
+   if (ch >= 128) return true;
+   if (ch >= 32) return false;
+   if (ch == '\r' || ch == '\n' || ch == '\t') return true;
+   return false;
+}
 
 
 

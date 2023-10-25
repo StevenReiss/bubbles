@@ -2219,6 +2219,10 @@ private class ValueData implements BumpRunValue {
       if (save_id == null) save_id = IvyXml.getAttrString(xml, "SAVEID");
       sub_values = null;
       var_detail = null;
+      if (IvyXml.getAttrBool(xml,"CHARS")) {
+	 int len = IvyXml.getAttrInt(xml,"LENGTH");
+	 val_value = IvyXml.decodeCharacters(val_value,len);
+       }
       addValues(xml);
     }
 

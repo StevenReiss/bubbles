@@ -375,16 +375,16 @@ private class RunEventHandler implements BumpRunEventHandler {
    @Override public void handleThreadEvent(BumpRunEvent evt) {
       if (evt.getThread() != getThread()) return;
       switch (evt.getEventType()) {
-	 case THREAD_REMOVE :
-	    removeUpdate();
-	    break;
-	 case THREAD_CHANGE :
-	    if (event_handler == null) return;
-	    if (getThread().getThreadState().isStopped())
-	       updateValues();
-	    break;
-	 default:
-	    break;
+         case THREAD_REMOVE :
+            removeUpdate();
+            break;
+         case THREAD_CHANGE :
+            if (event_handler == null) return;
+            if (getThread().getThreadState().isStopped())
+               updateValues();
+            break;
+         default:
+            break;
        }
     }
 

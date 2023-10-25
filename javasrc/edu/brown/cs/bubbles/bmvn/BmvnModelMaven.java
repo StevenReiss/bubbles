@@ -64,7 +64,7 @@ private static final String [] MAVEN_COMMANDS = {
 
 private static Pattern DEP_PATTERN = 
    Pattern.compile("^([-A-Za-z0-9_.]+)\\:([-A-Za-z0-9_.]*)\\:([-A-Za-z0-9_.]*)\\:([-A-Za-z0-9_.]*)\\:" + 
-         "([-A-Za-z0-9_.]*)\\:(.*) -- module (.*) (");
+         "([-A-Za-z0-9_.]*)\\:(.*) -- module (.*) ");
 
 
          
