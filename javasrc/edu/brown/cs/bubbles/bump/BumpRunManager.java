@@ -1172,7 +1172,7 @@ private class LaunchType implements BumpLaunchType {
       test_case = IvyXml.getAttrBool(xml,"TESTCASE");
       launch_fields = new ArrayList<>();
       for (Element fld : IvyXml.children(xml,"ATTRIBUTE")) {
-	 launch_fields.add(new LaunchTypeField(fld));
+         launch_fields.add(new LaunchTypeField(fld));
       }
    }
 

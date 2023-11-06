@@ -1931,8 +1931,8 @@ private static boolean isBadChar(char ch)
 {
    if (ch >= 128) return true;
    if (ch >= 32) return false;
-   if (ch == '\r' || ch == '\n' || ch == '\t') return true;
-   return false;
+   if (ch == '\r' || ch == '\n' || ch == '\t') return false;
+   return true;
 }
 
 

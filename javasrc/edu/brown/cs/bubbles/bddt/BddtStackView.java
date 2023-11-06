@@ -589,7 +589,7 @@ private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBub
 
    @Override public TableCellRenderer getCellRenderer(int r,int c) {
       if (cell_drawer[c] == null) {
-	 cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));
+         cell_drawer[c] = new CellDrawer(super.getCellRenderer(r,c));
        }
       return cell_drawer[c];
     }
@@ -642,22 +642,22 @@ private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBub
       ValueTreeNode tn = null;
       if (v0 instanceof ValueTreeNode) tn = (ValueTreeNode) v0;
       if (tn != null) {
-	 StringBuffer buf = new StringBuffer();
-	 buf.append("<html>");
-	 Object vobj = tn.getValue();
-	 String what = tn.getKey();
-	 if (what == null) return null;
-	 if (vobj == null) return what;
-	 buf.append(what);
-	 buf.append(" = ");
-	 buf.append(IvyXml.htmlSanitize(vobj.toString()));
-	 String evl = launch_control.getEvaluationString(tn.getFrame(),tn.getRunValue(),what);
-	 if (evl != null) {
-	    buf.append("<hr />");
-	    // buf.append(IvyXml.htmlSanitize(evl));
-	    buf.append(evl);
-	  }
-	 return buf.toString();
+         StringBuffer buf = new StringBuffer();
+         buf.append("<html>");
+         Object vobj = tn.getValue();
+         String what = tn.getKey();
+         if (what == null) return null;
+         if (vobj == null) return what;
+         buf.append(what);
+         buf.append(" = ");
+         buf.append(IvyXml.htmlSanitize(vobj.toString()));
+         String evl = launch_control.getEvaluationString(tn.getFrame(),tn.getRunValue(),what);
+         if (evl != null) {
+            buf.append("<hr />");
+            // buf.append(IvyXml.htmlSanitize(evl));
+            buf.append(evl);
+          }
+         return buf.toString();
        }
       return null;
     }

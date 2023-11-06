@@ -101,7 +101,7 @@ private Map<BumpChangeHandler,Boolean> change_handlers;
 private SwingEventListenerList<BumpOpenEditorBubbleHandler> open_editor_bubble_handlers;
 private SwingEventListenerList<BumpProgressHandler> progress_handlers;
 private List<String>	debug_jvm_args;
-private Element         language_data;
+private Element 	language_data;
 
 private boolean 	ide_active;
 private boolean 	doing_exit;
@@ -147,9 +147,9 @@ public synchronized static BumpClient getBump()
 	 case JS :
 	    default_client = new BumpClientJS();
 	    break;
-         default :
-            default_client = new BumpClientLsp(bl.getName());
-            break;
+	 default :
+	    default_client = new BumpClientLsp(bl.getName());
+	    break;
        }
       loadProperties();
     }
@@ -1715,7 +1715,7 @@ public List<BumpLocation> findAllTypes(String nm)
 
 /**
  *	Return a list of BumpLocations containing the definitions of all annotations
- *	matching the given pattern.						
+ *	matching the given pattern.					
  *	@param proj the project to search in, null implies all projects
  *	@param nm the search pattern
  *	@param def if true, include definitions in the output set
@@ -2844,18 +2844,18 @@ public BumpBreakModel getBreakModel()
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Handle hover data                                                       */
-/*                                                                              */
+/*										*/
+/*	Handle hover data							*/
+/*										*/
 /********************************************************************************/
 
 public Element getHoverData(String proj,File file,int soff,int eoff,int delay)
 {
    waitForIDE();
-   
+
    String flds = "FILE='" + file.getPath() + "' START='" + soff + "' END='" + eoff + "'";
    Element xml = getXmlReply("HOVERDATA",proj,flds,null,delay);
-   
+
    return xml;
 }
 
@@ -2863,7 +2863,7 @@ public Element getHoverData(String proj,File file,int soff,int eoff,int delay)
 
 /********************************************************************************/
 /*										*/
-/*	Language data methods   						*/
+/*	Language data methods							*/
 /*										*/
 /********************************************************************************/
 
@@ -2880,8 +2880,8 @@ public Element getLanguageData(BoardLanguage lang)
       if (lang != null) q = "LANGUAGE='" + lang.toString() + "'";
       Element e = getXmlReply("LANGUAGEDATA",null,q,null,0);
       if (IvyXml.isElement(e,"RESULT")) {
-         Element ld = IvyXml.getChild(e,"LANGUAGE");
-         e = ld;
+	 Element ld = IvyXml.getChild(e,"LANGUAGE");
+	 e = ld;
        }
       language_data = e;
     }
@@ -3012,7 +3012,7 @@ public BumpProcess startDebug(BumpLaunchConfig cfg,String id)
 
    String xtr = null;
    if (cfg.getLaunchType() != null && cfg.getLaunchType().useDebugArgs()) {
-      xtr = getDebugArgs(id); 
+      xtr = getDebugArgs(id);
     }
 
    String ctr = cfg.getContractArgs();
@@ -3238,6 +3238,11 @@ public String getVariableDetail(BumpStackFrame frm,String var)
    Element val = IvyXml.getChild(xml,"VALUE");
    if (val == null) return null;
    String rslt = IvyXml.getTextElement(val,"DESCRIPTION");
+   if (IvyXml.getAttrBool(val,"CHARS")) {
+      int len = IvyXml.getAttrInt(val,"LENGTH");
+      BoardLog.logD("BUMP","VARIABLE detail " + len + " " + rslt);
+      rslt = IvyXml.decodeCharacters(rslt,len);
+    }
 
    return rslt;
 }
@@ -3972,23 +3977,23 @@ protected static class NameCollector {
    synchronized void addNames(Element xml) {
       int ctr = 0;
       for (Element fe : IvyXml.children(xml,"FILE")) {
-         String path = IvyXml.getTextElement(fe,"PATH");
-         for (Element itm : IvyXml.children(fe,"ITEM")) {
-            int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
-            int length = IvyXml.getAttrInt(itm,"LENGTH");
-            String pnm = IvyXml.getAttrString(itm,"PROJECT");
-            BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
-            result_names.add(bl);
-            ++ctr;
-          }
+	 String path = IvyXml.getTextElement(fe,"PATH");
+	 for (Element itm : IvyXml.children(fe,"ITEM")) {
+	    int offset = IvyXml.getAttrInt(itm,"STARTOFFSET");
+	    int length = IvyXml.getAttrInt(itm,"LENGTH");
+	    String pnm = IvyXml.getAttrString(itm,"PROJECT");
+	    BumpLocation bl = new BumpLocation(pnm,path,offset,length,itm);
+	    result_names.add(bl);
+	    ++ctr;
+	  }
        }
       BoardLog.logD("BUMP","Received " + ctr + " Names");
       for (Element itm : IvyXml.children(xml,"ITEM")) {
-         String pnm = IvyXml.getAttrString(itm,"PROJECT");
-         String pth = IvyXml.getAttrString(itm,"PATH");
-         BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
-         result_names.add(bl);
-         // BoardLog.logD("BUMP","Added project name " + bl);
+	 String pnm = IvyXml.getAttrString(itm,"PROJECT");
+	 String pth = IvyXml.getAttrString(itm,"PATH");
+	 BumpLocation bl = new BumpLocation(pnm,pth,0,0,itm);
+	 result_names.add(bl);
+	 // BoardLog.logD("BUMP","Added project name " + bl);
        }
       BoardSetup.getSetup().noteNamesLoaded(result_names.size(),max_sym);
     }
