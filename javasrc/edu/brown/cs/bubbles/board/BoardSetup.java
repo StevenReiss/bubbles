@@ -2401,7 +2401,8 @@ public void checkResourceFile(String resfile) throws IOException
    if (!ivv.exists()) ivv.mkdir();
    File f1 = new File(ivv,resfile);
 
-   File res = new File(install_path,BOARD_INSTALL_RESOURCES);
+// File res1 = new File(install_path,BOARD_INSTALL_RESOURCES);
+   File res = getResourceDirectory();
    File f2 = new File(res,resfile);
 
    if (!f2.exists() || !f2.canRead()) {
