@@ -46,7 +46,7 @@ class BumpClientEclipse extends BumpClientJava
 private boolean 	eclipse_starting;
 
 private String [] MAC_BINARY = new String [] {
-      "Contents/MacOS/eclipse", "Contents/Eclispe/eclipse"
+      "Contents/MacOS/eclipse", "Contents/Eclipse/eclipse"
 };
 
 
@@ -108,6 +108,7 @@ private void ensureRunning()
    for (String s : BOARD_ECLIPSE_START) {
       ef1 = new File(ef,s);
       if (ef1.exists() && ef1.canExecute()) break;
+      ef1 = null;
     }
    if (ef1 != null && ef1.isDirectory()) {
       for (String s : MAC_BINARY) {
