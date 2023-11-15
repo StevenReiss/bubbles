@@ -25,6 +25,7 @@
 package edu.brown.cs.bubbles.nobase;
 
 
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -90,7 +91,26 @@ void handleLanguageData(IvyXmlWriter xw)
 {
    String nm = "resources/launches-js.xml";
    InputStream ins = NobaseDebugManager.class.getClassLoader().getResourceAsStream(nm);
+   NobaseMain.logD("Language data " + nm + " " + ins + " " +
+         NobaseDebugManager.class.getClassLoader().getResource(nm));
    Element xml = IvyXml.loadXmlFromStream(ins);
+   if (xml == null) {
+      String nm1 = "launches-java.xml";
+      ins = NobaseDebugManager.class.getClassLoader().getResourceAsStream(nm1);
+      NobaseMain.logD("Language data " + nm1 + " " + ins + " " +
+            NobaseDebugManager.class.getClassLoader().getResource(nm1));
+      xml = IvyXml.loadXmlFromStream(ins);
+    }
+   if (xml == null) {
+      ins = NobaseDebugManager.class.getClassLoader().getResourceAsStream(nm);
+      try {
+	 String txt = IvyFile.loadFile(ins);
+	 NobaseMain.logE("BAD language resource file:\n" + txt);
+       }
+      catch (IOException e) {
+	 NobaseMain.logE("Bad language resource read " + e);
+       }
+    }
    xw.writeXml(xml);
 }
 
