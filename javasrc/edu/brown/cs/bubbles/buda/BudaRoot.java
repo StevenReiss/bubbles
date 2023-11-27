@@ -855,6 +855,7 @@ public void createSearchBubble(Point pt,String proj,String pfx,boolean showmenu)
    hideSearchBubble();
 
    BudaBubble bb = search_creator.createSearch(SearchType.SEARCH_CODE,proj,pfx);
+   if (bb == null) return;
    bb.addComponentListener(new SearchSingleton());
 
    if (!BUDA_PROPERTIES.getBoolean(SEARCH_ALLOW_MULTIPLE)) search_bubble = bb;
