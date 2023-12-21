@@ -105,7 +105,7 @@ private Action			stepinto_action;
 private Action			stepuser_action;
 private FileSystemView		file_system;
 private BddtPerfViewTable	perf_data;
-private BumpProcess             hotswap_fail;
+private BumpProcess		hotswap_fail;
 
 
 private JPanel			launch_panel;
@@ -200,7 +200,7 @@ private void setProcess(BumpProcess p)
 {
    cur_process = p;
    hotswap_fail = null;
-   
+
    BoardLog.logD("BDDT","SET PROCESS " + p);
 
 
@@ -467,26 +467,26 @@ private class PlayAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-         case READY :
-         case TERMINATED :
-            BoardMetrics.noteCommand("BDDT","StartDebug");
-            BoardLog.logD("BDDT","PLAY ACTION " + launch_state);
-            setProcess(null);
-            setLaunchState(LaunchState.STARTING);
-            bubble_manager.restart();
-            BoardThreadPool.start(new StartDebug());
-            break;
-         case STARTING :
-         case RUNNING :
-            break;
-         case PAUSED :
-         case PARTIAL_PAUSE :
-            if (cur_process != null) {
-               BoardMetrics.noteCommand("BDDT","ResumeDebug");
-               waitForFreeze();
-               bump_client.resume(cur_process);
-             }
-            break;
+	 case READY :
+	 case TERMINATED :
+	    BoardMetrics.noteCommand("BDDT","StartDebug");
+	    BoardLog.logD("BDDT","PLAY ACTION " + launch_state);
+	    setProcess(null);
+	    setLaunchState(LaunchState.STARTING);
+	    bubble_manager.restart();
+	    BoardThreadPool.start(new StartDebug());
+	    break;
+	 case STARTING :
+	 case RUNNING :
+	    break;
+	 case PAUSED :
+	 case PARTIAL_PAUSE :
+	    if (cur_process != null) {
+	       BoardMetrics.noteCommand("BDDT","ResumeDebug");
+	       waitForFreeze();
+	       bump_client.resume(cur_process);
+	     }
+	    break;
        }
     }
 
@@ -537,19 +537,19 @@ private class StopAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-         case READY :
-         case TERMINATED :
-            break;
-         case STARTING :
-         case RUNNING :
-         case PARTIAL_PAUSE :
-         case PAUSED :
-            if (cur_process != null) {
-               BoardMetrics.noteCommand("BDDT","TerminateDebug");
-               waitForFreeze();
-               bump_client.terminate(cur_process);
-             }
-            break;
+	 case READY :
+	 case TERMINATED :
+	    break;
+	 case STARTING :
+	 case RUNNING :
+	 case PARTIAL_PAUSE :
+	 case PAUSED :
+	    if (cur_process != null) {
+	       BoardMetrics.noteCommand("BDDT","TerminateDebug");
+	       waitForFreeze();
+	       bump_client.terminate(cur_process);
+	     }
+	    break;
        }
     }
 
@@ -1025,53 +1025,59 @@ private class RunEventHandler implements BumpRunEventHandler {
 
    @Override synchronized public void handleProcessEvent(BumpRunEvent evt) {
       BumpLaunchConfig elc = evt.getLaunchConfiguration();
-      BoardLog.logD("BDDT","PROCESS EVENT " + evt.getEventType() + " " + elc + " " +
-            launch_config + " " + launch_state);
       switch (evt.getEventType()) {
-         case PROCESS_ADD :
-            if (cur_process == null && launch_state == LaunchState.STARTING &&
-        	   (elc == null || elc == launch_config)) {
-               setProcess(evt.getProcess());
-               last_stopped = null;
-               BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
-               BddtFactory.getFactory().getHistoryControl().clearHistory(cur_process);
-               if (perf_data != null) perf_data.clear();
-             }
-            break;
-         case PROCESS_REMOVE :
-            if (cur_process == evt.getProcess()) {
-               BoardLog.logD("BDDT","TERMINATE PROCESS " + cur_process);
-               setLaunchState(LaunchState.TERMINATED);
-               thread_states.clear();
-               setProcess(null);
-               last_stopped = null;
-             }
-            else if (cur_process == null && launch_state == LaunchState.STARTING &&
-        		(elc == null || elc == launch_config)) {
-               setLaunchState(LaunchState.TERMINATED);
-               thread_states.clear();
-               last_stopped = null;
-             }
-            else {
-               BoardLog.logE("BDDT","Spurrious process remove event " + evt.getProcess().getName() +
-                     " " + cur_process + " " + evt.getProcess() + " " + launch_state + " " +
-                     evt.getProcess().getId());
-               if (cur_process != null) {
-                  BoardLog.logD("BDDT","Current process " + cur_process.getId() + " " +
-                        cur_process.getName());
-                }
-             }
-            break;
-         case HOTCODE_FAILURE :
-            if (hotswap_fail != cur_process) {
-               JOptionPane.showMessageDialog(BddtLaunchControl.this,
-                     "Hot Code Swapping Failed",
-                     "Hot Code Failure",JOptionPane.WARNING_MESSAGE);
-               hotswap_fail = cur_process;
-             }
-            break;
-         default:
-            break;
+	 case PROCESS_TRIE :
+	 case PROCESS_TRACE :
+	 case PROCESS_PERFORMANCE :
+	    return;
+       }
+      BoardLog.logD("BDDT","PROCESS EVENT " + evt.getEventType() + " " + elc + " " +
+	    launch_config + " " + launch_state);
+      switch (evt.getEventType()) {
+	 case PROCESS_ADD :
+	    if (cur_process == null && launch_state == LaunchState.STARTING &&
+		   (elc == null || elc == launch_config)) {
+	       setProcess(evt.getProcess());
+	       last_stopped = null;
+	       BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
+	       BddtFactory.getFactory().getHistoryControl().clearHistory(cur_process);
+	       if (perf_data != null) perf_data.clear();
+	     }
+	    break;
+	 case PROCESS_REMOVE :
+	    if (cur_process == evt.getProcess()) {
+	       BoardLog.logD("BDDT","TERMINATE PROCESS " + cur_process);
+	       setLaunchState(LaunchState.TERMINATED);
+	       thread_states.clear();
+	       setProcess(null);
+	       last_stopped = null;
+	     }
+	    else if (cur_process == null && launch_state == LaunchState.STARTING &&
+			(elc == null || elc == launch_config)) {
+	       setLaunchState(LaunchState.TERMINATED);
+	       thread_states.clear();
+	       last_stopped = null;
+	     }
+	    else {
+	       BoardLog.logE("BDDT","Spurrious process remove event " + evt.getProcess().getName() +
+		     " " + cur_process + " " + evt.getProcess() + " " + launch_state + " " +
+		     evt.getProcess().getId());
+	       if (cur_process != null) {
+		  BoardLog.logD("BDDT","Current process " + cur_process.getId() + " " +
+			cur_process.getName());
+		}
+	     }
+	    break;
+	 case HOTCODE_FAILURE :
+	    if (hotswap_fail != cur_process) {
+	       JOptionPane.showMessageDialog(BddtLaunchControl.this,
+		     "Hot Code Swapping Failed",
+		     "Hot Code Failure",JOptionPane.WARNING_MESSAGE);
+	       hotswap_fail = cur_process;
+	     }
+	    break;
+	 default:
+	    break;
        }
     }
 
@@ -1080,52 +1086,52 @@ private class RunEventHandler implements BumpRunEventHandler {
       BumpThread bt = evt.getThread();
       BumpThreadState ost = thread_states.get(bt);
       BumpThreadState nst = bt.getThreadState();
-   
+
       switch (evt.getEventType()) {
-         case THREAD_ADD :
-            nst = BumpThreadState.RUNNING;
-            //$FALL-THROUGH$
-         case THREAD_CHANGE :
-            thread_states.put(bt,nst);
-            switch (bt.getThreadDetails()) {
-               case STEP_END :
-               case STEP_INTO :
-               case STEP_OVER :
-               case STEP_RETURN :
-        	  if (ost != null && ost.isStopped() && nst.isStopped()) {
-        	     // might not get a thread running event on a step request
-        	     ost = ost.getRunState();
-        	     handleThreadStateChange(bt,ost);
-        	   }
-        	  break;
-             }
-            if (nst != ost) {
-               handleThreadStateChange(bt,ost);
-               if (nst.isStopped()) last_stopped = bt;
-               else if (last_stopped == bt) last_stopped = null;
-             }
-            else if (nst.isStopped()) {
-               addExecutionAnnot(bt);
-             }
-            break;
-         case THREAD_REMOVE :
-            removeExecutionAnnot(bt);
-            if (bt == last_stopped) last_stopped = null;
-            thread_states.remove(bt);
-            break;
-         case THREAD_TRACE :
-         case THREAD_HISTORY :
-            return;
-         default:
-            break;
+	 case THREAD_ADD :
+	    nst = BumpThreadState.RUNNING;
+	    //$FALL-THROUGH$
+	 case THREAD_CHANGE :
+	    thread_states.put(bt,nst);
+	    switch (bt.getThreadDetails()) {
+	       case STEP_END :
+	       case STEP_INTO :
+	       case STEP_OVER :
+	       case STEP_RETURN :
+		  if (ost != null && ost.isStopped() && nst.isStopped()) {
+		     // might not get a thread running event on a step request
+		     ost = ost.getRunState();
+		     handleThreadStateChange(bt,ost);
+		   }
+		  break;
+	     }
+	    if (nst != ost) {
+	       handleThreadStateChange(bt,ost);
+	       if (nst.isStopped()) last_stopped = bt;
+	       else if (last_stopped == bt) last_stopped = null;
+	     }
+	    else if (nst.isStopped()) {
+	       addExecutionAnnot(bt);
+	     }
+	    break;
+	 case THREAD_REMOVE :
+	    removeExecutionAnnot(bt);
+	    if (bt == last_stopped) last_stopped = null;
+	    thread_states.remove(bt);
+	    break;
+	 case THREAD_TRACE :
+	 case THREAD_HISTORY :
+	    return;
+	 default:
+	    break;
        }
-   
+
       int tct = thread_states.size();
       int rct = 0;
       for (Map.Entry<BumpThread,BumpThreadState> ent : thread_states.entrySet()) {
-         BumpThreadState bts = ent.getValue();
-         if (bts.isStopped() && last_stopped == null) last_stopped = ent.getKey();
-         else if (bts.isRunning()) ++rct;
+	 BumpThreadState bts = ent.getValue();
+	 if (bts.isStopped() && last_stopped == null) last_stopped = ent.getKey();
+	 else if (bts.isRunning()) ++rct;
        }
       if (tct == 0) setLaunchState(LaunchState.TERMINATED);
       else if (rct == 0) setLaunchState(LaunchState.PAUSED);
@@ -1459,8 +1465,8 @@ String getEvaluationString(BumpStackFrame frm,BumpRunValue rv,String id)
       case JS :
 	 return getEvaluationStringJS(frm,rv,id);
       case DART :
-         // TODO: get dart evaluation string
-         return null;
+	 // TODO: get dart evaluation string
+	 return null;
     }
 }
 
@@ -1642,7 +1648,7 @@ private static String formatRunValue(BumpRunValue rv,int lvl)
 
 private class EditorContextListener implements BaleFactory.BaleContextListener {
 
-   
+
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu m) {
       if (isRelevant(cfg)) m.add(new ValueAction(cfg));
@@ -1650,48 +1656,48 @@ private class EditorContextListener implements BaleFactory.BaleContextListener {
 
    @Override public String getToolTipHtml(BaleContextConfig cfg) {
       if (isRelevant(cfg)) {
-         String id = cfg.getToken();
-         BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
-         if (frm != null) {
-            BumpRunValue rv = null;
-            switch (cfg.getTokenType()) {
-               case FIELD_ID :
-               case FIELD_DECL_ID :
-        	  BumpRunValue rv1 = frm.getValue("this");
-        	  if (rv1 != null) {
-        	     rv = rv1.getValue("this?" + id);
-        	   }
-        	  break;
-               case STATIC_FIELD_ID :
-        	  BumpRunValue rv2 = frm.getValue("this");
-        	  if (rv2 != null) {
-        	     String typ = rv2.getType();
-        	     typ = typ.replace("$",".");
-        	     // TODO: need to get static value here
-        	   }
-        	  break;
-               default :
-        	  break;
-             }
-            if (rv == null) rv = frm.getValue(id);
-            String st = getEvaluationString(frm,rv,id);
-            return st;
-          }
+	 String id = cfg.getToken();
+	 BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
+	 if (frm != null) {
+	    BumpRunValue rv = null;
+	    switch (cfg.getTokenType()) {
+	       case FIELD_ID :
+	       case FIELD_DECL_ID :
+		  BumpRunValue rv1 = frm.getValue("this");
+		  if (rv1 != null) {
+		     rv = rv1.getValue("this?" + id);
+		   }
+		  break;
+	       case STATIC_FIELD_ID :
+		  BumpRunValue rv2 = frm.getValue("this");
+		  if (rv2 != null) {
+		     String typ = rv2.getType();
+		     typ = typ.replace("$",".");
+		     // TODO: need to get static value here
+		   }
+		  break;
+	       default :
+		  break;
+	     }
+	    if (rv == null) rv = frm.getValue(id);
+	    String st = getEvaluationString(frm,rv,id);
+	    return st;
+	  }
        }
       else if (isRelevantFrame(cfg)) {
-         BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
-         if (frm != null) {
-            StringBuffer buf = new StringBuffer();
-            buf.append("Thread: " + frm.getThread().getName());
-            buf.append("<br>Line: " + frm.getLineNumber());
-            return buf.toString();
-          }
+	 BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
+	 if (frm != null) {
+	    StringBuffer buf = new StringBuffer();
+	    buf.append("Thread: " + frm.getThread().getName());
+	    buf.append("<br>Line: " + frm.getLineNumber());
+	    return buf.toString();
+	  }
        }
       return null;
     }
 
-   
-   
+
+
 
    private boolean isRelevant(BaleContextConfig cfg) {
       BudaBubble bb = cfg.getEditor();
@@ -1702,15 +1708,15 @@ private class EditorContextListener implements BaleFactory.BaleContextListener {
       if (cur_process == null || !cur_process.isRunning()) return false;
       if (cfg.getToken() == null) return false;
       switch (cfg.getTokenType()) {
-         case FIELD_ID :
-         case LOCAL_ID :
-         case STATIC_FIELD_ID :
-         case LOCAL_DECL_ID :
-         case FIELD_DECL_ID :
-         case CONST_ID :
-            break;
-         default :
-            return false;
+	 case FIELD_ID :
+	 case LOCAL_ID :
+	 case STATIC_FIELD_ID :
+	 case LOCAL_DECL_ID :
+	 case FIELD_DECL_ID :
+	 case CONST_ID :
+	    break;
+	 default :
+	    return false;
        }
       return true;
     }
