@@ -213,11 +213,14 @@ static void checkUpdate(String jarfile,List<String> javaargs)
       URL u = new URI(bubbles_dir + VERSION_URL).toURL();
       InputStream uins = u.openConnection(update_proxy).getInputStream();
       Element ue = getVersionXml(uins);
-      if (ue == null) return;
+      if (ue == null) {
+         System.err.println("BOARD: Can't connect to bubbles to get version: " + u);
+         return;
+       }
       uins.close();
 
+      System.err.println("BOARD: VERSIONS " + ue + " :: " + ve);
       if (sameVersion(ue,ve)) return;		// we are up to date
-      System.err.println("VERSIONS " + ue + " :: " + ve);
 
       if (System.getProperty("edu.brown.cs.bubbles.NO_UPDATE") != null) {
 	 return;
@@ -225,6 +228,7 @@ static void checkUpdate(String jarfile,List<String> javaargs)
 
       int curjava = getJavaVersion(System.getProperty("java.version"));
       int updjava = getJavaVersion(ue);
+      System.err.println("BOARD: JAVA VERSIONS: " + curjava + " " + updjava);
       if (curjava < updjava) return;
 
       forceUpdate(jarfile,javaargs);
