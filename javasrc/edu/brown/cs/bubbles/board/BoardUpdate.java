@@ -211,7 +211,9 @@ static void checkUpdate(String jarfile,List<String> javaargs)
       bubbles_dir = getBubblesDir(ve);
 
       URL u = new URI(bubbles_dir + VERSION_URL).toURL();
-      InputStream uins = u.openConnection(update_proxy).getInputStream();
+      HttpURLConnection huc = (HttpURLConnection) u.openConnection(update_proxy);
+      huc.setInstanceFollowRedirects(true);
+      InputStream uins = huc.getInputStream();
       Element ue = getVersionXml(uins);
       if (ue == null) {
          System.err.println("BOARD: Can't connect to bubbles to get version: " + u);
@@ -219,9 +221,9 @@ static void checkUpdate(String jarfile,List<String> javaargs)
        }
       uins.close();
 
-      System.err.println("BOARD: VERSIONS " + ue + " :: " + ve);
       if (sameVersion(ue,ve)) return;		// we are up to date
-
+      System.err.println("BOARD: VERSIONS " + getMinor(ue) + " :: " + getMinor(ve));
+      
       if (System.getProperty("edu.brown.cs.bubbles.NO_UPDATE") != null) {
 	 return;
        }
@@ -329,10 +331,11 @@ private static Element getVersionXml(InputStream ins) throws IOException
       return doc.getDocumentElement();
     }
    catch (ParserConfigurationException e) {
-      System.err.println("BOARD: Problem creating XML parser for versioning");
+      System.err.println("BOARD: Problem creating XML parser for versioning: " + e);
       throw new IOException("Can't parse xml",e);
     }
    catch (SAXException e) {
+      System.err.println("BOARD: Problem parsing XML (network inaccessible?): " + e);
       return null;			// network inaccessible
     }
 }
@@ -363,6 +366,7 @@ private BoardUpdate(String [] args)
    java_args = new ArrayList<String>();
    max_memory = 0;
    boolean ourargs = true;
+   HttpURLConnection.setFollowRedirects(true);
 
    for (int i = 0; i < args.length; ++i) {
       if (args[i].startsWith("-") && ourargs) {
@@ -403,6 +407,7 @@ private BoardUpdate(String jarfile,List<String> javaargs)
    java_args = new ArrayList<String>();
    if (javaargs != null) java_args.addAll(javaargs);
    max_memory = 0;
+   HttpURLConnection.setFollowRedirects(true);
 }
 
 
