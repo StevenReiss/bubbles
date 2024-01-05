@@ -248,6 +248,10 @@ private void setFile(String proj,File file)
 {
    String cnts = null;
    String linesep = null;
+   
+   if (proj == null) {
+      BoardLog.logE("BALE","Attempt to open file outside of project");
+    }
 
    project_name = proj;
    file_name = file;

@@ -91,6 +91,12 @@ private BaleLanguageKitDefault(BoardLanguage lang)
    Element xml = BumpClient.getBump().getLanguageData(lang);
    
    String lng = IvyXml.getAttrString(xml,"NAME"); 
+   if (lng == null) {
+      BoardLog.logE("Bale",
+            "Problem loading language kit from " + lang + ": " +  IvyXml.convertXmlToString(xml));
+      lng = lang.toString();
+    }
+   
    command_base = lng.toUpperCase() + "EDIT";
 
    content_map = new HashMap<>();

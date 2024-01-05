@@ -122,7 +122,7 @@ BumpProblemImpl(Element d,String id,int eid,String proj)
       BoardLog.logD("BUMP","FOUND FIXES: " + IvyXml.convertXmlToString(r));
       for (Element f : IvyXml.children(r,"FIX")) {
 	 EditFix ef = new EditFix(f);
-	 if (problem_fixes == null) problem_fixes = new ArrayList<BumpFix>();
+	 if (problem_fixes == null) problem_fixes = new ArrayList<>();
 	 problem_fixes.add(ef);
        }
       computed_fixes = true;

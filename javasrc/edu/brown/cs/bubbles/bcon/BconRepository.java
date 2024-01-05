@@ -279,6 +279,8 @@ private void reload()
 
    synchronized (active_names) {
       BassRepository br = BassFactory.getRepository(BudaConstants.SearchType.SEARCH_CODE);
+      if (br == null) return;
+       
       for (BassName bn : br.getAllNames()) {
 	 switch (bn.getNameType()) {
 	    case CLASS :

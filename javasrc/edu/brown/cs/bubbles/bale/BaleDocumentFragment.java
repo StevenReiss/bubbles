@@ -688,6 +688,14 @@ private boolean checkForNameChange(BaleElement be)
 	 return true;
        }
     }
+   else if (be instanceof BaleElement.CompilationUnitNode && fragment_type == BaleFragmentType.FILE) {
+      String id = be.getBaleDocument().getFile().getName();
+      int idx = id.lastIndexOf(".");
+      if (idx > 0) id = id.substring(0,idx);
+      id += ".<FILE>";
+      fragment_name = id;
+      return true;
+    }
    // need to find name for an initializer here without having a declaration element
    else if (be != null && !be.isLeaf()) {
       for (int i = 0; i < be.getElementCount(); ++i) {

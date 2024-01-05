@@ -1476,7 +1476,7 @@ public List<BumpLocation> findCompilationUnit(String proj,File fil,String clsn)
     }
 
    String flds = "COMPUNIT='T'";
-   if (clsn != null) flds += " CLASS='" + clsn + "'";
+   if (clsn != null && !clsn.isEmpty()) flds += " CLASS='" + clsn + "'";
    if (fil != null) flds += " FILE='" + fil.getAbsolutePath() + "'";
 
    Element xml = getXmlReply("FINDREGIONS",proj,flds,null,0);
@@ -3669,6 +3669,7 @@ private void grabPreferences()
       String nm = IvyXml.getAttrString(pr,"NAME");
       String vl = IvyXml.getAttrString(pr,"VALUE");
       if (IvyXml.getAttrBool(pr,"OPTS")) {
+         BoardLog.logD("BUMP","ADD Option " + nm + " = " + vl);
 	 option_map.put(nm,vl);
        }
     }
@@ -3705,7 +3706,8 @@ public String getOption(String nm)		{ return option_map.get(nm); }
 public boolean getOptionBool(String nm)
 {
    String v = option_map.get(nm);
-   if (v == null || v.length() == 0) return false;
+   BoardLog.logD("BUMP","OPTION BOOL " + nm + " = " + v);
+   if (v == null || v.isEmpty()) return false;
    if ("yYtT1".indexOf(v.charAt(0)) >= 0) return true;
    return false;
 }
@@ -3752,15 +3754,19 @@ private void buildAllProjects(boolean clean,boolean full,boolean refresh,boolean
    q += " FULL='" + Boolean.toString(full) + "'";
    q = addWorkspace(q);
 
-   problem_set.clearProblems(null);
-
    for (Element p : IvyXml.children(e,"PROJECT")) {
       String pnm = IvyXml.getAttrString(p,"NAME");
       if (!IvyXml.getAttrBool(p,"OPEN")) {
 	 getStringReply("OPENPROJECT",pnm,addWorkspace(null),null,0);
        }
       Element probs = getXmlReply("BUILDPROJECT",pnm,q,null,BUILD_DELAY);
-      problem_set.handleErrors(pnm,null,0,probs);
+      if (IvyXml.getAttrBool(probs,"DEFERERRORS")) {
+         // errors deferred -- will come later
+       }
+      else {
+         problem_set.clearProblems(pnm);
+         problem_set.handleErrors(pnm,null,0,probs);
+       }
     }
 }
 

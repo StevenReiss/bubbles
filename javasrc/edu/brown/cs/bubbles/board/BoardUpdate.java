@@ -222,6 +222,7 @@ static void checkUpdate(String jarfile,List<String> javaargs)
       uins.close();
 
       if (sameVersion(ue,ve)) return;		// we are up to date
+      
       System.err.println("BOARD: VERSIONS " + getMinor(ue) + " :: " + getMinor(ve));
       
       if (System.getProperty("edu.brown.cs.bubbles.NO_UPDATE") != null) {

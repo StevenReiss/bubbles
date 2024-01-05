@@ -31,6 +31,7 @@
 package edu.brown.cs.bubbles.bale;
 
 import edu.brown.cs.bubbles.board.BoardColors;
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.buda.BudaCursorManager;
 import edu.brown.cs.bubbles.burp.BurpHistory;
 
@@ -279,6 +280,12 @@ private synchronized void setFragmentName(String name,boolean dirty)
 	 nodollarname = packclass.substring(0, mobidx).replaceAll("[$]", ".");
 	 component_list.getLast().setPackageName(nodollarname);
 	 add(component_list.getLast());
+       }
+      
+      if (idx+1 >= usename.length()) {
+         BoardLog.logE("BALE","Problem with crumb bar name: " + name + " " + usename + " " +
+               fragment_name + " " + component_list);
+         return;
        }
 
       String lastcomp = usename.substring(idx+1);

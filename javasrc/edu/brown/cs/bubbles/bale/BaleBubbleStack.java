@@ -544,7 +544,7 @@ private class FileStackEntry extends GenericStackEntry {
 
    @Override protected BaleFragmentEditor createFullFragment() {
       BaleFragmentEditor ed = BaleFactory.getFactory().createFileEditor(
-	 def_location.getProject(),def_location.getFile(),null);
+         def_location.getProject(),def_location.getFile(),null);
       ed.setInitialSize(new Dimension(BALE_STACK_INITIAL_WIDTH,BALE_STACK_INITIAL_HEIGHT));
       return ed;
     }

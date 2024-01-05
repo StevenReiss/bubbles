@@ -308,6 +308,8 @@ BaleFragmentEditor createClassFragmentEditor(String proj,String cls)
 
 public BaleFragmentEditor createFileEditor(String proj,File fil,String cls)
 {
+   if (cls != null && cls.isEmpty()) cls = null;
+   
    List<BumpLocation> locs = bump_client.findCompilationUnit(proj,fil,cls);
 
    if (cls == null) {
@@ -680,6 +682,7 @@ public BudaBubble createClassBubble(String proj,String cls)
 
 public BudaBubble createFileBubble(String proj,File fil,String cls)
 {
+   if (cls != null && cls.isEmpty()) cls = null;
    BaleFragmentEditor bfe = createFileEditor(proj,fil,cls);
    if (bfe == null) return null;
 
@@ -1233,6 +1236,7 @@ List<BaleRegion> getFragmentRegions(BaleDocument doc)
    int idx = nam.lastIndexOf(".");
    String cnam = nam;
    if (idx > 0) cnam = nam.substring(0,idx);
+   if (cnam != null && cnam.isEmpty()) cnam = null;
 
    switch (doc.getFragmentType()) {
       case METHOD :
@@ -1675,7 +1679,7 @@ static class QuickFix extends AbstractAction {
 
    private Component for_editor;
    private transient BumpProblem for_problem;
-
+   
    private static final long serialVersionUID = 1;
 
    QuickFix(Component root,BumpProblem bp) {
@@ -1685,28 +1689,28 @@ static class QuickFix extends AbstractAction {
     }
 
    @Override public void actionPerformed(ActionEvent e) {
-      List<BaleFixer> fixes = new ArrayList<BaleFixer>();
+      List<BaleFixer> fixes = new ArrayList<>();
       List<BumpFix> fixlist = for_problem.getFixes();
       if (fixlist != null) {
-	 for (BumpFix bf : fixlist) {
-	    BaleFixer fixer = new BaleFixer(for_problem,bf);
-	    if (fixer.isValid()) fixes.add(fixer);
-	 }
+         for (BumpFix bf : fixlist) {
+            BaleFixer fixer = new BaleFixer(for_problem,bf);
+            if (fixer.isValid()) fixes.add(fixer);
+         }
       }
       if (fixes.isEmpty()) {
-	 JOptionPane.showMessageDialog(for_editor,"No quick fixes available");
-	 return;
+         JOptionPane.showMessageDialog(for_editor,"No quick fixes available");
+         return;
        }
-
+   
       BaleFixer fix = null;
       Collections.sort(fixes);
       Object [] fixalts = fixes.toArray();
       fix = (BaleFixer) JOptionPane.showInputDialog(for_editor,"Select Quick Fix",
-						       "Quick Fix Selector",
-						       JOptionPane.QUESTION_MESSAGE,
-						       null,fixalts,fixes.get(0));
+        					       "Quick Fix Selector",
+        					       JOptionPane.QUESTION_MESSAGE,
+        					       null,fixalts,fixes.get(0));
       if (fix == null) return;
-
+   
       fix.actionPerformed(e);
       BoardMetrics.noteCommand("BALE","QuickFixOption");
     }
