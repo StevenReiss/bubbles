@@ -915,27 +915,27 @@ private class SearchHandler extends TextSearchRequestor {
       if (!(elt instanceof ISourceReference)) return null;
       ISourceReference sref = (ISourceReference) elt;
       try {
-	 ISourceRange rng = sref.getSourceRange();
-	 if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
+         ISourceRange rng = sref.getSourceRange();
+         if (rng.getOffset() > off || rng.getOffset() + rng.getLength() < off + len) return null;
        }
       catch (JavaModelException ex) {
-	 BedrockPlugin.logE("Problem getting range: " + ex);
-	 return null;
+         BedrockPlugin.logE("Problem getting range: " + ex);
+         return null;
        }
-
+   
       if (!(elt instanceof IParent)) return elt;
-
+   
       IParent par = (IParent) elt;
       try {
-	 for (IJavaElement je : par.getChildren()) {
-	    IJavaElement fe = findInnerElement(je,off,len);
-	    if (fe != null) return fe;
-	  }
+         for (IJavaElement je : par.getChildren()) {
+            IJavaElement fe = findInnerElement(je,off,len);
+            if (fe != null) return fe;
+          }
        }
       catch (JavaModelException ex) {
-	 BedrockPlugin.logE("Problem getting children: " + ex);
+         BedrockPlugin.logE("Problem getting children: " + ex);
        }
-
+   
       return elt;
     }
 

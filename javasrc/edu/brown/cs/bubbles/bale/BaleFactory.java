@@ -812,6 +812,9 @@ double getScaleFactor()
 }
 
 
+BudaRoot getBudaRoot()                  { return buda_root; }
+
+
 
 /********************************************************************************/
 /*										*/

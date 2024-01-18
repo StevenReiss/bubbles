@@ -149,6 +149,7 @@ private void setupPanel()
    SwingGridPanel pnl = new SwingGridPanel();
    BoardColors.setColors(pnl,"Bddt.launch.background");
    pnl.beginLayout();
+   pnl.addBannerLabel("Launch " + launch_config.getLaunchType().getDescription());
    launch_name = pnl.addTextField("Launch Name",launch_config.getConfigName(),this,this);
    component_items.put(launch_name,"NAME");
 

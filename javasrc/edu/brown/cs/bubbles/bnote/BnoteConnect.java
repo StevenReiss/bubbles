@@ -86,6 +86,11 @@ private String			database_texttype;
 private String			database_longtype;
 private String			database_blobtype;
 
+static {
+   System.setProperty("derby.stream.error.field","edu.brown.cs.ivy.file.IvyDatabase.NULL_STREAM");
+   System.setProperty("derby.stream.error.file","/dev/null");
+}
+
 
 
 /********************************************************************************/
@@ -181,6 +186,11 @@ private boolean setupAccess()
       // Class.forName(jdbc).newInstance();
       Class.forName(jdbc);
       BoardLog.logD("BNOTE",database_type + " database driver loaded");
+      System.err.println("PROP: " + System.getProperty("derby.stream.error.field"));
+      System.err.println("PROP: " + System.getProperty("derby.stream.error.file")); 
+      File f1 = new File(System.getProperty("user.dir"));
+      File f2 = new File(f1,"derby.log");
+      f2.deleteOnExit();
     }
    catch (Throwable t) {
       BoardLog.logD("BNOTE","Can't load " + database_type + " database driver",t);

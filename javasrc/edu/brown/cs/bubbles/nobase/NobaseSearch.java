@@ -81,7 +81,6 @@ void handleTextSearch(String proj,int fgs,String pat,int maxresult,IvyXmlWriter 
     }
    catch (PatternSyntaxException e) {
       pp = Pattern.compile(pat,fgs|Pattern.LITERAL);
-
     }
 
    Pattern filepat = null;

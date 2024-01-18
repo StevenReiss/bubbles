@@ -3533,7 +3533,7 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
-      if (cmd.equals("WORKSPACE")) {
+      if (cmd.equals("WORKSPACE") || cmd.equals(board_language.getWorkspaceLabel())) {
          JTextField tf = (JTextField) e.getSource();
          File ef = new File(tf.getText());
          String np = ef.getPath();

@@ -1252,15 +1252,15 @@ private static class SearchBoxCellRenderer extends DefaultTreeCellRenderer imple
 
 
    @Override public Component getTreeCellRendererComponent(JTree tree,
-							      Object value,
-							      boolean sel,
-							      boolean expanded,
-							      boolean leaf,
-							      int row,
-							      boolean hasfocus) {
+        						      Object value,
+        						      boolean sel,
+        						      boolean expanded,
+        						      boolean leaf,
+        						      int row,
+        						      boolean hasfocus) {
       JLabel label = this;
       BassTreeBase btb = (BassTreeBase) value;
-
+   
       // System.err.println("BASS RENDER " + value);
       String txt = value.toString();
       int validx = txt.indexOf("#@");
@@ -1270,56 +1270,56 @@ private static class SearchBoxCellRenderer extends DefaultTreeCellRenderer imple
       label.setOpaque(false);
       String vnm = value.toString();
       Icon icn = null;
-
+   
       if (vnm.equals(BASS_BUDDY_LIST_NAME)) {
-	 if (expanded) icn = people_collapse_image;
-	 else icn = people_expand_image;
+         if (expanded) icn = people_collapse_image;
+         else icn = people_expand_image;
        }
       else if (vnm.equals(BASS_DOC_LIST_NAME)){
-	 if (expanded) icn = docs_collapse_image;
-	 else icn = docs_expand_image;
+         if (expanded) icn = docs_collapse_image;
+         else icn = docs_expand_image;
        }
       else if (vnm.equals(BASS_CONFIG_LIST_NAME)){
-	 if (expanded) icn = config_collapse_image;
-	 else icn = config_expand_image;
+         if (expanded) icn = config_collapse_image;
+         else icn = config_expand_image;
        }
       else if (vnm.equals(BASS_PROCESS_LIST_NAME)){
-	 if (expanded) icn = process_collapse_image;
-	 else icn = process_expand_image;
+         if (expanded) icn = process_collapse_image;
+         else icn = process_expand_image;
        }
       else if (vnm.equals(BASS_COURSE_LIST_NAME)){
-	 if(expanded) icn = courses_collapse_image;
-	 else icn = courses_expand_image;
+         if(expanded) icn = courses_collapse_image;
+         else icn = courses_expand_image;
        }
       else if (leaf) {
-	 BassName bn = ((BassTreeNode)value).getBassName();
-	 icn = bn.getDisplayIcon();
+         BassName bn = ((BassTreeNode)value).getBassName();
+         icn = bn.getDisplayIcon();
        }
       else {
-	 if (expanded) icn = btb.getCollapseIcon();
-	 else icn = btb.getExpandIcon();
+         if (expanded) icn = btb.getCollapseIcon();
+         else icn = btb.getExpandIcon();
        }
-
+   
       if (sel) {
-	 BoardColors.setColors(label,BASS_PANEL_SELECT_BACKGROUND_PROP);
-	 label.setOpaque(true);
+         BoardColors.setColors(label,BASS_PANEL_SELECT_BACKGROUND_PROP);
+         label.setOpaque(true);
        }
       else {
-	 label.setBackground(BoardColors.transparent());
-	 label.setForeground(tree.getForeground());
+         label.setBackground(BoardColors.transparent());
+         label.setForeground(tree.getForeground());
        }
-
+   
       BassFlag f = BassFactory.getFactory().getFlagForName(btb.getBassName(),btb.getFullName());
       if (f != null) {
-	 Icon i1 = f.getOverlayIcon();
-	 if (i1 != null) {
-	    if (icn == null) icn = i1;
-	    else icn = new OverlayIcon(icn,i1);
-	  }
+         Icon i1 = f.getOverlayIcon();
+         if (i1 != null) {
+            if (icn == null) icn = i1;
+            else icn = new OverlayIcon(icn,i1);
+          }
        }
-
+   
       label.setIcon(icn);
-
+   
       return label;
     }
 

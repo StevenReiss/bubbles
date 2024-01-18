@@ -229,14 +229,19 @@ void clearProblems(String proj)
    List<BumpProblemImpl> clear;
    synchronized (current_problems) {
       if (proj == null) {
-	 clear = new ArrayList<BumpProblemImpl>(current_problems.values());
+	 clear = new ArrayList<>(current_problems.values());
 	 current_problems.clear();
        }
       else {
-	 clear = new ArrayList<BumpProblemImpl>();
-	 for (BumpProblemImpl bp : current_problems.values()) {
-	    if (bp.getProject().equals(proj)) clear.add(bp);
-	  }
+	 clear = new ArrayList<>();
+         for (Iterator<BumpProblemImpl> it = current_problems.values().iterator();
+            it.hasNext(); ) {
+            BumpProblemImpl bp = it.next();
+            if (bp.getProject().equals(proj)) {
+               clear.add(bp);
+               it.remove();
+             }
+          }
        }
     }
 

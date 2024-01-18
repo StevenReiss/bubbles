@@ -1033,6 +1033,7 @@ String SEARCH_ALLOW_MULTIPLE = "Buda.search.multiple";
 interface SearchBoxCreator {
    BudaBubble createSearch(SearchType st,String project,String prefix);
    BudaBubble getPackageExplorer(BudaBubbleArea bba);
+   String findProjectForFile(File f);
 }
 
 

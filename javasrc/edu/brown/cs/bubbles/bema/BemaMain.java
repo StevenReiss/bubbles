@@ -47,6 +47,7 @@ import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bump.BumpClient;
+import edu.brown.cs.ivy.file.IvyDatabase;
 import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.xml.IvyXml;
@@ -185,7 +186,10 @@ private BemaMain(String [] args)
    no_bedrock = false;
    auto_update = null;
    palette_name = null;
-
+   
+   System.setProperty("derby.stream.error.file","/dev/null");
+   System.setProperty("derby.stream.error.field","edu.brown.cs.ivy.file.IvyDatabase.NULL_STREAM");
+   
    checkDefaultLanguage();
 
    scanArgs(args);

@@ -42,6 +42,7 @@ import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.bowi.BowiFactory;
+import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.bubbles.bump.BumpException;
@@ -249,8 +250,12 @@ private void setFile(String proj,File file)
    String cnts = null;
    String linesep = null;
    
-   if (proj == null) {
-      BoardLog.logE("BALE","Attempt to open file outside of project");
+   if (proj == null && file != null) {
+      BudaRoot br = BaleFactory.getFactory().getBudaRoot();
+      proj = br.findProjectForFile(file);
+    }
+   if (proj == null && file != null) {
+      BoardLog.logX("BALE","Attempt to open file outside of project " + file);
     }
 
    project_name = proj;

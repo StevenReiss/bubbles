@@ -332,6 +332,29 @@ Set<File> findAssociatedFiles(String proj,String pfx)
 }
 
 
+String findProjectForFile(File f)
+{
+   waitForNames();
+   
+   synchronized (this) {
+      for (BassName b : all_names) {
+         BassNameLocation bnl = (BassNameLocation) b;
+         if (bnl.getFile().equals(f)) {
+            return bnl.getProject();
+          }
+       }
+      for (BassName b : all_names) {
+         BassNameLocation bnl = (BassNameLocation) b;
+         if (bnl.getFile().getName().equals(f.getName())) {
+            return bnl.getProject();
+          }
+       }
+    }
+   
+   return null;
+}
+
+
 
 /********************************************************************************/
 /*										*/

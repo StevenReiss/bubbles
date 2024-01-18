@@ -582,17 +582,17 @@ private static class SearchProblemFlags implements BassFlagger, BumpProblemHandl
    @Override synchronized  public BassFlag getFlagForName(BassName bnm,String nm) {
       if (flag_map == null) computeFlagMap();
       ProblemFlag pf = flag_map.get(nm);
-
+   
       return pf;
     }
 
    @Override public synchronized void handleProblemAdded(BumpProblem bp)     { flag_map = null; }
    @Override public synchronized void handleProblemRemoved(BumpProblem bp)   { flag_map = null; }
-   @Override public synchronized void handleProblemsDone()		     {
+   @Override public synchronized void handleProblemsDone() {
       if (flag_map == null) {
-	 // System.err.println("FLAGS UPDATED");
-	 // BassFactory.getFactory().flagsUpdated();
-	 SwingUtilities.invokeLater(new FlagUpdater());
+         // System.err.println("FLAGS UPDATED");
+         // BassFactory.getFactory().flagsUpdated();
+         SwingUtilities.invokeLater(new FlagUpdater());
        }
     }
    @Override public synchronized void handleClearProblems()		     { flag_map = null; }
@@ -602,7 +602,7 @@ private static class SearchProblemFlags implements BassFlagger, BumpProblemHandl
       Map<String,ProblemFlag> mpf = new HashMap<>();
       flag_map = mpf;
       for (BumpProblem bp : BumpClient.getBump().getAllProblems()) {
-	 addFlags(bp,mpf);
+         addFlags(bp,mpf);
        }
     }
 

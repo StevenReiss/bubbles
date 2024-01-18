@@ -446,6 +446,11 @@ Set<File> findAssociatedFiles(String proj,String pfx)
 }
 
 
+public String findProjectForFile(File f)
+{
+   return bass_repository.findProjectForFile(f);
+}
+
 
 
 /********************************************************************************/

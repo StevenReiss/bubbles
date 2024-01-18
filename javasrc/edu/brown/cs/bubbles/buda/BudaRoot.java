@@ -991,6 +991,13 @@ private class SearchSingleton extends ComponentAdapter {
 
 
 
+public String findProjectForFile(File f)
+{
+   if (search_creator == null) return null;
+   
+   return search_creator.findProjectForFile(f);
+}
+
 
 /********************************************************************************/
 /*										*/

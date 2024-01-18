@@ -363,9 +363,9 @@ private class BumpHandler implements MintHandler {
       String rply = null;
       if (cmd == null) ;
       else if (cmd.equals("PORT")) {
-	 rply = socket_thread.getLocation();
+         rply = socket_thread.getLocation();
        }
-
+   
       msg.replyTo(rply);
     }
 
