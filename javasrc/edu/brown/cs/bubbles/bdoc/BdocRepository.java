@@ -353,7 +353,8 @@ private void loadJavadoc(URI u,String p,boolean optional)
 
    for (int i = 1; i <= 27; ++i) {
       try {
-	 u1 = new URI(u.getScheme(),u.getAuthority(),u.getPath() + "/index-files/index-" + i + ".html"); 
+	 u1 = new URI(u.getScheme(),u.getAuthority(),
+               u.getPath() + "/index-files/index-" + i + ".html",null,null); 
 	 loadJavadocFile(u1,p,optional);
        }
       catch (URISyntaxException e) { }
