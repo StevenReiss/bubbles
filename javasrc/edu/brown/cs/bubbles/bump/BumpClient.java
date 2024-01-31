@@ -107,6 +107,8 @@ private boolean 	ide_active;
 private boolean 	doing_exit;
 private boolean 	same_host;
 
+private int             serial_number;
+
 protected static BoardProperties system_properties = null;
 private static BumpClient default_client = null;
 
@@ -175,6 +177,7 @@ protected BumpClient()
    same_host = true;
    ide_active = false;
    language_data = null;
+   serial_number = 1;
 
    mint_control = BoardSetup.getSetup().getMintControl();
    mint_name = BoardSetup.getSetup().getMintName();
@@ -3449,7 +3452,7 @@ protected Element getXmlReply(String cmd,String proj,String flds,String cnts,lon
 
    Element r = mdr.waitForXml(delay);
    if (r == null) {
-      BoardLog.logD("BUMP","Command time out " + cmd + " " + mdr.hadReply());
+      BoardLog.logE("BUMP","Command time out " + cmd + " " + delay + " " + mdr.hadReply());
     }
 
    return r;
@@ -3490,9 +3493,10 @@ protected void sendMessage(String cmd,String proj,String flds,String cnts,MintRe
 {
    String xml = "<BUBBLES DO='" + cmd + "'";
    xml += " BID='" + source_id + "'";
-   if (proj != null && proj.length() > 0) xml += " PROJECT='" + proj + "'";
+   if (proj != null && !proj.isEmpty()) xml += " PROJECT='" + proj + "'";
    if (flds != null) xml += " " + flds;
    xml += " LANG='" + getName() + "'";
+   xml += " SNO='" + (serial_number++) + "'";
    xml += ">";
    if (cnts != null) xml += cnts;
    xml += "</BUBBLES>";

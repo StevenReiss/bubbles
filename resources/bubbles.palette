@@ -7,6 +7,9 @@ Buda.BubbleNewColor	:	0x80ffc000
 Buda.userpos.color	:	red
 
 Buda.area.top.color	:	0xff78aac8
+Buda.area.top.color1	:	0xffaac8aa
+Buda.area.top.color2	:	0xffc8aaaa
+Buda.area.top.color3	:	0xffaaaac8
 Buda.area.bottom.color	:	white
 Buda.LinkDrawColor	:	orange
 

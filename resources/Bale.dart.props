@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<entry key="Buda.area.top.color">0xffaac8aa</entry>
+<entry key="Bale.format.onsave">true</entry>
+<entry key="Bale.dart.indent">2</entry>
 </properties>
-
-
 
 
 

@@ -93,7 +93,7 @@ enum BoardLanguage {
    private String workspace_label;
 
    BoardLanguage(String name,String ttl,String dir,String log,String backlog,String arg,
-	 String vm,boolean showclass,String exts,String jar,String ws) {
+         String vm,boolean showclass,String exts,String jar,String ws) {
       language_name = name;
       language_title = ttl;
       property_directory = dir;
@@ -105,7 +105,7 @@ enum BoardLanguage {
       language_extensions = new HashSet<>();
       StringTokenizer tok = new StringTokenizer(exts,".");
       while (tok.hasMoreTokens()) {
-	 language_extensions.add("." + tok.nextToken());
+         language_extensions.add("." + tok.nextToken());
        }
       jar_runner = jar;
       workspace_label = ws;
@@ -468,14 +468,18 @@ String BOARD_RESOURCE_CHECK  = "resources/Bale.props";    // check to see if usi
  **/
 
 String [] BOARD_RESOURCE_PROPS =  new String [] {
-   "Bale.props", "Bale.x86.props", "Bdoc.props", "Bema.props", "Beam.props",
-   "Bgta.props", "Buda.props", "Bass.props", "Bted.props", "Board.props",
-   "Board.x86.props", "Bddt.props", "Bddt.java.props", "Bcon.props",
-   "Bueno.props", "Bueno.java.props",
+   "Bale.x86.props", "Bale.props", 
+   "Bema.props", "Beam.props",
+   "Bgta.props", "Bass.props", "Bted.props", 
+   "Board.x86.props", "Board.props",
+   "Bddt.java.props", "Bddt.props",
+   "Bcon.props",
+   "Bueno.java.props", "Bueno.props",
    "Bvcr.props",
    "Batt.props", "Bedu.props", "Bnote.props", "Bbook.props",
-   "Buda.js.props",
-   "Bandaid.props","Barr.props","Bass.props","Bdoc.java.props",
+   "Buda.js.props","Buda.dart.props","Buda.props",
+   "Bandaid.props","Barr.props","Bass.props",
+   "Bdoc.java.props","Bdoc.props",
    "Bhelp.props", "Bwiz.props", "Buss.props",
    "Bfix.props", "Brepair.props",
 };

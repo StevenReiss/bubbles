@@ -47,7 +47,6 @@ import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bump.BumpClient;
-import edu.brown.cs.ivy.file.IvyDatabase;
 import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.xml.IvyXml;

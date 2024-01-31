@@ -58,6 +58,7 @@ public class BoardColors implements BoardConstants
 /********************************************************************************/
 
 private Map<String,Color>	color_map;
+private Map<String,Color>       known_map;
 private String			palette_name;
 private File			palette_file;
 private long			last_modified;
@@ -86,6 +87,7 @@ private BoardColors()
 {
    palette_name = DEFAULT_PALETTE;
    color_map = null;
+   known_map = null;
    palette_file = null;
    check_count = 0;
    default_colors = null;
@@ -151,6 +153,51 @@ public static Color getColor(String id)
 }
 
 
+public static Color getResourceColor(String id)
+{
+   return getResourceColor(id,Color.WHITE);
+}
+
+
+public static Color getResourceColor(String id,Color dflt)
+{
+   if (id == null) return dflt;
+   
+   BoardColors bc = getColors();
+   
+   bc.loadPalette();
+   
+   Color c = bc.known_map.get(id);
+   if (c != null) return c;
+ 
+   int idx = id.indexOf(".");
+   if (idx >= 0) {
+      String pfx = id.substring(0,idx);
+      String sfx = id.substring(idx+1);
+      BoardProperties bp = BoardProperties.getProperties(pfx);
+      if (bp != null) {
+	 Color c1 = bp.getColor(id,null);
+	 if (c1 == null) c1 = bp.getColor(sfx,null);
+	 if (c1 != null) {
+            c = c1;
+          }
+       }
+    }
+   
+   if (c == null) c = bc.color_map.get(id);
+   
+   if (c == null && dflt != null) {
+      BoardLog.logX("BOARD","Color property " + id + " not found");
+      c = dflt;
+    }
+   
+   if (c != null) bc.known_map.put(id,c);
+   
+   return c;
+}
+
+
+
 public static Color getColor(String id,Color dflt)
 {
    if (id == null) return dflt;
@@ -171,7 +218,10 @@ public static Color getColor(String id,Color dflt)
       if (bp != null) {
 	 Color c1 = bp.getColor(id,null);
 	 if (c1 == null) c1 = bp.getColor(sfx,null);
-	 if (c1 != null) c = c1;
+	 if (c1 != null) {
+            c = c1;
+            cm.put(id,c);
+          }
        }
     }
 
@@ -364,6 +414,7 @@ synchronized private Map<String,Color> loadPalette()
     }
    if (color_map != null) return color_map;
    color_map = new HashMap<>();
+   known_map = new HashMap<>();
 
    InputStream insd = getDefaultPaletteStream();
    loadPaletteData(insd,false);

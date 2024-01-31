@@ -868,16 +868,16 @@ private static class Formatter implements Runnable  {
 
    @Override public void run() {
       if (edit_result == null) {
-	 BumpClient bc = BumpClient.getBump();
-	 Element edits = bc.format(project_name,file_name,0,(int) file_name.length());
-	 if (edits != null) {
-	    edit_result = edits;
-	    SwingUtilities.invokeLater(this);
-	 }
+         BumpClient bc = BumpClient.getBump();
+         Element edits = bc.format(project_name,file_name,0,(int) file_name.length());
+         if (edits != null) {
+            edit_result = edits;
+            SwingUtilities.invokeLater(this);
+         }
       }
       else {
-	 BaleFactory.getFactory().applyEdits(file_name,edit_result);
-	 edit_result = null;
+         BaleFactory.getFactory().applyEdits(file_name,edit_result);
+         edit_result = null;
       }
    }
    

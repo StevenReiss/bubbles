@@ -7,10 +7,13 @@ Bdyn.BackgroundColor	:	0xff000000
 Batt.BarType.SUCCESS	:	0xff00a900
 Bgta.AltBubbleBottomColor	:	0xff81ffc6
 Bted.FindBackground	:	0xff000000
+Buda.area.top.color3	:	0xffc4c4ff
 Bale.BudLineColor	:	0xffb9b9b9
 Buda.OverviewFakeTopColor	:	0x64adadad
+Buda.area.top.color1	:	0xff00d400
 Bale.attr.callid.foreground	:	0xfff6f6ff
 Batt.BarType.RUNNING	:	0xff4f4f00
+Buda.area.top.color2	:	0xffffb1b1
 Beam.problem.bottom.color	:	0xffffa5a5
 Bale.AnnotBarColor	:	0x64b9b9b9
 Bale.warning.color	:	0xfff0f0ff

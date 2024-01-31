@@ -1332,24 +1332,24 @@ private static class IndentLinesAction extends TextAction {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
       BaleDocument bd = be.getBaleDocument();
-
+   
       bd.baleWriteLock();
       try {
-	 int soff = be.getSelectionStart();
-	 int eoff = be.getSelectionEnd();
-
-	 int slno = bd.findLineNumber(soff);
-	 int elno = slno;
-	 if (eoff != soff) elno = bd.findLineNumber(eoff);
-	 if (elno < slno) {
-	    int x = elno;
-	    elno = slno;
-	    slno = x;
-	  }
-
-	 for (int i = slno; i <= elno; ++i) {
-	    bd.fixLineIndent(i);
-	  }
+         int soff = be.getSelectionStart();
+         int eoff = be.getSelectionEnd();
+   
+         int slno = bd.findLineNumber(soff);
+         int elno = slno;
+         if (eoff != soff) elno = bd.findLineNumber(eoff);
+         if (elno < slno) {
+            int x = elno;
+            elno = slno;
+            slno = x;
+          }
+   
+         for (int i = slno; i <= elno; ++i) {
+            bd.fixLineIndent(i);
+          }
        }
       finally { bd.baleWriteUnlock(); }
     }
@@ -1360,7 +1360,7 @@ private static class IndentLinesAction extends TextAction {
 private static class FixIndentsAction extends TextAction {
 
    private static final long serialVersionUID = 1;
-
+   
    FixIndentsAction() {
       super("FixIndentsAction");
     }
@@ -1369,25 +1369,26 @@ private static class FixIndentsAction extends TextAction {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
       BaleDocument bd = be.getBaleDocument();
-
+   
       bd.baleWriteLock();
       try {
-	 int soff = be.getSelectionStart();
-	 int eoff = be.getSelectionEnd();
-	 int dsoff = bd.mapOffsetToEclipse(soff);
-	 int deoff = bd.mapOffsetToEclipse(eoff);
-
-	 BumpClient bc = BumpClient.getBump();
-	 org.w3c.dom.Element edits = bc.fixIndents(bd.getProjectName(),bd.getFile(),bd.getEditCounter(),dsoff,deoff);
-
-	 if (edits != null) {
-	    BaleApplyEdits bae = new BaleApplyEdits(bd);
-	    bae.applyEdits(edits);
-	  }
-	 else {
-	    bd.nextEditCounter();
-	  }
-
+         int soff = be.getSelectionStart();
+         int eoff = be.getSelectionEnd();
+         int dsoff = bd.mapOffsetToEclipse(soff);
+         int deoff = bd.mapOffsetToEclipse(eoff);
+   
+         BumpClient bc = BumpClient.getBump();
+         org.w3c.dom.Element edits = bc.fixIndents(bd.getProjectName(),bd.getFile(),
+               bd.getEditCounter(),dsoff,deoff);
+   
+         if (edits != null) {
+            BaleApplyEdits bae = new BaleApplyEdits(bd);
+            bae.applyEdits(edits);
+          }
+         else {
+            bd.nextEditCounter();
+          }
+   
        }
       finally { bd.baleWriteUnlock(); }
     }
@@ -2556,7 +2557,7 @@ private static class FormatAction extends TextAction {
       if (!checkEditor(target)) return;
       BaleDocument bd = target.getBaleDocument();
       BoardMetrics.noteCommand("BALE",String.valueOf(getValue(Action.NAME)));
-
+   
       bd.format(target.getSelectionStart(),target.getSelectionEnd());
     }
 

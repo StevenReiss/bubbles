@@ -1461,8 +1461,8 @@ public BudaHelpRegion getHelpRegion(Point pt)
    Dimension sz = getSize();
 
    Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
-   Color tc = BoardColors.getColor(top_color_name);
-   Color bc = BoardColors.getColor(bottom_color_name);
+   Color tc = BoardColors.getResourceColor(top_color_name);
+   Color bc = BoardColors.getResourceColor(bottom_color_name);
    if (DISPLAY_SHOW_GRADIENT) {
       Paint p = new GradientPaint(0f,0f,tc,0f,sz.height,bc);
       g2.setPaint(p);

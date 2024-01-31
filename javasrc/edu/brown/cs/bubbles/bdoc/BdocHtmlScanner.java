@@ -22,7 +22,6 @@
 
 package edu.brown.cs.bubbles.bdoc;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +49,9 @@ static List<BdocReference> scanIndex(URI u,BdocRepository repo,String project)
    try {
       doc = Jsoup.parse(u.toURL(),10000);
     }
-   catch (IOException e) { }
+   catch (Throwable e) { 
+      BoardLog.logE("BDOC","Problem scanning index " + u,e);
+    }
    if (doc == null) return rslt;
    
    for (Element el : doc.select("dt")) {

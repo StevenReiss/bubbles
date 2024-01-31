@@ -40,11 +40,14 @@ class BaleIndenterLsp extends BaleIndenter implements BaleConstants
 /*										*/
 /********************************************************************************/
 
+enum LineIndentMode { ALL, EMPTY, NON_EMPTY, NONE }
+
 private int indent_space;
 private int tab_size;
 private int rbr_indent;
 private boolean unnest_functions;
 private boolean local_split;
+private LineIndentMode indent_mode;
 
 
 
@@ -88,19 +91,57 @@ BaleIndenterLsp(BaleDocument bd)
       return di.computeIndent();
    }
 
-   return getIndent(offset,false);
+   return getIndent(offset,true);
 }
 
 
 
 @Override int getDesiredIndentation(int offset)
 {
-   return getIndent(offset,true);
+   return getIndent(offset,false);
 }
 
 
 private int getIndent(int offset,boolean split)
 {
+   boolean usedefault = false;
+   if (indent_mode == LineIndentMode.ALL) usedefault = false;
+   else if (indent_mode == LineIndentMode.NONE) usedefault = true;
+   else {
+      int pos = offset;
+      int spos = pos;
+      int epos = pos;
+      boolean nonspace = false;
+      while (epos < doc_text.length()) {
+         char ch = doc_text.charAt(epos);
+         if (ch == ' ' || ch == '\t') ++epos;
+         else if (ch == '\n') break;
+         else {
+            nonspace = true;
+            break;
+          }
+       }
+      while (!nonspace && spos > 0) {
+         char ch = doc_text.charAt(spos);
+         if (ch == ' ' || ch == '\t') --spos;
+         else if (ch == '\n') {
+            if (spos < pos) ++spos;
+            break;
+          }
+         else {
+            nonspace = true;
+            break;
+          }
+       }
+      if (indent_mode == LineIndentMode.EMPTY) usedefault = nonspace;
+      else usedefault = !nonspace;
+    }
+   
+   if (usedefault) {
+      DefaultIndenter di = new DefaultIndenter(offset,split);
+      return di.computeIndent();
+    }
+
    int eoff = bale_document.mapOffsetToEclipse(offset);
 
    BumpClient bc = BumpClient.getBump();
@@ -176,38 +217,38 @@ private class DefaultIndenter {
       int soffset = bale_document.findLineOffset(current_line);
       int eoffset = bale_document.findLineOffset(current_line + 1) - 1;
       if (split_line >= 0) {
-	 if (lno > split_line) {
-	    lno -= 1;
-	    if (lno == split_line) {
-	       soffset = split_offset;
-	    }
-	    else {
-	       soffset = bale_document.findLineOffset(lno);
-	       eoffset = bale_document.findLineOffset(lno+1)-1;
-	    }
-	 }
-	 else if (lno == split_line) {
-	    eoffset = split_offset;
-	 }
+         if (lno > split_line) {
+            lno -= 1;
+            if (lno == split_line) {
+               soffset = split_offset;
+            }
+            else {
+               soffset = bale_document.findLineOffset(lno);
+               eoffset = bale_document.findLineOffset(lno+1)-1;
+            }
+         }
+         else if (lno == split_line) {
+            eoffset = split_offset;
+         }
       }
      StringBuffer buf = new StringBuffer();
      int pos = 0;
      for (int i = soffset; i < eoffset; ++i) {
-	char c = doc_text.charAt(i);
-	if (c == '\t') {
-	   int d = pos % tab_size;
-	   int ct = tab_size - d;
-	   for (int j = 0; j < ct; ++j) buf.append(" ");
-	}
-	else {
-	   buf.append(c);
-	}
+        char c = doc_text.charAt(i);
+        if (c == '\t') {
+           int d = pos % tab_size;
+           int ct = tab_size - d;
+           for (int j = 0; j < ct; ++j) buf.append(" ");
+        }
+        else {
+           buf.append(c);
+        }
      }
      String txt = buf.toString();
      txt = txt.replace("::","XX");
      line_text = txt;
      line_length = txt.length();
-
+   
      return txt;
    }
 
@@ -226,33 +267,51 @@ private class DefaultIndenter {
    }
 
    boolean isLabel(int pos) {
+      int fnd = -1;
       for (int i = pos; i < line_length; ++i) {
-	 char ch = line_text.charAt(i);
-	 if (Character.isJavaIdentifierPart(ch)) ;
-	 else if (ch == ':') {
-	    if (i+1 < line_length && line_text.charAt(i+1) == ':') break;
-	    return true;
-	  }
-	 else break;
+         char ch = line_text.charAt(i);
+         if (Character.isJavaIdentifierPart(ch)) ;
+         else if (ch == ':') {
+            if (i+1 < line_length && line_text.charAt(i+1) == ':') break;
+            fnd = i;
+            break;
+          }
+         else break;
        }
-      return false;
+      if (fnd > 0) {
+         int lno = current_line;
+         int soffset = bale_document.findLineOffset(lno)-1;
+         while (soffset >= 0) {
+            char c = doc_text.charAt(soffset);
+            if (!Character.isWhitespace(c)) {
+               if (c == '(' || c == ',') {
+                  fnd = -1;
+                  break;
+                }
+               if (c == '{' || c == ';') break;
+             }
+            --soffset;
+          }
+       }
+      
+      return fnd > 0;
    }
 
    boolean isPrototype(int pos) {
       boolean haveid = false;
       boolean inid = false;
-
+   
       for (int i = pos; i < line_length; ++i) {
-	 char c = getChar(i);
-	 if (c == 0 || c <= ')' || c == ',') break;
-	 if (Character.isJavaIdentifierPart(c) || c == '$') {
-	    if (!inid && haveid) return true;
-	    inid = true;
-	    haveid = true;
-	  }
-	 else inid = false;
+         char c = getChar(i);
+         if (c == 0 || c <= ')' || c == ',') break;
+         if (Character.isJavaIdentifierPart(c) || c == '$') {
+            if (!inid && haveid) return true;
+            inid = true;
+            haveid = true;
+          }
+         else inid = false;
        }
-
+   
       return false;
    }
 
@@ -260,7 +319,7 @@ private class DefaultIndenter {
    int computeIndent() {
       getLine();
       int x = 0;
-
+   
       // get initial indent
       // TODO -- handle tabs
       for ( ; getChar(x) == ' '; ++x);
@@ -268,168 +327,169 @@ private class DefaultIndenter {
       if (x < line_length) init_indent = x;
       if (c == '#') return 0;
       if (c == '}') {
-	 nest_level = 1;
-	 eos_first = true;
-	 rbr_flag = true;
+         nest_level = 1;
+         eos_first = true;
+         rbr_flag = true;
        }
       else if (c == '{') lbr_flag = true;
       else if (matchInLine(x,"case ")) case_flag = true;
       else if (matchInLine(x,"default ")) case_flag = true;
       else if (matchInLine(x,"default:")) case_flag = true;
       else if (isLabel(x)) label_flag = true;
-
-      x = 0;
+   
+      x = -1;
       loop: for ( ; ; ) {
-	 while (x <= 0) {
-	    int lstrfg = 0;
-	    --current_line;
-	    fct_flag = false;
-	    if (current_line < 0) break loop;
-	    getLine();
-	    if (getChar(0) == '#') x = 0;
-	    else {
-	       for (x = 0; x < line_length; ++x) {
-		  char chx = getChar(x);
-		  if (chx == '"' || chx == '\'') {
-		     if (x == 0 || getChar(x-1) == '\\') continue;
-		     if (lstrfg == 0) lstrfg = chx;
-		     else if (lstrfg == chx) lstrfg = 0;
-		   }
-		  else if (lstrfg == 0 && chx == '/' && getChar(x+1) == '/') break;
-		}
-	     }
-	  }
-	 --x;
-	 c = getChar(x);
-	
-	 if (string_char != 0) {
-	    if (c == string_char && (x == 0 || getChar(x-1) == '\\')) {
-	       string_char = 0;
-	       c = 'X';
-	     }
-	    else continue;
-	  }
-	 if (cmmt_flag) {
-	    if (c == '/' && getChar(x+1) == '*') cmmt_flag = false;
-	    continue;
-	  }
-	 if (c == '/' && getChar(x-1) == '*') {
-	    cmmt_flag = true;
-	    --x;
-	    continue;
-	  }
-	
-	 switch (c) {
-	    case ' ' :
-	       break;
-	    case '"' :
-	    case '\'' :
-	       string_char = c;
-	       break;
-	
-	    case '(' :
-	       if (last_semi != current_line && getChar(x+1) != ')' &&
-		     !isPrototype(x+1)) {
-		  fct_flag = true;
-		}
-	    /* FALLTHROUGH */
-	 case '{' :
-	       if (last_sig < 0 && last_semi < 0) case_flag = false;
-	       if (nest_level > 0) {
-		  --nest_level;
-		  if (nest_level == 0) last_sig = x;
-		}
-	       else if (last_sig < 0 && x > 0) nest_pos = x;
-	       else if (x == 0 && last_sig < 0) {
-		  nest_pos = 0;
-		  break loop;
-		}
-	       cma_line = -1;
-	       break;
-	
-	    case '}' :
-	       if (nest_level == 0) {
-		  if (x == 0) {
-		     last_sig = -1;
-		     nest_pos = -1;
-		     break loop;
-		   }
-		  if (last_sig >= 0) break loop;
-		  eos_first = true;
-		}
-	       ++nest_level;
-	       break;
-	
-	    case ')' :
-	       ++nest_level;
-	       break;
-	
-	    case ':' :
-	       if (nest_level > 0) break;
-	       int i = 0;
-	       while (getChar(i) == ' ') ++i;
-	       if (matchInLine(i,"case ") ||
-		     matchInLine(i,"default ") ||
-		     matchInLine(i,"default:")) {
-		  while (Character.isJavaIdentifierPart(getChar(i))) ++i;
-		  while (getChar(i) == ' ') ++i;
-		  if (i == x) x = 0;
-		}
-	       else {
-		  if (nest_pos < 0 && last_sig < 0) {
-		     last_sig = i;
-		     nest_pos = i;
-		   }
-		  break loop;
-		}
-	       break;
-	
-	    case ';' :
-	       last_semi = current_line;
-	       if (nest_level > 0) break;
-	       if (last_sig >= 0) break loop;
-	       eos_first = true;
-	       break;
-	
-	    case ',' :
-	       if (nest_level == 0) cma_line = current_line;
-	       break;
-	
-	    default :
-	       if (nest_level > 0) break;
-	       last_sig = x;
-	       if (x == 0) {
-		  if (fct_flag && unnest_functions) nest_pos = 0;
-		  last_sig = -1;
-		  if (getChar(0) == '/' && getChar(1) == '*' && nest_pos < 0) {
-		     last_sig = init_indent;
-		     eos_first = true;
-		   }
-		  break loop;
-		}
-	       break;
-	  }
+         while (x <= 0) {
+            int lstrfg = 0;
+            --current_line;
+            fct_flag = false;
+            if (current_line < 0) break loop;
+            getLine();
+            if (getChar(0) == '#') x = 0;
+            else {
+               for (x = 0; x < line_length; ++x) {
+                  char chx = getChar(x);
+                  if (chx == '"' || chx == '\'') {
+                     if (x == 0 || getChar(x-1) == '\\') continue;
+                     if (lstrfg == 0) lstrfg = chx;
+                     else if (lstrfg == chx) lstrfg = 0;
+                   }
+                  else if (lstrfg == 0 && chx == '/' && getChar(x+1) == '/') break;
+                }
+             }
+          }
+         --x;
+         c = getChar(x);
+         
+         if (string_char != 0) {
+            if (c == string_char && (x == 0 || getChar(x-1) == '\\')) {
+               string_char = 0;
+               c = 'X';
+             }
+            else continue;
+          }
+         if (cmmt_flag) {
+            if (c == '/' && getChar(x+1) == '*') cmmt_flag = false;
+            continue;
+          }
+         if (c == '/' && getChar(x-1) == '*') {
+            cmmt_flag = true;
+            --x;
+            continue;
+          }
+         
+         switch (c) {
+            case ' ' :
+               break;
+            case '"' :
+            case '\'' :
+               string_char = c;
+               break;
+               
+            case '(' :
+               if (last_semi != current_line && getChar(x+1) != ')' &&
+                     !isPrototype(x+1)) {
+                  fct_flag = true;
+                }
+               /* FALLTHROUGH */
+            case '{' :
+               if (last_sig < 0 && last_semi < 0) case_flag = false;
+               if (nest_level > 0) {
+                  --nest_level;
+                  if (nest_level == 0) last_sig = x;
+                }
+               else if (last_sig < 0 && x > 0) nest_pos = x;
+               else if (x == 0 && last_sig < 0) {
+                  nest_pos = 0;
+                  break loop;
+                }
+               else break loop;
+               cma_line = -1;
+               break;
+               
+            case '}' :
+               if (nest_level == 0) {
+                  if (x == 0) {
+                     last_sig = -1;
+                     nest_pos = -1;
+                     break loop;
+                   }
+                  if (last_sig >= 0) break loop;
+                  eos_first = true;
+                }
+               ++nest_level;
+               break;
+               
+            case ')' :
+               ++nest_level;
+               break;
+               
+            case ':' :
+               if (nest_level > 0) break;
+               int i = 0;
+               while (getChar(i) == ' ') ++i;
+               if (matchInLine(i,"case ") ||
+                     matchInLine(i,"default ") ||
+                     matchInLine(i,"default:")) {
+                  while (Character.isJavaIdentifierPart(getChar(i))) ++i;
+                  while (getChar(i) == ' ') ++i;
+                  if (i == x) x = 0;
+                }
+               else {
+                  if (nest_pos < 0 && last_sig < 0) {
+                     last_sig = i;
+                     nest_pos = i;
+                   }
+                  break loop;
+                }
+               break;
+               
+            case ';' :
+               last_semi = current_line;
+               if (nest_level > 0) break;
+               if (last_sig >= 0) break loop;
+               eos_first = true;
+               break;
+               
+            case ',' :
+               if (nest_level == 0) cma_line = current_line;
+               break;
+               
+            default :
+               if (nest_level > 0) break;
+               last_sig = x;
+               if (x == 0) {
+                  if (fct_flag && unnest_functions) nest_pos = 0;
+                  last_sig = -1;
+                  if (getChar(0) == '/' && getChar(1) == '*' && nest_pos < 0) {
+                     last_sig = init_indent;
+                     eos_first = true;
+                   }
+                  break loop;
+                }
+               break;
+          }
        }
-
+      
       int L4 = indent_space;		// default indent
       int L5 = indent_space;		// indent with no last significant char
       int L6 = rbr_indent;		// indent for }
-
+      
       int rslt = last_sig;
       if (last_sig < 0 && nest_pos < 0) rslt = 0;
       else if (last_sig < 0) rslt = L5;
       else if (nest_pos >= 0) rslt = last_sig + L5;
       else if (!eos_first && (cma_line < 0 || cma_line == current_line)) {
-	 rslt = last_sig + L4;
+         rslt = last_sig + L4;
        }
-
+      
       if (lbr_flag && rslt == L5) rslt = 0;
       if (rbr_flag && rslt != 0) rslt += L6;
       else if (case_flag) rslt -= L5;
       else if (label_flag) rslt -= L5;
-
+      
       if (rslt < 0) rslt = 0;
-
+      
       return rslt;
    }
 	
@@ -460,7 +520,31 @@ private void loadProperties()
    unnest_functions = BALE_PROPERTIES.getBoolean("Bale." + lang + ".unnestFunctions",unnest_functions);
 
    BumpClient bc = BumpClient.getBump();
-   local_split = !bc.getOptionBool("splitIndent");
+   local_split = !bc.getOptionBool("lspbase.lsp.splitIndent");
+   indent_mode = LineIndentMode.ALL;
+   String md = bc.getOption("lspbase.lsp.lineIndent");
+   if (md != null) {
+      md = md.toLowerCase();
+      switch (md) {
+         case "all" :
+         case "yes" :
+            indent_mode = LineIndentMode.ALL;
+            break;
+         default :
+         case "none" :
+         case "no" :
+            indent_mode = LineIndentMode.NONE;
+            break;
+         case "empty" :
+            indent_mode = LineIndentMode.EMPTY;
+            break;
+         case "nonempty" :
+         case "text" :
+         case "non-empty" :
+            indent_mode = LineIndentMode.NON_EMPTY;
+            break;
+       }
+    }
 }
 
 
