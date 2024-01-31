@@ -270,7 +270,7 @@ private class DefaultIndenter {
       int fnd = -1;
       for (int i = pos; i < line_length; ++i) {
          char ch = line_text.charAt(i);
-         if (Character.isJavaIdentifierPart(ch)) ;
+         if (Character.isJavaIdentifierPart(ch) || Character.isWhitespace(ch)) ;
          else if (ch == ':') {
             if (i+1 < line_length && line_text.charAt(i+1) == ':') break;
             fnd = i;
@@ -333,7 +333,7 @@ private class DefaultIndenter {
        }
       else if (c == '{') lbr_flag = true;
       else if (matchInLine(x,"case ")) case_flag = true;
-      else if (matchInLine(x,"default ")) case_flag = true;
+      else if (matchInLine(x,"default :")) case_flag = true;
       else if (matchInLine(x,"default:")) case_flag = true;
       else if (isLabel(x)) label_flag = true;
    
@@ -362,7 +362,7 @@ private class DefaultIndenter {
          c = getChar(x);
          
          if (string_char != 0) {
-            if (c == string_char && (x == 0 || getChar(x-1) == '\\')) {
+            if (c == string_char && (x == 0 || getChar(x-1) != '\\')) {
                string_char = 0;
                c = 'X';
              }

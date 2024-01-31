@@ -343,7 +343,7 @@ private void loadJavadoc(URI u,String p,boolean optional)
    URI u1;
 
    try {
-      u1 = new URI(u.getScheme(),u.getAuthority(),u.getPath() + "/index-all.html");
+      u1 = new URI(u.getScheme(),u.getAuthority(),u.getPath() + "/index-all.html",null,null);
       if (loadJavadocFile(u1,p,optional)) return;
     }
    catch (URISyntaxException e) {
