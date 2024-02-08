@@ -749,6 +749,16 @@ private class FragmentElisionUpdater implements Runnable {
 private void waitForRemoteEdits()
 {
    synchronized (remote_edits) {
+      if (remote_edits.isEmpty()) return;
+    }
+   
+   if (SwingUtilities.isEventDispatchThread()) {
+      RemoteEditor re = new RemoteEditor();
+      re.run();
+      return;
+    }
+   
+   synchronized (remote_edits) {
       while (!remote_edits.isEmpty()) {
          try {
             remote_edits.wait(500);
