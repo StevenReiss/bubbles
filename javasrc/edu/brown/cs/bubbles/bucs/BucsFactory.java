@@ -96,7 +96,7 @@ private BucsFactory()
 private void setupCallbacks()
 {
    BumpClient bc = BumpClient.getBump();
-   boolean useS6 = bc.getOptionBool("bubbles.useS6");
+   boolean useS6 = bc.getOptionBool("bubbles.useS6",false);
    if (!useS6) return;
    
    BaleFactory.getFactory().addContextListener(new BucsContexter());

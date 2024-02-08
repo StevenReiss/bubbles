@@ -114,7 +114,7 @@ public static void setup()
 public static void initialize(BudaRoot br)
 {
    BumpClient bc = BumpClient.getBump();
-   boolean usemvn = bc.getOptionBool("bubbles.useMaven");
+   boolean usemvn = bc.getOptionBool("bubbles.useMaven",false);
    if (!usemvn) return;
    getFactory().setupModels();
    getFactory().setupCallbacks();

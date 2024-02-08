@@ -2096,13 +2096,17 @@ private static class SaveAllRun implements Runnable {
    @Override public void run() {
       BowiFactory.startTask();
       try {
-	 // BumpClient.getBump().saveAll();
-	 for_root.handleSaveAllRequest();
-	 BumpClient.getBump().compile(false,false,false);
-	 try {
-	    for_root.saveConfiguration(null);
-	  }
-	 catch (IOException ex) { }
+         // BumpClient.getBump().saveAll();
+         for_root.handleSaveAllRequest();
+         BumpClient bc = BumpClient.getBump();
+         boolean comp = bc.getOptionBool("lspbase.lsp.compileOnSave",true);
+         if (comp) {
+            BumpClient.getBump().compile(false,false,false);
+          }
+         try {
+            for_root.saveConfiguration(null);
+          }
+         catch (IOException ex) { }
        }
       finally { BowiFactory.stopTask(); }
     }
@@ -2132,14 +2136,14 @@ private static class RedoElisionAction extends AbstractAction {
       BaleDocument bd = target.getBaleDocument();
       BowiFactory.startTask();
       try {
-	 bd.baleWriteLock();
-	 try {
-	    bd.redoElision();
-	    bd.handleElisionChange();
-	    target.getPreferredSize();
-	    bd.fixElisions();
-	  }
-	 finally { bd.baleWriteUnlock(); }
+         bd.baleWriteLock();
+         try {
+            bd.redoElision();
+            bd.handleElisionChange();
+            target.getPreferredSize();
+            bd.fixElisions();
+          }
+         finally { bd.baleWriteUnlock(); }
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","RedoElision");
@@ -3259,7 +3263,7 @@ private static class CommentAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
-
+   
       BuenoFactory bf = BuenoFactory.getFactory();
       BuenoLocation bl = new CommentLocation(be,be.getSelectionStart());
       bf.createNew(new_type,bl,null);

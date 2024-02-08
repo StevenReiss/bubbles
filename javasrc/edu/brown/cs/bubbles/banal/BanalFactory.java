@@ -99,7 +99,7 @@ public static void setup()
 public static void initialize(BudaRoot br)
 {
    BumpClient bc = BumpClient.getBump();
-   boolean useBanal = bc.getOptionBool("bubbles.useBanal");
+   boolean useBanal = bc.getOptionBool("bubbles.useBanal",false);
    if (!useBanal) return;
 
    switch (BoardSetup.getSetup().getRunMode()) {

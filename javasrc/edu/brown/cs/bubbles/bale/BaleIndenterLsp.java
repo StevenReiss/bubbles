@@ -260,9 +260,9 @@ private class DefaultIndenter {
    boolean matchInLine(int pos,String txt) {
       int ln = txt.length();
       for (int i = 0; i < ln; ++i) {
-	 if (txt.charAt(i) != getChar(pos+i)) return false;
+         if (txt.charAt(i) != getChar(pos+i)) return false;
        }
-
+   
       return true;
    }
 
@@ -403,8 +403,10 @@ private class DefaultIndenter {
                   nest_pos = 0;
                   break loop;
                 }
-               else break loop;
-               cma_line = -1;
+               else {
+                  cma_line = -1;
+                  break loop;
+                }
                break;
                
             case '}' :
@@ -436,10 +438,8 @@ private class DefaultIndenter {
                   if (i == x) x = 0;
                 }
                else {
-                  if (nest_pos < 0 && last_sig < 0) {
-                     last_sig = i;
-                     nest_pos = i;
-                   }
+                  if (last_sig < 0) nest_pos = i;
+                  last_sig = i;
                   break loop;
                 }
                break;
@@ -452,7 +452,10 @@ private class DefaultIndenter {
                break;
                
             case ',' :
-               if (nest_level == 0) cma_line = current_line;
+               if (nest_level == 0) {
+                  if (cma_line >= 0 && last_sig >= 0) break loop;
+                  cma_line = current_line;
+                }
                break;
                
             default :
@@ -479,7 +482,7 @@ private class DefaultIndenter {
       if (last_sig < 0 && nest_pos < 0) rslt = 0;
       else if (last_sig < 0) rslt = L5;
       else if (nest_pos >= 0) rslt = last_sig + L5;
-      else if (!eos_first && (cma_line < 0 || cma_line == current_line)) {
+      else if (eos_first && (cma_line < 0 || cma_line == current_line)) {
          rslt = last_sig + L4;
        }
       
@@ -520,7 +523,7 @@ private void loadProperties()
    unnest_functions = BALE_PROPERTIES.getBoolean("Bale." + lang + ".unnestFunctions",unnest_functions);
 
    BumpClient bc = BumpClient.getBump();
-   local_split = !bc.getOptionBool("lspbase.lsp.splitIndent");
+   local_split = !bc.getOptionBool("lspbase.lsp.splitIndent",false);
    indent_mode = LineIndentMode.ALL;
    String md = bc.getOption("lspbase.lsp.lineIndent");
    if (md != null) {

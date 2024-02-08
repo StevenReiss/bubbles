@@ -53,6 +53,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileSystemView;
@@ -180,7 +181,8 @@ private void setupPanel()
       String val = launch_config.getAttribute(what);
       switch (fld.getType()) {
 	 case STRING :
-	    JTextArea jta = pnl.addTextArea(fld.getDescription(),val,fld.getNumRows(),24,this);
+	    JTextArea jta = pnl.addTextArea(fld.getDescription(),val,
+                  fld.getNumRows(),24,this);
 	    cmp = jta;
 	    focus = jta;
 	    break;
@@ -194,6 +196,13 @@ private void setupPanel()
 	    List<ChoiceItem> vals = getChoiceValues(blt,fld);
 	    SwingComboBox<ChoiceItem> cmb = pnl.addChoice(fld.getDescription(),
 		  vals,val,false,this);
+//          if (val == null) {
+//             ChoiceItem cval = (ChoiceItem) cmb.getSelectedItem();
+//             if (cval == null && vals.size() > 0) cval = vals.get(0);
+//             if (cval != null) {
+//               edit_config = edit_config.setAttribute(what,cval.getValue());
+//              }
+//           }
 	    cmp = cmb;
 	    break;
 	 case BOOLEAN :
@@ -425,6 +434,10 @@ private String getNewName()
     }
    else if (cmd.equals("SAVE")) {
       BumpLaunchConfig blc = null;
+      for (JComponent jcmp : component_items.keySet()) {
+         handleFieldSet(jcmp);
+       }
+      // need to ensure fields are set to shown values
       if (edit_config != null) blc = edit_config.save();
       else if (launch_config.isWorkingCopy()) blc = launch_config.save();
       if (blc != null) {
@@ -455,39 +468,15 @@ private String getNewName()
        }
     }
    else if (doing_load) return;
-   else if (itm != null) {
-      if (edit_config == null) edit_config = launch_config;
-      if (edit_config != null) {
-	 JComponent cmp = (JComponent) e.getSource();
-	 if (cmp instanceof JTextArea) {
-	    JTextArea ta = (JTextArea) cmp;
-	    String val = ta.getText();
-	    edit_config = edit_config.setAttribute(itm,val);
+   else if (itm != null && launch_config != null) {
+      JComponent cmp = (JComponent) e.getSource();
+      handleFieldSet(cmp);
+      BumpLaunchType lt = edit_config.getLaunchType();
+      for (BumpLaunchConfigField fld : lt.getFields()) {
+         if (fld.getEvaluate() != null && fld.getEvaluate().equals("START") &&
+               itm.equals(fld.getArgField())) {
+            recomputeStarts();
           }
-	 else if (cmp instanceof SwingNumericField) {
-	    SwingNumericField snf = (SwingNumericField) cmp;
-	    int ival = (int) snf.getValue();
-	    edit_config = edit_config.setAttribute(itm, Integer.toString(ival));
-          }
-	 else if (cmp instanceof JCheckBox) {
-	    JCheckBox cbx = (JCheckBox) cmp;
-	    boolean bval = cbx.isSelected();
-	    edit_config = edit_config.setAttribute(itm, Boolean.toString(bval));
-          }
-	 else if (cmp instanceof SwingComboBox<?>) {
-	    SwingComboBox<?> cmbo = (SwingComboBox<?>) cmp;
-	    ChoiceItem ci = (ChoiceItem) cmbo.getSelectedItem();
-	    if (ci != null) {
-	       edit_config = edit_config.setAttribute(itm, ci.getValue());
-	     }
-          }
-	 BumpLaunchType lt = edit_config.getLaunchType();
-	 for (BumpLaunchConfigField fld : lt.getFields()) {
-	    if (fld.getEvaluate() != null && fld.getEvaluate().equals("START") &&
-		  itm.equals(fld.getArgField())) {
-	       recomputeStarts();
-	     }
-	  }
        }
     }
    else if (cmd.equals("Project")) {
@@ -507,6 +496,49 @@ private String getNewName()
    else BoardLog.logE("BDDT","Undefined launch config action: " + cmd);
    
    fixButtons();
+}
+
+
+private void handleFieldSet(JComponent cmp)
+{
+   String itm = component_items.get(cmp);
+   if (itm == null) return;
+   if (edit_config != null || launch_config != null) {
+      BumpLaunchConfig cfg = edit_config;
+      if (cfg == null) cfg = launch_config;
+      String oval = cfg.getAttribute(itm);
+      String nval = oval;
+      if (cmp instanceof JTextArea) {
+         JTextArea ta = (JTextArea) cmp;
+         nval = ta.getText();
+       }
+      else if (cmp instanceof JTextField) {
+         JTextField ta = (JTextField) cmp;
+         nval = ta.getText();
+       }
+      else if (cmp instanceof SwingNumericField) {
+         SwingNumericField snf = (SwingNumericField) cmp;
+         int ival = (int) snf.getValue();
+         nval = Integer.toString(ival);
+       }
+      else if (cmp instanceof JCheckBox) {
+         JCheckBox cbx = (JCheckBox) cmp;
+         boolean bval = cbx.isSelected();
+         nval = Boolean.toString(bval);
+       }
+      else if (cmp instanceof SwingComboBox<?>) {
+         SwingComboBox<?> cmbo = (SwingComboBox<?>) cmp;
+         ChoiceItem ci = (ChoiceItem) cmbo.getSelectedItem();
+         if (ci != null) {
+            nval = ci.getValue();
+          }
+       }
+      if (nval != null && nval.isEmpty()) nval = null;
+      if (nval != null && !nval.equals(oval)) {
+         if (edit_config == null) edit_config = launch_config;
+         edit_config = edit_config.setAttribute(itm,nval);
+       }
+    }
 }
 
 

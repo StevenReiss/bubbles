@@ -2227,8 +2227,8 @@ private class ValueData implements BumpRunValue {
       sub_values = null;
       var_detail = null;
       if (IvyXml.getAttrBool(xml,"CHARS")) {
-	 int len = IvyXml.getAttrInt(xml,"LENGTH");
-	 val_value = IvyXml.decodeCharacters(val_value,len);
+         int len = IvyXml.getAttrInt(xml,"LENGTH");
+         val_value = IvyXml.decodeCharacters(val_value,len);
        }
       addValues(xml);
     }
@@ -2268,8 +2268,8 @@ private class ValueData implements BumpRunValue {
       if (!has_values || sub_values != null) return;
       Element xml = bump_client.getVariableValue(for_frame,val_name,save_id,1);
       if (IvyXml.isElement(xml,"RESULT")) {
-	 Element root = IvyXml.getChild(xml,"VALUE");
-	 addValues(root);
+         Element root = IvyXml.getChild(xml,"VALUE");
+         addValues(root);
       }
     }
 

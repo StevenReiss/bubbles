@@ -24,7 +24,8 @@
 
 package edu.brown.cs.bubbles.board;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -66,7 +67,22 @@ private static int		thread_counter = 0;
 
 public static void start(Runnable r)
 {
-   if (r != null) getPool().execute(r);
+   if (r != null) {
+      BoardThreadPool pool = getPool();
+      for ( ; ; ) {
+         try {
+            pool.execute(r);
+            break;
+          }
+         catch (RejectedExecutionException e) { }
+         synchronized (pool) {
+            try {
+               pool.wait(1000);
+             }
+            catch (InterruptedException e) { }
+          }   
+       }
+    }
 }
 
 
@@ -102,7 +118,7 @@ private BoardThreadPool()
 {
    super(BOARD_CORE_POOL_SIZE,BOARD_MAX_POOL_SIZE,
 	    BOARD_POOL_KEEP_ALIVE_TIME,TimeUnit.MILLISECONDS,
-	    new LinkedBlockingQueue<Runnable>());
+	    new SynchronousQueue<Runnable>());
 
    setThreadFactory(this);
 }

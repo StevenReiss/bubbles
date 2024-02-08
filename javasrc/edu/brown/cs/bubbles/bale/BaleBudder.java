@@ -203,7 +203,6 @@ private class BudAction extends TextAction {
    
          BaleElement root = (BaleElement) bd.getDefaultRootElement();
    
-   
          // first find the fragment we are in
          BaleElement be = bd.getCharacterElement(soff);
          while (be != null && be.getParent() != null && be.getParent() != root &&

@@ -3707,11 +3707,17 @@ public String getOption(String nm)		{ return option_map.get(nm); }
  *	Return the boolean value of the IDE option with the given name
  **/
 
-public boolean getOptionBool(String nm)
+public boolean getOptionBool(String nm) 
+{
+   return getOptionBool(nm,false);
+}
+
+
+public boolean getOptionBool(String nm,boolean dflt)
 {
    String v = option_map.get(nm);
    BoardLog.logD("BUMP","OPTION BOOL " + nm + " = " + v);
-   if (v == null || v.isEmpty()) return false;
+   if (v == null || v.isEmpty()) return dflt;
    if ("yYtT1".indexOf(v.charAt(0)) >= 0) return true;
    return false;
 }

@@ -304,7 +304,7 @@ private boolean createProject()
    create_props.put(PROJ_PROP_JUNIT_PATH,
          BoardSetup.getSetup().getLibraryPath("junit.jar"));
    create_props.put(PROJ_PROP_USE_ANDROID,
-         BumpClient.getBump().getOptionBool("bedrock.useAndroid"));
+         BumpClient.getBump().getOptionBool("bedrock.useAndroid",false));
    BoardProperties props = BoardProperties.getProperties("Bueno");
    create_props.put(PROJ_PROP_CORE_OPTIONS,
          props.getProperty("Bueno.problem.set.data.1"));

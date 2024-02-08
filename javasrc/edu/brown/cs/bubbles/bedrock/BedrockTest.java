@@ -272,9 +272,12 @@ private void processRunEvent(Element re)
 
 	 switch (action_count) {
 	    case 0 :
-	       sendCommand("VARVAL",null,"THREAD='" + tid + "' FRAME='" + fid + "' VAR='var'",null);
-	       sendCommand("VARVAL",null,"THREAD='" + ttag + "' FRAME='" + fid + "' VAR='args'",null);
-	       sendCommand("DEBUGACTION",null,"THREAD='" + tid + "' ACTION='STEP_INTO'",null);
+	       sendCommand("VARVAL",null,
+                     "THREAD='" + tid + "' FRAME='" + fid + "' VAR='var'",null);
+	       sendCommand("VARVAL",null,
+                     "THREAD='" + ttag + "' FRAME='" + fid + "' VAR='args'",null);
+	       sendCommand("DEBUGACTION",null,
+                     "THREAD='" + tid + "' ACTION='STEP_INTO'",null);
 	       break;
 	    case 1 :
 	       sendCommand("VARVAL",null,"THREAD='" + tid + "' FRAME='" + fid + "' VAR='this'",null);

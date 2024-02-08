@@ -46,6 +46,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.bubbles.bump.BumpException;
+import edu.brown.cs.ivy.file.IvyFormat;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -79,6 +80,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 
@@ -146,7 +148,7 @@ BaleDocumentIde()
 
    project_name = null;
    file_name = null;
-   fragment_map = new HashMap<>();
+   fragment_map = new ConcurrentHashMap<>();
    doing_load = false;
    doing_remote = false;
    doing_eload = false;
@@ -420,6 +422,7 @@ private void setLanguage()
        }
     }
    try {
+      waitForRemoteEdits();
       bump_client.saveFile(project_name,file_name);
       is_dirty = false;
     }
@@ -555,10 +558,8 @@ void createFragment(BaleFragment owner,Collection<BaleRegion> regions)
 {
    FragmentData fd = new FragmentData(regions);
 
-   synchronized (fragment_map) {
-      fragment_map.put(owner,fd);
-      // fixupElision();
-    }
+   fragment_map.put(owner,fd);
+   // fixupElision();
 }
 
 
@@ -567,10 +568,8 @@ void removeFragment(BaleFragment owner)
 {
    baleReadLock();
    try {
-      synchronized (fragment_map) {
-	 fragment_map.remove(owner);
-	 fixupElision();
-       }
+      fragment_map.remove(owner);
+//    fixupElision();
     }
    finally { baleReadUnlock(); }
 }
@@ -579,22 +578,18 @@ void removeFragment(BaleFragment owner)
 
 void setFragmentElisionRegions(BaleFragment owner,Map<BaleRegion,Double> priors)
 {
-   synchronized (fragment_map) {
-      FragmentData fd = fragment_map.get(owner);
-      if (fd == null) return;
-
-      fd.setPriorityRegions(priors);
-      // fixupElision();
-    }
+   FragmentData fd = fragment_map.get(owner);
+   if (fd == null) return;
+   
+   fd.setPriorityRegions(priors);
+// fixupElision();
 }
 
 
 
 @Override void redoElision()
 {
-   synchronized (fragment_map) {
-      fixupElision();
-    }
+   fixupElision();
 }
 
 
@@ -611,10 +606,8 @@ private void fixupElision()
    String rgns = null;
    if (fragment_map.size() > 0) {
       IvyXmlWriter xw = new IvyXmlWriter();
-      synchronized (fragment_map) {
-	 for (FragmentData fd : fragment_map.values()) {
-	    fd.dumpRegions(this,xw);
-	  }
+      for (FragmentData fd : fragment_map.values()) {
+         fd.dumpRegions(this,xw);
        }
       rgns = xw.toString();
       bump_client.removeFileHandler(this);
@@ -675,29 +668,27 @@ private void fixupElision()
 
    List<FragmentElisionUpdater> runs = new ArrayList<FragmentElisionUpdater>();
 
-   synchronized (fragment_map) {
-      for (Map.Entry<BaleFragment,FragmentData> ent : fragment_map.entrySet()) {
-	 BaleFragment bf = ent.getKey();
-	 FragmentData fd = ent.getValue();
-	 List<BaleAstNode> rgnnodes = null;
-	 for (BaleRegion br : fd.getRegions()) {
-	    for (BaleAstNode bn : ast_nodes) {
-	       int pos = br.getStart();
-	       BaleAstNode cn = bn.getChild(pos);
-	       if (cn == null) {
-		  // if the text has errors, it might not extend to include comments
-		  if (bn.getStart() >= br.getStart() && bn.getEnd() <= br.getEnd()) cn = bn;
-		}
-	       if (cn != null) {
-		  if (rgnnodes == null) rgnnodes = new ArrayList<BaleAstNode>();
-		  // should this add bn or cn: bn
-		  rgnnodes.add(bn);
-		}
-	     }
-	  }
-	 if (rgnnodes != null) {
-	    runs.add(new FragmentElisionUpdater(bf,rgnnodes,id));
-	  }
+   for (Map.Entry<BaleFragment,FragmentData> ent : fragment_map.entrySet()) {
+      BaleFragment bf = ent.getKey();
+      FragmentData fd = ent.getValue();
+      List<BaleAstNode> rgnnodes = null;
+      for (BaleRegion br : fd.getRegions()) {
+         for (BaleAstNode bn : ast_nodes) {
+            int pos = br.getStart();
+            BaleAstNode cn = bn.getChild(pos);
+            if (cn == null) {
+               // if the text has errors, it might not extend to include comments
+               if (bn.getStart() >= br.getStart() && bn.getEnd() <= br.getEnd()) cn = bn;
+             }
+            if (cn != null) {
+               if (rgnnodes == null) rgnnodes = new ArrayList<BaleAstNode>();
+               // should this add bn or cn: bn
+               rgnnodes.add(bn);
+             }
+          }
+       }
+      if (rgnnodes != null) {
+         runs.add(new FragmentElisionUpdater(bf,rgnnodes,id));
        }
     }
 
@@ -749,9 +740,25 @@ private class FragmentElisionUpdater implements Runnable {
    synchronized (remote_edits) {
       boolean newrq = remote_edits.isEmpty();
       remote_edits.add(re);
+      BoardLog.logD("BALE","Queue remote edit " + len + " " + off + " " + newrq);
       if (newrq) SwingUtilities.invokeLater(new RemoteEditor());
     }
 }
+
+
+private void waitForRemoteEdits()
+{
+   synchronized (remote_edits) {
+      while (!remote_edits.isEmpty()) {
+         try {
+            remote_edits.wait(500);
+          }
+         catch (InterruptedException e) { }
+       }
+    }
+}
+
+
 
 
 void flushEdits()
@@ -768,15 +775,32 @@ void flushEdits()
 
 private class RemoteEditor implements Runnable {
 
-   RemoteEditor() { }
+   RemoteEditor() {
+      BoardLog.logD("BALE","Remote editor created " + remote_edits.size());
+    }
 
    @Override public void run() {
-      synchronized (remote_edits) {
-         while (!remote_edits.isEmpty()) {
-            RemoteEdit re = remote_edits.remove();
-            re.run();
+      BoardLog.logD("BALE","Start remote edits " + remote_edits.size());
+      RemoteEdit re = null;
+      for ( ; ; ) {
+         synchronized (remote_edits) {
+            if (!remote_edits.isEmpty()) {
+               re = remote_edits.peek();
+             }
+            else {
+               remote_edits.notifyAll();
+               break;
+             }
+          }
+         
+         re.run();
+         
+         synchronized (remote_edits) {
+            // ensure queue not empty until edits are run
+            remote_edits.remove(re);
           }
        }
+      
       fixupElision();
     }
 
@@ -815,9 +839,14 @@ private class RemoteEdit implements Runnable {
 	       if (edit_offset+edit_len >= getLength()) {
 		  edit_len = getLength() - edit_offset;
 		}
+               BoardLog.logD("BALE","REMOVE TEXT " + edit_offset + " " + 
+                     edit_len + " " +
+                     IvyFormat.formatString(getText(edit_offset,edit_len)));
 	       remove(edit_offset,edit_len);
 	     }
 	    if (edit_text != null && edit_text.length() > 0) {
+               BoardLog.logD("BALE","INSERT TEXT " + edit_offset + " " +
+                     IvyFormat.formatString(edit_text));
 	       insertString(edit_offset,edit_text,null);
 	     }
 	  }
@@ -835,92 +864,90 @@ private class RemoteEdit implements Runnable {
    private void reload() {
       writeLock();
       try {
-	 try {
-	    String txt = getText(0,getLength());
-	    if (txt.equals(edit_text)) {
-	       BoardLog.logD("BALE","Reload with equal text ignored");
-	       return;
-	     }
-	    else {
-	       BoardLog.logD("BALE","Full reload being done");
-	       BoardMetrics.noteCommand("BALE","FullReload");
-	     }
-	  }
-	 catch (BadLocationException e) { }
-
-	 doing_remote = true;
-	 doing_load = true;
-
-	 List<BaleReloadData> reloads = new ArrayList<BaleReloadData>();
-	 synchronized (fragment_map) {
-	    for (BaleFragment bf : fragment_map.keySet()) {
-	       BaleReloadData rd = bf.startReload();
-	       if (rd != null) reloads.add(rd);
-	     }
-	  }
-
-	 BaleSavedPositions posn = null;
-	 try {
-	    posn = savePositions();
-	  }
-	 catch (IOException e) {
-	    BoardLog.logE("BALE","Problem saving positions: " + e);
-	  }
-
-	 DocumentListener [] dlisteners = getDocumentListeners();
-	 UndoableEditListener [] elisteners = getUndoableEditListeners();
-	 for (int i = 0; i < dlisteners.length; ++i) {
-	    removeDocumentListener(dlisteners[i]);
-	  }
-	 for (int i = 0; i < elisteners.length; ++i) {
-	    removeUndoableEditListener(elisteners[i]);
-	  }
-
-	 try {
-	    remove(0,getLength());
-	    String ntxt = getText(0,getLength());
-	    if (ntxt != null && ntxt.length() > 0)
-	       BoardLog.logD("BALE","Didn't remove all text: " + ntxt);
-	    DefaultEditorKit dek = new DefaultEditorKit();
-	    Reader in = new StringReader(edit_text);
-	    try {
-	       dek.read(in,BaleDocumentIde.this,0);
-	     }
-	    catch (IOException e) {
-	       BoardLog.logE("BALE","I/O exception from string reader",e);
-	     }
-	    ntxt = getText(0,getLength());		// for debugging
-	    in = new StringReader(edit_text);
-	    setupLineOffsets(in,newline_string);
-	  }
-	 catch (BadLocationException e) {
-	    BoardLog.logE("BALE","Bad location for reload: " + e,e);
-	  }
-
-	 nextEditCounter();
-
-	 if (posn != null) resetPositions(posn);
-
-	 for (int i = 0; i < elisteners.length; ++i) {
-	    addUndoableEditListener(elisteners[i]);
-	  }
-	 for (int i = 0; i < dlisteners.length; ++i) {
-	    addDocumentListener(dlisteners[i]);
-	  }
-
-	 doing_load = false;
-	 doing_remote = false;
-
-	 for (BaleReloadData rd : reloads) {
-	    rd.finishedReload();
-	  }
+         try {
+            String txt = getText(0,getLength());
+            if (txt.equals(edit_text)) {
+               BoardLog.logD("BALE","Reload with equal text ignored");
+               return;
+             }
+            else {
+               BoardLog.logD("BALE","Full reload being done");
+               BoardMetrics.noteCommand("BALE","FullReload");
+             }
+          }
+         catch (BadLocationException e) { }
+   
+         doing_remote = true;
+         doing_load = true;
+   
+         List<BaleReloadData> reloads = new ArrayList<BaleReloadData>();
+         for (BaleFragment bf : fragment_map.keySet()) {
+            BaleReloadData rd = bf.startReload();
+            if (rd != null) reloads.add(rd);
+          }
+   
+         BaleSavedPositions posn = null;
+         try {
+            posn = savePositions();
+          }
+         catch (IOException e) {
+            BoardLog.logE("BALE","Problem saving positions: " + e);
+          }
+   
+         DocumentListener [] dlisteners = getDocumentListeners();
+         UndoableEditListener [] elisteners = getUndoableEditListeners();
+         for (int i = 0; i < dlisteners.length; ++i) {
+            removeDocumentListener(dlisteners[i]);
+          }
+         for (int i = 0; i < elisteners.length; ++i) {
+            removeUndoableEditListener(elisteners[i]);
+          }
+   
+         try {
+            remove(0,getLength());
+            String ntxt = getText(0,getLength());
+            if (ntxt != null && ntxt.length() > 0)
+               BoardLog.logD("BALE","Didn't remove all text: " + ntxt);
+            DefaultEditorKit dek = new DefaultEditorKit();
+            Reader in = new StringReader(edit_text);
+            try {
+               dek.read(in,BaleDocumentIde.this,0);
+             }
+            catch (IOException e) {
+               BoardLog.logE("BALE","I/O exception from string reader",e);
+             }
+            ntxt = getText(0,getLength());		// for debugging
+            in = new StringReader(edit_text);
+            setupLineOffsets(in,newline_string);
+          }
+         catch (BadLocationException e) {
+            BoardLog.logE("BALE","Bad location for reload: " + e,e);
+          }
+   
+         nextEditCounter();
+   
+         if (posn != null) resetPositions(posn);
+   
+         for (int i = 0; i < elisteners.length; ++i) {
+            addUndoableEditListener(elisteners[i]);
+          }
+         for (int i = 0; i < dlisteners.length; ++i) {
+            addDocumentListener(dlisteners[i]);
+          }
+   
+         doing_load = false;
+         doing_remote = false;
+   
+         for (BaleReloadData rd : reloads) {
+            rd.finishedReload();
+          }
        }
       finally {
-	 doing_load = false;
-	 doing_remote = false;
-	 writeUnlock();
+         doing_load = false;
+         doing_remote = false;
+         writeUnlock();
        }
-
+   
       fixupElision();
     }
 
@@ -949,11 +976,9 @@ private class RemoteEdit implements Runnable {
    int soff = mapOffsetToJava(bp.getStart());
    int eoff = mapOffsetToJava(bp.getEnd());
 
-   synchronized (fragment_map) {
-      for (FragmentData fd : fragment_map.values()) {
-	 if (fd.overlaps(soff,eoff)) {
-	    fd.setProblemsChanged(true);
-	  }
+   for (FragmentData fd : fragment_map.values()) {
+      if (fd.overlaps(soff,eoff)) {
+         fd.setProblemsChanged(true);
        }
     }
 }
@@ -971,11 +996,9 @@ private class RemoteEdit implements Runnable {
    int soff = mapOffsetToJava(bp.getStart());
    int eoff = mapOffsetToJava(bp.getEnd());
 
-   synchronized (fragment_map) {
-      for (FragmentData fd : fragment_map.values()) {
-	 if (fd.overlaps(soff,eoff)) {
-	    fd.setProblemsChanged(true);
-	  }
+   for (FragmentData fd : fragment_map.values()) {
+      if (fd.overlaps(soff,eoff)) {
+         fd.setProblemsChanged(true);
        }
     }
 }
@@ -999,15 +1022,13 @@ private class RemoteEdit implements Runnable {
 {
    handleProblemsUpdated();
 
-   synchronized (fragment_map) {
-      for (Map.Entry<BaleFragment,FragmentData> ent : fragment_map.entrySet()) {
-	 BaleFragment bf = ent.getKey();
-	 FragmentData fd = ent.getValue();
-	 if (fd.getProblemsChanged()) {
-	    fd.setProblemsChanged(false);
-	    ErrorUpdater eud = new ErrorUpdater(bf);
-	    SwingUtilities.invokeLater(eud);
-	  }
+   for (Map.Entry<BaleFragment,FragmentData> ent : fragment_map.entrySet()) {
+      BaleFragment bf = ent.getKey();
+      FragmentData fd = ent.getValue();
+      if (fd.getProblemsChanged()) {
+         fd.setProblemsChanged(false);
+         ErrorUpdater eud = new ErrorUpdater(bf);
+         SwingUtilities.invokeLater(eud);
        }
     }
 }
@@ -1269,19 +1290,19 @@ private static class FragmentData {
 
    void dumpRegions(BaleDocument bd,IvyXmlWriter xw) {
       for (BaleRegion br : active_regions) {
-	 xw.begin("REGION");
-	 xw.field("START",bd.mapOffsetToEclipse(br.getStart()));
-	 xw.field("END",bd.mapOffsetToEclipse(br.getEnd()));
-	 xw.end("REGION");
+         xw.begin("REGION");
+         xw.field("START",bd.mapOffsetToEclipse(br.getStart()));
+         xw.field("END",bd.mapOffsetToEclipse(br.getEnd()));
+         xw.end("REGION");
        }
       for (Map.Entry<BaleRegion,Double> ent : priority_regions.entrySet()) {
-	 BaleRegion br = ent.getKey();
-	 double p = ent.getValue();
-	 xw.begin("REGION");
-	 xw.field("START",bd.mapOffsetToEclipse(br.getStart()));
-	 xw.field("END",bd.mapOffsetToEclipse(br.getEnd()));
-	 xw.field("PRIORITY",p);
-	 xw.end("REGION");
+         BaleRegion br = ent.getKey();
+         double p = ent.getValue();
+         xw.begin("REGION");
+         xw.field("START",bd.mapOffsetToEclipse(br.getStart()));
+         xw.field("END",bd.mapOffsetToEclipse(br.getEnd()));
+         xw.field("PRIORITY",p);
+         xw.end("REGION");
        }
     }
 
