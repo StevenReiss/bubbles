@@ -553,6 +553,10 @@ private class PanelHandler extends AbstractAction implements ActionListener {
          cca = new CreateConfigAction(blt);
          break;
       }
+      if (cca == null) {
+         BoardLog.logE("BDDT","No launch configuration types");
+         return;
+       }
       ActionEvent act = new ActionEvent(this,0,"NEW");
       cca.actionPerformed(act);
     }

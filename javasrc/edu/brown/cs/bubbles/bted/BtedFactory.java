@@ -298,7 +298,13 @@ void loadFileIntoEditor(File file,JEditorPane editor,UndoableEditListener listen
    else {
       try {
 	 FileInputStream ins = new FileInputStream(file);
-	 editor.setContentType(contenttype);
+         try {
+            editor.setContentType(contenttype);
+          }
+         catch (Throwable e) {
+            BoardLog.logE("BTED","Bad content type " + contenttype + " " + file,e);
+            editor.setContentType("text/plain");
+          }
 	 editor.read(ins,null);
 	 // String cnts = IvyFile.loadFile(file);
 	 // editor.setText(cnts);
@@ -306,7 +312,7 @@ void loadFileIntoEditor(File file,JEditorPane editor,UndoableEditListener listen
 	 document_count.put(editor.getDocument(), Integer.valueOf(1));
 	 ins.close();
        }
-      catch (IOException e) {
+      catch (Throwable e) {
 	 BoardLog.logE("BTED","Problem loading file for " + contenttype + " " + path,e);
       }
    }

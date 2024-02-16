@@ -3,6 +3,7 @@
 <properties>
 <entry key="Bale.format.onsave">true</entry>
 <entry key="Bale.dart.indent">2</entry>
+<entry key="Bale.auto.insert.close">true</entry>
 </properties>
 
 

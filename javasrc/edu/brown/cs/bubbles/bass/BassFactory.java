@@ -66,6 +66,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 
@@ -137,7 +138,7 @@ public static synchronized void setup()
 {
    if (use_repositories != null) return;
 
-   use_repositories = new HashMap<>();
+   use_repositories = new ConcurrentHashMap<>();
    use_repositories.put(SearchType.SEARCH_ALL,new HashSet<>());
 
    the_factory = new BassFactory();

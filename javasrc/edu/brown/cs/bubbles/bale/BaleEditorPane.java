@@ -1028,7 +1028,7 @@ private String getHoverText(MouseEvent e)
       BumpClient bc = BumpClient.getBump();
       Element rslt = bc.getHoverData(bd.getProjectName(),bd.getFile(),
 	    bd.mapOffsetToEclipse(loc),
-	    bd.mapOffsetToEclipse(loc),4000);
+	    bd.mapOffsetToEclipse(loc),2000);
       BoardLog.logD("BALE","HOVERDATA result: " + IvyXml.convertXmlToString(rslt));
       String hovertext = IvyXml.getTextElement(rslt,"HOVER");
       if (hovertext != null && hovertext.startsWith("<") && !hovertext.startsWith("<html>")) {

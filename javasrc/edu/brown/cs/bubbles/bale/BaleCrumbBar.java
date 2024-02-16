@@ -247,7 +247,10 @@ private synchronized void setFragmentName(String name,boolean dirty)
 	 fnam = fragment_name.substring(0,fidx);
 	 fnam = fnam.replace(".", "$");
 	 usename = fragment_name.substring(fidx+1);
-	 if (idx > 0) packclass = fnam + fragment_name.substring(fidx+1,idx);
+	 if (idx > 0) {
+            packclass = fnam + fragment_name.substring(fidx+1,idx);
+            idx -= fidx+1;
+          }
 	 else packclass = fnam;
       }
       
@@ -284,7 +287,7 @@ private synchronized void setFragmentName(String name,boolean dirty)
       
       if (idx+1 >= usename.length()) {
          BoardLog.logE("BALE","Problem with crumb bar name: " + name + " " + usename + " " +
-               fragment_name + " " + component_list);
+               fragment_name + " " + idx);
          return;
        }
 

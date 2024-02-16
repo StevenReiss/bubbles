@@ -131,7 +131,7 @@ public synchronized static BoardProperties getProperties(String id)
 
 public static InputStream getResourceFile(String name)
 {
-   // allow user version in ~/.bubbles
+   // allow user version in ~/.bubbles or equivalent
 
    String pname = name.replace("/",File.separator);
 
@@ -156,8 +156,10 @@ public static InputStream getResourceFile(String name)
       String nm = "resources/" + name;
       InputStream ins = BoardProperties.class.getClassLoader().getResourceAsStream(nm);
       if (ins != null) return ins;
-      dir = sp.getProperty(BOARD_PROP_JAR_DIR);
+      String dir1 = sp.getProperty(BOARD_PROP_JAR_DIR);
+      if (dir1 != null) dir = dir1;
     }
+   if (dir == null) return null;
 
    // use whats in the resources directory
    File f1 = new File(dir);

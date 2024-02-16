@@ -371,50 +371,50 @@ private static class ImportChecker {
       String pat = "." + nm;
       Set<String> match = new HashSet<String>();
       for (String s : project_classes) {
-	 if (s.endsWith(pat) || s.equals(nm)) {
-	    match.add(s.replace("$","."));
-	  }
+         if (s.endsWith(pat) || s.equals(nm)) {
+            match.add(s.replace("$","."));
+          }
        }
       if (match.size() > 0) return match;
-
+   
       Set<String> dmatch = new HashSet<String>();
       Set<String> amatch = new HashSet<String>();
       Set<String> imatch = new HashSet<String>();
-
+   
       BumpClient bc = BumpClient.getBump();
       List<BumpLocation> typlocs = bc.findAllTypes(nm);
       if (typlocs == null) return null;
       if (typlocs.size() == 0) {
-	 typlocs = bc.findSystemDefinitions(proj,file,offset);
+         typlocs = bc.findSystemDefinitions(proj,file,offset);
        }
       if (typlocs != null) {
-	 for (BumpLocation bl : typlocs) {
-	    String tnm = bl.getSymbolName();
-	    int idx = tnm.indexOf("<");
-	    if (idx > 0) tnm = tnm.substring(0,idx).trim();
-	    if (explicit_imports.contains(tnm)) {
-	       match.add(tnm);
-	     }
-	    for (String s : demand_imports) {
-	       String dimp = s + "." + nm;
-	       if (dimp.equals(tnm)) {
-		  dmatch.add(tnm);
-		}
-	     }
-	    for (String s : implicit_imports) {
-	       String dimp = s + "." + nm;
-	       if (dimp.equals(tnm)) {
-		  imatch.add(tnm);
-		}
-	     }
-	    if (!tnm.contains("internal")) amatch.add(tnm);
-	  }
+         for (BumpLocation bl : typlocs) {
+            String tnm = bl.getSymbolName();
+            int idx = tnm.indexOf("<");
+            if (idx > 0) tnm = tnm.substring(0,idx).trim();
+            if (explicit_imports.contains(tnm)) {
+               match.add(tnm);
+             }
+            for (String s : demand_imports) {
+               String dimp = s + "." + nm;
+               if (dimp.equals(tnm)) {
+        	  dmatch.add(tnm);
+        	}
+             }
+            for (String s : implicit_imports) {
+               String dimp = s + "." + nm;
+               if (dimp.equals(tnm)) {
+        	  imatch.add(tnm);
+        	}
+             }
+            if (!tnm.contains("internal")) amatch.add(tnm);
+          }
        }
       if (match.size() > 0) return match;
       if (dmatch.size() > 0) return dmatch;
       if (imatch.size() > 0) return imatch;
       if (amatch.size() > 0) return amatch;
-
+   
       return null;
     }
 

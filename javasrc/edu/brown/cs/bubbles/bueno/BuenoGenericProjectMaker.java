@@ -135,6 +135,7 @@ boolean checkStatus(BuenoProperties props)
                if (!dir.isDirectory()) return false;
              }
             if (IvyXml.getAttrBool(felt,"CANWRITE")) {
+               if (dir == null) return false;
                if (dir.exists()) {
                   if (!dir.isDirectory()) return false;
                   if (!dir.canWrite()) return false;

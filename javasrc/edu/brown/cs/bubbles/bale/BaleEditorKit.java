@@ -650,7 +650,7 @@ private static class DefaultKeyAction extends TextAction {
          Dimension d0 = target.getSize();
          if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
          else d0 = target.getPreferredSize();
-   
+         
          String content = e.getActionCommand();
          String postcontent = null;
          int mod = e.getModifiers();
@@ -658,66 +658,66 @@ private static class DefaultKeyAction extends TextAction {
                ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
             char c = content.charAt(0);
             int soff = target.getSelectionStart();
-         int eoff = target.getSelectionEnd();
-   
+            int eoff = target.getSelectionEnd();
+            
             if ((c >= 0x20) && (c != 0x7F)) {
                boolean overwrite = target.getOverwriteMode();
                if (soff == eoff && !overwrite) {
-        	  if (language_kit.checkContent(content) &&
-        		bd.checkTypeover(content,soff)) overwrite = true;
-        	  else postcontent = language_kit.getPostContent(content);
-        	}
+                  if (language_kit.checkContent(content) &&
+                        bd.checkTypeover(content,soff)) overwrite = true;
+                  else postcontent = language_kit.getPostContent(content);
+                }
                if (overwrite) {
-        	  if (soff == target.getSelectionEnd()) {
-        	     String prev = null;
-        	     try {
-        		prev = target.getText(soff,1);
-        	      }
-        	     catch (BadLocationException ex) { }
-        	     eoff = soff+1;
-        	     if (prev == null || prev.equals("\n"));
-        	     else if (prev.equals("\t")) {
-        		int cpos = bd.getColumnPosition(soff);
-        		int npos = bd.getNextTabPosition(cpos);
-        		StringBuilder buf = new StringBuilder();
-        		for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
-        		target.setSelectionEnd(eoff);
-        		target.replaceSelection(buf.toString());
-        		target.setSelectionStart(soff);
-        		target.setSelectionEnd(eoff);
-        	      }
-        	     else target.setSelectionEnd(eoff);
-        	   }
-        	}
+                  if (soff == target.getSelectionEnd()) {
+                     String prev = null;
+                     try {
+                        prev = target.getText(soff,1);
+                      }
+                     catch (BadLocationException ex) { }
+                     eoff = soff+1;
+                     if (prev == null || prev.equals("\n"));
+                     else if (prev.equals("\t")) {
+                        int cpos = bd.getColumnPosition(soff);
+                        int npos = bd.getNextTabPosition(cpos);
+                        StringBuilder buf = new StringBuilder();
+                        for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
+                        target.setSelectionEnd(eoff);
+                        target.replaceSelection(buf.toString());
+                        target.setSelectionStart(soff);
+                        target.setSelectionEnd(eoff);
+                      }
+                     else target.setSelectionEnd(eoff);
+                   }
+                }
                if (soff != eoff) bd.handleReplaceTypeover(soff,eoff);
-   
+               
                target.replaceSelection(content);
                if (postcontent != null) {
-        	  int off = target.getSelectionEnd();
-        	  try {
-        	     bd.insertString(off,postcontent,null);
-        	   }
-        	  catch (BadLocationException ex) { }
-        	  bd.setCreatedTypeover(postcontent,off);
-        	  target.setSelectionStart(off);
-        	  target.setSelectionEnd(off);
-        	}
-   
+                  int off = target.getSelectionEnd();
+                  try {
+                     bd.insertString(off,postcontent,null);
+                   }
+                  catch (BadLocationException ex) { }
+                  bd.setCreatedTypeover(postcontent,off);
+                  target.setSelectionStart(off);
+                  target.setSelectionEnd(off);
+                }
+               
                if (content != null && shouldAutoIndent(target,content,soff)) {
-        	  // TODO: check that this is the only thing on the line
-        	  indent_lines_action.actionPerformed(e);
-        	}
+                  // TODO: check that this is the only thing on the line
+                  indent_lines_action.actionPerformed(e);
+                }
                BaleCompletionContext ctx = target.getCompletionContext();
                if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
-        	  new BaleCompletionContext(target,soff,c);
-        	}
-   
+                  new BaleCompletionContext(target,soff,c);
+                }
+               
                if (d0 != null) {
-        	  Dimension d1 = target.getPreferredSize();
-        	  if (d1.height > d0.height) {
-        	     target.increaseSize(1);
-        	   }
-        	}
+                  Dimension d1 = target.getPreferredSize();
+                  if (d1.height > d0.height) {
+                     target.increaseSize(1);
+                   }
+                }
              }
           }
        }
@@ -939,118 +939,118 @@ private static class NewlineAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane target = getBaleEditor(e);
       if (!checkEditor(target)) return;
-
+   
       BaleDocument bd = target.getBaleDocument();
       bd.baleWriteLock();
       try {
-	 String text = "\n";
-	 String posttext = null;
-	 int postdelta = 0;
-	 int size = 1;
-	 int postsize = 0;
-	 int soff = target.getSelectionStart();
-	 int eoff = target.getSelectionEnd();
-	 BaleElement elt = bd.getCharacterElement(eoff);
-	 if (elt != null && elt.isComment()) {
-	    switch (elt.getEndTokenState()) {
-	       case IN_COMMENT :
-	       case IN_FORMAL_COMMENT :
-		  String indtxt = " ";
-		  BaleElement be1 = elt.getPreviousCharacterElement();
-		  if (be1 != null) {
-		     BaleElement.Indent bin = be1.getIndent();
-		     if (bin != null) {
-			int col = bin.getFirstColumn();
-			StringBuffer buf = new StringBuffer();
-			for (int i = 0; i < col; ++i) buf.append(" ");
-			indtxt = buf.toString();
-		      }
-		     else if (be1.isComment()) {
-			try {
-			   String ctxt = target.getText(elt.getStartOffset(),
-				 elt.getEndOffset()-elt.getStartOffset()+1);
-			   int ct = 0;
-			   while (ctxt.charAt(ct) == ' ') ++ct;
-			   indtxt = ctxt.substring(0,ct);
-			 }
-			catch (BadLocationException ex) { }
-		      }
-		   }
-		  text += indtxt + "*";
-		  break;
-	       default:
-		  break;
-	     }
-	  }
-
-	 String tok = doAutoClose(bd,elt,soff,eoff);
-	 if (tok != null) {
-	    posttext= "\n" + tok;
-	    postsize = 1;
-	    try {
-	       String txt = target.getText(eoff,100);
-	       boolean havetxt = false;
-	       for (int i = 0; i < txt.length(); ++i) {
-		  if (txt.charAt(i) == '\n') {
-		     if (havetxt) postdelta = i;
-		     break;
-		   }
-		  else if (!Character.isWhitespace(txt.charAt(i))) havetxt = true;
-		}
-	     }
-	    catch (BadLocationException ex) { }
-	  }
-	 if (tok == null) {
-	    posttext = doAutoLine(bd,elt,soff,eoff);
-	    postdelta = 0;
-	    if (posttext != null && posttext.contains("\n")) postsize = 1;
-	  }
-
-	 boolean grow = true;
-	 boolean rep = true;
-	 boolean ind = true;
-
-	 if (soff != eoff) {
-	    int slno = bd.findLineNumber(soff);
-	    int elno = bd.findLineNumber(eoff);
-	    if (elno != slno) grow = false;
-	  }
-	 else {
-	    if (target.getOverwriteMode()) {
-	       rep = false;
-	       grow = false;
-	       int nlno = bd.findLineNumber(soff) + 1;
-	       int pos = bd.getFirstNonspace(nlno);
-	       if (pos >= 0) ind = false;
-	       else pos = -pos;
-	       if (pos < bd.getEndPosition().getOffset()) target.setCaretPosition(pos);
-	       soff = pos-1;
-	     }
-	  }
-
-	 if (rep) target.replaceSelection(text);
-	 int noff = target.getSelectionStart();
-	 if (posttext != null) {
-	    try {
-	       bd.insertString(noff+postdelta, posttext, null);
-	       int nlno = bd.findLineNumber(noff+1+postdelta);
-	       for (int i = 0; i < postsize; ++i) {
-		  bd.fixLineIndent(nlno+i);
-		}
-	       size += postsize;
-	     }
-	    catch (BadLocationException ex) { }
-	    target.setSelectionStart(noff);
-	    target.setSelectionEnd(noff);
-	  }
-	 if (ind) {
-	    int lno = bd.findLineNumber(soff+1);
-	    bd.fixLineIndent(lno);
-	  }
-
-	 if (grow) {
-	    target.increaseSize(size);
-	  }
+         String text = "\n";
+         String posttext = null;
+         int postdelta = 0;
+         int size = 1;
+         int postsize = 0;
+         int soff = target.getSelectionStart();
+         int eoff = target.getSelectionEnd();
+         BaleElement elt = bd.getCharacterElement(eoff);
+         if (elt != null && elt.isComment()) {
+            switch (elt.getEndTokenState()) {
+               case IN_COMMENT :
+               case IN_FORMAL_COMMENT :
+        	  String indtxt = " ";
+        	  BaleElement be1 = elt.getPreviousCharacterElement();
+        	  if (be1 != null) {
+        	     BaleElement.Indent bin = be1.getIndent();
+        	     if (bin != null) {
+        		int col = bin.getFirstColumn();
+        		StringBuffer buf = new StringBuffer();
+        		for (int i = 0; i < col; ++i) buf.append(" ");
+        		indtxt = buf.toString();
+        	      }
+        	     else if (be1.isComment()) {
+        		try {
+        		   String ctxt = target.getText(elt.getStartOffset(),
+        			 elt.getEndOffset()-elt.getStartOffset()+1);
+        		   int ct = 0;
+        		   while (ctxt.charAt(ct) == ' ') ++ct;
+        		   indtxt = ctxt.substring(0,ct);
+        		 }
+        		catch (BadLocationException ex) { }
+        	      }
+        	   }
+        	  text += indtxt + "*";
+        	  break;
+               default:
+        	  break;
+             }
+          }
+   
+         String tok = doAutoClose(bd,elt,soff,eoff);
+         if (tok != null) {
+            posttext= "\n" + tok;
+            postsize = 1;
+            try {
+               String txt = target.getText(eoff,100);
+               boolean havetxt = false;
+               for (int i = 0; i < txt.length(); ++i) {
+        	  if (txt.charAt(i) == '\n') {
+        	     if (havetxt) postdelta = i;
+        	     break;
+        	   }
+        	  else if (!Character.isWhitespace(txt.charAt(i))) havetxt = true;
+        	}
+             }
+            catch (BadLocationException ex) { }
+          }
+         if (tok == null) {
+            posttext = doAutoLine(bd,elt,soff,eoff);
+            postdelta = 0;
+            if (posttext != null && posttext.contains("\n")) postsize = 1;
+          }
+   
+         boolean grow = true;
+         boolean rep = true;
+         boolean ind = true;
+   
+         if (soff != eoff) {
+            int slno = bd.findLineNumber(soff);
+            int elno = bd.findLineNumber(eoff);
+            if (elno != slno) grow = false;
+          }
+         else {
+            if (target.getOverwriteMode()) {
+               rep = false;
+               grow = false;
+               int nlno = bd.findLineNumber(soff) + 1;
+               int pos = bd.getFirstNonspace(nlno);
+               if (pos >= 0) ind = false;
+               else pos = -pos;
+               if (pos < bd.getEndPosition().getOffset()) target.setCaretPosition(pos);
+               soff = pos-1;
+             }
+          }
+   
+         if (rep) target.replaceSelection(text);
+         int noff = target.getSelectionStart();
+         if (posttext != null) {
+            try {
+               bd.insertString(noff+postdelta, posttext, null);
+               int nlno = bd.findLineNumber(noff+1+postdelta);
+               for (int i = 0; i < postsize; ++i) {
+        	  bd.fixLineIndent(nlno+i);
+        	}
+               size += postsize;
+             }
+            catch (BadLocationException ex) { }
+            target.setSelectionStart(noff);
+            target.setSelectionEnd(noff);
+          }
+         if (ind) {
+            int lno = bd.findLineNumber(soff+1);
+            bd.fixLineIndent(lno);
+          }
+   
+         if (grow) {
+            target.increaseSize(size);
+          }
        }
       finally { bd.baleWriteUnlock(); }
    }

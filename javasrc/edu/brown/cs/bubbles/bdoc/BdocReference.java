@@ -110,6 +110,7 @@ private static DescriptionData [] prefix_set = new DescriptionData [] {
    new DescriptionData("Constructor for annotation type ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Class in ",BassNameType.CLASS),
    new DescriptionData("Record Class in ",BassNameType.CLASS),
+   new DescriptionData("Exception Class in ",BassNameType.CLASS),
    new DescriptionData("Interface in ",BassNameType.INTERFACE),
    new DescriptionData("Exception in ",BassNameType.THROWABLE),
    new DescriptionData("Error in ",BassNameType.THROWABLE),

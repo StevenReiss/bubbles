@@ -118,7 +118,7 @@
 <entry key="Bale.editor.no.reflow">false</entry>
 <entry key="Bale.indent.rbrace">0</entry>
 <entry key="Bale.indent.innerclass">false</entry>
-<entry key="Bale.autoclose">true</entry>
+<entry key="Bale.auto.insert.close">false</entry>
 <entry key="Bale.correct.spelling">true</entry>
 <entry key="Bale.correct.spelling.edits">2</entry>
 <entry key="Bale.correct.spelling.user">5</entry>

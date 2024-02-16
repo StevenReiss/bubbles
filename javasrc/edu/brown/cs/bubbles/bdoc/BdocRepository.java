@@ -344,7 +344,7 @@ private void loadJavadoc(URI u,String p,boolean optional)
 
    try {
       u1 = new URI(u.getScheme(),u.getAuthority(),u.getPath() + "/index-all.html",null,null);
-      if (loadJavadocFile(u1,p,optional)) return;
+      if (loadJavadocFile(u1,p,true)) return;
     }
    catch (URISyntaxException e) {
       BoardLog.logE("BDOC","Bad javadoc url: " + e);
@@ -367,7 +367,7 @@ private void loadJavadoc(URI u,String p,boolean optional)
 private boolean loadJavadocFile(URI u,String p,boolean optional)
 {
    BoardLog.logD("BDOC","Load documentation from " + u);
-   List<BdocReference> refs = BdocHtmlScanner.scanIndex(u,this,p);
+   List<BdocReference> refs = BdocHtmlScanner.scanIndex(u,this,p,optional);
    if (refs.isEmpty()) return false;
    for (BdocReference br : refs) {
       if (checkReference(br)) addReference(br);
@@ -642,7 +642,7 @@ private boolean loadXml(File f)
 		  return false;
 		}
 	     }
-	    else if (u.getScheme().equals("http")) {
+	    else if (u.getScheme().equals("http") || u.getScheme().equals("https")) {
 	       try {
 		  URL url = u.toURL();
 		  HttpURLConnection c = (HttpURLConnection) url.openConnection();

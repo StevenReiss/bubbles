@@ -1786,7 +1786,10 @@ List<BumpLocation> findByKey(String proj,String key,File file)
 
 private static List<BumpLocation> getSearchResults(String proj,Element xml,boolean mtch)
 {
-   if (!IvyXml.isElement(xml,"RESULT")) return null;
+   if (!IvyXml.isElement(xml,"RESULT")) {
+      BoardLog.logE("BUMP","Search returned error " + IvyXml.convertXmlToString(xml));
+      return null;
+    }
 
    List<BumpLocation> rslt = new ArrayList<>();
 

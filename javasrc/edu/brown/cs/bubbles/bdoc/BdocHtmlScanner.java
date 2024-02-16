@@ -42,7 +42,7 @@ class BdocHtmlScanner implements BdocConstants
 /*                                                                              */
 /********************************************************************************/
 
-static List<BdocReference> scanIndex(URI u,BdocRepository repo,String project)
+static List<BdocReference> scanIndex(URI u,BdocRepository repo,String project,boolean opt)
 {
    List<BdocReference> rslt = new ArrayList<>();
    Document doc = null;
@@ -50,7 +50,7 @@ static List<BdocReference> scanIndex(URI u,BdocRepository repo,String project)
       doc = Jsoup.parse(u.toURL(),10000);
     }
    catch (Throwable e) { 
-      BoardLog.logE("BDOC","Problem scanning index " + u,e);
+      if (!opt) BoardLog.logE("BDOC","Problem scanning index " + u,e);
     }
    if (doc == null) return rslt;
    

@@ -328,7 +328,7 @@ private class CommandRunner implements Runnable {
        }
       else {
          String rslt = executeCommand();
-         if (rslt != null && !rslt.isBlank()) {
+         if (rslt != null && !rslt.trim().isEmpty()) {
             show_result = rslt;
             SwingUtilities.invokeLater(this);
           }
@@ -391,7 +391,7 @@ private class CommandRunner implements Runnable {
     }
    
    private void createResultBubble() {
-      if (show_result == null || show_result.isBlank()) return;
+      if (show_result == null || show_result.trim().isEmpty()) return;
       BeamFactory bf = BeamFactory.getFactory();
       BeamNoteBubble bb = bf.createNoteBubble(show_result);
       if (bb == null) return;

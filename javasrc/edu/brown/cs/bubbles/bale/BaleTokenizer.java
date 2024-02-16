@@ -145,7 +145,7 @@ private BaleTokenizer(String text,BaleTokenState start)
    if (mls != null && mls.length() > 1) multiline_count = mls.length();
    else if (mls != null) multiline_string = mls.charAt(0);
    String sc = IvyXml.getTextElement(txml,"STRING");
-   if (sc == null || sc.isBlank()) string_chars = "\"";
+   if (sc == null || sc.trim().isEmpty()) string_chars = "\"";
    else string_chars = sc.trim();
    String cmmts = IvyXml.getTextElement(txml,"COMMENTS");
    if (cmmts == null) cmmts = "// /*";
