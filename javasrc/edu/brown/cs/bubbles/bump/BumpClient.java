@@ -3876,6 +3876,7 @@ protected class IDEHandler implements MintHandler {
 	       for (Element re : IvyXml.children(e,"RUNEVENT")) {
 		  run_manager.handleRunEvent(re,when);
 		}
+               BoardLog.logD("BUMP","Finished run event");
 	       msg.replyTo("<OK/>");
 	       break;
 	    case "NAMES" :

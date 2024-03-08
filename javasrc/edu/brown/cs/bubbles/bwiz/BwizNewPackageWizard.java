@@ -61,6 +61,7 @@ BwizNewPackageWizard(BuenoLocation loc)
    if (s != null) setInitialName(s + ".");
    property_set.put(BuenoKey.KEY_TYPE,"class");
    
+   
 // if (s != null) {
 //    int idx = s.lastIndexOf(".");
 //    if (idx >= 0) {
@@ -131,10 +132,12 @@ BwizNewPackageWizard(BuenoLocation loc)
 {
    property_set.put(BuenoKey.KEY_PACKAGE,property_set.get(BuenoKey.KEY_NAME));
    StringBuffer buf = new StringBuffer();
+   String what = property_set.getStringProperty(BuenoKey.KEY_TYPE);
    int mods = property_set.getModifiers();
+   boolean iface = what.equalsIgnoreCase("interface");
    if (Modifier.isPublic(mods)) buf.append("public ");
-   if (Modifier.isAbstract(mods)) buf.append("abstract ");
-   if (Modifier.isFinal(mods)) buf.append("final ");
+   if (Modifier.isAbstract(mods) & !iface) buf.append("abstract ");
+   if (Modifier.isFinal(mods) & !iface) buf.append("final ");
    buf.append(property_set.getStringProperty(BuenoKey.KEY_TYPE));
    buf.append(" ");
    String cnm = property_set.getStringProperty(BuenoKey.KEY_CLASS_NAME);

@@ -37,6 +37,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 
@@ -79,6 +80,7 @@ public BwizAccessibilityPanel(int fgs)
    use_constraints = new GridBagConstraints();
 
    setup(fgs);
+   addTypeActionListener(new TypeListener());
 }
 
 
@@ -308,6 +310,22 @@ public void addModifierListener(ItemListener listener)
    if (override_checkbox != null) override_checkbox.addItemListener(listener);
 }
 
+
+
+private class TypeListener implements ActionListener {
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+     String cmd = evt.getActionCommand();
+     if (cmd.equalsIgnoreCase("interface")) {
+        if (abstract_checkbox != null) abstract_checkbox.setEnabled(false);
+        if (final_checkbox != null) final_checkbox.setEnabled(false);
+      }
+     else {
+        if (abstract_checkbox != null) abstract_checkbox.setEnabled(true);
+        if (final_checkbox != null) final_checkbox.setEnabled(true);
+      }
+    }
+}
 
 
 }	// end of class BwizAccessibilityPanel

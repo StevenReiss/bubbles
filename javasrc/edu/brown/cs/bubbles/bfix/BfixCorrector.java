@@ -27,7 +27,6 @@ package edu.brown.cs.bubbles.bfix;
 import edu.brown.cs.bubbles.bale.BaleConstants;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
-import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaRoot;
@@ -341,7 +340,7 @@ void checkProblemFixable(FixAdapter subfix)
    subfix.noteFixersAdded(fixes.size());
    for (BfixFixer fis : fixes) {
       fis.setSubFixData(subfix);
-      BoardThreadPool.start(fis);
+      fixfac.startTask(fis);
     }
 }
 
@@ -572,7 +571,7 @@ private void checkForElementToFix()
 	 for (BfixFixer fix : fixers) {
 	    if (addPending(fix.getMemo())) {
 	       ++numfnd;
-	       BoardThreadPool.start(fix);
+               fixfactory.startTask(fix);
 	     }
 	    else {
 	       BoardLog.logD("BFIX", "Discard duplicate fix " + fix);
@@ -582,7 +581,7 @@ private void checkForElementToFix()
        }
       else if (!chores.isEmpty()) {
 	 ChoreAdder adder = new ChoreAdder(chores);
-	 BoardThreadPool.start(adder);
+	 fixfactory.startTask(adder);
        }
       else {
 	 recordError(bp);

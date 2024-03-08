@@ -92,8 +92,10 @@ BumpProblemImpl(Element d,String id,int eid,String proj)
    error_type = BumpErrorType.NOTICE;
    if (IvyXml.getAttrBool(d,"ERROR")) error_type = BumpErrorType.ERROR;
    else if (IvyXml.getAttrBool(d,"WARNING")) error_type = BumpErrorType.WARNING;
+   else if (IvyXml.getAttrBool(d,"TODO")) error_type = BumpErrorType.TODO;
+   else if (IvyXml.getAttrBool(d,"HINT")) error_type = BumpErrorType.HINT;
    edit_id = eid;
-
+   
    setupFixes(d);
 }
 

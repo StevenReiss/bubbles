@@ -814,51 +814,51 @@ private class FieldsPanel extends EditPanel implements ActionListener {
        BoardProperties bp = BoardProperties.getProperties("Bueno");
        Map<Integer,String> opts = new TreeMap<>();
        for (String s : bp.stringPropertyNames()) {
-	  if (s.startsWith(opt + ".name.")) {
-	     int idx = s.lastIndexOf(".");
-	     try {
-		int v = Integer.parseInt(s.substring(idx+1));
-		opts.put(v,s);
-	      }
-	     catch (NumberFormatException e) { }
-	   }
-	}
+          if (s.startsWith(opt + ".name.")) {
+             int idx = s.lastIndexOf(".");
+             try {
+        	int v = Integer.parseInt(s.substring(idx+1));
+        	opts.put(v,s);
+              }
+             catch (NumberFormatException e) { }
+           }
+        }
        for (String onm : opts.values()) {
-	  String nm = bp.getProperty(onm);
-	  String vnm = onm.replaceFirst(".name.",".data.");
-	  String vls = bp.getProperty(vnm);
-	  if (nm == null || vls == null) continue;
-	  Map<String,String> vmap = new HashMap<>();
-	  for (StringTokenizer tok = new StringTokenizer(vls," \n\t,"); tok.hasMoreTokens(); ) {
-	     String kv = tok.nextToken();
-	     int idx = kv.indexOf("=");
-	     if (idx < 0) continue;
-	     String k = kv.substring(0,idx);
-	     String v = kv.substring(idx+1);
-	     vmap.put(k,v);
-	   }
-	  option_sets.put(nm,vmap);
-	}
-
+          String nm = bp.getProperty(onm);
+          String vnm = onm.replaceFirst(".name.",".data.");
+          String vls = bp.getProperty(vnm);
+          if (nm == null || vls == null) continue;
+          Map<String,String> vmap = new HashMap<>();
+          for (StringTokenizer tok = new StringTokenizer(vls," \n\t,"); tok.hasMoreTokens(); ) {
+             String kv = tok.nextToken();
+             int idx = kv.indexOf("=");
+             if (idx < 0) continue;
+             String k = kv.substring(0,idx);
+             String v = kv.substring(idx+1);
+             vmap.put(k,v);
+           }
+          option_sets.put(nm,vmap);
+        }
+    
        String curoption = null;
        Map<String,String> usermap = new HashMap<>();
        for (Map.Entry<String,String> ent : project_editor.getOptions().entrySet()) {
-	  String k = ent.getKey();
-	  String v = ent.getValue();
-	  if (pfx == null || k.startsWith(pfx)) {
-	     usermap.put(k,v);
-	   }
-	}
+          String k = ent.getKey();
+          String v = ent.getValue();
+          if (pfx == null || k.startsWith(pfx)) {
+             usermap.put(k,v);
+           }
+        }
        for (Map.Entry<String,Map<String,String>> ent : option_sets.entrySet()) {
-	  if (compatibleSets(usermap,ent.getValue())) {
-	     if (curoption == null) curoption = ent.getKey();
-	   }
-	}
+          if (compatibleSets(usermap,ent.getValue())) {
+             if (curoption == null) curoption = ent.getKey();
+           }
+        }
        if (curoption == null) {
-	  curoption = "Current Settings";
-	  option_sets.put(curoption,usermap);
-	}
-
+          curoption = "Current Settings";
+          option_sets.put(curoption,usermap);
+        }
+    
        if (name != null) project_editor.getOptions().put(name,curoption);
        cur_values.put(name,curoption);
        addChoice(label,option_sets.keySet(),curoption,this);

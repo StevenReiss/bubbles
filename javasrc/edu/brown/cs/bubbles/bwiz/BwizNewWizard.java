@@ -216,6 +216,7 @@ private void setup()
 
    Accessibility defaultaccess = Accessibility.DEFAULT;
    if ((getAccessibilityInfo() & SHOW_PRIVATE) != 0) defaultaccess = Accessibility.PRIVATE;
+   if (create_type == BuenoType.NEW_PACKAGE) defaultaccess = Accessibility.PUBLIC;
    setAccess(defaultaccess);
 
    //second panel, used in Classes and Methods for either extends or return, respectively

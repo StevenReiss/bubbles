@@ -706,7 +706,7 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
 
    IJavaSearchScope scp = null;
    int fg = IJavaSearchScope.SOURCES | IJavaSearchScope.REFERENCED_PROJECTS;
-   if (system) {
+   if (system && pelt.length > 0) {
       IJavaElement top = null;
       for (IJavaElement telt = pelt[0]; telt != null; telt = telt.getParent()) {
 	 top = telt;

@@ -51,6 +51,10 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.WeakHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 
 public class BfixFactory implements BfixConstants, BaleConstants,
@@ -69,9 +73,11 @@ private Contexter			context_handler;
 private List<BfixAdapter>		all_adapters;
 private BfixOrderBase			base_order;
 private BfixChoreManager		chore_manager;
+private ThreadPoolExecutor              fix_thread_pool;
 
 private static BoardProperties bfix_props = BoardProperties.getProperties("Bfix");
 private static BfixFactory the_factory = null;
+private static int thread_counter = 0;             
 
 
 
@@ -167,6 +173,7 @@ private BfixFactory()
    base_order = new BfixOrderBase(xml);
 
    chore_manager = new BfixChoreManager();
+   fix_thread_pool = new BfixThreadPool();
 }
 
 
@@ -258,6 +265,20 @@ BfixOrderBase getBaseOrder()
 }
 
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      Queueing methods                                                        */
+/*                                                                              */
+/********************************************************************************/
+
+void startTask(Runnable r)
+{
+   fix_thread_pool.execute(r);
+}
+
+
+
 /********************************************************************************/
 /*										*/
 /*	Fix up methods -- called from BaleEditorKit using reflection            */
@@ -283,11 +304,6 @@ public static void fixErrorsInRegion(BaleWindowDocument doc,int soff,int eoff)
 /********************************************************************************/
 
 private class Contexter implements BaleContextListener {
-
-   
-
-   
-
 
    @Override public void addPopupMenuItems(BaleContextConfig ctx,JPopupMenu menu) {
       if (ctx.inAnnotationArea()) return;
@@ -368,6 +384,27 @@ private static class SaveHandler implements BudaConstants.BudaFileHandler {
    @Override public void handlePropertyChange()         { }
 
 }       // end of inner class SaveHandler
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Thread pool for fixing                                                  */
+/*                                                                              */
+/********************************************************************************/
+
+private static class BfixThreadPool extends ThreadPoolExecutor implements ThreadFactory {
+   
+   BfixThreadPool() {
+      super(2,2,4000,TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>());
+      setThreadFactory(this);
+    }
+   
+   @Override public Thread newThread(Runnable r) {
+      return new Thread(r,"BfixWorkerThread_" + (++thread_counter));
+    }
+}
 
 
 

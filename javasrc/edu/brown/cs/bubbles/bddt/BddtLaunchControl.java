@@ -1086,52 +1086,52 @@ private class RunEventHandler implements BumpRunEventHandler {
       BumpThread bt = evt.getThread();
       BumpThreadState ost = thread_states.get(bt);
       BumpThreadState nst = bt.getThreadState();
-
+   
       switch (evt.getEventType()) {
-	 case THREAD_ADD :
-	    nst = BumpThreadState.RUNNING;
-	    //$FALL-THROUGH$
-	 case THREAD_CHANGE :
-	    thread_states.put(bt,nst);
-	    switch (bt.getThreadDetails()) {
-	       case STEP_END :
-	       case STEP_INTO :
-	       case STEP_OVER :
-	       case STEP_RETURN :
-		  if (ost != null && ost.isStopped() && nst.isStopped()) {
-		     // might not get a thread running event on a step request
-		     ost = ost.getRunState();
-		     handleThreadStateChange(bt,ost);
-		   }
-		  break;
-	     }
-	    if (nst != ost) {
-	       handleThreadStateChange(bt,ost);
-	       if (nst.isStopped()) last_stopped = bt;
-	       else if (last_stopped == bt) last_stopped = null;
-	     }
-	    else if (nst.isStopped()) {
-	       addExecutionAnnot(bt);
-	     }
-	    break;
-	 case THREAD_REMOVE :
-	    removeExecutionAnnot(bt);
-	    if (bt == last_stopped) last_stopped = null;
-	    thread_states.remove(bt);
-	    break;
-	 case THREAD_TRACE :
-	 case THREAD_HISTORY :
-	    return;
-	 default:
-	    break;
+         case THREAD_ADD :
+            nst = BumpThreadState.RUNNING;
+            //$FALL-THROUGH$
+         case THREAD_CHANGE :
+            thread_states.put(bt,nst);
+            switch (bt.getThreadDetails()) {
+               case STEP_END :
+               case STEP_INTO :
+               case STEP_OVER :
+               case STEP_RETURN :
+        	  if (ost != null && ost.isStopped() && nst.isStopped()) {
+        	     // might not get a thread running event on a step request
+        	     ost = ost.getRunState();
+        	     handleThreadStateChange(bt,ost);
+        	   }
+        	  break;
+             }
+            if (nst != ost) {
+               handleThreadStateChange(bt,ost);
+               if (nst.isStopped()) last_stopped = bt;
+               else if (last_stopped == bt) last_stopped = null;
+             }
+            else if (nst.isStopped()) {
+               addExecutionAnnot(bt);
+             }
+            break;
+         case THREAD_REMOVE :
+            removeExecutionAnnot(bt);
+            if (bt == last_stopped) last_stopped = null;
+            thread_states.remove(bt);
+            break;
+         case THREAD_TRACE :
+         case THREAD_HISTORY :
+            return;
+         default:
+            break;
        }
-
+   
       int tct = thread_states.size();
       int rct = 0;
       for (Map.Entry<BumpThread,BumpThreadState> ent : thread_states.entrySet()) {
-	 BumpThreadState bts = ent.getValue();
-	 if (bts.isStopped() && last_stopped == null) last_stopped = ent.getKey();
-	 else if (bts.isRunning()) ++rct;
+         BumpThreadState bts = ent.getValue();
+         if (bts.isStopped() && last_stopped == null) last_stopped = ent.getKey();
+         else if (bts.isRunning()) ++rct;
        }
       if (tct == 0) setLaunchState(LaunchState.TERMINATED);
       else if (rct == 0) setLaunchState(LaunchState.PAUSED);

@@ -808,7 +808,10 @@ private static class ProblemAnnot implements BaleAnnotation {
          case WARNING :
             return BoardImage.getIcon("warning");
          case NOTICE :
+         case HINT: 
             return BoardImage.getIcon("notice");
+         case TODO :
+            return BoardImage.getIcon("todo");
        }
       return null;
     }

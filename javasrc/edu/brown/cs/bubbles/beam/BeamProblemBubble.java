@@ -304,6 +304,10 @@ private String getErrorType(BumpProblem bp)
 	 return "W";
       case NOTICE :
 	 return "N";
+      case TODO :
+         return "T";
+      case HINT :
+         return "H";
     }
 
    return null;
@@ -446,23 +450,25 @@ private class ProblemTable extends JTable implements MouseListener,
       BumpErrorType et = BumpErrorType.NOTICE;
       if (bp != null) et = bp.getErrorType();
       switch (et) {
-	 case WARNING :
-	    if (warning_renderer[col] == null) {
-	       warning_renderer[col] = new WarningRenderer(super.getCellRenderer(row,col));
-	     }
-	    return warning_renderer[col];
-	 case ERROR :
-	 case FATAL :
-	    if (error_renderer[col] == null) {
-	       error_renderer[col] = new ErrorRenderer(super.getCellRenderer(row,col));
-	     }
-	    return error_renderer[col];
-	 default :
-	 case NOTICE :
-	    if (notice_renderer[col] == null) {
-	       notice_renderer[col] = new NoticeRenderer(super.getCellRenderer(row,col));
-	     }
-	    return notice_renderer[col];
+         case WARNING :
+            if (warning_renderer[col] == null) {
+               warning_renderer[col] = new WarningRenderer(super.getCellRenderer(row,col));
+             }
+            return warning_renderer[col];
+         case ERROR :
+         case FATAL :
+            if (error_renderer[col] == null) {
+               error_renderer[col] = new ErrorRenderer(super.getCellRenderer(row,col));
+             }
+            return error_renderer[col];
+         default :
+         case TODO :
+         case NOTICE :
+         case HINT :
+            if (notice_renderer[col] == null) {
+               notice_renderer[col] = new NoticeRenderer(super.getCellRenderer(row,col));
+             }
+            return notice_renderer[col];
        }
     }
 

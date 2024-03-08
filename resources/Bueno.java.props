@@ -3,6 +3,7 @@
 <properties>
 <entry key="Bueno.problem.set.name.1">Eclipse Standard</entry>
 <entry key="Bueno.problem.set.data.1">
+   org.eclipse.jdt.core.encoding=UTF-8
    org.eclipse.jdt.core.compiler.problem.annotationSuperInterface=warning
    org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
    org.eclipse.jdt.core.compiler.problem.autoboxing=ignore
@@ -95,6 +96,7 @@
 </entry>
 <entry key="Bueno.problem.set.name.2">Bubbles Standard</entry>
 <entry key="Bueno.problem.set.data.2">
+   org.eclipse.jdt.core.encoding=UTF-8
    org.eclipse.jdt.core.compiler.problem.annotationSuperInterface=warning
    org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
    org.eclipse.jdt.core.compiler.problem.autoboxing=ignore
@@ -187,6 +189,7 @@
 </entry>
 <entry key="Bueno.problem.set.name.3">Student Settings</entry>
 <entry key="Bueno.problem.set.data.3">
+   org.eclipse.jdt.core.encoding=UTF-8
    org.eclipse.jdt.core.compiler.problem.annotationSuperInterface=warning
    org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
    org.eclipse.jdt.core.compiler.problem.autoboxing=ignore

@@ -26,6 +26,7 @@
    <IMPORT IGNORE='T' ANYWHERE='T'>Syntax error</IMPORT>
    <NEWFIELD USE='0'>The value of the field {0} is not used</NEWFIELD>
    <RETURN USE='0'>This method must return a result of type {0}</RETURN>
+   <SPELLLOOKUP TYPES='T' KEYWORDS='T' />
 </FIXES>
 <LAUNCHES>
    <LAUNCH NAME='JAVA' DESCRIPTION='Java Application' DEBUGARGS='T'>

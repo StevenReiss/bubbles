@@ -190,26 +190,26 @@ private class HistoryHandler implements BumpConstants.BumpRunEventHandler {
       if (evt.getProcess() == null) return;
       String pid = evt.getProcess().getId();
       if (pid == null) return;
-
+   
       HistoryData hd = getHistory(pid,true);
-
+   
       switch (evt.getEventType()) {
-	 case THREAD_ADD :
-	    hd.startThread(evt.getThread(),evt.getWhen());
-	    break;
-	 case THREAD_REMOVE :
-	    hd.endThread(evt.getThread(),evt.getWhen());
-	    break;
-	 case THREAD_CHANGE :
-	    hd.add(evt.getThread(),evt.getWhen());
-	    break;
-	 case THREAD_TRACE :
-	    hd.add(evt.getThread(),evt.getWhen());
-	    break;
-	 case THREAD_HISTORY :
-	    break;
-	 default:
-	    break;
+         case THREAD_ADD :
+            hd.startThread(evt.getThread(),evt.getWhen());
+            break;
+         case THREAD_REMOVE :
+            hd.endThread(evt.getThread(),evt.getWhen());
+            break;
+         case THREAD_CHANGE :
+            hd.add(evt.getThread(),evt.getWhen());
+            break;
+         case THREAD_TRACE :
+            hd.add(evt.getThread(),evt.getWhen());
+            break;
+         case THREAD_HISTORY :
+            break;
+         default:
+            break;
        }
     }
 

@@ -844,6 +844,9 @@ private void handleThreadEvent(Element xml,long when)
    td = active_threads.get(id);
    if (td == null) {
       td = new ThreadData(thrd);
+      String pid = IvyXml.getAttrString(thrd,"PID");
+      if (pid != null && terminated_processes.containsKey(pid)) return;
+      if (td.getProcess() == null) return;
       td.updateThread(thrd);
       active_threads.put(id,td);
       evt = new ThreadEvent(BumpRunEventType.THREAD_ADD,td,when);
@@ -1567,7 +1570,7 @@ private class LaunchData implements BumpLaunch {
 
    synchronized ProcessData getDefaultProcess() {
       if (default_process == null) {
-	 default_process = createDefaultProcess(this);
+         default_process = createDefaultProcess(this);
        }
       return default_process;
     }
@@ -1696,96 +1699,96 @@ private class ProcessData implements BumpProcess {
    void handleBandaidData(long when,Element xml) {
       Map<String,ThreadData> ths = new HashMap<String,ThreadData>();
       for (ThreadData td : active_threads.values()) {
-	 // management thread id and eclipse thread id don't match -- need to use names
-	 // this has problems when there are threads with identical names
-	 if (td.getProcess() == this) ths.put(td.getName(),td);
+         // management thread id and eclipse thread id don't match -- need to use names
+         // this has problems when there are threads with identical names
+         if (td.getProcess() == this) ths.put(td.getName(),td);
        }
-
+   
       Element x = IvyXml.getChild(xml,"STATES");
       for (Element tc : IvyXml.children(x,"THREAD")) {
-	 String id = IvyXml.getAttrString(tc,"NAME");
-	 ThreadData td = ths.get(id);
-	 if (td != null && td.handleBandaidData(tc)) {
-	    ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
-	    for (BumpRunEventHandler reh : event_handlers) {
-	       try {
-		  reh.handleThreadEvent(evt);
-		}
-	       catch (Throwable t) {
-		  BoardLog.logE("BUMP","Problem handling state event",t);
-		}
-	     }
-	  }
-	 else if (td == null) {
-	    BoardLog.logD("BUMP","Can't find thread " + id + " " + IvyXml.convertXmlToString(tc));
-	  }
+         String id = IvyXml.getAttrString(tc,"NAME");
+         ThreadData td = ths.get(id);
+         if (td != null && td.handleBandaidData(tc)) {
+            ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
+            for (BumpRunEventHandler reh : event_handlers) {
+               try {
+        	  reh.handleThreadEvent(evt);
+        	}
+               catch (Throwable t) {
+        	  BoardLog.logE("BUMP","Problem handling state event",t);
+        	}
+             }
+          }
+         else if (td == null) {
+            BoardLog.logD("BUMP","Can't find thread " + id + " " + IvyXml.convertXmlToString(tc));
+          }
        }
-
+   
       Element dx = IvyXml.getChild(xml,"DEADLOCKS");
       if (dx != null) {
-	 for (Element de : IvyXml.children(dx,"DEADLOCK")) {
-	    for (Element te : IvyXml.children(de,"THREAD")) {
-	       String id = IvyXml.getAttrString(te,"NAME");
-	       ThreadData td = ths.get(id);
-	       if (td != null && td.handleBandaidDeadlock()) {
-		  ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
-		  for (BumpRunEventHandler reh : event_handlers) {
-		     try {
-			reh.handleThreadEvent(evt);
-		      }
-		     catch (Throwable t) {
-			BoardLog.logE("BUMP","Problem handling deadlock state event",t);
-		      }
-		   }
-		}
-	     }
-	  }
+         for (Element de : IvyXml.children(dx,"DEADLOCK")) {
+            for (Element te : IvyXml.children(de,"THREAD")) {
+               String id = IvyXml.getAttrString(te,"NAME");
+               ThreadData td = ths.get(id);
+               if (td != null && td.handleBandaidDeadlock()) {
+        	  ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
+        	  for (BumpRunEventHandler reh : event_handlers) {
+        	     try {
+        		reh.handleThreadEvent(evt);
+        	      }
+        	     catch (Throwable t) {
+        		BoardLog.logE("BUMP","Problem handling deadlock state event",t);
+        	      }
+        	   }
+        	}
+             }
+          }
        }
-
+   
       Element px = IvyXml.getChild(xml,"CPUPERF");
       if (px != null) {
-	 if (perf_writer != null) {
-	    perf_writer.println(IvyXml.convertXmlToString(px));
-	    perf_writer.flush();
-	  }
-	 ProcessPerfEvent ppe = new ProcessPerfEvent(this,px);
-	 for (BumpRunEventHandler reh : event_handlers) {
-	    try {
-	       reh.handleProcessEvent(ppe);
-	     }
-	    catch (Throwable t) {
-	       BoardLog.logE("BUMP","Problem handling performance event",t);
-	     }
-	  }
+         if (perf_writer != null) {
+            perf_writer.println(IvyXml.convertXmlToString(px));
+            perf_writer.flush();
+          }
+         ProcessPerfEvent ppe = new ProcessPerfEvent(this,px);
+         for (BumpRunEventHandler reh : event_handlers) {
+            try {
+               reh.handleProcessEvent(ppe);
+             }
+            catch (Throwable t) {
+               BoardLog.logE("BUMP","Problem handling performance event",t);
+             }
+          }
        }
       Element tx = IvyXml.getChild(xml,"TRIE");
       if (tx != null) {
-	 if (trie_writer != null) {
-	    trie_writer.println(IvyXml.convertXmlToString(tx));
-	    trie_writer.flush();
-	  }
-	 ProcessTrieEvent pte = new ProcessTrieEvent(this,tx);
-	 for (BumpRunEventHandler reh : event_handlers) {
-	    try {
-	       reh.handleProcessEvent(pte);
-	     }
-	    catch (Throwable t) {
-	       BoardLog.logE("BUMP","Problem handling trie event",t);
-	     }
-	  }
+         if (trie_writer != null) {
+            trie_writer.println(IvyXml.convertXmlToString(tx));
+            trie_writer.flush();
+          }
+         ProcessTrieEvent pte = new ProcessTrieEvent(this,tx);
+         for (BumpRunEventHandler reh : event_handlers) {
+            try {
+               reh.handleProcessEvent(pte);
+             }
+            catch (Throwable t) {
+               BoardLog.logE("BUMP","Problem handling trie event",t);
+             }
+          }
        }
       Element rx = IvyXml.getChild(xml,"TRACE");
       if (rx != null) {
-	 // BoardLog.logD("BUMP","TRACE DATA: " + IvyXml.convertXmlToString(rx));
-	 ProcessTraceEvent pre = new ProcessTraceEvent(this,rx);
-	 for (BumpRunEventHandler reh : event_handlers) {
-	    try {
-	       reh.handleProcessEvent(pre);
-	     }
-	    catch (Throwable t) {
-	       BoardLog.logE("BUMP","Problem handling trace event",t);
-	     }
-	  }
+         // BoardLog.logD("BUMP","TRACE DATA: " + IvyXml.convertXmlToString(rx));
+         ProcessTraceEvent pre = new ProcessTraceEvent(this,rx);
+         for (BumpRunEventHandler reh : event_handlers) {
+            try {
+               reh.handleProcessEvent(pre);
+             }
+            catch (Throwable t) {
+               BoardLog.logE("BUMP","Problem handling trace event",t);
+             }
+          }
        }
    }
 
@@ -1852,15 +1855,15 @@ private class ThreadData implements BumpThread {
       if (val != null) thread_name = val;
       val = IvyXml.getAttrString(xml,"GROUP");
       if (val != null) thread_group = val;
-
+   
       if (IvyXml.getAttrBool(xml,"SYSTEM")) thread_type = BumpThreadType.SYSTEM;
       else {
-	 BumpThreadType btt = null;
-	 if (thread_name != null) btt = known_threads.get(thread_name);
-	 if (btt == null) btt = BumpThreadType.USER;
-	 thread_type = btt;		// don't allow thread_type to be null, even temporarily
+         BumpThreadType btt = null;
+         if (thread_name != null) btt = known_threads.get(thread_name);
+         if (btt == null) btt = BumpThreadType.USER;
+         thread_type = btt;		// don't allow thread_type to be null, even temporarily
        }
-
+   
       is_daemon = IvyXml.getAttrBool(xml,"DAEMON");
       if (IvyXml.getAttrBool(xml,"STACK")) num_frames = IvyXml.getAttrInt(xml,"FRAMES",1);
       else num_frames = -1;
@@ -1869,7 +1872,7 @@ private class ThreadData implements BumpThread {
       for_launch = findLaunch(IvyXml.getChild(xml,"LAUNCH"));
       for_process = findProcess(xml);
       if (for_process == null && !IvyXml.getAttrPresent(xml,"PID") && for_launch != null) {
-	 for_process = for_launch.getDefaultProcess();
+         for_process = for_launch.getDefaultProcess();
        }
       exception_type = null;
       current_breakpoint = null;

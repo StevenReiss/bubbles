@@ -340,6 +340,7 @@ static void outputProblem(IProject proj,IProblem ip,IvyXmlWriter xw)
    else {
       switch (ip.getID()) {
 	 case IProblem.Task :
+            xw.field("TODO",true);
 	    break;
 	 default :
 	    xw.field("WARNING",true);

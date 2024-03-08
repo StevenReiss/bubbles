@@ -62,7 +62,6 @@ import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Vector;

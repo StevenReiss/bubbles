@@ -64,7 +64,9 @@ enum BumpErrorType {
    FATAL,
    ERROR,
    WARNING,
-   NOTICE
+   NOTICE,
+   TODO,
+   HINT,
 }
 
 
@@ -492,30 +494,30 @@ enum BumpThreadState {
 
    public BumpThreadState getRunState() {
       switch (this) {
-	 case DEAD :
-	 default :
-	    return this;
-	 case NONE :
-	 case NEW :
-	 case STOPPED :
-	 case EXCEPTION :
-	    return RUNNING;
-	 case STOPPED_SYNC :
-	    return RUNNING_SYNC;
-	 case STOPPED_IO :
-	    return RUNNING_IO;
-	 case STOPPED_SYSTEM :
-	    return RUNNING_SYSTEM;
-	 case STOPPED_BLOCKED :
-	    return BLOCKED;
-	 case STOPPED_WAITING :
-	    return WAITING;
-	 case STOPPED_TIMED :
-	    return TIMED_WAITING;
-	 case STOPPED_DEADLOCK :
-	    return DEADLOCKED;
-	 case STOPPED_IDLE :
-	    return IDLE;
+         case DEAD :
+         default :
+            return this;
+         case NONE :
+         case NEW :
+         case STOPPED :
+         case EXCEPTION :
+            return RUNNING;
+         case STOPPED_SYNC :
+            return RUNNING_SYNC;
+         case STOPPED_IO :
+            return RUNNING_IO;
+         case STOPPED_SYSTEM :
+            return RUNNING_SYSTEM;
+         case STOPPED_BLOCKED :
+            return BLOCKED;
+         case STOPPED_WAITING :
+            return WAITING;
+         case STOPPED_TIMED :
+            return TIMED_WAITING;
+         case STOPPED_DEADLOCK :
+            return DEADLOCKED;
+         case STOPPED_IDLE :
+            return IDLE;
        }
     }
 
@@ -540,18 +542,18 @@ enum BumpThreadState {
 
    public boolean isStopped() {
       switch (this) {
-	 case STOPPED :
-	 case STOPPED_SYNC :
-	 case STOPPED_IO :
-	 case STOPPED_WAITING :
-	 case STOPPED_SYSTEM :
-	 case STOPPED_BLOCKED :
-	 case STOPPED_TIMED :
-	 case STOPPED_IDLE :
-	 case EXCEPTION :
-	    return true;
-	 default :
-	    break;
+         case STOPPED :
+         case STOPPED_SYNC :
+         case STOPPED_IO :
+         case STOPPED_WAITING :
+         case STOPPED_SYSTEM :
+         case STOPPED_BLOCKED :
+         case STOPPED_TIMED :
+         case STOPPED_IDLE :
+         case EXCEPTION :
+            return true;
+         default :
+            break;
        }
       return false;
     }

@@ -1121,20 +1121,20 @@ private class Mouser extends MouseAdapter {
       TreePath spath = pressed_path;
       if (spath == null) spath = active_options.getPathForLocation(e.getX(),e.getY());
       if (spath != null && e.isControlDown()) {
-	 active_options.collapsePath(spath);
-	 return;
+         active_options.collapsePath(spath);
+         return;
        }
       int cct = BoardProperties.getProperties("Bass").getInt("Bass.click.count",1);
       if (spath != null && e.getClickCount() == cct) {
-	    BassTreeNode tn = (BassTreeNode) spath.getLastPathComponent();
-	    BassName bn = tn.getBassName();
-	    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(active_options);
-	    if (bn != null && bba != null) {
-	       Point pt = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),bba);
-	       createBubble(bn,pt.y);
-	       if (!is_static && getParent() != null) getParent().setVisible(false);
-	     }
-	  }
+            BassTreeNode tn = (BassTreeNode) spath.getLastPathComponent();
+            BassName bn = tn.getBassName();
+            BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(active_options);
+            if (bn != null && bba != null) {
+               Point pt = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),bba);
+               createBubble(bn,pt.y);
+               if (!is_static && getParent() != null) getParent().setVisible(false);
+             }
+          }
       input_field.grabFocus();
    }
 

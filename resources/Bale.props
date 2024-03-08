@@ -102,7 +102,7 @@
 <entry key="Bale.string.wrapping">false</entry>
 <entry key="Bale.autocomplete.delay">0</entry>
 <entry key="Bale.autocomplete.nocase">false</entry>
-<entry key="Bale.elide.delay">250</entry>
+<entry key="Bale.elide.delay">100</entry>
 <entry key="Bale.highlight.delay">250</entry>
 <entry key="Bale.preview.enable">true</entry>
 <entry key="Bale.elide.statement">false</entry>

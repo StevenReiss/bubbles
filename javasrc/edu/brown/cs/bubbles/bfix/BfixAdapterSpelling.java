@@ -78,8 +78,23 @@ static {
 	  }
        }
     }
-   lookup_types = props.getBoolean("Bfix.correct.spelling.lookup.types");
-   lookup_keys = props.getBoolean("Bfix.correct.spelling.lookup.keywords");
+   Element xml = BumpClient.getBump().getLanguageData();
+   ignore_patterns = new ArrayList<>();
+   Element fxml = IvyXml.getChild(xml,"FIXES");
+   for (Element cxml : IvyXml.children(fxml,"SPELL")) {
+      if (IvyXml.getAttrBool(cxml,"IGNORE")) {
+         ignore_patterns.add(new BfixErrorPattern(cxml));
+       }
+    }
+   Element luxml = IvyXml.getChild(fxml,"SPELLLOOKUP");
+   if (luxml == null) {
+      lookup_types = props.getBoolean("Bfix.correct.spelling.lookup.types");
+      lookup_keys = props.getBoolean("Bfix.correct.spelling.lookup.keywords");
+    }
+   else {
+      lookup_types = IvyXml.getAttrBool(luxml,"TYPES");
+      lookup_keys = IvyXml.getAttrBool(luxml,"KEYWORDS");
+    }
 }
 
 

@@ -542,11 +542,11 @@ private class RunEventHandler implements BumpRunEventHandler {
    @Override public void handleThreadEvent(BumpRunEvent evt) {
       if (evt.getThread() != for_thread) return;
       switch (evt.getEventType()) {
-	 case THREAD_REMOVE :
-	    makeExtinct();
-	    break;
-	 default:
-	    break;
+         case THREAD_REMOVE :
+            makeExtinct();
+            break;
+         default:
+            break;
        }
     }
 

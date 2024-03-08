@@ -1754,34 +1754,34 @@ private static class FormatImporter implements BudaConstants.ButtonListener {
       Element n1 = xml;
       if (!IvyXml.isElement(xml,"profiles")) n1 = IvyXml.getChild(xml,"profiles");
       if (n1 != null) {
-	 Element n2 = IvyXml.getChild(n1,"profile");
-	 for (Element n3 : IvyXml.children(n2,"setting")) {
-	    xw.begin("OPTION");
-	    xw.field("NAME",IvyXml.getAttrString(n3,"id"));
-	    xw.field("VALUE",IvyXml.getAttrString(n3,"value"));
-	    xw.end("OPTION");
-	  }
+         Element n2 = IvyXml.getChild(n1,"profile");
+         for (Element n3 : IvyXml.children(n2,"setting")) {
+            xw.begin("OPTION");
+            xw.field("NAME",IvyXml.getAttrString(n3,"id"));
+            xw.field("VALUE",IvyXml.getAttrString(n3,"value"));
+            xw.end("OPTION");
+          }
        }
       else if (IvyXml.isElement(xml,"code_scheme")) {
-	 for (Element n4 : IvyXml.elementsByTag(xml,"option")) {
-	    xw.begin("IDEAOPTION");
-	    xw.field("NAME",IvyXml.getAttrString(n4,"name"));
-	    xw.field("VALUE",IvyXml.getAttrString(n4,"value"));
-	    xw.end("IDEAOPTION");
-	  }
+         for (Element n4 : IvyXml.elementsByTag(xml,"option")) {
+            xw.begin("IDEAOPTION");
+            xw.field("NAME",IvyXml.getAttrString(n4,"name"));
+            xw.field("VALUE",IvyXml.getAttrString(n4,"value"));
+            xw.end("IDEAOPTION");
+          }
        }
       xw.end("OPTIONS");
-
+   
       bump_client.loadPreferences(null,xw.toString());
       String v = BALE_PROPERTIES.getProperty("indent.tabulation.size");
       if (v == null) {
-	 v = BumpClient.getBump().getOption("org.eclipse.jdt.core.formatter.tabulation.size");
-	 if (v != null) {
-	    try {
-	       if (v != null) BaleTabHandler.setBaseTabSize(Integer.parseInt(v));
-	     }
-	    catch (NumberFormatException e) { }
-	  }
+         v = BumpClient.getBump().getOption("org.eclipse.jdt.core.formatter.tabulation.size");
+         if (v != null) {
+            try {
+               if (v != null) BaleTabHandler.setBaseTabSize(Integer.parseInt(v));
+             }
+            catch (NumberFormatException e) { }
+          }
        }
       xw.close();
       format_time = System.currentTimeMillis();
@@ -1806,63 +1806,63 @@ private static class ProjectFormatImporter implements BudaConstants.ButtonListen
       StringTokenizer tok = new StringTokenizer(rec,";");
       String cur = BoardSetup.getSetup().getDefaultWorkspace();
       while (tok.hasMoreTokens()) {
-	 String s = tok.nextToken();
-	 s = s.trim();
-	 if (s.equals(cur)) continue;
-	 int idx = s.lastIndexOf(File.separator);
-	 String s1 = s;
-	 if (idx > 0) s1 = s.substring(idx+1);
-	 if (s.length() == 0) continue;
-	 File f1 = new File(s);
-	 File f2 = new File(f1,".metadata");
-	 File f3 = new File(f2,".plugins");
-	 File f4 = new File(f3,"org.eclipse.core.runtime");
-	 File f5 = new File(f4,".settings");
-	 File f6 = new File(f5,"org.eclipse.jdt.core.prefs");
-	 if (!f6.exists()) continue;
-	 recs.put(s1,f6);
+         String s = tok.nextToken();
+         s = s.trim();
+         if (s.equals(cur)) continue;
+         int idx = s.lastIndexOf(File.separator);
+         String s1 = s;
+         if (idx > 0) s1 = s.substring(idx+1);
+         if (s.length() == 0) continue;
+         File f1 = new File(s);
+         File f2 = new File(f1,".metadata");
+         File f3 = new File(f2,".plugins");
+         File f4 = new File(f3,"org.eclipse.core.runtime");
+         File f5 = new File(f4,".settings");
+         File f6 = new File(f5,"org.eclipse.jdt.core.prefs");
+         if (!f6.exists()) continue;
+         recs.put(s1,f6);
        }
       if (recs.size() == 0) return;
       String [] opts = new String[recs.size()];
       opts = recs.keySet().toArray(opts);
       Object sel = JOptionPane.showInputDialog(BudaRoot.findBudaRoot(bba),
-	    "From Project","Select Project to Import From",
-	    JOptionPane.QUESTION_MESSAGE, null, opts,opts[0]);
+            "From Project","Select Project to Import From",
+            JOptionPane.QUESTION_MESSAGE, null, opts,opts[0]);
       if (sel == null) return;
       File path = recs.get((String) sel);
       if (path == null) return;
       Properties props = new Properties();
       try (FileInputStream fr = new FileInputStream(path)) {
-	 props.load(fr);
+         props.load(fr);
        }
       catch (IOException e) {
-	 return;
+         return;
        }
-
+   
       IvyXmlWriter xw = new IvyXmlWriter();
       xw.begin("OPTIONS");
       for (Map.Entry<Object,Object> ent : props.entrySet()) {
-	 String key = ent.getKey().toString();
-	 if (key.startsWith("Bale.indent.") || key.startsWith("org.eclipse.jdt.core.formatter.")) {
-	    xw.begin("OPTION");
-	    xw.field("NAME",key);
-	    xw.field("VALUE",ent.getValue().toString());
-	    xw.end("OPTION");
-	  }
+         String key = ent.getKey().toString();
+         if (key.startsWith("Bale.indent.") || key.startsWith("org.eclipse.jdt.core.formatter.")) {
+            xw.begin("OPTION");
+            xw.field("NAME",key);
+            xw.field("VALUE",ent.getValue().toString());
+            xw.end("OPTION");
+          }
        }
       // need to handle IDEA as well
       xw.end("OPTIONS");
       bump_client.loadPreferences(null,xw.toString());
-
+   
       String v = BALE_PROPERTIES.getProperty("indent.tabulation.size");
       if (v == null) {
-	 v = BumpClient.getBump().getOption("org.eclipse.jdt.core.formatter.tabulation.size");
-	 if (v != null) {
-	    try {
-	       if (v != null) BaleTabHandler.setBaseTabSize(Integer.parseInt(v));
-	     }
-	    catch (NumberFormatException e) { }
-	  }
+         v = BumpClient.getBump().getOption("org.eclipse.jdt.core.formatter.tabulation.size");
+         if (v != null) {
+            try {
+               if (v != null) BaleTabHandler.setBaseTabSize(Integer.parseInt(v));
+             }
+            catch (NumberFormatException e) { }
+          }
        }
       xw.close();
       format_time = System.currentTimeMillis();

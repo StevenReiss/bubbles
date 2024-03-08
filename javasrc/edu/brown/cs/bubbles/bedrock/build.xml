@@ -100,6 +100,10 @@
       <copy file='bedrock.jar'
 		tofile='/vol/Developer/jee-2023-06/Eclipse.app/Contents/Eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
       <copy file='bedrock.jar'
+		tofile='/vol/Developer/jee-2023-12/Eclipse.app/Contents/Eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+      <copy file='bedrock.jar'
+		tofile='/vol/Developer/java-2023-12/Eclipse.app/Contents/Eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+      <copy file='bedrock.jar'
 		tofile='/Users/spr/.p2/pool/plugins/bedrock_1.0.0.jar' />
    </target>
 

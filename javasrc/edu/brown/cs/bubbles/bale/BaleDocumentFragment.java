@@ -689,6 +689,26 @@ private boolean checkForNameChange(BaleElement be)
        }
     }
    else if (be instanceof BaleElement.CompilationUnitNode && fragment_type == BaleFragmentType.FILE) {
+      BaleElement use = null;
+      boolean skip = false;
+      for (int i = 0; i < be.getElementCount(); ++i) {
+         BaleElement ce = be.getBaleElement(i);
+         if (ce instanceof BaleElement.ClassNode) {
+            if (use == null) use = ce;
+            else skip = true;
+          }
+         else if (ce instanceof BaleElement.MethodNode ||
+               ce instanceof BaleElement.DeclSet ||
+               ce instanceof BaleElement.FieldNode ||
+               ce instanceof BaleElement.InitializerNode ||
+               ce instanceof BaleElement.StatementNode ||
+               ce instanceof BaleElement.FieldNode) {
+            skip = true;
+          }
+       }
+      if (use != null && !skip) {
+         if (checkForNameChange(use)) return true;
+       }
       String id = be.getBaleDocument().getFile().getName();
       int idx = id.lastIndexOf(".");
       if (idx > 0) id = id.substring(0,idx);

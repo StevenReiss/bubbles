@@ -1587,6 +1587,8 @@ static {
    BedrockPlugin.logD("RUNEVENT: " + xw.toString());
 
    our_plugin.finishMessageWait(xw);
+   
+   BedrockPlugin.logD("FINISHED RUNEVENT");
 }
 
 

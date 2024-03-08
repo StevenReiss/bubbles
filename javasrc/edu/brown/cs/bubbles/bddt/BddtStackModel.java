@@ -380,8 +380,11 @@ private class RunEventHandler implements BumpRunEventHandler {
             break;
          case THREAD_CHANGE :
             if (event_handler == null) return;
-            if (getThread().getThreadState().isStopped())
-               updateValues();
+            if (getThread().getThreadState().isStopped()) {
+               ValueUpdater vu = new ValueUpdater();
+               // BoardThreadPool.start(vu);
+               vu.run();
+             }
             break;
          default:
             break;
@@ -389,6 +392,16 @@ private class RunEventHandler implements BumpRunEventHandler {
     }
 
 }	// end of inner class RunEventHandler
+
+
+
+private class ValueUpdater implements Runnable {
+ 
+   @Override public void run() {
+      updateValues();
+    }
+   
+}       // end of inner class ValueUpdater
 
 
 

@@ -326,10 +326,6 @@ private class ModelHandler implements BumpConstants.BumpRunEventHandler {
       // might want to track number of processes for each launch configuration
     }
 
-   @Override public void handleThreadEvent(BumpRunEvent evt)	{ }
-
-   
-
 }	// end of inner class ModelHandler
 
 

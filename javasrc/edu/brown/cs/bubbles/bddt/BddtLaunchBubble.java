@@ -242,15 +242,17 @@ private void setupPanel()
 private List<ChoiceItem> getChoiceValues(BumpLaunchType lt,BumpLaunchConfigField fld)
 {
    List<ChoiceItem> rslt = new ArrayList<>();
+   BumpLaunchConfig cfg = edit_config;
+   if (cfg == null) cfg = launch_config;
 
    String eval = fld.getEvaluate();
    String arg = fld.getArgField();
    String argv = null;
    if (arg != null) {
-      argv = launch_config.getAttribute(arg);
+      argv = cfg.getAttribute(arg);
    }
    BumpClient bc = BumpClient.getBump();
-   String proj = launch_config.getProject();
+   String proj = cfg.getProject();
    Element xml = bc.doLaunchQuery(proj,eval,argv);
    for (Element e : IvyXml.children(xml,"OPTION")) {
       String v = IvyXml.getAttrString(e, "VALUE");

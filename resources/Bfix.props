@@ -37,8 +37,6 @@
 <entry key="Bfix.enable.BfixAdapterNewField">false</entry>
 <entry key="Bfix.enable.BfixAdapterNoReturn">true</entry>
 <entry key="Bfix.enable.BfixAdapterAddCatch">false</entry>
-<entry key="Bfix.correct.spelling.lookup.types">true</entry>
-<entry key="Bfix.correct.spelling.lookup.keywords">true</entry>
 </properties>
 
 

@@ -137,7 +137,7 @@ enum BoardLanguage {
       String ext = name.substring(idx);
       if (language_extensions.contains(ext)) return true;
       return false;
-    }	
+    }
 
 }	// end of inner enum BoardLanguage
 
@@ -481,7 +481,7 @@ String [] BOARD_RESOURCE_PROPS =  new String [] {
    "Bandaid.props","Barr.props","Bass.props",
    "Bdoc.java.props","Bdoc.props",
    "Bhelp.props", "Bwiz.props", "Buss.props",
-   "Bfix.props", "Bfix.dart.props",
+   "Bfix.props",
    "Brepair.props",
 };
 
@@ -684,7 +684,7 @@ int	BOARD_CORE_POOL_SIZE = 2;
 /**
  *	Maximum number of threads to allow in the pool
  **/
-int	BOARD_MAX_POOL_SIZE = 12;
+int	BOARD_MAX_POOL_SIZE = 20;
 
 
 /**

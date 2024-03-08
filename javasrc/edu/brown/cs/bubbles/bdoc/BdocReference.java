@@ -7,15 +7,15 @@
 /********************************************************************************/
 /*	Copyright 2009 Brown University -- Steven P. Reiss		      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.                            *
- *                                                                               *
- *                        All Rights Reserved                                    *
- *                                                                               *
- * This program and the accompanying materials are made available under the      *
+ *  Copyright 2011, Brown University, Providence, RI.				 *
+ *										 *
+ *			  All Rights Reserved					 *
+ *										 *
+ * This program and the accompanying materials are made available under the	 *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at                                                           *
- *      http://www.eclipse.org/legal/epl-v10.html                                *
- *                                                                               *
+ * and is available at								 *
+ *	http://www.eclipse.org/legal/epl-v10.html				 *
+ *										 *
  ********************************************************************************/
 
 
@@ -69,17 +69,21 @@ private BdocRepository for_repository;
 private static DescriptionData [] prefix_set = new DescriptionData [] {
    new DescriptionData("Variable in class ",BassNameType.FIELDS),
    new DescriptionData("Variable in record class ",BassNameType.FIELDS),
+   new DescriptionData("Variable in record ",BassNameType.FIELDS),
    new DescriptionData("Variable in enum class ",BassNameType.FIELDS),
    new DescriptionData("Variable in enum ",BassNameType.FIELDS),
    new DescriptionData("Variable in interface ",BassNameType.FIELDS),
+   new DescriptionData("Variable in exception class ",BassNameType.FIELDS),
    new DescriptionData("Variable in exception ",BassNameType.FIELDS),
    new DescriptionData("Variable in error ",BassNameType.FIELDS),
    new DescriptionData("Variable in annotation type ",BassNameType.FIELDS),
    new DescriptionData("Static variable in class ",BassNameType.FIELDS),
    new DescriptionData("Static variable in record class ",BassNameType.FIELDS),
+   new DescriptionData("Static variable in record ",BassNameType.FIELDS),
    new DescriptionData("Static variable in enum class ",BassNameType.FIELDS),
    new DescriptionData("Static variable in enum ",BassNameType.FIELDS),
    new DescriptionData("Static variable in interface ",BassNameType.FIELDS),
+   new DescriptionData("Static variable in exception class ",BassNameType.FIELDS),
    new DescriptionData("Static variable in exception ",BassNameType.FIELDS),
    new DescriptionData("Static variable in error ",BassNameType.FIELDS),
    new DescriptionData("Static variable in annotation type ",BassNameType.FIELDS),
@@ -87,30 +91,37 @@ private static DescriptionData [] prefix_set = new DescriptionData [] {
    new DescriptionData("Element in annotation interface ",BassNameType.FIELDS),
    new DescriptionData("Method in class ",BassNameType.METHOD),
    new DescriptionData("Method in record class ",BassNameType.METHOD),
+   new DescriptionData("Method in record ",BassNameType.METHOD),
    new DescriptionData("Method in enum class ",BassNameType.METHOD),
    new DescriptionData("Method in enum ",BassNameType.METHOD),
    new DescriptionData("Method in interface ",BassNameType.METHOD),
+   new DescriptionData("Method in exception class ",BassNameType.METHOD),
    new DescriptionData("Method in exception ",BassNameType.METHOD),
    new DescriptionData("Method in error ",BassNameType.METHOD),
    new DescriptionData("Method in annotation type ",BassNameType.METHOD),
    new DescriptionData("Static method in class ",BassNameType.METHOD),
    new DescriptionData("Static method in record class ",BassNameType.METHOD),
+   new DescriptionData("Static method in record ",BassNameType.METHOD),
    new DescriptionData("Static method in enum class ",BassNameType.METHOD),
    new DescriptionData("Static method in enum ",BassNameType.METHOD),
    new DescriptionData("Static method in interface ",BassNameType.METHOD),
+   new DescriptionData("Static method in exception class ",BassNameType.METHOD),
    new DescriptionData("Static method in exception ",BassNameType.METHOD),
    new DescriptionData("Static method in error ",BassNameType.METHOD),
    new DescriptionData("Static method in annotation type ",BassNameType.METHOD),
    new DescriptionData("Constructor for class ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Constructor for record class ",BassNameType.CONSTRUCTOR),
+   new DescriptionData("Constructor for record ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Constructor for enum class ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Constructor for enum ",BassNameType.CONSTRUCTOR),
+   new DescriptionData("Constructor for exception class ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Constructor for exception ",BassNameType.CONSTRUCTOR),
+   new DescriptionData("Constructor for error class ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Constructor for error ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Constructor for annotation type ",BassNameType.CONSTRUCTOR),
    new DescriptionData("Class in ",BassNameType.CLASS),
    new DescriptionData("Record Class in ",BassNameType.CLASS),
-   new DescriptionData("Exception Class in ",BassNameType.CLASS),
+   new DescriptionData("Exception Class in ",BassNameType.THROWABLE),
    new DescriptionData("Interface in ",BassNameType.INTERFACE),
    new DescriptionData("Exception in ",BassNameType.THROWABLE),
    new DescriptionData("Error in ",BassNameType.THROWABLE),
@@ -166,9 +177,12 @@ BdocReference(BdocRepository br,String proj,URI base,String ref,String desc) thr
       int idx1 = desc.indexOf("Search tag in ") + "Search tag in ".length();
       inside = desc.substring(idx1).trim();
     }
-   
+
    if (inside == null) {
       throw new BdocException("Unknown javadoc index element " + desc);
+    }
+   if (inside.contains("class")) {
+      System.err.println("CHECK HERE");
     }
 
    setName(local,inside,ref);
@@ -245,7 +259,7 @@ URI getReferenceUrl()			{ return ref_url; }
 
 BdocReference findRelatedReference(String newurl)
 {
-   URI u = ref_url.resolve(newurl); 
+   URI u = ref_url.resolve(newurl);
    return for_repository.findReference(u);
 }
 
@@ -282,7 +296,7 @@ void addDescription(String s)
 private void setName(String lcl,String inside,String ref) throws BdocException
 {
    int idx;
-   
+
    key_name = null;
    name_parameters = null;
    idx = lcl.indexOf("(");
@@ -370,7 +384,7 @@ private void setName(String lcl,String inside,String ref) throws BdocException
       case THROWABLE :
 	 return " (throwable)";
       case ANNOTATION :
-         return " (annotation)";
+	 return " (annotation)";
       default:
 	 break;
     }
@@ -423,7 +437,7 @@ String getDigestedName()	 { return bdoc_name; }
 boolean matchName(String nm)
 {
    int idx = nm.indexOf("(");
-   
+
    String bnm = bdoc_name;
    boolean mtch = nm.startsWith(bnm);
    if (!mtch) {
@@ -434,12 +448,12 @@ boolean matchName(String nm)
        }
     }
    if (!mtch) return false;
-   
+
    if (idx < 0) {
       // if there are no parameters, insist on exact match
       return (bnm.length() == nm.length());
     }
-     
+
    if (bnm.length() != idx) return false;
 
    return BumpLocation.compareParameters(name_parameters,nm.substring(idx));
