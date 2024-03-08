@@ -1330,7 +1330,10 @@ private abstract class AbstractCreator extends AbstractAction {
    protected BuenoType new_type;
    protected boolean is_before;
    protected BconRegion for_region;
-   protected BuenoProperties property_set;
+   protected BuenoProperties property_set; 
+   
+   private static final long serialVersionUID = 1L;
+
 
    AbstractCreator(BuenoType typ,BconRegion br,boolean before) {
       super(getButtonName(br,typ,before));

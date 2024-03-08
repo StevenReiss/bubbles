@@ -86,7 +86,6 @@ int OP_COUNT = 3;
 /*										*/
 /********************************************************************************/
 
-
 enum CallbackType {
    UNKNOWN,
    EVENT,		// event handler
