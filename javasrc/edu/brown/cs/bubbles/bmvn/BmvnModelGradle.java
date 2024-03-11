@@ -158,6 +158,8 @@ private class GradleCommand extends AbstractAction implements BmvnCommand {
    private BudaBubble relative_bubble;
    private Point relative_point;
    
+   private static final long serialVersionUID = 1;
+   
    GradleCommand(String goal,BudaBubble relbbl,Point where) {
       gradle_task = goal;
       relative_bubble = relbbl;

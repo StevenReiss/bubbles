@@ -849,6 +849,8 @@ private class TestListener extends RunListener {
 
 private static class ExitException extends SecurityException {
 
+   private static final long serialVersionUID = 1;
+
    ExitException(int sts) {
       super("Attempt to call System.exit");
     }

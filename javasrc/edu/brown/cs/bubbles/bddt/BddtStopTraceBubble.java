@@ -80,6 +80,7 @@ private BumpThread	for_thread;
 private boolean 	have_data;
 private RootNode	tree_root;
 private long		base_time;
+private static final long serialVersionUID = 1;
 
 
 
@@ -214,7 +215,8 @@ private class StopTracePanel extends JTree implements TreeExpansionListener {
 
    private DefaultTreeModel tree_model;
    private Set<String> expanded_threads;
-
+   private static final long serialVersionUID = 1;
+   
    StopTracePanel() {
       tree_model = new DefaultTreeModel(tree_root);
       expanded_threads = new HashSet<>();

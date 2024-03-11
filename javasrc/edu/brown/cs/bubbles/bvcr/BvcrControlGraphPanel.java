@@ -75,6 +75,7 @@ private BvcrControlPanel	control_panel;
 private BvcrControlVersion	current_version;
 private JButton 		change_button;
 private VersionHistoryGraph	petal_graph;
+private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
@@ -171,7 +172,8 @@ private class VersionHistoryGraph extends JPanel {
    private PetalEditor		petal_editor;
    private PetalModelDefault	petal_model;
    private PetalLayoutMethod	layout_method;
-
+   private static final long serialVersionUID = 1;
+   
    VersionHistoryGraph() {
       super(new BorderLayout());
       setPreferredSize(new Dimension(400,150));
@@ -218,20 +220,25 @@ private class VersionHistoryGraph extends JPanel {
     }	// end of inner class Model
 
    private class Node extends PetalNodeDefault {
+      
       private BvcrControlVersion for_node;
-
+      private static final long serialVersionUID = 1;
+      
       Node(BvcrControlVersion hn) {
-	 super(hn.getBestName());
-	 for_node = hn;
+         super(hn.getBestName());
+         for_node = hn;
        }
-
+   
       @Override public String getToolTip(Point at) {
-	 return "<html>" + for_node.getHtmlDescription();
+         return "<html>" + for_node.getHtmlDescription();
        }
-
+   
     }	// end of inner class Node
 
    private class Arc extends PetalArcDefault {
+      
+      private static final long serialVersionUID = 1;
+      
       Arc(Node f,Node t) {
 	 super(f,t);
 	 setSourceEnd(new PetalArcEndDefault(PetalArcEnd.PETAL_ARC_END_ARROW));
@@ -251,7 +258,9 @@ private class VersionHistoryGraph extends JPanel {
 /********************************************************************************/
 
 private class ChangeVersionAction extends AbstractAction {
-
+   
+   private static final long serialVersionUID = 1;
+   
    @Override public void actionPerformed(ActionEvent evt) {
       if (current_version == null) return;
       control_panel.setVersion(current_version);
@@ -261,7 +270,9 @@ private class ChangeVersionAction extends AbstractAction {
 
 
 private class ShowTableAction extends AbstractAction {
-
+   
+   private static final long serialVersionUID = 1;
+   
    @Override public void actionPerformed(ActionEvent evt) {
       Component btn = (Component) evt.getSource();
       BvcrControlVersionPanel pnl = new BvcrControlVersionPanel(control_panel);

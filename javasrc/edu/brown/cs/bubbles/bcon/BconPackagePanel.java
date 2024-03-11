@@ -182,7 +182,9 @@ private class Sizer extends ComponentAdapter {
 /********************************************************************************/
 
 private class NodeTab extends JPanel implements ActionListener {
-
+   
+   private static final long serialVersionUID = 1;
+   
    NodeTab() {
       setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
    
@@ -260,7 +262,9 @@ private class ClassAction implements ActionListener {
 /********************************************************************************/
 
 private class EdgeTab extends JPanel implements ActionListener {
-
+   
+   private static final long serialVersionUID = 1;
+   
    EdgeTab() {
       setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 
@@ -335,7 +339,9 @@ private class RelationAction implements ActionListener {
 /********************************************************************************/
 
 private class LayoutTab extends JPanel implements ActionListener {
-
+   
+   private static final long serialVersionUID = 1;
+   
    LayoutTab() {
       setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 
@@ -426,7 +432,9 @@ private class FilterAction implements ActionListener {
 
 private class PackagePanel extends SwingGridPanel
       implements BudaConstants.BudaBubbleOutputer {
-
+   
+   private static final long serialVersionUID = 1;
+   
    @Override public String getConfigurator()		{ return "BCON"; }
 
    @Override public void outputXml(BudaXmlWriter xw) {

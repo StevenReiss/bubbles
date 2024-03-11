@@ -128,6 +128,7 @@ private class AntCommand extends AbstractAction implements BmvnCommand {
    private String ant_goal;
    private BudaBubble relative_bubble;
    private Point relative_point;
+   private static final long serialVersionUID = 1;
    
    AntCommand(String goal,BudaBubble relbbl,Point where) {
       ant_goal = goal;

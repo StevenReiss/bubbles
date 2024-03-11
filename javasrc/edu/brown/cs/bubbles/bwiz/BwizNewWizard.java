@@ -110,7 +110,10 @@ protected BuenoValidator new_validator;
 protected BuenoType create_type;
 protected BuenoBubbleCreator bubble_creator;
 
+private static final long serialVersionUID = 1;
+
 private static final String DEFAULT_PACKAGE = "<default package>";
+
 
 
 

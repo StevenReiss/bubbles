@@ -139,7 +139,9 @@ BudaBubble getBubble()
 
 
 private class OptionBubble extends BudaBubble {
-
+   
+   private static final long serialVersionUID = 1;
+   
    OptionBubble() {
       super(display_panel,BudaBorder.RECTANGLE);
    }
@@ -363,6 +365,8 @@ private static class SubPanel {
 
 private static class OptionPanel extends SwingGridPanel implements Scrollable {
 
+   private static final long serialVersionUID = 1;
+   
    @Override public Dimension getPreferredScrollableViewportSize() {
       return new Dimension(300,400);
     }

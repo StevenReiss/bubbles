@@ -141,7 +141,9 @@ interface BdynEntryTask {
 }       // end of interface BdynEntryTask
 
 
-class BdynRangeSet extends HashMap<BdynEntryThread,Set<BdynEntry>> { }
+class BdynRangeSet extends HashMap<BdynEntryThread,Set<BdynEntry>> {
+   private static final long serialVersionUID = 1;
+}
 
 
 interface BdynEventUpdater extends EventListener {

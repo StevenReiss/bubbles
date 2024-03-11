@@ -59,6 +59,8 @@ class BwizStartWizard extends JPanel implements BwizConstants
 
 private Element         wizard_data;
 
+private static final long serialVersionUID = 1;
+
 
 
 /********************************************************************************/
@@ -174,6 +176,8 @@ private void setup()
 
 private class WizardButton extends JButton {
 
+   private static final long serialVersionUID = 1;
+   
    WizardButton(Action a) {
       super(a);
       setOpaque(false);
@@ -194,6 +198,8 @@ private class WizardButton extends JButton {
 
 private class CreateClassAction extends AbstractAction {
 
+   private static final long serialVersionUID = 1;
+   
    CreateClassAction(Element bdata) {
       super(CREATE_CLASS_TEXT);
       String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
@@ -213,57 +219,63 @@ private class CreateClassAction extends AbstractAction {
 
 private class CreateInterfaceAction extends AbstractAction {
 
-CreateInterfaceAction(Element bdata) {
-   super(CREATE_INTERFACE_TEXT);
-   String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
-         "Create a new top-level interface");
-   putValue(SHORT_DESCRIPTION,desc);
-   String lbl = IvyXml.getAttrString(bdata,"LABEL");
-   if (lbl != null) putValue(NAME,lbl);
-}
-
-@Override public void actionPerformed(ActionEvent evt) {
-   BwizNewWizard bcwiz = new BwizNewInterfaceWizard(null);
-   BwizFactory.getFactory().createBubble(bcwiz,bcwiz.getFocus());
- }
+   private static final long serialVersionUID = 1;
+   
+   CreateInterfaceAction(Element bdata) {
+      super(CREATE_INTERFACE_TEXT);
+      String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
+            "Create a new top-level interface");
+      putValue(SHORT_DESCRIPTION,desc);
+      String lbl = IvyXml.getAttrString(bdata,"LABEL");
+      if (lbl != null) putValue(NAME,lbl);
+    }
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+      BwizNewWizard bcwiz = new BwizNewInterfaceWizard(null);
+      BwizFactory.getFactory().createBubble(bcwiz,bcwiz.getFocus());
+    }
 
 }	// end of inner class CreateInterfaceAction
 
 
 private class CreateEnumAction extends AbstractAction {
-
-CreateEnumAction(Element bdata) {
-   super(CREATE_ENUM_TEXT);
-   String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
-         "Create a new top-level enumeration");
-   putValue(SHORT_DESCRIPTION,desc);
-   String lbl = IvyXml.getAttrString(bdata,"LABEL");
-   if (lbl != null) putValue(NAME,lbl);
-}
-
-@Override public void actionPerformed(ActionEvent evt) {
-   BwizNewWizard bcwiz = new BwizNewEnumWizard(null);
-   BwizFactory.getFactory().createBubble(bcwiz,bcwiz.getFocus());
- }
+   
+   private static final long serialVersionUID = 1;
+   
+   CreateEnumAction(Element bdata) {
+      super(CREATE_ENUM_TEXT);
+      String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
+            "Create a new top-level enumeration");
+      putValue(SHORT_DESCRIPTION,desc);
+      String lbl = IvyXml.getAttrString(bdata,"LABEL");
+      if (lbl != null) putValue(NAME,lbl);
+    }
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+      BwizNewWizard bcwiz = new BwizNewEnumWizard(null);
+      BwizFactory.getFactory().createBubble(bcwiz,bcwiz.getFocus());
+    }
 
 }	// end of inner class CreateEnumAction
 
 
 private class OpenAssignmentAction extends AbstractAction {
 
-OpenAssignmentAction(Element bdata) {
-   super(OPEN_ASSIGNMENT_TEXT);
-   String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
-         "Create a new course assignment");
-   putValue(SHORT_DESCRIPTION,desc);
-   String lbl = IvyXml.getAttrString(bdata,"LABEL");
-   if (lbl != null) putValue(NAME,lbl);
-}
-
-@Override public void actionPerformed(ActionEvent evt) {
-   BwizAssignmentWizard bcwiz = new BwizAssignmentWizard();
-   BwizFactory.getFactory().createBubble(bcwiz,null);
- }
+   private static final long serialVersionUID = 1;
+   
+   OpenAssignmentAction(Element bdata) {
+      super(OPEN_ASSIGNMENT_TEXT);
+      String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
+            "Create a new course assignment");
+      putValue(SHORT_DESCRIPTION,desc);
+      String lbl = IvyXml.getAttrString(bdata,"LABEL");
+      if (lbl != null) putValue(NAME,lbl);
+    }
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+      BwizAssignmentWizard bcwiz = new BwizAssignmentWizard();
+      BwizFactory.getFactory().createBubble(bcwiz,null);
+    }
 
 }	// end of inner class OpenAssignmentAction
 

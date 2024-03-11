@@ -88,6 +88,7 @@ private FileTableModel		table_model;
 private boolean 		show_untracked;
 private boolean 		show_ignored;
 private List<JButton>		select_buttons;
+private static final long serialVersionUID = 1;
 
 
 
@@ -262,7 +263,8 @@ private class ExpandAllAction extends AbstractAction {
 private class FileTable extends SwingTreeTable {
 
    private CellDrawer [] cell_drawer;
-
+   private static final long serialVersionUID = 1;
+   
    FileTable() {
       super(table_model);
       setPreferredScrollableViewportSize(new Dimension(400,300));

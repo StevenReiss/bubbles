@@ -311,7 +311,9 @@ private void insertBeforeEnd(Element e,String txt)
 /********************************************************************************/
 
 private class InteractPanel extends SwingGridPanel {
-
+   
+   private static final long serialVersionUID = 1;
+   
    InteractPanel() {
       setOpaque(false);
     }
@@ -331,6 +333,8 @@ private class InteractPanel extends SwingGridPanel {
 
 private class InteractEditor extends SwingEditorPane implements CaretListener {
 
+   private static final long serialVersionUID = 1;
+   
    InteractEditor(String typ,String cnts) {
       super(typ,cnts);
       addCaretListener(this);

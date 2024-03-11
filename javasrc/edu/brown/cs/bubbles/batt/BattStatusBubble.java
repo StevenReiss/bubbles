@@ -108,6 +108,7 @@ private JButton         run_selected;
 private Set<DisplayMode> ALL_MODE = EnumSet.of(DisplayMode.ALL);
 private Set<DisplayMode> FAIL_MODE = EnumSet.of(DisplayMode.FAIL);
 private Set<DisplayMode> PENDING_MODE = EnumSet.of(DisplayMode.PENDING,DisplayMode.NEEDED);
+private static final long serialVersionUID = 1;
 
 
 
@@ -322,7 +323,8 @@ private class Selector implements ListSelectionListener {
 private class DebugAction extends AbstractAction {
 
    private BattTestCase test_case;
-
+   private static final long serialVersionUID = 1;
+   
    DebugAction(BattTestCase tc) {
       super("Debug " + tc.getName());
       test_case = tc;
@@ -431,6 +433,8 @@ private BarType getTestType(BattTestCase btc)
 
 private class DisplayBar extends JPanel {
 
+   private static final long serialVersionUID = 1;
+
    DisplayBar() {
       setPreferredSize(new Dimension(300,30));
       setMinimumSize(new Dimension(100,16));
@@ -483,6 +487,8 @@ private class DisplayBar extends JPanel {
 
 private class DisplayTable extends JTable implements MouseListener {
 
+   private static final long serialVersionUID = 1;
+
    DisplayTable() {
       super(batt_model.getTableModel());
       setShowGrid(true);
@@ -491,16 +497,16 @@ private class DisplayTable extends JTable implements MouseListener {
       setColumnSelectionAllowed(false);
       setDragEnabled(false);
       setFillsViewportHeight(true);
-
+   
       getColumnModel().getColumn(0).setMinWidth(BATT_STATUS_COL_MIN_WIDTH);
       getColumnModel().getColumn(0).setMaxWidth(BATT_STATUS_COL_MAX_WIDTH);
-
+   
       getColumnModel().getColumn(1).setMinWidth(BATT_STATE_COL_MIN_WIDTH);
       getColumnModel().getColumn(1).setMaxWidth(BATT_STATE_COL_MAX_WIDTH);
-
+   
       getColumnModel().getColumn(2).setPreferredWidth(BATT_CLASS_COL_PREF_WIDTH);
       getColumnModel().getColumn(3).setPreferredWidth(BATT_NAME_COL_PREF_WIDTH);
-
+   
       setCellSelectionEnabled(false);
       setRowSelectionAllowed(true);
       setColumnSelectionAllowed(false);
@@ -589,7 +595,8 @@ private static class SetupBatt implements Runnable {
 private class SourceAction extends AbstractAction {
 
    private BattTestCase test_case;
-
+   private static final long serialVersionUID = 1;
+   
    SourceAction(BattTestCase btc) {
       super("Open " + btc.getMethodName());
       test_case = btc;
@@ -612,7 +619,8 @@ private class SourceAction extends AbstractAction {
 private class RunTestAction extends AbstractAction {
 
    private BattTestCase test_case;
-
+   private static final long serialVersionUID = 1;
+   
    RunTestAction(BattTestCase btc) {
       super("Run Test " + btc.getName());
       test_case = btc;
@@ -629,6 +637,7 @@ private class RunTestAction extends AbstractAction {
 private class RunSelectedAction extends AbstractAction {
    
    private List<BattTestCase> test_cases;
+   private static final long serialVersionUID = 1;
    
    RunSelectedAction(Collection<BattTestCase> cases) {
       super("Run Selected Tests");
@@ -646,7 +655,8 @@ private class RunSelectedAction extends AbstractAction {
 private class ShowStackAction extends AbstractAction {
 
    private BattTestCase test_case;
-
+   private static final long serialVersionUID = 1;
+   
    ShowStackAction(BattTestCase btc) {
       super("Show Failure for " + btc.getMethodName());
       test_case = btc;
@@ -674,7 +684,8 @@ private class ShowStackAction extends AbstractAction {
 private class GotoFailureAction extends AbstractAction {
 
    private BattTestCase test_case;
-
+   private static final long serialVersionUID = 1;
+   
    GotoFailureAction(BattTestCase btc) {
       super("Goto Failure for " + btc.getMethodName());
       test_case = btc;
@@ -736,7 +747,8 @@ private class GotoFailureAction extends AbstractAction {
 private class ModeAction extends JRadioButtonMenuItem implements ActionListener {
 
    private TestMode test_mode;
-
+   private static final long serialVersionUID = 1;
+   
    ModeAction(TestMode md) {
       super(md.toString(),(md == current_mode));
       addActionListener(this);
@@ -754,6 +766,8 @@ private class ModeAction extends JRadioButtonMenuItem implements ActionListener 
 
 private class UpdateAction extends AbstractAction {
 
+   private static final long serialVersionUID = 1;
+   
    UpdateAction() {
       super("Update Test Set");
     }
@@ -770,7 +784,8 @@ private class UpdateAction extends AbstractAction {
 private class RunAction extends JRadioButtonMenuItem implements ActionListener {
 
    private RunType run_type;
-
+   private static final long serialVersionUID = 1;
+   
    RunAction(RunType typ) {
       super(typ.toString(),(typ == current_runtype));
       addActionListener(this);
@@ -788,6 +803,8 @@ private class RunAction extends JRadioButtonMenuItem implements ActionListener {
 
 private static class StopAction extends AbstractAction {
 
+   private static final long serialVersionUID = 1;
+   
    StopAction() {
       super("Stop current test");
     }

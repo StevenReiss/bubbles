@@ -613,7 +613,9 @@ private static class TestDisplayAction extends AbstractAction {
 
    private List<BattTestCase> test_cases;
    private JComponent source_area;
-
+   
+   private static final long serialVersionUID = 1;
+   
    TestDisplayAction(String id,List<BattTestCase> cases,JComponent src) {
       super(id);
       test_cases = cases;
@@ -650,7 +652,9 @@ private static class NewTestAction extends AbstractAction {
    private String in_class;
    private String in_project;
    private boolean create_class;
-
+   
+   private static final long serialVersionUID = 1;
+   
    NewTestAction(String mthd,NewTestMode mode,String nm,String proj,String cls,boolean newcls,JComponent src) {
       super(getButtonName(mode,nm,cls,newcls));
       source_area = src;

@@ -39,6 +39,16 @@ public class BuenoProperties extends HashMap<String,Object> implements BuenoCons
 
 
 /********************************************************************************/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
+/********************************************************************************/
+
+private static final long serialVersionUID = 1;
+
+
+
+/********************************************************************************/
 /*										*/
 /*	Constructors								*/
 /*										*/

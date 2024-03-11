@@ -141,6 +141,7 @@ private class ViewCallback implements BudaConstants.BubbleViewCallback {
 private class CreateAction extends AbstractAction {
    
    private BudaBubbleGroup bubble_group;
+   private static final long serialVersionUID = 1;
    
    CreateAction(BudaBubbleGroup grp) {
       super("Create Virtual File for " + grp.getTitle());
@@ -172,6 +173,7 @@ private class UpdateAction extends AbstractAction {
    
    private BudaBubbleGroup bubble_group;
    private BvfmVirtualFile virtual_file;
+   private static final long serialVersionUID = 1;
    
    UpdateAction(BvfmVirtualFile vf,BudaBubbleGroup grp) {
       super("Update Virtual File " + vf.getName());
@@ -194,6 +196,7 @@ private class UpdateAction extends AbstractAction {
 private class RemoveAction extends AbstractAction {
    
    private BvfmVirtualFile virtual_file;
+   private static final long serialVersionUID = 1;
    
    RemoveAction(BvfmVirtualFile vf) {
       super("Remove Virtual File " + vf.getName());

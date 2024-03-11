@@ -235,7 +235,8 @@ private static class PackageAction extends AbstractAction
    private Point      source_point;
    private String     project_name;
    private String     package_name;
-
+   private static final long serialVersionUID = 1;
+   
    PackageAction(BudaBubble bb,Point wh,String proj,String pkg) {
       super("Create package viewer");
       source_bubble = bb;

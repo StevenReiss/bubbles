@@ -82,6 +82,8 @@ private JButton add_button;
 private JButton remove_button;
 private SwingEventListenerList<ItemChangeListener> item_listeners;
 
+private static final long serialVersionUID = 1;
+
 private static Border cell_padding = BorderFactory.createEmptyBorder(4,4,4,4);
 
 

@@ -54,6 +54,7 @@ class BvcrControlLogPanel extends BudaBubble implements BvcrConstants, BvcrProje
 
 private BvcrControlPanel        control_panel;
 private LogViewer               log_viewer;
+private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
@@ -181,6 +182,8 @@ private class VersionComparer implements Comparator<BvcrControlVersion> {
 /********************************************************************************/
 
 private static class LogViewer extends JEditorPane {
+   
+   private static final long serialVersionUID = 1;
    
    LogViewer() {
       super("text/html",null);

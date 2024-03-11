@@ -217,6 +217,8 @@ private class CheckLibraryAction extends AbstractAction {
    private BudaBubble relative_bubble;
    private Point relative_point;
    
+   private static final long serialVersionUID = 1;
+   
    CheckLibraryAction(BudaBubble relbbl,Point where) {
       super("Check " + model_name + " Library Class Path");
       relative_bubble = relbbl;
@@ -235,6 +237,8 @@ private class UpdateLibraryAction extends AbstractAction {
 
    private BudaBubble relative_bubble;
    private Point relative_point;
+   
+   private static final long serialVersionUID = 1;
    
    UpdateLibraryAction(BudaBubble relbbl,Point where) {
       super("Update " + model_name + " Library Versions");
@@ -256,6 +260,8 @@ private class AddLibraryAction extends AbstractAction {
    private BudaBubble relative_bubble;
    private Point relative_point;
    
+   private static final long serialVersionUID = 1;
+   
    AddLibraryAction(BudaBubble relbbl,Point where) {
       super("Add " + model_name + " Library");
       relative_bubble = relbbl;
@@ -274,6 +280,8 @@ private class RemoveLibraryAction extends AbstractAction {
    
    private BudaBubble relative_bubble;
    private Point relative_point;
+   
+   private static final long serialVersionUID = 1;
    
    RemoveLibraryAction(BudaBubble relbbl,Point where) {
       super("Remove " + model_name + " Library");

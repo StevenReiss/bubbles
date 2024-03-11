@@ -48,6 +48,7 @@ class BddtLibraryBubble extends BudaBubble implements BddtConstants, BumpConstan
 private BumpStackFrame	current_frame;
 private JTextField	method_field;
 private JTextField	line_field;
+private static final long serialVersionUID = 1;
 
 
 

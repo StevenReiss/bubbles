@@ -90,7 +90,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.eclipse.ui.progress.WorkbenchJob;
-import org.osgi.framework.Bundle;
 import org.osgi.service.prefs.Preferences;
 import org.w3c.dom.Element;
 
@@ -1063,18 +1062,19 @@ void handlePreferences(String proj,IvyXmlWriter xw)
     }
 
    // handle special preferences
-   try {
-      Bundle b = Platform.getBundle("com.android.ide.eclipse.adt");
-      if (b != null) {
-	 xw.begin("PREF");
-	 xw.field("NAME","bedrock.useAndroid");
-	 xw.field("VALUE",true);
-	 xw.field("OPTS",true);
-	 xw.end("PREF");
-	 use_android = true;
-       }
-    }
-   catch (Throwable t) { }
+   //  let android depend on files in project, not whether it is available in Eclipse
+// try {
+//    Bundle b = Platform.getBundle("com.android.ide.eclipse.adt");
+//    if (b != null) {
+// 	 xw.begin("PREF");
+// 	 xw.field("NAME","bedrock.useAndroid");
+// 	 xw.field("VALUE",true);
+// 	 xw.field("OPTS",true);
+// 	 xw.end("PREF");
+// 	 use_android = true;
+//     }
+//  }
+// catch (Throwable t) { }
 
    if (show_preferences) {
       try {

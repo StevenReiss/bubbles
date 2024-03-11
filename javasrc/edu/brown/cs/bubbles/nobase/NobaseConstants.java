@@ -296,6 +296,7 @@ public class IdCounter {
 public class NobaseDebugRefMap extends HashMap<String,NobaseDebugValue> {
 
    private NobaseDebugTarget for_target;
+   private static final long serialVersionUID = 1;
    
    NobaseDebugRefMap(NobaseDebugTarget tgt) {
       for_target = tgt;

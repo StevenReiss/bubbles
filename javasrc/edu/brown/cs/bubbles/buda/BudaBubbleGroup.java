@@ -540,7 +540,9 @@ void handlePopupMenu(MouseEvent e)
 
 
 private class RemoveAction extends AbstractAction {
-
+   
+   private static final long serialVersionUID = 1;
+   
    RemoveAction() {
       super("Remove Group");
     }

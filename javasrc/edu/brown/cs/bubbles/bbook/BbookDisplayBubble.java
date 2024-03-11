@@ -66,6 +66,7 @@ class BbookDisplayBubble extends BudaBubble implements BbookConstants
 /********************************************************************************/
 
 private BbookDisplayBuilder	display_builder;
+private static final long serialVersionUID = 1;
 
 
 

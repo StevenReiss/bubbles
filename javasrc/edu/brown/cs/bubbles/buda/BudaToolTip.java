@@ -341,7 +341,9 @@ public BudaToolTip()
 /********************************************************************************/
 
 private static class ScrollableLabel extends JLabel implements Scrollable {
-
+   
+   private static final long serialVersionUID = 1;
+   
    @Override public int getScrollableBlockIncrement(Rectangle v,int o,int d) {
       return 32;
     }

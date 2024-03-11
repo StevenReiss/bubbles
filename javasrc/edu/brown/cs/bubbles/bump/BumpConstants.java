@@ -260,10 +260,11 @@ interface BumpFix {
 
 interface BumpProblemHandler extends EventListener {
 
-   void handleProblemAdded(BumpProblem bp);
-   void handleProblemRemoved(BumpProblem bp);
-   void handleProblemsDone();
-   void handleClearProblems();
+   default void handleProblemAdded(BumpProblem bp)              { }
+   default void handleProblemRemoved(BumpProblem bp)            { }
+   default void handleProblemsDone()                            { }
+   default void handleClearProblems()                           { }
+   default void handleClearProjectProblems(String proj)         { }
 
 }	// end of inner interface BumpProblemHandler
 

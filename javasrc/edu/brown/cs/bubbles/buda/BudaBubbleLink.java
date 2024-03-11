@@ -332,7 +332,9 @@ void handlePopupMenu(MouseEvent e)
 
 
 private class RemoveAction extends AbstractAction {
-
+   
+   private static final long serialVersionUID = 1;
+   
    RemoveAction() {
       super("Remove");
     }
@@ -349,7 +351,8 @@ private class RemoveAction extends AbstractAction {
 private class StyleAction extends AbstractAction {
 
    BudaLinkStyle set_style;
-
+   private static final long serialVersionUID = 1;
+   
    StyleAction(String id,BudaLinkStyle sty) {
       super(id);
       set_style = sty;
@@ -366,7 +369,9 @@ private class StyleAction extends AbstractAction {
 
 
 private class CollapseAction extends AbstractAction {
-
+   
+   private static final long serialVersionUID = 1;
+   
    CollapseAction() {
       super("Collapse");
     }

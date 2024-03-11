@@ -673,6 +673,7 @@ private class ChangeHighlighter implements Highlighter.HighlightPainter {
 
 private class DiffBubble extends BudaBubble {
 
+   private static final long serialVersionUID = 1;
    
    DiffBubble(JPanel pnl) {
       setContentPane(pnl);
@@ -754,6 +755,8 @@ private class DiffFileView {
 
 private class DiffPanel extends SwingTextArea {
    
+   private static final long serialVersionUID = 1;
+   
    DiffPanel() {
       super(new DefaultStyledDocument());
       setEditable(false);
@@ -772,6 +775,7 @@ private class DiffPanel extends SwingTextArea {
 private class CenterPanel extends JPanel implements AdjustmentListener {
    
    private BvcrDifferenceFile file_diffs;
+   private static final long serialVersionUID = 1;
    
    CenterPanel() {
       file_diffs = null;
@@ -875,6 +879,7 @@ private class RevisionBar extends JPanel {
    private boolean is_left;
    private double file_length;
    private BvcrDifferenceFile file_diffs;
+   private static final long serialVersionUID = 1;
    
    RevisionBar(boolean left) {
       is_left = left;
@@ -1034,6 +1039,8 @@ private class VScrollSync implements AdjustmentListener {
 
 private class LeftScrollPaneLayout extends ScrollPaneLayout {
    
+   private static final long serialVersionUID = 1;
+
    @Override public void layoutContainer(Container parent) {
       ComponentOrientation or;
       or = parent.getComponentOrientation();

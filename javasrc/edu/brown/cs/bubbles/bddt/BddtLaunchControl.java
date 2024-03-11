@@ -107,8 +107,9 @@ private FileSystemView		file_system;
 private BddtPerfViewTable	perf_data;
 private BumpProcess		hotswap_fail;
 
-
 private JPanel			launch_panel;
+
+private static final long serialVersionUID = 1;
 
 private static AtomicInteger expr_counter = new AtomicInteger(0);
 
@@ -1844,7 +1845,8 @@ private class ValueEvalListener implements BumpEvaluationHandler, Runnable {
 private class ValueAction extends AbstractAction {
 
    private BaleContextConfig context_config;
-
+   private static final long serialVersionUID = 1;
+   
    ValueAction(BaleContextConfig cfg) {
       super("Show value of " + cfg.getToken());
       context_config = cfg;

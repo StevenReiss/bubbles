@@ -44,6 +44,8 @@ class BwizNewInterfaceWizard extends BwizNewWizard
 /*										*/
 /********************************************************************************/
 
+private static final long serialVersionUID = 1;
+
 
 
 /********************************************************************************/
@@ -51,10 +53,6 @@ class BwizNewInterfaceWizard extends BwizNewWizard
 /*	Constructors								*/
 /*										*/
 /********************************************************************************/
-
-
-
-
 
 BwizNewInterfaceWizard(BuenoLocation loc)
 {

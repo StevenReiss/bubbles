@@ -68,6 +68,7 @@ private JTable                  output_table;
 private VersionTable            data_table;
 private JButton                 change_button;
 private BvcrControlVersion      current_version;
+private static final long serialVersionUID = 1;
 
 
 /********************************************************************************/
@@ -152,6 +153,8 @@ private void setCurrentSelection()
 
 private class VersionDisplay extends JTable {
    
+   private static final long serialVersionUID = 1;
+   
    VersionDisplay() {
       super(data_table);
       setAutoCreateRowSorter(true);
@@ -193,6 +196,7 @@ private class VersionTable extends AbstractTableModel {
     };
    
    private List<BvcrControlVersion> version_data;
+   private static final long serialVersionUID = 1;
    
    VersionTable() {
       update();
@@ -324,6 +328,7 @@ private class VersionSelector implements ListSelectionListener {
 private static class GraphPanelAction extends AbstractAction {
    
    private BvcrControlPanel control_panel;
+   private static final long serialVersionUID = 1;
    
    GraphPanelAction(BvcrControlPanel pnl) {
       control_panel = pnl;
@@ -345,6 +350,7 @@ private static class GraphPanelAction extends AbstractAction {
 private static class LogPanelAction extends AbstractAction {
    
    private BvcrControlPanel control_panel;
+   private static final long serialVersionUID = 1;
    
    LogPanelAction(BvcrControlPanel cpnl) {
       control_panel = cpnl;
@@ -364,6 +370,8 @@ private static class LogPanelAction extends AbstractAction {
 
 
 private class ChangeVersionAction extends AbstractAction {
+   
+   private static final long serialVersionUID = 1;
    
    @Override public void actionPerformed(ActionEvent evt) {
       if (current_version == null) return;

@@ -594,7 +594,8 @@ private class BreakpointTableModel extends AbstractTableModel {
 private class GotoSourceAction extends AbstractAction {
 
    private BumpBreakpoint for_breakpoint;
-
+   private static final long serialVersionUID = 1;
+   
    GotoSourceAction(BumpBreakpoint bp) {
       super("Go to Source");
       for_breakpoint = bp;
@@ -617,7 +618,8 @@ private class ExceptionAction extends AbstractAction {
    private BumpBreakpoint for_breakpoint;
    private boolean is_set;
    private boolean is_caught;
-
+   private static final long serialVersionUID = 1;
+   
    ExceptionAction(BumpBreakpoint bp,boolean set,boolean cgt) {
       super((set ? "Ignore" : "Break") + " if " + (cgt ? "Caught" : "Uncaught"));
       for_breakpoint = bp;
@@ -639,6 +641,7 @@ private class ExceptionSubclassAction extends AbstractAction {
 
    private BumpBreakpoint for_breakpoint;
    private boolean is_set;
+   private static final long serialVersionUID = 1;
    
    ExceptionSubclassAction(BumpBreakpoint bp,boolean set) {
       super((set ? "Only this exception" : "Include subclasses of exception"));
@@ -661,8 +664,8 @@ private class EnableAction extends AbstractAction {
 
    private BumpBreakpoint for_breakpoint;
    private boolean is_disable;
-
-
+   private static final long serialVersionUID = 1;
+   
    EnableAction(BumpBreakpoint bp,boolean dis) {
       super((dis ? "Disable" : "Enable") + " Breakpoint");
       for_breakpoint = bp;
@@ -683,8 +686,8 @@ private class EnableAction extends AbstractAction {
 private class RemoveAction extends AbstractAction {
 
    private BumpBreakpoint for_breakpoint;
-
-
+   private static final long serialVersionUID = 1;
+   
    RemoveAction(BumpBreakpoint bp) {
       super("Remove Breakpoint");
       for_breakpoint = bp;
@@ -701,6 +704,8 @@ private class RemoveAction extends AbstractAction {
 
 private class NewExceptionAction extends AbstractAction {
 
+   private static final long serialVersionUID = 1;
+   
    NewExceptionAction() {
       super("Create New Exception Breakpoint");
     }
@@ -719,7 +724,9 @@ private class NewExceptionAction extends AbstractAction {
 
 
 private static class NewFieldWatchAction extends AbstractAction {
-
+   
+   private static final long serialVersionUID = 1;
+   
    NewFieldWatchAction() {
       super("Create New Field Watch Breakpoing");
     }

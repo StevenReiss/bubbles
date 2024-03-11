@@ -96,6 +96,8 @@ private double cur_tdelta;
 
 private Stroke	mark_stroke;
 
+private static final long serialVersionUID = 1;
+
 private double min_step = 10000000;
 
 
@@ -394,7 +396,8 @@ void handleContextMenu(JPopupMenu menu,Point p,MouseEvent evt)
 private class CallbackLabeler extends AbstractAction {
 
    private BdynCallback for_callback;
-
+   private static final long serialVersionUID = 1;
+   
    CallbackLabeler(BdynCallback cb) {
       super("Set Label for " + cb.getMethodName());
       for_callback = cb;
@@ -424,7 +427,8 @@ private class CallbackColorer extends AbstractAction {
    private Color	set_color;
    private JColorChooser  color_chooser;
    private JDialog	task_dialog;
-
+   private static final long serialVersionUID = 1;
+   
    CallbackColorer(BdynCallback cb,Color c) {
       super("Set Color for " + cb.getMethodName());
       for_callback = cb;
@@ -473,7 +477,8 @@ private class CallbackColorer extends AbstractAction {
 private class TimeMarker extends AbstractAction {
 
    private long at_time;
-
+   private static final long serialVersionUID = 1;
+   
    TimeMarker(long when) {
       super("Add Time Mark");
       at_time = when;
@@ -487,7 +492,9 @@ private class TimeMarker extends AbstractAction {
 
 
 private class FreezeAction extends AbstractAction {
-
+   
+   private static final long serialVersionUID = 1;
+   
    FreezeAction() {
       super((is_frozen ? "Unfreeze" : "Frozen") + " Display");
     }
@@ -501,6 +508,8 @@ private class FreezeAction extends AbstractAction {
 
 private class ShowOptions extends AbstractAction {
 
+   private static final long serialVersionUID = 1;
+   
    ShowOptions() {
       super("Show Visualization Options");
     }
@@ -745,7 +754,8 @@ private static class AccumEntry implements Comparable<AccumEntry> {
 private static class AccumMap extends HashMap<BdynCallback,long []> {
 
    private long total_time;
-
+   private static final long serialVersionUID = 1;
+   
    AccumMap() {
       total_time = 0;
     }
@@ -861,6 +871,8 @@ private class Keyer extends KeyAdapter {
 
 private class OptionPanel extends SwingGridPanel implements ActionListener {
 
+   private static final long serialVersionUID = 1;
+   
    OptionPanel() {
       setupPanel();
     }

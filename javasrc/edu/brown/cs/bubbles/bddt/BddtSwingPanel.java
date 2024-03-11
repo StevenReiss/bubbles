@@ -85,6 +85,7 @@ private HierarchyTree		hierarchy_tree;
 private DrawingTree		drawing_tree;
 private HierarchyModel		hierarchy_model;
 private DrawingModel		drawing_model;
+private static final long serialVersionUID = 1;
 
 
 
@@ -282,7 +283,9 @@ private class InfoListener extends MouseAdapter {
 /********************************************************************************/
 
 private abstract class CommonTree extends JTree {
-
+   
+   private static final long serialVersionUID = 1;
+   
    CommonTree(TreeModel md) {
       super(md);
       setEditable(false);
@@ -332,6 +335,8 @@ private abstract class CommonTree extends JTree {
 
 private class HierarchyTree extends CommonTree {
 
+   private static final long serialVersionUID = 1;
+   
    HierarchyTree(HierarchyModel md) {
       super(md);
     }
@@ -340,7 +345,9 @@ private class HierarchyTree extends CommonTree {
 
 
 private class DrawingTree extends CommonTree {
-
+   
+   private static final long serialVersionUID = 1;
+   
    DrawingTree(DrawingModel md) {
       super(md);
     }
@@ -358,6 +365,8 @@ private class DrawingTree extends CommonTree {
 
 private abstract class CommonModel extends DefaultTreeModel {
 
+   private static final long serialVersionUID = 1;
+   
    CommonModel() {
       super(new DefaultMutableTreeNode());
     }
@@ -382,14 +391,17 @@ private abstract class CommonModel extends DefaultTreeModel {
 
 private class HierarchyModel extends CommonModel {
 
-   HierarchyModel() {
-    }
+   private static final long serialVersionUID = 1;
+   
+   HierarchyModel() { }
 
 }	// end of inner class HierarchyModel
 
 
 
 private class DrawingModel extends CommonModel {
+
+   private static final long serialVersionUID = 1;
 
    DrawingModel() {
     }
@@ -405,7 +417,9 @@ private class DrawingModel extends CommonModel {
 /********************************************************************************/
 
 private abstract class CommonNode extends DefaultMutableTreeNode {
-
+   
+   private static final long serialVersionUID = 1;
+   
    String getToolTipText()		{ return toString(); }
 
 }	// end of inner class CommonNode
@@ -419,7 +433,8 @@ private class ComponentNode extends CommonNode {
    private int c_height;
    private String class_name;
    private String comp_name;
-
+   private static final long serialVersionUID = 1;
+   
    ComponentNode(Element xml) {
       x_pos = IvyXml.getAttrInt(xml,"X");
       y_pos = IvyXml.getAttrInt(xml,"Y");
@@ -453,13 +468,14 @@ private class ComponentNode extends CommonNode {
 private class DrawNode extends CommonNode {
 
    private String fg_color;
-
+   private static final long serialVersionUID = 1;
+   
    DrawNode(Element xml) {
       fg_color = IvyXml.getTextElement(xml,"COLOR");
       Element stk = IvyXml.getChild(xml,"STACK");
       for (Element selt : IvyXml.children(stk,"FRAME")) {
-	 StackNode sn = new StackNode(selt);
-	 add(sn);
+         StackNode sn = new StackNode(selt);
+         add(sn);
        }
     }
 
@@ -479,7 +495,8 @@ private class StackNode extends CommonNode {
    private String method_name;
    private int line_number;
    private File file_name;
-
+   private static final long serialVersionUID = 1;
+   
    StackNode(Element xml) {
       class_name = IvyXml.getAttrString(xml,"CLASS");
       method_name = IvyXml.getAttrString(xml,"METHOD");
@@ -565,7 +582,8 @@ private class ClickHandler extends MouseAdapter {
 private class SourceAction extends AbstractAction {
 
    private StackNode for_node;
-
+   private static final long serialVersionUID = 1;
+   
    SourceAction(StackNode sn) {
       super("Goto Source");
       for_node = sn;

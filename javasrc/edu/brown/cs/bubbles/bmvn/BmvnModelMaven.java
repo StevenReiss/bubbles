@@ -212,6 +212,7 @@ private class MavenCommand extends AbstractAction implements BmvnCommand {
    private String maven_goal;
    private BudaBubble relative_bubble;
    private Point relative_point;
+   private static final long serialVersionUID = 1;
    
    MavenCommand(String goal,BudaBubble relbbl,Point where) {
       maven_goal = goal;

@@ -484,7 +484,8 @@ private static class ControlPanelBubble extends BudaBubble implements BvcrProjec
    private JButton version_button;
    private JLabel version_label;
    private JLabel files_label;
-
+   private static final long serialVersionUID = 1;
+   
    ControlPanelBubble(BvcrControlPanel ctrl) {
       control_panel = ctrl;
       JPanel pnl = getBubblePanel(ctrl);
@@ -653,7 +654,8 @@ private class FileChangeManager implements BumpConstants.BumpChangeHandler {
 private static class VersionPanelAction extends AbstractAction {
 
    private BvcrControlPanel control_panel;
-
+   private static final long serialVersionUID = 1;
+   
    VersionPanelAction(BvcrControlPanel cpnl) {
       control_panel = cpnl;
     }
@@ -675,7 +677,8 @@ private static class VersionPanelAction extends AbstractAction {
 private static class FilePanelAction extends AbstractAction {
 
    private BvcrControlPanel control_panel;
-
+   private static final long serialVersionUID = 1;
+   
    FilePanelAction(BvcrControlPanel cpnl) {
       control_panel = cpnl;
     }
@@ -695,7 +698,8 @@ private static class FilePanelAction extends AbstractAction {
 private static class CommitAction extends AbstractAction {
 
    private BvcrControlPanel control_panel;
-
+   private static final long serialVersionUID = 1;
+   
    CommitAction(BvcrControlPanel pnl) {
       control_panel = pnl;
     }
@@ -713,7 +717,8 @@ private static class CommitAction extends AbstractAction {
 private static class PushAction extends AbstractAction {
 
    private BvcrControlPanel control_panel;
-
+   private static final long serialVersionUID = 1;
+   
    PushAction(BvcrControlPanel pnl) {
       control_panel = pnl;
     }
@@ -730,7 +735,8 @@ private static class PushAction extends AbstractAction {
 private static class UpdateAction extends AbstractAction {
 
    private BvcrControlPanel control_panel;
-
+   private static final long serialVersionUID = 1;
+   
    UpdateAction(BvcrControlPanel pnl) {
       control_panel = pnl;
     }

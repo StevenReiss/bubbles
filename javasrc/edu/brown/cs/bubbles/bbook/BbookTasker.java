@@ -151,7 +151,9 @@ void createTaskNoter(BudaBubbleArea bba,BudaBubble bb,Point pt,String proj,Bnote
 /********************************************************************************/
 
 private static class TaskBubble extends BudaBubble {
-
+   
+   private static final long serialVersionUID = 1;
+   
    TaskBubble(Component c) {
       super(c,BudaBorder.NONE);
     }
@@ -168,6 +170,8 @@ private static class TaskBubble extends BudaBubble {
 
 private abstract class TaskDialog extends SwingGridPanel {
 
+   private static final long serialVersionUID = 1;
+   
    protected TaskDialog() {
       setInsets(4);
       setBackground(BoardColors.getColor("Bbook.TaskBackgroundColor"));
@@ -212,7 +216,8 @@ private class TaskSelector extends TaskDialog implements ActionListener {
    private int result_status;
    private JButton done_button;
    private JButton note_button;
-
+   private static final long serialVersionUID = 1;
+   
    TaskSelector(String proj) {
       task_box = null;
       current_project = proj;
@@ -370,7 +375,9 @@ private class TaskCreator extends TaskDialog implements ActionListener {
    private JTextArea  desc_field;
    private String current_project;
    private int result_status;
-
+   
+   private static final long serialVersionUID = 1;
+   
    TaskCreator(String proj) {
       current_project = proj;
       result_status = 0;
@@ -451,7 +458,8 @@ private class TaskNoter extends TaskDialog implements ActionListener {
    private BnoteTask current_task;
    private String current_project;
    private int result_status;
-
+   private static final long serialVersionUID = 1;
+   
    TaskNoter(String proj,BnoteTask task) {
       current_project = proj;
       current_task = task;

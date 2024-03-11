@@ -334,7 +334,8 @@ private class ModelHandler implements BumpConstants.BumpRunEventHandler {
 private static class CloneLaunchAction extends AbstractAction {
 
    private BumpLaunchConfig for_config;
-
+   private static final long serialVersionUID = 1;
+   
    CloneLaunchAction(BumpLaunchConfig blc) {
       super("Create copy of " + blc.getConfigName());
       for_config = blc;
@@ -352,7 +353,8 @@ private static class CloneLaunchAction extends AbstractAction {
 private static class DeleteLaunchAction extends AbstractAction {
 
    private BumpLaunchConfig for_config;
-
+   private static final long serialVersionUID = 1;
+   
    DeleteLaunchAction(BumpLaunchConfig blc) {
       super("Delete " + blc.getConfigName());
       for_config = blc;
@@ -370,7 +372,8 @@ private static class DeleteLaunchAction extends AbstractAction {
 private class RunLaunchAction extends AbstractAction {
 
    private BumpLaunchConfig for_config;
-
+   private static final long serialVersionUID = 1;
+   
    RunLaunchAction(BumpLaunchConfig blc) {
       super("Run " + blc.getConfigName());
       for_config = blc;
@@ -386,7 +389,8 @@ private class RunLaunchAction extends AbstractAction {
 private class DebugLaunchAction extends AbstractAction {
 
    private BumpLaunchConfig for_config;
-
+   private static final long serialVersionUID = 1;
+   
    DebugLaunchAction(BumpLaunchConfig blc) {
       super("Debug " + blc.getConfigName());
       for_config = blc;
@@ -403,6 +407,7 @@ private class DebugLaunchAction extends AbstractAction {
 private class TerminateProcessAction extends AbstractAction {
    
    private BumpProcess for_process;
+   private static final long serialVersionUID = 1;
    
    TerminateProcessAction(BumpProcess bp) {
       super("Terminate " + bp.getName());

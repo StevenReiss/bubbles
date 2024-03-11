@@ -648,7 +648,8 @@ private interface HistoryCallback {
 private class HistoryMap extends HashMap<BvcrFileVersion,Map<BvcrFileVersion,BvcrDifferenceFile>>
 {
    private BvcrFileVersion current_version;
-
+   private static final long serialVersionUID = 1;
+   
    HistoryMap() {
       current_version = null;
     }
@@ -823,7 +824,8 @@ private class NodeSorter implements Comparator<HistoryNode> {
 private class HistoryBubble extends BudaBubble {
 
    private ColorMode last_mode;
-
+   private static final long serialVersionUID = 1;
+   
    HistoryBubble(HistoryGather hg) {
       SwingGridPanel pnl = new SwingGridPanel();
       JLabel lbl = new JLabel("Version History for " + for_file);
@@ -863,7 +865,8 @@ private class HistoryBubble extends BudaBubble {
 private class ColorModeAction extends JRadioButtonMenuItem implements ActionListener {
 
    private ColorMode color_mode;
-
+   private static final long serialVersionUID = 1;
+   
    ColorModeAction(ColorMode md) {
       super("Color By " + md.toString(),(md == color_by));
       addActionListener(this);
@@ -879,7 +882,9 @@ private class ColorModeAction extends JRadioButtonMenuItem implements ActionList
 
 
 private class ShowAuthorAction extends JRadioButtonMenuItem implements ActionListener {
-
+   
+   private static final long serialVersionUID = 1;
+   
    ShowAuthorAction() {
       super("Show Authors",(author_display != null && author_display.isVisible()));
       addActionListener(this);
@@ -903,6 +908,8 @@ private class ShowAuthorAction extends JRadioButtonMenuItem implements ActionLis
 
 private class FileDisplay extends JSplitPane {
 
+   private static final long serialVersionUID = 1;
+
    FileDisplay(HistoryGather hg) {
       super(VERTICAL_SPLIT,true,new HistoryGraph(hg),new LineInfo(hg));
     }
@@ -922,7 +929,8 @@ private class HistoryGraph extends JPanel implements HistoryCallback {
    private PetalEditor petal_editor;
    private PetalModelDefault petal_model;
    private PetalLayoutMethod layout_method;
-
+   private static final long serialVersionUID = 1;
+   
    HistoryGraph(HistoryGather hg) {
       super(new BorderLayout());
 
@@ -984,7 +992,8 @@ private class HistoryGraph extends JPanel implements HistoryCallback {
    private class Node extends PetalNodeDefault {
 
       private HistoryNode for_node;
-
+      private static final long serialVersionUID = 1;
+      
       Node(HistoryNode hn) {
 	 super(hn.getLabel());
 	 Color c = node_color.get(hn);
@@ -1019,10 +1028,13 @@ private class HistoryGraph extends JPanel implements HistoryCallback {
     }	// end of inner class Node
 
    private class Arc extends PetalArcDefault {
+      
+      private static final long serialVersionUID = 1;
+      
       Arc(Node f,Node t) {
-	 super(f,t);
+         super(f,t);
        }
-
+   
    }	// end of inner class Arc
 
 }	// end of inner class HistoryGraph
@@ -1038,7 +1050,8 @@ private class HistoryGraph extends JPanel implements HistoryCallback {
 private class LineInfo extends JPanel implements HistoryCallback {
 
    private LineDrawingArea line_area;
-
+   private static final long serialVersionUID = 1;
+   
    LineInfo(HistoryGather hg) {
       super(new BorderLayout());
 
@@ -1174,8 +1187,8 @@ private class LineDrawingArea extends JPanel {
    private FileData	file_data;
    private List<LineData> line_data;
    private Rectangle2D	draw_rect;
-
-
+   private static final long serialVersionUID = 1;
+   
    LineDrawingArea(FileData fd) {
       file_data = fd;
       line_data = null;
@@ -1454,6 +1467,8 @@ private class Mouser extends MouseAdapter {
 
 private class AuthorWindow extends JPanel implements HistoryCallback, Scrollable {
 
+   private static final long serialVersionUID = 1;
+   
    AuthorWindow(HistoryGather hg) {
       super(new FlowLayout(FlowLayout.CENTER,10,10));
       setPreferredSize(new Dimension(300,175));

@@ -152,7 +152,7 @@ BumpErrorType getErrorType()
 void handleErrors(String proj,File forfile,int eid,Element ep)
 {
    BoardLog.logD("BUMP","Handle errors " + forfile);
-   Set<BumpProblemImpl> found = new HashSet<BumpProblemImpl>();
+   Set<BumpProblemImpl> found = new HashSet<>();
    List<BumpProblemImpl> added = null;
    List<BumpProblemImpl> deled = null;
 
@@ -164,11 +164,13 @@ void handleErrors(String proj,File forfile,int eid,Element ep)
 	 BumpProblemImpl bp = current_problems.get(pid);
 	 if (bp == null) {
 	    bp = new BumpProblemImpl(e,pid,eid,proj);
+            BoardLog.logD("BUMP","Add problem " + bp);
 	    current_problems.put(pid,bp);
-	    if (added == null) added = new ArrayList<BumpProblemImpl>();
+	    if (added == null) added = new ArrayList<>();
 	    added.add(bp);
 	  }
 	 else {
+            BoardLog.logD("BUMP","Update problem " + bp);
 	    bp.setEditId(eid);
 	    bp.update(e);
 	  }
@@ -183,7 +185,7 @@ void handleErrors(String proj,File forfile,int eid,Element ep)
 	    if (found.contains(bp)) continue;
 	    if (!fileMatch(forfile,bp)) continue;
 	    // if (bp.getErrorType() == BumpErrorType.NOTICE) continue; // notes not returned on recompile -- seems fixed
-	    if (deled == null) deled = new ArrayList<BumpProblemImpl>();
+	    if (deled == null) deled = new ArrayList<>();
 	    deled.add(bp);
             BoardLog.logD("BUMP","Remove problem " + bp);
 	    it.remove();
@@ -225,7 +227,7 @@ void handleErrors(String proj,File forfile,int eid,Element ep)
 
 void clearProblems(String proj)
 {
-   BoardLog.logD("BUMP","Clear Problems");
+   BoardLog.logD("BUMP","Clear Problems " + proj);
    List<BumpProblemImpl> clear;
    synchronized (current_problems) {
       if (proj == null) {
@@ -238,6 +240,7 @@ void clearProblems(String proj)
             it.hasNext(); ) {
             BumpProblemImpl bp = it.next();
             if (bp.getProject().equals(proj)) {
+               BoardLog.logD("BUMP","REMOVE PROBLEM " + bp);
                clear.add(bp);
                it.remove();
              }
@@ -250,12 +253,20 @@ void clearProblems(String proj)
 	 for (BumpProblemImpl bp : clear) {
 	    bph.handleProblemRemoved(bp);
 	  }
-	 bph.handleClearProblems();
+         bph.handleClearProjectProblems(proj);
 	 bph.handleProblemsDone();
        }
     }
 }
 
+
+void fireClearAll(String proj)
+{
+   for (BumpProblemHandler bph : handler_set) {
+      bph.handleClearProjectProblems(proj);
+    }
+}
+       
 
 
 /********************************************************************************/

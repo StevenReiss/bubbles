@@ -253,6 +253,8 @@ private class Updater implements Runnable {
 
 private class DifferenceMap extends HashMap<File,Map<String,BvcrDifferenceFile>> {
 
+   private static final long serialVersionUID = 1;
+   
    DifferenceMap() { }
 
    void add(File file,String user,BvcrDifferenceFile dif) {

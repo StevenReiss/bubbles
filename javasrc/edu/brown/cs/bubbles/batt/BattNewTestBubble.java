@@ -265,7 +265,9 @@ private class CallMethodBubble extends BudaBubble implements ActionListener, Sta
 
    private NewTestArea test_area;
    private JButton generate_button;
-
+   
+   private static final long serialVersionUID = 1;
+   
    CallMethodBubble(String fnm) {
       test_area = new NewTestArea(this);
       for (int i = 0; i < 3; ++i) {		   // initial test cases

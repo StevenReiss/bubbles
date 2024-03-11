@@ -457,6 +457,7 @@ private boolean checkFileProperties(File f)
 	     }
 	    fg = true;
 	    prop_map.put(PROJ_PROP_ANDROID,true);
+            BedrockPlugin.logD("ANDROID main found in " + f);
 	  }
 	 if (cnts.contains("import org.junit.") ||
 	       cnts.contains("import junit.framework.")) {
@@ -540,7 +541,7 @@ private boolean generateClassPathFile()
 	 xw.field("path",getFilePath(sdir));
 	 xw.end("classpathentry");
        }
-      if (prop_map.get(PROJ_PROP_ANDROID) == null) {
+      if (!propBool(PROJ_PROP_ANDROID)) {
 	 xw.begin("classpathentry");
 	 xw.field("kind","con");
 	 xw.field("path","org.eclipse.jdt.launching.JRE_CONTAINER");
@@ -560,7 +561,7 @@ private boolean generateClassPathFile()
 	 xw.end("classpathentry");
        }
 
-      if (prop_map.get(PROJ_PROP_ANDROID) != null) {
+      if (propBool(PROJ_PROP_ANDROID)) {
 	 xw.begin("classpathentry");
 	 xw.field("kind","con");
 	 xw.field("path","com.android.ide.eclipse.adt.ANDROID_FRAMEWORK");
@@ -720,6 +721,8 @@ private boolean generateProjectFile()
 
 private boolean generateSettingsFile()
 {
+   boolean status = true;
+   
    BedrockPlugin.logD("WRITE SETTINGS FILE");
 
    File sdir = new File(project_dir,".settings");
@@ -755,10 +758,20 @@ private boolean generateSettingsFile()
     }
    catch (Throwable e) {
       BedrockPlugin.logE("Problem careating settings file",e);
-      return false;
+      status = false;
     }
-
-   return true;
+   
+   File popts = new File(sdir,"org.eclipse.core.resources.prefs");
+   try (PrintWriter pw = new PrintWriter(new FileWriter(popts))) {
+      pw.println("eclispe.preferences.version=1");
+      pw.println("encoding/<project>=UTF-8");
+   }
+   catch (Throwable e) {
+      BedrockPlugin.logE("Problem careating project settings file",e);
+      status = false;
+   }
+   
+   return status;
 }
 
 

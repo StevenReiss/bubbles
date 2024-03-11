@@ -262,7 +262,9 @@ private class Hyperlinker implements HyperlinkListener {
 /********************************************************************************/
 
 private static class TestAction extends AbstractAction {
-
+   
+   private static final long serialVersionUID = 1;
+   
    @Override public void actionPerformed(ActionEvent e) {
       BhelpFactory bf = BhelpFactory.getFactory();
       Component c = (Component) e.getSource();

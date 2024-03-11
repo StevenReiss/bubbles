@@ -1079,7 +1079,9 @@ private static class SplashImage extends JPanel {
 
    private Image brown_image;
    private Image bubbles_image;
-
+   
+   private static final long serialVersionUID = 1;
+   
    SplashImage() {
       brown_image = loadImage(BROWN_IMAGE_PATH,BROWN_IMAGE_URL,"Brown LOGO");
       bubbles_image = loadImage(BUBBLES_IMAGE_PATH,BUBBLES_IMAGE_URL,"Bubbles LOGO");

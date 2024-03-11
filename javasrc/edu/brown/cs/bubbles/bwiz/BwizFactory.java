@@ -149,9 +149,10 @@ void createBubble(Component c,Component fc)
 
 
 
-private class WizardBubble extends BudaBubble
-{
-
+private class WizardBubble extends BudaBubble {
+   
+   private static final long serialVersionUID = 1;
+   
    WizardBubble(Component c,Component fc) {
       setContentPane(c,fc);
     }

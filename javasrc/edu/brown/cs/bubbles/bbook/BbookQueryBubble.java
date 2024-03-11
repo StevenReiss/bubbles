@@ -94,6 +94,9 @@ private Orderings	current_order;
 
 private boolean 	show_users;
 
+private static final long serialVersionUID = 1;
+
+
 
 
 

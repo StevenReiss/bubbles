@@ -66,6 +66,7 @@ private long max_time;
 private BdynEventTrace event_trace;
 private List<BdynEntryThread> active_threads;
 private RunHandler process_handler;
+private static final long serialVersionUID = 1;
 
 private static final int MAX_SCROLL_TIME = 1000;
 
@@ -282,7 +283,8 @@ private class RunHandler implements BumpConstants.BumpRunEventHandler {
 private class TaskBubble extends BudaBubble {
 
    BdynTaskWindow task_window;
-
+   private static final long serialVersionUID = 1;
+   
    TaskBubble(BdynTaskWindow w) {
       task_window = w;
       setContentPane(w,null);

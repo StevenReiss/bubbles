@@ -44,6 +44,7 @@ class BwizHoverButton extends JButton implements MouseListener
 
 protected Color text_color;
 protected Color hover_color;
+private static final long serialVersionUID = 1;
 
 
 

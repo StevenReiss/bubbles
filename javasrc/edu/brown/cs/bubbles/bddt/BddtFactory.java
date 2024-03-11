@@ -466,7 +466,8 @@ private JButton defineButton(String name,String info,PanelHandler hdlr)
 private class PanelHandler extends AbstractAction implements ActionListener {
 
    private Rectangle prior_viewport;
-
+   private static final long serialVersionUID = 1;
+   
    PanelHandler() {
       prior_viewport = null;
     }
@@ -707,7 +708,8 @@ private class ConfigSelector extends BoardMouser {
 private class ConfigAction extends AbstractAction {
 
    private BumpLaunchConfig for_config;
-
+   private static final long serialVersionUID = 1;
+   
    ConfigAction(BumpLaunchConfig blc) {
       super(blc.getConfigName());
       for_config = blc;
@@ -726,6 +728,7 @@ private class ConfigAction extends AbstractAction {
 private static class CreateConfigAction extends AbstractAction {
 
    private BumpLaunchType launch_type;
+   private static final long serialVersionUID = 1;
    
    CreateConfigAction(BumpLaunchType typ) {
       super("Create new " + typ.getDescription() + " Configuration");
@@ -804,7 +807,8 @@ private static class BreakpointAction extends AbstractAction {
 
    private BumpBreakMode break_mode;
    private BaleContextConfig bale_context;
-
+   private static final long serialVersionUID = 1;
+   
    BreakpointAction(BaleContextConfig cfg,boolean brk) {
       super(brk ? "Toggle Breakpoint" : "Toggle Tracepoint");
       break_mode = (brk ? BumpBreakMode.DEFAULT : BumpBreakMode.TRACE);

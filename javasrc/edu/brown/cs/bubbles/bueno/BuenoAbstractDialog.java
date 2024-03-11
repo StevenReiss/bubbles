@@ -369,7 +369,9 @@ protected class ModifierButton extends JToggleButton implements ActionListener {
 /********************************************************************************/
 
 private class DialogBubble extends BudaBubble {
-
+   
+   private static final long serialVersionUID = 1;
+   
    DialogBubble(JPanel pnl) {
       setContentPane(pnl,focus_field);
       pnl.addMouseListener(new BudaConstants.FocusOnEntry(focus_field));

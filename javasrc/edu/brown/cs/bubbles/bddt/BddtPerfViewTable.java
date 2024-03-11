@@ -224,6 +224,7 @@ private double getTotalSamples()
 class PerfBubble extends BudaBubble {
    
    private PerfTable perf_table;
+   private static final long serialVersionUID = 1;
    
    PerfBubble() {
       perf_table = new PerfTable(perf_model);
@@ -372,7 +373,8 @@ private class PerfEventHandler implements BumpRunEventHandler {
 private class PerfTable extends JTable implements BudaConstants.BudaBubbleOutputer {
 
    private CellDrawer [] cell_drawer;
-
+   private static final long serialVersionUID = 1;
+   
    PerfTable(PerfModel mdl) {
       super(mdl);
       setOpaque(false);
@@ -507,7 +509,8 @@ private class PerfModel extends AbstractTableModel {
    private Lock 	model_lock;
    private List<PerfNode> node_set;
    private Map<PerfNode,Integer> index_set;
-
+   private static final long serialVersionUID = 1;
+   
    PerfModel() {
       model_lock = new ReentrantLock();
       node_set = new ArrayList<PerfNode>();
@@ -785,6 +788,8 @@ private class ChangeHandler implements Runnable {
 /********************************************************************************/
 
 private class ResetAction extends AbstractAction {
+   
+   private static final long serialVersionUID = 1;
    
    ResetAction() {
       super("Reset Counters");

@@ -193,6 +193,8 @@ private void createPanel()
 
 private abstract class EditPanel extends SwingGridPanel {
    
+   private static final long serialVersionUID = 1;
+   
    void doUpdate()                              { }
    
 }       // end of inner class EditPanel
@@ -216,7 +218,8 @@ private class PathPanel extends EditPanel implements ActionListener, ListSelecti
    private JButton edit_button;
    private JButton delete_button;
    private JList<BuenoPathEntry>   path_display;
-
+   private static final long serialVersionUID = 1;
+   
    PathPanel() {
       base_paths = project_editor.getLibraryPaths();
       panel_paths = new SwingListSet<>(true);
@@ -306,7 +309,8 @@ private class PathPanel extends EditPanel implements ActionListener, ListSelecti
 private class NewPathEntryBubble extends BudaBubble implements ActionListener {
 
    private JFileChooser file_chooser;
-
+   private static final long serialVersionUID = 1;
+   
    NewPathEntryBubble(FileFilter ff,int mode) {
       FileSystemView fsv = BoardFileSystemView.getFileSystemView();
       file_chooser = new JFileChooser(last_directory,fsv);
@@ -373,7 +377,8 @@ private static class BinaryFileFilter extends FileFilter {
 private class EditLibraryPathEntryBubble extends BudaBubble implements ActionListener {
 
    private BuenoPathEntry	for_path;
-
+   private static final long serialVersionUID = 1;
+   
    EditLibraryPathEntryBubble(BuenoPathEntry pp) {
       for_path = pp;
       SwingGridPanel pnl = new SwingGridPanel();
@@ -418,7 +423,8 @@ private class SourcePanel extends EditPanel implements ActionListener, ListSelec
    private JButton edit_button;
    private JButton delete_button;
    private JList<BuenoPathEntry> path_display;
-
+   private static final long serialVersionUID = 1;
+   
    SourcePanel() {
       base_paths = project_editor.getSourcePaths();
       panel_paths = new SwingListSet<>(true);
@@ -504,7 +510,7 @@ private class EditSourcePathEntryBubble extends BudaBubble implements ActionList
    private BuenoPathEntry for_path;
    private SwingListSet<SourcePattern> source_patterns;
    private PatternPanel pattern_panel;
-
+   private static final long serialVersionUID = 1;
 
    EditSourcePathEntryBubble(BuenoPathEntry pp) {
       for_path = pp;
@@ -590,7 +596,8 @@ private class PatternPanel extends SwingListPanel<SourcePattern> {
 
    private BuenoPathEntry for_path;
    private SwingListSet<SourcePattern> source_patterns;
-
+   private static final long serialVersionUID = 1;
+   
    PatternPanel(BuenoPathEntry path,SwingListSet<SourcePattern> pats) {
       super(pats);
       for_path = path;
@@ -645,7 +652,8 @@ private class SourcePatternPanel extends SwingGridPanel {
 
    private JTextField pattern_field;
    private JComboBox<PatternOptions> option_field;
-
+   private static final long serialVersionUID = 1;
+   
    SourcePatternPanel(SourcePattern pat) {
       String txt = pat == null ? null : pat.getPattern();
       pattern_field = addTextField("Pattern",txt,24,null,null);
@@ -687,13 +695,14 @@ private EditPanel createProjectPanel()
 
 private class ReferencesPanel extends EditPanel implements ActionListener {
 
-
+   private static final long serialVersionUID = 1;
+   
    ReferencesPanel() {
       beginLayout();
       Set<String> refs = project_editor.getReferencedProjects();
       for (String s : project_editor.getOtherProjects()) {
-	 boolean fg = refs.contains(s);
-	 addBoolean(s,fg,this);
+         boolean fg = refs.contains(s);
+         addBoolean(s,fg,this);
        }
       addExpander();
     }
@@ -726,7 +735,8 @@ private class FieldsPanel extends EditPanel implements ActionListener {
 
     private Map<String,Map<String,String>> option_sets;
     private Map<String,Object> cur_values;
-
+    private static final long serialVersionUID = 1;
+    
     FieldsPanel() {
        option_sets = new HashMap<>();
        cur_values = new HashMap<>();

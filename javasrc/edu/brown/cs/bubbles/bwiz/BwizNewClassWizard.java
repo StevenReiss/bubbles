@@ -44,6 +44,8 @@ class BwizNewClassWizard extends BwizNewWizard
 /*										*/
 /********************************************************************************/
 
+private static final long serialVersionUID = 1;
+
 
 
 /********************************************************************************/

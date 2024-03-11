@@ -363,18 +363,22 @@ static void outputMarkers(IProject proj,IMarker [] mrks,IvyXmlWriter xw)
 
    //TODO:  if mrks.length > MAX_PROBLEM then prioritize to do errors before warnings
 
-   Set<IMarker> done = new HashSet<IMarker>();
+   Set<IMarker> done = new HashSet<>();
    for (IMarker mrk : mrks) {
       if (done.contains(mrk)) continue;
       done.add(mrk);
       IResource irc = mrk.getResource();
       // group by file
-      if (irc == null || !(irc instanceof IFile)) continue;
+      if (irc == null || !(irc instanceof IFile)) {
+         BedrockPlugin.logD("MARKER lacks file " + mrk);
+         continue;
+      }
       IFile f = (IFile) irc;
       File fil = f.getFullPath().toFile();
       fil = getFileForPath(fil,proj);
 
       for (IMarker xmk : mrks) {
+         BedrockPlugin.logD("CHECK MARKER " + xmk + " " + xmk.getResource() + " " + irc);
 	 if (xmk != mrk && done.contains(xmk)) continue;
 	 if (xmk.getResource() != irc) continue;
 	 done.add(xmk);

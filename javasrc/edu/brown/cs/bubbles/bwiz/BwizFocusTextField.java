@@ -46,6 +46,8 @@ class BwizFocusTextField extends SwingTextField
 private boolean 	showing_hint;
 private String		hint_text;
 
+private static final long serialVersionUID = 1;
+
 
 
 /********************************************************************************/

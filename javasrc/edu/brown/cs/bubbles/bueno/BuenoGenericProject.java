@@ -131,11 +131,13 @@ BudaBubble createProjectCreationBubble()
 
 private class CreateBubble extends BudaBubble {
 
+   private static final long serialVersionUID = 1;
+   
    CreateBubble() throws BuenoException {
       JPanel cnts = getCreationPanel();
       setContentPane(cnts);
-    }
-   
+   }
+
 }	// end of inner class CreateBubble
 
 
@@ -381,6 +383,8 @@ BudaBubble createProjectEditorBubble(String proj)
 
 
 private class EditorBubble extends BudaBubble {
+   
+   private static final long serialVersionUID = 1;
    
    EditorBubble(Element projxml,Element editxml) throws BuenoException {
       JPanel cnts = getEditorPanel(projxml,editxml);

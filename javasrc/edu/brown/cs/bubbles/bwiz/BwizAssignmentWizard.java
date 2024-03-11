@@ -57,6 +57,8 @@ private JLabel assignment_description;
 private JComboBox<String> drop_down;
 private List<Assignment> avail_assignments;
 
+private static final long serialVersionUID = 1;
+
 protected final static Border EMPTY_BORDER=BorderFactory.createEmptyBorder(2,2,2,2);
 protected final static Border HOVER_BORDER=BorderFactory.createLineBorder(Color.RED, 2);
 

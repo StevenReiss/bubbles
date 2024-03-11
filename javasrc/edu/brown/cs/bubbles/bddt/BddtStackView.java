@@ -122,6 +122,7 @@ private ValueUpdater		value_updater;
 private Selector		node_selector;
 private JLabel			title_bar;
 private JTextArea		value_area;
+private static final long serialVersionUID = 1;
 
 
 
@@ -565,7 +566,8 @@ private class RunEventHandler implements BumpRunEventHandler {
 private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBubbleOutputer
 {
    private CellDrawer [] cell_drawer;
-
+   private static final long serialVersionUID = 1;
+   
    ValueTable(TreeTableModel mdl) {
       super(mdl);
       setOpaque(false);

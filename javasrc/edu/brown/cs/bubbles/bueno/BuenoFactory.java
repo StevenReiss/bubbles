@@ -516,7 +516,9 @@ private static class TemplateImporter implements BudaConstants.ButtonListener {
 
 
 private static class TemplateBubble extends BudaBubble {
-
+   
+   private static final long serialVersionUID = 1;
+   
    TemplateBubble() {
       TemplatePanel pnl = new TemplatePanel();
       setContentPane(pnl);
@@ -533,7 +535,8 @@ private static class TemplatePanel extends SwingGridPanel implements ActionListe
    private SwingComboBox<String> source_field;
    private SwingComboBox<String> forproject_field;
    private String target_project;
-
+   private static final long serialVersionUID = 1;
+   
    TemplatePanel() {
       beginLayout();
       addBannerLabel("Choose Templates to Import");

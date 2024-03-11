@@ -44,6 +44,8 @@ class BwizNewEnumWizard extends BwizNewWizard
 /*                                                                              */
 /********************************************************************************/
 
+private static final long serialVersionUID = 1;
+
 
 
 /********************************************************************************/
@@ -51,10 +53,6 @@ class BwizNewEnumWizard extends BwizNewWizard
 /*      Constructors                                                            */
 /*                                                                              */
 /********************************************************************************/
-
-
-
-
 
 BwizNewEnumWizard(BuenoLocation loc)
 {

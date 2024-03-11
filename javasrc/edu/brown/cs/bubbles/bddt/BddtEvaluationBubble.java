@@ -229,7 +229,8 @@ private class ExprAdder implements ActionListener {
 private class RemoveAction extends AbstractAction {
 
    private EvalExpr for_expr;
-
+   private static final long serialVersionUID = 1;
+   
    RemoveAction(EvalExpr ee) {
       super("Remove Expression");
       for_expr = ee;
@@ -248,7 +249,8 @@ private class RemoveAction extends AbstractAction {
 private static class EditAction extends AbstractAction {
 
    // private EvalExpr for_expr;
-
+   private static final long serialVersionUID = 1;
+   
    EditAction(EvalExpr ee) {
       super("Edit Expression");
       // for_expr = ee;
@@ -270,7 +272,9 @@ private static class EditAction extends AbstractAction {
 /********************************************************************************/
 
 private class EvaluationPanel extends SwingGridPanel {
-
+   
+   private static final long serialVersionUID = 1;
+   
    EvaluationPanel() {
       setOpaque(false);
    }

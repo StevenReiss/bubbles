@@ -965,7 +965,9 @@ private static class Selector {
 /********************************************************************************/
 
 private class ClassPanel extends SwingGridPanel implements BudaConstants.BudaBubbleOutputer {
-
+   
+   private static final long serialVersionUID = 1;
+   
    @Override public String getConfigurator()		{ return "BCON"; }
    @Override public void outputXml(BudaXmlWriter xw) {
       xw.field("TYPE","CLASS");
@@ -1357,6 +1359,8 @@ private abstract class AbstractCreator extends AbstractAction {
 
 private class CommentCreator extends AbstractCreator {
 
+   private static final long serialVersionUID = 1;
+   
    CommentCreator(BuenoType typ,BconRegion br,boolean before) {
       super(typ,br,before);
    }
@@ -1372,7 +1376,9 @@ private class CommentCreator extends AbstractCreator {
 
 
 private class MethodCreator extends AbstractCreator implements BuenoBubbleCreator {
-
+   
+   private static final long serialVersionUID = 1;
+   
    MethodCreator(BconRegion br,boolean before) {
       super(BuenoType.NEW_METHOD,br,before);
     }
@@ -1395,6 +1401,8 @@ private class MethodCreator extends AbstractCreator implements BuenoBubbleCreato
 
 private class FieldCreator extends AbstractCreator implements BuenoBubbleCreator {
 
+   private static final long serialVersionUID = 1;
+   
    FieldCreator(BconRegion br,boolean before) {
       super(BuenoType.NEW_FIELD,br,before);
     }
@@ -1414,7 +1422,9 @@ private class FieldCreator extends AbstractCreator implements BuenoBubbleCreator
 
 
 private class TypeCreator extends AbstractCreator implements BuenoBubbleCreator {
-
+   
+   private static final long serialVersionUID = 1;
+   
    TypeCreator(BconRegion br,boolean before) {
       super(BuenoType.NEW_INNER_TYPE,br,before);
     }
@@ -1479,7 +1489,9 @@ private class TypeCreator extends AbstractCreator implements BuenoBubbleCreator 
 
 
 private class ClassBubbleAction extends AbstractAction {
-
+   
+   private static final long serialVersionUID = 1;
+   
    ClassBubbleAction() {
       super("Open Class Bubble");
     }
@@ -1500,7 +1512,8 @@ private class ClassBubbleAction extends AbstractAction {
 private static class DeleteAction extends AbstractAction {
 
    private BconRegion delete_region;
-
+   private static final long serialVersionUID = 1;
+   
    DeleteAction(BconRegion br) {
       super("Delete " + br.getShortRegionName());
       delete_region = br;
@@ -1515,7 +1528,9 @@ private static class DeleteAction extends AbstractAction {
 
 
 private class ResetAction extends AbstractAction {
-
+   
+   private static final long serialVersionUID = 1;
+   
    ResetAction() {
       super("Update Regions");
     }

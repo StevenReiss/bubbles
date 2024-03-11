@@ -279,7 +279,8 @@ private static class BpareAction extends AbstractAction {
    private String project_name;
    private File for_file;
    private int file_position;
-
+   private static final long serialVersionUID = 1;
+   
    BpareAction(BaleContextConfig cfg) {
       super("Show Possible Suggestions");
       project_name = cfg.getEditor().getContentProject();

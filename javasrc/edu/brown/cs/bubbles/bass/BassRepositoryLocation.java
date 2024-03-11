@@ -530,7 +530,7 @@ private String commonSuffix(String s1,String s2)
 private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 {
    if (!isRelevant(bl)) {
-      BoardLog.logD("BASS","Ignore symbol " + bl);
+//    BoardLog.logD("BASS","Ignore symbol " + bl);
       return;
     }
 

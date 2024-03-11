@@ -59,6 +59,8 @@ private boolean previous_failure;
 private Color normal_color;
 private SwingEventListenerList<BwizConstants.VerificationListener> verification_listeners;
 
+private static final long serialVersionUID = 1;
+
 
 
 

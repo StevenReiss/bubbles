@@ -357,7 +357,8 @@ private class GotoLine extends AbstractAction {
    private boolean is_constructor;
    private int line_number;
    private List<BumpLocation> goto_locs;
-
+   private static final long serialVersionUID = 1;
+   
    GotoLine(String mthd,String file,int line) {
       super("Go To " + mthd);
       goto_locs = null;

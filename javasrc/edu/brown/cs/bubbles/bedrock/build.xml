@@ -81,6 +81,11 @@
 		tofile='/home/spr/eclipse-2022-03/eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
    </target>
 
+   <target name='homeplugin' depends='plugin' if='ivy.present'>
+      <copy file='bedrock.jar'
+		tofile='/pro/eclipse/java-2023-12/eclipse/dropins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />
+   </target>
+
    <target name='eduplugin' depends='plugin' if='ivy.present'>
       <copy file='bedrock.jar'
 		tofile='/research/people/spr/suds/eclipse/plugins/edu.brown.cs.bubbles.bedrock_1.0.0.jar' />

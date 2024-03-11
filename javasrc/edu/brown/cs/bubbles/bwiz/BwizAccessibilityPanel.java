@@ -67,6 +67,9 @@ private ButtonGroup class_group;
 
 protected GridBagConstraints use_constraints;
 
+private static final long serialVersionUID = 1;
+
+
 
 
 /********************************************************************************/

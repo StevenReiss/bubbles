@@ -393,7 +393,8 @@ private class ConsoleDocument extends DefaultStyledDocument {
    private int		line_length;
    private File 	log_file;
    private Writer	log_writer;
-
+   private static final long serialVersionUID = 1;
+   
    ConsoleDocument(File logfile) {
       line_count = 0;
       max_length = 0;

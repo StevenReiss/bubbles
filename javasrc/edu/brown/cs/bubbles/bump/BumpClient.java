@@ -3766,7 +3766,9 @@ private void buildAllProjects(boolean clean,boolean full,boolean refresh,boolean
    q += " CLEAN='" + Boolean.toString(clean) + "'";
    q += " FULL='" + Boolean.toString(full) + "'";
    q = addWorkspace(q);
-
+   
+   problem_set.fireClearAll(null);
+   
    for (Element p : IvyXml.children(e,"PROJECT")) {
       String pnm = IvyXml.getAttrString(p,"NAME");
       if (!IvyXml.getAttrBool(p,"OPEN")) {
@@ -3777,7 +3779,10 @@ private void buildAllProjects(boolean clean,boolean full,boolean refresh,boolean
          // errors deferred -- will come later
        }
       else {
-         problem_set.clearProblems(pnm);
+         BoardLog.logD("BUMP","Start working on problems: " + IvyXml.convertXmlToString(probs));
+         if (clean || full || refresh) {
+            problem_set.clearProblems(pnm);
+         }
          problem_set.handleErrors(pnm,null,0,probs);
        }
     }

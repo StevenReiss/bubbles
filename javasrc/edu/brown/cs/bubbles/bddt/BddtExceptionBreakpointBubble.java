@@ -61,6 +61,7 @@ private JCheckBox		caught_button;
 private JCheckBox		uncaught_button;
 private JCheckBox		suspendvm_button;
 private JCheckBox               subclass_button;
+private static final long serialVersionUID = 1;
 
 
 

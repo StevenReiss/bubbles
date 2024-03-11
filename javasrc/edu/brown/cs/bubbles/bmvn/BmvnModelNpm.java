@@ -82,6 +82,7 @@ private class NpmCommand extends AbstractAction implements BmvnCommand {
    private String npm_task;
    private BudaBubble relative_bubble;
    private Point relative_point;
+   private static final long serialVersionUID = 1;
    
    NpmCommand(String goal,BudaBubble relbbl,Point where) {
       npm_task = goal;

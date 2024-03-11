@@ -121,6 +121,8 @@ private Map<BconGraphArc,BconPetalArc>	 arc_map;
 
 private static Map<NodeType,CompShape> shape_map;
 
+private static final long serialVersionUID = 1;
+
 
 enum CompShape {
    SQUARE,
@@ -505,7 +507,8 @@ static Color getNodeColor(NodeType nt)
 private class BconPetalNode extends PetalNodeDefault {
 
    private BconGraphNode graph_node;
-
+   private static final long serialVersionUID = 1;
+   
    BconPetalNode(BconGraphNode gn) {
       graph_node = gn;
       setComponent(getDisplayComponent(graph_node));
@@ -597,7 +600,8 @@ private class BconPetalNode extends PetalNodeDefault {
 private class BconPetalArc extends PetalArcDefault {
 
    BconGraphArc for_arc;
-
+   private static final long serialVersionUID = 1;
+   
    BconPetalArc(BconGraphArc ga) {
       super(node_map.get(ga.getFromNode()),node_map.get(ga.getToNode()));
       for_arc = ga;
@@ -674,7 +678,8 @@ private static class GraphComponent extends JPanel {
 
    private CompShape	use_shape;
    private Polygon	poly_shape;
-
+   private static final long serialVersionUID = 1;
+   
    GraphComponent(CompShape sh) {
       Dimension d = new Dimension(20,20);
       setSize(d);
@@ -842,7 +847,8 @@ private static class NodeSorter implements Comparator<PetalNode> {
 private class ExpandAction extends AbstractAction  {
 
    private BconGraphNode for_node;
-
+   private static final long serialVersionUID = 1;
+   
    ExpandAction(BconGraphNode gn) {
       super("Expand node");
       for_node = gn;
@@ -863,7 +869,8 @@ private class CompactAction extends AbstractAction {
 
    private BconGraphNode for_node;
    private Set<ArcType> compact_type;
-
+   private static final long serialVersionUID = 1;
+   
    CompactAction(BconGraphNode gn,ArcType ... at ) {
       super("Compact node for " + at[0].toString());
       for_node = gn;
@@ -883,7 +890,8 @@ private class CompactAction extends AbstractAction {
 private class InducedAction extends AbstractAction {
 
    private BconGraphNode for_node;
-
+   private static final long serialVersionUID = 1;
+   
    InducedAction(BconGraphNode gn) {
       super("Show Subgraph");
       for_node = gn;
@@ -901,7 +909,8 @@ private class InducedAction extends AbstractAction {
 private class ExcludeAction extends AbstractAction {
 
    private BconGraphNode for_node;
-
+   private static final long serialVersionUID = 1;
+   
    ExcludeAction(BconGraphNode gn) {
       super("Remove Node");
       for_node = gn;
@@ -919,6 +928,8 @@ private class ExcludeAction extends AbstractAction {
 
 private class HomeAction extends AbstractAction {
 
+   private static final long serialVersionUID = 1;
+   
    HomeAction() {
       super("Show Complete Graph");
     }
@@ -934,7 +945,8 @@ private class HomeAction extends AbstractAction {
 private class RemoveSelectAction extends AbstractAction {
 
    private Collection<BconGraphNode> select_nodes;
-
+   private static final long serialVersionUID = 1;
+   
    RemoveSelectAction(Collection<BconGraphNode> sels) {
       super("Remove Selected Nodes");
       select_nodes = sels;
@@ -954,7 +966,8 @@ private class RemoveSelectAction extends AbstractAction {
 private class RestrictSelectAction extends AbstractAction {
 
    private Collection<BconGraphNode> select_nodes;
-
+   private static final long serialVersionUID = 1;
+   
    RestrictSelectAction(Collection<BconGraphNode> sels) {
       super("Show Selected Subgraph");
       select_nodes = sels;
@@ -979,7 +992,8 @@ private class RestrictSelectAction extends AbstractAction {
 private class SourceAction extends AbstractAction {
 
    private BconGraphNode for_node;
-
+   private static final long serialVersionUID = 1;
+   
    SourceAction(BconGraphNode gn) {
       super("Go to source of " + gn.getLabelName());
       for_node = gn;
@@ -1006,7 +1020,8 @@ private class SourceAction extends AbstractAction {
 private class SearchAction extends AbstractAction {
 
    private BconGraphNode for_node;
-
+   private static final long serialVersionUID = 1;
+   
    SearchAction(BconGraphNode gn) {
       super("Search in " + gn.getLabelName());
       for_node = gn;

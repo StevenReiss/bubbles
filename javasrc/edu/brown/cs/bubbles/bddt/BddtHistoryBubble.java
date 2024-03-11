@@ -93,6 +93,8 @@ private Map<BumpThread,Color> thread_colors;
 private Map<LinkType,Stroke> type_strokes;
 private Stroke		arrow_stroke;
 
+private static final long serialVersionUID = 1;
+
 private static final float [] DASHED = new float [] { 8,2 };
 private static final float [] DOTTED = new float [] { 2,2 };
 
@@ -222,7 +224,8 @@ private void setupPanel()
 private class GotoSourceAction extends AbstractAction {
 
    private BddtHistoryItem for_item;
-
+   private static final long serialVersionUID = 1;
+   
    GotoSourceAction(BddtHistoryItem itm) {
       super("Show source");
       for_item = itm;
@@ -258,7 +261,8 @@ private class GotoSourceAction extends AbstractAction {
 private class GotoStackAction extends AbstractAction {
 
    private BumpThreadStack for_stack;
-
+   private static final long serialVersionUID = 1;
+   
    GotoStackAction(BddtHistoryItem itm) {
       super("Show stack");
       for_stack = itm.getStack();
@@ -282,7 +286,8 @@ private class GotoStackAction extends AbstractAction {
 private class GotoValueAction extends AbstractAction {
 
    private BumpRunValue for_value;
-
+   private static final long serialVersionUID = 1;
+   
    GotoValueAction(GraphObject go) {
       super("Show this value");
       for_value = go.getValue();
@@ -943,7 +948,9 @@ private GraphObject getObjectAtPoint(int x,int y)
 /********************************************************************************/
 
 private class HistoryPanel extends JComponent {
-
+   
+   private static final long serialVersionUID = 1;
+   
    HistoryPanel() {
       setToolTipText("History Panel");
     }

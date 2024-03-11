@@ -258,7 +258,8 @@ synchronized List<String> getProjects()
 private static class BbookAction extends AbstractAction {
 
    private BudaRoot buda_root;
-
+   private static final long serialVersionUID = 1;
+   
    BbookAction(BudaRoot br) {
       super("ProgrammersLogAction");
       buda_root = br;
