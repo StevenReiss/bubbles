@@ -381,6 +381,7 @@ public static BassRepository getRepository(BudaConstants.SearchType typ)
 	 break;
        }
       catch (ConcurrentModificationException e) { }
+      catch (ArrayIndexOutOfBoundsException e) { }
     }
    BassRepository rslt = null;
    if (lbr != null) {

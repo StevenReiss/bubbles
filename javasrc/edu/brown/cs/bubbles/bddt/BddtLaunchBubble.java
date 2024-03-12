@@ -473,7 +473,9 @@ private String getNewName()
    else if (itm != null && launch_config != null) {
       JComponent cmp = (JComponent) e.getSource();
       handleFieldSet(cmp);
-      BumpLaunchType lt = edit_config.getLaunchType();
+      BumpLaunchConfig cfg = edit_config;
+      if (cfg == null) cfg = launch_config;
+      BumpLaunchType lt = cfg.getLaunchType();
       for (BumpLaunchConfigField fld : lt.getFields()) {
          if (fld.getEvaluate() != null && fld.getEvaluate().equals("START") &&
                itm.equals(fld.getArgField())) {

@@ -389,7 +389,7 @@ void handleGetCompletions(String proj,String bid,String file,int offset,IvyXmlWr
    try {
       icu.codeComplete(offset,ch);
     }
-   catch (JavaModelException e) {
+   catch (Throwable e) {
       throw new BedrockException("Problem getting completions: ",e);
     }
 }
