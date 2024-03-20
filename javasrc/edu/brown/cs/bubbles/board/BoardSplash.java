@@ -64,13 +64,18 @@ private Image		bubbles_image;
 
 private boolean 	show_bubbles;
 
-private static final boolean 	construct_image = true;
-
 private static final Color  first_color = new Color(0,0,255);
 private static final Color  second_color = new Color(128,128,255);
 
-private static final int SPLASH_WIDTH = 450;
-private static final int SPLASH_HEIGHT = 300;
+private static boolean scale_image = false;
+private static int splash_width = 450;
+private static int splash_height = 300;
+private static int splash_font = 9;
+private static float splash_task = 12f;
+private static int splash_brown = 24;
+private static int splash_bubbles_w = 64;
+private static int splash_bubbles_h = 96;
+private static int splash_delta = 24;
 
 
 
@@ -150,11 +155,26 @@ void remove()
 
 private void setup()
 {
+   Toolkit tk = Toolkit.getDefaultToolkit();
+   Dimension ssz = tk.getScreenSize();
+   if (ssz.width >= 3840 && ssz.height >= 2160) {
+      splash_font = 12;
+      splash_task = 15;
+      splash_delta = 27;
+      scale_image = true;
+    }
+   
    JPanel pnl = new JPanel(new BorderLayout());
    bubble_panel = new BubblePanel();
    pnl.add(bubble_panel,BorderLayout.CENTER);
    current_task = new JLabel("",SwingConstants.LEFT);
    current_task.setForeground(Color.black);
+   if (scale_image) {
+      Font f1 = current_task.getFont();
+      f1 = f1.deriveFont(splash_task);
+      current_task.setFont(f1);
+    }
+   
    pnl.setBackground(new Color(211,232,248));
    pnl.add(current_task,BorderLayout.SOUTH);
 
@@ -166,14 +186,11 @@ private void setup()
 
    splash_frame.pack();
 
-   Toolkit tk = Toolkit.getDefaultToolkit();
-   Dimension ssz = tk.getScreenSize();
    Dimension wsz = splash_frame.getSize();
    int xpos = ssz.width/2 - wsz.width/2;
    int ypos = ssz.height/2 - wsz.height/2;
    splash_frame.setLocation(xpos,ypos);
 }
-
 
 
 
@@ -205,31 +222,27 @@ Color getBubbleColor(int v0,int v1)
 
 private void drawSplash(Graphics g,JPanel obs)
 {
-   if (construct_image) {
       String vname = "version " + BoardSetup.getVersionData();
       int idx = vname.indexOf(" @ ");
       if (idx > 0) vname = vname.substring(0,idx);
       String copyr = "Copyright 2010 by Brown University.  All Rights Reserved";
       Graphics2D g2 = (Graphics2D) g;
-      Paint p = new GradientPaint(0,0,Color.WHITE,0,SPLASH_HEIGHT,new Color(211,232,248));
-      Rectangle r1 = new Rectangle(0,0,SPLASH_WIDTH,SPLASH_HEIGHT);
+      Paint p = new GradientPaint(0,0,Color.WHITE,0,splash_height,new Color(211,232,248));
+      Rectangle r1 = new Rectangle(0,0,splash_width,splash_height);
       g2.setPaint(p);
       g2.fill(r1);
       g2.setColor(new Color(88,88,88));
       r1.width -= 1;
       g2.draw(r1);
-      g2.drawImage(brown_image,24,24,obs);
-      g2.drawImage(bubbles_image,64,96,obs);
+      g2.drawImage(brown_image,splash_brown,splash_brown,obs);
+      g2.drawImage(bubbles_image,splash_bubbles_w,splash_bubbles_h,obs);
       g2.setPaint(new Color(88,179,255));
-      Font f1 = new Font(Font.SANS_SERIF,Font.PLAIN,9);
+      Font f1 = new Font(Font.SANS_SERIF,Font.PLAIN,splash_font);
       g2.setFont(f1);
       g2.drawString(vname,256,200);
       g2.setColor(new Color(88,88,88));
-      g2.drawString(copyr,24,SPLASH_HEIGHT-24);
-    }
-   else {
-      g.drawImage(splash_image,0,0,obs);
-    }
+      
+      g2.drawString(copyr,24,splash_height-splash_delta);
 }
 
 
@@ -257,14 +270,9 @@ private class BubblePanel extends JPanel implements Runnable {
 
    BubblePanel() {
       setOpaque(false);
-      int wd = SPLASH_WIDTH;
-      int ht = SPLASH_HEIGHT;
-      if (!construct_image) {
-	 wd = splash_image.getWidth(this);
-	 ht = splash_image.getHeight(this);
-       }
-
-      Dimension sz = new Dimension(wd,ht+20);//amc6
+      int wd = splash_width;
+      int ht = splash_height;
+      Dimension sz = new Dimension(wd,ht+splash_delta - 4);//amc6
       setMinimumSize(sz);
       setPreferredSize(sz);
       setMaximumSize(sz);

@@ -320,6 +320,7 @@ private static final SwingKey [] skey_defs = new SwingKey[] {
    new SwingKey("CODEEDIT",null,fragment_action,"menu shift C","xalt C"),
    new SwingKey("CODEEDIT",null,block_comment_action,"xalt shift C"),
    new SwingKey("CODEEDIT",null,marquis_comment_action,"xalt shift Q"),
+   new SwingKey("CODEEDIT",null,marquis_comment_action,"menu shift Q"),
    new SwingKey("CODEEDIT",null,javadoc_comment_action,"xalt shift J"),
    new SwingKey("CODEEDIT",null,quick_fix_action,"menu 1","alt 1"),
    new SwingKey("CODEEDIT",null,infer_decl_action,"menu shift W"),
@@ -823,23 +824,23 @@ private static class BackspaceAction extends TextAction {
       if (target == null) ;
       else if (target.getOverwriteMode()) backward_action.actionPerformed(e);
       else {
-	 BaleDocument bd = target.getBaleDocument();
-	 int soff = target.getSelectionStart(); 
-	 int eoff = target.getSelectionEnd();
-	 if (soff == eoff && BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_CLOSE)) {
-	    try {
-	       String del = target.getText(soff-1,1);
-	       String d1 = language_kit.getPostContent(del);
-	       if (d1 != null) {
-		  if (bd.checkTypeover(d1,soff)) {
-		     bd.remove(soff,1);
-		   }
-		}
-	     }
-	    catch (BadLocationException ex) { }
-
-	  }
-	 delete_prev_action.actionPerformed(e);
+         BaleDocument bd = target.getBaleDocument();
+         int soff = target.getSelectionStart(); 
+         int eoff = target.getSelectionEnd();
+         if (soff == eoff && BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_CLOSE)) {
+            try {
+               String del = target.getText(soff-1,1);
+               String d1 = language_kit.getPostContent(del);
+               if (d1 != null) {
+        	  if (bd.checkTypeover(d1,soff)) {
+        	     bd.remove(soff,1);
+        	   }
+        	}
+             }
+            catch (BadLocationException ex) { }
+   
+          }
+         delete_prev_action.actionPerformed(e);
        }
     }
 
