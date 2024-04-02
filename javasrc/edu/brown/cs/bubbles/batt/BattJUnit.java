@@ -221,7 +221,7 @@ private void scanArgs(String [] args)
       mac.invoke(null,(Object) strarr);
     }
    catch (ClassNotFoundException e) { 
-      System.err.println("BATTJ: No agent found");
+      if (!list_only) System.err.println("BATTJ: No agent found");
    }
    catch (Throwable t) {
       System.err.println("BATTJ: Problem with agent: " + t);
@@ -237,7 +237,6 @@ private void scanArgs(String [] args)
           }
        }
     }
-   
    
    for (String cnm : tststr) {
       Class<?> c1 = setupClass(cnm,service);
@@ -456,7 +455,7 @@ private void process()
       int idx2 = single_test.indexOf(")");
       String mnm = single_test.substring(0,idx1);
       String cnm = single_test.substring(idx1+1,idx2);
-      System.err.println("BATTJ: WORK ON TEST " + single_test + " " + cnm + " " + mnm);
+      System.err.println("BATTJ: WORK ON SINGLE TEST " + single_test + " " + cnm + " " + mnm);
       try {
 	 Class<?> clz = Class.forName(cnm);
 	 rq = Request.method(clz,mnm);
@@ -772,30 +771,30 @@ private class TestListener extends RunListener {
 
    @Override public void testFinished(Description d) {
       System.err.println("BATTJ: FINISH " + d + " " + test_cases.containsKey(d));
-
+   
       JunitTest jt = test_cases.get(d);
       if (jt == null) {
-	 System.err.println("BATTJ: No test case found");
-	 return;
+         System.err.println("BATTJ: No test case found");
+         return;
        }
       noteFinish(d);
-
+   
       JunitTestStatus bts = getTestStatus(d);
       System.err.println("BATTJ: STATUS " + bts.getType() + " " + result_stream
-	       );
+               );
       
       switch (bts.getType()) {
-	 case IGNORED :
-	 case LISTING :
-	    break;
-	 case FAILURE :
-	    setTestStatus(d,STATUS_FAILURE);
-	    break;
-	 default :
-	    setTestStatus(d,STATUS_SUCCESS);
-	    break;
+         case IGNORED :
+         case LISTING :
+            break;
+         case FAILURE :
+            setTestStatus(d,STATUS_FAILURE);
+            break;
+         default :
+            setTestStatus(d,STATUS_SUCCESS);
+            break;
        }
-
+   
       outputSingleTest(jt);
     }
 
@@ -817,23 +816,25 @@ private class TestListener extends RunListener {
       setTestStatus(f.getDescription(),STATUS_FAILURE);
       
       if (f.getMessage() != null && bad_messages.contains(f.getMessage())) {
-	 removeTestCase(f.getDescription());
+         removeTestCase(f.getDescription());
        }
       else if (f.getMessage() != null &&
-		  (f.getMessage().startsWith("No tests found matching List test cases from org.junit.runner.Request") ||
-		      f.getMessage().startsWith("No runnable methods") ||
-		      f.getMessage().startsWith("No tests found in "))) {
-	 removeTestCase(f.getDescription());
+        	  (f.getMessage().startsWith("No tests found matching List test cases from org.junit.runner.Request") ||
+        	      f.getMessage().startsWith("No runnable methods") ||
+        	      f.getMessage().startsWith("No tests found in "))) {
+         removeTestCase(f.getDescription());
        }
       else {
-	 System.err.println("BATTJ: FAIL " + f.getTestHeader() + " " + f.getDescription() + " " + f.getException() + " " + f.getMessage() + "\nTRACE: " + f.getTrace());
-	 addTestCase(f.getDescription(),new JunitTestStatus(f));
+         System.err.println("BATTJ: FAIL " + f.getTestHeader() + " " + 
+               f.getDescription() + " " + f.getException() + " " + 
+               f.getMessage() + "\nTRACE: " + f.getTrace());
+         addTestCase(f.getDescription(),new JunitTestStatus(f));
        }
-
+   
       JunitTest jt = test_cases.get(f.getDescription());
       if (jt != null) outputSingleTest(jt);
       else {
-	 System.err.println("Can't find failing test case " + f.getDescription());
+         System.err.println("Can't find failing test case " + f.getDescription());
       }
     }
 
@@ -893,7 +894,13 @@ private static class JunitTest {
 
    Description getDescription() 		{ return test_info; }
    JunitTestStatus getStatus()			{ return test_status; }
-   void setStatus(JunitTestStatus sts)		{ test_status = sts; }
+   void setStatus(JunitTestStatus sts)		
+   { 
+      if (sts == STATUS_FAILURE) {
+         if (test_status.getType() == StatusType.FAILURE) return;
+       }
+      test_status = sts; 
+   }
 
 }	// end of inner class JunitTest
 

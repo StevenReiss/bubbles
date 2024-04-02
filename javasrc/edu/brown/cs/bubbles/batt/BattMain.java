@@ -212,7 +212,7 @@ private void scanArgs(String [] args)
 
 private void badArgs()
 {
-   System.err.println("BATT: battmain -m <mint> [-List] [-Run]");
+   System.err.println("BATTM: battmain -m <mint> [-List] [-Run]");
    System.exit(1);
 }
 
@@ -329,14 +329,14 @@ void doTests()
 
 synchronized void addErrors(Set<String> clss)
 {
-   for (String s : clss) System.err.println("BATT: Note error in " + s);
+   for (String s : clss) System.err.println("BATTM: Note error in " + s);
    error_classes.addAll(clss);
 }
 
 
 synchronized void removeErrors(Set<String> clss)
 {
-   for (String s : clss) System.err.println("BATT: Remove error in " + s);
+   for (String s : clss) System.err.println("BATTM: Remove error in " + s);
 
    error_classes.removeAll(clss);
    synchronized (run_tests) {
@@ -460,7 +460,7 @@ void processTests() throws InterruptedException
       rpt = false;
       boolean listonly = false;
       synchronized (run_tests) {
-	 System.err.println("BATT: Process tests " + run_tests.size() + " " + run_all + " " + find_new);
+	 System.err.println("BATTM: Process tests " + run_tests.size() + " " + run_all + " " + find_new);
 	 if (run_tests.size() == 0 && server_thread == null && !find_new) return;
 	 int ct = 0;
 	 while (!canRunAny(run_tests)) {
@@ -524,11 +524,11 @@ private boolean canRunAny(Collection<BattTestCase> tests)
       for (String cnm : bp.getClassNames()) {
 	 if (error_classes.contains(cnm)) {
 	    err = true;
-	    System.err.println("BATT: HOLD for errors in " + cnm);
+	    System.err.println("BATTM: HOLD for errors in " + cnm);
 	  }
 	 if (testclass.contains(cnm)) {
 	    use = true;
-	    System.err.println("BATT: USE tests for " + cnm);
+	    System.err.println("BATTM: USE tests for " + cnm);
 	  }
        }
       if (use && !err) return true;
@@ -571,9 +571,9 @@ private void processRun(boolean listonly,Set<String> testclss,Set<BattTestCase> 
 private void processRun(boolean listonly,Set<String> testclss)
 {
    if (testclss !=  null) 
-      System.err.println("BATT: Run all tests in " + testclss.size() + " classes");
+      System.err.println("BATTM: Run all tests in " + testclss.size() + " classes");
    else
-      System.err.println("BATT: Run all tests in all classes");
+      System.err.println("BATTM: Run all tests in all classes");
    
    if (!listonly) {
       synchronized (run_tests) {
@@ -693,7 +693,7 @@ private void processRun(boolean listonly,Set<String> testclss)
 
       reportTestStatus(false);
 
-      System.err.print("BATT: RUN" );
+      System.err.print("BATTM: RUN" );
       for (String s : args) {
 	 System.err.print(" " + s);
        }
@@ -706,11 +706,11 @@ private void processRun(boolean listonly,Set<String> testclss)
 	 current_test = ex;
 	 // should handle input and output here
 	 int sts = ex.waitFor();
-	 System.err.println("BATT: Test status " + sts);
+	 System.err.println("BATTM: Test status " + sts);
 	 current_test = null;
        }
       catch (IOException e) {
-	 System.err.println("BATT: Problem running junit java: " + e);
+	 System.err.println("BATTM: Problem running junit java: " + e);
        }
     }
 
@@ -724,7 +724,7 @@ private boolean runOneTest(BattTestCase testcase)
    String testclss = testcase.getClassName();
    if (testclss == null) return false;
 
-   System.err.println("BATT: Start running test " + testcase.getName() +
+   System.err.println("BATTM: Start running test " + testcase.getName() +
 	 " in " + testclss);
 
    for (BattProject bp : batt_monitor.getProjects()) {
@@ -810,7 +810,7 @@ private boolean runOneTest(BattTestCase testcase)
 
       reportTestStatus(false);
 
-      System.err.print("BATT: RUN" );
+      System.err.print("BATTM: RUN" );
       for (String s : args) {
 	 System.err.print(" " + s);
        }
@@ -823,11 +823,11 @@ private boolean runOneTest(BattTestCase testcase)
 	 current_test = ex;
 	 // should handle input and output here
 	 int sts = ex.waitFor();
-	 System.err.println("BATT: Test status " + sts);
+	 System.err.println("BATTM: Test status " + sts);
 	 current_test = null;
        }
       catch (IOException e) {
-	 System.err.println("BATT: Problem running junit java: " + e);
+	 System.err.println("BATTM: Problem running junit java: " + e);
        }
     }
 
@@ -850,7 +850,7 @@ synchronized BattTestCase findTestCase(String nm)
    if (btc == null) {
       btc = new BattTestCase(nm);
       test_cases.put(nm,btc);
-      System.err.println("BATT: TEST CASES " + test_cases.size() + " " + nm);
+      System.err.println("BATTM: TEST CASES " + test_cases.size() + " " + nm);
     }
 
    return btc;
@@ -918,7 +918,7 @@ void updateTestsForClasses(Map<String,FileState> chng)
    synchronized (this) {
       for (BattTestCase btc : test_cases.values()) {
 	 FileState fs = btc.usesClasses(chng);
-	 System.err.println("BATT: TEST UPDATE: " + btc.getName() + " " + fs + " " + btc.getState());
+	 System.err.println("BATTM: TEST UPDATE: " + btc.getName() + " " + fs + " " + btc.getState());
 	 if (fs != null) {
 	    switch (fs) {
 	       case STABLE :
@@ -982,7 +982,7 @@ void reportTestStatus(boolean force)
    for (BattTestCase btc : rpt) {
       if (force || btc.getUpdateTime() >= last_report) {
 	 // btc.shortReport(xw);
-	 // System.err.println("BATT: WORK ON TEST CASE " + btc.getName());
+	 // System.err.println("BATTM: WORK ON TEST CASE " + btc.getName());
 	 btc.longReport(xw);
 	 ++ctr;
        }
@@ -1011,10 +1011,10 @@ private void setupSocket()
       server_socket = new ServerSocket(0);
     }
    catch (IOException e) {
-      System.err.println("BATT: Problem creating test socket: " + e);
+      System.err.println("BATTM: Problem creating test socket: " + e);
     }
 
-   System.err.println("BATT: Listening on " + server_socket.getInetAddress());
+   System.err.println("BATTM: Listening on " + server_socket.getInetAddress());
 
    SocketListener sl = new SocketListener();
    sl.start();
@@ -1029,7 +1029,7 @@ private void createClient(Socket s)
       c.start();
     }
    catch (IOException e) {
-      System.err.println("BATT: Problem starting server client: " + e);
+      System.err.println("BATTM: Problem starting server client: " + e);
     }
 }
 
@@ -1045,13 +1045,13 @@ private class SocketListener extends Thread {
 
    @Override public void run() {
       try {
-	 for ( ; ; ) {
-	    Socket s = server_socket.accept();
-	    if (s != null) createClient(s);
-	  }
+         for ( ; ; ) {
+            Socket s = server_socket.accept();
+            if (s != null) createClient(s);
+          }
        }
       catch (IOException e) {
-	 System.err.println("BATT: Problem with server socket accept: " + e);
+         System.err.println("BATTM: Problem with server socket accept: " + e);
        }
     }
 
@@ -1073,7 +1073,7 @@ private class Client extends IvyXmlReaderThread {
       Element e = IvyXml.convertStringToXml(msg);
    
       synchronized(message_lock) {
-         System.err.println("BATT: CLIENT MSG: " + client_socket.getLocalPort() + " " + msg);
+         System.err.println("BATTM: CLIENT MSG: " + client_socket.getLocalPort() + " " + msg);
          
          if (IvyXml.isElement(e,"TESTCASE")) {
             String nm = IvyXml.getAttrString(e,"NAME");
@@ -1087,7 +1087,7 @@ private class Client extends IvyXmlReaderThread {
             btc.handleTestCounts(e);
           }
          
-         System.err.println("BATT: FINISH CLIENT MSG");
+         System.err.println("BATTM: FINISH CLIENT MSG");
        }
    }
 
