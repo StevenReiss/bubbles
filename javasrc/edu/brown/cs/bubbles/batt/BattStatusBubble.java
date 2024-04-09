@@ -537,14 +537,14 @@ private class DisplayTable extends JTable implements MouseListener {
       int col = columnAtPoint(e.getPoint());
       TableColumn tc = getColumnModel().getColumn(col);
       if (tc != null) {
-	 String ch = tc.getIdentifier().toString();
-	 switch (ch) {
-	    case "Status" :
-	    case "State" :
-	       break;
-	    default :
-	       return null;
-	  }
+         String ch = tc.getIdentifier().toString();
+         switch (ch) {
+            case "Status" :
+            case "State" :
+               break;
+            default :
+               return null;
+          }
        }
       return btc.getToolTip();
     }
