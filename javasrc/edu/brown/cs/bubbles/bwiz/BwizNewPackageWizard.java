@@ -135,7 +135,7 @@ BwizNewPackageWizard(BuenoLocation loc)
    StringBuffer buf = new StringBuffer();
    String what = property_set.getStringProperty(BuenoKey.KEY_TYPE);
    int mods = property_set.getModifiers();
-   boolean iface = what.equalsIgnoreCase("interface");
+   boolean iface = (what != null && what.equalsIgnoreCase("interface"));
    if (Modifier.isPublic(mods)) buf.append("public ");
    if (Modifier.isAbstract(mods) & !iface) buf.append("abstract ");
    if (Modifier.isFinal(mods) & !iface) buf.append("final ");

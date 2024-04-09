@@ -549,7 +549,7 @@ private class NewPackageAction extends NewAction implements BuenoConstants.Bueno
       BoardMetrics.noteCommand("BASS","NewPackage");
       BudaRoot.hideSearchBubble(e);
       BuenoFactory.getFactory().createPackageDialog(search_bubble,access_point,create_type,
-							 property_set,for_location,null,this);
+        						 property_set,for_location,null,this);
     }
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
