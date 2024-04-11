@@ -665,8 +665,23 @@ private static class DefaultKeyAction extends TextAction {
                boolean overwrite = target.getOverwriteMode();
                if (soff == eoff && !overwrite) {
                   if (language_kit.checkContent(content) &&
-                        bd.checkTypeover(content,soff)) overwrite = true;
-                  else postcontent = language_kit.getPostContent(content);
+                        bd.checkTypeover(content,soff)) {
+                     overwrite = true;
+                   }
+                  else {
+                     postcontent = language_kit.getPostContent(content);
+                     if (postcontent != null && 
+                           BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_SPACES_ONLY)) { 
+                        String follow = null;
+                        try {
+                           follow = target.getText(eoff,1);
+                         }
+                        catch (BadLocationException ex) { }
+                        if (follow != null && !Character.isWhitespace(follow.charAt(0))) {
+                           postcontent = null;
+                         }
+                      }
+                   }
                 }
                if (overwrite) {
                   if (soff == target.getSelectionEnd()) {

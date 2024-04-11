@@ -36,6 +36,7 @@ import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.bubbles.bump.BumpLocation;
+import edu.brown.cs.ivy.file.IvyFile;
 
 import java.lang.reflect.Modifier;
 import java.io.BufferedReader;
@@ -160,6 +161,8 @@ BassName findBubbleName(File f,int eclipsepos)
    boolean inclbest = false;
    int maxdelta0 = 0;
    int maxdelta1 = 2;
+   
+   f = IvyFile.getCanonical(f);
 
    waitForNames();
    // this needs to be faster
@@ -171,6 +174,7 @@ BassName findBubbleName(File f,int eclipsepos)
 	 for (BassName bn : names) {
 	    BassNameLocation bnl = (BassNameLocation) bn;
 	    File namef = bnl.getFile();
+            namef = IvyFile.getCanonical(namef);
 	    if (namef == null) continue;
 	    List<BassName> nl = file_names.get(namef);
 	    if (nl == null) {
@@ -187,14 +191,17 @@ BassName findBubbleName(File f,int eclipsepos)
 
       for (BassName bn : names) {
 	 BassNameLocation bnl = (BassNameLocation) bn;
-	 if (bnl.getFile().equals(f)) {
+         File bnf = IvyFile.getCanonical(bnl.getFile());
+	 if (bnf.equals(f)) {
 	    int spos = bnl.getEclipseStartOffset();
 	    int epos = bnl.getEclipseEndOffset();
 	    boolean incl = (spos <= eclipsepos && epos > eclipsepos);
-	    if (best != null && incl && !inclbest && best.getNameType() == bnl.getNameType()) best = null;
+	    if (best != null && incl && !inclbest && best.getNameType() == bnl.getNameType()) 
+               best = null;
 	    if (best == null || epos - spos <= bestlen) {
 	       if (best != null && epos - spos == bestlen) {
-		  if (best.getNameType() == BassNameType.HEADER && bnl.getNameType() == BassNameType.CLASS) ;
+		  if (best.getNameType() == BassNameType.HEADER && 
+                        bnl.getNameType() == BassNameType.CLASS) ;
 		  else continue;
 		}
 	       if (spos-maxdelta0 <= eclipsepos && epos+maxdelta1 > eclipsepos) {	// allow for indentations

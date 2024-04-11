@@ -1442,6 +1442,7 @@ interface BaleWindowElement {
 /********************************************************************************/
 
 String BALE_AUTO_INSERT_CLOSE = "Bale.auto.insert.close";
+String BALE_AUTO_INSERT_SPACES_ONLY = "Bale.auto.insert.whitespace";
 
 
 
