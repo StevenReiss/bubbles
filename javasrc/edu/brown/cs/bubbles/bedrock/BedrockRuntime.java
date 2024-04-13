@@ -1789,7 +1789,14 @@ private void sendHotCodeMessage(IJavaDebugTarget tgt,boolean succ,DebugException
 
 void consoleInput(String lname,String input) throws BedrockException
 {
-   input = IvyXml.decodeXmlString(input);
+   String in1 = IvyXml.decodeXmlString(input);
+   
+   BedrockPlugin.logD("CONSOLE INPUT " + input + " " + in1);
+   
+   if (input == null) {
+      BedrockPlugin.logE("EMPTY CONSOLE INPUT");
+      return;
+    }
 
    ILaunch[] launches = debug_plugin.getLaunchManager().getLaunches();
 

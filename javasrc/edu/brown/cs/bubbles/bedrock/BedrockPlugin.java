@@ -694,6 +694,12 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrEnum(xml,"ACTION",BedrockDebugAction.NONE),xw);
 	 break;
       case "CONSOLEINPUT" :
+         String cinp = IvyXml.getTextElement(xml,"INPUT");
+         if (cinp == null) {
+            Element inpelt = IvyXml.getChild(xml,"INPUT");
+            String c1 = inpelt.getTextContent();
+            cinp = c1;
+          }
 	 bedrock_runtime.consoleInput(IvyXml.getAttrString(xml,"LAUNCH"),
 	       IvyXml.getTextElement(xml,"INPUT"));
 	 break;
