@@ -145,6 +145,7 @@ static {
       speed_delta = MAC_DELTA;
       native_command = props.getString("Bhelp.say.command","/usr/bin/say \"@@@\"");
     }
+   // might wan to use /pro/bubbles/bin/say on linux
    else {
       native_command = props.getString("Bhelp.say.command");
     }
@@ -993,43 +994,43 @@ private static class MarySpeechAction extends BhelpAction {
    @Override void executeAction(BhelpContext ctx) throws BhelpException {
       if (speech_synth == null) return;
       try {
-	 waitFor();
-	 if (!ctx.checkMouse()) return;
-	 if (speech_text != null) {
-	    if (!speakNative()) {
-	       AudioInputStream audio = speech_synth.generateAudio(speech_text);
-	       audio_player = new AudioPlayer(audio);
-	       audio_player.start();
-	       if (wait_for) waitFor();
-	     }
-	  }
+         waitFor();
+         if (!ctx.checkMouse()) return;
+         if (speech_text != null) {
+            if (!speakNative()) {
+               AudioInputStream audio = speech_synth.generateAudio(speech_text);
+               audio_player = new AudioPlayer(audio);
+               audio_player.start();
+               if (wait_for) waitFor();
+             }
+          }
        }
       catch (Exception e) {
-	 throw new BhelpException("Problem with speech",e);
+         throw new BhelpException("Problem with speech",e);
        }
     }
 
    private boolean speakNative() {
-      if (native_command == null) return false;
+      if (native_command == null || native_command.isEmpty()) return false;
       String txt = speech_text;
    // txt = speech_text.replace(".",", ");
-
+   
       txt = txt.replace("\n"," ");
       txt = txt.replace("\t"," ");
       for (int i = 0; i < 10;  ++i) {
-	 txt = txt.replace("  "," ");
+         txt = txt.replace("  "," ");
        }
       String cmd = native_command.replace("@@@",txt);
       BoardLog.logD("BHELP","Speak command: " + cmd);
       try {
-	 IvyExec exec = new IvyExec(cmd);
-	 if (wait_for) {
-	    int sts = exec.waitFor();
-	    if (sts != 0) return false;
-	  }
+         IvyExec exec = new IvyExec(cmd);
+         if (wait_for) {
+            int sts = exec.waitFor();
+            if (sts != 0) return false;
+          }
        }
       catch (IOException e) {
-	 return false;
+         return false;
        }
       return true;
     }
@@ -1037,11 +1038,11 @@ private static class MarySpeechAction extends BhelpAction {
    private void waitFor() throws Exception {
       AudioPlayer ap = audio_player;
       if (ap != null) {
-	 try {
-	    audio_player.join();
-	  }
-	 catch (InterruptedException e) { }
-	 audio_player = null;
+         try {
+            audio_player.join();
+          }
+         catch (InterruptedException e) { }
+         audio_player = null;
        }
     }
 

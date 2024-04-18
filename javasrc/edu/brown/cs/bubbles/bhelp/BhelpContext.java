@@ -136,8 +136,7 @@ boolean checkMouse()
             cp.x += ssz.width;
           }
        }
-      System.err.println("POINT " + pi.getLocation() + " " + cp);
-      // BoardLog.logD("BHELP","MOUSE RESULT " + cp);
+      // BoardLog.logD("BHELP","MOUSE RESULT " + pi.getLocation() + " " + cp);
     }
 
    int diff = Math.abs(cp.x - current_mouse.x) + Math.abs(cp.y - current_mouse.y);
