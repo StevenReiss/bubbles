@@ -101,6 +101,8 @@ BddtBubbleManager(BddtLaunchControl blc)
 BudaBubble createExecBubble(BumpThread bt)
 {
    boolean godown = bddt_properties.getBoolean("Bddt.grow.down");
+   
+   BoardLog.logD("BDDT","Start to create execution bubble for " + bt.getId());
 
    BumpThreadStack stk = bt.getStack();
    if (stk == null) return null;
@@ -150,6 +152,10 @@ BudaBubble createExecBubble(BumpThread bt)
        }
     }
 
+   if (bb == null) {
+      BoardLog.logD("BDDT","No bubble found for stopping point");
+    }
+   
    return bb;
 }
 

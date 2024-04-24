@@ -492,6 +492,20 @@ private class ThreadHandler implements BumpRunEventHandler
       TableUpdater tup = new TableUpdater(evt);
       SwingUtilities.invokeLater(tup);
     }
+   
+   @Override public void handleProcessEvent(BumpRunEvent evt) {
+      BumpProcess bp = evt.getProcess();
+      if (launch_control != null && launch_control.getProcess() == bp &&
+            evt.getEventType() == BumpRunEventType.PROCESS_ADD) {
+         TableUpdater tup = new TableUpdater(evt);
+         SwingUtilities.invokeLater(tup);
+       }
+      else if (launch_control != null && launch_control.getProcess() == null &&
+            evt.getEventType() == BumpRunEventType.PROCESS_ADD) {
+         TableUpdater tup = new TableUpdater(evt);
+         SwingUtilities.invokeLater(tup);
+        }
+    }
 
 }	// end of inner class ThreadHandler
 
@@ -513,13 +527,13 @@ private class TableUpdater implements Runnable {
             bt = run_event.getThread();
             if (bt != null) {
                if (!thread_set.add(bt)) {
-        	  // BoardLog.logD("BDDT","THREAD ALREADY IN THREADSET " + bt.getId());
-        	  return;
-               }
+                  // BoardLog.logD("BDDT","THREAD ALREADY IN THREADSET " + bt.getId());
+                  return;
+                }
                synchronized (bump_threads) {
-        	  bump_threads.clear();
-        	  bump_threads.addAll(thread_set);
-        	}
+                  bump_threads.clear();
+                  bump_threads.addAll(thread_set);
+                }
              }
             break;
          case THREAD_REMOVE :
@@ -527,8 +541,8 @@ private class TableUpdater implements Runnable {
             if (bt != null) {
                thread_set.remove(bt);
                synchronized (bump_threads) {
-        	  bump_threads.remove(bt);
-        	}
+                  bump_threads.remove(bt);
+                }
              }
             break;
          case THREAD_CHANGE :
@@ -539,11 +553,17 @@ private class TableUpdater implements Runnable {
          case THREAD_TRACE :
          case THREAD_HISTORY :
             return;
+         case PROCESS_ADD :
+            thread_set.clear();
+            synchronized (bump_threads) {
+               bump_threads.clear();
+             }
+            break;
          default:
             break;
        }
       threads_model.fireTableDataChanged();
-    }
+   }
 
 }	// end of inner class TableUpdater
 

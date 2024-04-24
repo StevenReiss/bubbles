@@ -468,26 +468,26 @@ private class PlayAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    BoardMetrics.noteCommand("BDDT","StartDebug");
-	    BoardLog.logD("BDDT","PLAY ACTION " + launch_state);
-	    setProcess(null);
-	    setLaunchState(LaunchState.STARTING);
-	    bubble_manager.restart();
-	    BoardThreadPool.start(new StartDebug());
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	    break;
-	 case PAUSED :
-	 case PARTIAL_PAUSE :
-	    if (cur_process != null) {
-	       BoardMetrics.noteCommand("BDDT","ResumeDebug");
-	       waitForFreeze();
-	       bump_client.resume(cur_process);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            BoardMetrics.noteCommand("BDDT","StartDebug");
+            BoardLog.logD("BDDT","PLAY ACTION " + launch_state);
+            setProcess(null);
+            setLaunchState(LaunchState.STARTING);
+            bubble_manager.restart();
+            BoardThreadPool.start(new StartDebug());
+            break;
+         case STARTING :
+         case RUNNING :
+            break;
+         case PAUSED :
+         case PARTIAL_PAUSE :
+            if (cur_process != null) {
+               BoardMetrics.noteCommand("BDDT","ResumeDebug");
+               waitForFreeze();
+               bump_client.resume(cur_process);
+             }
+            break;
        }
     }
 
@@ -1099,12 +1099,12 @@ private class RunEventHandler implements BumpRunEventHandler {
                case STEP_INTO :
                case STEP_OVER :
                case STEP_RETURN :
-        	  if (ost != null && ost.isStopped() && nst.isStopped()) {
-        	     // might not get a thread running event on a step request
-        	     ost = ost.getRunState();
-        	     handleThreadStateChange(bt,ost);
-        	   }
-        	  break;
+                  if (ost != null && ost.isStopped() && nst.isStopped()) {
+                     // might not get a thread running event on a step request
+                     ost = ost.getRunState();
+                     handleThreadStateChange(bt,ost);
+                   }
+                  break;
              }
             if (nst != ost) {
                handleThreadStateChange(bt,ost);
@@ -1126,7 +1126,7 @@ private class RunEventHandler implements BumpRunEventHandler {
          default:
             break;
        }
-   
+      
       int tct = thread_states.size();
       int rct = 0;
       for (Map.Entry<BumpThread,BumpThreadState> ent : thread_states.entrySet()) {
@@ -1138,7 +1138,7 @@ private class RunEventHandler implements BumpRunEventHandler {
       else if (rct == 0) setLaunchState(LaunchState.PAUSED);
       else if (rct == tct) setLaunchState(LaunchState.RUNNING);
       else setLaunchState(LaunchState.PARTIAL_PAUSE,rct,tct);
-    }
+   }
 
 }	// end of inner class RunEventHandler
 
@@ -1158,6 +1158,9 @@ private void handleThreadStateChange(BumpThread bt,BumpThreadState ost)
       if (autoCreateBubble(bt)) {
 	 CreateBubble cb = new CreateBubble(bt);
 	 SwingUtilities.invokeLater(cb);
+       }
+      else {
+         BoardLog.logD("BDDT","NO Need to create bubble based on thread state and stack");
        }
     }
    else if (!bt.getThreadState().isStopped()) {
