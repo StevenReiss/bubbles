@@ -216,7 +216,7 @@ private void checkNames()
 
 private synchronized void setFragmentName(String name,boolean dirty)
 {
-   if (name == null) return;
+   if (name == null || name.isEmpty()) return;
 
    String nodollarname;
    if (fragment_name != null) nodollarname = fragment_name.replaceAll("[$]", ".");
