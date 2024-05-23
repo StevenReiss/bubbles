@@ -187,14 +187,14 @@ private class DefaultIndenter {
    DefaultIndenter(int pos,boolean split) {
       current_line = bale_document.findLineNumber(pos);
       if (split) {
-	 split_line = current_line;
-	 split_offset = pos;
+         split_line = current_line;
+         split_offset = pos;
        }
       else {
-	 split_line = -1;
-	 split_offset = -1;
+         split_line = -1;
+         split_offset = -1;
       }
-
+   
       line_length = 0;
       last_sig = -1;
       nest_level = 0;
@@ -215,6 +215,12 @@ private class DefaultIndenter {
    private String getLine() {
       int lno = current_line;
       int soffset = bale_document.findLineOffset(current_line);
+      if (soffset < 0) {
+         line_text = "";
+         line_length = 0;
+         return null;
+       }
+      
       int eoffset = bale_document.findLineOffset(current_line + 1) - 1;
       if (split_line >= 0) {
          if (lno > split_line) {
@@ -344,7 +350,7 @@ private class DefaultIndenter {
             --current_line;
             fct_flag = false;
             if (current_line < 0) break loop;
-            getLine();
+            if (getLine() == null) break loop;
             if (getChar(0) == '#') x = 0;
             else {
                for (x = 0; x < line_length; ++x) {

@@ -33,9 +33,10 @@
 
    <target name='compile' depends='init'>
       <javac srcdir='.' destdir='${BUBBLES}/java' debug='on' deprecation='on'
-		source='10' target='10'
+		source='10' target='10' listfiles='TRUE'
 		includeantruntime='false' >
 	 <classpath refid='bubbles.classpath' />
+	 <compilerarg value="-proc:none" />
       </javac>
    </target>
 

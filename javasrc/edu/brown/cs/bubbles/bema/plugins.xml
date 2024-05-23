@@ -24,7 +24,7 @@
 
   <PLUGIN NAME="ROSE"
 	  DESCRIPTION="Quick Repair of Run Time Bugs for Java"
-	  URL="https://www.cs.brown.edu/people/spr/bubbles/dropins/rose.jar" >
+	  URL="https://www.cs.brown.edu/people/spr/bubbles/dropins/rose.jar" >         f
      <RESOURCE>Rose.props</RESOURCE>
      <RESOURCE>rose.palette</RESOURCE>
      <RESOURCE>images/rose.png</RESOURCE>
