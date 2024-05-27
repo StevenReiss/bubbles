@@ -1266,6 +1266,9 @@ private class ArrayValueNode extends ValueNode {
    @Override public boolean getAllowsChildren() { return for_value.hasContents(); }
    @Override public Object getValue() {
       String typ = for_value.getType();
+      if (typ == null) {
+         typ = "<ANY>[]";
+       }
       int idx = typ.lastIndexOf("[]");
       return typ.substring(0,idx) + "[" + for_value.getLength() + "] " + for_value.getValue();
    }
