@@ -869,6 +869,9 @@ static Reader findTemplate(String id,BuenoProperties props)
    rslt = checkTemplateForProject("DEFAULT",id);
    if (rslt != null) return rslt;
    
+   rslt = checkTemplateForLanguage(id);
+   if (rslt != null) return rslt;
+  
    // else use default template
    String pnm = "templates/" + id + ".template";
    InputStream ins = BoardProperties.getResourceFile(pnm);
@@ -888,6 +891,18 @@ private static InputStreamReader checkTemplateForProject(String prj,String id)
    xnm = "templates/" + prj.toLowerCase() + "/" + id + ".template";
    ins = BoardProperties.getResourceFile(xnm);
    if (ins != null) return new InputStreamReader(ins);   
+   
+   return null;
+}
+
+
+private static InputStreamReader checkTemplateForLanguage(String id) 
+{
+   String lang = BoardSetup.getSetup().getLanguage().getName();
+   
+   String xnm = "templates/" + id + "_" + lang + ".template";
+   InputStream ins = BoardProperties.getResourceFile(xnm);
+   if (ins != null) return new InputStreamReader(ins);
    
    return null;
 }

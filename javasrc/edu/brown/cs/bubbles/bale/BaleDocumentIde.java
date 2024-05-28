@@ -46,6 +46,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.bubbles.bump.BumpException;
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.file.IvyFormat;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
@@ -255,6 +256,13 @@ private void setFile(String proj,File file)
    if (proj == null && file != null) {
       BudaRoot br = BaleFactory.getFactory().getBudaRoot();
       proj = br.findProjectForFile(file);
+      if (proj == null) {
+         File f1 = IvyFile.getCanonical(file);
+         if (!f1.equals(file)) {
+            proj = br.findProjectForFile(f1);
+            if (proj != null) file = f1;
+          }
+       }
     }
    if (proj == null && file != null) {
       BoardLog.logX("BALE","Attempt to open file outside of project " + file);

@@ -468,7 +468,7 @@ String BOARD_RESOURCE_CHECK  = "resources/Bale.props";    // check to see if usi
  **/
 
 String [] BOARD_RESOURCE_PROPS =  new String [] {
-   "Bale.x86.props", "Bale.props",
+   "Bale.x86.props", "Bale.props", "Bale.dart.props",
    "Bema.props", "Beam.props",
    "Bgta.props", "Bass.props", "Bted.props",
    "Board.x86.props", "Board.props",
