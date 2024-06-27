@@ -490,6 +490,24 @@ private class HelpMouser extends MouseAdapter {
 {
    ProblemAnnot pa = problem_annotations.remove(bp);
    if (pa != null) annot_area.removeAnnotation(pa);
+   else {
+      BoardLog.logD("BALE","Unable to find problem to remove " + bp);
+      List<BumpProblem> rem = new ArrayList<>();
+      for (BumpProblem bp1 : problem_annotations.keySet()) {
+         if (bp1.getFile().equals(bp.getFile()) &&
+               bp1.getLine() == bp.getLine()) {
+            BoardLog.logD("BALE","Matching problem " + bp1 + " " +
+                  bp1.getProblemId() + " " + bp.getProblemId());
+            if (bp1.getMessage().equals(bp.getMessage())) {
+               rem.add(bp1);
+             }
+          }
+       }
+      for (BumpProblem bp2 : rem) {
+         ProblemAnnot pa2 = problem_annotations.remove(bp2);
+         if (pa2 != null) annot_area.removeAnnotation(pa2);
+       }
+    }
 }
 
 @Override public void handleClearProblems()

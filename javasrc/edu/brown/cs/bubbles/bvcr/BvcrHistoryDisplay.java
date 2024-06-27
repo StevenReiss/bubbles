@@ -933,19 +933,19 @@ private class HistoryGraph extends JPanel implements HistoryCallback {
    
    HistoryGraph(HistoryGather hg) {
       super(new BorderLayout());
-
+   
       // setMinimumSize(new Dimension(400,150));
       setPreferredSize(new Dimension(400,150));
-
+   
       PetalUndoSupport.getSupport().blockCommands();
       petal_model = new Model();
       petal_editor = new PetalEditor(petal_model);
       layout_method = new PetalLevelLayout(petal_editor);
-
+   
       JScrollPane jsp = new JScrollPane(petal_editor);
       petal_editor.addZoomWheeler();
       add(jsp,BorderLayout.CENTER);
-
+   
       hg.addCallback(this);
     }
 
