@@ -145,6 +145,7 @@ String getImportCandidate(BfixCorrector corr,BumpProblem bp)
    int eloff = elt.getEndOffset();
    if (eoff + 1 != eloff && eoff != eloff) return null;
    if (corr.getEndOffset() > 0 && eloff + 1 >= corr.getEndOffset()) return null;
+   if (eloff-elstart <= 3) return null;
 
    String txt = document.getWindowText(elstart,eloff-elstart);
    return txt;
