@@ -427,10 +427,10 @@ private class EclipseHandler implements MintHandler {
                Element re = IvyXml.getChild(de,"RESOURCE");
                String rtyp = IvyXml.getAttrString(re,"TYPE");
                if (rtyp != null && rtyp.equals("FILE")) {
-        	  String fp = IvyXml.getAttrString(re,"LOCATION");
-        	  System.err.println("BATT: Note " + fp + " CHANGED");
-        	  setFileState(fp,FileState.CHANGED);
-        	}
+                  String fp = IvyXml.getAttrString(re,"LOCATION");
+                  System.err.println("BATT: Note " + fp + " CHANGED");
+                  setFileState(fp,FileState.CHANGED);
+                }
              }
             updateTestState();
           }

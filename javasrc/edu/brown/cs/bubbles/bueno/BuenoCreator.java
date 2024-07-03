@@ -208,7 +208,7 @@ protected void createModule(BuenoLocation where,BuenoProperties props)
 
 /********************************************************************************/
 /*                                                                              */
-/*      Create JS file                                                          */
+/*      Create file                                                             */
 /*                                                                              */
 /********************************************************************************/
 
@@ -216,9 +216,14 @@ protected void createFile(BuenoLocation where,BuenoProperties props)
 {
    StringBuffer buf = new StringBuffer();
    
-   setupJSModule(buf,props);
+   setupModule(buf,props);
    
    String nm = props.getStringProperty(BuenoKey.KEY_NAME);
+   File f = where.getFile();
+   if (f != null) {
+      File f1 = new File(f,nm);
+      nm = f1.getPath();
+    }
    
    BumpClient bc = BumpClient.getBump();
    bc.saveAll();
@@ -229,16 +234,41 @@ protected void createFile(BuenoLocation where,BuenoProperties props)
 
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Create directory and initial file                                       */
+/*                                                                              */
+/********************************************************************************/
+
+protected void createDirectory(BuenoLocation where,BuenoProperties props)
+{
+   BumpClient bc = BumpClient.getBump();
+   
+   String dir = props.getStringProperty(BuenoKey.KEY_DIRECTORY);
+   File f = where.getFile();
+   if (f != null) {
+      File f1 = new File(f,dir);
+      dir = f1.getPath();
+    }
+   
+   File dirf = bc.createNewPackage(where.getProject(),dir,false);
+   if (dirf == null) return;
+   
+   where.setFile(dirf);
+}
+
+
+
+
+
+
 protected void setupModule(StringBuffer buf,BuenoProperties props)
 {
    moduleText(buf,props);
 }
 
 
-protected void setupJSModule(StringBuffer buf,BuenoProperties props)
-{
-   moduleJSText(buf,props);
-}
+
 
 
 
@@ -710,21 +740,7 @@ protected void moduleText(StringBuffer buf,BuenoProperties props)
 }
 
 
-protected void moduleJSText(StringBuffer buf,BuenoProperties props)
-{
-   String cmmt = props.getStringProperty(BuenoKey.KEY_COMMENT);
-   if (props.getBooleanProperty(BuenoKey.KEY_ADD_COMMENT)) {
-      setupBlockComment(buf,props,cmmt);
-    }
-   
-   String [] imps = props.getImports();
-   if (imps != null && imps.length > 0) {
-      for (String s : imps) {
-	 buf.append(s + "\n");
-       }
-    }
-   buf.append("\n");
-}
+
 
 
 

@@ -50,7 +50,8 @@ public interface BuenoConstants {
 enum BuenoType {
    NEW_PACKAGE,
    NEW_MODULE,			// python module
-   NEW_FILE,			// JS file/module
+   NEW_FILE,			// JS/Dart file/module
+   NEW_DIRECTORY,               // new subdirectory for dart
    
    NEW_CLASS,
    NEW_INTERFACE,
@@ -109,6 +110,7 @@ enum BuenoKey {
    KEY_FIELD_TYPE,		// String;
    KEY_AUTHOR,			// String
    KEY_FILE,			// String
+   KEY_DIRECTORY,               // String
    KEY_FILETAIL,		// String
    KEY_PROJECT, 		// String
    KEY_RETURN_STMT,		// String

@@ -233,9 +233,9 @@ private class EclipseHandler implements MintHandler {
             for (Element re : IvyXml.children(e,"DELTA")) {
                String rtyp = IvyXml.getAttrString(re,"TYPE");
                if (rtyp != null && rtyp.equals("FILE")) {
-        	  String proj = IvyXml.getAttrString(re,"PROJECT");
-        	  project_manager.invalidate(proj);
-        	}
+                  String proj = IvyXml.getAttrString(re,"PROJECT");
+                  project_manager.invalidate(proj);
+                }
              }
           }
          else if (cmd.equals("PING")) {

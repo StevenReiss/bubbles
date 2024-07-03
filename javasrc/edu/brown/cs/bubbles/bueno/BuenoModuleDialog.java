@@ -29,7 +29,7 @@ import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 
-public class BuenoJsModuleDialog extends BuenoAbstractDialog implements BuenoConstants
+public class BuenoModuleDialog extends BuenoAbstractDialog implements BuenoConstants
 {
 
 
@@ -40,7 +40,7 @@ public class BuenoJsModuleDialog extends BuenoAbstractDialog implements BuenoCon
 /*                                                                              */
 /********************************************************************************/
 
-public BuenoJsModuleDialog(BudaBubble source,Point locale,
+public BuenoModuleDialog(BudaBubble source,Point locale,
       BuenoProperties known,BuenoLocation insert,
       BuenoBubbleCreator newer)
 {

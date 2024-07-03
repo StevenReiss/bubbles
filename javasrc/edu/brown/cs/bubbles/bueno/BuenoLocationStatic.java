@@ -53,13 +53,14 @@ private boolean 	insert_after;
 
 
 
+
 /********************************************************************************/
 /*										*/
 /*	Constructors								*/
 /*										*/
 /********************************************************************************/
 
-BuenoLocationStatic(String proj,String nm,String ins,boolean after)
+BuenoLocationStatic(String proj,String file,String nm,String ins,boolean after)
 {
    BumpClient bcc = BumpClient.getBump();
 
@@ -98,6 +99,24 @@ BuenoLocationStatic(String proj,String nm,String ins,boolean after)
 	  }
 	 if (idx > 0) package_name = snm.substring(0,idx);
        }
+      else {
+         
+       }
+    }
+   else if (file != null) {
+      if (!file.isEmpty()) {
+         location_file = new File(file);
+       }
+    }
+   else {
+      int idx = proj.indexOf(":");
+      if (idx > 0) {
+         String sub = proj.substring(idx+1);
+         project_name = proj.substring(0,idx);
+         if (!sub.isEmpty()) {
+            location_file = new File(sub);
+          }
+       }
     }
 }
 
@@ -121,6 +140,11 @@ BuenoLocationStatic(String proj,String nm,String ins,boolean after)
    return location_file;
 }
 
+@Override public void setFile(File f)
+{
+   super.setFile(f);
+   location_file = f;
+}
 
 @Override public String getInsertAfter()
 {

@@ -234,7 +234,6 @@ public static long getLastActive()
 
 public static void noteCommand(String src,Object ... cmd)
 {
-
    BoardLog.logD("BOARD","COMMAND: " + src + ":" + Arrays.toString(cmd));
    if (the_metrics.collect_commands) {
       if (cmd.length == 0 || (cmd.length == 1 && cmd == null)) {

@@ -78,6 +78,19 @@ public String getInsertBefore() 		{ return null; }
 
 public String getInsertAtEnd()			{ return null; }
 
+public String getFileWhere()                   
+{
+   String rslt = "";
+   String proj = getProject();
+   if (proj != null) rslt = proj + ":";
+   File f = getFile();
+   if (f != null) {
+      if (f.isAbsolute()) rslt = f.getPath();
+      else rslt += f.getPath();
+    }
+   return rslt;
+}
+
 
 
 
@@ -114,7 +127,7 @@ public int getInsertionLength() 		{ return insert_length; }
 public String getTitle(BuenoType typ)
 {
    String ttl = null;
-
+   
    switch (typ) {
       case NEW_METHOD :
 	 ttl = "Create New Method " + getMemberWhere();
@@ -144,8 +157,11 @@ public String getTitle(BuenoType typ)
 	 ttl = "Create New Module in Project " + getProject();
 	 break;
       case NEW_FILE :
-	 ttl = "Create New File/Module in Project " + getProject();
+	 ttl = "Create New File/Module in " + getFileWhere();
 	 break;
+      case NEW_DIRECTORY :
+         ttl = "Create new Directory in " + getFileWhere();
+         break;
       default:
 	 break;
     }

@@ -340,6 +340,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
       case "EDITPROJECT" :
 	 project_manager.handleEditProject(proj,IvyXml.getChild(xml,"PROJECT"),xw);
 	 break;
+      case "CREATEDIRECTORY" :
       case "CREATEPACKAGE" :
 	 project_manager.handleCreatePackage(proj,IvyXml.getAttrString(xml,"NAME"),
 	       IvyXml.getAttrBool(xml,"FORCE"),xw);
@@ -347,6 +348,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws NobaseEx
       case "FINDPACKAGE" :
 	 project_manager.handleFindPackage(proj,IvyXml.getAttrString(xml,"NAME"),xw);
 	 break;
+      case "CREATEFILE" :
       case "CREATECLASS" :
 	 project_manager.handleNewModule(proj,IvyXml.getAttrString(xml,"NAME"),
 	       IvyXml.getAttrBool(xml,"FORCE"),

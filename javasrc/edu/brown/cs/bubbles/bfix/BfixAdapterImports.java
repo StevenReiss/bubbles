@@ -84,9 +84,9 @@ BfixAdapterImports()
       Element xml = BumpClient.getBump().getLanguageData();
       Element fxml = IvyXml.getChild(xml,"FIXES");
       for (Element cxml : IvyXml.children(fxml,"IMPORT")) {
-         if (IvyXml.getAttrBool(cxml,"IGNORE")) {
-            ignore_patterns.add(new BfixErrorPattern(cxml));
-          }
+	 if (IvyXml.getAttrBool(cxml,"IGNORE")) {
+	    ignore_patterns.add(new BfixErrorPattern(cxml));
+	  }
        }
     }
 }
@@ -133,7 +133,7 @@ String getImportCandidate(BfixCorrector corr,BumpProblem bp)
    int eoff = document.mapOffsetToJava(bp.getEnd());
    if (eoff == soff) {
       for (BfixErrorPattern pat : ignore_patterns) {
-         if (pat.testMatch(bp.getMessage())) return null;
+	 if (pat.testMatch(bp.getMessage())) return null;
        }
     }
 
@@ -145,9 +145,10 @@ String getImportCandidate(BfixCorrector corr,BumpProblem bp)
    int eloff = elt.getEndOffset();
    if (eoff + 1 != eloff && eoff != eloff) return null;
    if (corr.getEndOffset() > 0 && eloff + 1 >= corr.getEndOffset()) return null;
-   if (eloff-elstart <= 3) return null;
 
    String txt = document.getWindowText(elstart,eloff-elstart);
+   if (txt.length() <= 2) return null;
+
    return txt;
 }
 
@@ -372,50 +373,50 @@ private static class ImportChecker {
       String pat = "." + nm;
       Set<String> match = new HashSet<String>();
       for (String s : project_classes) {
-         if (s.endsWith(pat) || s.equals(nm)) {
-            match.add(s.replace("$","."));
-          }
+	 if (s.endsWith(pat) || s.equals(nm)) {
+	    match.add(s.replace("$","."));
+	  }
        }
       if (match.size() > 0) return match;
-   
+
       Set<String> dmatch = new HashSet<String>();
       Set<String> amatch = new HashSet<String>();
       Set<String> imatch = new HashSet<String>();
-   
+
       BumpClient bc = BumpClient.getBump();
       List<BumpLocation> typlocs = bc.findAllTypes(nm);
       if (typlocs == null) return null;
       if (typlocs.size() == 0) {
-         typlocs = bc.findSystemDefinitions(proj,file,offset);
+	 typlocs = bc.findSystemDefinitions(proj,file,offset);
        }
       if (typlocs != null) {
-         for (BumpLocation bl : typlocs) {
-            String tnm = bl.getSymbolName();
-            int idx = tnm.indexOf("<");
-            if (idx > 0) tnm = tnm.substring(0,idx).trim();
-            if (explicit_imports.contains(tnm)) {
-               match.add(tnm);
-             }
-            for (String s : demand_imports) {
-               String dimp = s + "." + nm;
-               if (dimp.equals(tnm)) {
-        	  dmatch.add(tnm);
-        	}
-             }
-            for (String s : implicit_imports) {
-               String dimp = s + "." + nm;
-               if (dimp.equals(tnm)) {
-        	  imatch.add(tnm);
-        	}
-             }
-            if (!tnm.contains("internal")) amatch.add(tnm);
-          }
+	 for (BumpLocation bl : typlocs) {
+	    String tnm = bl.getSymbolName();
+	    int idx = tnm.indexOf("<");
+	    if (idx > 0) tnm = tnm.substring(0,idx).trim();
+	    if (explicit_imports.contains(tnm)) {
+	       match.add(tnm);
+	     }
+	    for (String s : demand_imports) {
+	       String dimp = s + "." + nm;
+	       if (dimp.equals(tnm)) {
+		  dmatch.add(tnm);
+		}
+	     }
+	    for (String s : implicit_imports) {
+	       String dimp = s + "." + nm;
+	       if (dimp.equals(tnm)) {
+		  imatch.add(tnm);
+		}
+	     }
+	    if (!tnm.contains("internal")) amatch.add(tnm);
+	  }
        }
       if (match.size() > 0) return match;
       if (dmatch.size() > 0) return dmatch;
       if (imatch.size() > 0) return imatch;
       if (amatch.size() > 0) return amatch;
-   
+
       return null;
     }
 

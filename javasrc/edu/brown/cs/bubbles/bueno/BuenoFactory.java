@@ -188,7 +188,13 @@ public BuenoLocation createLocation(BumpLocation l,boolean before)
 
 public BuenoLocation createLocation(String proj,String pkgcls,String insert,boolean after)
 {
-   return new BuenoLocationStatic(proj,pkgcls,insert,after);
+   return new BuenoLocationStatic(proj,null,pkgcls,insert,after);
+}
+
+
+public BuenoLocation createFileLocation(String proj,String file)
+{
+   return new BuenoLocationStatic(proj,file,null,null,true);
 }
 
 
@@ -285,6 +291,15 @@ public BudaBubble createProjectDialog(String proj)
 }
 
 
+public void createDirectoryDialog(BudaBubble src,Point loc,BuenoType type,
+      BuenoProperties known,
+      BuenoLocation insert,String lbl,BuenoBubbleCreator newer)
+{
+   BuenoDirectoryDialog dd = new BuenoDirectoryDialog(src,loc,known,insert,newer);
+   if (lbl != null) dd.setLabel(lbl);
+   dd.showDialog();
+}
+
 
 public boolean useSeparateTypeButtons()
 {
@@ -328,6 +343,9 @@ public void createNew(BuenoType what,BuenoLocation where,BuenoProperties props)
       case NEW_FILE :
 	 cur_creator.createFile(where,props);
 	 break;
+      case NEW_DIRECTORY :
+         cur_creator.createDirectory(where,props);
+         break;
       case NEW_TYPE :
       case NEW_CLASS :
       case NEW_INTERFACE :

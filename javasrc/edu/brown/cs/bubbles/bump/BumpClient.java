@@ -3350,6 +3350,12 @@ public File createNewClass(String proj,String name,boolean force,String cnts)
  *	Create a new package with the given name
  **/
 
+public File createNewDirectory(String proj,String dir,boolean force)
+{
+   return createNewPackage(proj,dir,force);
+}
+
+   
 public File createNewPackage(String proj,String pkg,boolean force)
 {
    waitForIDE();

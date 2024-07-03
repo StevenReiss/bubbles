@@ -543,6 +543,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrBool(xml,"FULL"),
 	       IvyXml.getAttrBool(xml,"REFRESH"),xw);
 	 break;
+      case "CREATEDIRECTORY" :
       case "CREATEPACKAGE" :
 	 bedrock_project.createPackage(proj,IvyXml.getAttrString(xml,"NAME"),
 	       IvyXml.getAttrBool(xml,"FORCE",false),xw);
@@ -606,6 +607,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrInt(xml,"START"),
 	       IvyXml.getAttrInt(xml,"END"),xw);
 	 break;
+      case "CREATEFILE" :
       case "CREATECLASS" :
 	 bedrock_java.handleNewClass(proj,IvyXml.getAttrString(xml,"NAME"),
 	       IvyXml.getAttrBool(xml,"FORCE",false),

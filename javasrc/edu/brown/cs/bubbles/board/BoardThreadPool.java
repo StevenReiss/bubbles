@@ -49,7 +49,7 @@ public class BoardThreadPool extends ThreadPoolExecutor
 /*										*/
 /********************************************************************************/
 
-private static BoardThreadPool	the_pool = null;
+private static BoardThreadPool	the_pool = new BoardThreadPool();
 private static int		thread_counter = 0;
 
 
@@ -68,16 +68,15 @@ private static int		thread_counter = 0;
 public static void start(Runnable r)
 {
    if (r != null) {
-      BoardThreadPool pool = getPool();
       for ( ; ; ) {
          try {
-            pool.execute(r);
+            the_pool.execute(r);
             break;
           }
          catch (RejectedExecutionException e) { }
-         synchronized (pool) {
+         synchronized (the_pool) {
             try {
-               pool.wait(1000);
+               the_pool.wait(100);
              }
             catch (InterruptedException e) { }
           }   
@@ -94,17 +93,9 @@ public static void start(Runnable r)
 
 public static void finish(Runnable r)
 {
-   if (r != null) getPool().remove(r);
+   if (r != null) the_pool.remove(r);
 }
 
-
-private static synchronized BoardThreadPool getPool()
-{
-   if (the_pool == null) {
-      the_pool = new BoardThreadPool();
-    }
-   return the_pool;
-}
 
 
 

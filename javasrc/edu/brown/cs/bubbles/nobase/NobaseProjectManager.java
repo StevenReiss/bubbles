@@ -211,7 +211,7 @@ void handleEditProject(String name,Element pxml,IvyXmlWriter xw) throws NobaseEx
 
 /********************************************************************************/
 /*										*/
-/*	Handle CREATEPACKAGE command						*/
+/*	Handle CREATEPACKAGE/CREATEDIRECTORY command			        */
 /*										*/
 /********************************************************************************/
 
@@ -245,7 +245,7 @@ throws NobaseException
 
 /********************************************************************************/
 /*										*/
-/*	Handle CREATECLASS (new module) 					*/
+/*	Handle CREATECLASS/CREATEFILE (new module) 				*/
 /*										*/
 /********************************************************************************/
 

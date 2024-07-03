@@ -629,7 +629,8 @@ String [] BOARD_TEMPLATES = new String [] {
    "scratch.template",
    "type.template",
    "interface.template",
-   "modulejs.template",
+   "module_js.template",
+   "module_dart.template",
 };
 
 

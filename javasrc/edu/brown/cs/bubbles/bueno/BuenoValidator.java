@@ -63,6 +63,8 @@ private BuenoLocation		insertion_point;
 
 private static Pattern package_pattern = null;
 private static Pattern module_pattern = null;
+private static Pattern file_pattern = null;
+private static String file_extension = null;
 
 
 
@@ -82,16 +84,23 @@ public BuenoValidator(BuenoValidatorCallback cb,BuenoProperties known,
    if (package_pattern == null) {
       Element xml = BumpClient.getBump().getLanguageData();
       Element pdata = IvyXml.getChild(xml,"PROJECT");
+      file_extension = IvyXml.getAttrString(pdata,"EXTENSION");
+      if (file_extension == null) file_extension = IvyXml.getAttrString(pdata,"LANGUAGE").toLowerCase();
       Element vdata = IvyXml.getChild(pdata,"VALIDATION");
       String pat = IvyXml.getTextElement(vdata,"PACKAGE");
       if (pat == null) pat = "[A-Za-z_]\\w*(\\.[A-Za-z_]\\w*)*";
       else pat = pat.trim();
       package_pattern = Pattern.compile(pat);
       pat = IvyXml.getTextElement(vdata,"MODULE");
-      if (pat == null){
+      if (pat == null) {
          pat = "[A-Za-z_]\\w*";
        }
       module_pattern = Pattern.compile(pat);
+      String pat1 = IvyXml.getTextElement(vdata,"FILE");
+      if (pat1 == null) {
+         pat1 = pat + "\\." + file_extension;
+       }
+      file_pattern = Pattern.compile(pat1);
     }
 
    if (known == null) known = new BuenoProperties();
@@ -381,7 +390,10 @@ private class ParseCheck implements Runnable {
                   fg = checkModuleParsing();
                   break;
                case NEW_FILE :
-                  fg = checkModuleParsing();
+                  fg = checkFileParsing();
+                  break;
+               case NEW_DIRECTORY :
+                  fg = checkDirectoryParsing();
                   break;
              }
           }
@@ -547,6 +559,29 @@ private boolean checkModuleParsing()
    if (!m.matches()) return false;
 
    return true;
+}
+
+
+
+private boolean checkFileParsing()
+{
+   String mod = property_set.getStringProperty(BuenoKey.KEY_NAME);
+   if (mod == null || mod.length() == 0) return false;
+   Matcher m = file_pattern.matcher(mod);
+   if (!m.matches()) return false;
+   
+   return true;
+}
+
+
+private boolean checkDirectoryParsing()
+{
+   String dir = property_set.getStringProperty(BuenoKey.KEY_DIRECTORY);
+   if (dir == null || dir.isEmpty()) return false;
+   Matcher m = package_pattern.matcher(dir);
+   if (!m.matches()) return false;
+   
+   return checkFileParsing();
 }
 
 

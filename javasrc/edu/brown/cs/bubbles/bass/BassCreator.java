@@ -43,7 +43,7 @@ import edu.brown.cs.bubbles.bueno.BuenoConstants;
 import edu.brown.cs.bubbles.bueno.BuenoFactory;
 import edu.brown.cs.bubbles.bueno.BuenoFieldDialog;
 import edu.brown.cs.bubbles.bueno.BuenoInnerClassDialog;
-import edu.brown.cs.bubbles.bueno.BuenoJsModuleDialog;
+import edu.brown.cs.bubbles.bueno.BuenoModuleDialog;
 import edu.brown.cs.bubbles.bueno.BuenoLocation;
 import edu.brown.cs.bubbles.bueno.BuenoProperties;
 import edu.brown.cs.bubbles.bump.BumpClient;
@@ -135,12 +135,40 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
    List<BuenoLocation> memblocs = new ArrayList<BuenoLocation>();
    BuenoLocation clsloc = null;
    
-   if (forname != null && forname.getNameType() == BassNameType.PROJECT) {
+   boolean isproj = false;
+   if (forname != null && forname.getNameType() == BassNameType.PROJECT) isproj = true;
+   else if (forname == null && fullname != null && 
+         fullname.contains(":") &&
+         (fullname.endsWith(":") || fullname.endsWith("/")) && 
+         !fullname.contains(".") && !fullname.contains("^^")) 
+      isproj= true;
+   
+   if (isproj) {
+      int pidx = fullname.indexOf(":");
+      String pname = fullname.substring(0,pidx);
+      String body = fullname.substring(pidx+1);
+      body = body.replace("/.","/");
+      body = body.replace("^^",".");
+      if (body.contains("/")) {
+         int sidx = body.lastIndexOf("/");
+         body = body.substring(0,sidx+1);
+       }
+      
       bdata = getButtonData("NEWPACKAGE");
       if (bdata != null) {
          BuenoLocation dfltloc = BuenoFactory.getFactory().createLocation(fullname,
                null,null,true);
          actions.put("NEWPACKAGE",new NewPackageAction(dfltloc));
+       }
+      bdata = getButtonData("NEWDIRECTORY");
+      if (bdata != null) {
+         BuenoLocation dfltloc = BuenoFactory.getFactory().createFileLocation(pname,body);
+         actions.put("NEWDIRECTORY",new NewDirectoryAction(dfltloc));
+       }     
+      bdata = getButtonData("NEWFILE");
+      if (forname == null && bdata != null) {
+         BuenoLocation dfltloc = BuenoFactory.getFactory().createFileLocation(pname,body);
+         actions.put("NEWFILE",new NewFileAction(dfltloc));
        }
       bdata = getButtonData("DELETEPROJECT");
       if (bdata != null) {
@@ -295,7 +323,7 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
          for (BuenoLocation bl : memblocs) {
             acts.add(new NewFieldAction(bl));
           }
-         actions.put("NEWMETHOD",acts);
+         actions.put("NEWFIELD",acts);
        }
       bdata = getButtonData("NEWINNERTYPE");
       if (bdata != null) {
@@ -348,12 +376,21 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
          else if (v instanceof Collection<?>) {
             Collection<?> itms = (Collection<?>) v;
             String mname = IvyXml.getAttrString(btn,"MENU");
-            JMenu m1 = new JMenu(mname);
-            for (Object o : itms) {
-               Action act = (Action) o;
-               m1.add(act);
+            if (mname == null) mname = IvyXml.getAttrString(btn,"LABEL");
+            if (mname != null) {
+               JMenu m1 = new JMenu(mname);
+               for (Object o : itms) {
+                  Action act = (Action) o;
+                  m1.add(act);
+                }
+               menu.add(m1);
              }
-            menu.add(m1);
+            else {
+               for (Object o : itms) {
+                  Action act = (Action) o;
+                  menu.add(act);
+                }
+             }
           }
        }
     }
@@ -561,6 +598,30 @@ private class NewPackageAction extends NewAction implements BuenoConstants.Bueno
 
 
 
+private class NewDirectoryAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
+   
+   private final static long serialVersionUID = 1;
+   
+   NewDirectoryAction(BuenoLocation loc) {
+      super(BuenoType.NEW_DIRECTORY,loc);
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      BoardMetrics.noteCommand("BASS","NewDirectory");
+      BudaRoot.hideSearchBubble(e);
+      BuenoFactory.getFactory().createDirectoryDialog(search_bubble,access_point,create_type,
+            property_set,for_location,null,this);
+    }
+   
+   @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
+      BudaBubble bb = BaleFactory.getFactory().createFileBubble(proj,null,name);
+      addNewBubble(bb,bba,p);
+    }
+   
+}	// end of inner class NewDirectoryAction
+
+
+
 
 
 
@@ -568,14 +629,14 @@ private class NewFileAction extends NewAction implements BuenoConstants.BuenoBub
 
    private final static long serialVersionUID = 1;
    
-   NewFileAction(BuenoLocation loc) {
+   NewFileAction(BuenoLocation loc) { 
       super(BuenoType.NEW_FILE,loc);
     }
    
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","NewModule");
       BudaRoot.hideSearchBubble(e);
-      BuenoJsModuleDialog bpd = new BuenoJsModuleDialog(search_bubble,access_point,
+      BuenoModuleDialog bpd = new BuenoModuleDialog(search_bubble,access_point,
             property_set,for_location,this);
       bpd.showDialog();
     }
