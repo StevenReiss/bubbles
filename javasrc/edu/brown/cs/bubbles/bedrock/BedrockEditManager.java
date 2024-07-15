@@ -708,7 +708,16 @@ void rename(String proj,String bid,String file,int start,int end,String name,Str
       refactor.setValidationContext(null);
 
       // this seems to reset files from disk (mutliple times)
-      sts = refactor.checkAllConditions(new NullProgressMonitor());
+      try {
+         sts = refactor.checkAllConditions(new NullProgressMonitor());
+       }
+      catch (Throwable e) {
+         BedrockPlugin.logE("Problem with refactoring",e);
+         xw.begin("FAILURE");
+	 xw.field("TYPE","CHECK");
+	 xw.end("FAILURE");
+         return;
+       }
       if (!sts.isOK()) {
 	 xw.begin("FAILURE");
 	 xw.field("TYPE","CHECK");

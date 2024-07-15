@@ -259,7 +259,7 @@ private class DefaultIndenter {
    }
 
    private char getChar(int pos) {
-      if (pos >= line_length) return 0;
+      if (pos >= line_length || pos < 0) return 0;
       return line_text.charAt(pos);
    }
 
