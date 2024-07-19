@@ -641,6 +641,7 @@ void setForceDefine()				{ force_define = true; }
 @Override public void endVisit(ListExpression n)
 {
    List<?> exprs = n.expressions();
+   if (exprs.isEmpty()) return;
    Expression e = (Expression) exprs.get(exprs.size()-1);
    NobaseValue nv = NobaseAst.getNobaseValue(e);
    setValue(n,nv);
