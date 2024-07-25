@@ -76,6 +76,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 class BaleFragmentEditor extends SwingGridPanel implements CaretListener, BaleConstants,
@@ -146,7 +147,7 @@ BaleFragmentEditor(String proj,File file,String name,BaleDocumentIde fdoc,BaleFr
    find_bar = new BaleFindReplaceBar(editor_pane,false);
    find_bar.getComponent().setVisible(false);
 
-   problem_annotations = new HashMap<>();
+   problem_annotations = new ConcurrentHashMap<>();
    breakpoint_annotations = new HashMap<>();
    document_annotations = new HashSet<>();
    Icon help = BoardImage.getIcon(BALE_CRUMB_HELP_ICON);

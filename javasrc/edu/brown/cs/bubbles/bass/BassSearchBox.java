@@ -1317,8 +1317,10 @@ private static class SearchBoxCellRenderer extends DefaultTreeCellRenderer imple
             else icn = new OverlayIcon(icn,i1);
           }
        }
-   
-      label.setIcon(icn);
+      
+      synchronized (label) {
+         label.setIcon(icn);
+       }
    
       return label;
     }

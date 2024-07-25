@@ -80,6 +80,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
 
@@ -461,18 +462,20 @@ private class DocLinker implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-	 try {
-	    URI u = e.getURL().toURI();
-	    String lbl = e.getDescription();
-	    createLinkBubble(lbl,u);
-	 }
-	 catch (URISyntaxException ex) { }
+         try {
+            URL url = e.getURL();
+            if (url == null) return;
+            URI u = url.toURI();
+            String lbl = e.getDescription();
+            createLinkBubble(lbl,u);
+         }
+         catch (URISyntaxException ex) { }
        }
       else if (e.getEventType() == HyperlinkEvent.EventType.ENTERED) {
-	 BudaCursorManager.setTemporaryCursor(desc_view, new Cursor(Cursor.HAND_CURSOR));
+         BudaCursorManager.setTemporaryCursor(desc_view, new Cursor(Cursor.HAND_CURSOR));
       }
       else if (e.getEventType() == HyperlinkEvent.EventType.EXITED) {
-	 BudaCursorManager.resetDefaults(desc_view);
+         BudaCursorManager.resetDefaults(desc_view);
       }
     }
 

@@ -329,12 +329,12 @@ private class DocLinker implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-	 try {
-	    URI u = e.getURL().toURI();
-	    String lbl = e.getDescription();
-	    for_panel.createLinkBubble(lbl,u);
-	 }
-	 catch (URISyntaxException ex) { }
+         try {
+            URI u = e.getURL().toURI();
+            String lbl = e.getDescription();
+            for_panel.createLinkBubble(lbl,u);
+         }
+         catch (URISyntaxException ex) { }
        }
     }
 
