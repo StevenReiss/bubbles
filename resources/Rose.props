@@ -35,6 +35,7 @@
 <entry key="Rose.no.autostart">fait bubbles ivy seede</entry>
 <entry key="Rose.chatgpt.host">https://XXXXXX</entry>
 <entry key="Rose.chatgpt.key">XXXXXX</entry>
+<entry key="Rose.use.chatgpt">true</entry>
 </properties>
 
 
