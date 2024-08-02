@@ -754,21 +754,21 @@ private class SocketClient {
    private char [] char_trailer;
    private byte [] byte_buffer;
 
+   @SuppressWarnings("resource")
    SocketClient() {
       output_stream = null;
       String eom = BANDAID_TRAILER + "\n";
       byte_buffer = new byte[65536];
       char_trailer = new char[eom.length()];
       eom.getChars(0,eom.length(),char_trailer,0);
-
+   
       try {
-	 @SuppressWarnings("resource")
-	 Socket cs = new Socket(host_name,port_number);
-	 output_stream = cs.getOutputStream();
-	 input_reader = new BufferedReader(new InputStreamReader(cs.getInputStream()));
+         Socket cs = new Socket(host_name,port_number);
+         output_stream = cs.getOutputStream();
+         input_reader = new BufferedReader(new InputStreamReader(cs.getInputStream()));
        }
       catch (Exception e) {
-	 System.err.println("BANDAID: No server connection: " + e.getMessage());
+         System.err.println("BANDAID: No server connection: " + e.getMessage());
        }
     }
 

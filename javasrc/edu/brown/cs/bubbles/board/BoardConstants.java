@@ -481,8 +481,7 @@ String [] BOARD_RESOURCE_PROPS =  new String [] {
    "Bandaid.props","Barr.props","Bass.props",
    "Bdoc.java.props","Bdoc.props",
    "Bhelp.props", "Bwiz.props", "Buss.props",
-   "Bfix.props",
-   "Brepair.props",
+   "Bfix.props", "Brepair.props"
 };
 
 
@@ -503,7 +502,7 @@ String [] BOARD_LIBRARY_FILES = new String [] {
    "joscar-protocol.jar",
    "bubblesasm.jar",
 // "wikitextcore.jar", "wikitexttrac.jar",
-   "mail.jar","json.jar", "jsoup.jar", "asm.jar",
+   "mail.jar","json.jar", "jsoup.jar", "asm.jar", "slf4j-api.jar",
 
    "derby.jar", "derbyclient.jar", "derbynet.jar", "mysql.jar", "postgresql.jar",
 };
@@ -525,7 +524,7 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
 *******************/
    "websocket.jar",
    "asm.jar",
-
+   "slf4j-api.jar",
 // "com.google.guava.jar",
 // "com.google.javascript.jar",
    "org.eclipse.core.commands.jar",
