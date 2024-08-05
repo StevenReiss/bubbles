@@ -8,7 +8,7 @@
 <entry key="Bsean.fait.threads">4</entry>
 <entry key="Bsean.fait.debug">false</entry>
 <entry key="Bsean.fait.trace">false</entry>
-<entry key="Bsean.fait.class.path">fait.jar:asm.jar:eclipsejar:junit.jar:ivy.jar</entry>
+<entry key="Bsean.fait.class.path">fait.jar:asm.jar:eclipsejar:junit.jar:ivy.jar:slf4j-api.jar</entry>
 <entry key="Bsean.var.width">600</entry>
 <entry key="Bsean.var.height">600</entry>
 <entry key="Bsean.slice.conddepth">6</entry>

@@ -69,6 +69,10 @@
 	 <FIELD NAME='GIT_DIR' DESCRIPTION='Target Directory' TYPE='DIRECTORY'
 	    CANWRITE='TRUE' />
       </TYPE>
+      <TYPE NAME='CLONE' DESCRIPTION='Clone Project from Another Workspace' RESULT='JAVA'>
+	 <FIELD NAME='WORKSPACE_DIR' DESCRIPTION='Project Directory' TYPE='DIRECTORY'
+	    EXISTS='TRUE' CONTAINS='.classpath .project' />
+      </TYPE>
    </CREATE>
    <EDIT>
       <TAB LABEL='Libraries' TYPE='LIBRARY' />

@@ -919,6 +919,11 @@ interface BaleFragment	{
  *	can updated the display accordingly.
  **/
    void handleProblemsUpdated();
+   
+/**
+ *      Handle file removed
+ ***/
+   void handleFileRemoved();
 
 }	// end of inner interface BaleFragment
 

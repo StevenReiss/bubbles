@@ -818,12 +818,21 @@ protected void setScaleFactor(double sf)
       sc.setScaleFactor(sf);
       return;
     }
+   else if (c != null && c instanceof Zoomable) {
+      Zoomable z = (Zoomable) c;
+      z.setScaleFactor(sf);
+    }
    else if (c != null && c instanceof JScrollPane) {
       JScrollPane jsp = (JScrollPane) c;
       JViewport vp = jsp.getViewport();
       if (vp != null && vp.getView() != null && vp.getView() instanceof Scalable) {
 	 Scalable sc = (Scalable) vp.getView();
 	 sc.setScaleFactor(sf);
+	 return;
+       }
+      if (vp != null && vp.getView() != null && vp.getView() instanceof Zoomable) {
+	 Zoomable zc = (Zoomable) vp.getView();
+	 zc.setScaleFactor(sf);
 	 return;
        }
     }
@@ -1268,8 +1277,16 @@ public boolean connectTo(BudaBubble bb,MouseEvent evt)
 
 @Override public void paintComponent(Graphics g0)
 {
+   if (this instanceof Zoomable) {
+      Zoomable z = (Zoomable) this;
+      Graphics2D g2 = (Graphics2D) g0.create();
+      g2.scale(scale_factor,scale_factor);
+      z.scaledPaint(g2);
+    }
+   
    Graphics2D g02 = (Graphics2D) g0;	// set graphics hints for children
    g02.setRenderingHints(hint_map);
+   // might need to scale here;
 
    Graphics2D g2 = (Graphics2D) g0.create();
 

@@ -1407,6 +1407,9 @@ private class EclipseUpdater implements DocumentListener {
 
 @Override public void handleFileRemoved(String proj,String file)
 {
+   for (BaleFragment bf : fragment_map.keySet()) {
+      bf.handleFileRemoved(); 
+    }
    // TODO: ensure all fragments are orphaned
 }
 
