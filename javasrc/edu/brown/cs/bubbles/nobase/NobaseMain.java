@@ -702,37 +702,37 @@ private class CommandHandler implements MintHandler {
       String cmd = args.getArgument(1);
       Element xml = msg.getXml();
       String proj = IvyXml.getAttrString(xml,"PROJECT");
-
+   
       String rslt = null;
-
+   
       try {
-	 rslt = handleCommand(cmd,proj,xml);
+         rslt = handleCommand(cmd,proj,xml);
        }
       catch (NobaseException e) {
-	 String xmsg = "Error in command " + cmd + ": " + e;
-	 logE(xmsg,e);
-	 rslt = "<ERROR><![CDATA[NOBASE: " + xmsg + "]]></ERROR>";
+         String xmsg = "Error in command " + cmd + ": " + e;
+         logE(xmsg,e);
+         rslt = "<ERROR><![CDATA[NOBASE: " + xmsg + "]]></ERROR>";
        }
       catch (Throwable t) {
-	 String xmsg = "Problem processing command " + cmd + ": " + t;
-	 logE(xmsg,t);
-	 StringWriter sw = new StringWriter();
-	 PrintWriter pw = new PrintWriter(sw);
-	 t.printStackTrace(pw);
-	 rslt = "<ERROR>";
-	 rslt += "<MESSAGE>NOBASE: " + xmsg + "</MESSAGE>";
-	 rslt += "<EXCEPTION><![CDATA[" + t.toString() + "]]></EXCEPTION>";
-	 rslt += "<STACK><![CDATA[" + sw.toString() + "]]></STACK>";
-	 rslt += "</ERROR>";
+         String xmsg = "Problem processing command " + cmd + ": " + t;
+         logE(xmsg,t);
+         StringWriter sw = new StringWriter();
+         PrintWriter pw = new PrintWriter(sw);
+         t.printStackTrace(pw);
+         rslt = "<ERROR>";
+         rslt += "<MESSAGE>NOBASE: " + xmsg + "</MESSAGE>";
+         rslt += "<EXCEPTION><![CDATA[" + t.toString() + "]]></EXCEPTION>";
+         rslt += "<STACK><![CDATA[" + sw.toString() + "]]></STACK>";
+         rslt += "</ERROR>";
        }
-
+   
       msg.replyTo(rslt);
-
+   
       if (shutdown_mint) {
-	 mint_control.shutDown();
-	 synchronized (NobaseMain.this) {
-	    NobaseMain.this.notifyAll();
-	  }
+         mint_control.shutDown();
+         synchronized (NobaseMain.this) {
+            NobaseMain.this.notifyAll();
+          }
        }
     }
 
