@@ -113,6 +113,7 @@ void findChanges(File f,IvyXmlWriter xw)
 /*										*/
 /********************************************************************************/
 
+@SuppressWarnings("resource")
 private void update()
 {
    long now = System.currentTimeMillis();

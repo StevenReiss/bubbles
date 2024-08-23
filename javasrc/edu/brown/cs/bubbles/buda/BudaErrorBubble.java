@@ -87,7 +87,7 @@ private class ErrorContentPane extends JPanel
       JLabel errlabel = new JLabel(errmsg);
       errlabel.setForeground(text_color);
       errlabel.addMouseListener(new QuitAction());
-      add(new JLabel(errmsg));
+      add(errlabel);
     }
 
 }	// end of inner class ErrorContentPane

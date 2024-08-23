@@ -129,6 +129,9 @@ boolean setupProject()
       case "GIT" :
 	 fg = setupGitProject();
 	 break;
+      case "CLONE" :
+         fg = setupCloneProject();
+         break;
     }
 
    BedrockPlugin.logD("Project defined.  Write project " + fg);
@@ -416,6 +419,25 @@ private boolean setupGitProject()
 }
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Setup project by cloning an existing one                                */
+/*                                                                              */
+/********************************************************************************/
+
+private boolean setupCloneProject()
+{
+   File sdir = propFile("WORKSPACE_DIR");
+   File f1 = new File(sdir,".classpath");
+   File f2 = new File(sdir,".project");
+   File f3 = new File(sdir,".settings");
+   File f4 = new File(f3,"org.eclipse.jdt.core.prefs");
+   File f5 = new File(f3,"org.eclipse.core.resources.prefs");
+   if (!f1.exists() || !f2.exists() || !f4.exists() || !f5.exists()) return false;
+   
+   return true;
+}
+
 
 /********************************************************************************/
 /*										*/
@@ -531,6 +553,19 @@ private boolean generateClassPathFile()
    BedrockPlugin.logD("GENERATE CLASS PATH FILE IN " + project_dir);
 
    File cpf = new File(project_dir,".classpath");
+   if (project_type.equals("CLONE")) {
+      File f1 = propFile("WORKSPACE_DIR");
+      File f2 = new File(f1,".classpath");
+      try {
+         IvyFile.copyFile(f2,cpf);
+       }
+      catch (IOException e) { 
+         BedrockPlugin.logE("Problem copying class path file",e);
+         return false;
+       }
+      return true;
+    }
+   
    try {
       IvyXmlWriter xw = new IvyXmlWriter(cpf);
       xw.outputHeader();
@@ -645,9 +680,22 @@ private String getFilePath(File f)
 private boolean generateProjectFile()
 {
    BedrockPlugin.logD("GENERATE PROJECT FILE");
-
+   File f1 = new File(project_dir,".project");
+   
+   if (project_type.equals("CLONE")) {
+      File f0 = propFile("WORKSPACE_DIR");
+      File f2 = new File(f0,".project");
+      try {
+         IvyFile.copyFile(f2,f1);
+       }
+      catch (IOException e) {
+         BedrockPlugin.logE("Problem copying class path file",e);
+         return false;
+       }
+      return true;
+    }
+   
    try {
-      File f1 = new File(project_dir,".project");
       IvyXmlWriter xw = new IvyXmlWriter(f1);
       xw.outputHeader();
       xw.begin("projectDescription");
@@ -728,9 +776,24 @@ private boolean generateSettingsFile()
    File sdir = new File(project_dir,".settings");
    sdir.mkdirs();
    File opts = new File(sdir,"org.eclipse.jdt.core.prefs");
-
+   File popts = new File(sdir,"org.eclipse.core.resources.prefs");
+   if (project_type.equals("CLONE")) {
+      File f1 = propFile("WORKSPACE_DIR");
+      File f2 = new File(f1,".settings");
+      File f3 = new File(f2,"org.eclipse.jdt.core.prefs");
+      File f4 = new File(f2,"org.eclipse.core.resources.prefs");
+      try {
+         IvyFile.copyFile(f3,opts);
+         IvyFile.copyFile(f4,popts);
+       }
+      catch (IOException e) {
+         BedrockPlugin.logE("Problem copying settings file",e);
+         return false;
+       }
+      return true;
+    }
+   
    String copts = propString(PROJ_PROP_CORE_OPTIONS);
-
    String fopts = null;
    File f2 = propFile(PROJ_PROP_FORMAT_FILE);
    if (f2 != null && f2.exists()) {
@@ -757,17 +820,16 @@ private boolean generateSettingsFile()
       if (fopts != null) pw.println(fopts);
     }
    catch (Throwable e) {
-      BedrockPlugin.logE("Problem careating settings file",e);
+      BedrockPlugin.logE("Problem creating settings file",e);
       status = false;
     }
    
-   File popts = new File(sdir,"org.eclipse.core.resources.prefs");
    try (PrintWriter pw = new PrintWriter(new FileWriter(popts))) {
       pw.println("eclispe.preferences.version=1");
       pw.println("encoding/<project>=UTF-8");
    }
    catch (Throwable e) {
-      BedrockPlugin.logE("Problem careating project settings file",e);
+      BedrockPlugin.logE("Problem creating project settings file",e);
       status = false;
    }
    

@@ -357,7 +357,7 @@ static void outputProblem(IProject proj,IProblem ip,IvyXmlWriter xw)
 
 
 
-static void outputMarkers(IProject proj,IMarker [] mrks,IvyXmlWriter xw)
+static void outputMarkers(IProject proj,Iterable<IMarker> mrks,IvyXmlWriter xw)
 {
    int ctr = 0;
 

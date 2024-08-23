@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<entry key="Brepair.fait.class.path">fait.jar:asm.jar:eclipsejar:junit.jar:ivy.jar</entry>
+<entry key="Brepair.fait.class.path">fait.jar:asm.jar:eclipsejar:junit.jar:ivy.jar:slf4j-api.jar</entry>
 <entry key="Brepair.fait.threads">4</entry>
 <entry key="Brepair.fait.debug">false</entry>
 <entry key="Brepair.fait.trace">false</entry>
@@ -65,4 +65,4 @@
 
 
 
-			
+		

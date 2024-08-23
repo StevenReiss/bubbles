@@ -30,7 +30,9 @@ import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
-
+import edu.brown.cs.bubbles.bump.BumpClient;
+import edu.brown.cs.bubbles.bump.BumpConstants.BumpChangeHandler;
+import edu.brown.cs.ivy.file.ConcurrentHashSet;
 import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
@@ -48,6 +50,7 @@ import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -88,6 +91,8 @@ private FileTableModel		table_model;
 private boolean 		show_untracked;
 private boolean 		show_ignored;
 private List<JButton>		select_buttons;
+private Set<String>             changed_files;
+
 private static final long serialVersionUID = 1;
 
 
@@ -103,6 +108,7 @@ BvcrControlFilePanel(BvcrControlPanel pnl)
    control_panel = pnl;
    show_untracked = true;
    show_ignored = false;
+   changed_files = new ConcurrentHashSet<>();
 
    select_buttons = new ArrayList<JButton>();
 
@@ -137,6 +143,8 @@ BvcrControlFilePanel(BvcrControlPanel pnl)
    setContentPane(fpnl);
 
    pnl.addUpdateListener(this);
+   
+   BumpClient.getBump().addChangeHandler(new FileChangeHandler());
 
    projectUpdated(pnl);
 }
@@ -252,6 +260,36 @@ private class ExpandAllAction extends AbstractAction {
 }	// end of inner class ExpandAllAction
 
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      File change callback                                                    */
+/*                                                                              */
+/********************************************************************************/
+
+private class FileChangeHandler implements BumpChangeHandler, Runnable {
+   
+   @Override public void handleFileChanged(String p,String file) {
+      noteChange(file,false);
+    }
+   @Override public void handleFileAdded(String p,String file) {
+      noteChange(file,true);
+    }
+   @Override public void handleFileRemoved(String p,String file) {
+      noteChange(file,true);
+    }
+   
+   private void noteChange(String f,boolean force) {
+      if (changed_files.add(f) || force) {
+         SwingUtilities.invokeLater(this);
+       }
+    }
+   
+   @Override public void run() {
+      projectUpdated(control_panel);
+    }
+   
+}       // end of inner class FileChangeHandler
 
 
 /********************************************************************************/

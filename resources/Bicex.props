@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<entry key='Bicex.seede.class.path'>seede.jar:asm.jar:eclipsejar:junit.jar:ivy.jar</entry>
+<entry key='Bicex.seede.class.path'>seede.jar:asm.jar:eclipsejar:junit.jar:ivy.jar:slf4j-api.jar</entry>
 <entry key="Bicex.seede.debug">false</entry>
 <entry key="Bicex.seede.trace">false</entry>
 <entry key="Bicex.seede.open.user"></entry>

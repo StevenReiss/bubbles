@@ -553,7 +553,7 @@ private void commitFile(FileData fd,boolean refresh,boolean save,boolean compile
    catch (JavaModelException e) {
       if (xw != null) xw.field("ERROR",e.toString());
     }
-   if (xw != null) xw.end("FILE");
+   if (xw != null) xw.end("FILE"); 
 }
 
 
@@ -2310,36 +2310,36 @@ private class FileData implements IBufferChangedListener {
       if (is_deleted) return;
       BedrockBreakMover brkmvr = null;
       if (compile) {
-	 last_ast = null;
-	 getDefaultRoot(last_edit);
+         last_ast = null;
+         getDefaultRoot(last_edit);
        }
       else if (!refresh) {
-	 if (working_unit != null) {
-	    BedrockPlugin.logD("Commiting working copy for file data " + file_name);
-	    String proj = null;
-	    if (for_project != null) proj = for_project.getName();
-	    brkmvr = new BedrockBreakMover(proj,file_name);
-	    working_unit.commitWorkingCopy(true,null);
-	    last_ast = null;
-	  }
-	 if (save) {
-	    try {
-	       safe_update = true;
-	       BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,"Saving");
-	       comp_unit.save(pm,true);
-	       pm.finish();
-	       safe_update = false;
-	     }
-	    catch (ArrayIndexOutOfBoundsException e) { }
-	  }
-	 if (brkmvr != null) {
-	    brkmvr.restoreBreakpoints();
-	  }
+         if (working_unit != null) {
+            BedrockPlugin.logD("Commiting working copy for file data " + file_name);
+            String proj = null;
+            if (for_project != null) proj = for_project.getName();
+            brkmvr = new BedrockBreakMover(proj,file_name);
+            working_unit.commitWorkingCopy(true,null);
+            last_ast = null;
+          }
+         if (save) {
+            try {
+               safe_update = true;
+               BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,"Saving");
+               comp_unit.save(pm,true);
+               pm.finish();
+               safe_update = false;
+             }
+            catch (ArrayIndexOutOfBoundsException e) { }
+          }
+         if (brkmvr != null) {
+            brkmvr.restoreBreakpoints();
+          }
        }
       else if (refresh) {
-	 comp_unit.restore();
-	 last_ast = null;
-	 // compare original and default buffer
+         comp_unit.restore();
+         last_ast = null;
+         // compare original and default buffer
        }
     }
 

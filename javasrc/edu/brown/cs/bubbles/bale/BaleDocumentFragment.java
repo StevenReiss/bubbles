@@ -85,7 +85,6 @@ private static final long serialVersionUID = 1;
 
 BaleDocumentFragment(BaleDocumentIde base,BaleFragmentType typ,List<BaleRegion> rgns)
 {
-   // super(new BaleFragmentContent(base,rgns));
    super(new BaleFragmentContentIndent(base,rgns));
 
    BaleFragmentContent cnt = (BaleFragmentContent) getContent();
@@ -854,6 +853,14 @@ private void handleEvent(DocumentEvent e,BaleElementEvent ee)
 /*	Orphan management methods						*/
 /*										*/
 /********************************************************************************/
+
+@Override public void handleFileRemoved()
+{
+   BoardLog.logD("BALE","Making orphan due to file removal");
+   is_orphan = true;
+   startReload();
+}
+
 
 @Override protected void checkOrphan()
 {

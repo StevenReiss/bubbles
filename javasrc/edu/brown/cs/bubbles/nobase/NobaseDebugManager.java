@@ -95,12 +95,23 @@ void handleLanguageData(IvyXmlWriter xw)
          NobaseDebugManager.class.getClassLoader().getResource(nm));
    Element xml = IvyXml.loadXmlFromStream(ins);
    if (xml == null) {
-      String nm1 = "launches-java.xml";
+      String nm1 = "launches-js.xml";
       ins = NobaseDebugManager.class.getClassLoader().getResourceAsStream(nm1);
+      System.err.println("CP: " + System.getProperty("java.class.path").replace(":","\n"));
       NobaseMain.logD("Language data " + nm1 + " " + ins + " " +
             NobaseDebugManager.class.getClassLoader().getResource(nm1));
       xml = IvyXml.loadXmlFromStream(ins);
     }
+   if (xml == null) {
+      String insdir = System.getProperty("edu.brown.cs.bubbles.INSTALLDIR");
+      if (insdir != null) {
+         File f1 = new File(insdir);
+         File f2 = new File(f1,"resources");
+         File f3 = new File(f2,"launches-js.xml");
+         xml = IvyXml.loadXmlFromFile(f3);
+       }
+    }
+  
    if (xml == null) {
       ins = NobaseDebugManager.class.getClassLoader().getResourceAsStream(nm);
       try {

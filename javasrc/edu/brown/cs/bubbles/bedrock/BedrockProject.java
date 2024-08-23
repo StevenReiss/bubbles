@@ -101,6 +101,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -342,8 +343,12 @@ void buildProject(String proj,boolean clean,boolean full,boolean refresh,IvyXmlW
    IMarker [] mrks;
    try {
       mrks = ip.findMarkers(null,true,IResource.DEPTH_INFINITE);
-      BedrockUtil.outputMarkers(ip,mrks,xw);
-    }
+      Map<Long,IMarker> marset = new HashMap<>();
+      for (IMarker m : mrks) {
+         marset.put(m.getId(),m);
+       }
+      BedrockUtil.outputMarkers(ip,marset.values(),xw);
+    } 
    catch (CoreException e) {
       throw new BedrockException("Problem finding errors",e);
     }
