@@ -171,7 +171,7 @@ private boolean setupNewProject()
    String cnm = "Main";
    String pnm = propString("PACKAGE_NAME");
    if (pnm != null && pnm.length() > 0) {
-      bp.put("PACKAGE",pnm);
+      bp.put("PACKAGE","package " + pnm + ";");
       StringTokenizer tok = new StringTokenizer(pnm,".");
       while (tok.hasMoreTokens()) {
 	 sdir = new File(sdir,tok.nextToken());
