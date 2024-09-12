@@ -160,6 +160,10 @@ BdocReference(BdocRepository br,String proj,URI base,String ref,String desc) thr
    String local = desc.substring(0,idx).trim();
    desc = desc.substring(idx+1).trim();
    String inside = null;
+   
+// if (desc.contains("Exception") && desc.contains("Constructor")) {
+//    System.err.println("CHECK HERE");
+//  }
 
    for (DescriptionData dd : prefix_set) {
       if (desc.startsWith(dd.getPrefix())) {

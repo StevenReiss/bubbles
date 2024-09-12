@@ -680,23 +680,23 @@ private static class Branch extends BassTreeImpl {
 
    @Override public Icon getExpandIcon() {
       switch (branch_type) {
-	 case CLASS :
-	 case METHOD :
-	    return BoardImage.getIcon("class_expand");
-	 case THROWABLE :
-	    return BoardImage.getIcon("throw_expand");
-	 case PROJECT :
-	    return BoardImage.getIcon("project_expand");
-	 case PACKAGE :
-	    return BoardImage.getIcon("package_expand");
-	 case INTERFACE :
-	    return BoardImage.getIcon("interface_expand");
-	 case ENUM :
-	    return BoardImage.getIcon("enum_expand");
-	 case ANNOTATION :
-	    return BoardImage.getIcon("annot_expand");
-	 case NONE:
-	    break;
+         case CLASS :
+         case METHOD :
+            return BoardImage.getIcon("class_expand");
+         case THROWABLE :
+            return BoardImage.getIcon("throw_expand");
+         case PROJECT :
+            return BoardImage.getIcon("project_expand");
+         case PACKAGE :
+            return BoardImage.getIcon("package_expand");
+         case INTERFACE :
+            return BoardImage.getIcon("interface_expand");
+         case ENUM :
+            return BoardImage.getIcon("enum_expand");
+         case ANNOTATION :
+            return BoardImage.getIcon("annot_expand");
+         case NONE:
+            break;
        }
       return null;
     }
