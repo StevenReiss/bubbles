@@ -194,6 +194,15 @@ private static class SynthSetup extends Thread {
             System.setProperty("de.phonemiser.logunknown","false");
             speech_synth = new LocalMaryInterface();
             if (jver != null) System.setProperty("java.version",jver);
+            Set<Locale> locales = speech_synth.getAvailableLocales();
+            Locale dflt = Locale.ENGLISH;
+            for (Locale l : locales) {
+               if (l.getLanguage().equals("en")) {
+                  dflt = l;
+                  break;
+                }
+             }
+            speech_synth.setLocale(dflt);
           }
        }
       catch (Throwable e) {

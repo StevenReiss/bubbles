@@ -220,10 +220,6 @@ private void updateAll()
 /*										*/
 /********************************************************************************/
 
-
-
-
-
 private void expandAll()
 {
    JTree tr = output_table.getTree();
@@ -591,20 +587,20 @@ private static class DirectoryNode extends GenericNode {
    synchronized GenericNode insert(File f,GenericNode add) {
       child_list = null;
       for (GenericNode gn : child_nodes) {
-	 File child = gn.getFile();
-	 if (f.equals(child)) return gn;
-	 File f2 = IvyFile.getCommonParent(f,child);
-	 if (f2 == null) continue;
-	 if (f2.equals(child)) return gn.insert(f,add);
-	 if (f2.equals(directory_name)) continue;
-	 if (f2.getPath().length() < child.getPath().length()) {
-	    GenericNode newpar = new DirectoryNode(f2);
-	    child_nodes.remove(gn);
-	    child_nodes.add(newpar);
-	    newpar.setParent(this);
-	    newpar.insert(child,gn);
-	    return newpar.insert(f,add);
-	  }
+         File child = gn.getFile();
+         if (f.equals(child)) return gn;
+         File f2 = IvyFile.getCommonParent(f,child);
+         if (f2 == null) continue;
+         if (f2.equals(child)) return gn.insert(f,add);
+         if (f2.equals(directory_name)) continue;
+         if (f2.getPath().length() < child.getPath().length()) {
+            GenericNode newpar = new DirectoryNode(f2);
+            child_nodes.remove(gn);
+            child_nodes.add(newpar);
+            newpar.setParent(this);
+            newpar.insert(child,gn);
+            return newpar.insert(f,add);
+          }
        }
       child_nodes.add(add);
       add.setParent(this);

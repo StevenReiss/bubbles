@@ -475,11 +475,13 @@ private String getNewName()
       handleFieldSet(cmp);
       BumpLaunchConfig cfg = edit_config;
       if (cfg == null) cfg = launch_config;
-      BumpLaunchType lt = cfg.getLaunchType();
-      for (BumpLaunchConfigField fld : lt.getFields()) {
-         if (fld.getEvaluate() != null && fld.getEvaluate().equals("START") &&
-               itm.equals(fld.getArgField())) {
-            recomputeStarts();
+      if (cfg != null) {
+         BumpLaunchType lt = cfg.getLaunchType();
+         for (BumpLaunchConfigField fld : lt.getFields()) {
+            if (fld.getEvaluate() != null && fld.getEvaluate().equals("START") &&
+                  itm.equals(fld.getArgField())) {
+               recomputeStarts();
+             }
           }
        }
     }

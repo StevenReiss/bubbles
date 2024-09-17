@@ -252,6 +252,7 @@ private class VersionTable extends AbstractTableModel {
          case 1 :
             String r = null;
             for (String s : vv.getAlternativeNames()) {
+               if (s.isEmpty()) continue;
                if (r == null) r = s;
                else r += "," + s;
              }

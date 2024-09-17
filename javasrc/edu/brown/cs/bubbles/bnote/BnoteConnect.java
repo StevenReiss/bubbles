@@ -295,7 +295,8 @@ Connection getLogDatabase()
 	 bnote_conn = DriverManager.getConnection(url,props);
        }
       catch (SQLException e) {
-	 BoardLog.logE("BNOTE","Problem creating log database",e);
+	 BoardLog.logE("BNOTE","Problem creating log database for " + database_type + 
+               " " + durl + " " + url,e);
       }
     }
 

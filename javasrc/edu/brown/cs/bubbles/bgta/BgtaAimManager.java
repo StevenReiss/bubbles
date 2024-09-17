@@ -123,76 +123,81 @@ server)
 {
    BoardLog.logD("BGTA","Starting login process for " + username + " on server: login.messaging.aol.com");
    Screenname screenname = new Screenname(username);
-   AimSession aimSession = new DefaultAppSession().openAimSession(screenname);
-   AimConnectionProperties props = new AimConnectionProperties(screenname,password);
-   props.setLoginHost("login.messaging.aol.com");
-   props.setLoginPort(5190);
-   the_connection = aimSession.openConnection(props);
-   the_connection.addOpenedServiceListener(
-      new OpenedServiceListener() {
-
-	 @Override
-	    public void closedServices(AimConnection arg0,
-					  Collection<? extends Service> arg1) { }
-
-	 @Override
-	    public void openedServices(AimConnection arg0,
-					  Collection<? extends Service> arg1) { }
-
-       });
-   the_connection.connect();
-   if (the_connection.getState() == State.FAILED) {
-      BoardLog.logE("BGTA", "Error connecting to AIM via OSCAR protocol.");
-      throw new XMPPException("Error connecting to AIM via OSCAR protocol.");
-    }
    try {
-      Thread.sleep(2000);
-    }
-   catch (InterruptedException e) {
-      //do nothing
-    }
-   the_service = the_connection.getIcbmService();
-   if (the_service == null) {
+      AimSession aimSession = new DefaultAppSession().openAimSession(screenname);
+      AimConnectionProperties props = new AimConnectionProperties(screenname,password);
+      props.setLoginHost("login.messaging.aol.com");
+      props.setLoginPort(5190);
+      the_connection = aimSession.openConnection(props);
+      the_connection.addOpenedServiceListener(
+            new OpenedServiceListener() {
+               
+               @Override
+                  public void closedServices(AimConnection arg0,
+                        Collection<? extends Service> arg1) { }
+               
+               @Override
+               public void openedServices(AimConnection arg0,
+                     Collection<? extends Service> arg1) { }
+               
+             });
+      the_connection.connect();
+      if (the_connection.getState() == State.FAILED) {
+         BoardLog.logE("BGTA", "Error connecting to AIM via OSCAR protocol.");
+         throw new XMPPException("Error connecting to AIM via OSCAR protocol.");
+       }
       try {
-	 Thread.sleep(1000);
+         Thread.sleep(2000);
        }
       catch (InterruptedException e) {
-	 //do nothing
+         //do nothing
        }
+      the_service = the_connection.getIcbmService();
+      if (the_service == null) {
+         try {
+            Thread.sleep(1000);
+          }
+         catch (InterruptedException e) {
+            //do nothing
+          }
+       }
+      if (the_service == null) {
+         BoardLog.logE("BGTA", "Icbm service not available.");
+         throw new XMPPException("Error connecting to AIM server.");
+       }
+      if (!the_service.isReady()) {
+         BoardLog.logE("BGTA", "Icbm service is not ready.");
+         throw new XMPPException("Error connecting to AIM server.");
+       }
+      the_service.removeIcbmListener(conversation_listener);
+      conversation_listener = new AIMServiceListener();
+      the_service.addIcbmListener(conversation_listener);
+      OscarConnection con = the_connection.getInfoService().getOscarConnection();
+      con.addGlobalServiceListener(
+            new ServiceListener() {
+               
+               @Override
+                  public void handleServiceFinished(Service arg0) { }
+               
+               @Override
+               public void handleServiceReady(Service arg0) { }
+               
+             });
+      SsiService ssi = the_connection.getSsiService();
+      if (ssi == null) {
+         BoardLog.logE("BGTA", "Ssi service not available.");
+         throw new XMPPException("Error connecting to AIM server.");
+       }
+      if (!ssi.isReady()) {
+         BoardLog.logE("BGTA", "Ssi service not ready.");
+         throw new XMPPException("Error connecting to AIM server.");
+       }
+      the_roster = new BgtaAIMRoster(ssi.getBuddyList());
+      BoardLog.logD("BGTA","Successfully logged into login.messaging.aol.com with username: " + username + ".");
     }
-   if (the_service == null) {
-      BoardLog.logE("BGTA", "Icbm service not available.");
-      throw new XMPPException("Error connecting to AIM server.");
+   catch (Throwable t) {
+      BoardLog.logE("BGTA","Problem setting up messaging connection",t);
     }
-   if (!the_service.isReady()) {
-      BoardLog.logE("BGTA", "Icbm service is not ready.");
-      throw new XMPPException("Error connecting to AIM server.");
-    }
-   the_service.removeIcbmListener(conversation_listener);
-   conversation_listener = new AIMServiceListener();
-   the_service.addIcbmListener(conversation_listener);
-   OscarConnection con = the_connection.getInfoService().getOscarConnection();
-   con.addGlobalServiceListener(
-      new ServiceListener() {
-
-	 @Override
-	    public void handleServiceFinished(Service arg0) { }
-
-	 @Override
-	    public void handleServiceReady(Service arg0) { }
-
-       });
-   SsiService ssi = the_connection.getSsiService();
-   if (ssi == null) {
-      BoardLog.logE("BGTA", "Ssi service not available.");
-      throw new XMPPException("Error connecting to AIM server.");
-    }
-   if (!ssi.isReady()) {
-      BoardLog.logE("BGTA", "Ssi service not ready.");
-      throw new XMPPException("Error connecting to AIM server.");
-    }
-   the_roster = new BgtaAIMRoster(ssi.getBuddyList());
-   BoardLog.logD("BGTA","Successfully logged into login.messaging.aol.com with username: " + username + ".");
 }
 
 @Override void disconnect()

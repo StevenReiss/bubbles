@@ -200,17 +200,20 @@ static String getIndication(String proj,String from0,String key)
 {
    if (from0 == null) return null;
    
+   String typ = BALE_PROPERTIES.getString(key + "." + proj);
+   if (typ == null) typ = BALE_PROPERTIES.getString(key);
+   
    String from = from0;
    
    int idx0 = from.indexOf(";");
    if (idx0 > 0) {
       from = from.substring(0,idx0);
-      if (BALE_PROPERTIES.getString(key).equals("package")) {
+      if (typ.equals("package") || typ.equals("directory")) {
 	    int idx1 = from.lastIndexOf("/");
 	    if (idx1 < 0) from = "*";
 	    else from = from.substring(0,idx1);
       }
-   }
+    }
    else {
    // convert from to a class name
       int idx = from.indexOf("(");
@@ -226,7 +229,7 @@ static String getIndication(String proj,String from0,String key)
 	 }
       }
 
-      if (BALE_PROPERTIES.getString(key).equals("package")) {
+      if (typ.equals("package")) {
 	 for ( ; ; ) {
 	    idx = from.lastIndexOf(".");
 	    if (idx < 0) return null;
@@ -234,12 +237,17 @@ static String getIndication(String proj,String from0,String key)
 	    if (checkPackage(proj,from)) break;
 	 }
       }
+      else if (typ.equals("directory")) {
+         int idx1 = from.lastIndexOf("/");
+         if (idx1 < 0) return "*";
+         from = from.substring(0,idx);
+       }
 
       idx = from.lastIndexOf(".");
       if (idx >= 0) from = from.substring(idx+1);
    }
       
-   if (from.length() == 0) from = "*";
+   if (from.isEmpty()) from = "*";
 
    return from;
 }

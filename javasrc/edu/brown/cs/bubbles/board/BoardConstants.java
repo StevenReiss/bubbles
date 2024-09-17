@@ -517,6 +517,7 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
    "annotations.jar",
    "cofoja.jar",
    "jsoup.jar",
+   "jsocks-klea.jar",
    "commons-compress.jar",
 /*********************
    "caja.jar",
