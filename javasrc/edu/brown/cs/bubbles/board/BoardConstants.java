@@ -78,7 +78,9 @@ enum BoardLanguage {
    JS("js","JavaScript",".nobbles","nobbles","nobase","-js","-Xmx1536m",false,
 	 ".js.","nobbles.jar","Node/JS Workspace"),
    DART("dart","Dart",".dartbubbles","dartbub","dartbase","-dart",null,false,
-	 ".dart.","dartbubbles.jar","Dart Workspace");
+	 ".dart.","dartbubbles.jar","Dart Workspace"),
+   TS("ts","TypeScript/JavaScript",".tybbles","tybbles","tsbase","-ts",null,false,
+         ".ts.js.","tsbubbles.jar","TS/JS Workspace");
 
    private String language_name;
    private String language_title;

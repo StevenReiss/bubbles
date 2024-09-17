@@ -763,6 +763,8 @@ public static BumpLaunchConfig getLaunchConfigurationForTest(BattTest btc)
             String vl = blf.getDefaultValue();
             if (nm != null && vl != null) blc1 = blc1.setAttribute(fnm,vl);
             break;
+         default :
+            break;
        }
     }
    blc = blc1.save();

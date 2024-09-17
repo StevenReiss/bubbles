@@ -50,7 +50,6 @@ public BaleJavaHinter()
 }
 
 
-
 /********************************************************************************/
 /*										*/
 /*	Access methods								*/
@@ -115,6 +114,8 @@ private int getArgNumber(BaleElement be)
    int argno = -1;
 
    switch (be.getTokenType()) {
+      default :
+	 break;
       case LPAREN :
 	 return 0;
       case COMMA :
@@ -125,6 +126,8 @@ private int getArgNumber(BaleElement be)
 	    prev = prev.getPreviousCharacterElement();
 	    if (prev == null) return -1;
 	    switch (prev.getTokenType()) {
+	       default :
+		  break;
 	       case RPAREN :
 		  ++dep;
 		  break;

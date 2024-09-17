@@ -1,1 +1,1 @@
-Version 0.442 of BUBBLES is now available
+Version 0.443 of BUBBLES is now available

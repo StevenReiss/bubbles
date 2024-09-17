@@ -1829,7 +1829,7 @@ private static class ProjectFormatImporter implements BudaConstants.ButtonListen
             "From Project","Select Project to Import From",
             JOptionPane.QUESTION_MESSAGE, null, opts,opts[0]);
       if (sel == null) return;
-      File path = recs.get((String) sel);
+      File path = recs.get(sel);
       if (path == null) return;
       Properties props = new Properties();
       try (FileInputStream fr = new FileInputStream(path)) {

@@ -1031,6 +1031,8 @@ private class RunEventHandler implements BumpRunEventHandler {
 	 case PROCESS_TRACE :
 	 case PROCESS_PERFORMANCE :
 	    return;
+	 default :
+	    break;
        }
       BoardLog.logD("BDDT","PROCESS EVENT " + evt.getEventType() + " " + elc + " " +
 	    launch_config + " " + launch_state);
@@ -1105,6 +1107,8 @@ private class RunEventHandler implements BumpRunEventHandler {
                      handleThreadStateChange(bt,ost);
                    }
                   break;
+               default :
+        	  break;
              }
             if (nst != ost) {
                handleThreadStateChange(bt,ost);
@@ -1184,7 +1188,9 @@ private boolean autoCreateBubble(BumpThread bt)
 	    case STOPPED_IO :
 	    case STOPPED_IDLE :
 	       return false;
-	  }
+	    default : 
+	       break;
+	 }
 	 break;
       default :
 	 switch (bt.getThreadState()) {
@@ -1195,7 +1201,9 @@ private boolean autoCreateBubble(BumpThread bt)
 	    case STOPPED_IO :
 	    case STOPPED_IDLE :
 	       return false;
-	  }
+	    default :
+	       break;
+	 }
 	 break;
     }
 

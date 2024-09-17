@@ -338,6 +338,8 @@ private String getNodeType(ASTNode n)
 	    case VARIABLE :
 	       typ = "VARIABLE";
 	       break;
+	    default :
+	       break;
 	  }
        }
     }

@@ -1812,6 +1812,8 @@ private boolean checkBaseIde()
 	 return checkEclipse();
       case JAVA_IDEA :
 	 return checkIntelliJ();
+      default :
+	 break;
     }
    return true;
 }
@@ -2510,6 +2512,8 @@ private boolean checkWorkspaceDirectory(File wsd,boolean create)
 	 df = new File(wsd,BOARD_IDEA_WS_DATA);
 	 if (!df.exists() || !df.canRead()) return false;
 	 break;
+      default :
+	 break;
     }
 
    return true;
@@ -2835,6 +2839,8 @@ private static File getIdePluginDirectory(File edf)
 	 return getEclipsePluginDirectory(edf);
       case JAVA_IDEA :
 	 return getIdeaPluginDirectory(edf);
+      default :
+	 break;
     }
 
    return null;
@@ -2891,6 +2897,8 @@ private static File checkPluginDirectory(File base)
 	 return checkEclipsePluginDirectory(base);
       case JAVA_IDEA :
 	 return checkIdeaPluginDirectory(base);
+      default :
+	 break;
     }
    return null;
 }
@@ -3377,6 +3385,8 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
 	       break;
 	    case JAVA :
 	       updateEclipsePlugin();
+	       break;
+	    default :
 	       break;
 	  }
 	 force_setup = false;

@@ -223,6 +223,8 @@ int getEclipseEndOffset()
    switch (name_type) {
       case FILE :
 	 return (int) getFile().length();
+      default :
+	 break;
    }
    return base_location.getDefinitionEndOffset(); 
 }

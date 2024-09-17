@@ -418,6 +418,8 @@ public CharSequence setupNew(BuenoType what,BuenoLocation where,BuenoProperties 
       case NEW_JAVADOC_COMMENT :
 	 result = cur_creator.createComment(what,props);
 	 break;
+      default :
+	 break;
     }
 
   return result;

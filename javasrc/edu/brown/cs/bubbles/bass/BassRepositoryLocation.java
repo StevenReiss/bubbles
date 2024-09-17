@@ -621,6 +621,8 @@ private void addLocation(BumpLocation bl,Map<String,BassNameLocation> usedmap)
 	 BassNameLocation inm = new BassNameLocation(bl,BassNameType.HEADER,pfx);
 	 all_names.add(inm);
 	 break;
+      default :
+	 break;
     }
 
    if (bn != null) all_names.add(bn);

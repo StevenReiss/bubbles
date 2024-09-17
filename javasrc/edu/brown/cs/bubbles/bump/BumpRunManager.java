@@ -383,6 +383,8 @@ String startDebugArgs(String id)
       case SERVER :
 	 args += ";remote";
 	 break;
+      default :
+	 break;
     }
    File f = BoardSetup.getBubblesWorkingDirectory();
    args += ";base=" + f.getPath();
