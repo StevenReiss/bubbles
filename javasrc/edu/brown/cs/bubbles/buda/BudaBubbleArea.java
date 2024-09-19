@@ -2822,15 +2822,15 @@ private class BubbleMoveContext extends MouseContext {
 
    @Override void next(MouseEvent e) {
       if (for_bubble == null) return;
-
+   
       for_bubble.forceFreeze();
    //	 if (docked_bubbles.containsKey(for_bubble)) {
    //	    docked_bubbles.remove(for_bubble);
    //	    for_bubble.setDocked(false);
    //	  }
-
+   
       BudaCursorManager.setGlobalCursorForComponent(for_bubble, palm_cursor);
-
+   
       ++move_count;
       setLayer(for_bubble,DRAG_LAYER,0);
       Point p0 = e.getPoint();
@@ -2838,30 +2838,30 @@ private class BubbleMoveContext extends MouseContext {
       // int y0 = initial_location.y + (int)(p0.y / scale_factor) - initial_mouse.y;
       int x0 = initial_location.x + p0.x - initial_mouse.x;
       int y0 = initial_location.y + p0.y - initial_mouse.y;
-
+   
       // if (scale_factor != 1.0) {
-	 // p0 = new Point((int)(p0.x / scale_factor), (int)(p0.y / scale_factor));
+         // p0 = new Point((int)(p0.x / scale_factor), (int)(p0.y / scale_factor));
        // }
-
+   
       checkMoveViewport(p0);
-
+   
       if (x0 + bubble_size.width < MIN_SHOW_SIZE) {
-	 x0 = MIN_SHOW_SIZE - bubble_size.width;
+         x0 = MIN_SHOW_SIZE - bubble_size.width;
        }
       else if (x0 > area_size.width - MIN_SHOW_SIZE) {
-	 x0 = area_size.width - MIN_SHOW_SIZE;
+         x0 = area_size.width - MIN_SHOW_SIZE;
        }
       if (y0 + bubble_size.height < MIN_SHOW_SIZE) {
-	 y0 = MIN_SHOW_SIZE - bubble_size.height;
+         y0 = MIN_SHOW_SIZE - bubble_size.height;
        }
       else if (y0 > area_size.height - MIN_SHOW_SIZE) {
-	 y0 = area_size.height - MIN_SHOW_SIZE;
+         y0 = area_size.height - MIN_SHOW_SIZE;
        }
-
+   
       for_bubble.setLocation(x0,y0);
       fixupGroups(for_bubble);
       if (for_bubble.isUserPos()) repaint();
-
+   
       setupDockedBubble(for_bubble);
     }
 

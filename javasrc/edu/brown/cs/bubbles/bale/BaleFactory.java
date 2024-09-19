@@ -1823,8 +1823,10 @@ private static class ProjectFormatImporter implements BudaConstants.ButtonListen
          recs.put(s1,f6);
        }
       if (recs.size() == 0) return;
-      String [] opts = new String[recs.size()];
-      opts = recs.keySet().toArray(opts);
+      String [] opts = new String[recs.size()]; 
+      ArrayList<String> lst = new ArrayList<>(recs.keySet());
+      Collections.sort(lst);
+      opts = lst.toArray(opts);
       Object sel = JOptionPane.showInputDialog(BudaRoot.findBudaRoot(bba),
             "From Project","Select Project to Import From",
             JOptionPane.QUESTION_MESSAGE, null, opts,opts[0]);
