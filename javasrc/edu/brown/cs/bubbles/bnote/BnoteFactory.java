@@ -73,7 +73,9 @@ private BnoteFactory()
 
    BoardProperties bp = BoardProperties.getProperties("Bnote");
    if (bp.getBoolean("Bnote.record",true)) {
-      the_store = BnoteStore.createStore();
+      SetupStore ss = new SetupStore();
+      edu.brown.cs.bubbles.board.BoardThreadPool.start(ss);
+//    the_store = BnoteStore.createStore();
     }
 }
 
@@ -82,6 +84,14 @@ private BnoteFactory()
 public static BnoteFactory getFactory() 	{ return the_factory; }
 
 
+
+private class SetupStore implements Runnable {
+
+   @Override public void run() {
+      the_store = BnoteStore.createStore();
+    }
+   
+}       // end of inner class SetupStore
 
 /********************************************************************************/
 /*										*/
