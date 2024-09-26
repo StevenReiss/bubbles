@@ -27,6 +27,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='mysql.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='wikitext*.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='javax.activation.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='commons-compress.jar' />
@@ -52,6 +53,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='wikitext*.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='org.eclipse.*.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='javax.activation.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
@@ -77,6 +79,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='wikitext*.jar' />
 	 <!-- <fileset dir='${BUBBLES}/lib/' includes='nashorn.jar' />  -->
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='javax.activation.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='jsoup.jar' />
@@ -154,6 +157,7 @@
 	 <fileset dir='${BUBBLES}/lib/' includes='seede.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='poppy.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='mail.jar' />
+	 <fileset dir='${BUBBLES}/lib/' includes='javax.activation.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='cocker.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='websocket.jar' />
 	 <fileset dir='${BUBBLES}/lib/' includes='js-scriptengine.jar' />

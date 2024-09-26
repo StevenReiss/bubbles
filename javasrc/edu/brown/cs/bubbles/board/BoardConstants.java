@@ -505,6 +505,7 @@ String [] BOARD_LIBRARY_FILES = new String [] {
    "bubblesasm.jar",
 // "wikitextcore.jar", "wikitexttrac.jar",
    "mail.jar","json.jar", "jsoup.jar", "asm.jar", "slf4j-api.jar",
+   "javax.activation.jar",
 
    "derby.jar", "derbyclient.jar", "derbynet.jar", "mysql.jar", "postgresql.jar",
 };

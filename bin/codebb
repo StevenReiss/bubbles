@@ -42,19 +42,47 @@ set CPC = $INS/resources
 
 set CP = ${CP1}:${CP2}:${CP3}:${CP4}:${CP5}:${CP6}:${CP7}:${CP8}:${CP9}:${CPB}:${CPC}
 
-if ($BROWN_JAVA_HOME == 0) then
-   set JBIN = /pro/java/linux/jdk10/bin
-else
-   set JBIN = $BROWN_JAVA_HOME/bin
-endif
+set JBIN = $BROWN_JAVA_HOME/bin
 
 set JAVA = $JBIN/java
 set path = ($JBIN $path)
 
-if (-e ~/commands/java10) then
-#  set JAVA = ~/commands/java10
-endif
-
 # echo $JAVA -cp $CP -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain $*
 $JAVA -cp $CP -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain $* >&! ~/runlog.log &
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

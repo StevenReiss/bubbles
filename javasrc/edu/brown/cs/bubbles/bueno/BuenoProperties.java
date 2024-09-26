@@ -39,9 +39,9 @@ public class BuenoProperties extends HashMap<String,Object> implements BuenoCons
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Private Storage                                                         */
-/*                                                                              */
+/*										*/
+/*	Private Storage 							*/
+/*										*/
 /********************************************************************************/
 
 private static final long serialVersionUID = 1;
@@ -63,7 +63,7 @@ public BuenoProperties()
 
 /********************************************************************************/
 /*										*/
-/*	Access methods				        			*/
+/*	Access methods								*/
 /*										*/
 /********************************************************************************/
 
@@ -77,7 +77,7 @@ public String getStringProperty(String k)
 {
    Object v = get(k);
    if (v == null) return null;
-   
+
    return v.toString();
 }
 
@@ -142,7 +142,7 @@ public int getModifiers()
    Object v = get(BuenoKey.KEY_MODIFIERS);
    if (v == null) return 0;
    if (v instanceof Integer) return ((Integer) v);
-   
+
    // allow string or set here and decode
 
    return 0;
@@ -164,7 +164,7 @@ public String getModifierString()
    addModifier(buf,"synchronized",Modifier.isSynchronized(mods));
    addModifier(buf,"transient",Modifier.isTransient(mods));
    addModifier(buf,"volatile",Modifier.isVolatile(mods));
-   
+
    return buf.toString();
 }
 
@@ -178,7 +178,7 @@ private void addModifier(StringBuffer buf,String txt,boolean fg)
 }
 
 
-public String [] getParameters()        { return getArrayProperty(BuenoKey.KEY_PARAMETERS); }
+public String [] getParameters()	{ return getArrayProperty(BuenoKey.KEY_PARAMETERS); }
 public String [] getExtends()		{ return getArrayProperty(BuenoKey.KEY_EXTENDS); }
 public String [] getImplements()	{ return getArrayProperty(BuenoKey.KEY_IMPLEMENTS); }
 public String [] getThrows()		{ return getArrayProperty(BuenoKey.KEY_THROWS); }
@@ -259,7 +259,7 @@ public void addToArrayProperty(String k,String v)
 
 
 
-String getIndentString()                { return getIndentProperty(BuenoKey.KEY_INDENT,-1); }
+String getIndentString()		{ return getIndentProperty(BuenoKey.KEY_INDENT,-1); }
 String getInitialIndentString() 	{ return getIndentProperty(BuenoKey.KEY_INITIAL_INDENT,0); }
 
 String getIndentProperty(BuenoKey k,int dflt)
@@ -288,14 +288,14 @@ String getIndentProperty(String k,int dflt)
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Key access methods                                                      */
-/*                                                                              */
+/*										*/
+/*	Key access methods							*/
+/*										*/
 /********************************************************************************/
 
-public void put(BuenoKey k,Object v) 
+public void put(BuenoKey k,Object v)
 {
-   put(k.toString(),v);
+   super.put(k.toString(),v);
 }
 
 
