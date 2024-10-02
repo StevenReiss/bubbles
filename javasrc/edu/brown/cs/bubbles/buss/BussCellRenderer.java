@@ -174,7 +174,7 @@ private Component simpleComponent(JTree t,Object val,boolean sel,boolean exp,
       String classname = " " + s.substring(s.lastIndexOf(".") + 1);
 
       SwingRoundedCornerLabel packagelabel = new SwingRoundedCornerLabel(aryseparateloc, new int[0], 1);
-      packagelabel.setFont(BUSS_STACK_FONT);
+      packagelabel.setFont(t.getFont());
       packagelabel.setForeground(BoardColors.getColor(BUSS_PACKAGE_LABEL_COLOR_PROP));
 
       packagelabel.setSize(content_width, 21);
@@ -182,7 +182,7 @@ private Component simpleComponent(JTree t,Object val,boolean sel,boolean exp,
       packagelabel.setText(packagename);
 
       SwingRoundedCornerLabel classnamelabel = new SwingRoundedCornerLabel(aryseparateloc, new int[0], 1);
-      classnamelabel.setFont(BUSS_STACK_FONT);
+      classnamelabel.setFont(t.getFont());
       classnamelabel.setForeground(BoardColors.getColor(BUSS_CLASS_LABEL_COLOR_PROP));
 
       classnamelabel.setSize(content_width, 21);
@@ -204,7 +204,7 @@ private Component simpleComponent(JTree t,Object val,boolean sel,boolean exp,
     }
 
    SwingRoundedCornerLabel roundedcornerlabel = new SwingRoundedCornerLabel(aryseparateloc, new int[0], 1);
-   roundedcornerlabel.setFont(BUSS_STACK_FONT);
+   roundedcornerlabel.setFont(t.getFont());
 
    roundedcornerlabel.setSize(content_width, 21);
    roundedcornerlabel.setPreferredSize(roundedcornerlabel.getSize());

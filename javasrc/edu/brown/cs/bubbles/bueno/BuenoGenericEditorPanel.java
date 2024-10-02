@@ -22,6 +22,7 @@
 
 package edu.brown.cs.bubbles.bueno;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +46,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
@@ -246,6 +248,7 @@ private class PathPanel extends EditPanel implements ActionListener, ListSelecti
       path_display.setFixedCellWidth(-1);
       path_display.setVisibleRowCount(10);
       path_display.addListSelectionListener(this);
+      path_display.setCellRenderer(new PathCellRenderer(path_display));
       addGBComponent(new JScrollPane(path_display),0,0,1,y++,1,1);
     }
 
@@ -304,6 +307,44 @@ private class PathPanel extends EditPanel implements ActionListener, ListSelecti
     }
 
 }	// end of inner class PathPanel
+
+
+private class PathCellRenderer implements ListCellRenderer<BuenoPathEntry> {
+   
+   private ListCellRenderer<? super BuenoPathEntry> base_renderer;
+   
+   PathCellRenderer(JList<BuenoPathEntry> pnl) {
+      base_renderer = pnl.getCellRenderer();
+    }
+   
+   @Override public Component getListCellRendererComponent(JList<? extends BuenoPathEntry> list,
+         BuenoPathEntry value,int idx,boolean sel,boolean foc) {
+      Component c = base_renderer.getListCellRendererComponent(list,value,idx,sel,foc);
+      
+      String fp = null;
+      switch (value.getPathType()) {
+         case NONE :
+            c.setForeground(Color.GRAY);
+            break;
+         case SOURCE :
+            fp = value.getSourcePath();
+            break;
+         case BINARY :
+            fp = value.getBinaryPath();
+            break;
+         case LIBRARY :
+            fp = value.getBinaryPath();
+            break; 
+       }
+      if (fp != null) {
+         File f = new File(fp);
+         if (f.isAbsolute() && !f.exists()) {
+            c.setForeground(Color.RED);
+          }
+       }
+      return c;
+    }
+}
 
 
 private class NewPathEntryBubble extends BudaBubble implements ActionListener {

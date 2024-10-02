@@ -161,10 +161,6 @@ BdocReference(BdocRepository br,String proj,URI base,String ref,String desc) thr
    desc = desc.substring(idx+1).trim();
    String inside = null;
    
-// if (desc.contains("Exception") && desc.contains("Constructor")) {
-//    System.err.println("CHECK HERE");
-//  }
-
    for (DescriptionData dd : prefix_set) {
       if (desc.startsWith(dd.getPrefix())) {
 	 name_type = dd.getNameType();
@@ -184,9 +180,6 @@ BdocReference(BdocRepository br,String proj,URI base,String ref,String desc) thr
 
    if (inside == null) {
       throw new BdocException("Unknown javadoc index element " + desc);
-    }
-   if (inside.contains("class")) {
-      System.err.println("CHECK HERE");
     }
 
    setName(local,inside,ref);

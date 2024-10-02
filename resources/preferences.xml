@@ -356,6 +356,13 @@
 	    <KEYWORD TEXT="background"/>
 	    <KEYWORD TEXT="error"/>
 	</OPT>
+	<OPT NAME="Bale.compact.font" DESCRIPTION="Font for code in bubble stacks" TYPE="FONT">
+	    <TAB NAME="Font Options"/>
+	    <TAB NAME="Bubble Stack Options"/>
+	    <TAB NAME="Code Editor Options"/>
+	    <KEYWORD TEXT="Font" />
+	    <KEYWORD TEXT="Stack" />
+	</OPT>
     </PACKAGE>
 
     <PACKAGE NAME="Buda">
@@ -697,6 +704,7 @@
 	    <TAB NAME="Font Options"/>
 	    <TAB NAME="Bubble Stack Options"/>
 	    <KEYWORD TEXT="Font" />
+	    <KEYWORD TEXT="Stack" />
 	</OPT>
     </PACKAGE>
 

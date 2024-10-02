@@ -77,6 +77,7 @@ private final static long serialVersionUID = 1;
 private final static String HIGHLIGHT_START = "<span style='background:$(HILITE)'>";
 private final static String HIGHLIGHT_END = "</span>";
 private final static Font COMPACT_FONT = BoardFont.getFont(Font.MONOSPACED,Font.PLAIN,9);
+private final static String COMPACT_FONT_PROP = "Bale.compact.font";
 
 private static int INIT_HEIGHT = 22;
 
@@ -94,7 +95,8 @@ BaleCompactFragment(BaleDocument bd,Collection<BumpLocation> locs,int wd)
 {
    base_document = bd;
 
-   setFont(COMPACT_FONT);
+   Font ft = BALE_PROPERTIES.getFont(COMPACT_FONT_PROP,COMPACT_FONT);
+   setFont(ft);
 
    item_name = getTitle(locs);
    line_data = new TreeMap<Integer,LineData>();

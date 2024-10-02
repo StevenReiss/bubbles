@@ -147,7 +147,7 @@ static {
     }
    // might wan to use /pro/bubbles/bin/say on linux
    else {
-      native_command = props.getString("Bhelp.say.command");
+      native_command = props.getString("Bhelp.say.command",null);
     }
    speed_delta = props.getDouble("Bhelp.speed.delta",speed_delta);
 }

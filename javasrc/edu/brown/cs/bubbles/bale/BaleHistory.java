@@ -94,7 +94,7 @@ static class BaleIdeContent extends GapContent {
 
    @Override public UndoableEdit remove(int where,int nitems) throws BadLocationException {
       if (where + nitems >= length()) {
-	 throw new BadLocationException("Invalid remove", length() + 1);
+         throw new BadLocationException("Invalid remove", length() + 1);
        }
       String removedString = getString(where, nitems);
       UndoableEdit edit = new BaleRemoveUndo(this,where, removedString);
@@ -203,15 +203,15 @@ static class BaleInsertUndo extends BaleGenericUndo {
    @Override public void undo() throws CannotUndoException {
       super.undo();
       try {
-	 int start = insert_offset;
-	 int len = insert_length;
-	 // Get the Positions in the range being removed.
-	 pos_refs = the_content.getPositions(null,start,len);
-	 ins_string = the_content.getString(start,len);
-	 the_content.remove(start,len);
+         int start = insert_offset;
+         int len = insert_length;
+         // Get the Positions in the range being removed.
+         pos_refs = the_content.getPositions(null,start,len);
+         ins_string = the_content.getString(start,len);
+         the_content.remove(start,len);
        }
       catch (BadLocationException bl) {
-	 throw new CannotUndoException();
+         throw new CannotUndoException();
        }
     }
 
@@ -322,15 +322,15 @@ static class BaleRemoveUndo extends BaleGenericUndo {
    @Override public void redo() throws CannotRedoException {
       super.redo();
       try {
-	 int start = remove_offset;
-	 int len = remove_length;
-	 rem_string = the_content.getString(start,len);
-	 // Get the Positions in the range being removed.
-	 pos_refs = the_content.getPositions(null, start,len);
-	 the_content.remove(start,len);
+         int start = remove_offset;
+         int len = remove_length;
+         rem_string = the_content.getString(start,len);
+         // Get the Positions in the range being removed.
+         pos_refs = the_content.getPositions(null, start,len);
+         the_content.remove(start,len);
        }
       catch (BadLocationException bl) {
-	 throw new CannotRedoException();
+         throw new CannotRedoException();
        }
     }
 

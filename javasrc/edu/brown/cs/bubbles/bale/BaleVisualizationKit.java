@@ -200,8 +200,8 @@ static String getIndication(String proj,String from0,String key)
 {
    if (from0 == null) return null;
    
-   String typ = BALE_PROPERTIES.getString(key + "." + proj);
-   if (typ == null) typ = BALE_PROPERTIES.getString(key);
+   String typ = BALE_PROPERTIES.getString(key + "." + proj,null);
+   if (typ == null || typ.isEmpty()) typ = BALE_PROPERTIES.getString(key);
    
    String from = from0;
    

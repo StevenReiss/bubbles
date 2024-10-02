@@ -131,6 +131,7 @@
 <entry key="Bale.show.line.numbers">false</entry>
 <entry key="Bale.show.hints">true</entry>
 <entry key="Bale.format.onsave">false</entry>
+<entry key="Bale.compact.font">Monospaced/0/9</entry>
 </properties>
 
 
