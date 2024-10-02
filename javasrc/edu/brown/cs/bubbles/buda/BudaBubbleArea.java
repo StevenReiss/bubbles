@@ -2472,7 +2472,14 @@ private void handleMouseEvent(MouseEvent e)
    
    for_root.setCurrentChannel(this);
    if (e.getID() == MouseEvent.MOUSE_CLICKED && e.getButton() == MouseEvent.BUTTON2) {
-      if (mr.getBubble() != null) userRemoveBubble(mr.getBubble());
+      if (mr.getBubble() != null) {
+         if (BUDA_PROPERTIES.getBoolean("Buda.mouse.delete.doubleclick")) {
+            if (e.getClickCount() == 2) userRemoveBubble(mr.getBubble());
+          }
+         else {
+            userRemoveBubble(mr.getBubble());
+          }
+       }
       else if (mr.getGroup() != null) {
 	 if (e.getClickCount() == 1) {
 	  }

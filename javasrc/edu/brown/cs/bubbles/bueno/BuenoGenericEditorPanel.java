@@ -224,9 +224,9 @@ private class PathPanel extends EditPanel implements ActionListener, ListSelecti
       base_paths = project_editor.getLibraryPaths();
       panel_paths = new SwingListSet<>(true);
       for (BuenoPathEntry pe : base_paths) {
-	 panel_paths.addElement(pe);
+         panel_paths.addElement(pe);
        }
-
+   
       int y = 0;
       JButton bn = new JButton("New Jar File");
       bn.addActionListener(this);
@@ -241,7 +241,7 @@ private class PathPanel extends EditPanel implements ActionListener, ListSelecti
       delete_button.addActionListener(this);
       addGBComponent(delete_button,1,y++,1,1,0,0);
       ++y;
-
+   
       path_display = new JList<>(panel_paths);
       path_display.setFixedCellWidth(-1);
       path_display.setVisibleRowCount(10);
