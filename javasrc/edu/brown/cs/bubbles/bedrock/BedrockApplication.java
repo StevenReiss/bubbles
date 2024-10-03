@@ -520,7 +520,7 @@ private class WbAdvisor extends WorkbenchAdvisor {
     }
 
    @Override public boolean openWindows() {
-   // System.err.println("OPEN WINDOWS");
+      BedrockPlugin.logD("OPEN WINDOWS");
       if (hide_display) return true;
       return super.openWindows();
     }
@@ -633,13 +633,13 @@ private class WbShellRemover extends ShellAdapter {
       Shell sh = (Shell) e.getSource();
       String what = sh.toString();
       BedrockPlugin.logD("ACTIVE SHELL " + what + " " + sh.getClass().getName() + " " +
-	sh.getMinimumSize() + " " + sh.isVisible());
+        sh.getMinimumSize() + " " + sh.isVisible());
       if (hide_display) {
-	 if (!is_setup) sh.setVisible(false);
-	 else if (what.contains("{Eclipse}")) sh.setVisible(false);
-	 else {
-	    sh.setVisible(false);
-	  }
+         if (!is_setup) sh.setVisible(false);
+         else if (what.contains("{Eclipse}")) sh.setVisible(false);
+         else {
+            sh.setVisible(false);
+          }
        }
       BedrockPlugin.logD("BEDROCK: ACTIVE SHELL RESULT " + sh.isVisible());
     }

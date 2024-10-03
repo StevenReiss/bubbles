@@ -33,7 +33,9 @@ package edu.brown.cs.bubbles.bass;
 import edu.brown.cs.bubbles.bale.BaleConstants;
 import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.board.BoardMetrics;
+import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
+import edu.brown.cs.bubbles.board.BoardConstants.BoardLanguage;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -127,7 +129,7 @@ BassCreator()
 private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname)
 {
    Map<String,Object> actions = new HashMap<>();
-   Element bdata;
+   Element bdata = null;
    search_bubble = bb;
    access_point = where;
    if (fullname.startsWith("@")) return;
@@ -142,6 +144,11 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
          (fullname.endsWith(":") || fullname.endsWith("/")) && 
          !fullname.contains(".") && !fullname.contains("^^")) 
       isproj= true;
+   else if (forname == null && fullname != null && fullname.contains(":")
+         && BoardSetup.getSetup().getLanguage() == BoardLanguage.JAVA) {
+      isproj = true;
+    }
+         
    
    if (isproj) {
       int pidx = fullname.indexOf(":");
