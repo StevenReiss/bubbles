@@ -3126,6 +3126,18 @@ public boolean resume(BumpProcess bp)
 }
 
 
+public boolean restart(BumpProcess bp)
+{
+   BumpLaunch bl = null;
+   if (bp.isDummy()) {
+      bl = bp.getLaunch();
+      bp = null;
+    }
+   
+   return debugAction(bl,bp,null,null,"RESTART");
+}
+
+
 public boolean resume(BumpThread bt)
 {
    return debugAction(null,null,bt,null,"RESUME");

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+\?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <entry key="Console.family">Monospaced</entry>
@@ -34,6 +34,7 @@
 <entry key="Bddt.buttons.History">true</entry>
 <entry key="Bddt.buttons.DropToFrame">true</entry>
 <entry key="Bddt.buttons.Swing">true</entry>
+<entry key="Bddt.buttons.Restart">true</entry>
 <entry key="Bddt.show.values">true</entry>
 <entry key="Bddt.show.library.bubbles">false</entry>
 <entry key="Bddt.show.user.bubble">true</entry>

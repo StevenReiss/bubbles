@@ -280,7 +280,8 @@ private void setupPanel()
    btnbar.addSeparator();
    btnbar.add(new StopAction());
    btnbar.addSeparator();
-   btnbar.add(new ClearAction());
+   if (bp.getBoolean("Bddt.buttons.Restart",true)) btnbar.add(new RestartAction());
+   else btnbar.add(new ClearAction());
 
    btnbar.setFloatable(false);
    btnbar.setMargin(new Insets(2,2,2,2));
@@ -306,7 +307,8 @@ private void setupPanel()
    bblbar.add(new ValueViewerBubbleAction());
    bblbar.add(new EvaluationBubbleAction());
    bblbar.addSeparator();
-   bblbar.add(new NewChannelAction());
+   if (bp.getBoolean("Bddt.buttons.Restart",true)) bblbar.add(new ClearAction());
+   else bblbar.add(new NewChannelAction());
    bblbar.setFloatable(false);
    bblbar.setMargin(new Insets(2,2,2,2));
    pnl.addGBComponent(bblbar,0,y++,0,1,1,0);
@@ -495,6 +497,50 @@ private class PlayAction extends AbstractAction {
 
 
 
+private class RestartAction extends AbstractAction {
+   
+   private static final long serialVersionUID = 1;
+   
+   RestartAction() {
+      super("Play",BoardImage.getIcon("debug/restart"));
+      putValue(SHORT_DESCRIPTION,"Stop and restart execution");
+    }
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+      BumpClient bc = BumpClient.getBump();
+      boolean userestart = bc.getOptionBool("bubbles.haveRestart",false);
+      if (userestart) {
+         switch (launch_state) {
+            case READY :
+            case TERMINATED :
+               break;
+            case STARTING :
+            case RUNNING :
+            case PAUSED :
+            case PARTIAL_PAUSE :
+               if (cur_process != null) {
+                  BoardMetrics.noteCommand("BDDT","RestartDebug");
+                  waitForFreeze();
+                  bump_client.restart(cur_process);
+                } 
+               break;
+          }
+       }
+      // if back end supports restart do that here
+      new StopAction().actionPerformed(evt);
+      while (launch_state != LaunchState.READY && launch_state != LaunchState.TERMINATED) {
+         try {
+            Thread.sleep(1000);
+          }
+         catch (InterruptedException e) { }
+       }
+      new PlayAction().actionPerformed(evt);
+    }
+   
+}
+
+
+
 
 private class PauseAction extends AbstractAction {
 
@@ -538,19 +584,19 @@ private class StopAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	 case PARTIAL_PAUSE :
-	 case PAUSED :
-	    if (cur_process != null) {
-	       BoardMetrics.noteCommand("BDDT","TerminateDebug");
-	       waitForFreeze();
-	       bump_client.terminate(cur_process);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            break;
+         case STARTING :
+         case RUNNING :
+         case PARTIAL_PAUSE :
+         case PAUSED :
+            if (cur_process != null) {
+               BoardMetrics.noteCommand("BDDT","TerminateDebug");
+               waitForFreeze();
+               bump_client.terminate(cur_process);
+             }
+            break;
        }
     }
 
@@ -602,23 +648,23 @@ private class StepIntoAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	    PlayAction pa = new PlayAction();
-	    pa.actionPerformed(evt);
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	    break;
-	 case PARTIAL_PAUSE :
-	 case PAUSED :
-	    BumpThread bt = event_handler.getLastStoppedThread();
-	    if (bt != null) {
-	       BoardMetrics.noteCommand("BDDT","StepIntoDebug");
-	       waitForFreeze();
-	       bump_client.stepInto(bt);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+            PlayAction pa = new PlayAction();
+            pa.actionPerformed(evt);
+            break;
+         case STARTING :
+         case RUNNING :
+            break;
+         case PARTIAL_PAUSE :
+         case PAUSED :
+            BumpThread bt = event_handler.getLastStoppedThread();
+            if (bt != null) {
+               BoardMetrics.noteCommand("BDDT","StepIntoDebug");
+               waitForFreeze();
+               bump_client.stepInto(bt);
+             }
+            break;
        }
     }
 
@@ -791,21 +837,21 @@ private class StartDebug implements Runnable {
       BudaRoot br = BudaRoot.findBudaRoot(BddtLaunchControl.this);
       if (br == null) return;
       br.handleSaveAllRequest();
-
+   
       BumpErrorType etyp = bump_client.getErrorType();
-
+   
       if (etyp == BumpErrorType.ERROR) {
-	 int sts = JOptionPane.showConfirmDialog(BddtLaunchControl.this,
-	       "Start debugging with compiler errors?",
-	       "Error Check for Run",JOptionPane.YES_NO_OPTION,
-	       JOptionPane.QUESTION_MESSAGE);
-	 if (sts == JOptionPane.YES_OPTION) etyp = BumpErrorType.WARNING;
+         int sts = JOptionPane.showConfirmDialog(BddtLaunchControl.this,
+               "Start debugging with compiler errors?",
+               "Error Check for Run",JOptionPane.YES_NO_OPTION,
+               JOptionPane.QUESTION_MESSAGE);
+         if (sts == JOptionPane.YES_OPTION) etyp = BumpErrorType.WARNING;
        }
       if (etyp == BumpErrorType.ERROR || etyp == BumpErrorType.FATAL) {
-	 setLaunchState(LaunchState.READY);
-	 return;
+         setLaunchState(LaunchState.READY);
+         return;
        }
-
+   
       String id = "B_" + Integer.toString(((int)(Math.random() * 100000)));
       BumpProcess bp = bump_client.startDebug(launch_config,id);
       if (bp != null && cur_process == null) setProcess(bp);
