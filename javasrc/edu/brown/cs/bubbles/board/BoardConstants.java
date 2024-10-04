@@ -549,6 +549,7 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
    "org.eclipse.jdt.core.manipulation.jar",
    "org.eclipse.jdt.debug.jdi.jar",
    "org.eclipse.jdt.debug.jdimodel.jar",
+   "org.eclipse.jdt.launching.jar",
    "org.eclipse.jdt.ui.jar",
    "org.eclipse.jface.jar",
    "org.eclipse.jface.text.jar",

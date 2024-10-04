@@ -182,7 +182,7 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
          actions.put("DELETEPROJECT",new DeleteProjectAction(fullname,bb));
        }
       bdata = getButtonData("FIXIMPORTS");
-      if (bdata != null) {
+      if (bdata != null && forname != null) {
          if (bass_properties.getBoolean("Bass.fix.imports") && forname.getProject() != null) {
             Action act = new FixImportsAction("Project " + forname.getProject(),
                   forname.getProject(),fullname,bb);
@@ -190,7 +190,7 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
           }
        }
       bdata = getButtonData("FORMAT");
-      if (bdata != null && bass_properties.getBoolean("Bass.fix.format")) {
+      if (bdata != null && forname != null && bass_properties.getBoolean("Bass.fix.format")) {
          Action act = new FormatAction("Project " + forname.getProject(),
                forname.getProject(),fullname,bb);
          actions.put("FORMAT",act);

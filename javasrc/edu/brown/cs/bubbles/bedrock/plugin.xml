@@ -12,6 +12,7 @@
       <import plugin="org.eclipse.jdt.core" />
       <import plugin="org.eclipse.jdt.ui" />
       <import plugin="org.eclipse.jdt.debug" />
+      <import plugin="org.eclipse.jdt.launching" />
       <import plugin="org.eclipse.jdt.core.manipulation" />
       <import plugin="org.eclipse.jface.text" />
       <import plugin="org.eclipse.jface.ui" />

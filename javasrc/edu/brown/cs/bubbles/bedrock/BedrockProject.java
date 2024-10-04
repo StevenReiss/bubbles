@@ -76,6 +76,10 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.IVMInstallType;
+import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jdt.launching.LibraryLocation;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -287,6 +291,28 @@ void listProjects(IvyXmlWriter xw)
        }
       xw.end("PROJECT");
     }
+   
+   xw.begin("VMS");
+   IVMInstallType [] vmtypes = JavaRuntime.getVMInstallTypes();
+   for (IVMInstallType vtyp : vmtypes) {
+      IVMInstall [] inst = vtyp.getVMInstalls();
+      for (IVMInstall vm : inst) {
+         xw.begin("VM");
+         xw.field("NAME",vm.getName());
+         xw.field("TYPE",vtyp.getName());
+         xw.field("LOCATION",vm.getInstallLocation());
+         xw.field("JAVADOC",vm.getJavadocLocation());
+         boolean valid = vtyp.validateInstallLocation(vm.getInstallLocation()).isOK();
+         xw.field("VALID",valid);
+         if (vm.getVMArguments() != null) { 
+            for (String s : vm.getVMArguments()) {
+               xw.textElement("ARGUMENT",s);
+             }
+          }
+         xw.end("VM");
+       }
+    }
+   xw.end("VMS");
 }
 
 
