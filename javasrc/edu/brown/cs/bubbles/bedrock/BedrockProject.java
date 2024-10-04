@@ -291,25 +291,27 @@ void listProjects(IvyXmlWriter xw)
        }
       xw.end("PROJECT");
     }
-   
+
    xw.begin("VMS");
    IVMInstallType [] vmtypes = JavaRuntime.getVMInstallTypes();
+   IVMInstall dflt = JavaRuntime.getDefaultVMInstall();
    for (IVMInstallType vtyp : vmtypes) {
       IVMInstall [] inst = vtyp.getVMInstalls();
       for (IVMInstall vm : inst) {
-         xw.begin("VM");
-         xw.field("NAME",vm.getName());
-         xw.field("TYPE",vtyp.getName());
-         xw.field("LOCATION",vm.getInstallLocation());
-         xw.field("JAVADOC",vm.getJavadocLocation());
-         boolean valid = vtyp.validateInstallLocation(vm.getInstallLocation()).isOK();
-         xw.field("VALID",valid);
-         if (vm.getVMArguments() != null) { 
-            for (String s : vm.getVMArguments()) {
-               xw.textElement("ARGUMENT",s);
-             }
-          }
-         xw.end("VM");
+	 xw.begin("VM");
+	 xw.field("NAME",vm.getName());
+	 xw.field("TYPE",vtyp.getName());
+	 xw.field("LOCATION",vm.getInstallLocation());
+	 xw.field("JAVADOC",vm.getJavadocLocation());
+	 boolean valid = vtyp.validateInstallLocation(vm.getInstallLocation()).isOK();
+	 xw.field("VALID",valid);
+	 if (vm == dflt) xw.field("DEFAULT",true);
+	 if (vm.getVMArguments() != null) {
+	    for (String s : vm.getVMArguments()) {
+	       xw.textElement("ARGUMENT",s);
+	     }
+	  }
+	 xw.end("VM");
        }
     }
    xw.end("VMS");
@@ -371,10 +373,10 @@ void buildProject(String proj,boolean clean,boolean full,boolean refresh,IvyXmlW
       mrks = ip.findMarkers(null,true,IResource.DEPTH_INFINITE);
       Map<Long,IMarker> marset = new HashMap<>();
       for (IMarker m : mrks) {
-         marset.put(m.getId(),m);
+	 marset.put(m.getId(),m);
        }
       BedrockUtil.outputMarkers(ip,marset.values(),xw);
-    } 
+    }
    catch (CoreException e) {
       throw new BedrockException("Problem finding errors",e);
     }
@@ -543,7 +545,7 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
    if (id != 0) {
       for (IClasspathEntry ent : ents) {
 	 if (ent.hashCode() == id) {
-            oent = ent;
+	    oent = ent;
 	    break;
 	  }
        }
@@ -565,7 +567,7 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 	 f = IvyXml.getTextElement(xml,"SOURCE");
 	 IPath src = (f == null ? null : Path.fromOSString(f));
 	 BedrockPlugin.logD("PATHS " + bin + " " + src);
-         
+	
 	 boolean optfg = IvyXml.getAttrBool(xml,"OPTIONAL");
 	 boolean export = IvyXml.getAttrBool(xml,"EXPORTED");
 	 IAccessRule [] rls = null;
@@ -621,11 +623,11 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 	 if (bin != null && !typ.equals("SOURCE")) {
 	    nent = JavaCore.newLibraryEntry(bin,src,null,
 		  rls,xatts,export);
-          }
+	  }
 	 else {
 	    nent = JavaCore.newSourceEntry(src,inclarr,exclarr,
 		  null,xatts);
-          }
+	  }
 
 	 if (IvyXml.getAttrBool(xml,"MODIFIED") && oent != null) {
 	    int idx = ents.indexOf(oent);
@@ -1097,12 +1099,12 @@ void handlePreferences(String proj,IvyXmlWriter xw)
 // try {
 //    Bundle b = Platform.getBundle("com.android.ide.eclipse.adt");
 //    if (b != null) {
-// 	 xw.begin("PREF");
-// 	 xw.field("NAME","bedrock.useAndroid");
-// 	 xw.field("VALUE",true);
-// 	 xw.field("OPTS",true);
-// 	 xw.end("PREF");
-// 	 use_android = true;
+//	 xw.begin("PREF");
+//	 xw.field("NAME","bedrock.useAndroid");
+//	 xw.field("VALUE",true);
+//	 xw.field("OPTS",true);
+//	 xw.end("PREF");
+//	 use_android = true;
 //     }
 //  }
 // catch (Throwable t) { }
