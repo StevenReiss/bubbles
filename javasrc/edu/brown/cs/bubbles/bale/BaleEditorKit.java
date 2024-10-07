@@ -2221,26 +2221,26 @@ private static class ExplicitElisionAction extends AbstractAction {
       BaleDocument bd = target.getBaleDocument();
       BowiFactory.startTask();
       try {
-	 bd.baleWriteLock();
-	 try {
-	    int off = target.getCaretPosition();
-	    BaleElement.Branch br = bd.getParagraphElement(off);
-	    BaleElement ebr = null;
-	    if (br.isElided()) {
-	       br.setElided(false);
-	       ebr = br;
-	     }
-	    else {
-	       while (br != null && !br.canElide()) {
-		  br = br.getBaleParent();
-		}
-	       if (br == null) return;
-	       br.setElided(true);
-	     }
-	    bd.handleElisionChange();
-	    if (ebr != null) target.increaseSizeForElidedElement(ebr);
-	  }
-	 finally { bd.baleWriteUnlock(); }
+         bd.baleWriteLock();
+         try {
+            int off = target.getCaretPosition();
+            BaleElement.Branch br = bd.getParagraphElement(off);
+            BaleElement ebr = null;
+            if (br.isElided()) {
+               br.setElided(false);
+               ebr = br;
+             }
+            else {
+               while (br != null && !br.canElide()) {
+        	  br = br.getBaleParent();
+        	}
+               if (br == null) return;
+               br.setElided(true);
+             }
+            bd.handleElisionChange();
+            if (ebr != null) target.increaseSizeForElidedElement(ebr);
+          }
+         finally { bd.baleWriteUnlock(); }
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","ExplicitElision");

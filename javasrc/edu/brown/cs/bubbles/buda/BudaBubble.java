@@ -128,6 +128,7 @@ private String		unique_id;
 private long		creation_time;
 private BudaBorder	border_type;
 private double		scale_factor;
+private float           base_font_size;
 private long            last_viewed;
 private long            unviewed_time;
 
@@ -229,6 +230,7 @@ protected BudaBubble(Component c,BudaBorder bdr)
    unique_id = null;
    creation_time = System.currentTimeMillis();
    scale_factor = 1;
+   base_font_size = 0;
 
    setContentPane(c);
 
@@ -809,7 +811,7 @@ void setCreationTime(long t)
 /*										*/
 /********************************************************************************/
 
-protected void setScaleFactor(double sf)
+public void setScaleFactor(double sf)
 {
    Component c = getContentPane();
 
@@ -818,7 +820,7 @@ protected void setScaleFactor(double sf)
       sc.setScaleFactor(sf);
       return;
     }
-   else if (c != null && c instanceof Zoomable) {
+   else if (c != null && c instanceof Zoomable) { 
       Zoomable z = (Zoomable) c;
       z.setScaleFactor(sf);
     }
@@ -1277,18 +1279,8 @@ public boolean connectTo(BudaBubble bb,MouseEvent evt)
 
 @Override public void paintComponent(Graphics g0)
 {
-   if (this instanceof Zoomable) {
-      Zoomable z = (Zoomable) this;
-      Graphics2D g2 = (Graphics2D) g0.create();
-      g2.scale(scale_factor,scale_factor);
-      z.scaledPaint(g2);
-    }
-   
-   Graphics2D g02 = (Graphics2D) g0;	// set graphics hints for children
-   g02.setRenderingHints(hint_map);
-   // might need to scale here;
-
    Graphics2D g2 = (Graphics2D) g0.create();
+   g2.setRenderingHints(hint_map);
 
    Shape s0 = getShape();
 
@@ -1299,6 +1291,24 @@ public boolean connectTo(BudaBubble bb,MouseEvent evt)
 
    paintBubbleBorder(g2);
 }
+
+
+
+@Override public void paintComponents(Graphics g0)
+{
+   Graphics2D g2 = (Graphics2D) g0;
+   if (this instanceof Scalable) {
+      Font ft = g2.getFont();
+      g2 = (Graphics2D) g0.create();
+      g2.scale(scale_factor,scale_factor);
+      float f = (float)(base_font_size * scale_factor);
+      ft = ft.deriveFont(f);
+      g2.setFont(ft);
+    }
+   
+   super.paintComponents(g2);
+}
+
 
 
 

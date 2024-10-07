@@ -39,7 +39,6 @@ import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -986,10 +985,12 @@ interface Scalable {
 
 interface Zoomable {
    
-   default void setScaleFactor(double sf)               { }
+   void setScaleFactor(double df);
    
-   void scaledPaint(Graphics g);
 }
+
+
+
 
 
 interface BudaBubbleScaler {

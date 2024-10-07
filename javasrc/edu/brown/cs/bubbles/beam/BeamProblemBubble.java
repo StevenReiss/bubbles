@@ -345,7 +345,7 @@ private String getToolTip(BumpProblem bp)
    return bp.getErrorType().toString() + ": " + bp.getMessage();
 }
 
-@Override protected void setScaleFactor(double sf)
+@Override public void setScaleFactor(double sf)
 {
    Font ft = base_font;
    int ht = base_height;

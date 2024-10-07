@@ -1462,8 +1462,14 @@ private void setupGlobalActions()
    SwingKey.registerKeyAction("ROOT",jc,new HelpHandler(),"HELP","menu shift SLASH","menu shift F1");
    SwingKey.registerKeyAction("ROOT",jc,new PrintHandler(),"menu P");
    
+   SwingKey.registerKeyAction("ROOT",jc, new ZoomHandler(1),
+         "menu EQUALS");
+   SwingKey.registerKeyAction("ROOT",jc,new ZoomHandler(-1),
+         "menu MINUS");
+   SwingKey.registerKeyAction("ROOT",jc,new ZoomHandler(0),
+         "menu shift EQUALS");
 // registerKeyAction(new BudaExpose(this,bubble_area),"EXPOSE",
-// KeyStroke.getKeyStroke(KeyEvent.VK_F9,0));
+//              KeyStroke.getKeyStroke(KeyEvent.VK_F9,0));
 // registerKeyAction(new ZoomHandler(1),"Zoom in",
 //	        KeyStroke.getKeyStroke(KeyEvent.VK_PLUS,menudown));
 // registerKeyAction(new ZoomHandler(1),"Zoom in",
@@ -1947,6 +1953,7 @@ private class ZoomHandler extends AbstractAction implements ActionListener {
    private static final long serialVersionUID = 1;
 
    ZoomHandler(int dir) {
+      super(getZoomName(dir));
       zoom_direction = dir;
     }
 
@@ -1957,8 +1964,17 @@ private class ZoomHandler extends AbstractAction implements ActionListener {
       else v = 1.0;
       getCurrentBubbleArea().setScaleFactor(v);
     }
+   
 
 }	// end of inner class ZoomHandler
+
+
+private static String getZoomName(int dir)
+{
+   if (dir == 0) return "Zoom Reset";
+   else if (dir > 0) return "Zoom In";
+   else return "Zoom Out";
+}
 
 
 

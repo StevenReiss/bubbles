@@ -1154,7 +1154,7 @@ void setScaleFactor(double sf)
       bb.setBounds(bnds);
       bb.setScaleFactor(sf);
     }
-
+   
    for (BudaBubbleGroup bg : getBubbleGroups()) {
       bg.setScaleFactor(sf);
     }

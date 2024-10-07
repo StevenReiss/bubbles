@@ -67,7 +67,7 @@ import java.util.List;
 
 
 
-class BaleEditorBubble extends BudaBubble implements BaleConstants, BudaConstants
+class BaleEditorBubble extends BudaBubble implements BaleConstants, BudaConstants, BudaConstants.Scalable 
 {
 
 
@@ -210,7 +210,6 @@ BaleEditorBubble(BaleFragmentEditor bfe)
 
 
 
-
 /********************************************************************************/
 /*										*/
 /*	Access methods								*/
@@ -290,10 +289,6 @@ BaleEditorBubble(BaleFragmentEditor bfe)
    if (bfe == null) return null;
    return bfe.getDocument();
 }
-
-
-
-
 
 
 
