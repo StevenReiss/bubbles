@@ -1462,20 +1462,16 @@ private void setupGlobalActions()
    SwingKey.registerKeyAction("ROOT",jc,new HelpHandler(),"HELP","menu shift SLASH","menu shift F1");
    SwingKey.registerKeyAction("ROOT",jc,new PrintHandler(),"menu P");
    
-   SwingKey.registerKeyAction("ROOT",jc, new ZoomHandler(1),
-         "menu EQUALS");
-   SwingKey.registerKeyAction("ROOT",jc,new ZoomHandler(-1),
-         "menu MINUS");
-   SwingKey.registerKeyAction("ROOT",jc,new ZoomHandler(0),
-         "menu shift EQUALS");
+   if (BUDA_PROPERTIES.getBoolean("Buda.enable.zoom")) {
+      SwingKey.registerKeyAction("ROOT",jc, new ZoomHandler(1),
+            "menu EQUALS");
+      SwingKey.registerKeyAction("ROOT",jc,new ZoomHandler(-1),
+            "menu MINUS");
+      SwingKey.registerKeyAction("ROOT",jc,new ZoomHandler(0),
+            "menu shift EQUALS");
+    }
 // registerKeyAction(new BudaExpose(this,bubble_area),"EXPOSE",
 //              KeyStroke.getKeyStroke(KeyEvent.VK_F9,0));
-// registerKeyAction(new ZoomHandler(1),"Zoom in",
-//	        KeyStroke.getKeyStroke(KeyEvent.VK_PLUS,menudown));
-// registerKeyAction(new ZoomHandler(1),"Zoom in",
-//              KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,menudown|InputEvent.SHIFT_DOWN_MASK));
-// registerKeyAction(new ZoomHandler(-1),"Zoom out",
-//	        KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,menudown));
 }
 
 
@@ -1945,7 +1941,6 @@ private class CommitHandler extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-@SuppressWarnings("unused")
 private class ZoomHandler extends AbstractAction implements ActionListener {
 
    private int zoom_direction;

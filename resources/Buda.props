@@ -38,6 +38,7 @@
 <entry key="Buda.tooltip.foreground">ff000000</entry>
 <entry key="Buda.remove.old.time">168</entry>
 <entry key="Buda.remove.old.active.time">96</entry>
+<entry key="Buda.enable.zoom">false</entry>
 </properties>
 
 

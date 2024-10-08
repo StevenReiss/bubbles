@@ -463,6 +463,10 @@
 	    <KEYWORD TEXT='overview' />
 	    <KEYWORD TEXT='shade' />
 	</OPT>
+	<OPT NAME="Buda.enable.zoom" TYPE="BOOLEAN" DESCRIPTION="Enable zooming in and out">
+	    <TAB NAME="Bubble Config"/>
+	    <KEYWORD TEXT='zoom' />
+	</OPT>
 	<OPT NAME="Buda.shade.time" DESCRIPTION="Time for shade to move up or down (ms)" TYPE="INTEGER" MAX="2000" MIN="1" SLIDER="true">
 	    <TAB NAME="Bubble Config"/>
 	    <KEYWORD TEXT="overview"/>
