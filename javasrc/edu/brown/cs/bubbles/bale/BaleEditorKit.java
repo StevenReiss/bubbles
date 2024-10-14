@@ -1362,6 +1362,9 @@ private static class IndentLinesAction extends TextAction {
             elno = slno;
             slno = x;
           }
+         
+         // might want to do a few lines at a time by puttins
+         // separate tasks into Swing event queue?
    
          for (int i = slno; i <= elno; ++i) {
             bd.fixLineIndent(i);
@@ -1404,7 +1407,6 @@ private static class FixIndentsAction extends TextAction {
          else {
             bd.nextEditCounter();
           }
-   
        }
       finally { bd.baleWriteUnlock(); }
     }

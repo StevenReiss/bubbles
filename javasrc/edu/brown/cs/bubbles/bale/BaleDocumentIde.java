@@ -40,7 +40,6 @@ import edu.brown.cs.bubbles.board.BoardConstants;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardSetup;
-import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.bowi.BowiFactory;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bump.BumpClient;
@@ -703,7 +702,7 @@ private void fixupElision()
    if (id != getEditCounter()) return;
 
    for (FragmentElisionUpdater feu : runs) {
-      BoardThreadPool.start(feu);
+      SwingUtilities.invokeLater(feu);
     }
 }
 

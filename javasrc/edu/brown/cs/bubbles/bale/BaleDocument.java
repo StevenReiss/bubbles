@@ -78,7 +78,6 @@ private long			last_edit;
 
 private transient Map<Position,String> created_text;
 
-
 private static AtomicInteger	edit_counter = new AtomicInteger();
 private static final long serialVersionUID = 1;
 
@@ -295,10 +294,25 @@ private boolean isElided(Element e)
 /*										*/
 /********************************************************************************/
 
-void baleWriteLock()				{ writeLock(); }
-void baleWriteUnlock()				{ writeUnlock(); }
-void baleReadLock()				{ readLock(); }
-void baleReadUnlock()				{ readUnlock(); }
+void baleWriteLock()			
+{ 
+   writeLock(); 
+}
+
+void baleWriteUnlock()				
+{ 
+   writeUnlock();
+}
+
+void baleReadLock()			
+{
+   readLock();
+}
+
+void baleReadUnlock()			
+{ 
+   readUnlock(); 
+}
 
 void checkWriteLock()
 {
@@ -491,7 +505,9 @@ public void handleAstUpdated(List<BaleAstNode> nodes)
       checkOrphan();
       if (isOrphan()) return;
    }
-   finally { baleReadUnlock(); }
+   finally {
+      baleReadUnlock(); 
+    }
 
    // BoardLog.logD("BALE","Update AST for " + nodes);
    BaleAstNode oast = null;
@@ -503,7 +519,9 @@ public void handleAstUpdated(List<BaleAstNode> nodes)
       BaleElementEvent ee = element_buffer.updateAst(nodes);
       if (ee != null) reportEvent(this,0,getLength(),DocumentEvent.EventType.CHANGE,null,ee);
     }
-   finally { baleWriteUnlock(); }
+   finally { 
+      baleWriteUnlock();
+    }
 
    if (oast == null) {
       synchronized (this) {		// notify that AST is now ready
