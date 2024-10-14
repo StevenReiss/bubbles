@@ -19,15 +19,6 @@
  ********************************************************************************/
 
 
-/* RCS: $Header$ */
-
-/*********************************************************************************
- *
- * $Log$
- *
- ********************************************************************************/
-
-
 package edu.brown.cs.bubbles.bale;
 
 
@@ -132,8 +123,9 @@ BumpLocation insertMethod()
    catch (BadLocationException e) {
       return null;
     }
-   finally { doc.baleWriteUnlock(); }
-
+   finally {
+      doc.baleWriteUnlock();
+    }
 }
 
 
@@ -273,7 +265,7 @@ private String createMethodText()
    if (method_params != null) {
       StringTokenizer tok = new StringTokenizer(method_params,",");
       ct = 0;
-      if(tok.hasMoreTokens()) buf.append(tok.nextToken().trim());
+      if (tok.hasMoreTokens()) buf.append(tok.nextToken().trim());
       while (tok.hasMoreTokens()) {
 	 buf.append(", ");
 	 buf.append(tok.nextToken().trim());
@@ -289,11 +281,13 @@ private String createMethodText()
    else {
       buf.append("\n{\n   // method body goes here");
       // TODO: if return type != void, add a return statement here
-      if(method_returns != null && !method_returns.equals("void")){
-	 if(method_returns.equals("boolean")) buf.append("\n    return false;");
-	 else if(method_returns.equals("int") || method_returns.equals("float") || method_returns.equals("double") || method_returns.equals("short") || method_returns.equals("byte"))
+      if (method_returns != null && !method_returns.equals("void")){
+	 if (method_returns.equals("boolean")) buf.append("\n    return false;");
+	 else if (method_returns.equals("int") || method_returns.equals("float") || 
+               method_returns.equals("double") || method_returns.equals("short") || 
+               method_returns.equals("byte"))
 	    buf.append("\n    return 0;");
-	 else if(method_returns.equals("char")) buf.append("\n    return '\u0000';");
+	 else if (method_returns.equals("char")) buf.append("\n    return '\u0000';");
 	 else buf.append("\n    return null;");
       }
       buf.append("    \n}\n");

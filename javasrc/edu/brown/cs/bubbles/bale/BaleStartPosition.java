@@ -19,15 +19,6 @@
  ********************************************************************************/
 
 
-/* RCS: $Header$ */
-
-/*********************************************************************************
- *
- * $Log$
- *
- ********************************************************************************/
-
-
 package edu.brown.cs.bubbles.bale;
 
 
@@ -37,7 +28,7 @@ import javax.swing.text.Position;
 
 
 
-class BaleStartPosition implements Position, BaleConstants {
+final class BaleStartPosition implements Position, BaleConstants {
 
 
 

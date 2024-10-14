@@ -19,15 +19,6 @@
  ********************************************************************************/
 
 
-/* RCS: $Header$ */
-
-/*********************************************************************************
- *
- * $Log$
- *
- ********************************************************************************/
-
-
 package edu.brown.cs.bubbles.bale;
 
 
@@ -225,8 +216,9 @@ private void handleScroll(int nline,boolean lr)
    int line1 = -1;
 
    BaleElement be = bd.getCharacterElement(off0);
-   while (be != null && !be.isLineElement() && !be.isElided())
+   while (be != null && !be.isLineElement() && !be.isElided()) {
       be = be.getBaleParent();
+    }
    int delta = Math.abs(nline);
    while (be != null && delta > 0) {
       int off1;
@@ -234,8 +226,9 @@ private void handleScroll(int nline,boolean lr)
       else off1 = be.getStartOffset() - 1;
       --delta;
       be = bd.getCharacterElement(off1);
-      while (be != null && !be.isLineElement() && !be.isElided())
+      while (be != null && !be.isLineElement() && !be.isElided()) {
 	 be = be.getBaleParent();
+       }
     }
    if (be != null) {
       int off2 = be.getStartOffset();
@@ -285,7 +278,9 @@ private void handleScroll(int nline,boolean lr)
    try {
       super.validate();
     }
-   finally { bd.baleReadUnlock(); }
+   finally {
+      bd.baleReadUnlock();
+    }
    
    if (BALE_PROPERTIES.getBoolean("Bale.editor.scrollbar")) {
        checkScrollBars();
@@ -301,7 +296,7 @@ private void handleScroll(int nline,boolean lr)
 
 
 
-private class ViewportManager extends ComponentAdapter {
+private final class ViewportManager extends ComponentAdapter {
 
    @Override public void componentResized(ComponentEvent e) {
       handleViewportSized();
@@ -322,13 +317,15 @@ private class ViewportManager extends ComponentAdapter {
       try {
 	 handleScroll(nclk,(mods & InputEvent.SHIFT_DOWN_MASK) != 0);
        }
-      finally { bd.baleReadUnlock(); }
+      finally {
+         bd.baleReadUnlock();
+       }
     }
 }
 
 
 
-private class ViewManager implements ChangeListener {
+private final class ViewManager implements ChangeListener {
 
    @Override public void stateChanged(ChangeEvent e) {
       // BoardLog.logD("BALE","VIEW CHANGED " + getViewport().getViewRect());

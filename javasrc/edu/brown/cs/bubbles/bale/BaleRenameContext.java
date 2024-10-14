@@ -124,7 +124,9 @@ BaleRenameContext(BaleEditorPane edt,int soff)
    try {
       start_name = for_document.getText(esoff,eeoff-esoff);
     }
-   catch (BadLocationException e) { return; }
+   catch (BadLocationException e) { 
+      return; 
+    }
 
    for_editor.addCaretListener(this);
    edit_mouser = new EditMouser();
@@ -171,7 +173,7 @@ private synchronized void removeContext()
 
 
 
-private class EditMouser extends MouseAdapter {
+private final class EditMouser extends MouseAdapter {
 
    @Override public void mousePressed(MouseEvent e) {
       removeContext();
@@ -182,7 +184,7 @@ private class EditMouser extends MouseAdapter {
 
 
 
-private class EditKeyer extends KeyAdapter {
+private final class EditKeyer extends KeyAdapter {
 
    @Override public void keyPressed(KeyEvent e) {
       removeContext();
@@ -384,7 +386,7 @@ private class RenameDoer implements Runnable {
 /*										*/
 /********************************************************************************/
 
-private class RenameListener implements ActionListener, CaretListener {
+private final class RenameListener implements ActionListener, CaretListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       if (!isRenameValid()) return;

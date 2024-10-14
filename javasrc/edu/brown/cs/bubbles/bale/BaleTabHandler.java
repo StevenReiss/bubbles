@@ -19,15 +19,6 @@
  ********************************************************************************/
 
 
-/* RCS: $Header$ */
-
-/*********************************************************************************
- *
- * $Log$
- *
- ********************************************************************************/
-
-
 package edu.brown.cs.bubbles.bale;
 
 import edu.brown.cs.bubbles.board.BoardLog;
@@ -62,7 +53,7 @@ private int font_height;
 private static int base_tab_size;
 
 
-private static final float	rounding_value = 0.95f; 	// matches AWT
+private static float	rounding_value = 0.95f; 	// matches AWT
 
 static {
    String v = BALE_PROPERTIES.getProperty("indent.tabulation.size");
@@ -137,7 +128,7 @@ static void setBaseTabSize(int tz)
    setFont();
 
    //TODO: this doesn't work for variable space fonts
-   int pos = (int)(x/font_width);
+   int pos = (int) (x/font_width);
    int delta = ((int) x) % font_width;
 
    int npos = localNextTabPosition(pos);
@@ -185,8 +176,8 @@ private void setFont()
       FontRenderContext frc = new FontRenderContext(null,false,false);
       Rectangle2D r = fn.getStringBounds("n",frc);
       LineMetrics lm = fn.getLineMetrics("NWMpq",frc);
-      int ht = (int)(lm.getAscent() + rounding_value);
-      ht += (int)(lm.getDescent() + lm.getLeading() + rounding_value);
+      int ht = (int) (lm.getAscent() + rounding_value);
+      ht += (int) (lm.getDescent() + lm.getLeading() + rounding_value);
       font_width = (int) r.getWidth();
       font_height = ht;
       last_font = fn;

@@ -19,10 +19,6 @@
  ********************************************************************************/
 
 
-/* SVN: $Id$ */
-
-
-
 package edu.brown.cs.bubbles.bale;
 
 import edu.brown.cs.bubbles.board.BoardLog;
@@ -246,7 +242,9 @@ protected void computeSizes()
    float maxy = miny;
    float prfx = 0;
    float prfy = miny;
-   float span1,span2,span3;
+   float span1;
+   float span2;
+   float span3;
 
    for (int i = 0; i < n; ++i) {
       View v = getView(i);
@@ -364,7 +362,7 @@ protected void adjustFontSizes(int sidx,int eidx)
 	 if (fn != fn0) {
 	    lmn = fn.getLineMetrics("Ap",frc);
 	    float fht1 = lmn.getAscent();
-	    lastoffset = (int)(base + fnht - fht1 + 0.5);
+	    lastoffset = (int) (base + fnht - fht1 + 0.5);
 	    fn0 = fn;
 	  }
 	 view_data[i].setPosition(view_data[i].xOffset(),lastoffset);

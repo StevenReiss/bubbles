@@ -19,10 +19,6 @@
  ********************************************************************************/
 
 
-/* SVN: $Id$ */
-
-
-
 package edu.brown.cs.bubbles.bale;
 
 
@@ -80,7 +76,7 @@ private boolean 	have_errors;
 private ElisionTrigger	elision_trigger;
 private ExtractTrigger	extract_trigger;
 
-private static final boolean annotate_cutline = false;
+private static boolean annotate_cutline = false;
 
 
 private static final int CHANGE_ELISION_DELTA = 20;
@@ -601,7 +597,8 @@ private void drawElisionTrigger(Graphics g,Rectangle alloc,boolean fg)
 @Override public void replace(int idx,int len,View [] elems)
 {
    // BaleDocument bd = getBaleElement().getBaleDocument();
-   // BoardLog.logD("BALE","VIEW REPLACE " + getBaleElement().getName() + " " + idx + " " + len + " " + elems.length + " " + bd);
+   // BoardLog.logD("BALE","VIEW REPLACE " + getBaleElement().getName() + " " + idx +
+   //      " " + len + " " + elems.length + " " + bd);
    // bd.checkWriteLock();	// might be called during initialization without lock
 
    super.replace(idx,len,elems);
@@ -692,7 +689,9 @@ private void drawElisionTrigger(Graphics g,Rectangle alloc,boolean fg)
 	 layout_valid = true;
        }
     }
-   finally { bd.baleReadUnlock(); }
+   finally { 
+      bd.baleReadUnlock(); 
+    }
 }
 
 
@@ -951,7 +950,7 @@ private double getPriority()
 /*										*/
 /********************************************************************************/
 
-private class ElisionTrigger implements RegionAction {
+private final class ElisionTrigger implements RegionAction {
 
    @Override public void handleClick(MouseEvent e) {
       BaleEditorPane bep = getBaleEditorPane();
@@ -979,7 +978,9 @@ private class ElisionTrigger implements RegionAction {
          else BoardMetrics.noteCommand("BALE","ClickElision");
          BaleEditorBubble.noteElision(bep);
        }
-      finally { bd.baleWriteUnlock(); }
+      finally { 
+         bd.baleWriteUnlock(); 
+       }
     }
 
    @Override public BudaBubble handleHoverBubble(MouseEvent e)	      { return null; }
@@ -988,7 +989,7 @@ private class ElisionTrigger implements RegionAction {
 
 
 
-private class ExtractTrigger implements RegionAction {
+private final class ExtractTrigger implements RegionAction {
 
    @Override public void handleClick(MouseEvent e) {
       BaleEditorPane bep = getBaleEditorPane();

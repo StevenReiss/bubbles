@@ -42,7 +42,7 @@ import javax.swing.SwingUtilities;
 
 
 
-public class BaleTest implements BaleConstants {
+public final class BaleTest implements BaleConstants {
 
 
 

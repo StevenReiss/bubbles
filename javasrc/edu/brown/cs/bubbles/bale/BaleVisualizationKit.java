@@ -141,8 +141,8 @@ BufferedImage getIcon(String indication)
 {
    if (indication != null) {
       int hc = indication.hashCode() % NUM_ICONS;
-      String id = "visualization/" + BALE_PROPERTIES.getString(VISUALIZATION_ICON_SIZE)
-		   +"_leaf/leaf" + Math.abs(hc) + ".png";
+      String id = "visualization/" + BALE_PROPERTIES.getString(VISUALIZATION_ICON_SIZE) +
+            "_leaf/leaf" + Math.abs(hc) + ".png";
       Image image = BoardImage.getImage(id);
       if (image == null) return null;
 

@@ -149,7 +149,7 @@ BaleViewText(BaleElement e)
    int p0 = getStartOffset();
    int p1 = getEndOffset();
 
-   Rectangle alloc = (a instanceof Rectangle) ? (Rectangle)a : a.getBounds();
+   Rectangle alloc = (a instanceof Rectangle) ? (Rectangle) a : a.getBounds();
    View parent = getParent();
    Segment s = null;
    if ((parent != null) && (parent.getEndOffset() == p1)) {

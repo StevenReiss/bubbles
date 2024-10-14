@@ -19,10 +19,6 @@
  ********************************************************************************/
 
 
-/* SVN: $Id$ */
-
-
-
 package edu.brown.cs.bubbles.bale;
 
 
@@ -119,7 +115,9 @@ protected void invalidateLayout()
 	 if (pv.layout_valid) pv.invalidateLayout();
        }
     }
-   finally { bd.baleReadUnlock(); }
+   finally {
+      bd.baleReadUnlock();
+    }
 }
 
 
@@ -261,7 +259,8 @@ private int findPosition(JTextComponent c, int pos, boolean down) throws BadLoca
 {
    Rectangle initview = SwingText.modelToView2D(c,0);
    Rectangle posview = SwingText.modelToView2D(c,pos);
-   int front, back;
+   int front;
+   int back;
 
    if (initview.x > 3) initview.x = 3;
 
@@ -359,10 +358,16 @@ protected static class ViewData {
    private float actual_width;
 
    ViewData() {
-      min_x = max_x = pref_x = 0;
-      min_y = max_y = pref_y = 0;
-      x_offset = y_offset = 0;
-      actual_height = actual_width = 0;
+      min_x = 0;
+      max_x = 0;
+      pref_x = 0;
+      min_y = 0;
+      max_y = 0;
+      pref_y = 0;
+      x_offset = 0;
+      y_offset = 0;
+      actual_height = 0;
+      actual_width = 0;
     }
 
    float minWidth()			{ return min_x; }
