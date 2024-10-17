@@ -437,9 +437,10 @@ BaleElement shouldBeElided(BaleElement be)
 /*										*/
 /********************************************************************************/
 
-synchronized private BaleElementEvent replaceParent(BaleElement.Branch par,boolean elide)
+private synchronized BaleElementEvent replaceParent(BaleElement.Branch par,boolean elide)
 {
-   int soff,eoff;
+   int soff;
+   int eoff;
    String text;
    BaleDocument doc = par.getBaleDocument();
    BaleTokenState sstate = par.getStartTokenState();
@@ -787,10 +788,10 @@ private boolean fixElementPosition(NewLeafIter nli,BaleElement oelt)
 
 private static class NewLeafIter implements Iterator<BaleElement> {
 
-   List<BaleElement> element_list;
-   int cur_index;
-   boolean is_checked;
-   BaleElement cur_element;
+   private List<BaleElement> element_list;
+   private int cur_index;
+   private boolean is_checked;
+   private BaleElement cur_element;
 
    NewLeafIter(List<BaleElement> lst,int idx) {
       element_list = lst;

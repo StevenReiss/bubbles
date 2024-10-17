@@ -533,7 +533,7 @@ private void addElementNode(BaleElement nbe,int prior)
       int n = cur_parent.getElementCount();
       prior -= 1;			// is this what we want?
       int j = n-prior;
-      for (int i = 0; i < prior; ++ i) {
+      for (int i = 0; i < prior; ++i) {
 	 BaleElement celt = cur_parent.getBaleElement(j);
 	 cur_parent.remove(j,j);
 	 bbe.add(celt);
@@ -543,7 +543,7 @@ private void addElementNode(BaleElement nbe,int prior)
       BaleElement.Branch bbe = (BaleElement.Branch) nbe;
       int n = new_children.size();
       int j = n-prior+1;
-      for (int i = 0; i < prior-1; ++ i) {
+      for (int i = 0; i < prior-1; ++i) {
 	 BaleElement celt = new_children.get(j);
 	 new_children.remove(j);
 	 bbe.add(celt);

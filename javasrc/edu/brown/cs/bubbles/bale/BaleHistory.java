@@ -65,7 +65,7 @@ class BaleHistory {
 /*										*/
 /********************************************************************************/
 
-private static final char [] empty = new char[0];
+private static final char [] EMPTY = new char[0];
 
 
 
@@ -77,7 +77,7 @@ private static final char [] empty = new char[0];
 
 static class BaleIdeContent extends GapContent {
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    BaleIdeContent(int len) {
       super(len);
@@ -98,7 +98,7 @@ static class BaleIdeContent extends GapContent {
        }
       String removedString = getString(where, nitems);
       UndoableEdit edit = new BaleRemoveUndo(this,where, removedString);
-      replace(where, nitems, empty, 0);
+      replace(where, nitems, EMPTY, 0);
       return edit;
     }
 
@@ -120,7 +120,7 @@ static class BaleIdeContent extends GapContent {
 /*										*/
 /********************************************************************************/
 
-static private abstract class BaleGenericUndo extends AbstractUndoableEdit
+private abstract static class BaleGenericUndo extends AbstractUndoableEdit
 	implements BurpPlayableEdit {
 
    private transient Map<Object,Integer> special_delta;
@@ -136,7 +136,8 @@ static private abstract class BaleGenericUndo extends AbstractUndoableEdit
       if (offset == opos) {
 	 if (delta > 0 && edit != null && special_delta != null && special_delta.containsKey(edit)) {
 	    int ndelta = special_delta.get(edit);
-	    //if (ndelta != 0) BoardLog.logD("BALE","Update position special " + opos + "->" + (opos+ndelta) + " " + edit);
+	    //if (ndelta != 0) BoardLog.logD("BALE","Update position special " + 
+            //        opos + "->" + (opos+ndelta) + " " + edit);
 	    return opos + ndelta;
 	 }
 	 else return opos;
@@ -144,7 +145,8 @@ static private abstract class BaleGenericUndo extends AbstractUndoableEdit
       if (delta > 0) {			// insertion
 	 if (edit != null && special_delta != null && special_delta.containsKey(edit)) {
 	    int ndelta = special_delta.get(edit);
-	    // if (ndelta != 0) BoardLog.logD("BALE","Update position special1 " + opos + "->" + (opos+ndelta) + " " + edit);
+	    // if (ndelta != 0) BoardLog.logD("BALE","Update position special1 " + 
+            //       opos + "->" + (opos+ndelta) + " " + edit);
 	    return opos + ndelta;
 	  }
 	 if (opos == offset && start) return opos;
@@ -187,7 +189,7 @@ static class BaleInsertUndo extends BaleGenericUndo {
    private int insert_length;
    protected Vector<?> pos_refs;
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    BaleInsertUndo(BaleIdeContent cnt,int offset,int length) {
       the_content = cnt;
@@ -290,7 +292,7 @@ static class BaleRemoveUndo extends BaleGenericUndo {
    private int remove_length;
    private Vector<?> pos_refs;
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    BaleRemoveUndo(BaleIdeContent cnt,int offset, String string) {
       the_content = cnt;
@@ -376,7 +378,7 @@ static class BaleRemoveUndo extends BaleGenericUndo {
 /*										*/
 /********************************************************************************/
 
-static abstract class BaleAbstractDocument extends BaleDocument {
+abstract static class BaleAbstractDocument extends BaleDocument {
 
    private static final long serialVersionUID = 1;
 
@@ -469,7 +471,7 @@ static abstract class BaleAbstractDocument extends BaleDocument {
       private int evt_offset;
       private int evt_length;
    
-      private final static long serialVersionUID = 1;
+      private static final long serialVersionUID = 1;
    
       BaleDefaultDocumentEvent(int offs, int len, DocumentEvent.EventType type) {
          super(offs,len,type);

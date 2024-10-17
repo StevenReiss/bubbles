@@ -51,7 +51,7 @@ import java.util.Map;
  * This class implements a bubble, which contains information of various "go to" actions
  **/
 
-class BaleInfoBubble extends BudaBubble implements BaleConstants {
+final class BaleInfoBubble extends BudaBubble implements BaleConstants {
 
 
 
@@ -229,7 +229,7 @@ private void addBubbleLink(Position p)
 /*										*/
 /********************************************************************************/
 
-private class QuitAction extends MouseAdapter {
+private final class QuitAction extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       setVisible(false);
@@ -238,7 +238,7 @@ private class QuitAction extends MouseAdapter {
 }	// end of inner calss QuitAction
 
 
-private class ContextActionHandler extends MouseAdapter {
+private final class ContextActionHandler extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       JLabel lb = (JLabel) e.getSource();

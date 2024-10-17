@@ -114,7 +114,9 @@ BaleInserter()
    catch (BadLocationException e) {
       return false;
     }
-   finally { doc.baleWriteUnlock(); }
+   finally {
+      doc.baleWriteUnlock();
+    }
 
    return true;
 }

@@ -481,22 +481,22 @@ private class DefaultIndenter {
           }
        }
       
-      int L4 = indent_space;		// default indent
-      int L5 = indent_space;		// indent with no last significant char
-      int L6 = rbr_indent;		// indent for }
+      int l4 = indent_space;		// default indent
+      int l5 = indent_space;		// indent with no last significant char
+      int l6 = rbr_indent;		// indent for }
       
       int rslt = last_sig;
       if (last_sig < 0 && nest_pos < 0) rslt = 0;
-      else if (last_sig < 0) rslt = L5;
-      else if (nest_pos >= 0) rslt = last_sig + L5;
+      else if (last_sig < 0) rslt = l5;
+      else if (nest_pos >= 0) rslt = last_sig + l5;
       else if (!eos_first && (cma_line < 0 || cma_line == current_line)) {
-         rslt = last_sig + L4;
+         rslt = last_sig + l4;
        }
       
-      if (lbr_flag && rslt == L5) rslt = 0;
-      if (rbr_flag && rslt != 0) rslt += L6;
-      else if (case_flag) rslt -= L5;
-      else if (label_flag) rslt -= L5;
+      if (lbr_flag && rslt == l5) rslt = 0;
+      if (rbr_flag && rslt != 0) rslt += l6;
+      else if (case_flag) rslt -= l5;
+      else if (label_flag) rslt -= l5;
       
       if (rslt < 0) rslt = 0;
       

@@ -45,7 +45,7 @@ class BaleJavaHinter implements BaleConstants.BaleHinter, BaleConstants
 /*										*/
 /********************************************************************************/
 
-public BaleJavaHinter()
+BaleJavaHinter()
 {
 }
 

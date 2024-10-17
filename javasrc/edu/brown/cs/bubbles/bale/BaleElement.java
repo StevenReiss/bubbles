@@ -403,10 +403,12 @@ public String getMethodName()
    else if (default_attrs == null) return element_attrs.getAttributeNames();
    else {
       Set<Object> r = new HashSet<>();
-      for (Enumeration<?> e = element_attrs.getAttributeNames(); e.hasMoreElements(); )
+      for (Enumeration<?> e = element_attrs.getAttributeNames(); e.hasMoreElements(); ) {
 	 r.add(e.nextElement());
-      for (Enumeration<?> e = default_attrs.getAttributeNames(); e.hasMoreElements(); )
+       }
+      for (Enumeration<?> e = default_attrs.getAttributeNames(); e.hasMoreElements(); ) {
 	 r.add(e.nextElement());
+       }
       return Collections.enumeration(r);
     }
 }
@@ -1008,7 +1010,8 @@ static class Leaf extends BaleElement {
 	 if (getBaleParent() != null) getBaleParent().setChildPosition(start_pos,end_pos,this);
        }
       catch (BadLocationException e) {
-	 start_pos = end_pos = null;
+	 start_pos = null;
+         end_pos = null;
 	 throw new Error("Can't create position references for leaf element " + start_pos + " " + end_pos);
        }
     }
@@ -1274,7 +1277,7 @@ static class InternalBlockNode extends Branch {
 static class UnknownNode extends Branch {
 
    private int reflow_count;
-   boolean has_eol;
+   private boolean has_eol;
 
    UnknownNode(BaleDocument d,BaleElement.Branch par) {
       super(d,par,null);

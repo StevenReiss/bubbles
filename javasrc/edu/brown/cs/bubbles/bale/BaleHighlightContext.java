@@ -156,7 +156,7 @@ static Highlighter.HighlightPainter getPainter(BaleHighlightType typ)
 /*										*/
 /********************************************************************************/
 
-@Override synchronized public void caretUpdate(CaretEvent e)
+@Override public synchronized void caretUpdate(CaretEvent e)
 {
    if (wait_task != null) {
       caret_event = null;
@@ -175,13 +175,15 @@ static Highlighter.HighlightPainter getPainter(BaleHighlightType typ)
 	 our_timer.schedule(wait_task,highlight_delay);
        }
     }
-   finally { doc.baleReadUnlock(); }
+   finally { 
+      doc.baleReadUnlock(); 
+    }
 }
 
 
 
 
-synchronized private void handleWaitDone(CaretEvent start)
+private synchronized void handleWaitDone(CaretEvent start)
 {
    if (start == caret_event) {
       DataGetter dg = new DataGetter(start);
@@ -435,7 +437,9 @@ private class HighlightCreator implements Runnable {
          if (def_locs != null)
             createHighlights(start_event,BaleHighlightType.IDENTIFIER_DEFINE,def_locs);
        }
-      finally { doc.baleReadUnlock(); }
+      finally { 
+         doc.baleReadUnlock();
+       }
     }
 
 }	// end of inner class HighlightCreator
@@ -462,9 +466,11 @@ private class BracketHighlightCreator implements Runnable {
       try {
 	 if (doc.getEditCounter() != edit_counter) return;
 	 createBracketHighlights(start_element,end_element);
-      }
-      finally { doc.baleReadUnlock(); }
-   }
+       }
+      finally {
+         doc.baleReadUnlock();
+       }
+    }
 
 }	// end of inner class BracketHighlightCreator
 

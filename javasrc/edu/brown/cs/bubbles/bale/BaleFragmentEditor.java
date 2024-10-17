@@ -399,7 +399,7 @@ private void convertMouseEvent(MouseEvent e,Point p,Component c)
 
 
 
-private class HelpMouser extends MouseAdapter {
+private final class HelpMouser extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent evt) {
       Component c = (Component) evt.getSource();

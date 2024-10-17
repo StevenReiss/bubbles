@@ -40,7 +40,7 @@ import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.xml.IvyXml;
 
-class BaleLanguageKitDefault implements BaleConstants, BaleConstants.BaleLanguageKit
+final class BaleLanguageKitDefault implements BaleConstants, BaleConstants.BaleLanguageKit
 {
 
 

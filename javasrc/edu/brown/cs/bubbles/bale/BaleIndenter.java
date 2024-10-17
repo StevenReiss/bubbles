@@ -95,7 +95,9 @@ int getCurrentIndentation(int offset)
    try {
       return getLeadingWhitespaceLength(offset);
     }
-   finally { bale_document.readUnlock(); }
+   finally { 
+      bale_document.readUnlock();
+    }
 }
 
 
@@ -105,7 +107,9 @@ int getCurrentIndentationAtOffset(int offset)
    try {
       return getLeadingWhitespaceLengthAtOffset(offset);
     }
-   finally { bale_document.readUnlock(); }
+   finally {
+      bale_document.readUnlock(); 
+    }
 }
 
 

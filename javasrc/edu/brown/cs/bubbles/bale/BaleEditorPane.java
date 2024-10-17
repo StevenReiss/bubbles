@@ -139,7 +139,9 @@ protected BaleEditorPane()
       setCaret(new BaleCaret());
       if (!bd.isEditable()) setEditable(false);
     }
-   finally { bd.baleWriteUnlock(); }
+   finally { 
+      bd.baleWriteUnlock(); 
+    }
 
    BoardColors.setColors(this,BALE_EDITOR_TOP_COLOR_PROP);
    setOpaque(false);
@@ -222,7 +224,9 @@ void dispose()
       try {
 	 super.setDocument(bd);
        }
-      finally { bd.baleWriteUnlock(); }
+      finally {
+         bd.baleWriteUnlock();
+       }
     }
    else if (d != null) {
       super.setDocument(d);
@@ -242,7 +246,7 @@ void dispose()
 {
    if (fixed_size) return;
 
-   int ht = (int)(getBaleDocument().getFontHeight() * nline + 0.5);
+   int ht = (int) (getBaleDocument().getFontHeight() * nline + 0.5);
    Dimension r = getParent().getParent().getSize();	// size of viewport
    Dimension d = getSize();
    if (d.height + ht < r.height) return;	     // it fits in current window
@@ -331,8 +335,8 @@ private int fixIncreaseDelta(BaleDocument bd,BaleElement be)
 /*										*/
 /********************************************************************************/
 
-@Override abstract public BaleFinder getFindBar();
-@Override abstract public BaleAnnotationArea getAnnotationArea();
+@Override public abstract BaleFinder getFindBar();
+@Override public abstract BaleAnnotationArea getAnnotationArea();
 
 void toggleFindBar() {}
 
@@ -436,7 +440,7 @@ private void addButton(JPopupMenu m,String txt,boolean enable,ActionListener hdl
 
 
 
-private class ContextMenuHandler implements ActionListener {
+private final class ContextMenuHandler implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
@@ -457,7 +461,7 @@ private class ContextMenuHandler implements ActionListener {
 }	// end of inner class ContextMenuHandler
 
 
-private class RemoveBubbleHandler implements ActionListener {
+private final class RemoveBubbleHandler implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BaleEditorPane.this);
@@ -506,7 +510,7 @@ void addHighlight(BaleHighlightType typ,BaleRegion rgn)
 {
    HighlightData hd = null;
 
-   synchronized(hilite_map) {
+   synchronized (hilite_map) {
       hd = hilite_map.get(typ);
       if (hd == null) {
 	 hd = new HighlightData(typ);
@@ -632,7 +636,9 @@ private String getIndication(String key)
        }
       super.paintComponent(g0);
     }
-   finally { getBaleDocument().baleReadUnlock(); }
+   finally {
+      getBaleDocument().baleReadUnlock();
+    }
 }
 
 
@@ -662,7 +668,9 @@ private static class BaleTextUI extends TextUI {
       try {
 	 base_ui.damageRange(t,p0,p1,fb,sb);
        }
-      finally { readUnlock(t); }
+      finally {
+         readUnlock(t); 
+       }
     }
 
    @Override public EditorKit getEditorKit(JTextComponent t) {
@@ -676,7 +684,9 @@ private static class BaleTextUI extends TextUI {
       try {
 	 return base_ui.getNextVisualPositionFrom(t,pos,b,dir,bret);
        }
-      finally { readUnlock(t); }
+      finally { 
+         readUnlock(t);
+       }
     }
 
    @Override public View getRootView(JTextComponent t) {
@@ -688,7 +698,9 @@ private static class BaleTextUI extends TextUI {
       try {
 	 return SwingText.getToolTipText2D(base_ui,t,pt);
        }
-      finally { readUnlock(t); }
+      finally { 
+         readUnlock(t); 
+       }
     }
 
    @Deprecated public Rectangle modelToView(JTextComponent t,int pos) throws BadLocationException {
@@ -701,7 +713,9 @@ private static class BaleTextUI extends TextUI {
       try {
 	 return SwingText.modelToView2D(base_ui,t,pos,bias);
        }
-      finally { readUnlock(t); }
+      finally {
+         readUnlock(t);
+       }
     }
 
    public Rectangle2D modelToView2D(JTextComponent t,int pos,Position.Bias bias)
@@ -710,7 +724,9 @@ private static class BaleTextUI extends TextUI {
       try {
 	 return SwingText.modelToView2D(base_ui,t,pos,bias);
       }
-      finally { readUnlock(t); }
+      finally {
+         readUnlock(t);
+       }
    }
 
    @Deprecated public int viewToModel(JTextComponent t,Point pt) {
@@ -726,7 +742,9 @@ private static class BaleTextUI extends TextUI {
       try {
 	 return SwingText.viewToModel2D(base_ui,t,pt,bret);
        }
-      finally { readUnlock(t); }
+      finally {
+         readUnlock(t); 
+       }
     }
 
    @Override public void installUI(JComponent c) {
@@ -734,7 +752,9 @@ private static class BaleTextUI extends TextUI {
       try {
 	 base_ui.installUI(c);
        }
-      finally { writeUnlock(c); }
+      finally {
+         writeUnlock(c);
+       }
     }
 
    @Override public void uninstallUI(JComponent c) {
@@ -746,7 +766,9 @@ private static class BaleTextUI extends TextUI {
       try {
 	 base_ui.paint(g,c);
        }
-      finally { readUnlock(c); }
+      finally {
+         readUnlock(c); 
+       }
     }
 
    @Override public void update(Graphics g,JComponent c) {
@@ -758,7 +780,9 @@ private static class BaleTextUI extends TextUI {
       try {
 	 return base_ui.getPreferredSize(c);
        }
-      finally { readUnlock(c); }
+      finally {
+         readUnlock(c); 
+       }
     }
 
    @Override public Dimension getMinimumSize(JComponent c) {
@@ -766,7 +790,9 @@ private static class BaleTextUI extends TextUI {
       try {
 	 return base_ui.getMinimumSize(c);
        }
-      finally { readUnlock(c); }
+      finally {
+         readUnlock(c);
+       }
     }
 
    @Override public Dimension getMaximumSize(JComponent c) {
@@ -774,7 +800,9 @@ private static class BaleTextUI extends TextUI {
       try {
 	 return base_ui.getMaximumSize(c);
        }
-      finally { readUnlock(c); }
+      finally {
+         readUnlock(c);
+       }
     }
 
    @Override public boolean contains(JComponent c,int x,int y) {
@@ -975,7 +1003,9 @@ private class HighlightArea {
    try {
       return getHoverText(e);
     }
-   finally { bd.baleReadUnlock(); }
+   finally { 
+      bd.baleReadUnlock(); 
+    }
 }
 
 
@@ -1225,26 +1255,26 @@ private class ActiveMouser extends MouseAdapter {
 /*										*/
 /********************************************************************************/
 
-private static final Map<String,BaleContextType> context_types;
+private static final Map<String,BaleContextType> CONTEXT_TYPES;
 
 static {
-   context_types = new HashMap<String,BaleContextType>();
-   context_types.put("Identifier",BaleContextType.LOCAL_ID);
-   context_types.put("FieldId",BaleContextType.FIELD_ID);
-   context_types.put("StaticFieldId",BaleContextType.STATIC_FIELD_ID);
-   context_types.put("ClassDeclId",BaleContextType.CLASS_DECL_ID);
-   context_types.put("MethodDeclId",BaleContextType.METHOD_DECL_ID);
-   context_types.put("LocalDeclId",BaleContextType.LOCAL_DECL_ID);
-   context_types.put("FieldDeclId",BaleContextType.FIELD_DECL_ID);
-   context_types.put("CallId",BaleContextType.CALL_ID);
-   context_types.put("StaticCallId",BaleContextType.STATIC_CALL_ID);
-   context_types.put("UndefCallId",BaleContextType.UNDEF_CALL_ID);
-   context_types.put("AnnotationId",BaleContextType.ANNOTATION_ID);
-   context_types.put("DeprecatedCallId",BaleContextType.CALL_ID);
-   context_types.put("TypeId",BaleContextType.TYPE_ID);
-   context_types.put("ConstId",BaleContextType.CONST_ID);
-   context_types.put("UndefId", BaleContextType.UNDEF_ID);
-   context_types.put("UndefCallId", BaleContextType.UNDEF_CALL_ID);
+   CONTEXT_TYPES = new HashMap<String,BaleContextType>();
+   CONTEXT_TYPES.put("Identifier",BaleContextType.LOCAL_ID);
+   CONTEXT_TYPES.put("FieldId",BaleContextType.FIELD_ID);
+   CONTEXT_TYPES.put("StaticFieldId",BaleContextType.STATIC_FIELD_ID);
+   CONTEXT_TYPES.put("ClassDeclId",BaleContextType.CLASS_DECL_ID);
+   CONTEXT_TYPES.put("MethodDeclId",BaleContextType.METHOD_DECL_ID);
+   CONTEXT_TYPES.put("LocalDeclId",BaleContextType.LOCAL_DECL_ID);
+   CONTEXT_TYPES.put("FieldDeclId",BaleContextType.FIELD_DECL_ID);
+   CONTEXT_TYPES.put("CallId",BaleContextType.CALL_ID);
+   CONTEXT_TYPES.put("StaticCallId",BaleContextType.STATIC_CALL_ID);
+   CONTEXT_TYPES.put("UndefCallId",BaleContextType.UNDEF_CALL_ID);
+   CONTEXT_TYPES.put("AnnotationId",BaleContextType.ANNOTATION_ID);
+   CONTEXT_TYPES.put("DeprecatedCallId",BaleContextType.CALL_ID);
+   CONTEXT_TYPES.put("TypeId",BaleContextType.TYPE_ID);
+   CONTEXT_TYPES.put("ConstId",BaleContextType.CONST_ID);
+   CONTEXT_TYPES.put("UndefId", BaleContextType.UNDEF_ID);
+   CONTEXT_TYPES.put("UndefCallId", BaleContextType.UNDEF_CALL_ID);
 }
 
 
@@ -1288,7 +1318,7 @@ private class ContextData implements BaleContextConfig {
    @Override public BaleContextType getTokenType() {
       if (editor_element == null) return BaleContextType.NONE;
       String nm = editor_element.getName();
-      BaleContextType t = context_types.get(nm);
+      BaleContextType t = CONTEXT_TYPES.get(nm);
       if (t != null) return t;
       return BaleContextType.NONE;
     }

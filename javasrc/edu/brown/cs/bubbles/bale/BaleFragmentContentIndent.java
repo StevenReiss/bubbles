@@ -101,7 +101,9 @@ private void initialize(BaleDocumentIde base)
    try {
       setupSpacing();
     }
-   finally { base.baleWriteUnlock(); }
+   finally { 
+      base.baleWriteUnlock(); 
+    }
 
    doc_monitor = new DocMonitor();
    base_document.addDocumentListener(doc_monitor);
@@ -733,7 +735,7 @@ private Position createBalePosition(int off) throws BadLocationException
 
 private class IndentPosition extends BalePosition {
 
-   int local_offset;
+   private int local_offset;
 
    IndentPosition(BaleRegion br,int off) throws BadLocationException {
       RegionData rd = region_map.get(br);
@@ -775,7 +777,7 @@ private class IndentPosition extends BalePosition {
 
 
 
-private class DocMonitor implements DocumentListener {
+private final class DocMonitor implements DocumentListener {
 
    @Override public void changedUpdate(DocumentEvent e) 	{ }
 

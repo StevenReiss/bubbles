@@ -92,7 +92,7 @@ import java.util.TreeMap;
  *	fragments.
  **/
 
-public class BaleFactory implements BaleConstants, BudaConstants, BuenoConstants,
+public final class BaleFactory implements BaleConstants, BudaConstants, BuenoConstants,
 		BudaConstants.BudaFileHandler, BumpConstants.BumpChangeHandler
 {
 
@@ -160,7 +160,7 @@ private BaleFactory()
  *	Return the singular instance of the BaleFactory object.
  **/
 
-public synchronized static BaleFactory getFactory()
+public static synchronized BaleFactory getFactory()
 {
    if (the_factory == null) the_factory = new BaleFactory();
 
@@ -761,7 +761,8 @@ public BudaBubble createNewMethod(String proj,
 					   boolean link,
 					   boolean add)
 {
-   String clsnm,mthdnm;
+   String clsnm; 
+   String mthdnm;
    int idx = name.lastIndexOf(".");
    if (idx < 0) {
       clsnm = null;
@@ -1636,9 +1637,7 @@ private BaleRegion mergeRegions(BaleRegion r1,BaleRegion r2,Segment txt)
 /*										*/
 /********************************************************************************/
 
-private static class ProblemHover implements BaleContextListener {
-
-   
+private static final class ProblemHover implements BaleContextListener {
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       if (cfg.inAnnotationArea()) return;
@@ -1737,7 +1736,7 @@ private static String fixMessage(BumpProblem bp)
 /*										*/
 /********************************************************************************/
 
-private static class FormatImporter implements BudaConstants.ButtonListener {
+private static final class FormatImporter implements BudaConstants.ButtonListener {
 
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
       JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
@@ -1797,7 +1796,7 @@ private static class FormatImporter implements BudaConstants.ButtonListener {
 /*										*/
 /********************************************************************************/
 
-private static class ProjectFormatImporter implements BudaConstants.ButtonListener {
+private static final class ProjectFormatImporter implements BudaConstants.ButtonListener {
 
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
       BoardProperties bp = BoardProperties.getProperties("System");

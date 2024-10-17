@@ -94,7 +94,9 @@ private int		previous_offset;
 private BaleTokenType	cur_token;
 private int		cur_line;
 
-
+private static final int NOTHING = 0;
+private static final int READ_PARENS = 1;
+private static final int READ_IDENT = 2;
 
 
 /********************************************************************************/
@@ -141,10 +143,14 @@ private void setupPreferences()
    opts = getOptionInt("alignment_for_condition_expression",80);
    pref_ternary_deep_align = ((opts & 0x3) == 1);
    pref_ternary_indent = (((opts & 0x3) == 2) ? 1 : pref_continuation_indent);
-   pref_indent_braces_for_blocks = getOption("brace_position_for_block","eol").equals("next_line_shifted");
-   pref_indent_braces_for_arrays = getOption("brace_position_for_array_initializer","eol").equals("next_line_shifted");
-   pref_indent_braces_for_methods = getOption("brace_position_for_method_declaration","eol").equals("next_line_shifted");
-   pref_indent_braces_for_types = getOption("brace_position_for_type_declaration","eol").equals("next_line_shifted");
+   pref_indent_braces_for_blocks = 
+      getOption("brace_position_for_block","eol").equals("next_line_shifted");
+   pref_indent_braces_for_arrays = 
+      getOption("brace_position_for_array_initializer","eol").equals("next_line_shifted");
+   pref_indent_braces_for_methods = 
+      getOption("brace_position_for_method_declaration","eol").equals("next_line_shifted");
+   pref_indent_braces_for_types =
+      getOption("brace_position_for_type_declaration","eol").equals("next_line_shifted");
    pref_case_indent = (getOptionBool("indent_switchstatements_compare_to_switch",true) ? pref_block_indent : 0);
    pref_assignment_indent = pref_block_indent;
    pref_case_block_indent = (getOptionBool("indent_switchstatements_compare_to_cases",true) ? pref_block_indent : 0);
@@ -183,7 +189,9 @@ private void setupPreferences()
    try {
       return findLineReferenceIndentation(offset);
     }
-   finally { bale_document.readUnlock(); }
+   finally { 
+      bale_document.readUnlock();
+    }
 }
 
 
@@ -196,7 +204,9 @@ private void setupPreferences()
    try {
       return getLeadingWhitespaceLength(offset);
     }
-   finally { bale_document.readUnlock(); }
+   finally {
+      bale_document.readUnlock();
+    }
 }
 
 
@@ -211,7 +221,9 @@ private void setupPreferences()
       int off1 = getPositionWhitespaceLength(offset);
       return off0 - off1;
     }
-   finally { bale_document.readUnlock(); }
+   finally {
+      bale_document.readUnlock(); 
+    }
 }
 
 
@@ -686,8 +698,8 @@ private int handleScopeIntroduction(BaleElement bound)
 
 	 // normal: skip to the statement start before the scope introducer
 	 // opening braces are often on differently ending indents than e.g. a method definition
-	 if (looksLikeArrayInitializerIntro() && !pref_indent_braces_for_arrays
-		|| !pref_indent_braces_for_blocks) {
+	 if (looksLikeArrayInitializerIntro() && !pref_indent_braces_for_arrays ||
+               !pref_indent_braces_for_blocks) {
 	    setCurrent(celt);
 	    return skipToStatementStart(true,true,false); // set to true to match the first if
 	  }
@@ -900,9 +912,7 @@ private boolean skipNextIF()
 @SuppressWarnings("fallthrough")
 private int skipToStatementStart(boolean danglingelse,boolean isinblock,boolean ateos)
 {
-   final int NOTHING = 0;
-   final int READ_PARENS = 1;
-   final int READ_IDENT = 2;
+  
    int maybemethodbody = NOTHING;
    boolean istypebody = false;
    boolean innerclass = false;
@@ -1213,7 +1223,7 @@ private boolean looksLikeAnonymousTypeDecl()
       while (cur_token == BaleTokenType.DOT) { // dot of qualification
 	 previousToken();
 	 if (cur_token != BaleTokenType.IDENTIFIER && cur_token != BaleTokenType.TYPEKEY)
-	    return false ;		// qualificating name
+	    return false;		// qualificating name
 	 previousToken();
        }
       return cur_token == BaleTokenType.NEW;

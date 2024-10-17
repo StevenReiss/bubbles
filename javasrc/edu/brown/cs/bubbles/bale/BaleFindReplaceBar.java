@@ -99,7 +99,8 @@ private JCheckBox is_case_sensitive; // toggles whether the search should be cas
 private JLabel number_label; // shows how many occurences of the search text have been found
 
 private String	search_for;
-private String searched_for; // stores the most recent search text. used to determine whether it is necessary to run a new search
+private String searched_for;    // stores the most recent search text. used to determine 
+                                //   whether it is necessary to run a new search
 private transient List<Position> occurrences_set; // stores the locations of occurrences of the search text.
 private int current_index; // stores which occurrence was last highlighted - used to facilitate the arrow functions
 private int current_caret_position;
@@ -311,8 +312,8 @@ private JTextField createTextField(int ln)
 @Override public void find(int dir,boolean next)
 {
    if (BudaRoot.findBudaBubble(editor_pane) == null) {
-      BudaBubble my_bub = BudaRoot.findBudaBubble(this);
-      if (my_bub != null) my_bub.setVisible(false);
+      BudaBubble mybub = BudaRoot.findBudaBubble(this);
+      if (mybub != null) mybub.setVisible(false);
       return;
     }
    BaleElement currentelement = null;
@@ -328,12 +329,14 @@ private JTextField createTextField(int ln)
             return;
           }
          // if the user changed the text then run a new search
-         if (searched_for == null || (is_case_sensitive.isSelected() && !search_for.equals(searched_for))
-               || (!is_case_sensitive.isSelected() && !search_for.equalsIgnoreCase(searched_for))
-               || current_caret_position != editor_pane.getCaretPosition()) {
+         if (searched_for == null || (is_case_sensitive.isSelected() && 
+               !search_for.equals(searched_for)) ||
+               (!is_case_sensitive.isSelected() && !search_for.equalsIgnoreCase(searched_for)) ||
+               current_caret_position != editor_pane.getCaretPosition()) {
             clearHighlights();
             searched_for = search_for;
-            // find and store the indices of all the occurrences so that going back and forth doesn't require a new search
+            // find and store the indices of all the occurrences so that going back 
+            //    and forth doesn't require a new search
             findAllOccurences(search_for, dir);
             number_label.setText("Matches: " + occurrences_set.size());
             //current_index = -1;
@@ -396,65 +399,62 @@ private JTextField createTextField(int ln)
 
 private void findAllOccurences(String text, int dir)
 {
+   int carpos = editor_pane.getCaretPosition();
+   int soff = 0;
+   int eoff = for_document.getLength();
+   int len = text.length();
+   List<Position> occurrences = new ArrayList<>();
+   int tlen = eoff-soff;
    try {
-      int carpos = editor_pane.getCaretPosition();
-      int soff = 0;
-      int eoff = for_document.getLength();
-      int len = text.length();
-      List<Position> occurrences = new ArrayList<>();
-      int tlen = eoff-soff;
-      try {
-	 boolean search = true;
-	 Segment segment = new Segment();
-	 Position found;
-	 Position bestfound = for_document.createPosition(0);
-	 int bestdist = for_document.getLength();
-	 while (search) {
-	    for_document.getText(soff,tlen,segment);
-	    int finalloc = tlen-len;
-	    if (finalloc < 0) break;
-	    for (int i = 0; i <= tlen-len; ++i) {
-	       boolean fnd = true;
-	       for (int j = 0; fnd && j < len; ++j) {
-		  char x = segment.charAt(i+j);
-		  char y = search_for.charAt(j);
-		  if (is_case_sensitive.isSelected()) fnd = x == y;
-		  else{
-		     x = Character.toLowerCase(x);
-		     y = Character.toLowerCase(y);
-		     fnd = x == y;
-		   }
-		}
-	       if (fnd) {
-		  found = for_document.createPosition(i+soff);
-		  occurrences.add(found);
-		  soff = found.getOffset() + len;
-		  if (found.getOffset() - carpos < bestdist && found.getOffset() - carpos > 0 && dir > 0) {
-		     bestfound = found;
-		     bestdist = found.getOffset() - carpos;
-		   }
-		  else if (carpos - soff < bestdist && carpos - soff > 0 && dir < 0) {
-		     bestfound = found;
-		     bestdist = carpos - soff;
-		   }
-		  tlen = eoff - soff;
-		  break;
-		}
-	       else if (i >= tlen-len) {
-		  search = false;
-		}
-	     }
-	  }
-	 occurrences_set = occurrences;
-	 if (dir == 0 || bestfound.getOffset() == 0)  current_index = -1;
-	 else if (dir > 0) current_index = occurrences_set.indexOf(bestfound)-1;
-	 else current_index = occurrences_set.indexOf(bestfound)+1;
+      boolean search = true;
+      Segment segment = new Segment();
+      Position found;
+      Position bestfound = for_document.createPosition(0);
+      int bestdist = for_document.getLength();
+      while (search) {
+         for_document.getText(soff,tlen,segment);
+         int finalloc = tlen-len;
+         if (finalloc < 0) break;
+         for (int i = 0; i <= tlen-len; ++i) {
+            boolean fnd = true;
+            for (int j = 0; fnd && j < len; ++j) {
+               char x = segment.charAt(i+j);
+               char y = search_for.charAt(j);
+               if (is_case_sensitive.isSelected()) fnd = x == y;
+               else {
+                  x = Character.toLowerCase(x);
+                  y = Character.toLowerCase(y);
+                  fnd = x == y;
+                }
+             }
+            if (fnd) {
+               found = for_document.createPosition(i+soff);
+               occurrences.add(found);
+               soff = found.getOffset() + len;
+               if (found.getOffset() - carpos < bestdist && found.getOffset() - carpos > 0 && dir > 0) {
+                  bestfound = found;
+                  bestdist = found.getOffset() - carpos;
+                }
+               else if (carpos - soff < bestdist && carpos - soff > 0 && dir < 0) {
+                  bestfound = found;
+                  bestdist = carpos - soff;
+                }
+               tlen = eoff - soff;
+               break;
+             }
+            else if (i >= tlen-len) {
+               search = false;
+             }
+          }
        }
-      catch (BadLocationException e) {
-	 BoardLog.logE("BALE","Problem with search: " + e);
-       }
+      occurrences_set = occurrences;
+      if (dir == 0 || bestfound.getOffset() == 0)  current_index = -1;
+      else if (dir > 0) current_index = occurrences_set.indexOf(bestfound)-1;
+      else current_index = occurrences_set.indexOf(bestfound)+1;
     }
-   finally {}
+   catch (BadLocationException e) {
+      BoardLog.logE("BALE","Problem with search: " + e);
+    }
 }
 
 
@@ -558,8 +558,9 @@ private void clearHighlights()
    if (cmd.equals("DONE")) {
       try {
 	 my_highlighter.changeHighlight(my_highlight_tag, 0, 0);
-       } catch (BadLocationException ble) {}
-	 setVisible(false);
+       } 
+      catch (BadLocationException ble) { }
+      setVisible(false);
     }
    else if (cmd.equals("NEXT")) {
       find(1,true);
@@ -611,7 +612,7 @@ private void clearHighlights()
    BoardColors.setColors(this,tc);
    Paint p = new GradientPaint(0f, 0f, tc, 0f, getHeight(), bc);
    g.setPaint(p);
-   g.fillRect(0, 0, getWidth() , getHeight());
+   g.fillRect(0, 0, getWidth(), getHeight());
 }
 
 
@@ -679,7 +680,7 @@ private class CloseListener extends KeyAdapter {
 
 
 
-private class HighlightCanceler implements CaretListener {
+private final class HighlightCanceler implements CaretListener {
 
    @Override public void caretUpdate(CaretEvent e) {
       if (current_caret_position != editor_pane.getCaretPosition()) clearHighlights();
@@ -699,7 +700,7 @@ private static class FindFocusTraversalPolicy extends FocusTraversalPolicy {
    
    private List<Component> focus_order;
    
-   FindFocusTraversalPolicy(Component ... comps) {
+   FindFocusTraversalPolicy(Component... comps) {
       focus_order = new ArrayList<>();
       for (Component c : comps) focus_order.add(c);
     }
@@ -709,8 +710,9 @@ private static class FindFocusTraversalPolicy extends FocusTraversalPolicy {
       int start = focus_order.indexOf(comp);
       for (int idx = (start + 1) % sz; ; idx  = (idx + 1) % sz) {
          Component c1 = focus_order.get(idx);
-         System.err.println("FOCUS " + idx + " " + sz + " " + start + " " + c1.isVisible() + " " + c1.getParent().isVisible() + " " +
-             c1.isFocusable() + " " + c1.isShowing());
+         System.err.println("FOCUS " + idx + " " + sz + " " + start + " " + c1.isVisible() + 
+               " " + c1.getParent().isVisible() + " " + 
+               c1.isFocusable() + " " + c1.isShowing());
          if (c1.isVisible() && c1.getParent().isVisible()) return c1;
        }
     }
