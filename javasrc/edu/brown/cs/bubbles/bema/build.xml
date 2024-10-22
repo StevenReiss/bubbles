@@ -91,7 +91,7 @@
 
    <target name='compile' depends='init'>
       <javac srcdir='.' destdir='${BUBBLES}/java' debug='on'
-		target='10' source='10' listfiles='true'
+		target='10' source='10'
 		deprecation='on' includeantruntime='false' >
 	 <classpath refid='bubbles.classpath' />
 	 <compilerarg value="-proc:none" />

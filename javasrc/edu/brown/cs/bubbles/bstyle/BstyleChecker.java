@@ -109,11 +109,14 @@ void processProject(String proj,List<BstyleFile> files)
    RootModule root = null;
    try {
       root = new BstyleCheckRunner();
+      // root getPropertyDescriptor fails for root -- might need to copy properties if
+      //        based on package name
       root.setModuleClassLoader(mcl);
       root.configure(cfg);
       root.addListener(this);
     }
    catch (CheckstyleException e) {
+      e.printStackTrace();
       IvyLog.logE("BSTYLE","Problem processing files",e);
       return;
     }
