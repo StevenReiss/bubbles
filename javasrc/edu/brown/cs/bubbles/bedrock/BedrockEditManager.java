@@ -1956,6 +1956,12 @@ private synchronized FileData findFile(String proj,String file,String bid)
 }
 
 
+synchronized boolean isFileOpen(String file)
+{
+   return file_map.containsKey(file);
+}
+
+
 
 
 /********************************************************************************/

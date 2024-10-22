@@ -1692,9 +1692,10 @@ private void addPath(IvyXmlWriter xw,IJavaProject jp,IClasspathEntry ent,boolean
 
 
 
-private void addSourceFiles(IResource ir,IvyXmlWriter xw,FileFilter ff)
+private void addSourceFiles(IProject ir,IvyXmlWriter xw,FileFilter ff)
 {
    Collection<IFile> fls = findSourceFiles(ir,null);
+   BedrockEditManager bem = our_plugin.getEditManager();
 
    for (IFile ifl : fls) {
       IContentDescription cd = null;
@@ -1720,7 +1721,9 @@ private void addSourceFiles(IResource ir,IvyXmlWriter xw,FileFilter ff)
 	 if (ifl.isLinked()) xw.field("LINKED",true);
 	 if (!ifl.isSynchronized(IResource.DEPTH_ONE)) xw.field("SYNC",false);
 	 xw.field("PROJPATH",ipr.toOSString());
-	 xw.field("PATH",ip.toOSString());
+         String path = ip.toOSString();
+	 xw.field("PATH",path);
+         if (bem != null) xw.field("ISOPEN",bem.isFileOpen(path)); 
 	 xw.text(f.getPath());
 	 xw.end("FILE");
        }
@@ -1838,11 +1841,11 @@ private void handleBuild(IProject p,boolean clean,boolean full,boolean refresh) 
       String knm = "";
       if (clean) {
 	 kind = IncrementalProjectBuilder.CLEAN_BUILD;
-	 knm = " (clean)";
+	 knm = "(clean)";
        }
       else if (full) {
 	 kind = IncrementalProjectBuilder.FULL_BUILD;
-	 knm = " (full)";
+	 knm = "(full)";
        }
       String desc = "Building " + knm + " project " + p.getName();
       BedrockProgressMonitor pm = new BedrockProgressMonitor(our_plugin,desc);

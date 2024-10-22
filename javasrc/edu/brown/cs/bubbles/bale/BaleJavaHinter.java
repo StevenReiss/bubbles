@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
 import edu.brown.cs.ivy.file.IvyFormat;
 import edu.brown.cs.ivy.xml.IvyXml;
 
-class BaleJavaHinter implements BaleConstants.BaleHinter, BaleConstants
+public class BaleJavaHinter implements BaleConstants.BaleHinter, BaleConstants
 {
 
 
@@ -45,7 +45,7 @@ class BaleJavaHinter implements BaleConstants.BaleHinter, BaleConstants
 /*										*/
 /********************************************************************************/
 
-BaleJavaHinter()
+public BaleJavaHinter()
 {
 }
 

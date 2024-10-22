@@ -138,12 +138,15 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
    BuenoLocation clsloc = null;
    
    boolean isproj = false;
+   boolean ispkg = true;
    if (forname != null && forname.getNameType() == BassNameType.PROJECT) isproj = true;
    else if (forname == null && fullname != null && 
          fullname.contains(":") &&
          (fullname.endsWith(":") || fullname.endsWith("/")) && 
-         !fullname.contains(".") && !fullname.contains("^^")) 
+         !fullname.contains(".") && !fullname.contains("^^")) {
       isproj= true;
+      ispkg = false;
+    }
    else if (forname == null && fullname != null && fullname.contains(":")
          && BoardSetup.getSetup().getLanguage() == BoardLanguage.JAVA) {
       isproj = true;
@@ -196,7 +199,8 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
          actions.put("FORMAT",act);
        }
     }
-   else if (forname == null) {
+   
+   if (forname == null && ispkg) {
       String proj = null;
       int idx = fullname.indexOf(":");
       if (idx > 0) {

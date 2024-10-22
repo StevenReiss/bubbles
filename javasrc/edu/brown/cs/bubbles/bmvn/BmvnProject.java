@@ -238,7 +238,7 @@ void addButtons(String name,BudaBubble relbbl,Point where,JPopupMenu menu)
     }
    if (mdls.size() > 1) {
       for (BmvnModel mdl : mdls) {
-         String lbl = mdl.getName() + "...";
+         String lbl = mdl.getLabel() + " ...";
          JMenu menu1 = new JMenu(lbl);
          mdl.addButtons(name,relbbl,where,menu1);
          menu.add(menu1);

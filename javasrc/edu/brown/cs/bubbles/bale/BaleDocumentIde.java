@@ -708,7 +708,8 @@ private void fixupElision()
 // for (FragmentElisionUpdater feu : runs) {
 //    BoardThreadPool.start(feu);
 //    try {
-//	 SwingUtilities.invokeAndWait(feu);
+//       if (SwingUtilities.isEventDispatchThread()) feu.run();
+//	 else SwingUtilities.invokeAndWait(feu);
 //     }
 //    catch (Exception e) {
 //	 BoardLog.logE("BALE","Problem with elision update",e);

@@ -321,10 +321,10 @@ private class Connection extends Thread {
 
    synchronized void sendCommand(String msg) {
       if (output_writer == null) {
-	 try {
-	    output_writer = new PrintWriter(client_socket.getOutputStream());
-	  }
-	 catch (IOException e) { return; }
+         try {
+            output_writer = new PrintWriter(client_socket.getOutputStream());
+          }
+         catch (IOException e) { return; }
        }
       output_writer.println(msg);
       output_writer.flush();

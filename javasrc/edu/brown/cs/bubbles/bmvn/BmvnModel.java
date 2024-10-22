@@ -190,7 +190,7 @@ void addButtons(String name,BudaBubble relbbl,Point where,JMenu menu)
    
    List<BmvnCommand> cmds = getCommands(name,relbbl,where);
    if (cmds != null && !cmds.isEmpty()) {
-      String lbl = "Execute " + getLabel() + "...";
+      String lbl = "Execute " + getLabel() + " ...";
       JMenu menu2 = new JMenu(lbl);
       for (BmvnCommand cmd : cmds) {
          cmd.putValue(Action.NAME,cmd.getName());

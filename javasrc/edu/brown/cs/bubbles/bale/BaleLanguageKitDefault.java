@@ -117,7 +117,7 @@ private BaleLanguageKitDefault(BoardLanguage lang)
    
    bale_hinter = null;
    String hintclass = IvyXml.getTextElement(exml,"HINTER");
-   if (hintclass != null) {
+   if (hintclass != null && bale_hinter == null) {
       try {
          Class<?> cls = Class.forName(hintclass);
          bale_hinter = (BaleHinter) cls.getConstructor().newInstance();
