@@ -146,7 +146,7 @@ private void process()
    project_manager = new BstyleProjectManager(this,file_manager); 
    project_manager.setup();
    our_monitor.start();
-   bstyle_checker = new BstyleChecker();
+   bstyle_checker = new BstyleChecker(this);
    
    project_manager.processAllProjects(); 
 }

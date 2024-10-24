@@ -25,6 +25,7 @@
 package edu.brown.cs.bubbles.batt;
 
 
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.mint.MintArguments;
 import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
@@ -407,26 +408,20 @@ private class EclipseHandler implements MintHandler {
             BattProject bp = project_set.get(proj);
             Map<File,FileState> fsmap = new HashMap<>();
             for (File fp : bp.getSourceFiles()) {
-               
+                fsmap.put(fp,FileState.STABLE);
              }
-            IvyXml probs = IvyXml.getChild(e,"PROBLEMS");
+            Element probs = IvyXml.getChild(e,"PROBLEMS");
             for (Element pe : IvyXml.children(probs,"PROBLEM")) {
-               if (IvyXml.getAttrBool(pe,"ERROR")) fs = FileState.ERRORS;
-             }
-            for (Element de : IvyXml.children(e,"DELTA")) {
-               Element re = IvyXml.getChild(de,"RESOURCE");
-               String rtyp = IvyXml.getAttrString(re,"TYPE");
-               if (rtyp != null && rtyp.equals("FILE")) {
-                  String fp = IvyXml.getAttrString(re,"LOCATION");
-                  FileState fs = FileState.STABLE;
-                  for (Element me : IvyXml.children(de,"MARKER")) {
-                     for (Element pe : IvyXml.children(me,"PROBLEM")) {
-                        if (IvyXml.getAttrBool(pe,"ERROR")) fs = FileState.ERRORS;
-                      }
-                   }
-                  System.err.println("BATT: Note " + fp + " BUILT " + fs);
-                  setFileState(fp,fs);
+               if (IvyXml.getAttrBool(pe,"ERROR")) {
+                  String fn = IvyXml.getAttrString(pe,"FILE");
+                  File f1 = new File(fn);
+                  f1 = IvyFile.getCanonical(f1);
+                  fsmap.put(f1,FileState.ERRORS);
                 }
+             }
+            for (Map.Entry<File,FileState> ent : fsmap.entrySet()) {
+               File f1 = ent.getKey();
+               setFileState(f1.getPath(),ent.getValue());
              }
             updateTestState();
           }

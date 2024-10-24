@@ -72,6 +72,46 @@ BstyleProjectManager(BstyleMain bm,BstyleFileManager fm)
 
 /********************************************************************************/
 /*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+BstyleFile addFile(String project,String filename)
+{ 
+   File f1 = new File(filename);
+   f1 = IvyFile.getCanonical(f1);
+   BstyleFile bf = file_manager.findFile(f1);
+   if (bf == null) {
+      bf = file_manager.addFile(project,filename,false);
+      if (bf != null) project_files.add(bf);
+    }
+   else {
+      bf = null;
+    }
+   
+   return bf;
+}
+
+
+
+BstyleFile removeFile(String project,String filename)
+{
+   File f1 = new File(filename);
+   f1 = IvyFile.getCanonical(f1);
+   BstyleFile bf = file_manager.findFile(f1);
+   if (bf != null) {
+      file_manager.removeFile(bf); 
+      project_files.remove(bf);
+    }
+   
+   return bf;
+}
+
+
+
+
+/********************************************************************************/
+/*                                                                              */
 /*      Processing methods                                                      */
 /*                                                                              */
 /********************************************************************************/

@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*                                                                              */
-/*              BstyleChecker.java                                              */
-/*                                                                              */
-/*      description of class                                                    */
-/*                                                                              */
+/*										*/
+/*		BstyleChecker.java						*/
+/*										*/
+/*	description of class							*/
+/*										*/
 /********************************************************************************/
-/*      Copyright 2011 Brown University -- Steven P. Reiss                    */
+/*	Copyright 2011 Brown University -- Steven P. Reiss		      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.                            *
- *                                                                               *
- *                        All Rights Reserved                                    *
- *                                                                               *
- * This program and the accompanying materials are made available under the      *
+ *  Copyright 2011, Brown University, Providence, RI.				 *
+ *										 *
+ *			  All Rights Reserved					 *
+ *										 *
+ * This program and the accompanying materials are made available under the	 *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at                                                           *
- *      http://www.eclipse.org/legal/epl-v10.html                                *
- *                                                                               *
+ * and is available at								 *
+ *	http://www.eclipse.org/legal/epl-v10.html				 *
+ *										 *
  ********************************************************************************/
 
 
@@ -41,7 +41,6 @@ import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
-import com.puppycrawl.tools.checkstyle.api.RootModule;
 import com.puppycrawl.tools.checkstyle.api.Violation;
 
 import edu.brown.cs.bubbles.board.BoardProperties;
@@ -52,38 +51,40 @@ class BstyleChecker implements BstyleConstants, MessageDispatcher, AuditListener
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Private Storage                                                         */
-/*                                                                              */
+/*										*/
+/*	Private Storage 							*/
+/*										*/
 /********************************************************************************/
 
-private Map<String,Configuration>       project_configs;
-private Configuration                   default_config;
+private BstyleMain			bstyle_main;
+private Map<String,Configuration>	project_configs;
+private Configuration			default_config;
 
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Constructors                                                            */
-/*                                                                              */
+/*										*/
+/*	Constructors								*/
+/*										*/
 /********************************************************************************/
 
-BstyleChecker()
+BstyleChecker(BstyleMain bm)
 {
+   bstyle_main = bm;
    project_configs = new HashMap<>();
    default_config = null;
-   
+
    BoardProperties bp = BoardProperties.getProperties("Bstyle");
-   
+
    for (String nm : bp.stringPropertyNames()) {
       if (nm.startsWith("Bstyle.config.file.")) {
-         int idx = nm.lastIndexOf(".");
-         String proj = nm.substring(idx+1);
-         Configuration cfg = getConfiguration(proj,bp.getProperty(nm));
-         project_configs.put(proj,cfg);
+	 int idx = nm.lastIndexOf(".");
+	 String proj = nm.substring(idx+1);
+	 Configuration cfg = getConfiguration(proj,bp.getProperty(nm));
+	 project_configs.put(proj,cfg);
        }
       else if (nm.equals("Bstyle.config.file")) {
-         default_config = getConfiguration(null,bp.getProperty(nm));
+	 default_config = getConfiguration(null,bp.getProperty(nm));
        }
     }
 }
@@ -91,23 +92,23 @@ BstyleChecker()
 
 
 /********************************************************************************/
-/*                                                                              */
-/*     Processing methods                                                       */
-/*                                                                              */
+/*										*/
+/*     Processing methods							*/
+/*										*/
 /********************************************************************************/
 
 void processProject(String proj,List<BstyleFile> files)
 {
+   if (files == null || files.isEmpty()) return;
+
    Configuration cfg = project_configs.get(proj);
    if (cfg == null) cfg = default_config;
    if (cfg == null) return;
-   
+
    ClassLoader mcl = Checker.class.getClassLoader();
-   RootModule root = null;
+   BstyleCheckRunner root = null;
    try {
-      root = new BstyleCheckRunner();
-      // root getPropertyDescriptor fails for root -- might need to copy properties if
-      //        based on package name
+      root = new BstyleCheckRunner(bstyle_main);
       root.setModuleClassLoader(mcl);
       root.configure(cfg);
       root.addListener(this);
@@ -117,10 +118,10 @@ void processProject(String proj,List<BstyleFile> files)
       IvyLog.logE("BSTYLE","Problem processing files",e);
       return;
     }
-   
+
    List<File> base = new ArrayList<>();
    for (BstyleFile bf : files) {
-      base.add(bf.getFile()); 
+      base.add(bf.getFile());
     }
    try {
       root.process(base);
@@ -132,10 +133,11 @@ void processProject(String proj,List<BstyleFile> files)
 
 
 
+
 /********************************************************************************/
-/*                                                                              */
-/*      Configuration methods                                                   */
-/*                                                                              */
+/*										*/
+/*	Configuration methods							*/
+/*										*/
 /********************************************************************************/
 
 private Configuration getConfiguration(String proj,String configpath)
@@ -157,50 +159,50 @@ private Configuration getConfiguration(String proj,String configpath)
    String xprops = null;
    for (String nm : bp.stringPropertyNames()) {
       if (nm.equals("Bstyle.config.properties." + proj)) {
-         xprops = bp.getProperty(nm);
+	 xprops = bp.getProperty(nm);
        }
       else if (nm.equals("Bstyle.config.properties")) {
-         dfltprops = bp.getProperty(nm);
+	 dfltprops = bp.getProperty(nm);
        }
     }
    if (xprops != null) xprops = dfltprops;
    if (xprops != null) {
       StringTokenizer tok = new StringTokenizer(xprops);
       while (tok.hasMoreTokens()) {
-         String t = tok.nextToken();
-         int idx = t.indexOf("=");
-         if (idx > 0) {
-            String key = t.substring(0,idx);
-            String v = t.substring(idx+1);
-            props.put(key,v);
-          }
-         else {
-            props.put(t,"true");
-          }
+	 String t = tok.nextToken();
+	 int idx = t.indexOf("=");
+	 if (idx > 0) {
+	    String key = t.substring(0,idx);
+	    String v = t.substring(idx+1);
+	    props.put(key,v);
+	  }
+	 else {
+	    props.put(t,"true");
+	  }
        }
     }
    PropertiesExpander res = new PropertiesExpander(props);
    ThreadModeSettings mode = new ThreadModeSettings(1,1);
-  
+
    try {
       Configuration cfg = ConfigurationLoader.loadConfiguration(
-            configpath, res, ConfigurationLoader.IgnoredModulesOptions.OMIT,
-            mode);
+	    configpath, res, ConfigurationLoader.IgnoredModulesOptions.OMIT,
+	    mode);
       return cfg;
     }
    catch (CheckstyleException e) {
       IvyLog.logE("BSTYLE","Problem setting up configuration",e);
     }
-   
+
    return null;
 }
 
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Handle error returns                                                    */
-/*                                                                              */
+/*										*/
+/*	Handle error returns							*/
+/*										*/
 /********************************************************************************/
 
 @Override public void fireFileStarted(String file)
@@ -228,27 +230,29 @@ private Configuration getConfiguration(String proj,String configpath)
 
 
 @Override public void auditStarted(AuditEvent e)
-{ 
+{
    IvyLog.logD("BSTYLE","Event Audit Started " + e);
 }
 
 @Override public void fileStarted(AuditEvent e)
-{ 
+{
    IvyLog.logD("BSTYLE","Event File Started " + e);
 }
 
 @Override public void addError(AuditEvent e)
-{ 
-   IvyLog.logD("BSTYLE","Event Add error " + e);
+{
+   IvyLog.logD("BSTYLE","Event Add error " +
+      e.getFileName() + " " + e.getLine() + " " + e.getColumn() + " " +
+      e.getMessage() + " " + e.getModuleId() + " " + e.getSeverityLevel());
 }
 
 @Override public void fileFinished(AuditEvent e)
-{ 
+{
    IvyLog.logD("BSTYLE","Event File finished " + e);
 }
 
 @Override public void auditFinished(AuditEvent e)
-{ 
+{
    IvyLog.logD("BSTYLE","Event Audit finished " + e);
 }
 
@@ -260,7 +264,7 @@ private Configuration getConfiguration(String proj,String configpath)
 
 
 
-}       // end of class BstyleChecker
+}	// end of class BstyleChecker
 
 
 

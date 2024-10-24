@@ -1977,22 +1977,22 @@ private void dumpDelta(int lvl,IResourceDelta drd)
 
 
 
-private void checkForProjectOpen(IResourceDelta rd)
-{
-   IResource ir = rd.getResource();
-   if (rd.getFlags() == IResourceDelta.OPEN) {
-      if (ir != null && ir.getProject() != null && ir.getType() == IResource.PROJECT) {
-	 IvyXmlWriter xw = our_plugin.beginMessage("PROJECTOPEN");
-	 xw.field("PROJECT",ir.getProject().getName());
-	 our_plugin.finishMessage(xw);
-       }
-    }
-   else if (ir.getType() == IResource.ROOT) {
-      for (IResourceDelta crd : rd.getAffectedChildren()) {
-	 checkForProjectOpen(crd);
-       }
-    }
-}
+// private void checkForProjectOpen(IResourceDelta rd)
+// {
+// IResource ir = rd.getResource();
+// if (rd.getFlags() == IResourceDelta.OPEN) {
+//    if (ir != null && ir.getProject() != null && ir.getType() == IResource.PROJECT) {
+// 	 IvyXmlWriter xw = our_plugin.beginMessage("PROJECTOPEN");
+// 	 xw.field("PROJECT",ir.getProject().getName());
+// 	 our_plugin.finishMessage(xw);
+//     }
+//  }
+// else if (ir.getType() == IResource.ROOT) {
+//    for (IResourceDelta crd : rd.getAffectedChildren()) {
+// 	 checkForProjectOpen(crd);
+//     }
+//  }
+// }
 
 
 
