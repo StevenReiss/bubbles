@@ -76,6 +76,20 @@ BstyleProjectManager(BstyleMain bm,BstyleFileManager fm)
 /*                                                                              */
 /********************************************************************************/
 
+List<BstyleFile> getAllFiles(String proj)
+{
+   List<BstyleFile> files = new ArrayList<>();
+   for (BstyleFile bf : project_files) {
+      if (bf.getProject() != null && proj != null &&
+            proj.equals(bf.getProject())) {
+         files.add(bf); 
+       }
+    }
+   return files;
+}
+
+
+
 BstyleFile addFile(String project,String filename)
 { 
    File f1 = new File(filename);
@@ -127,15 +141,9 @@ void processAllProjects()
 
 void processProject(String proj)
 {
-   List<BstyleFile> files = new ArrayList<>();
-   
-   for (BstyleFile bf : project_files) {
-      if (bf.getProject() != null && proj != null &&
-            proj.equals(bf.getProject())) {
-         files.add(bf); 
-       }
-    }
+   List<BstyleFile> files = getAllFiles(proj);
    if (files.isEmpty()) return;
+   
    bstyle_main.getStyleChecker().processProject(proj,files);
 }
 
@@ -178,6 +186,8 @@ void setup()
        }
     }
 }
+
+
 
 
 }       // end of class BstyleProjectManager

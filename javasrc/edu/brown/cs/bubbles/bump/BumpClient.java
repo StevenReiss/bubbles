@@ -1066,10 +1066,10 @@ public void build(String proj,boolean clean,boolean full,boolean refresh)
    q += " CLEAN='" + Boolean.toString(clean) + "'";
    q += " FULL='" + Boolean.toString(full) + "'";
 
-   problem_set.clearProblems(proj);
+   problem_set.clearProblems(proj,"IDE");
 
    Element probs = getXmlReply("BUILDPROJECT",proj,q,null,BUILD_DELAY);
-   problem_set.handleErrors(proj,null,0,probs);
+   problem_set.handleErrors(proj,null,"IDE",0,probs);
 }
 
 
@@ -3799,9 +3799,9 @@ private void buildAllProjects(boolean clean,boolean full,boolean refresh,boolean
       else {
          BoardLog.logD("BUMP","Start working on problems: " + IvyXml.convertXmlToString(probs));
          if (clean || full || refresh) {
-            problem_set.clearProblems(pnm);
+            problem_set.clearProblems(pnm,"IDE");
          }
-         problem_set.handleErrors(pnm,null,0,probs);
+         problem_set.handleErrors(pnm,null,"IDE",0,probs);
        }
     }
 }
@@ -3841,14 +3841,16 @@ protected class IDEHandler implements MintHandler {
 	    case "EDITERROR" :
 	       problem_set.handleErrors(IvyXml.getAttrString(e,"PROJECT"),
 		     new File(IvyXml.getAttrString(e,"FILE")),
+                     IvyXml.getAttrString(e,"CATEGORY","IDE"),
 		     IvyXml.getAttrInt(e,"ID"),
 		     IvyXml.getChild(e,"MESSAGES"));
 	       break;
 	    case "FILEERROR" :
 	       problem_set.handleErrors(IvyXml.getAttrString(e,"PROJECT"),
 		     new File(IvyXml.getAttrString(e,"FILE")),
+                     IvyXml.getAttrString(e,"CATEOGRY","IDE"),
 		     -1,
-		     IvyXml.getChild(e,"MESSAGES"));
+		     IvyXml.getChild(e,"MESSAGES")); 
 	       break;
 	    case "PRIVATEERROR" :
 	       problem_set.handlePrivateErrors(IvyXml.getAttrString(e,"PROJECT"),

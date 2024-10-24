@@ -66,6 +66,7 @@ private BumpErrorType error_type;
 private int	edit_id;
 private List<BumpFix> problem_fixes;
 private boolean computed_fixes;
+private String  error_category;
 
 
 
@@ -95,6 +96,7 @@ BumpProblemImpl(Element d,String id,int eid,String proj)
    else if (IvyXml.getAttrBool(d,"TODO")) error_type = BumpErrorType.TODO;
    else if (IvyXml.getAttrBool(d,"HINT")) error_type = BumpErrorType.HINT;
    edit_id = eid;
+   error_category = IvyXml.getAttrString(d,"CATEGORY","IDE");
    
    setupFixes(d);
 }
@@ -116,6 +118,7 @@ BumpProblemImpl(Element d,String id,int eid,String proj)
 @Override public BumpErrorType getErrorType()			{ return error_type; }
 @Override public int getEditId()				{ return edit_id; }
 @Override public String getProject()				{ return for_project; }
+@Override public String getCategory()                           { return error_category; } 
 
 @Override synchronized public List<BumpFix> getFixes()
 {

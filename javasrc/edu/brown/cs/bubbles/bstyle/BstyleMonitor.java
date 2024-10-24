@@ -256,6 +256,7 @@ private void handleErrors(String proj,String filename,Element messages)
        }
     }
    
+   // this is wrong
    if (!redo.isEmpty()) {
       bstyle_main.getStyleChecker().processProject(proj,redo);
     }
@@ -301,40 +302,27 @@ private void handleFinishFile(String proj,String file)
 }
 
 
-private void handleBuildDone(Element deltas)
+private void handleBuildDone(Element xml)
 {
-   Map<BstyleFile,Boolean> errmap = new HashMap<>();
    List<BstyleFile> redo = new ArrayList<>();
-   String proj = null;
-   
-   for (Element de : IvyXml.children(deltas,"DELTA")) {
-      Element re = IvyXml.getChild(de,"RESOURCE");
-      String rtyp = IvyXml.getAttrString(re,"TYPE");
-      if (rtyp == null || !rtyp.equals("FILE")) continue;
-      String fp = IvyXml.getAttrString(re,"LOCATION");
-      File f = new File(fp);
-      BstyleFile bf = bstyle_main.getFileManager().findFile(f);
-      if (bf == null) continue;
-      errmap.put(bf,false);
-      for (Element me : IvyXml.children(de,"MARKER")) {
-         for (Element pe : IvyXml.children(me,"PROBLEM")) {
-            if (IvyXml.getAttrBool(pe,"ERROR")) errmap.put(bf,true);
-          }
+   Set<BstyleFile> haderrors = new HashSet<>();
+   String proj = IvyXml.getAttrString(xml,"PROJECT");
+   List<BstyleFile> allbf = bstyle_main.getProjectManager().getAllFiles(proj); 
+   for (BstyleFile bf : allbf) {
+      if (bf.getHasErrors()) haderrors.add(bf);
+    }
+   Element probs = IvyXml.getChild(xml,"PROBLEMS");
+   for (Element pe : IvyXml.children(probs,"PROBLEM")) {
+      if (IvyXml.getAttrBool(pe,"ERROR")) {
+         String fnm = IvyXml.getAttrString(pe,"FILE");
+         BstyleFile bf = bstyle_main.getFileManager().findFile(fnm);
+         if (bf == null) continue;
+         boolean chng = bf.setHasErrors(true);
+         if (chng) redo.add(bf);
+         haderrors.remove(bf);
        }
     }
-   
-   for (Map.Entry<BstyleFile,Boolean> ent : errmap.entrySet()) {
-      BstyleFile bf = ent.getKey();
-      boolean errs = ent.getValue();
-      synchronized (todo_files) {
-         if (errs) {
-            todo_files.add(bf);
-          }
-         else {
-            if (todo_files.remove(bf)) redo.add(bf);
-          } 
-       }
-    }
+   redo.addAll(haderrors);
    
    if (!redo.isEmpty()) {
       bstyle_main.getStyleChecker().processProject(proj,redo);

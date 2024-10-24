@@ -149,7 +149,7 @@ BumpErrorType getErrorType()
 /*										*/
 /********************************************************************************/
 
-void handleErrors(String proj,File forfile,int eid,Element ep)
+void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
 {
    BoardLog.logD("BUMP","Handle errors " + forfile);
    Set<BumpProblemImpl> found = new HashSet<>();
@@ -184,6 +184,7 @@ void handleErrors(String proj,File forfile,int eid,Element ep)
 	    BumpProblemImpl bp = it.next();
 	    if (found.contains(bp)) continue;
 	    if (!fileMatch(forfile,bp)) continue;
+            if (bp.getCategory() != null && cat != null && !bp.getCategory().equals(cat)) continue;
 	    // if (bp.getErrorType() == BumpErrorType.NOTICE) continue; // notes not returned on recompile -- seems fixed
 	    if (deled == null) deled = new ArrayList<>();
 	    deled.add(bp);
@@ -225,7 +226,7 @@ void handleErrors(String proj,File forfile,int eid,Element ep)
 
 
 
-void clearProblems(String proj)
+void clearProblems(String proj,String category)
 {
    BoardLog.logD("BUMP","Clear Problems " + proj);
    List<BumpProblemImpl> clear;
@@ -240,9 +241,12 @@ void clearProblems(String proj)
             it.hasNext(); ) {
             BumpProblemImpl bp = it.next();
             if (bp.getProject().equals(proj)) {
-               BoardLog.logD("BUMP","REMOVE PROBLEM " + bp);
-               clear.add(bp);
-               it.remove();
+               if (category == null || bp.getCategory() == null ||
+                     category.equals(bp.getCategory())) {
+                  BoardLog.logD("BUMP","REMOVE PROBLEM " + bp);
+                  clear.add(bp);
+                  it.remove();
+                }
              }
           }
        }

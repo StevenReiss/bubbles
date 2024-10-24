@@ -217,6 +217,11 @@ interface BumpProblem {
  *	Return project for this problem
  **/
    String getProject();
+   
+/**
+ *      Return the category for the error (default IDE)
+ **/
+   String getCategory();
 
 }	// end of inner interface BumpProblem
 
