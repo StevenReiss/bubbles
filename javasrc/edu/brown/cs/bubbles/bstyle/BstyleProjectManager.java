@@ -135,7 +135,6 @@ void setup()
          IvyLog.logD("BSTYLE","Project file " + fpath + " " + isopen);
          BstyleFile bf = file_manager.addFile(projnm,fpath,isopen);
          if (bf != null) project_files.add(bf);
-         
        }
     }
 }

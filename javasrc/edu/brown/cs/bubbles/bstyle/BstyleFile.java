@@ -58,6 +58,8 @@ private IDocument       edit_document;
 private String          file_project;
 private File            for_file;
 private FileText        file_text;
+private String          newline_string;
+private boolean         has_errors;
 
 private static AtomicInteger    edit_counter = new AtomicInteger();
 
@@ -76,6 +78,8 @@ BstyleFile(BstyleMain bm,String proj,File f)
    file_project = proj;
    edit_document = null;
    file_text = null;
+   newline_string = null;
+   has_errors = true;
 }
 
 
@@ -95,6 +99,25 @@ String getProject()
 File getFile()
 {
    return for_file;
+}
+
+boolean getHasErrors()
+{
+   return has_errors;
+}
+
+
+boolean setHasErrors(boolean fg)
+{
+   boolean rslt = fg == has_errors;
+   has_errors = fg;
+   return rslt;
+}
+
+
+String getNewLineString()
+{
+   return newline_string;
 }
 
 
@@ -130,6 +153,9 @@ synchronized FileText getFileText()
    return file_text;
 }
 
+
+
+
 /********************************************************************************/
 /*                                                                              */
 /*      Start file from buffer                                                  */
@@ -146,6 +172,14 @@ synchronized void startFile()
    if (file_project == null) file_project = IvyXml.getAttrString(open,"PROJECT");
    byte [] cnts = IvyXml.getBytesElement(open,"CONTENTS");
    String cn = new String(cnts);
+   String linesep = IvyXml.getTextElement(open,"LINESEP");
+   if (linesep != null) {
+      if (linesep.equals("LF")) newline_string = "\n";
+      else if (linesep.equals("CRLF")) newline_string = "\r\n";
+      else if (linesep.equals("CR")) newline_string = "\r";
+      else newline_string = "\n";
+    }
+   
    edit_document = new Document(cn);
    file_text = null;
 }

@@ -378,7 +378,7 @@ static void outputMarkers(IProject proj,Iterable<IMarker> mrks,IvyXmlWriter xw)
       fil = getFileForPath(fil,proj);
 
       for (IMarker xmk : mrks) {
-         BedrockPlugin.logD("CHECK MARKER " + xmk + " " + xmk.getResource() + " " + irc);
+//       BedrockPlugin.logD("CHECK MARKER " + xmk + " " + xmk.getResource() + " " + irc);
 	 if (xmk != mrk && done.contains(xmk)) continue;
 	 if (xmk.getResource() != irc) continue;
 	 done.add(xmk);

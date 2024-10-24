@@ -35,6 +35,7 @@ import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -237,7 +238,7 @@ void loadProjects()
       String pnm = IvyXml.getAttrString(pe,"NAME");
       MintDefaultReply prply = new MintDefaultReply();
       String pmsg = "<BUBBLES DO='OPENPROJECT' PROJECT='" + pnm +
-	 "' CLASSES='true' FILES='false' PATHS='true' OPTIONS='false' />";
+	 "' CLASSES='true' FILES='true' PATHS='true' OPTIONS='false' />";
       mint_control.send(pmsg,prply,MINT_MSG_FIRST_NON_NULL);
       Element pr = prply.waitForXml();
       if (!IvyXml.isElement(pr,"RESULT")) {
@@ -402,6 +403,16 @@ private class EclipseHandler implements MintHandler {
             updateTestState();
           }
          else if (cmd.equals("BUILDDONE")) {
+            String proj = IvyXml.getAttrString(e,"PROJECT");
+            BattProject bp = project_set.get(proj);
+            Map<File,FileState> fsmap = new HashMap<>();
+            for (File fp : bp.getSourceFiles()) {
+               
+             }
+            IvyXml probs = IvyXml.getChild(e,"PROBLEMS");
+            for (Element pe : IvyXml.children(probs,"PROBLEM")) {
+               if (IvyXml.getAttrBool(pe,"ERROR")) fs = FileState.ERRORS;
+             }
             for (Element de : IvyXml.children(e,"DELTA")) {
                Element re = IvyXml.getChild(de,"RESOURCE");
                String rtyp = IvyXml.getAttrString(re,"TYPE");

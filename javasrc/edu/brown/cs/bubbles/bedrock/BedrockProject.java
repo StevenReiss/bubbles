@@ -368,6 +368,7 @@ void buildProject(String proj,boolean clean,boolean full,boolean refresh,IvyXmlW
    handleBuild(ip,clean,full,refresh);
 
    IMarker [] mrks;
+   BuildDoneThread bdt = null;
    try {
       mrks = ip.findMarkers(null,true,IResource.DEPTH_INFINITE);
       Map<Long,IMarker> marset = new HashMap<>();
@@ -375,11 +376,40 @@ void buildProject(String proj,boolean clean,boolean full,boolean refresh,IvyXmlW
 	 marset.put(m.getId(),m);
        }
       BedrockUtil.outputMarkers(ip,marset.values(),xw);
+      bdt = new BuildDoneThread(ip,marset.values());
     }
    catch (CoreException e) {
       throw new BedrockException("Problem finding errors",e);
     }
+   
+   if (bdt != null) {
+      bdt.start();
+    }
 }
+
+
+
+private class BuildDoneThread extends Thread {
+
+   private IProject for_project;
+   private Collection<IMarker> marker_set;
+   
+   BuildDoneThread(IProject p,Collection<IMarker> mrks) {
+      for_project = p;
+      marker_set = mrks;
+    }
+   
+   @Override public void run() {
+      IvyXmlWriter xw = our_plugin.beginMessage("BUILDDONE");
+      xw.field("PROJECT",for_project.getName());
+      // need to include all files here, not just those with problems?
+      xw.begin("PROBLEMS");
+      BedrockUtil.outputMarkers(for_project,marker_set,xw);
+      xw.end("PROBLEMS");
+      our_plugin.finishMessage(xw);
+    }
+   
+}       // end of inner class BuildDoneThread
 
 
 
@@ -1916,19 +1946,19 @@ private class BuildMonitor extends BedrockProgressMonitor {
        }
     }
    else if (evt.getType() == IResourceChangeEvent.POST_BUILD) {
-      try {
-	 IvyXmlWriter xw = our_plugin.beginMessage("BUILDDONE");
-	 IResourceDelta rd = evt.getDelta();
-	 int ctr = BedrockUtil.outputResource(rd,xw);
-	 if (ctr != 0) our_plugin.finishMessage(xw);
-	 else {
-	    checkForProjectOpen(rd);
-	  }
-       }
-      catch (Throwable t) {
-	 BedrockPlugin.logE("Problem with resource: " + t);
-	 t.printStackTrace();
-       }
+//    try {
+// 	 IvyXmlWriter xw = our_plugin.beginMessage("BUILDDONE");
+// 	 IResourceDelta rd = evt.getDelta();
+// 	 int ctr = BedrockUtil.outputResource(rd,xw);
+// 	 if (ctr != 0) our_plugin.finishMessage(xw);
+// 	 else {
+// 	    checkForProjectOpen(rd);
+// 	  }
+//     }
+//    catch (Throwable t) {
+// 	 BedrockPlugin.logE("Problem with resource: " + t);
+// 	 t.printStackTrace();
+//     }
     }
 }
 

@@ -909,90 +909,90 @@ private class RemoteEdit implements Runnable {
    private void reload() {
       writeLock();
       try {
-	 try {
-	    String txt = getText(0,getLength());
-	    if (txt.equals(edit_text)) {
-	       BoardLog.logD("BALE","Reload with equal text ignored");
-	       return;
-	     }
-	    else {
-	       BoardLog.logD("BALE","Full reload being done");
-	       BoardMetrics.noteCommand("BALE","FullReload");
-	     }
-	  }
-	 catch (BadLocationException e) { }
-
-	 doing_remote = true;
-	 doing_load = true;
-
-	 List<BaleReloadData> reloads = new ArrayList<BaleReloadData>();
-	 for (BaleFragment bf : fragment_map.keySet()) {
-	    BaleReloadData rd = bf.startReload();
-	    if (rd != null) reloads.add(rd);
-	  }
-
-	 BaleSavedPositions posn = null;
-	 try {
-	    posn = savePositions();
-	  }
-	 catch (IOException e) {
-	    BoardLog.logE("BALE","Problem saving positions: " + e);
-	  }
-
-	 DocumentListener [] dlisteners = getDocumentListeners();
-	 UndoableEditListener [] elisteners = getUndoableEditListeners();
-	 for (int i = 0; i < dlisteners.length; ++i) {
-	    removeDocumentListener(dlisteners[i]);
-	  }
-	 for (int i = 0; i < elisteners.length; ++i) {
-	    removeUndoableEditListener(elisteners[i]);
-	  }
-
-	 try {
-	    remove(0,getLength());
-	    String ntxt = getText(0,getLength());
-	    if (ntxt != null && ntxt.length() > 0)
-	       BoardLog.logD("BALE","Didn't remove all text: " + ntxt);
-	    DefaultEditorKit dek = new DefaultEditorKit();
-	    Reader in = new StringReader(edit_text);
-	    try {
-	       dek.read(in,BaleDocumentIde.this,0);
-	     }
-	    catch (IOException e) {
-	       BoardLog.logE("BALE","I/O exception from string reader",e);
-	     }
-	    ntxt = getText(0,getLength());		// for debugging
-	    in = new StringReader(edit_text);
-	    setupLineOffsets(in,newline_string);
-	  }
-	 catch (BadLocationException e) {
-	    BoardLog.logE("BALE","Bad location for reload: " + e,e);
-	  }
-
-	 nextEditCounter();
-
-	 if (posn != null) resetPositions(posn);
-
-	 for (int i = 0; i < elisteners.length; ++i) {
-	    addUndoableEditListener(elisteners[i]);
-	  }
-	 for (int i = 0; i < dlisteners.length; ++i) {
-	    addDocumentListener(dlisteners[i]);
-	  }
-
-	 doing_load = false;
-	 doing_remote = false;
-
-	 for (BaleReloadData rd : reloads) {
-	    rd.finishedReload();
-	  }
+         try {
+            String txt = getText(0,getLength());
+            if (txt.equals(edit_text)) {
+               BoardLog.logD("BALE","Reload with equal text ignored");
+               return;
+             }
+            else {
+               BoardLog.logD("BALE","Full reload being done");
+               BoardMetrics.noteCommand("BALE","FullReload");
+             }
+          }
+         catch (BadLocationException e) { }
+   
+         doing_remote = true;
+         doing_load = true;
+   
+         List<BaleReloadData> reloads = new ArrayList<BaleReloadData>();
+         for (BaleFragment bf : fragment_map.keySet()) {
+            BaleReloadData rd = bf.startReload();
+            if (rd != null) reloads.add(rd);
+          }
+   
+         BaleSavedPositions posn = null;
+         try {
+            posn = savePositions();
+          }
+         catch (IOException e) {
+            BoardLog.logE("BALE","Problem saving positions: " + e);
+          }
+   
+         DocumentListener [] dlisteners = getDocumentListeners();
+         UndoableEditListener [] elisteners = getUndoableEditListeners();
+         for (int i = 0; i < dlisteners.length; ++i) {
+            removeDocumentListener(dlisteners[i]);
+          }
+         for (int i = 0; i < elisteners.length; ++i) {
+            removeUndoableEditListener(elisteners[i]);
+          }
+   
+         try {
+            remove(0,getLength());
+            String ntxt = getText(0,getLength());
+            if (ntxt != null && ntxt.length() > 0)
+               BoardLog.logD("BALE","Didn't remove all text: " + ntxt);
+            DefaultEditorKit dek = new DefaultEditorKit();
+            Reader in = new StringReader(edit_text);
+            try {
+               dek.read(in,BaleDocumentIde.this,0);
+             }
+            catch (IOException e) {
+               BoardLog.logE("BALE","I/O exception from string reader",e);
+             }
+            ntxt = getText(0,getLength());		// for debugging
+            in = new StringReader(edit_text);
+            setupLineOffsets(in,newline_string);
+          }
+         catch (BadLocationException e) {
+            BoardLog.logE("BALE","Bad location for reload: " + e,e);
+          }
+   
+         nextEditCounter();
+   
+         if (posn != null) resetPositions(posn);
+   
+         for (int i = 0; i < elisteners.length; ++i) {
+            addUndoableEditListener(elisteners[i]);
+          }
+         for (int i = 0; i < dlisteners.length; ++i) {
+            addDocumentListener(dlisteners[i]);
+          }
+   
+         doing_load = false;
+         doing_remote = false;
+   
+         for (BaleReloadData rd : reloads) {
+            rd.finishedReload();
+          }
        }
       finally {
-	 doing_load = false;
-	 doing_remote = false;
-	 writeUnlock();
+         doing_load = false;
+         doing_remote = false;
+         writeUnlock();
        }
-
+   
       fixupElision();
     }
 
@@ -1393,15 +1393,15 @@ private class EclipseUpdater implements DocumentListener {
 
    @Override public void removeUpdate(DocumentEvent e) {
       if (!doing_load && !doing_remote && !doing_eload) {
-	 int off = e.getOffset();
-	 int len = e.getLength();
-	 // The delete has already been done.  The length might be off because things
-	 // have changed -- i.e. there may be new lines in the deleted segment that don't
-	 // show up here.  Length needs to be incremented by the number of newlines that
-	 // were deleted.  This is now handled inside bedrock
-	 int eoff1 = mapOffsetToEclipse(off);
-	 int eoff2 = eoff1+len;
-	 bump_client.editFile(project_name,file_name,nextEditCounter(),eoff1,eoff2,null);
+         int off = e.getOffset();
+         int len = e.getLength();
+         // The delete has already been done.  The length might be off because things
+         // have changed -- i.e. there may be new lines in the deleted segment that don't
+         // show up here.  Length needs to be incremented by the number of newlines that
+         // were deleted.  This is now handled inside bedrock
+         int eoff1 = mapOffsetToEclipse(off);
+         int eoff2 = eoff1+len;
+         bump_client.editFile(project_name,file_name,nextEditCounter(),eoff1,eoff2,null);
        }
     }
 

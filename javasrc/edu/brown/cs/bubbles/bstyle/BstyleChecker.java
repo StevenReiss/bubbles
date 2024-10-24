@@ -34,8 +34,6 @@ import java.util.StringTokenizer;
 
 import com.puppycrawl.tools.checkstyle.Checker;
 import com.puppycrawl.tools.checkstyle.ConfigurationLoader;
-import com.puppycrawl.tools.checkstyle.ModuleFactory;
-import com.puppycrawl.tools.checkstyle.PackageObjectFactory;
 import com.puppycrawl.tools.checkstyle.PropertiesExpander;
 import com.puppycrawl.tools.checkstyle.ThreadModeSettings;
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
@@ -105,7 +103,6 @@ void processProject(String proj,List<BstyleFile> files)
    if (cfg == null) return;
    
    ClassLoader mcl = Checker.class.getClassLoader();
-   ModuleFactory fac = new PackageObjectFactory(Checker.class.getPackage().getName(),mcl);
    RootModule root = null;
    try {
       root = new BstyleCheckRunner();

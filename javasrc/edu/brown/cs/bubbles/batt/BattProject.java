@@ -25,10 +25,12 @@
 package edu.brown.cs.bubbles.batt;
 
 
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -54,6 +56,7 @@ class BattProject implements BattConstants
 
 private String			project_name;
 private Map<String,List<ProjClass>> file_classes;
+private Set<File>               source_files;
 
 private Map<String,ProjClass>	class_data;
 private Set<String>		class_paths;
@@ -123,6 +126,17 @@ void loadProject(Element xml)
 	 if (nm.startsWith(ignore)) it.remove();
        }
     }
+   
+   Set<File> done = new HashSet<>();
+   Element files = IvyXml.getChild(xml,"FILES");
+   for (Element finfo : IvyXml.children(files,"FILE")) {
+      if (!IvyXml.getAttrBool(finfo,"SOURCE")) continue;
+      String fpath = IvyXml.getAttrString(finfo,"PATH");
+      File f1 = new File(fpath);
+      f1 = IvyFile.getCanonical(f1);
+      if (!done.add(f1)) continue;
+      source_files.add(f1);
+    }
 }
 
 
@@ -150,6 +164,11 @@ List<String> getClassNames()
        }
     }
    return rslt;
+}
+
+Set<File> getSourceFiles()
+{
+   return source_files;
 }
 
 
