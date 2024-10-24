@@ -34,8 +34,6 @@ import java.util.StringTokenizer;
 
 import com.puppycrawl.tools.checkstyle.Checker;
 import com.puppycrawl.tools.checkstyle.ConfigurationLoader;
-import com.puppycrawl.tools.checkstyle.ModuleFactory;
-import com.puppycrawl.tools.checkstyle.PackageObjectFactory;
 import com.puppycrawl.tools.checkstyle.PropertiesExpander;
 import com.puppycrawl.tools.checkstyle.ThreadModeSettings;
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
@@ -43,7 +41,6 @@ import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.Configuration;
 import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
-import com.puppycrawl.tools.checkstyle.api.RootModule;
 import com.puppycrawl.tools.checkstyle.api.Violation;
 
 import edu.brown.cs.bubbles.board.BoardProperties;
@@ -59,6 +56,7 @@ class BstyleChecker implements BstyleConstants, MessageDispatcher, AuditListener
 /*                                                                              */
 /********************************************************************************/
 
+private BstyleMain                      bstyle_main;
 private Map<String,Configuration>       project_configs;
 private Configuration                   default_config;
 
@@ -70,8 +68,9 @@ private Configuration                   default_config;
 /*                                                                              */
 /********************************************************************************/
 
-BstyleChecker()
+BstyleChecker(BstyleMain bm)
 {
+   bstyle_main = bm;
    project_configs = new HashMap<>();
    default_config = null;
    
@@ -100,17 +99,16 @@ BstyleChecker()
 
 void processProject(String proj,List<BstyleFile> files)
 {
+   if (files == null || files.isEmpty()) return;
+   
    Configuration cfg = project_configs.get(proj);
    if (cfg == null) cfg = default_config;
    if (cfg == null) return;
    
    ClassLoader mcl = Checker.class.getClassLoader();
-   ModuleFactory fac = new PackageObjectFactory(Checker.class.getPackage().getName(),mcl);
-   RootModule root = null;
+   BstyleCheckRunner root = null;
    try {
-      root = new BstyleCheckRunner();
-      // root getPropertyDescriptor fails for root -- might need to copy properties if
-      //        based on package name
+      root = new BstyleCheckRunner(bstyle_main);
       root.setModuleClassLoader(mcl);
       root.configure(cfg);
       root.addListener(this);
@@ -132,6 +130,7 @@ void processProject(String proj,List<BstyleFile> files)
       IvyLog.logE("BSTYLE","Problem processing files",e);
     }
 }
+
 
 
 
@@ -242,7 +241,9 @@ private Configuration getConfiguration(String proj,String configpath)
 
 @Override public void addError(AuditEvent e)
 { 
-   IvyLog.logD("BSTYLE","Event Add error " + e);
+   IvyLog.logD("BSTYLE","Event Add error " +
+      e.getFileName() + " " + e.getLine() + " " + e.getColumn() + " " +
+      e.getMessage() + " " + e.getModuleId() + " " + e.getSeverityLevel());
 }
 
 @Override public void fileFinished(AuditEvent e)

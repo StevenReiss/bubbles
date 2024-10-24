@@ -25,7 +25,12 @@ package edu.brown.cs.bubbles.bstyle;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.w3c.dom.Element;
 
@@ -54,6 +59,7 @@ class BstyleMonitor implements BstyleConstants, MintConstants
 
 private BstyleMain      bstyle_main;
 private MintControl     mint_control;
+private Set<BstyleFile> todo_files;
 private boolean         is_done;
 private boolean         no_exit;
 
@@ -72,6 +78,7 @@ BstyleMonitor(BstyleMain bm,String mintid)
    mint_control = MintClient.create(mintid,MintSyncMode.ONLY_REPLIES);
    is_done = false;
    no_exit = false;
+   todo_files = new HashSet<>();
 }
 
 
@@ -89,7 +96,7 @@ void start()
    
    new WaitForExit().start();
 }
-
+ 
 
 
 /********************************************************************************/
@@ -192,7 +199,7 @@ void sendCommand(String cmd,String proj,CommandArgs args,String body,MintReply r
    IvyLog.logD("BSTYLE","SEND TO BUBBLES: " + msg);
    
    if (rply != null) {
-      sendMessage(msg,rply,MintConstants.MINT_MSG_FIRST_REPLY);
+      sendMessage(msg,rply,MintConstants.MINT_MSG_FIRST_NON_NULL);
     }
    else {
       sendMessage(msg,null,MintConstants.MINT_MSG_NO_REPLY);
@@ -213,9 +220,45 @@ void sendMessage(String xml,MintReply rply,int fgs)
 /*                                                                              */
 /********************************************************************************/
 
-private void handleErrors(String proj,String file,Element messages)
+private void handleErrors(String proj,String filename,Element messages)
 {
+   Map<BstyleFile,Boolean> errmap = new HashMap<>();
    
+   if (filename != null) {
+      BstyleFile bf = bstyle_main.getFileManager().findFile(filename);
+      if (bf != null) errmap.put(bf,false);
+    }
+   
+   List<BstyleFile> redo = new ArrayList<>();
+   
+   for (Element pelt : IvyXml.children(messages,"PROBLEM")) {
+      String fnm = IvyXml.getAttrString(pelt,"FILE");
+      if (fnm != null) {
+         BstyleFile bf1 = bstyle_main.getFileManager().findFile(fnm);
+         if (errmap.get(bf1) != Boolean.TRUE) {
+            if (IvyXml.getAttrBool(pelt,"ERROR")) {
+               errmap.put(bf1,true);
+             }
+          }
+       }
+    }
+   
+   for (Map.Entry<BstyleFile,Boolean> ent : errmap.entrySet()) {
+      BstyleFile bf = ent.getKey();
+      boolean errs = ent.getValue();
+      synchronized (todo_files) {
+         if (errs) {
+            todo_files.add(bf);
+          }
+         else {
+            if (todo_files.remove(bf)) redo.add(bf);
+          } 
+       }
+    }
+   
+   if (!redo.isEmpty()) {
+      bstyle_main.getStyleChecker().processProject(proj,redo);
+    }
 }
 
 
@@ -232,6 +275,10 @@ private void handleEdit(MintMessage msg,String bid,File file,int len,int offset,
    if (bf == null) return;
    
    bf.editFile(len,offset,txt,complete);
+   
+   synchronized (todo_files) {
+      todo_files.add(bf);
+    }
 }
 
 
@@ -254,6 +301,47 @@ private void handleFinishFile(String proj,String file)
 }
 
 
+private void handleBuildDone(Element deltas)
+{
+   Map<BstyleFile,Boolean> errmap = new HashMap<>();
+   List<BstyleFile> redo = new ArrayList<>();
+   String proj = null;
+   
+   for (Element de : IvyXml.children(deltas,"DELTA")) {
+      Element re = IvyXml.getChild(de,"RESOURCE");
+      String rtyp = IvyXml.getAttrString(re,"TYPE");
+      if (rtyp == null || !rtyp.equals("FILE")) continue;
+      String fp = IvyXml.getAttrString(re,"LOCATION");
+      File f = new File(fp);
+      BstyleFile bf = bstyle_main.getFileManager().findFile(f);
+      if (bf == null) continue;
+      errmap.put(bf,false);
+      for (Element me : IvyXml.children(de,"MARKER")) {
+         for (Element pe : IvyXml.children(me,"PROBLEM")) {
+            if (IvyXml.getAttrBool(pe,"ERROR")) errmap.put(bf,true);
+          }
+       }
+    }
+   
+   for (Map.Entry<BstyleFile,Boolean> ent : errmap.entrySet()) {
+      BstyleFile bf = ent.getKey();
+      boolean errs = ent.getValue();
+      synchronized (todo_files) {
+         if (errs) {
+            todo_files.add(bf);
+          }
+         else {
+            if (todo_files.remove(bf)) redo.add(bf);
+          } 
+       }
+    }
+   
+   if (!redo.isEmpty()) {
+      bstyle_main.getStyleChecker().processProject(proj,redo);
+    }
+}
+
+
 private void projectRebuilt(String proj)
 {
    
@@ -264,15 +352,28 @@ private void handleResourceChange(Element res)
    String k = IvyXml.getAttrString(res,"KIND");
    Element re = IvyXml.getChild(res,"RESOURCE");
    String rtyp = IvyXml.getAttrString(res,"TYPE");
+   BstyleFile bf = null;
    if (rtyp != null && rtyp.equals("FILE")) {
       String fp = IvyXml.getAttrString(re,"LOCATION");
       String proj = IvyXml.getAttrString(re,"PROJECT");
       switch (k) {
          case "ADDED" :
          case "ADDED_PHANTOM" :
+            bf = bstyle_main.getProjectManager().addFile(proj,fp); 
+            if (bf != null) {
+               synchronized (todo_files) {
+                  todo_files.add(bf);
+                }
+             }
             break;
          case "REMOVED" :
          case "REMOVED_PHANTOM" :
+            bf = bstyle_main.getProjectManager().removeFile(proj,fp);
+            if (bf != null) {
+               synchronized (todo_files) {
+                  todo_files.remove(bf); 
+                }
+             }
             break;
          default :
             IvyLog.logI("BSTYLE","CHANGE FILE " + fp + " IN " + proj);
@@ -322,16 +423,16 @@ private class BstyleHandler implements MintHandler {
    
    @Override public void receive(MintMessage msg,MintArguments args) {
       IvyLog.logI("BSTYLE","Process command: " + msg.getText());
-        String cmd = args.getArgument(0);
+      String cmd = args.getArgument(0);
       String sid = args.getArgument(1);
       Element e = msg.getXml();
       String rslt = null;
-
+      
       try {
          rslt = processCommand(cmd,sid,e);
          IvyLog.logI("BSTYLE","COMMAND RESULT: " + rslt);
        }
-    
+      
       catch (Throwable t) {
          String xmsg = "Problem processing command " + cmd + ": " + t;
          IvyLog.logE("BSTYLE",xmsg,t);
@@ -356,7 +457,7 @@ private class BstyleHandler implements MintHandler {
          pw.close();
        }
       msg.replyTo(rslt);
-    }
+   }
 
 }       // end of inner class BstyleHandler
 
@@ -390,7 +491,7 @@ private class EclipseHandler implements MintHandler {
          case "EDIT" :
             String bid = IvyXml.getAttrString(e,"BID");
             if (!bid.equals(SOURCE_ID)) {
-               msg.replyTo();
+               msg.replyTo();// 
                break;
              }
             String txt = IvyXml.getText(e);
@@ -425,6 +526,9 @@ private class EclipseHandler implements MintHandler {
                 }
              }
             msg.replyTo();
+            break;
+         case "BUILDDONE" :
+            handleBuildDone(e);
             break;
          default :
          case "EVALUATION" :

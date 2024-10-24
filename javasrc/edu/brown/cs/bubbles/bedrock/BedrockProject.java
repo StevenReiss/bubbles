@@ -135,7 +135,7 @@ private static boolean		initial_refresh = false;
 
 private static Set<String> ignore_projects;
 
-private static boolean		show_events = false;
+private static boolean		show_events = true;
 private static boolean		show_preferences = false;
 
 static {
@@ -368,9 +368,9 @@ void buildProject(String proj,boolean clean,boolean full,boolean refresh,IvyXmlW
    handleBuild(ip,clean,full,refresh);
 
    IMarker [] mrks;
+   Map<Long,IMarker> marset = new HashMap<>();
    try {
       mrks = ip.findMarkers(null,true,IResource.DEPTH_INFINITE);
-      Map<Long,IMarker> marset = new HashMap<>();
       for (IMarker m : mrks) {
 	 marset.put(m.getId(),m);
        }
@@ -378,6 +378,30 @@ void buildProject(String proj,boolean clean,boolean full,boolean refresh,IvyXmlW
     }
    catch (CoreException e) {
       throw new BedrockException("Problem finding errors",e);
+    }
+   
+   BuildDoneThread bdt = new BuildDoneThread(ip,marset.values());
+   bdt.start();
+}
+
+
+
+private class BuildDoneThread extends Thread {
+   
+   private IProject for_project;
+   private Collection<IMarker> marker_set;
+   
+   BuildDoneThread(IProject proj,Collection<IMarker> mkrs) {
+      for_project = proj;
+      marker_set = mkrs;
+    }
+   
+   @Override public void run() {
+      IvyXmlWriter xw = our_plugin.beginMessage("BUILDDONE");
+      xw.field("MESSAGES",true);
+      xw.field("PROJECT",for_project.getName());
+      BedrockUtil.outputMarkers(for_project,marker_set,xw);
+      our_plugin.finishMessage(xw);
     }
 }
 

@@ -117,6 +117,11 @@ BstyleFile addFile(String project,String path,boolean isopen)
 }
 
 
+void removeFile(BstyleFile bf)
+{
+   file_map.remove(bf.getFile());
+}
+
 
 
 /********************************************************************************/
@@ -124,6 +129,12 @@ BstyleFile addFile(String project,String path,boolean isopen)
 /*      Find file                                                               */
 /*                                                                              */
 /********************************************************************************/
+
+BstyleFile findFile(String filename)
+{
+   return findFile(new File(filename));
+}
+
 
 BstyleFile findFile(File f)
 {

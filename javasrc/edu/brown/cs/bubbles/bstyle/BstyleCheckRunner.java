@@ -58,7 +58,7 @@ import edu.brown.cs.ivy.file.IvyLog;
 
 
 
-class BstyleCheckRunner extends AbstractAutomaticBean implements BstyleConstants, 
+public class BstyleCheckRunner extends AbstractAutomaticBean implements BstyleConstants, 
       RootModule, MessageDispatcher
 {
 
@@ -69,6 +69,7 @@ class BstyleCheckRunner extends AbstractAutomaticBean implements BstyleConstants
 /*                                                                              */
 /********************************************************************************/
 
+private BstyleMain bstyle_main;
 private List<AuditListener> audit_listeners;
 private List<FileSetCheck> fileset_checks;
 private SeverityLevelCounter error_counter;
@@ -81,6 +82,9 @@ private int tab_width;
 private Context child_context;
 private BeforeExecutionFileFilterSet before_filters;
 private FilterSet filter_set;
+private String [] file_extensions;
+
+private static final String EXTENSION_SEPARATOR = ".";
 
 
 
@@ -90,8 +94,9 @@ private FilterSet filter_set;
 /*                                                                              */
 /********************************************************************************/
 
-BstyleCheckRunner()
+BstyleCheckRunner(BstyleMain bm)
 {
+   bstyle_main = bm;
    error_counter = new SeverityLevelCounter(SeverityLevel.ERROR);
    audit_listeners = new ArrayList<>();
    audit_listeners.add(error_counter);
@@ -106,6 +111,7 @@ BstyleCheckRunner()
    child_context = null;
    before_filters = new BeforeExecutionFileFilterSet();
    filter_set = new FilterSet();
+   file_extensions = null;
 }
 
 
@@ -139,6 +145,30 @@ public void setTabWidth(int wd)
 {
    tab_width = wd;
 }
+
+
+public void setSeverity(String severity)
+{
+   severity_level = SeverityLevel.getInstance(severity);
+}
+
+
+public void setFileExtensions(String... extensions)
+{
+   if (extensions != null) {
+      file_extensions = new String[extensions.length];
+      for (int i = 0; i < extensions.length; ++i) {
+         String ext = extensions[i];
+         if (ext.startsWith(EXTENSION_SEPARATOR)) {
+            file_extensions[i] = ext;
+          }
+         else {
+            file_extensions[i] = EXTENSION_SEPARATOR + ext;
+          }
+       }
+    }
+}
+
 
 
 private void addFileSetCheck(FileSetCheck fsc)
@@ -237,7 +267,16 @@ public void fireFileFinished(String filename) {
 
 @Override public int process(List<File> files) throws CheckstyleException
 {
-   throw new CheckstyleException("Not implemented");
+   BstyleFileManager fm = bstyle_main.getFileManager();
+   List<FileText> texts = new ArrayList<>();
+   for (File f : files) {
+      BstyleFile bf = fm.findFile(f);
+      if (bf != null) {
+         FileText ft = bf.getFileText();
+         if (ft != null) texts.add(ft);
+       }
+    }
+   return processTexts(texts);
 }
 
 
@@ -255,6 +294,7 @@ public int processTexts(List<FileText> files) throws CheckstyleException
    for (FileSetCheck fsc : fileset_checks) {
       fsc.finishProcessing();
     }
+   
    for (FileSetCheck fsc : fileset_checks) {
       fsc.destroy();
     }
