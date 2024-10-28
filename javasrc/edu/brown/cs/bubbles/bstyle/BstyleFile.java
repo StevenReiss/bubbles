@@ -22,6 +22,7 @@
 
 package edu.brown.cs.bubbles.bstyle;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +56,7 @@ class BstyleFile implements BstyleConstants
 
 private BstyleMain      bstyle_main;
 private IDocument       edit_document;
+private IDocument       read_document;
 private String          file_project;
 private File            for_file;
 private FileText        file_text;
@@ -77,6 +79,7 @@ BstyleFile(BstyleMain bm,String proj,File f)
    for_file = f;
    file_project = proj;
    edit_document = null;
+   read_document = null;
    file_text = null;
    newline_string = null;
    has_errors = true;
@@ -111,6 +114,8 @@ boolean setHasErrors(boolean fg)
 {
    boolean rslt = fg == has_errors;
    has_errors = fg;
+   if (fg) file_text = null;
+   
    return rslt;
 }
 
@@ -122,8 +127,8 @@ String getNewLineString()
 
 
 synchronized FileText getFileText()      
-
 {
+   if (has_errors) return null;
    if (file_text != null) return file_text;
    
    if (edit_document != null) {
@@ -151,6 +156,51 @@ synchronized FileText getFileText()
     }
    
    return file_text;
+}
+
+
+Point getStartAndEndPosition(int lno,int coffset)
+{
+   String linetext = null;
+   IDocument doc = edit_document;
+   if (doc == null) {
+      doc = read_document;
+      if (doc == null) {
+         try {
+            String cnts = IvyFile.loadFile(for_file);
+            read_document = new Document(cnts);
+            doc = read_document;
+          }
+         catch (IOException e) {
+            IvyLog.logE("BSTYLE","Problem reading source file " + for_file,e);
+            return null;
+          }
+       }
+    }
+   
+   
+   if (doc != null) {
+      try {
+         int start = doc.getLineOffset(lno-1);
+         int nxt = doc.getLineOffset(lno);
+         linetext = doc.get(start,nxt-start);
+         int cend = coffset+1;
+         if (coffset < linetext.length()) {
+            char c = linetext.charAt(coffset);
+            if (Character.isJavaIdentifierPart(c)) {
+               for (int i = coffset+1; i < linetext.length(); ++i) {
+                  char c1 = linetext.charAt(i);
+                  if (Character.isJavaIdentifierPart(c1)) cend = i+1;
+                }
+             }
+          }
+         return new Point(start+coffset,start+cend);
+       }
+      catch (BadLocationException e) {
+         IvyLog.logE("BSTYLE","Problem converting  line/col to position");
+       }
+    }
+   return null;
 }
 
 
@@ -182,6 +232,7 @@ synchronized void startFile()
    
    edit_document = new Document(cn);
    file_text = null;
+   read_document = null;
 }
 
 
@@ -197,6 +248,7 @@ synchronized void editFile(int len,int off,String txt,boolean complete)
       try {
          String cnts = IvyFile.loadFile(for_file);
          edit_document = new Document(cnts);
+         read_document = null;
        }
       catch (IOException e) {
          return;

@@ -59,10 +59,8 @@ class BstyleMonitor implements BstyleConstants, MintConstants
 
 private BstyleMain      bstyle_main;
 private MintControl     mint_control;
-private Set<BstyleFile> todo_files;
 private boolean         is_done;
 private boolean         no_exit;
-
 
 
 
@@ -78,7 +76,6 @@ BstyleMonitor(BstyleMain bm,String mintid)
    mint_control = MintClient.create(mintid,MintSyncMode.ONLY_REPLIES);
    is_done = false;
    no_exit = false;
-   todo_files = new HashSet<>();
 }
 
 
@@ -216,6 +213,31 @@ void sendMessage(String xml,MintReply rply,int fgs)
 
 /********************************************************************************/
 /*                                                                              */
+/*      Handle sending messages back to Bubbles                                 */
+/*                                                                              */
+/********************************************************************************/
+
+IvyXmlWriter beginMessage(String cmd)
+{ 
+   IvyXmlWriter xw = new IvyXmlWriter();
+   xw.begin("BEDROCK");
+   xw.field("SOURCE","BEDROCK");
+   xw.field("TYPE",cmd);
+   xw.field("BID",SOURCE_ID);
+   return xw;
+}
+
+
+void finishMessage(IvyXmlWriter xw)
+{
+   xw.end("BEDROCK");
+   sendMessage(xw.toString(),null,MINT_MSG_NO_REPLY);
+}
+   
+
+
+/********************************************************************************/
+/*                                                                              */
 /*      Error handling                                                          */
 /*                                                                              */
 /********************************************************************************/
@@ -246,13 +268,9 @@ private void handleErrors(String proj,String filename,Element messages)
    for (Map.Entry<BstyleFile,Boolean> ent : errmap.entrySet()) {
       BstyleFile bf = ent.getKey();
       boolean errs = ent.getValue();
-      synchronized (todo_files) {
-         if (errs) {
-            todo_files.add(bf);
-          }
-         else {
-            if (todo_files.remove(bf)) redo.add(bf);
-          } 
+      boolean chng = bf.setHasErrors(errs);
+      if (chng) {
+         redo.add(bf);
        }
     }
    
@@ -275,10 +293,16 @@ private void handleEdit(MintMessage msg,String bid,File file,int len,int offset,
    BstyleFile bf = bstyle_main.getFileManager().findFile(file);
    if (bf == null) return;
    
-   bf.editFile(len,offset,txt,complete);
+   List<BstyleFile> redo = null;
    
-   synchronized (todo_files) {
-      todo_files.add(bf);
+   bf.editFile(len,offset,txt,complete);
+   if (len != 0 || (txt != null && !txt.isEmpty())) {
+      redo = List.of(bf);
+      redo.add(bf);
+    }
+   
+   if (redo != null) {
+      bstyle_main.getStyleChecker().processProject(bf.getProject(),redo);
     }
 }
 
@@ -309,7 +333,10 @@ private void handleBuildDone(Element xml)
    String proj = IvyXml.getAttrString(xml,"PROJECT");
    List<BstyleFile> allbf = bstyle_main.getProjectManager().getAllFiles(proj); 
    for (BstyleFile bf : allbf) {
-      if (bf.getHasErrors()) haderrors.add(bf);
+      if (bf.getHasErrors()) {
+         haderrors.add(bf);
+         bf.setHasErrors(false);
+       }
     }
    Element probs = IvyXml.getChild(xml,"PROBLEMS");
    for (Element pe : IvyXml.children(probs,"PROBLEM")) {
@@ -341,6 +368,7 @@ private void handleResourceChange(Element res)
    Element re = IvyXml.getChild(res,"RESOURCE");
    String rtyp = IvyXml.getAttrString(res,"TYPE");
    BstyleFile bf = null;
+   List<BstyleFile> redo = new ArrayList<>();
    if (rtyp != null && rtyp.equals("FILE")) {
       String fp = IvyXml.getAttrString(re,"LOCATION");
       String proj = IvyXml.getAttrString(re,"PROJECT");
@@ -349,18 +377,14 @@ private void handleResourceChange(Element res)
          case "ADDED_PHANTOM" :
             bf = bstyle_main.getProjectManager().addFile(proj,fp); 
             if (bf != null) {
-               synchronized (todo_files) {
-                  todo_files.add(bf);
-                }
+               redo.add(bf);
              }
             break;
          case "REMOVED" :
          case "REMOVED_PHANTOM" :
             bf = bstyle_main.getProjectManager().removeFile(proj,fp);
             if (bf != null) {
-               synchronized (todo_files) {
-                  todo_files.remove(bf); 
-                }
+               redo.add(bf);
              }
             break;
          default :
@@ -369,7 +393,6 @@ private void handleResourceChange(Element res)
             break;
        }
     }
-   // detect file saved.  This will come from the edit
 }
 
 

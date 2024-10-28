@@ -82,6 +82,7 @@ void loadProject(Element xml)
    class_data = new HashMap<String,ProjClass>();
    class_paths = new LinkedHashSet<String>();
    file_classes = new HashMap<String,List<ProjClass>>();
+   source_files = new HashSet<>();
 
    Element clss = IvyXml.getChild(xml,"CLASSES");
    for (Element ce : IvyXml.children(clss,"TYPE")) {
@@ -135,7 +136,9 @@ void loadProject(Element xml)
       File f1 = new File(fpath);
       f1 = IvyFile.getCanonical(f1);
       if (!done.add(f1)) continue;
-      source_files.add(f1);
+      if (f1.getName().endsWith(".java")) {
+         source_files.add(f1);
+       }
     }
 }
 

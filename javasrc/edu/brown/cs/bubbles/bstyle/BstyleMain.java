@@ -29,6 +29,7 @@ import org.w3c.dom.Element;
 import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.mint.MintReply;
 import edu.brown.cs.ivy.mint.MintConstants.CommandArgs;
+import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 public final class BstyleMain implements BstyleConstants
 {
@@ -168,6 +169,18 @@ void sendCommand(String cmd,String proj,CommandArgs fields,String body,MintReply
 Element sendCommandWithXmlReply(String cmd,String proj,CommandArgs fields,String body)
 {
    return our_monitor.sendCommandWithXmlReply(cmd,proj,fields,body);
+}
+
+
+IvyXmlWriter beginMessage(String cmd)
+{
+   return our_monitor.beginMessage(cmd);
+}
+
+
+void finishMessage(IvyXmlWriter xw)
+{
+   our_monitor.finishMessage(xw);  
 }
 
 }       // end of class BstyleMain

@@ -2875,35 +2875,35 @@ private class ProblemHandler implements IProblemRequestor {
    @Override public void endReporting() {
       BedrockPlugin.logD("End error reporting for " + is_private);
       if (suppress_errors) return;
-
+   
       IvyXmlWriter xw;
       if (is_private) {
-	 if (bedrock_id != null) {
-	    xw = our_plugin.beginMessage("PRIVATEERROR",bedrock_id);
-	    xw.field("FILE",file_data.getFileName());
-	    xw.field("ID",bedrock_id);
-	  }
-	 else return;
+         if (bedrock_id != null) {
+            xw = our_plugin.beginMessage("PRIVATEERROR",bedrock_id);
+            xw.field("FILE",file_data.getFileName());
+            xw.field("ID",bedrock_id);
+          }
+         else return;
        }
       else if (file_data != null) {
-	 xw = our_plugin.beginMessage("FILEERROR",bedrock_id);
-	 xw.field("FILE",file_data.getFileName());
+         xw = our_plugin.beginMessage("FILEERROR",bedrock_id);
+         xw.field("FILE",file_data.getFileName());
        }
       else return;
-
+   
       if (file_data != null && file_data.getProject() != null) {
-	 xw.field("PROJECT",file_data.getProject().getName());
+         xw.field("PROJECT",file_data.getProject().getName());
        }
       xw.begin("MESSAGES");
       if (problem_set != null) {
-	 for (IProblem ip : problem_set) {
-	    BedrockUtil.outputProblem(file_data.getProject(),ip,xw);
-	  }
+         for (IProblem ip : problem_set) {
+            BedrockUtil.outputProblem(file_data.getProject(),ip,xw);
+          }
        }
       xw.end("MESSAGES");
-
+   
       our_plugin.finishMessage(xw);
-
+   
       BedrockPlugin.logD("ERROR REPORT: " + xw.toString());
       xw.close();
     }

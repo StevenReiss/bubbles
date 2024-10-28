@@ -26,6 +26,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 // import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -83,6 +84,7 @@ private Context child_context;
 private BeforeExecutionFileFilterSet before_filters;
 private FilterSet filter_set;
 private String [] file_extensions;
+private Set<FileSetCheck> inited_checks;
 
 private static final String EXTENSION_SEPARATOR = ".";
 
@@ -112,6 +114,7 @@ BstyleCheckRunner(BstyleMain bm)
    before_filters = new BeforeExecutionFileFilterSet();
    filter_set = new FilterSet();
    file_extensions = null;
+   inited_checks = new HashSet<>();
 }
 
 
@@ -206,6 +209,7 @@ public void removeListener(AuditListener al)
    audit_listeners.remove(al);
 }
 
+
 private void fireAuditStarted()
 {
    final AuditEvent event = new AuditEvent(this);
@@ -269,35 +273,48 @@ public void fireFileFinished(String filename) {
 {
    BstyleFileManager fm = bstyle_main.getFileManager();
    List<FileText> texts = new ArrayList<>();
+   List<BstyleFile> empty = new ArrayList<>();
    for (File f : files) {
       BstyleFile bf = fm.findFile(f);
       if (bf != null) {
          FileText ft = bf.getFileText();
          if (ft != null) texts.add(ft);
+         else empty.add(bf);
        }
     }
-   return processTexts(texts);
+   // output FILEERROR message for empty
+   int errct = processTexts(texts,empty);
+   
+   return errct;
 }
 
 
 
-public int processTexts(List<FileText> files) throws CheckstyleException
+public int processTexts(List<FileText> files,List<BstyleFile> empty) throws CheckstyleException
 {
    fireAuditStarted();
    
    for (FileSetCheck fsc : fileset_checks) {
-      fsc.beginProcessing(char_set);
+      if (inited_checks.add(fsc)) {
+         fsc.beginProcessing(char_set);
+       }
     }
    
    processFileTexts(files);
+   
+   for (BstyleFile bf : empty) {
+      String fnm = bf.getFile().getAbsolutePath();
+      fireFileStarted(fnm);
+      fireFileFinished(fnm);
+    }
    
    for (FileSetCheck fsc : fileset_checks) {
       fsc.finishProcessing();
     }
    
-   for (FileSetCheck fsc : fileset_checks) {
-      fsc.destroy();
-    }
+// for (FileSetCheck fsc : fileset_checks) {
+//    fsc.destroy();
+//  }
    
    int errorcount = error_counter.getCount();
    fireAuditFinished();
