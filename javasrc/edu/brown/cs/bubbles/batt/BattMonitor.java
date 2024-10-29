@@ -406,24 +406,29 @@ private class EclipseHandler implements MintHandler {
          else if (cmd.equals("BUILDDONE")) {
             String proj = IvyXml.getAttrString(e,"PROJECT");
             BattProject bp = project_set.get(proj);
-            Map<File,FileState> fsmap = new HashMap<>();
-            for (File fp : bp.getSourceFiles()) {
-                fsmap.put(fp,FileState.STABLE);
+            if (bp == null) {
+              System.err.println("BATT: Can't find project " + proj);
              }
-            Element probs = IvyXml.getChild(e,"PROBLEMS");
-            for (Element pe : IvyXml.children(probs,"PROBLEM")) {
-               if (IvyXml.getAttrBool(pe,"ERROR")) {
-                  String fn = IvyXml.getAttrString(pe,"FILE");
-                  File f1 = new File(fn);
-                  f1 = IvyFile.getCanonical(f1);
-                  fsmap.put(f1,FileState.ERRORS);
+            if (bp != null) {
+               Map<File,FileState> fsmap = new HashMap<>();
+               for (File fp : bp.getSourceFiles()) {
+                  fsmap.put(fp,FileState.STABLE);
                 }
+               Element probs = IvyXml.getChild(e,"PROBLEMS");
+               for (Element pe : IvyXml.children(probs,"PROBLEM")) {
+                  if (IvyXml.getAttrBool(pe,"ERROR")) {
+                     String fn = IvyXml.getAttrString(pe,"FILE");
+                     File f1 = new File(fn);
+                     f1 = IvyFile.getCanonical(f1);
+                     fsmap.put(f1,FileState.ERRORS);
+                   }
+                }
+               for (Map.Entry<File,FileState> ent : fsmap.entrySet()) {
+                  File f1 = ent.getKey();
+                  setFileState(f1.getPath(),ent.getValue());
+                }
+               updateTestState();
              }
-            for (Map.Entry<File,FileState> ent : fsmap.entrySet()) {
-               File f1 = ent.getKey();
-               setFileState(f1.getPath(),ent.getValue());
-             }
-            updateTestState();
           }
          else if (cmd.equals("LAUNCHCONFIGEVENT")) {
             // handle changes to saved launch configurations
