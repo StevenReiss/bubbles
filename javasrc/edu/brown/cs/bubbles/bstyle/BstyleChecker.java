@@ -152,15 +152,21 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
       base.add(bf.getFile());
     }
    try {
-      root.process(base);
+      int ct = root.process(base);
+      IvyLog.logD("BSTYLE","Found " + ct + " errors");
     }
    catch (CheckstyleException e) {
       IvyLog.logE("BSTYLE","Problem processing files",e);
     }
    
+   Map<String,Set<Violation>> errs  = null;
+   synchronized (all_errors) {
+      errs = new HashMap<>(all_errors);
+    }
    
-   for (Map.Entry<String,Set<Violation>> ent : all_errors.entrySet()) {
+   for (Map.Entry<String,Set<Violation>> ent : errs.entrySet()) {
       IvyXmlWriter xw = bstyle_main.beginMessage("FILEERROR");
+      xw.field("CATEGORY","BSTYLE");
       xw.field("FILE",ent.getKey());
       xw.begin("MESSAGES");
       for (Violation v : ent.getValue()) {
@@ -303,9 +309,10 @@ private Configuration buildConfiguration(String proj,String configpath)
    Violation v = e.getViolation();
    if (v == null) return;
    String fnm = e.getFileName();
+   
    Set<Violation> vset = all_errors.get(fnm);
    if (vset == null) {
-      fileStarted(e);
+      fileStarted(e);           // this synchronizes on all_errors
       vset = all_errors.get(fnm);
     }
    if (vset == null) return;
@@ -322,7 +329,14 @@ private Configuration buildConfiguration(String proj,String configpath)
 
 @Override public void fileFinished(AuditEvent e)
 {
-   IvyLog.logD("BSTYLE","Event File finished " + e);
+   String fnm = e.getFileName();
+   int ct = 0;
+   synchronized (all_errors) {
+      Set<Violation> errs = all_errors.get(fnm);
+      if (errs != null) ct = errs.size();
+    }
+   IvyLog.logD("BSTYLE","Event File finished " + e + " " + ct);
+   
 }
 
 @Override public void auditFinished(AuditEvent e)

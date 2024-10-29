@@ -176,6 +176,7 @@ void setup()
       for (Element finfo : IvyXml.children(files,"FILE")) {
          if (!IvyXml.getAttrBool(finfo,"SOURCE")) continue;
          String fpath = IvyXml.getAttrString(finfo,"PATH");
+         // check for valid file extension
          File f1 = new File(fpath);
          f1 = IvyFile.getCanonical(f1);
          if (!done.add(f1)) continue;

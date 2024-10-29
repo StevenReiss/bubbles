@@ -24,13 +24,16 @@ package edu.brown.cs.bubbles.bstyle;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.junit.Test;
 import org.w3c.dom.Element;
 
 import edu.brown.cs.ivy.exec.IvyExec;
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.mint.MintArguments;
 import edu.brown.cs.ivy.mint.MintConstants;
@@ -52,8 +55,10 @@ public class BstyleTest implements BstyleConstants, MintConstants
 /*                                                                              */
 /********************************************************************************/
 
-private static MintControl       mint_control;
-private static Random random_gen = new Random();
+private MintControl       mint_control;
+private Random random_gen = new Random();
+private int               file_count;
+
 
 
 /********************************************************************************/
@@ -108,6 +113,7 @@ private void runServerTest1(String dir,String pid)
    String mid = "BSTYLE_TEST_" + pid.toUpperCase() + "_" + rint;
    
    setupBedrock(dir,mid,pid);
+   file_count = getFileCount();
    
    File log = new File("/vol/spr");
    if (!log.exists()) {
@@ -120,6 +126,10 @@ private void runServerTest1(String dir,String pid)
 	    "-LOG", loghead + "servertest" + dir + ".log" };
       
       BstyleMain.main(args); 
+      
+      issueBuild();
+      
+      waitForResults();
     }
    catch (Throwable t) {
       System.err.println("PROBLEM RUNNING TEST");
@@ -132,13 +142,36 @@ private void runServerTest1(String dir,String pid)
 
 
 
+private void handleErrorReturn(Element msgxml)
+{
+   String cat = IvyXml.getAttrString(msgxml,"CATEGORY","IDE");
+   if (cat.equals("BSTYLE")) {
+      synchronized (this) {
+         --file_count;
+         if (file_count <= 0) notifyAll();
+       }
+    }
+}
+
+
+private synchronized void waitForResults()
+{
+   while (file_count > 0) {
+      try {
+         wait(5000);
+       }
+      catch (InterruptedException e) { }
+    }
+}
+
+
 /********************************************************************************/
 /*										*/
 /*	Bubbles Messaging methods						*/
 /*										*/
 /********************************************************************************/
 
-private static Element sendBubblesXmlReply(String cmd,String proj,Map<String,Object> flds,String cnts)
+private Element sendBubblesXmlReply(String cmd,String proj,Map<String,Object> flds,String cnts)
 {
    MintDefaultReply mdr = new MintDefaultReply();
    sendBubblesMessage(cmd,proj,flds,cnts,mdr);
@@ -151,19 +184,19 @@ private static Element sendBubblesXmlReply(String cmd,String proj,Map<String,Obj
 
 
 
-private static void sendBubblesMessage(String cmd)
+private void sendBubblesMessage(String cmd)
 {
    sendBubblesMessage(cmd,null,null,null,null);
 }
 
 
-private static void sendBubblesMessage(String cmd,String proj,Map<String,Object> flds,String cnts)
+private void sendBubblesMessage(String cmd,String proj,Map<String,Object> flds,String cnts)
 {
    sendBubblesMessage(cmd,proj,flds,cnts,null);
 }
 
 
-private static void sendBubblesMessage(String cmd,String proj,Map<String,Object> flds,String cnts,
+private void sendBubblesMessage(String cmd,String proj,Map<String,Object> flds,String cnts,
       MintReply rply)
 {
    IvyXmlWriter xw = new IvyXmlWriter();
@@ -199,7 +232,7 @@ private static void sendBubblesMessage(String cmd,String proj,Map<String,Object>
 /*										*/
 /********************************************************************************/
 
-private static void setupBedrock(String dir,String mint,String proj)
+private void setupBedrock(String dir,String mint,String proj)
 {
    mint_control = MintControl.create(mint,MintSyncMode.ONLY_REPLIES);
    mint_control.register("<BEDROCK SOURCE='ECLIPSE' TYPE='_VAR_0' />",new TestEclipseHandler());
@@ -250,17 +283,64 @@ private static void setupBedrock(String dir,String mint,String proj)
 
 
 
+private int getFileCount()
+{
+   Set<File> done = new HashSet<>();
+   
+   Element projs = sendBubblesXmlReply("PROJECTS",null,null,null); 
+   for (Element proj : IvyXml.children(projs,"PROJECT")) {
+      String projnm = IvyXml.getAttrString(proj,"NAME");
+      IvyLog.logD("BSTYLE","Setup project " + projnm);
+      CommandArgs args = new CommandArgs("CLASSES",false,
+            "FILES",true,
+            "OPTIONS",false);
+      Element pinfo = sendBubblesXmlReply("OPENPROJECT",projnm,args,null);
+      Element pdata = IvyXml.getChild(pinfo,"PROJECT");
+      Element files = IvyXml.getChild(pdata,"FILES");
+      for (Element finfo : IvyXml.children(files,"FILE")) {
+         if (!IvyXml.getAttrBool(finfo,"SOURCE")) continue;
+         String fpath = IvyXml.getAttrString(finfo,"PATH");
+         if (!fpath.endsWith(".java")) continue;
+         File f1 = new File(fpath);
+         f1 = IvyFile.getCanonical(f1);
+         if (!done.add(f1)) continue;
+         
+       }
+    }
+   
+   return done.size();
+}
 
-private static class TestEclipseHandler implements MintHandler {
+
+private void issueBuild()
+{
+   Element e = sendBubblesXmlReply("PROJECTS",null,null,null);
+   CommandArgs args = new CommandArgs("REFRESH",false,"CLEAN",false,"FULL",true);
+   for (Element p : IvyXml.children(e,"PROJECT")) {
+      String pnm = IvyXml.getAttrString(p,"NAME");
+      if (!IvyXml.getAttrBool(p,"OPEN")) {
+	 sendBubblesXmlReply("OPENPROJECT",pnm,null,null);
+       }
+      sendBubblesXmlReply("BUILDPROJECT",pnm,args,null);
+    }
+}
+
+
+private class TestEclipseHandler implements MintHandler {
    
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
+      IvyLog.logD("BSTYLE","TEST receoved from Eclipse: " + msg.toString());
       switch (cmd) {
          case "PING" :
             msg.replyTo("<PONG/>");
             break;
          case "ELISION" :
          case "RESOURCE" :
+            break;
+         case "FILEERROR" :
+         case "EDITERROR" :
+            handleErrorReturn(msg.getXml());
             break;
          default :
             msg.replyTo();
@@ -272,7 +352,7 @@ private static class TestEclipseHandler implements MintHandler {
 
 
 
-private static void shutdownBedrock()
+private void shutdownBedrock()
 {
    System.err.println("SHUT DOWN BEDROCK");
    sendBubblesMessage("EXIT");
@@ -281,7 +361,7 @@ private static void shutdownBedrock()
 
 
 
-private static boolean pingEclipse()
+private boolean pingEclipse()
 {
    MintDefaultReply mdr = new MintDefaultReply();
    sendBubblesMessage("PING",null,null,null,mdr);
