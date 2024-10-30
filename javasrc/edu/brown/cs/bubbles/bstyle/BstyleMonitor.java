@@ -170,7 +170,11 @@ Element sendCommandWithXmlReply(String cmd,String proj,CommandArgs args,String b
    MintDefaultReply rply = new MintDefaultReply();
    sendCommand(cmd,proj,args,body,rply);
    
-   return rply.waitForXml();
+   Element xml = rply.waitForXml();
+   
+   IvyLog.logD("BSTYLE","TEST REPLY FROM BUBBLES: " + IvyXml.convertXmlToString(xml));
+   
+   return xml;
 }
 
 
@@ -193,7 +197,7 @@ void sendCommand(String cmd,String proj,CommandArgs args,String body,MintReply r
    String msg = xw.toString();
    xw.close();
    
-   IvyLog.logD("BSTYLE","SEND TO BUBBLES: " + msg);
+   IvyLog.logD("BSTYLE","SEND TEST TO BUBBLES: " + msg);
    
    if (rply != null) {
       sendMessage(msg,rply,MintConstants.MINT_MSG_FIRST_NON_NULL);
@@ -221,7 +225,7 @@ IvyXmlWriter beginMessage(String cmd)
 { 
    IvyXmlWriter xw = new IvyXmlWriter();
    xw.begin("BEDROCK");
-   xw.field("SOURCE","BEDROCK");
+   xw.field("SOURCE","ECLIPSE");
    xw.field("TYPE",cmd);
    xw.field("BID",SOURCE_ID);
    return xw;
@@ -231,6 +235,9 @@ IvyXmlWriter beginMessage(String cmd)
 void finishMessage(IvyXmlWriter xw)
 {
    xw.end("BEDROCK");
+   
+   IvyLog.logD("BSTYLE","Fake bedrock message " + xw.toString());
+   
    sendMessage(xw.toString(),null,MINT_MSG_NO_REPLY);
 }
    
@@ -295,17 +302,18 @@ private void handleEdit(MintMessage msg,String bid,File file,int len,int offset,
    BstyleFile bf = bstyle_main.getFileManager().findFile(file);
    if (bf == null) return;
    
-   List<BstyleFile> redo = null;
-   
    bf.editFile(len,offset,txt,complete);
-   if (len != 0 || (txt != null && !txt.isEmpty())) {
-      redo = List.of(bf);
-      redo.add(bf);
-    }
+   bf.setHasErrors(true);
    
-   if (redo != null) {
-      bstyle_main.getStyleChecker().processProject(bf.getProject(),redo);
-    }
+// List<BstyleFile> redo = null;   
+// if (len != 0 || (txt != null && !txt.isEmpty())) {
+//    redo = List.of(bf);
+//    redo.add(bf);
+//  }
+// 
+// if (redo != null) {
+//    bstyle_main.getStyleChecker().processProject(bf.getProject(),redo);
+//  }
 }
 
 
@@ -340,6 +348,7 @@ private void handleBuildDone(Element xml)
          bf.setHasErrors(false);
        }
     }
+   IvyLog.logD("BSTYLE","Build done A " + haderrors.size());
    Element probs = IvyXml.getChild(xml,"PROBLEMS");
    for (Element pe : IvyXml.children(probs,"PROBLEM")) {
       if (IvyXml.getAttrBool(pe,"ERROR")) {
@@ -351,6 +360,7 @@ private void handleBuildDone(Element xml)
          haderrors.remove(bf);
        }
     }
+   IvyLog.logD("BSTYLE","Build done B " + haderrors.size() + " " + redo.size());
    redo.addAll(haderrors);
    
    if (!redo.isEmpty()) {
@@ -359,10 +369,7 @@ private void handleBuildDone(Element xml)
 }
 
 
-private void projectRebuilt(String proj)
-{
-   
-}
+
 
 private void handleResourceChange(Element res)
 {
@@ -503,7 +510,7 @@ private class EclipseHandler implements MintHandler {
             break;
          case "EDIT" :
             String bid = IvyXml.getAttrString(e,"BID");
-            if (!bid.equals(SOURCE_ID)) {
+            if (bid.equals(SOURCE_ID)) {
                msg.replyTo();// 
                break;
              }
@@ -527,17 +534,6 @@ private class EclipseHandler implements MintHandler {
              }
             break;
          case "PROGRESS" :
-            String kind = IvyXml.getAttrString(e,"KIND");
-            if (kind.equals("DONE")) {
-               String task = IvyXml.getAttrString(e,"TASK");
-               if (task.startsWith("Building")) {
-                  int idx = task.indexOf("project ");
-                  if (idx > 0) {
-                     String project = task.substring(idx+8).trim();
-                     projectRebuilt(project);
-                   }
-                }
-             }
             msg.replyTo();
             break;
          case "BUILDDONE" :

@@ -59,6 +59,7 @@ private IDocument       edit_document;
 private IDocument       read_document;
 private String          file_project;
 private File            for_file;
+private File            user_file;
 private FileText        file_text;
 private String          newline_string;
 private boolean         has_errors;
@@ -76,13 +77,14 @@ private static AtomicInteger    edit_counter = new AtomicInteger();
 BstyleFile(BstyleMain bm,String proj,File f)
 {
    bstyle_main = bm;
-   for_file = f;
+   user_file = f;
+   for_file = IvyFile.getCanonical(f);
    file_project = proj;
    edit_document = null;
    read_document = null;
    file_text = null;
    newline_string = null;
-   has_errors = true;
+   has_errors = false;
 }
 
 
@@ -104,6 +106,11 @@ File getFile()
    return for_file;
 }
 
+File getUserFile()
+{
+   return user_file;
+}
+
 boolean getHasErrors()
 {
    return has_errors;
@@ -112,7 +119,8 @@ boolean getHasErrors()
 
 boolean setHasErrors(boolean fg)
 {
-   boolean rslt = fg == has_errors;
+   boolean rslt = (fg != has_errors);
+   
    has_errors = fg;
    if (fg) file_text = null;
    
@@ -178,7 +186,6 @@ Point getStartAndEndPosition(int lno,int coffset)
        }
     }
    
-   
    if (doc != null) {
       try {
          int start = doc.getLineOffset(lno-1);
@@ -191,6 +198,7 @@ Point getStartAndEndPosition(int lno,int coffset)
                for (int i = coffset+1; i < linetext.length(); ++i) {
                   char c1 = linetext.charAt(i);
                   if (Character.isJavaIdentifierPart(c1)) cend = i+1;
+                  else break;
                 }
              }
           }
@@ -200,6 +208,11 @@ Point getStartAndEndPosition(int lno,int coffset)
          IvyLog.logE("BSTYLE","Problem converting  line/col to position");
        }
     }
+   
+   if (lno == 1 && coffset == 0) {
+      return new Point(0,0);
+    }
+   
    return null;
 }
 

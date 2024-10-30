@@ -31,7 +31,7 @@
 package edu.brown.cs.bubbles.bump;
 
 import edu.brown.cs.bubbles.board.BoardLog;
-
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.swing.SwingEventListenerList;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -151,7 +151,7 @@ BumpErrorType getErrorType()
 
 void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
 {
-   BoardLog.logD("BUMP","Handle errors " + forfile);
+   BoardLog.logD("BUMP","Handle errors " + forfile +  " " + cat);
    Set<BumpProblemImpl> found = new HashSet<>();
    List<BumpProblemImpl> added = null;
    List<BumpProblemImpl> deled = null;
@@ -184,7 +184,7 @@ void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
 	    BumpProblemImpl bp = it.next();
 	    if (found.contains(bp)) continue;
 	    if (!fileMatch(forfile,bp)) continue;
-            if (bp.getCategory() != null && cat != null && !bp.getCategory().equals(cat)) continue;
+            if (cat != null && !cat.equals("IDE") && !cat.equals(bp.getCategory())) continue;
 	    // if (bp.getErrorType() == BumpErrorType.NOTICE) continue; // notes not returned on recompile -- seems fixed
 	    if (deled == null) deled = new ArrayList<>();
 	    deled.add(bp);
@@ -342,8 +342,12 @@ Collection<BumpProblem> getPrivateErrors(String privid)
 
 private boolean fileMatch(File forfile,BumpProblemImpl bp)
 {
+   File f1 = bp.getFile();
    if (forfile == null) return true;
-   return forfile.equals(bp.getFile());
+   if (forfile.equals(f1)) return true;
+   if (!forfile.getName().equals(f1.getName())) return false;
+   
+   return IvyFile.getCanonical(forfile).equals(IvyFile.getCanonical(f1));     
 }
 
 

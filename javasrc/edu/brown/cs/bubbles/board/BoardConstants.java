@@ -483,7 +483,8 @@ String [] BOARD_RESOURCE_PROPS =  new String [] {
    "Bandaid.props","Barr.props","Bass.props",
    "Bdoc.java.props","Bdoc.props",
    "Bhelp.props", "Bwiz.props", "Buss.props",
-   "Bfix.props", "Brepair.props"
+   "Bfix.props", "Brepair.props",
+   "Bstyle.props"
 };
 
 
@@ -591,6 +592,7 @@ String [] BOARD_LIBRARY_EXTRAS = new String [] {
 *********/
 
    "cocker.jar",
+   "checkstyle.jar",
 
    "marytts/marytts.jar",
    "marytts/marytts-lang-en.jar",
@@ -879,6 +881,8 @@ String	PALETTE_PROP = "edu.brown.cs.bubbles.palette";
 
 String	DEFAULT_PALETTE = "bubbles.palette";
 String	KEY_DEFINITIONS = "bubbles.keys";
+
+
 
 /********************************************************************************/
 /*										*/

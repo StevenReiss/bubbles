@@ -278,10 +278,14 @@ private void setupPanel()
    btnbar.add(new PauseAction());
    if (bp.getBoolean("Bddt.buttons.DropToFrame",true)) btnbar.add(new DropToFrameAction());
    btnbar.addSeparator();
-   btnbar.add(new StopAction());
-   btnbar.addSeparator();
-   if (bp.getBoolean("Bddt.buttons.Restart",true)) btnbar.add(new RestartAction());
-   else btnbar.add(new ClearAction());
+   if (bp.getBoolean("Bddt.buttons.Restart",true)) {
+      btnbar.add(new RestartAction());
+      btnbar.addSeparator();
+      btnbar.add(new StopAction());
+    }
+   else {
+      btnbar.add(new ClearAction());
+    }
 
    btnbar.setFloatable(false);
    btnbar.setMargin(new Insets(2,2,2,2));
@@ -307,7 +311,9 @@ private void setupPanel()
    bblbar.add(new ValueViewerBubbleAction());
    bblbar.add(new EvaluationBubbleAction());
    bblbar.addSeparator();
-   if (bp.getBoolean("Bddt.buttons.Restart",true)) bblbar.add(new ClearAction());
+   if (bp.getBoolean("Bddt.buttons.Restart",true)) {
+      bblbar.add(new ClearAction());
+    }
    else bblbar.add(new NewChannelAction());
    bblbar.setFloatable(false);
    bblbar.setMargin(new Insets(2,2,2,2));

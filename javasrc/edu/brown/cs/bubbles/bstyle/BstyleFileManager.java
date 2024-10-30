@@ -100,17 +100,18 @@ BstyleFileManager(BstyleMain bm)
 BstyleFile addFile(String project,String path,boolean isopen)
 {
    File add = new File(path);
-   add = IvyFile.getCanonical(add);
+   File canon = IvyFile.getCanonical(add);
    if (!useFile(add)) return null;
+   if (!useFile(canon)) return null;
   
    BstyleFile bf = new BstyleFile(bstyle_main,project,add); 
-   
    
    if (bf != null) {
       if (isopen) {
          bf.startFile();
        }
       file_map.put(add,bf);
+      file_map.put(canon,bf);
     }
    
    return bf;

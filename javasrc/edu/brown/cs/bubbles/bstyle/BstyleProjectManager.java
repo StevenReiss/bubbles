@@ -175,12 +175,17 @@ void setup()
       Element files = IvyXml.getChild(pdata,"FILES");
       for (Element finfo : IvyXml.children(files,"FILE")) {
          if (!IvyXml.getAttrBool(finfo,"SOURCE")) continue;
+         boolean isopen = IvyXml.getAttrBool(finfo,"ISOPEN");
          String fpath = IvyXml.getAttrString(finfo,"PATH");
          // check for valid file extension
          File f1 = new File(fpath);
          f1 = IvyFile.getCanonical(f1);
-         if (!done.add(f1)) continue;
-         boolean isopen = IvyXml.getAttrBool(finfo,"ISOPEN");
+         if (!done.add(f1)) {
+            if (isopen) {
+               BstyleFile bf1 = file_manager.findFile(f1);
+               bf1.startFile();
+             }
+          }
          IvyLog.logD("BSTYLE","Project file " + fpath + " " + isopen);
          BstyleFile bf = file_manager.addFile(projnm,fpath,isopen);
          if (bf != null) project_files.add(bf);

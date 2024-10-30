@@ -99,7 +99,7 @@ private static final String EXTENSION_SEPARATOR = ".";
 BstyleCheckRunner(BstyleMain bm)
 {
    bstyle_main = bm;
-   error_counter = new SeverityLevelCounter(SeverityLevel.ERROR);
+   error_counter = new SeverityLevelCounter(SeverityLevel.WARNING);
    audit_listeners = new ArrayList<>();
    audit_listeners.add(error_counter);
    
@@ -326,6 +326,8 @@ public int processTexts(List<FileText> files,List<BstyleFile> empty) throws Chec
 
 private void processFileTexts(List<FileText> files) throws CheckstyleException
 {
+   IvyLog.logD("BSTYLE","Process file texts " + files.size());
+   
    for (FileText ft : files) {
       File f = ft.getFile();
       String fnm = f.getAbsolutePath();
@@ -354,6 +356,9 @@ private SortedSet<Violation> processFileText(File f,FileText ft)
          msgs.addAll(fsc.process(f,ft));
        }
       catch (Throwable t) {
+         BstyleFileManager fm = bstyle_main.getFileManager();
+         BstyleFile bf = fm.findFile(f);
+         bf.setHasErrors(true);
          IvyLog.logE("BSTYLE","Problem processing file " + f + " for " + fsc,t);
          // add error violation
        }

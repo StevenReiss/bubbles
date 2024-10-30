@@ -32,6 +32,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.w3c.dom.Element;
 
+import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.ivy.exec.IvyExec;
 import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.file.IvyLog;
@@ -114,6 +115,7 @@ private void runServerTest1(String dir,String pid)
    
    setupBedrock(dir,mid,pid);
    file_count = getFileCount();
+   IvyLog.logD("BSTYLE","Will wait for " + file_count + " files");
    
    File log = new File("/vol/spr");
    if (!log.exists()) {
@@ -144,6 +146,10 @@ private void runServerTest1(String dir,String pid)
 
 private void handleErrorReturn(Element msgxml)
 {
+   IvyLog.logD("BSTYLE","Handle test errors for " + 
+         IvyXml.getAttrString(msgxml,"FILE") + " " + 
+         IvyXml.getAttrString(msgxml,"CATEGORY") + " " +
+         file_count);
    String cat = IvyXml.getAttrString(msgxml,"CATEGORY","IDE");
    if (cat.equals("BSTYLE")) {
       synchronized (this) {
@@ -177,7 +183,7 @@ private Element sendBubblesXmlReply(String cmd,String proj,Map<String,Object> fl
    sendBubblesMessage(cmd,proj,flds,cnts,mdr);
    Element pxml = mdr.waitForXml();
    IvyLog.logD("BSTYLE",
-         "RECEIVE from BUBBLES: " + IvyXml.convertXmlToString(pxml));
+         "REPLY from BUBBLES: " + IvyXml.convertXmlToString(pxml));
 
    return pxml;
 }
@@ -234,18 +240,42 @@ private void sendBubblesMessage(String cmd,String proj,Map<String,Object> flds,S
 
 private void setupBedrock(String dir,String mint,String proj)
 {
+   BoardProperties bp = BoardProperties.getProperties("System");
+   String ecldir = bp.getString("edu.brown.cs.bubbles.baseide.x86_64",null);
+   if (ecldir == null) {
+      ecldir = bp.getString("edu.brown.cs.bubbles.baseide.amd64",null);
+    }
+   if (ecldir == null) {
+      ecldir = bp.getString("edu.brown.cs.bubbles.baseide.i386",null);
+    }
+   if (ecldir == null) {
+      System.err.println("Can't find bubbles version of eclipse to run");
+      System.exit(1);
+    }
+   File ec0 = new File(ecldir);
+   if (!ec0.exists()) {
+      System.err.println("Can't find bubbles version of eclipse to run");
+      System.exit(1);
+    }
+   File ec1 = null;
+   File ec1a = new File(ec0,"Eclipse.app");
+   if (ec1a.exists()) {
+      ec1 = new File(ec1a,"Contents/MacOS/eclipse");
+    }
+   else {
+      ec1 = new File(ec0,"eclipse");
+    }
+   
    mint_control = MintControl.create(mint,MintSyncMode.ONLY_REPLIES);
    mint_control.register("<BEDROCK SOURCE='ECLIPSE' TYPE='_VAR_0' />",new TestEclipseHandler());
    
    System.err.println("SETTING UP BEDROCK");
-   File ec1 = new File("/u/spr/eclipse-oxygenx/eclipse/eclipse");
-   File ec2 = new File("/u/spr/Eclipse/" + dir);
-   if (!ec1.exists()) {
-      ec1 = new File("/vol/Developer/java-2023-06/Eclipse.app/Contents/MacOS/eclipse");
-      ec2 = new File("/Users/spr/Eclipse/" + dir);
-    }
-   if (!ec1.exists()) {
-      System.err.println("Can't find bubbles version of eclipse to run");
+   String home = System.getProperty("user.home");
+   File ec2a = new File(home);
+   File ec2b = new File(ec2a,"Eclipse");
+   File ec2 = new File(ec2b,dir);
+   if (!ec2.exists()) {
+      System.err.println("Can't find bubbles workspace to run");
       System.exit(1);
     }
    
@@ -304,7 +334,6 @@ private int getFileCount()
          File f1 = new File(fpath);
          f1 = IvyFile.getCanonical(f1);
          if (!done.add(f1)) continue;
-         
        }
     }
    
@@ -330,7 +359,7 @@ private class TestEclipseHandler implements MintHandler {
    
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
-      IvyLog.logD("BSTYLE","TEST receoved from Eclipse: " + msg.toString());
+      IvyLog.logD("BSTYLE","TEST received from Eclipse: " + msg.getText());
       switch (cmd) {
          case "PING" :
             msg.replyTo("<PONG/>");

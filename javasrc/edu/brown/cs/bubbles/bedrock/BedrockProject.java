@@ -379,8 +379,10 @@ void buildProject(String proj,boolean clean,boolean full,boolean refresh,IvyXmlW
       bdt = new BuildDoneThread(ip,marset.values());
     }
    catch (CoreException e) {
-      throw new BedrockException("Problem finding errors",e);
+       throw new BedrockException("Problem finding errors",e);
     }
+   
+   BedrockPlugin.logD("Finished build with " + bdt);
    
    if (bdt != null) {
       bdt.start();
@@ -1234,14 +1236,25 @@ Collection<IFile> findSourceFiles(IResource ir,Collection<IFile> rslt)
    try {
       if (ir instanceof IFile) {
 	 IFile ifl = (IFile) ir;
-	 rslt.add(ifl);
+         if (!ifl.isHidden() && !ifl.isDerived() && !ifl.isLinked()) {
+            String nm = ifl.getName();
+            int idx = nm.lastIndexOf(".");
+            if (idx > 0) {
+               String tail = nm.substring(idx);
+               if (tail.equalsIgnoreCase(".java")) {
+                  rslt.add(ifl);
+                }
+             }
+          }
        }
       else if (ir instanceof IContainer) {
 	 IContainer ic = (IContainer) ir;
-	 IResource[] mems = ic.members();
-	 for (int i = 0; i < mems.length; ++i) {
-	    findSourceFiles(mems[i],rslt);
-	  }
+         if (!ic.isLinked()) {
+            IResource[] mems = ic.members();
+            for (int i = 0; i < mems.length; ++i) {
+               findSourceFiles(mems[i],rslt);
+             }
+          }
        }
     }
    catch (CoreException e) {

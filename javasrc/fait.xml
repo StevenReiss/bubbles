@@ -43,6 +43,7 @@
 	edu.brown.cs.bubbles.bicex.BicexFactory.setup()
 	edu.brown.cs.bubbles.brepair.BrepairFactory.setup()
 	edu.brown.cs.bubbles.barr.BarrFactory.setup()
+	edu.brown.cs.bubbles.barr.BstyleFactory.setup()
      </REPLACE>
   </METHOD>
 

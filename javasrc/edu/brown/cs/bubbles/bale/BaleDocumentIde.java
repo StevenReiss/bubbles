@@ -1020,6 +1020,8 @@ private class RemoteEdit implements Runnable {
 
    int soff = mapOffsetToJava(bp.getStart());
    int eoff = mapOffsetToJava(bp.getEnd());
+   
+   BoardLog.logD("BALE","Add PROBLEM " + bp.getProblemId() + " " + soff + " " + eoff);
 
    for (FragmentData fd : fragment_map.values()) {
       if (fd.overlaps(soff,eoff)) {

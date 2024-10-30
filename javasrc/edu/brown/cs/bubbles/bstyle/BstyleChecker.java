@@ -64,7 +64,9 @@ private BstyleMain			bstyle_main;
 private Map<String,ConfigData>	        project_configs;
 private ConfigData    			default_config;
 private Map<String,ProjectChecker>      project_checkers;
-private Map<String,Set<Violation>>      all_errors;         
+private Map<String,Set<Violation>>      all_errors;        
+
+private static final long               CHANGE_TIME = 50;
 
 
 
@@ -131,6 +133,7 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
    if (cfdata == null) cfdata = default_config;
    
    Configuration cfg = cfdata.getConfiguration(proj);
+   if (cfg == null) return;
 
    ClassLoader mcl = Checker.class.getClassLoader();
    BstyleCheckRunner root = null;
@@ -153,7 +156,7 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
     }
    try {
       int ct = root.process(base);
-      IvyLog.logD("BSTYLE","Found " + ct + " errors");
+      IvyLog.logD("BSTYLE","Found " + ct + " errors/warnings");
     }
    catch (CheckstyleException e) {
       IvyLog.logE("BSTYLE","Problem processing files",e);
@@ -162,15 +165,22 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
    Map<String,Set<Violation>> errs  = null;
    synchronized (all_errors) {
       errs = new HashMap<>(all_errors);
+      all_errors.clear();
     }
+   
+   IvyLog.logD("BSTYLE","Handle results with " + errs.size() + " files");
+   
+   BstyleFileManager bfm = bstyle_main.getFileManager();
    
    for (Map.Entry<String,Set<Violation>> ent : errs.entrySet()) {
       IvyXmlWriter xw = bstyle_main.beginMessage("FILEERROR");
       xw.field("CATEGORY","BSTYLE");
-      xw.field("FILE",ent.getKey());
+      String fnm = ent.getKey();
+      BstyleFile bf = bfm.findFile(fnm);
+      xw.field("FILE",bf.getUserFile());
       xw.begin("MESSAGES");
       for (Violation v : ent.getValue()) {
-         outputViolation(v,xw);
+         outputViolation(v,bf,xw);
        }
       xw.end("MESSAGES");
       bstyle_main.finishMessage(xw);
@@ -179,21 +189,21 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
 
 
 
-private void outputViolation(Violation v,IvyXmlWriter xw)
+private void outputViolation(Violation v,BstyleFile bf,IvyXmlWriter xw)
 {
    String fnm = v.getSourceName();
-   BstyleFile bf = bstyle_main.getFileManager().findFile(fnm);
-   if (bf == null) return;
+   int idx = fnm.lastIndexOf(".");
+   if (idx > 0) fnm = fnm.substring(idx+1);
    
    Point pos = bf.getStartAndEndPosition(v.getLineNo(),v.getColumnCharIndex()); 
-   String msg = "CheckStyle: " + v.getModuleId() +": " + v.getViolation();
+   String msg = "Style: " + v.getViolation();
    
    xw.begin("PROBLEM");
    xw.field("CATEGORY","BSTYLE");
    xw.field("MSGID",Integer.toString(v.hashCode()));
    xw.field("ID",v.getKey());
    xw.field("MESSAGE",msg);
-   xw.field("FILE",fnm);
+   xw.field("FILE",bf.getUserFile().getPath()); 
    xw.field("LINE",v.getLineNo());
    switch (v.getSeverityLevel()) {
       case ERROR : 
@@ -363,6 +373,13 @@ private class ConfigData {
    private Configuration project_config;
    
    ConfigData(String cfg) {
+      if (cfg == null || cfg.equals("*") || cfg.isEmpty()) {
+         config_file = null;
+         project_config = null;
+         config_dlm = 0;
+         return;
+       }
+      
       config_file = cfg;
       File cff = new File(cfg);
       if (cff.isAbsolute()) {
@@ -383,7 +400,7 @@ private class ConfigData {
           }
        }
       
-      if (project_config == null) {
+      if (project_config == null && config_file != null) {
          project_config = buildConfiguration(proj,config_file);
        }
       
@@ -404,9 +421,11 @@ private class ProjectChecker extends Thread {
    
    private String project_name;
    private Set<BstyleFile> todo_files;
+   private long last_change;
    
    private ProjectChecker(String proj) {
       project_name = proj;
+      last_change = 0;
     }
    
    synchronized void processFiles(Collection<BstyleFile> files) {
@@ -415,6 +434,8 @@ private class ProjectChecker extends Thread {
          todo_files = new HashSet<>();
        }
       todo_files.addAll(files);
+      last_change = System.currentTimeMillis();
+      IvyLog.logD("BSTYLE","Add " + files.size() + " to process set");
       notifyAll();
     }
    
@@ -428,9 +449,17 @@ private class ProjectChecker extends Thread {
                 }
                catch (InterruptedException e) { }
              }
+            while ((System.currentTimeMillis() - last_change) < CHANGE_TIME) {
+               try {
+                  wait(CHANGE_TIME);
+                }
+               catch (InterruptedException e) { }
+             }
             todo = new ArrayList<>(todo_files);
             todo_files = null;
           }
+         IvyLog.logD("BSTYLE","Start running checker for " + project_name + " " +
+               todo_files.size());
          runCheckerOnProject(project_name,todo);
        }
     }

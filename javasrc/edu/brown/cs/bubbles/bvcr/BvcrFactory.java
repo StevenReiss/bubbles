@@ -97,6 +97,7 @@ public synchronized static BvcrFactory getFactory()
 private BvcrFactory()
 {
    server_running = false;
+   server_started = false;
    factory_setup = null;
 
    control_panels = new HashMap<String,BvcrControlPanel>();

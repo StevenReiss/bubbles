@@ -971,9 +971,9 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
    String rslt = xw.toString();
 
    if (rslt.length() > 1024)
-      BedrockPlugin.logD("Result (" + delta + ") = " + rslt.substring(0,1023) + " ...");
+      BedrockPlugin.logD("Result (" + delta + ") " + cmd + " = " + rslt.substring(0,1023) + " ...");
    else
-      BedrockPlugin.logD("Result (" + delta + ") = " + rslt);
+      BedrockPlugin.logD("Result (" + delta + ") " + cmd + " = " + rslt);
 
    return rslt;
 }
