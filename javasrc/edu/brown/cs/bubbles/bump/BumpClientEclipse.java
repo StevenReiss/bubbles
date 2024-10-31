@@ -131,7 +131,7 @@ private void ensureRunning()
    
    String eopt = system_properties.getProperty(BOARD_PROP_BASE_IDE_OPTIONS);
    eopt = system_properties.getProperty(BOARD_PROP_ECLIPSE_OPTIONS,eopt);
-   if (eopt != null) cmd += " " + eopt;
+   if (eopt != null && !eopt.isEmpty()) cmd += " " + eopt;
    
    if (system_properties.getBoolean(BOARD_PROP_ECLIPSE_FOREGROUND,false)) {
       cmd += " -bdisplay";
