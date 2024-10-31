@@ -92,9 +92,12 @@ BstyleChecker(BstyleMain bm)
 	 String proj = nm.substring(idx+1);
          String cfile = bp.getProperty(nm);
          project_configs.put(proj,new ConfigData(cfile));
+         IvyLog.logD("BSTYLE","Use configuration " + cfile + " for " + proj);
        }
       else if (nm.equals("Bstyle.config.file")) {
-	 default_config = new ConfigData(bp.getProperty(nm));
+         String cfile = bp.getProperty(nm);
+         IvyLog.logD("BSTYLE","Default configuration " + cfile);
+	 default_config = new ConfigData(cfile);
        }
     }
    
@@ -429,13 +432,13 @@ private class ProjectChecker extends Thread {
     }
    
    synchronized void processFiles(Collection<BstyleFile> files) {
-      if (files == null || files.isEmpty()) return;
+      if (files == null) return;
       if (todo_files == null) {
          todo_files = new HashSet<>();
        }
       todo_files.addAll(files);
       last_change = System.currentTimeMillis();
-      IvyLog.logD("BSTYLE","Add " + files.size() + " to process set");
+      IvyLog.logD("BSTYLE","Add " + files.size() + " to process set for " + project_name);
       notifyAll();
     }
    
@@ -458,9 +461,11 @@ private class ProjectChecker extends Thread {
             todo = new ArrayList<>(todo_files);
             todo_files = null;
           }
-         IvyLog.logD("BSTYLE","Start running checker for " + project_name + " " +
-               todo_files.size());
-         runCheckerOnProject(project_name,todo);
+         if (todo != null) {
+            IvyLog.logD("BSTYLE","Start running checker for " + project_name + " " +
+                  todo.size());
+            runCheckerOnProject(project_name,todo);
+          }
        }
     }
    

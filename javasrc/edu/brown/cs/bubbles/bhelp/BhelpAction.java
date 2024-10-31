@@ -180,11 +180,11 @@ private static class SynthSetup extends Thread {
     }
    
    @Override public void run() {
+      String jver = System.getProperty("java.version");
       try {
          if (speech_synth == null) {
             BoardSetup bs = BoardSetup.getSetup();
             String marybase = bs.getLibraryPath("marytts");
-            String jver = System.getProperty("java.version");
             if (!jver.startsWith("1.")) {
                // this gets around a bug in mary checking for java version
                System.setProperty("java.version","1.9");
@@ -207,6 +207,7 @@ private static class SynthSetup extends Thread {
        }
       catch (Throwable e) {
          BoardLog.logE("BHELP","Problem setting up speech synthesizer",e);
+         if (jver != null) System.setProperty("java.version",jver);
          speech_synth = null;
        }
     }

@@ -143,7 +143,7 @@ void startBstyleServer()
        }
       args.add("-cp");
       args.add(cp);
-      args.add("edu.brown.cs.bubbles.bvcr.BstyleMain");
+      args.add("edu.brown.cs.bubbles.bstyle.BstyleMain");
       args.add("-m");
       args.add(bs.getMintName());
       String opts = bp.getProperty("Bstyle.options");

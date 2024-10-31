@@ -1249,11 +1249,9 @@ Collection<IFile> findSourceFiles(IResource ir,Collection<IFile> rslt)
        }
       else if (ir instanceof IContainer) {
 	 IContainer ic = (IContainer) ir;
-         if (!ic.isLinked()) {
-            IResource[] mems = ic.members();
-            for (int i = 0; i < mems.length; ++i) {
-               findSourceFiles(mems[i],rslt);
-             }
+         IResource[] mems = ic.members();
+         for (int i = 0; i < mems.length; ++i) {
+            findSourceFiles(mems[i],rslt);
           }
        }
     }

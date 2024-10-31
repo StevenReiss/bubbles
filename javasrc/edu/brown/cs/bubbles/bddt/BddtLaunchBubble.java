@@ -187,7 +187,13 @@ private void setupPanel()
 	    focus = jta;
 	    break;
 	 case INTEGER  :
-	    int ivl = Integer.parseInt(val);
+            int ivl = 0;
+            if (val != null) {
+               try {
+                 ivl = Integer.parseInt(val);
+                }
+               catch (NumberFormatException e) { }
+             }
 	    SwingNumericField snf = pnl.addNumericField(fld.getDescription(),
 		  fld.getMin(),fld.getMax(),ivl,this);
 	    cmp = snf;

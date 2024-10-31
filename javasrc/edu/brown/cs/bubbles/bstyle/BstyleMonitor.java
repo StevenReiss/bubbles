@@ -172,7 +172,7 @@ Element sendCommandWithXmlReply(String cmd,String proj,CommandArgs args,String b
    
    Element xml = rply.waitForXml();
    
-   IvyLog.logD("BSTYLE","TEST REPLY FROM BUBBLES: " + IvyXml.convertXmlToString(xml));
+   IvyLog.logD("BSTYLE","REPLY FROM BUBBLES: " + IvyXml.convertXmlToString(xml));
    
    return xml;
 }
@@ -197,7 +197,7 @@ void sendCommand(String cmd,String proj,CommandArgs args,String body,MintReply r
    String msg = xw.toString();
    xw.close();
    
-   IvyLog.logD("BSTYLE","SEND TEST TO BUBBLES: " + msg);
+   IvyLog.logD("BSTYLE","SEND TO BUBBLES: " + msg);
    
    if (rply != null) {
       sendMessage(msg,rply,MintConstants.MINT_MSG_FIRST_NON_NULL);
