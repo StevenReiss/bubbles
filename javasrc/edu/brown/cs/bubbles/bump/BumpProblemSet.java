@@ -184,7 +184,7 @@ void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
 	    BumpProblemImpl bp = it.next();
 	    if (found.contains(bp)) continue;
 	    if (!fileMatch(forfile,bp)) continue;
-            if (cat != null && !cat.equals("IDE") && !cat.equals(bp.getCategory())) continue;
+            if (cat != null && !cat.equals(bp.getCategory())) continue;
 	    // if (bp.getErrorType() == BumpErrorType.NOTICE) continue; // notes not returned on recompile -- seems fixed
 	    if (deled == null) deled = new ArrayList<>();
 	    deled.add(bp);
@@ -240,6 +240,11 @@ void clearProblems(String proj,String category)
          for (Iterator<BumpProblemImpl> it = current_problems.values().iterator();
             it.hasNext(); ) {
             BumpProblemImpl bp = it.next();
+            if (bp.getProject() == null) {
+               BoardLog.logE("BUMP","Problem lacks a project " + bp.getFile() + " " +
+                     bp.getMessage());
+               continue;
+             }
             if (bp.getProject().equals(proj)) {
                if (category == null || bp.getCategory() == null ||
                      category.equals(bp.getCategory())) {

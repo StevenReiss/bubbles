@@ -3848,7 +3848,7 @@ protected class IDEHandler implements MintHandler {
 	    case "FILEERROR" :
 	       problem_set.handleErrors(IvyXml.getAttrString(e,"PROJECT"),
 		     new File(IvyXml.getAttrString(e,"FILE")),
-                     IvyXml.getAttrString(e,"CATEOGRY","IDE"),
+                     IvyXml.getAttrString(e,"CATEGORY","IDE"),
 		     -1,
 		     IvyXml.getChild(e,"MESSAGES")); 
 	       break;

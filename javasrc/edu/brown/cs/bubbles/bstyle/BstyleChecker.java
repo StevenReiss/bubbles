@@ -178,6 +178,7 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
    for (Map.Entry<String,Set<Violation>> ent : errs.entrySet()) {
       IvyXmlWriter xw = bstyle_main.beginMessage("FILEERROR");
       xw.field("CATEGORY","BSTYLE");
+      xw.field("PROJECT",proj);
       String fnm = ent.getKey();
       BstyleFile bf = bfm.findFile(fnm);
       xw.field("FILE",bf.getUserFile());
