@@ -507,10 +507,13 @@ private void process()
 
 synchronized JunitTest addTestCase(Description d,JunitTestStatus sts)
 {
+   if (d.toString().startsWith("initializationError(")) return null;
+   
    JunitTest btc = test_cases.get(d);
    if (btc == null) {
       btc = new JunitTest(d);
-      System.err.println("BATTJ: Create new test case for " + d + " " + test_cases.size());
+      System.err.println("BATTJ: Create new test case for " + d + " " +
+            test_cases.size() + " " + sts);
       test_cases.put(d,btc);
     }
    btc.setStatus(sts);
@@ -710,23 +713,24 @@ private class ListFilter extends Filter {
 
    @Override public boolean shouldRun(Description d) {
       System.err.println("BATTJ: Consider test: " + d.isTest() + " " + d.isEmpty() + " " + d.isSuite() + " " +
-			    d.getClassName() + " " + d.getMethodName() + " " +
-			    d.getChildren().size() + " " + d.getDisplayName() + " " + d);
+        		    d.getClassName() + " " + d.getMethodName() + " " +
+        		    d.getChildren().size() + " " + d.getDisplayName() + " " + d);
       // if (d.isSuite() && d.getClassName().contains("$")) return false;
-
+   
       if (d.isSuite()) return true;
       if (!d.isTest()) return false;
       if (d.getMethodName() != null) {
-	 if (d.getClassName().startsWith("junit.") || d.getClassName().startsWith("org.junit."))
-	    return false;
-	 if (Modifier.isAbstract(d.getTestClass().getModifiers())) return false;
-	 JunitTest jt = addTestCase(d,STATUS_LISTING);
-	 outputSingleTest(jt);
-	 return false;
+         if (d.getClassName().startsWith("junit.") || d.getClassName().startsWith("org.junit."))
+            return false;
+         if (d.toString().startsWith("initializationError")) return false;
+         JunitTest jt = addTestCase(d,STATUS_LISTING);
+         if (jt == null) return false;
+         outputSingleTest(jt);
+         return false;
        }
-
+   
       System.err.println("BATTJ: Unknown test: " + d.isTest() + " " + d.isEmpty() + " " +
-			    d.getClassName() + " " + d.isSuite() + " " + d.getChildren().size() + " " + d);
+        		    d.getClassName() + " " + d.isSuite() + " " + d.getChildren().size() + " " + d);
       setTestStatus(d,STATUS_UNKNOWN);
       // might want to check classes to see if they are relevant here as well
       return false;
@@ -754,13 +758,13 @@ private class TestListener extends RunListener {
       noteStart(d);
       System.err.println("BATTJ: TEST " + bts + " " + jt.getDescription() + " " + bts.getType());
       switch (bts.getType()) {
-	 case FAILURE :
-	 case SUCCESS :
-	 case LISTING :
-	    if (d.isTest()) outputSingleTest(jt);
-	    break;
-	 default:
-	    break;
+         case FAILURE :
+         case SUCCESS :
+         case LISTING :
+            if (d.isTest()) outputSingleTest(jt);
+            break;
+         default:
+            break;
        }
     }
 
@@ -823,6 +827,7 @@ private class TestListener extends RunListener {
         	      f.getMessage().startsWith("No runnable methods") ||
         	      f.getMessage().startsWith("No tests found in "))) {
          removeTestCase(f.getDescription());
+         return;
        }
       else {
          System.err.println("BATTJ: FAIL " + f.getTestHeader() + " " + 
