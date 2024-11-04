@@ -1960,7 +1960,7 @@ synchronized boolean isFileOpen(String file)
       fg = file_map.containsKey(IvyFile.getCanonicalPath(f1));
     }
    
-   BedrockPlugin.logD("Check if file is open " + file + " " + fg);
+// BedrockPlugin.logD("Check if file is open " + file + " " + fg);
    
    return fg;
 }

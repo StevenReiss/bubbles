@@ -34,11 +34,13 @@ package edu.brown.cs.bubbles.bedrock;
 
 
 import edu.brown.cs.ivy.file.IvyFile;
+import edu.brown.cs.ivy.file.IvyPathPattern;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -58,8 +60,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.content.IContentDescription;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IPreferenceNodeVisitor;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
@@ -110,6 +110,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.swing.filechooser.FileSystemView;
 
 
 
@@ -354,8 +356,11 @@ void closeProject(String name,IvyXmlWriter _xw) throws BedrockException
 void listSourceFiles(String name,IvyXmlWriter xw) throws BedrockException
 {
    IProject ip = findProject(name);
+   if (ip == null) return;
 
-   addSourceFiles(ip,xw,new JavaSourceFilter());
+   IJavaProject jp = JavaCore.create(ip);
+
+   addSourceFiles(jp,xw,new JavaSourceFilter());
 }
 
 
@@ -381,9 +386,9 @@ void buildProject(String proj,boolean clean,boolean full,boolean refresh,IvyXmlW
    catch (CoreException e) {
        throw new BedrockException("Problem finding errors",e);
     }
-   
+
    BedrockPlugin.logD("Finished build with " + bdt);
-   
+
    if (bdt != null) {
       bdt.start();
     }
@@ -395,12 +400,12 @@ private class BuildDoneThread extends Thread {
 
    private IProject for_project;
    private Collection<IMarker> marker_set;
-   
+
    BuildDoneThread(IProject p,Collection<IMarker> mrks) {
       for_project = p;
       marker_set = mrks;
     }
-   
+
    @Override public void run() {
       IvyXmlWriter xw = our_plugin.beginMessage("BUILDDONE");
       xw.field("PROJECT",for_project.getName());
@@ -410,8 +415,8 @@ private class BuildDoneThread extends Thread {
       xw.end("PROBLEMS");
       our_plugin.finishMessage(xw);
     }
-   
-}       // end of inner class BuildDoneThread
+
+}	// end of inner class BuildDoneThread
 
 
 
@@ -598,7 +603,7 @@ private void updatePathElement(List<IClasspathEntry> ents,Element xml)
 	 f = IvyXml.getTextElement(xml,"SOURCE");
 	 IPath src = (f == null ? null : Path.fromOSString(f));
 	 BedrockPlugin.logD("PATHS " + bin + " " + src);
-	
+
 	 boolean optfg = IvyXml.getAttrBool(xml,"OPTIONAL");
 	 boolean export = IvyXml.getAttrBool(xml,"EXPORTED");
 	 IAccessRule [] rls = null;
@@ -1231,28 +1236,28 @@ private static class PreferenceLister implements IPreferenceNodeVisitor {
 
 Collection<IFile> findSourceFiles(IResource ir,Collection<IFile> rslt)
 {
-   if (rslt == null) rslt = new HashSet<IFile>();
+   if (rslt == null) rslt = new HashSet<>();
 
    try {
       if (ir instanceof IFile) {
 	 IFile ifl = (IFile) ir;
-         if (!ifl.isHidden() && !ifl.isDerived() && !ifl.isLinked()) {
-            String nm = ifl.getName();
-            int idx = nm.lastIndexOf(".");
-            if (idx > 0) {
-               String tail = nm.substring(idx);
-               if (tail.equalsIgnoreCase(".java")) {
-                  rslt.add(ifl);
-                }
-             }
-          }
+	 if (!ifl.isHidden() && !ifl.isDerived() && !ifl.isLinked()) {
+	    String nm = ifl.getName();
+	    int idx = nm.lastIndexOf(".");
+	    if (idx > 0) {
+	       String tail = nm.substring(idx);
+	       if (tail.equalsIgnoreCase(".java")) {
+		  rslt.add(ifl);
+		}
+	     }
+	  }
        }
       else if (ir instanceof IContainer) {
 	 IContainer ic = (IContainer) ir;
-         IResource[] mems = ic.members();
-         for (int i = 0; i < mems.length; ++i) {
-            findSourceFiles(mems[i],rslt);
-          }
+	 IResource[] mems = ic.members();
+	 for (int i = 0; i < mems.length; ++i) {
+	    findSourceFiles(mems[i],rslt);
+	  }
        }
     }
    catch (CoreException e) {
@@ -1260,6 +1265,106 @@ Collection<IFile> findSourceFiles(IResource ir,Collection<IFile> rslt)
     }
 
    return rslt;
+}
+
+
+
+Collection<File> findFilteredFiles(File basefile,FileFilter ff,Collection<File> rslt)
+{
+   if (rslt == null) rslt = new HashSet<>();
+   if (basefile == null) return rslt;
+   
+   FileSystemView fsv = FileSystemView.getFileSystemView();
+
+   if (basefile.isHidden() || fsv.isLink(basefile)) return rslt;
+   
+   if (basefile.isFile()) {
+      if (ff == null || ff.accept(basefile)) {
+         rslt.add(basefile);
+       }
+    }
+   else if (basefile.isDirectory()) {
+      for (File f : basefile.listFiles()) {
+         findFilteredFiles(f,ff,rslt);
+       }
+    }
+
+   return rslt;
+}
+
+
+Collection<File> findProjectSourceFiles(IJavaProject jp)
+{
+   Collection<File> rslt = new HashSet<>();
+
+   IProject ip = jp.getProject();
+
+   try {
+      IClasspathEntry [] ents = jp.getResolvedClasspath(true);
+      for (IClasspathEntry ent : ents) {
+	 if (ent.getEntryKind() != IClasspathEntry.CPE_SOURCE) continue;
+	 SourceFileFilter sff = new SourceFileFilter(ent);
+	 IPath p = ent.getPath();
+         File f1 = BedrockUtil.getFileForPath(p,ip);
+	 String sp = p.toOSString();
+	 IFolder pf = ip.getFolder(f1.getPath());
+	 BedrockPlugin.logD("Lookup source path " + p + " " +
+	       sp + " " + pf + " " + f1);
+	 findFilteredFiles(f1,sff,rslt);
+       }
+    }
+   catch (CoreException e) {
+      BedrockPlugin.logE("Problem resolving classpath",e);
+    }
+
+
+   return rslt;
+}
+
+
+
+
+
+private static final class SourceFileFilter implements FileFilter {
+
+   private List<IvyPathPattern> include_patterns;
+   private List<IvyPathPattern> exclude_patterns;
+
+   SourceFileFilter(IClasspathEntry ent) {
+      exclude_patterns = buildPatternList(ent.getExclusionPatterns());
+      include_patterns = buildPatternList(ent.getInclusionPatterns());
+    }
+
+   private List<IvyPathPattern> buildPatternList(IPath [] pats) {
+      List<IvyPathPattern> rslt = new ArrayList<>();
+      for (IPath p : pats) {
+	 rslt.add(new IvyPathPattern(p.toOSString()));
+       }
+      return rslt;
+    }
+
+   @Override public boolean accept(File f) {
+      if (!f.getPath().endsWith(".java")) return false;
+      if (!include_patterns.isEmpty()) {
+	 boolean fnd = false;
+	 for (IvyPathPattern fpat : include_patterns) {
+	    if (fpat.doesMatch(f)) {
+	       fnd = true;
+	       break;
+	     }
+	  }
+	 if (!fnd) {
+            return false;
+          }
+       }
+      for (IvyPathPattern fpat : exclude_patterns) {
+	 if (fpat.doesMatch(f)) {
+	    return false;
+	  }
+       }
+      return true;
+    }
+
 }
 
 
@@ -1490,7 +1595,7 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
 
    if (fil) {
       xw.begin("FILES");
-      addSourceFiles(p,xw,null);
+      addSourceFiles(jp,xw,null);
       xw.end("FILES");
     }
 
@@ -1588,7 +1693,7 @@ private void addClassPaths(IJavaProject jp,IvyXmlWriter xw,Set<IProject> done,bo
        }
     }
    catch (CoreException e) {
-      BedrockPlugin.logE("Problem resolving classpath: " + e);
+      BedrockPlugin.logE("Problem resolving classpath",e);
     }
 }
 
@@ -1602,7 +1707,7 @@ private void addPath(IvyXmlWriter xw,IJavaProject jp,IClasspathEntry ent,boolean
    IPath sp = ent.getSourceAttachmentPath();
    IProject ip = jp.getProject();
 
-   BedrockPlugin.logD("ADD PATH " + ent + " " + p + " " + op + " " + sp);
+// BedrockPlugin.logD("ADD PATH " + ent + " " + p + " " + op + " " + sp);
 
    String jdp = null;
    boolean opt = false;
@@ -1733,40 +1838,51 @@ private void addPath(IvyXmlWriter xw,IJavaProject jp,IClasspathEntry ent,boolean
 
 
 
-private void addSourceFiles(IProject ir,IvyXmlWriter xw,FileFilter ff)
+private void addSourceFiles(IJavaProject jp,IvyXmlWriter xw,FileFilter ff)
 {
-   Collection<IFile> fls = findSourceFiles(ir,null);
+   Collection<IFile> fls = new HashSet<>();
+   Collection<File> ffls = new HashSet<>();
+   IProject ir = jp.getProject();
+   
+   if (ff != null) {
+      fls = findSourceFiles(ir,fls);
+      for (IFile ifl : fls) {
+         IPath ip = ifl.getLocation();
+         File f = ip.toFile();
+         ffls.add(f);
+       }
+    }
+   else {
+      ffls = findProjectSourceFiles(jp);
+      for (File f : ffls) {
+         IFile ifl = ir.getFile(f.getPath());
+         fls.add(ifl);
+       }
+    }
+
    BedrockEditManager bem = our_plugin.getEditManager();
 
-   for (IFile ifl : fls) {
-      IContentDescription cd = null;
-      try {
-	 cd = ifl.getContentDescription();
-       }
-      catch (CoreException e) { }
-      if (cd == null) continue;
-
-      IContentType ct = cd.getContentType();
-      IPath ip = ifl.getLocation();
-      IPath ipr = ifl.getProjectRelativePath();
-      File f = ip.toFile();
+   for (File f : ffls) {
+      String cid = "unknown";
+      if (f.getName().endsWith(".java")) cid = "javaSource";
+      else if (f.getName().endsWith(".class")) cid = "javaClass";
       if (ff != null && !ff.accept(f)) continue;
       if (f.exists()) {
 	 f = IvyFile.getCanonical(f);
 	 xw.begin("FILE");
-	 if (ct.getId().endsWith("javaSource")) xw.field("SOURCE",true);
-	 else if (ct.getId().endsWith("javaClass")) xw.field("BINARY",true);
-	 else xw.field("TYPENAME",ct.getId());
-	 xw.field("NAME",ifl.getName());
-	 if (ifl.isReadOnly()) xw.field("READONLY",true);
-	 if (ifl.isLinked()) xw.field("LINKED",true);
-	 if (!ifl.isSynchronized(IResource.DEPTH_ONE)) xw.field("SYNC",false);
-	 xw.field("PROJPATH",ipr.toOSString());
-         String path = ip.toOSString();
+	 if (cid.endsWith("javaSource")) xw.field("SOURCE",true);
+	 else if (cid.endsWith("javaClass")) xw.field("BINARY",true);
+	 else xw.field("TYPENAME",cid);
+	 xw.field("NAME",f.getName());
+	 if (!f.canWrite()) xw.field("READONLY",true);
+// 	 if (!ifl.isSynchronized(IResource.DEPTH_ONE)) xw.field("SYNC",false);
+// 	 xw.field("PROJPATH",ipr.toOSString());
+	 String path = f.getAbsolutePath();
 	 xw.field("PATH",path);
-         if (bem != null) xw.field("ISOPEN",bem.isFileOpen(path)); 
+	 if (bem != null) xw.field("ISOPEN",bem.isFileOpen(path));
 	 xw.text(f.getPath());
 	 xw.end("FILE");
+         
        }
     }
 }
@@ -1958,17 +2074,17 @@ private class BuildMonitor extends BedrockProgressMonitor {
     }
    else if (evt.getType() == IResourceChangeEvent.POST_BUILD) {
 //    try {
-// 	 IvyXmlWriter xw = our_plugin.beginMessage("BUILDDONE");
-// 	 IResourceDelta rd = evt.getDelta();
-// 	 int ctr = BedrockUtil.outputResource(rd,xw);
-// 	 if (ctr != 0) our_plugin.finishMessage(xw);
-// 	 else {
-// 	    checkForProjectOpen(rd);
-// 	  }
+//	 IvyXmlWriter xw = our_plugin.beginMessage("BUILDDONE");
+//	 IResourceDelta rd = evt.getDelta();
+//	 int ctr = BedrockUtil.outputResource(rd,xw);
+//	 if (ctr != 0) our_plugin.finishMessage(xw);
+//	 else {
+//	    checkForProjectOpen(rd);
+//	  }
 //     }
 //    catch (Throwable t) {
-// 	 BedrockPlugin.logE("Problem with resource: " + t);
-// 	 t.printStackTrace();
+//	 BedrockPlugin.logE("Problem with resource: " + t);
+//	 t.printStackTrace();
 //     }
     }
 }
@@ -1993,14 +2109,14 @@ private void dumpDelta(int lvl,IResourceDelta drd)
 // IResource ir = rd.getResource();
 // if (rd.getFlags() == IResourceDelta.OPEN) {
 //    if (ir != null && ir.getProject() != null && ir.getType() == IResource.PROJECT) {
-// 	 IvyXmlWriter xw = our_plugin.beginMessage("PROJECTOPEN");
-// 	 xw.field("PROJECT",ir.getProject().getName());
-// 	 our_plugin.finishMessage(xw);
+//	 IvyXmlWriter xw = our_plugin.beginMessage("PROJECTOPEN");
+//	 xw.field("PROJECT",ir.getProject().getName());
+//	 our_plugin.finishMessage(xw);
 //     }
 //  }
 // else if (ir.getType() == IResource.ROOT) {
 //    for (IResourceDelta crd : rd.getAffectedChildren()) {
-// 	 checkForProjectOpen(crd);
+//	 checkForProjectOpen(crd);
 //     }
 //  }
 // }
