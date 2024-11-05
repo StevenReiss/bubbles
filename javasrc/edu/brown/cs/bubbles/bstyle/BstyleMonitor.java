@@ -326,6 +326,9 @@ private void handleStartFile(String proj,String fnm)
    if (bf == null) return;
    
    bf.startFile();
+   
+   List<BstyleFile> redo = List.of(bf);
+   bstyle_main.getStyleChecker().processProject(bf.getProject(),redo);
 }
 
 

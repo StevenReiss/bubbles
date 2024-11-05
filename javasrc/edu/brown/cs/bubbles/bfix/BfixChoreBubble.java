@@ -68,8 +68,8 @@ private ChoreList		chore_list;
 private transient ChoreUpdater  chore_updater;
 
 
-static private Icon yesicon = BoardImage.getIcon("accept",12,12);
-static private Icon noicon = BoardImage.getIcon("no",12,12);
+static private Icon yes_icon = BoardImage.getIcon("accept",12,12);
+static private Icon no_icon = BoardImage.getIcon("no",12,12);
 
 private static final long serialVersionUID = 0;
 
@@ -173,9 +173,9 @@ private class ChoreTable extends AbstractTableModel {
     }
 
    @Override public Object getValueAt(int row,int col) {
-      if (col == 0) return yesicon;
+      if (col == 0) return yes_icon;
       else if (col == 1) return chore_manager.getElementAt(row);
-      else return noicon;
+      else return no_icon;
     }
 
    @Override public boolean isCellEditable(int row,int col) {
@@ -274,7 +274,7 @@ private class TableButton extends AbstractCellEditor
       Map<Integer,JButton> map = (col == 0 ? action_map : delete_map);
       JButton btn = map.get(row);
       if (btn == null) {
-	 btn = new JButton((col == 0 ? yesicon : noicon));
+	 btn = new JButton((col == 0 ? yes_icon : no_icon));
 	 btn.setMargin(new Insets(2,2,2,2));
 	 btn.addActionListener(new ButtonAction(row,col));
 	 map.put(row,btn);

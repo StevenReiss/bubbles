@@ -22,22 +22,31 @@
 
 package edu.brown.cs.bubbles.bstyle;
 
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
+
+import org.w3c.dom.Element;
 
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
+import edu.brown.cs.bubbles.buda.BudaBubbleArea;
+import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaRoot;
+import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.ivy.exec.IvyExec;
 import edu.brown.cs.ivy.exec.IvyExecQuery;
 import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
 import edu.brown.cs.ivy.mint.MintDefaultReply;
+import edu.brown.cs.ivy.xml.IvyXml;
 
 public class BstyleFactory implements BstyleConstants, MintConstants
 {
@@ -98,8 +107,71 @@ public static void setup()
 public static void initialize(BudaRoot root)
 { 
    BoardLog.logD("BSTYLE","Initialize called");
-   BoardThreadPool.start(new BstyleStarter());
+   
+   BudaRoot.registerMenuButton(BSTYLE_CONFIG_BUTTON,new ConfigAction()); 
+   
+   // add button to display dialog bubble to set style files
+   //   option: any project in the workspace
+   //   option: all projects in the workspace
+   //   option: default for all workspaces
+   //   file: user selected xml file
+   //   file: sun_checks, google_checks
+   //   file: other files user has used before in Bstyle.props
+   //   And start bstyle if needed after setting
+   
+   BumpClient bc = BumpClient.getBump();
+   Element projs = bc.getAllProjects();
+   boolean use = false;
+   for (Element proj : IvyXml.children(projs,"PROJECT")) {
+      if (useBstyleForProject(IvyXml.getAttrString(proj,"NAME"))) {
+         use = true;
+         break;
+       }
+    }
+   if (use) {
+      BoardThreadPool.start(new BstyleStarter());
+    }
 }
+
+
+
+private static boolean useBstyleForProject(String proj)
+{
+   BoardProperties bp = BoardProperties.getProperties("Bstyle");
+   String s = bp.getString("Bstyle.config.file",null);
+   String s1 = bp.getString("Bstyle.config.file." + proj,s);
+   if (s1 == null) return false;
+   if (s1.isEmpty()) return false;
+   if (s1.equals("*")) return false;
+   return true;
+}
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Button handling                                                         */
+/*                                                                              */
+/********************************************************************************/
+
+private final static class ConfigAction implements BudaConstants.ButtonListener {
+   
+   @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
+      if (bba == null) return;
+      BumpClient bc = BumpClient.getBump();
+      Element projs = bc.getAllProjects();
+      Set<String> projects = new TreeSet<>();
+      for (Element proj : IvyXml.children(projs,"PROJECT")) {
+         projects.add(IvyXml.getAttrString(proj,"NAME"));
+       }
+      if (projects.size() == 0) return;
+//    BstyleConfigBubble bbl = new BstyleConfigBubble(projectws);
+//    bba.addBubble(bbl,null,pt,
+//          BudaConstants.PLACEMENT_LOGICAL|BudaConstants.PLACEMENT_MOVETO|
+// 	    BudaConstants.PLACEMENT_NEW|BudaConstants.PLACEMENT_USER); 
+    }
+   
+}       // end of inner class ConfigAction
 
 
 

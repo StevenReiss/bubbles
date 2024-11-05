@@ -42,6 +42,8 @@ public interface BstyleConstants
 
 String SOURCE_ID = "BSTYLE_" + (new Random().nextInt(10000000));
 
+String BSTYLE_CONFIG_BUTTON = "Bubbles.Configure Checkstyle";
+
 
 }       // end of interface BstyleConstants
 
