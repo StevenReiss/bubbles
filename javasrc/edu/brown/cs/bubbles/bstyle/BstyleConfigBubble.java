@@ -22,6 +22,7 @@
 
 package edu.brown.cs.bubbles.bstyle;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -33,8 +34,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-
+import javax.swing.filechooser.FileFilter;
 
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.buda.BudaBubble;
@@ -142,9 +144,6 @@ JPanel setupPanel()
    List<String> useoptions = new ArrayList<>();
    useoptions.addAll(files);
    // ADD OPTION TO USE DEFAULT
-   String newfile = "Select File";
-   useoptions.add(newfile);
-   name_map.put(newfile,"*NEW*");
    
    pnl.beginLayout();
    pnl.addBannerLabel("Select CheckStyle Configuration Files");
@@ -155,7 +154,10 @@ JPanel setupPanel()
    if (p1 == null) p1 = dflt;
    use_button = pnl.addChoice("Use: ",useoptions,p1,
          new FileAction());
+  
    pnl.addSeparator();
+   pnl.addBottomButton("Add Configuration","CONFIG",
+         new AddConfigAction(useoptions));
    pnl.addBottomButton("Apply","APPLY",new ApplyAction());
    pnl.addBottomButtons();
    
@@ -208,15 +210,61 @@ private final class ProjectAction implements ActionListener {
 private final class FileAction implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
-      String file = (String) use_button.getSelectedItem();
-      if (file == null) return;
-      String afile = name_map.get(file);
-      if (afile.equals("*NEW*")) {
-         // pop up file selector dialog
-       }
     }
 
 }       // end of inner class FileAction
+
+
+
+
+private final class AddConfigAction implements ActionListener {
+   
+   private Set<String> use_options;
+   
+   AddConfigAction(List<String> opts) {
+      use_options = new TreeSet<>(opts);
+    }
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+      Component c = (Component) evt.getSource();
+      JFileChooser chooser = new JFileChooser();
+      chooser.setFileFilter(new ConfigFileFilter());
+      int rval = chooser.showDialog(c,"Add Configuration File");
+      if (rval == JFileChooser.APPROVE_OPTION) {
+         File f = chooser.getSelectedFile();
+         if (f == null) return;
+         String fnm = f.getAbsolutePath();
+         int idx = fnm.lastIndexOf(File.separator);
+         String xnm = fnm.substring(idx+1);
+         boolean add = name_map.containsKey(xnm);
+         name_map.put(xnm,fnm);
+         if (add) {
+            use_options.add(xnm);
+            use_button.setContents(use_options);
+          }
+       }
+    }
+   
+}       // end of inner class AddConfigAction
+
+
+private final class ConfigFileFilter extends FileFilter {
+   
+   @Override public String getDescription() {
+      return "Checkstyle configuration file";
+    }
+   
+   @Override public boolean accept(File f) {
+      if (!f.canRead()) return false;
+      String fp = f.getName();
+      if (fp.endsWith(".xml")) {
+         return true;
+       }
+      return false;
+    }
+   
+}       // end of inner class ConfigFileFilter
+
 
 
 private final class ApplyAction implements ActionListener {

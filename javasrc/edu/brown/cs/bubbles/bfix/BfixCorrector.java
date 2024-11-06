@@ -79,6 +79,7 @@ private long			start_time;
 private int			caret_position;
 private Set<BumpProblem>	active_problems;
 private String			bubble_id;
+private BfixStyleFixer          style_fixer;
 
 private Set<BfixMemo>		pending_fixes;
 
@@ -106,6 +107,7 @@ BfixCorrector(BaleWindow ed,boolean auto)
    caret_position = -1;
    active_problems = new ConcurrentSkipListSet<>(new ProblemComparator());
    pending_fixes = new ConcurrentSkipListSet<>();
+   style_fixer = new BfixStyleFixer();
 
    smart_inserter = new BfixSmartInsert(this);
 
@@ -284,7 +286,8 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
    // need to maintain region bounds correctly after fixes
 
    for ( ; ; ) {
-      List<BumpProblem> totry = new ArrayList<BumpProblem>();
+      List<BumpProblem> totry = new ArrayList<>();
+      List<BumpProblem> sytletry = new ArrayList<>();
       BumpClient bc = BumpClient.getBump();
       List<BumpProblem> probs = bc.getProblems(for_document.getFile());
       BoardLog.logD("BFIX","Found " + probs.size() + " problems");
@@ -298,10 +301,11 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
 	    it.remove();
 	    continue;
 	 }
-	 totry.add(bp);
+         if (bp.getCategory().equals("BSTYLE")) sytletry.add(bp);
+	 else totry.add(bp);
       }
 
-      if (totry.isEmpty()) return;
+      if (totry.isEmpty() && sytletry.isEmpty()) return;
 
       boolean fnd = false;
       for (BumpProblem bp : totry) {
@@ -321,6 +325,20 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
              }	
           }
       }
+      for (BumpProblem bp : sytletry) {
+         BoardLog.logD("BFIX","Work on style problem " + bp);
+         RunnableFix rslt = style_fixer.fixStyleProblem(bp,force); 
+         if (rslt != null) { 
+	    BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
+	    RunAndWait rw = new RunAndWait(rslt);
+            rw.runFix();
+	    done.add(bp);
+	    if (rw.waitForDone()) {
+               fnd = true;
+               break;
+             }	
+          }      
+       }
       if (!fnd) return;
       // need to wait for errors to change here
     }
