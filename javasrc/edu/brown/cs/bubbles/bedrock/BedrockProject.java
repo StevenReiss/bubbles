@@ -1327,7 +1327,7 @@ Collection<File> findProjectSourceFiles(IJavaProject jp)
 
 private static final class SourceFileFilter implements FileFilter {
 
-   private List<IvyPathPattern> include_patterns;
+   private List<IvyPathPattern> include_patterns; 
    private List<IvyPathPattern> exclude_patterns;
 
    SourceFileFilter(IClasspathEntry ent) {

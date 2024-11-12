@@ -23,7 +23,9 @@
 package edu.brown.cs.bubbles.bstyle;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +38,8 @@ import edu.brown.cs.bubbles.bfix.BfixConstants.BfixRunnableFix;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
+
+import com.ibm.icu.util.StringTokenizer;
 
 abstract class BstyleFixer
 {
@@ -56,6 +60,12 @@ static List<BstyleFixer> getStyleFixers()
    rslt.add(new ArrayBracketPosition());
    rslt.add(new ClassFinal());
    rslt.add(new EmptyXBlock());
+   rslt.add(new FileNewline());
+   rslt.add(new ModifierOrder());
+   rslt.add(new FollowedByWhitespace());
+   rslt.add(new InnerAssignments());
+   rslt.add(new UppercaseL());
+   rslt.add(new ExpressionSimplified());
 
    return rslt;
 }
@@ -75,6 +85,7 @@ private static final String MODIFIER_PATTERN =
 	"native|strict|synchronized";
 private static final String WHITE_PATTERN = "\\s+";
 private static final String OPT_WHITE_PATTERN = "\\s*";
+private static final String BOOLEAN_PATTERN = "true|false";
 
 private static final Pattern ARG_PATTERN = Pattern.compile("\\$([0-9]+)\\$");
 
@@ -123,6 +134,7 @@ protected static Pattern generatePattern(String pat,Matcher m)
    pat0 = pat0.replace("$M$",MODIFIER_PATTERN);
    pat0 = pat0.replace("$W$",WHITE_PATTERN);
    pat0 = pat0.replace("$w$",OPT_WHITE_PATTERN);
+   pat0 = pat0.replace("$B$",BOOLEAN_PATTERN);
 
    if (m != null) {
       Matcher m0 = ARG_PATTERN.matcher(pat0);
@@ -227,8 +239,10 @@ abstract static class GenericPatternFixer extends BstyleFixer {
       return buildFix(corr,bp,lsoff,m1);
     }
 
-   protected abstract BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,
-	 int lsoff,Matcher m1);
+   protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,
+	 int lsoff,Matcher m1) {
+      return null;
+    }
 
 }	// end of inner class GenericPatternFixer
 
@@ -307,6 +321,183 @@ private static class EmptyXBlock extends GenericPatternFixer {
     }
 
 }	// end of innter class EmptyXBlock
+
+
+private static class FileNewline extends GenericPatternFixer {
+
+   FileNewline() {
+      super("File does not end with a newline",null);
+    }
+   
+   @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {
+      // NEED TO CREATE A SPECIAL StyleDoer for the overall file
+      return null;
+    }
+   
+}       // end of inner class FileNewline
+
+
+
+
+private static final String [] MOD_ORDER = {
+   "public", "protected", "private", "abstract",
+   "default", "static", "sealed", "non-sealed",
+   "final", "transient", "volatile", "synchronized",
+   "native", "strictfp" 
+};
+
+
+private static class ModifierOrder extends GenericPatternFixer {
+
+   ModifierOrder() {
+      super("'($N$)' modifier out of order with respect to JLS suggestions","(($M$\\s+)+)\\S");
+    }
+   
+   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
+      String modstr = m1.group(1);
+      Set<String> mods = new HashSet<>();
+      StringTokenizer tok = new StringTokenizer(modstr);
+      while (tok.hasMoreTokens()) {
+         mods.add(tok.nextToken());
+       }
+      StringBuffer buf = new StringBuffer();
+      for (String s : MOD_ORDER) {
+         if (mods.contains(s)) {
+            buf.append(s);
+            buf.append(" ");
+          }
+       }
+      
+      int s0 = m1.start(1);
+      int e0 = m1.end(1);
+      int rs0 = m1.start();
+      int re0 = m1.end();
+      return new StyleDoer(corr,bp,s0,e0,rs0,re0,buf.toString());
+    }
+   
+}       // end of inner class ModifierOrder
+
+
+
+private static class FollowedByWhitespace extends GenericPatternFixer {
+
+   FollowedByWhitespace() {
+      super("'([^']+)' is followed by whitespace","$1$(\s+)");
+    }
+   
+   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
+      int s0 = m1.start(1);
+      int e0 = m1.end();
+      int rs0 = m1.start();
+      int re0 = m1.end();
+      return new StyleDoer(corr,bp,s0,e0,rs0,re0,null);
+    }
+
+}       // end of inner class FollowedByWhitespace
+
+
+private static class InnerAssignments extends GenericPatternFixer {
+
+   InnerAssignments() {
+      super("Inner assignments should be avoided","^(\s*)((($N$\\s*\\=\\s*)+)($E$)\\;");
+    }
+   
+   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
+      String asgstr = m1.group(2);
+      String expr = m1.group(4);
+      List<String> terms = new ArrayList<>();
+      StringTokenizer tok = new StringTokenizer(asgstr,"=");
+      String ind = m1.group(1);
+      while (tok.hasMoreTokens()) {
+         String term = tok.nextToken().trim();
+         terms.add(term);
+       }
+      
+      StringBuffer buf = new StringBuffer();
+      if (expr.matches("[0-9a-zA-Z\\.]+")) {
+         // simple expression
+         for (int i = 0; i < terms.size(); ++i) {
+            String t = terms.get(i);
+            if (i > 0) buf.append(";\n" + ind);
+            buf.append(t);
+            buf.append(" = ");
+            buf.append(expr);
+          }
+       }
+      else {
+         String e = expr;
+         for (int i = 0; i < terms.size(); ++i) {
+            String t = terms.get(i);
+            if (i > 0) buf.append(";\n" + ind);
+            buf.append(t);
+            buf.append(" = ");
+            buf.append(e);
+            e = t;
+          }
+       }
+      
+      
+      int s0 = m1.start(2);
+      int e0 = m1.end(4);
+      int rs0 = m1.start(2);
+      int re0 = m1.end();
+      return new StyleDoer(corr,bp,s0,e0,rs0,re0,buf.toString());
+    }
+   
+}       // end of inner class InnerAssignments
+
+
+
+private static class UppercaseL extends GenericPatternFixer {
+
+   UppercaseL() {
+      super("Shoukld use uppercase 'L'","[0-9]+(l)");
+    }
+   
+   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
+      int s0 = m1.start(1);
+      int e0 = m1.end(1);
+      int rs0 = m1.start();
+      int re0 = m1.end();
+      String txt = "L";
+      return new StyleDoer(corr,bp,s0,e0,rs0,re0,txt);
+    }
+
+}	// end of innter class UppercaseL
+
+
+
+private static class ExpressionSimplified extends GenericPatternFixer {
+
+   ExpressionSimplified() {
+      super("Expression can be simplified","\\(($E$)\\?\\s*($B$)\\s*\\:($B$)\\)");
+    }
+   
+   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
+      String expr = m1.group(1);
+      String btrue = m1.group(2);
+      String bfalse = m1.group(3);
+      
+      String e = null;
+      if (btrue.equals("true") && bfalse.equals("false")) {
+         if (expr.trim().startsWith("(")) e = expr;
+         else e = "(" + expr + ")";
+       }
+      else if (btrue.equals("false") && bfalse.equals("true")) {
+         if (expr.trim().startsWith("(")) e = "!" + expr;
+         else e = "!(" + expr + ")";
+       }
+      else return null;
+      
+      int s0 = m1.start();
+      int e0 = m1.end();
+      int rs0 = m1.start();
+      int re0 = m1.end();
+      return new StyleDoer(corr,bp,s0,e0,rs0,re0,e); 
+    }
+   
+}       // end of inner class ExpressionSimplified
+
 
 
 
