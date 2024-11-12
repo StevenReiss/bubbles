@@ -81,7 +81,7 @@ BfixAdapterAddCatch()
 /*                                                                              */
 /********************************************************************************/
 
-@Override void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,
+@Override public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,
       List<BfixFixer> rslt)
 {
    String ctype = getCatchType(corr,bp);
@@ -94,7 +94,7 @@ BfixAdapterAddCatch()
 
 
 
-@Override String getMenuAction(BfixCorrector corr,BumpProblem bp)
+@Override protected String getMenuAction(BfixCorrector corr,BumpProblem bp) 
 {
    String ctyp = getCatchType(corr,bp);
    if (ctyp != null && !ctyp.equals("*")) return "Add Catch";
@@ -167,7 +167,7 @@ private static class CatchFixer extends BfixFixer {
       initial_time = corr.getStartTime();
     }
    
-   @Override protected RunnableFix findFix() {
+   @Override protected BfixRunnableFix findFix() {
       int soff = for_document.mapOffsetToJava(for_problem.getStart());
       BaleWindowElement pelt = findTryStatement(for_document,soff);
       if (pelt == null) return null;
@@ -255,7 +255,7 @@ private static class CatchFixer extends BfixFixer {
 /*                                                                              */
 /********************************************************************************/
 
-private static class CatchDoer implements RunnableFix {
+private static class CatchDoer implements BfixRunnableFix {
    
    private BfixCorrector for_corrector;
    private BaleWindowDocument for_document;

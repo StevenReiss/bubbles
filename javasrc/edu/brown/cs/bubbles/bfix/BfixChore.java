@@ -28,7 +28,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 
 
-abstract class BfixChore implements BfixConstants
+public abstract class BfixChore implements BfixConstants
 
 {
 

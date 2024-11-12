@@ -144,7 +144,7 @@ BfixAdapterSpelling()
 /*										*/
 /********************************************************************************/
 
-@Override void addFixers(BfixCorrector corr,BumpProblem bp,boolean explict,List<BfixFixer> rslt)
+@Override public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explict,List<BfixFixer> rslt)
 {
    List<String> cands = getSpellingCandidates(corr,bp);
    if (cands == null || cands.size() == 0) return;
@@ -158,7 +158,7 @@ BfixAdapterSpelling()
 
 
 
-@Override String getMenuAction(BfixCorrector corr,BumpProblem bp)
+@Override protected String getMenuAction(BfixCorrector corr,BumpProblem bp)
 {
    List<String> cands = getSpellingCandidates(corr,bp);
 
@@ -244,7 +244,7 @@ private static class SpellFixer extends BfixFixer {
 
    @Override protected String getMemoId()	{ return for_identifier; }
 
-   @Override protected RunnableFix findFix() {
+   @Override protected BfixRunnableFix findFix() {
       String proj = for_document.getProjectName();
       File file = for_document.getFile();
       String filename = file.getAbsolutePath();
@@ -475,7 +475,7 @@ private static class SpellFix implements Comparable<SpellFix> {
 /*										*/
 /********************************************************************************/
 
-private static class SpellDoer implements RunnableFix {
+private static class SpellDoer implements BfixRunnableFix {
 
    private BfixCorrector for_corrector;
    private BaleWindowDocument for_document;

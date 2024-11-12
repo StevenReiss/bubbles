@@ -99,7 +99,7 @@ BfixAdapterImports()
 /*										*/
 /********************************************************************************/
 
-@Override void addFixers(BfixCorrector corr,BumpProblem bp,boolean explict,List<BfixFixer> rslt)
+@Override public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explict,List<BfixFixer> rslt)
 {
    String fix = getImportCandidate(corr,bp);
    if (fix == null) return;
@@ -110,7 +110,7 @@ BfixAdapterImports()
 
 
 
-@Override String getMenuAction(BfixCorrector corr,BumpProblem bp)
+@Override protected String getMenuAction(BfixCorrector corr,BumpProblem bp)
 {
    String name = getImportCandidate(corr,bp);
    return name;
@@ -176,7 +176,7 @@ private static class ImportFixer extends BfixFixer {
 
    @Override protected String getMemoId()	{ return for_identifier; }
 
-   @Override protected RunnableFix findFix() {
+   @Override protected BfixRunnableFix findFix() {
       int soffset = for_document.mapOffsetToJava(for_problem.getStart());
       BaleWindowElement elt = for_document.getCharacterElement(soffset);
       if (!elt.isTypeIdentifier()) {
@@ -432,7 +432,7 @@ private static class ImportChecker {
 /*										*/
 /********************************************************************************/
 
-private static class ImportDoer implements RunnableFix {
+private static class ImportDoer implements BfixRunnableFix {
 
    private BfixCorrector for_corrector;
    private BaleWindowDocument for_document;

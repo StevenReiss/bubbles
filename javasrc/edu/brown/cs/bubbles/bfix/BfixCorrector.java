@@ -57,7 +57,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 
 
-class BfixCorrector implements BfixConstants, BaleConstants
+public final class BfixCorrector implements BfixConstants, BaleConstants
 {
 
 
@@ -79,7 +79,6 @@ private long			start_time;
 private int			caret_position;
 private Set<BumpProblem>	active_problems;
 private String			bubble_id;
-private BfixStyleFixer          style_fixer;
 
 private Set<BfixMemo>		pending_fixes;
 
@@ -107,7 +106,6 @@ BfixCorrector(BaleWindow ed,boolean auto)
    caret_position = -1;
    active_problems = new ConcurrentSkipListSet<>(new ProblemComparator());
    pending_fixes = new ConcurrentSkipListSet<>();
-   style_fixer = new BfixStyleFixer();
 
    smart_inserter = new BfixSmartInsert(this);
 
@@ -248,15 +246,15 @@ private static String getFixActionName(String name) {
 /*										*/
 /********************************************************************************/
 
-BaleWindow getEditor()			{ return for_editor; }
+public BaleWindow getEditor()			{ return for_editor; }
 
 int getEndOffset()			{ return end_offset; }
 
-long getStartTime()			{ return start_time; }
+public long getStartTime()		{ return start_time; }
 
 int getCaretPosition()			{ return caret_position; }
 
-String getBubbleId()
+public String getBubbleId()
 {
    if (bubble_id == null) {
       BudaBubble bbl = for_editor.getBudaBubble();
@@ -312,7 +310,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
          BoardLog.logD("BFIX","Work on problem " + bp);
 	 RegionFixer fx = new RegionFixer(bp);
 	 checkProblemFixable(fx);
-	 RunnableFix rslt = fx.waitForDone();
+	 BfixRunnableFix rslt = fx.waitForDone();
          
 	 if (rslt != null) {
 	    BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
@@ -327,7 +325,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
       }
       for (BumpProblem bp : sytletry) {
          BoardLog.logD("BFIX","Work on style problem " + bp);
-         RunnableFix rslt = style_fixer.fixStyleProblem(bp,force); 
+         BfixRunnableFix rslt = checkStyleProblemFixable(bp,force); 
          if (rslt != null) { 
 	    BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
 	    RunAndWait rw = new RunAndWait(rslt);
@@ -351,7 +349,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
 void checkProblemFixable(FixAdapter subfix)
 {
    BfixFactory fixfac = BfixFactory.getFactory();
-   List<BfixFixer> fixes = new ArrayList<BfixFixer>();
+   List<BfixFixer> fixes = new ArrayList<>();
    for (BfixAdapter fixadapt : fixfac.getAdapters()) {
       fixadapt.addFixers(this,subfix.getProblem(),true,fixes);
     }
@@ -363,15 +361,27 @@ void checkProblemFixable(FixAdapter subfix)
 }
 
 
+BfixRunnableFix checkStyleProblemFixable(BumpProblem bp,boolean explicit)
+{
+   BfixFactory fixfac = BfixFactory.getFactory();
+   for (BfixAdapter fixadapt : fixfac.getAdapters()) {
+      BfixRunnableFix rf = fixadapt.findStyleFixer(this,bp,explicit); 
+      if (rf != null) return rf;
+    }
+   
+   return null;
+}
+
+
 
 
 private class RunAndWait implements BumpProblemHandler {
 
-   private RunnableFix fixer_run;
+   private BfixRunnableFix fixer_run;
    private boolean  is_done;
    private boolean  done_status;
 
-   RunAndWait(RunnableFix r) {
+   RunAndWait(BfixRunnableFix r) {
       fixer_run = r;
       is_done = false;
       done_status = false;
@@ -424,10 +434,10 @@ private class RunAndWait implements BumpProblemHandler {
 
 private class SwingRunner implements Runnable {
 
-   private RunnableFix fixer_run;
+   private BfixRunnableFix fixer_run;
    private boolean fixer_result;
    
-   SwingRunner(RunnableFix rf) {
+   SwingRunner(BfixRunnableFix rf) {
       fixer_run = rf;
       fixer_result = false;
     }
@@ -560,7 +570,8 @@ private boolean checkFocus()
 
 private void checkForElementToFix()
 {
-   List<BumpProblem> totry = new ArrayList<BumpProblem>();
+   List<BumpProblem> totry = new ArrayList<>();
+   List<BumpProblem> styletry = new ArrayList<>();
 
    if (start_offset < 0) return;
    if (active_problems.isEmpty()) return;
@@ -571,10 +582,11 @@ private void checkForElementToFix()
 	 it.remove();
 	 continue;
        }
-      totry.add(bp);
+      if (bp.getCategory().equals("BSTYLE")) styletry.add(bp);
+      else totry.add(bp);
     }
 
-   if (totry.isEmpty()) return;
+   if (totry.isEmpty() && styletry.isEmpty()) return;
 
    BfixFactory fixfactory = BfixFactory.getFactory();
    List<BfixFixer> fixers = new ArrayList<BfixFixer>();
@@ -605,6 +617,15 @@ private void checkForElementToFix()
 	 recordError(bp);
        }
     }
+   for (BumpProblem bp : styletry) {
+      BfixRunnableFix fix = checkStyleProblemFixable(bp,false);
+      if (fix != null) {
+         RunAndWait rw = new RunAndWait(fix);
+         rw.runFix();
+         break;
+       }
+    }
+   
    if (numfnd > 0) BoardMetrics.noteCommand("BFIX","StartImplicitFix" + "_" + numfnd +
 	 "_" + start_offset + "_" + end_offset + "_" + caret_position);
 }
@@ -818,7 +839,7 @@ void removePending(BfixMemo bm)
 private static class RegionFixer implements FixAdapter {
 
    private BumpProblem the_problem;
-   private RunnableFix fix_found;
+   private BfixRunnableFix fix_found;
    private int num_fixers;
    private boolean is_done;
 
@@ -840,7 +861,7 @@ private static class RegionFixer implements FixAdapter {
     }
 
    @Override public String getPrivateBufferId() 		{ return null; }
-   @Override synchronized public void noteFix(RunnableFix fix) {
+   @Override synchronized public void noteFix(BfixRunnableFix fix) {
       if (fix_found == null && fix != null) fix_found = fix;
       else if (fix_found != null && fix != null) {
          if (fix_found.getPriority() < fix.getPriority()) {
@@ -850,7 +871,7 @@ private static class RegionFixer implements FixAdapter {
       noteStatus(fix != null);
     }
 
-   synchronized RunnableFix waitForDone() {
+   synchronized BfixRunnableFix waitForDone() {
       while (!is_done && fix_found == null) {
          try {
             wait(5000);

@@ -1,8 +1,8 @@
 /********************************************************************************/
 /*                                                                              */
-/*              BfixStyleFixer.java                                             */
+/*              BstyleFixAdapter.java                                           */
 /*                                                                              */
-/*      Fix CheckStyle errors                                                   */
+/*      BFIX adapter to fix style problems automatically or on demand           */
 /*                                                                              */
 /********************************************************************************/
 /*      Copyright 2011 Brown University -- Steven P. Reiss                    */
@@ -20,16 +20,16 @@
 
 
 
-package edu.brown.cs.bubbles.bfix;
+package edu.brown.cs.bubbles.bstyle;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import edu.brown.cs.bubbles.bfix.BfixAdapter;
+import edu.brown.cs.bubbles.bfix.BfixConstants;
+import edu.brown.cs.bubbles.bfix.BfixCorrector;
+import edu.brown.cs.bubbles.bfix.BfixFixer;
 
-class BfixStyleFixer extends BfixAdapter
+public class BstyleFixAdapter extends BfixAdapter implements BstyleConstants, BfixConstants
 {
 
 
@@ -39,11 +39,9 @@ class BfixStyleFixer extends BfixAdapter
 /*                                                                              */
 /********************************************************************************/
 
-private static Map<Pattern,StyleGenerator> fix_map;
+private List<BstyleFixer> fixer_set;
 
-static {
-   fix_map = new LinkedHashMap<>(); 
-}
+
 
 /********************************************************************************/
 /*                                                                              */
@@ -51,29 +49,42 @@ static {
 /*                                                                              */
 /********************************************************************************/
 
-BfixStyleFixer() 
+public BstyleFixAdapter()
 {
-   super("StyleFixer"); 
+   super("StyleFixer");
+   
+   fixer_set = BstyleFixer.getStyleFixers(); 
 }
 
 
 /********************************************************************************/
 /*                                                                              */
-/*      Try to handle a fix that doesn't need checking                          */
+/*      Handle fixes that might need checking                                   */
 /*                                                                              */
 /********************************************************************************/
 
-BfixRunnableFix fixStyleProblem(BumpProblem bp,boolean explicit)
+@Override 
+public void addFixers(BfixCorrector bc,BumpProblem bp,boolean explicit,
+      List<BfixFixer> rslts)
 {
-   if (!bp.getCategory().equals("BSTYLE")) return null;
+   // check if this is a style problem that needs double checking
+   // if so return a fixer using bstylefixer
+}
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Handle style problems                                                   */
+/*                                                                              */
+/********************************************************************************/
+
+public BfixRunnableFix findStyleFixer(BfixCorrector bc,BumpProblem bp,boolean explicit)
+{
+   if (!bp.getCategory().equals("BSTYLE")) return null; 
    
-   for (Map.Entry<Pattern,StyleGenerator> ent : fix_map.entrySet()) {
-      Pattern p = ent.getKey();
-      Matcher m = p.matcher(bp.getMessage());
-      if (m.matches()) {
-         BfixRunnableFix rf = ent.getValue().findFix(bp,m);
-         if (rf != null) return rf;
-       }
+   for (BstyleFixer bf : fixer_set) {
+      BfixRunnableFix rf = bf.findFix(bc,bp,explicit);  
+      if (rf != null) return rf;
     }
    
    
@@ -81,43 +92,11 @@ BfixRunnableFix fixStyleProblem(BumpProblem bp,boolean explicit)
 }
 
 
-/********************************************************************************/
-/*                                                                              */
-/*      Handle fixes that do need checking                                      */
-/*                                                                              */
-/********************************************************************************/
 
-// If any fixers are added here, be sure to add this to Bfix.props
-
-@Override 
-public void addFixers(BfixCorrector bc,BumpProblem bp,boolean explicit,
-      List<BfixFixer> rslts)
-{
-   // check if this is a style problem that needs double checking
-}
-
-
-
-/********************************************************************************/
-/*                                                                              */
-/*      Generic style fix generator                                             */
-/*                                                                              */
-/********************************************************************************/
-
-private abstract class StyleGenerator {
-   
-   abstract BfixRunnableFix findFix(BumpProblem bp,Matcher m);
-   
-}       // end of inner class StyleGenerator
+}       // end of class BstyleFixAdapter
 
 
 
 
-
-}       // end of class BfixStyleFixer
-
-
-
-
-/* end of BfixStyleFixer.java */
+/* end of BstyleFixAdapter.java */
 

@@ -31,7 +31,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
-abstract class BfixAdapter implements BfixConstants, BaleConstants
+public abstract class BfixAdapter implements BfixConstants, BaleConstants
 {
 
 
@@ -64,17 +64,22 @@ protected BfixAdapter(String name)
 /*										*/
 /********************************************************************************/
 
-void addFixers(BfixCorrector bc,BumpProblem bp,boolean explict,List<BfixFixer> rslts)
+public void addFixers(BfixCorrector bc,BumpProblem bp,boolean explict,List<BfixFixer> rslts)
 { }
 
-void addChores(BfixCorrector bc,BumpProblem bp,List<BfixChore> rslts)
+public void addChores(BfixCorrector bc,BumpProblem bp,List<BfixChore> rslts)
 { }
+
+public BfixRunnableFix findStyleFixer(BfixCorrector bc,BumpProblem bp,boolean explicit)
+{
+   return null;
+}
 
 
 // note that the action might try multiple fixers -- generally only one action
 // should be generated, but there might be multiple things to try in parallel
 
-String getMenuAction(BfixCorrector bc,BumpProblem bp)
+protected String getMenuAction(BfixCorrector bc,BumpProblem bp)
 {
    return null;
 }
@@ -88,7 +93,7 @@ String getMenuAction(BfixCorrector bc,BumpProblem bp)
 /*										*/
 /********************************************************************************/
 
-static boolean checkProblemPresent(BumpProblem prob,Collection<BumpProblem> bpl)
+public static boolean checkProblemPresent(BumpProblem prob,Collection<BumpProblem> bpl)
 {
    for (BumpProblem bp : bpl) {
       if (!bp.getProblemId().equals(prob.getProblemId())) continue;
@@ -170,7 +175,7 @@ static boolean checkAnyProblemPresent(Collection<BumpProblem> bpl,File file,int 
 
 
 
-static boolean checkSafePosition(BfixCorrector bc,int start,int end)
+public static boolean checkSafePosition(BfixCorrector bc,int start,int end)
 {
    int pos = bc.getCaretPosition();
    if (pos >= 0 && pos >= start && pos <= end+1) {

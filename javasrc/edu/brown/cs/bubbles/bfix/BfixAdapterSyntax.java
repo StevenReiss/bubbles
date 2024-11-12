@@ -91,7 +91,8 @@ BfixAdapterSyntax()
 /*										*/
 /********************************************************************************/
 
-@Override void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,List<BfixFixer> rslt)
+@Override 
+public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,List<BfixFixer> rslt)
 {
    if (trySyntaxProblem(corr,bp)) {
       BoardLog.logD("BFIX","Handle syntax problem " + bp.getMessage());
@@ -102,7 +103,7 @@ BfixAdapterSyntax()
 
 
 
-@Override String getMenuAction(BfixCorrector corr,BumpProblem bp)
+@Override protected String getMenuAction(BfixCorrector corr,BumpProblem bp)
 {
    if (trySyntaxProblem(corr,bp)) return "syntax error";
 
@@ -169,7 +170,7 @@ private class SyntaxFixer extends BfixFixer {
       initial_time = corr.getStartTime();
     }
 
-   @Override protected RunnableFix findFix() {
+   @Override protected BfixRunnableFix findFix() {
       String msg = for_problem.getMessage();
       int soff = for_problem.getStart();
       int eoff = for_problem.getEnd()+1;
@@ -270,7 +271,7 @@ private class SyntaxFixer extends BfixFixer {
 /*										*/
 /********************************************************************************/
 
-private class SyntaxDoer implements RunnableFix {
+private class SyntaxDoer implements BfixRunnableFix {
 
    private BfixCorrector for_corrector;
    private BumpProblem for_problem;

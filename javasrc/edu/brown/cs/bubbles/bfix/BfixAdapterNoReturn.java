@@ -78,7 +78,7 @@ BfixAdapterNoReturn()
 /********************************************************************************/
 
 @Override
-void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,List<BfixFixer> rslt)
+public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,List<BfixFixer> rslt)
 {
    String rtstmt = getReturnType(corr, bp);
    if (rtstmt == null) return;
@@ -89,7 +89,7 @@ void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,List<BfixFixer
 
 
 @Override
-String getMenuAction(BfixCorrector corr,BumpProblem bp)
+protected String getMenuAction(BfixCorrector corr,BumpProblem bp)
 {
    String name = getReturnType(corr, bp);
    return (name == null ? null : "Add Return");
@@ -143,7 +143,7 @@ protected String getMemoId()
 }
 
 @Override
-protected RunnableFix findFix()
+protected BfixRunnableFix findFix()
 {
    int soff = for_document.mapOffsetToJava(for_problem.getStart());
    BaleWindowElement elt = for_document.getCharacterElement(soff);
@@ -235,60 +235,57 @@ protected RunnableFix findFix()
 /*                                                                              */
 /********************************************************************************/
 
-private static class ReturnDoer implements RunnableFix {
-
-private BfixCorrector	   for_corrector;
-private BaleWindowDocument for_document;
-private BumpProblem	   for_problem;
-private String		   insert_stmt;
-private long		   initial_time;
-
-ReturnDoer(BfixCorrector corr,BaleWindowDocument doc,BumpProblem bp,String text,long time)
-{
-   for_corrector = corr;
-   for_document = doc;
-   for_problem = bp;
-   insert_stmt = text;
-   initial_time = time;
-}
-
-@Override
-public Boolean call()
-{
-   BumpClient bc = BumpClient.getBump();
-   List<BumpProblem> probs = bc.getProblems(for_document.getFile());
-   if (!checkProblemPresent(for_problem, probs)) return false;
-   if (for_corrector.getStartTime() != initial_time) return false;
-   int soff = for_document.mapOffsetToJava(for_problem.getStart());
-   BaleWindowElement elt = for_document.getCharacterElement(soff);
-
-   BaleWindowElement pelt = elt;
-   while (pelt != null) {
-      if (pelt.getName().equals("Method")) break;
-      pelt = pelt.getBaleParent();
-   }
-   if (pelt == null) return false;
-   int foff = pelt.getStartOffset();
-   int eoff = pelt.getEndOffset();
-   String text = for_document.getWindowText(foff, eoff - foff);
-   if (text.contains("return ")) return false;
-   int xpos = text.lastIndexOf("}");
-   int inspos = foff + xpos;
-   if (!checkSafePosition(for_corrector, inspos - 1, inspos + 1)) return false;
-
-   BoardMetrics.noteCommand("BFIX", "AddReturn_" + for_corrector.getBubbleId());
-   // int eoff0 = for_document.mapOffsetToJava(for_problem.getEnd());
-   for_document.replace(inspos, 0, insert_stmt, true, true);
-   BoardMetrics.noteCommand("BFIX", "DoneAddReturn_" + for_corrector.getBubbleId());
-
-   return true;
-}
-
-@Override
-public double getPriority()
-{
-   return 0;
-}
+private static class ReturnDoer implements BfixRunnableFix {
+   
+   private BfixCorrector	   for_corrector;
+   private BaleWindowDocument for_document;
+   private BumpProblem	   for_problem;
+   private String		   insert_stmt;
+   private long		   initial_time;
+   
+   ReturnDoer(BfixCorrector corr,BaleWindowDocument doc,BumpProblem bp,String text,long time) {
+      for_corrector = corr;
+      for_document = doc;
+      for_problem = bp;
+      insert_stmt = text;
+      initial_time = time;
+    }
+   
+   @Override
+   public Boolean call() {
+      BumpClient bc = BumpClient.getBump();
+      List<BumpProblem> probs = bc.getProblems(for_document.getFile());
+      if (!checkProblemPresent(for_problem, probs)) return false;
+      if (for_corrector.getStartTime() != initial_time) return false;
+      int soff = for_document.mapOffsetToJava(for_problem.getStart());
+      BaleWindowElement elt = for_document.getCharacterElement(soff);
+      
+      BaleWindowElement pelt = elt;
+      while (pelt != null) {
+         if (pelt.getName().equals("Method")) break;
+         pelt = pelt.getBaleParent();
+       }
+      if (pelt == null) return false;
+      int foff = pelt.getStartOffset();
+      int eoff = pelt.getEndOffset();
+      String text = for_document.getWindowText(foff, eoff - foff);
+      if (text.contains("return ")) return false;
+      int xpos = text.lastIndexOf("}");
+      int inspos = foff + xpos;
+      if (!checkSafePosition(for_corrector, inspos - 1, inspos + 1)) return false;
+      
+      BoardMetrics.noteCommand("BFIX", "AddReturn_" + for_corrector.getBubbleId());
+      // int eoff0 = for_document.mapOffsetToJava(for_problem.getEnd());
+      for_document.replace(inspos, 0, insert_stmt, true, true);
+      BoardMetrics.noteCommand("BFIX", "DoneAddReturn_" + for_corrector.getBubbleId());
+      
+      return true;
+    }
+   
+   @Override
+   public double getPriority() {
+      return 0;
+    }
 
 } // end of inner class ReturnDoer
 

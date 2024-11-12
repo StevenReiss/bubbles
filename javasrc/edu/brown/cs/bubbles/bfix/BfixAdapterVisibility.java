@@ -81,7 +81,8 @@ BfixAdapterVisibility()
 /*										*/
 /********************************************************************************/
 
-@Override void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,
+@Override 
+public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,
       List<BfixFixer> rslt)
 {
    String outer = getSuperClass(corr,bp);
@@ -91,7 +92,7 @@ BfixAdapterVisibility()
 }
 
 
-@Override String getMenuAction(BfixCorrector corr,BumpProblem bp)
+@Override protected String getMenuAction(BfixCorrector corr,BumpProblem bp)
 {
    String outer = getSuperClass(corr,bp);
    if (outer != null) return "Change visibility";
@@ -222,7 +223,7 @@ private static class VisibilityFixer extends BfixFixer {
       initial_time = when;
     }
 
-   @Override protected RunnableFix findFix() {
+   @Override protected BfixRunnableFix findFix() {
       if (for_corrector.getStartTime() != initial_time) return null;
       BumpClient bc = BumpClient.getBump();
       BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
@@ -264,7 +265,7 @@ private static class VisibilityFixer extends BfixFixer {
 /*										*/
 /********************************************************************************/
 
-private static class VisibilityDoer implements RunnableFix {
+private static class VisibilityDoer implements BfixRunnableFix {
 
    private BfixCorrector for_corrector;
    private BumpProblem for_problem;

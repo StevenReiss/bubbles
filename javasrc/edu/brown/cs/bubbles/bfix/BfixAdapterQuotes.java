@@ -78,7 +78,7 @@ BfixAdapterQuotes()
 /*										*/
 /********************************************************************************/
 
-@Override void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,List<BfixFixer> rslt)
+@Override public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,List<BfixFixer> rslt)
 {
    List<QuoteFix> fixes = findFixes(corr,bp);
    if (fixes != null && fixes.size() > 0) {
@@ -89,7 +89,7 @@ BfixAdapterQuotes()
 }
 
 
-@Override String getMenuAction(BfixCorrector corr,BumpProblem bp)
+@Override protected String getMenuAction(BfixCorrector corr,BumpProblem bp)
 {
    List<QuoteFix> fixes = findFixes(corr,bp);
    if (fixes != null && fixes.size() > 0) return "quote error";
@@ -240,7 +240,7 @@ private class QuoteFixer extends BfixFixer {
       return potential_fixes.toString();
     }
    
-   @Override protected RunnableFix findFix() {
+   @Override protected BfixRunnableFix findFix() {
       QuoteFix usefix = null;
       BaleWindow win = for_corrector.getEditor();
       BaleWindowDocument doc = win.getWindowDocument();
@@ -296,7 +296,7 @@ private class QuoteFixer extends BfixFixer {
 /*										*/
 /********************************************************************************/
 
-private class QuoteDoer implements RunnableFix {
+private class QuoteDoer implements BfixRunnableFix {
 
    private BfixCorrector for_corrector;
    private BumpProblem for_problem;

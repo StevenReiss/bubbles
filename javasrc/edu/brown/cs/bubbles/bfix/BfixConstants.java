@@ -133,12 +133,12 @@ interface FixAdapter {
    BumpProblem getProblem();
    void noteFixersAdded(int ct);
    void noteStatus(boolean fg);
-   void noteFix(RunnableFix fix);
+   void noteFix(BfixRunnableFix fix);
    String getPrivateBufferId();
 }
 
 
-interface RunnableFix extends Callable<Boolean>, Runnable {
+interface BfixRunnableFix extends Callable<Boolean>, Runnable {
 
    double getPriority();
 
@@ -153,8 +153,6 @@ interface RunnableFix extends Callable<Boolean>, Runnable {
     }
 
 }
-
-
 
 }	// end of interface BfixConstants
 

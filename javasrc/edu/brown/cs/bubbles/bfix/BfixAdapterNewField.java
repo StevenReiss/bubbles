@@ -90,7 +90,7 @@ BfixAdapterNewField()
 /*										*/
 /********************************************************************************/
 
-@Override void addChores(BfixCorrector corr,BumpProblem bp,List<BfixChore> rslts)
+@Override  public void addChores(BfixCorrector corr,BumpProblem bp,List<BfixChore> rslts)
 {
    String fld = getFieldName(corr,bp);
    if (fld == null) return;
@@ -110,7 +110,7 @@ BfixAdapterNewField()
 
 
 
-@Override String getMenuAction(BfixCorrector corr,BumpProblem bp)
+@Override public String getMenuAction(BfixCorrector corr,BumpProblem bp)
 {
    String fld = getFieldName(corr,bp);
    if (fld == null) return null;

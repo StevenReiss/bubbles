@@ -29,7 +29,7 @@ import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
 
 import javax.swing.SwingUtilities;
 
-abstract class BfixFixer implements Runnable, BfixConstants
+public abstract class BfixFixer implements Runnable, BfixConstants
 {
 
 
@@ -101,7 +101,7 @@ protected String getMemoId()
 {
    for_corrector.removePending(getMemo());
    
-   RunnableFix r = findFix();
+   BfixRunnableFix r = findFix();
    if (subfix_data == null) {
       if (r != null) SwingUtilities.invokeLater(r);
     }
@@ -112,7 +112,7 @@ protected String getMemoId()
 
 
 
-abstract protected RunnableFix findFix();
+abstract protected BfixRunnableFix findFix();
 
 
 

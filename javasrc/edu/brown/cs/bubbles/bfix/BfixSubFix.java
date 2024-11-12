@@ -93,7 +93,7 @@ boolean isRelevant()                            { return fix_callback != null; }
 }
 
 
-@Override public void noteFix(RunnableFix fix)
+@Override public void noteFix(BfixRunnableFix fix)
 {
    noteStatus(fix != null);
 }
