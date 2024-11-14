@@ -205,7 +205,7 @@ private void outputViolation(Violation v,BstyleFile bf,IvyXmlWriter xw)
    xw.begin("PROBLEM");
    xw.field("CATEGORY","BSTYLE");
    xw.field("MSGID",Integer.toString(v.hashCode()));
-   xw.field("ID",v.getKey());
+   xw.field("DATA",v.getModuleId());
    xw.field("MESSAGE",msg);
    xw.field("FILE",bf.getUserFile().getPath()); 
    xw.field("LINE",v.getLineNo());

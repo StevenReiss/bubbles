@@ -56,6 +56,7 @@ class BumpProblemImpl implements BumpConstants.BumpProblem, BumpConstants {
 
 private String	problem_id;
 private int	problem_msgid;
+private String  problem_data;
 private String	problem_message;
 private String	for_project;
 private File	file_name;
@@ -80,6 +81,7 @@ BumpProblemImpl(Element d,String id,int eid,String proj)
 {
    problem_id = id;
    problem_msgid = IvyXml.getAttrInt(d,"MSGID");
+   problem_data = IvyXml.getTextElement(d,"DATA");
    problem_message = IvyXml.getTextElement(d,"MESSAGE");
    problem_message = IvyXml.decodeXmlString(problem_message);
    for_project = proj;
@@ -118,6 +120,7 @@ BumpProblemImpl(Element d,String id,int eid,String proj)
 @Override public int getEditId()				{ return edit_id; }
 @Override public String getProject()				{ return for_project; }
 @Override public String getCategory()                           { return error_category; } 
+@Override public String getData()                               { return problem_data; } 
 
 @Override synchronized public List<BumpFix> getFixes()
 {

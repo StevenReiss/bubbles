@@ -165,7 +165,7 @@ private BfixFactory()
 	       all_adapters.add(adpt);
 	     }
 	    catch (Throwable e) {
-               BoardLog.logE("BFIX","Adapter " + val + " lacks valid constructor");
+               BoardLog.logE("BFIX","Adapter " + val + " lacks valid constructor",e);
              }
 	  }
        }

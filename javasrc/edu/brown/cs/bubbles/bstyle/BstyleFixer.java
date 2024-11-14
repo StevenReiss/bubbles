@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleFileOverview;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindow;
@@ -45,30 +46,6 @@ abstract class BstyleFixer
 {
 
 
-
-/********************************************************************************/
-/*										*/
-/*	Return the set of fixers to try 					*/
-/*										*/
-/********************************************************************************/
-
-static List<BstyleFixer> getStyleFixers()
-{
-   List<BstyleFixer> rslt = new ArrayList<>();
-
-   rslt.add(new PrecededByWhitespace());
-   rslt.add(new ArrayBracketPosition());
-   rslt.add(new ClassFinal());
-   rslt.add(new EmptyXBlock());
-   rslt.add(new FileNewline());
-   rslt.add(new ModifierOrder());
-   rslt.add(new FollowedByWhitespace());
-   rslt.add(new InnerAssignments());
-   rslt.add(new UppercaseL());
-   rslt.add(new ExpressionSimplified());
-
-   return rslt;
-}
 
 
 /********************************************************************************/
@@ -89,6 +66,29 @@ private static final String BOOLEAN_PATTERN = "true|false";
 
 private static final Pattern ARG_PATTERN = Pattern.compile("\\$([0-9]+)\\$");
 
+private static List<BstyleFixer> style_fixers;
+
+static {
+   style_fixers = new ArrayList<>();
+   style_fixers.add(new PrecededByWhitespace());
+   style_fixers.add(new ArrayBracketPosition());
+   style_fixers.add(new ClassFinal());
+   style_fixers.add(new EmptyXBlock());
+   style_fixers.add(new FileNewline());
+   style_fixers.add(new ModifierOrder());
+   style_fixers.add(new FollowedByWhitespace());
+   style_fixers.add(new InnerAssignments());
+   style_fixers.add(new UppercaseL());
+   style_fixers.add(new ExpressionSimplified());
+   style_fixers.add(new LineByItself());
+   style_fixers.add(new LineBreakAfter());
+   style_fixers.add(new CastNotFollowedByWhite());
+   style_fixers.add(new NotFollowedByWhite());
+   style_fixers.add(new MustUseBraces());
+   style_fixers.add(new OnlyOneDefinition());
+   style_fixers.add(new RedundantModifier());
+}
+
 
 
 
@@ -98,9 +98,28 @@ private static final Pattern ARG_PATTERN = Pattern.compile("\\$([0-9]+)\\$");
 /*										*/
 /********************************************************************************/
 
-BstyleFixer() {
+BstyleFixer() { }
 
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+
+/********************************************************************************/
+/*										*/
+/*	Return the set of fixers to try 					*/
+/*										*/
+/********************************************************************************/
+
+static List<BstyleFixer> getStyleFixers()
+{
+   return style_fixers;
 }
+
 
 
 /********************************************************************************/
@@ -153,59 +172,15 @@ protected static Pattern generatePattern(String pat,Matcher m)
       pat0 = pat0.replace("$L$","");
     }
 
-   return Pattern.compile(pat0,flags);
+   try {
+      return Pattern.compile(pat0,flags);
+    }
+   catch (PatternSyntaxException e) {
+      BoardLog.logE("BSTYLE","Bad regex pattern " + pat + " = " + pat0);
+      return Pattern.compile(Pattern.quote("*IGNORE ME -- BAD PATTERN*"));
+    }
 }
 
-
-
-/********************************************************************************/
-/*										*/
-/*	Runnable Fix for style problems 					*/
-/*										*/
-/********************************************************************************/
-
-private class StyleDoer implements BfixRunnableFix {
-
-   private BfixCorrector for_corrector;
-   private int range_start;
-   private int range_end;
-   private int edit_start;
-   private int edit_end;
-   private String insert_text;
-   private long initial_time;
-
-   StyleDoer(BfixCorrector corr,BumpProblem bp,int rsoff,int reoff,
-	 int soff,int eoff,String txt) {
-      for_corrector = corr;
-      range_start = rsoff;
-      range_end = reoff+1;
-      edit_start = soff;
-      edit_end = eoff;
-      insert_text = txt;
-      initial_time = corr.getStartTime();
-    }
-
-   @Override public Boolean call() {
-      BaleWindow win = for_corrector.getEditor();
-      BaleWindowDocument doc = win.getWindowDocument();
-      BaleFileOverview view = doc.getBaseWindowDocument();
-      if (for_corrector.getStartTime() != initial_time) return false;
-      int soff = view.mapOffsetToJava(edit_start);
-      int eoff = view.mapOffsetToJava(edit_end);
-      if (!BfixAdapter.checkSafePosition(for_corrector,range_start,range_end)) return false;
-
-      BoardLog.logD("BSTYLE","Making style fix " + soff + " " + eoff + " " + insert_text);
-
-      BoardMetrics.noteCommand("BSTYLE","StyleCorrection_" + for_corrector.getBubbleId());
-      doc.replace(soff,eoff-soff,insert_text,false,false);
-      BoardMetrics.noteCommand("BSTYLE","DoneStyleCorrection_" + for_corrector.getBubbleId());
-
-      return true;
-    }
-
-   @Override public double getPriority()			{ return 0; }
-
-}	// end of inner class StyleDoer
 
 
 
@@ -219,13 +194,20 @@ abstract static class GenericPatternFixer extends BstyleFixer {
 
    private Pattern error_pattern;
    private String code_pattern;
+   private boolean explicit_only;
 
    GenericPatternFixer(String p1,String p2) {
+      this(p1,p2,false);
+    }
+   
+   GenericPatternFixer(String p1,String p2,boolean explicit) {
       error_pattern = generatePattern("Style: " + p1 + "\\.");
       code_pattern = p2;
+      explicit_only = explicit;
     }
 
    @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {
+      if (explicit_only && !explicit) return null;
       Matcher m0 = error_pattern.matcher(bp.getMessage());
       if (!m0.find()) return null;
       BaleWindow win = corr.getEditor();
@@ -240,17 +222,30 @@ abstract static class GenericPatternFixer extends BstyleFixer {
     }
 
    protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,
-	 int lsoff,Matcher m1) {
-      return null;
+         int lsoff,Matcher m1) {
+      String txt = getEditReplace(m1);
+      if (txt == null) return null;
+      if (txt.isEmpty()) txt = null;
+      int s0 = getEditStart(m1)+lsoff;
+      int e0 = getEditEnd(m1)+lsoff;
+      int rs0 = getCheckStart(m1)+lsoff;
+      int re0 = getCheckEnd(m1)+lsoff;
+      return new StyleDoer(corr,bp,rs0,re0,s0,e0,txt);
     }
 
+   protected String getEditReplace(Matcher m1)          { return ""; }
+   protected int getEditStart(Matcher m1)               { return m1.start(); }
+   protected int getEditEnd(Matcher m1)                 { return m1.end(); }
+   protected int getCheckStart(Matcher m1)              { return m1.start(); }
+   protected int getCheckEnd(Matcher m1)                { return m1.end(); }
+   
 }	// end of inner class GenericPatternFixer
 
 
 
 /********************************************************************************/
 /*										*/
-/*	Sample Fix: 'X' is preceded by whitespace                               */
+/*	Various fix classes                                                     */
 /*										*/
 /********************************************************************************/
 
@@ -260,13 +255,8 @@ private static class PrecededByWhitespace extends GenericPatternFixer {
       super("'([^']+)' is preceded with whitespace","(\\s+)$1$");
     }
 
-   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
-      int s0 = m1.start() + lsoff;
-      int e0 = m1.end(1) + lsoff;
-      int re0 = m1.end() + lsoff;
-      return new StyleDoer(corr,bp,s0,re0,s0,e0,null);
-    }
-
+   @Override protected int getEditEnd(Matcher m1)       { return m1.end(1); }
+   
 }	// end of inner class PrecededByWhitespace
 
 
@@ -275,13 +265,10 @@ private static class ArrayBracketPosition extends GenericPatternFixer {
    ArrayBracketPosition() {
       super("Array brackets at illegal position","$T$(\\s+)($N$)(\\s*)\\[\\]");
     }
-
-   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
-      int s0 = m1.start(1);
-      int e0 = m1.end();
-      int re0 = m1.start();
-      String txt = "[] " + m1.group(2);
-      return new StyleDoer(corr,bp,s0,e0,re0,e0,txt);
+   
+   @Override protected int getEditStart(Matcher m1)     { return m1.start(1); }
+   @Override protected String getEditReplace(Matcher m1) {
+      return "[] " + m1.group(2);
     }
 
 }	// end of inner class ArrayBracketPosition
@@ -293,14 +280,8 @@ private static class ClassFinal extends GenericPatternFixer {
       super("Class ($N$) should be declared final","class $1$");
     }
 
-   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
-      int s0 = m1.start();
-      int e0 = m1.start();
-      int rs0 = m1.start();
-      int re0 = m1.end();
-      String txt = "final ";
-      return new StyleDoer(corr,bp,s0,e0,rs0,re0,txt);
-    }
+   @Override protected int getEditEnd(Matcher m1)       { return m1.start(); }
+   @Override protected String getEditReplace(Matcher m) { return "final "; }
 
 }	// end of inner class ClassFinal
 
@@ -310,15 +291,10 @@ private static class EmptyXBlock extends GenericPatternFixer {
    EmptyXBlock() {
       super("Empty ($N$) block","$1$\\s*($E$)\\s+(\\{\\s*\\})");
     }
-
-   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
-      int s0 = m1.start(2);
-      int e0 = m1.start(2);
-      int rs0 = m1.start();
-      int re0 = m1.end();
-      String txt = ";";
-      return new StyleDoer(corr,bp,s0,e0,rs0,re0,txt);
-    }
+   
+   @Override protected int getEditStart(Matcher m)      { return m.start(2); }
+   @Override protected int getEditEnd(Matcher m)        { return m.start(2); }
+   @Override protected String getEditReplace(Matcher m) { return ";"; }
 
 }	// end of innter class EmptyXBlock
 
@@ -353,8 +329,11 @@ private static class ModifierOrder extends GenericPatternFixer {
       super("'($N$)' modifier out of order with respect to JLS suggestions","(($M$\\s+)+)\\S");
     }
    
-   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
-      String modstr = m1.group(1);
+   @Override protected int getEditStart(Matcher m)      { return m.start(1); }
+   @Override protected int getEditEnd(Matcher m)        { return m.end(1); }
+   
+   @Override protected String getEditReplace(Matcher m) {
+      String modstr = m.group(1);
       Set<String> mods = new HashSet<>();
       StringTokenizer tok = new StringTokenizer(modstr);
       while (tok.hasMoreTokens()) {
@@ -367,12 +346,7 @@ private static class ModifierOrder extends GenericPatternFixer {
             buf.append(" ");
           }
        }
-      
-      int s0 = m1.start(1);
-      int e0 = m1.end(1);
-      int rs0 = m1.start();
-      int re0 = m1.end();
-      return new StyleDoer(corr,bp,s0,e0,rs0,re0,buf.toString());
+      return buf.toString();
     }
    
 }       // end of inner class ModifierOrder
@@ -382,16 +356,10 @@ private static class ModifierOrder extends GenericPatternFixer {
 private static class FollowedByWhitespace extends GenericPatternFixer {
 
    FollowedByWhitespace() {
-      super("'([^']+)' is followed by whitespace","$1$(\s+)");
+      super("'([^']+)' is followed by whitespace","$1$(\\s+)");
     }
    
-   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
-      int s0 = m1.start(1);
-      int e0 = m1.end();
-      int rs0 = m1.start();
-      int re0 = m1.end();
-      return new StyleDoer(corr,bp,s0,e0,rs0,re0,null);
-    }
+   @Override protected int getEditStart(Matcher m)      { return m.start(1); }
 
 }       // end of inner class FollowedByWhitespace
 
@@ -399,15 +367,18 @@ private static class FollowedByWhitespace extends GenericPatternFixer {
 private static class InnerAssignments extends GenericPatternFixer {
 
    InnerAssignments() {
-      super("Inner assignments should be avoided","^(\s*)((($N$\\s*\\=\\s*)+)($E$)\\;");
+      super("Inner assignments should be avoided","^(\\s*)((($N$\\s*\\=\\s*)+)($E$)\\;");
     }
    
-   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
-      String asgstr = m1.group(2);
-      String expr = m1.group(4);
+   @Override protected int getEditStart(Matcher m)      { return m.start(2); }
+   @Override protected int getEditEnd(Matcher m)        { return m.end(4); }
+   @Override protected int getCheckStart(Matcher m)     { return m.start(2); }
+   @Override protected String getEditReplace(Matcher m) {
+      String asgstr = m.group(2);
+      String expr = m.group(4);
       List<String> terms = new ArrayList<>();
       StringTokenizer tok = new StringTokenizer(asgstr,"=");
-      String ind = m1.group(1);
+      String ind = m.group(1);
       while (tok.hasMoreTokens()) {
          String term = tok.nextToken().trim();
          terms.add(term);
@@ -435,14 +406,10 @@ private static class InnerAssignments extends GenericPatternFixer {
             e = t;
           }
        }
-      
-      
-      int s0 = m1.start(2);
-      int e0 = m1.end(4);
-      int rs0 = m1.start(2);
-      int re0 = m1.end();
-      return new StyleDoer(corr,bp,s0,e0,rs0,re0,buf.toString());
+      return buf.toString();
     }
+   
+   
    
 }       // end of inner class InnerAssignments
 
@@ -451,17 +418,11 @@ private static class InnerAssignments extends GenericPatternFixer {
 private static class UppercaseL extends GenericPatternFixer {
 
    UppercaseL() {
-      super("Shoukld use uppercase 'L'","[0-9]+(l)");
+      super("Should use uppercase 'L'","[0-9]+(l)");
     }
    
-   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
-      int s0 = m1.start(1);
-      int e0 = m1.end(1);
-      int rs0 = m1.start();
-      int re0 = m1.end();
-      String txt = "L";
-      return new StyleDoer(corr,bp,s0,e0,rs0,re0,txt);
-    }
+   @Override protected int getEditStart(Matcher m)      { return m.start(1); }
+   @Override protected String getEditReplace(Matcher m) { return "L"; }
 
 }	// end of innter class UppercaseL
 
@@ -473,10 +434,10 @@ private static class ExpressionSimplified extends GenericPatternFixer {
       super("Expression can be simplified","\\(($E$)\\?\\s*($B$)\\s*\\:($B$)\\)");
     }
    
-   @Override protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,int lsoff,Matcher m1) {
-      String expr = m1.group(1);
-      String btrue = m1.group(2);
-      String bfalse = m1.group(3);
+   @Override protected String getEditReplace(Matcher m) {
+      String expr = m.group(1);
+      String btrue = m.group(2);
+      String bfalse = m.group(3);
       
       String e = null;
       if (btrue.equals("true") && bfalse.equals("false")) {
@@ -489,14 +450,160 @@ private static class ExpressionSimplified extends GenericPatternFixer {
        }
       else return null;
       
-      int s0 = m1.start();
-      int e0 = m1.end();
-      int rs0 = m1.start();
-      int re0 = m1.end();
-      return new StyleDoer(corr,bp,s0,e0,rs0,re0,e); 
+      return e;
     }
    
 }       // end of inner class ExpressionSimplified
+
+
+private static class LineByItself extends GenericPatternFixer {
+   
+   LineByItself() {
+      super("'([^']+)' at column ([0-9]+) should be alone on a line",
+            "(\\s*)$1$(\\s*)(\\S)",true);
+    }
+   
+   @Override protected int getEditStart(Matcher m)      { return m.start(2); }
+   @Override protected int getEditEnd(Matcher m)        { return m.start(3); }
+   @Override protected String getEditReplace(Matcher m) { return "\n"; }
+ 
+}       // end of inner class LineByItself
+
+
+private static class LineBreakAfter extends GenericPatternFixer {
+   
+   LineBreakAfter() {
+      super("'\\{' at column ([0-9]+) should have a liine break after",
+            "(\\s*)(.*)(\\{)(\\s*)(\\S.*)\\}",true);
+    }
+   
+   @Override protected int getEditStart(Matcher m)      { return m.start(4); }
+   @Override protected String getEditReplace(Matcher m) { 
+      return "\n" + m.group(1) + "   " + m.group(3) + "\n" + m.group(1) + "}";
+    }
+   
+}       // end of inner class LineBreakAfter
+
+
+private static class CastNotFollowedByWhite extends GenericPatternFixer {
+   
+   CastNotFollowedByWhite() {
+      super("'typecast' is not followed by whitespace",
+            "\\(($E)\\)(\\()");
+    }
+   @Override protected int getEditStart(Matcher m)      { return m.start(2); }
+   @Override protected int getEditEnd(Matcher m)        { return m.start(2); }
+   @Override protected String getEditReplace(Matcher m) { return " "; }
+   
+}       // end of innter class CastNotFollowedByWhite
+
+
+private static class NotFollowedByWhite extends GenericPatternFixer {
+   
+   NotFollowedByWhite() {
+      super("'([^']+)' is not followed by whitespace",
+            "(\\s*)($1$)(\\S)");
+    }
+   
+   @Override protected int getEditStart(Matcher m)      { return m.start(3); }
+   @Override protected int getEditEnd(Matcher m)        { return m.start(3); }
+   @Override protected String getEditReplace(Matcher m) { return " "; }
+ 
+}       // end of inner class NotFollowedByWhite
+
+
+private static class MustUseBraces extends GenericPatternFixer {
+   
+   MustUseBraces() {
+      super("'($N$)' construct must use '\\{\\}'s",
+            "(\\s*)$1$\\s*($E$)\\;");
+    }
+   
+   @Override protected String getEditReplace(Matcher m) {
+      // this has to find the end of the construct to find location for { ... }
+      return null;
+    }
+   
+}       // end of inner class MustUseBraces
+      
+     
+private static class OnlyOneDefinition extends GenericPatternFixer {
+   
+   OnlyOneDefinition() {
+      super("Only one variable definition per line allowed",
+            "(\\s*)($T$)(\\s+$N$\\s*[,;])+",true);
+    }
+   
+   @Override protected String getEditReplace(Matcher m) {
+      // need to construct declaration with multiple lines
+      // also check that the end is with a ;
+      return null;
+    }
+   
+}       // end of inner class OnlyOneDefinition
+      
+      
+private static class RedundantModifier extends GenericPatternFixer {
+   
+   RedundantModifier() {
+      super("Redundant '($N$)' modifier",
+            "\\s*($1$)(\\s)");
+    }
+   
+   @Override protected int getEditStart(Matcher m)      { return m.start(1); }
+   
+}
+      
+
+
+/********************************************************************************/
+/*										*/
+/*	Runnable Fix for style problems 					*/
+/*										*/
+/********************************************************************************/
+
+private class StyleDoer implements BfixRunnableFix {
+
+   private BfixCorrector for_corrector;
+   private int range_start;
+   private int range_end;
+   private int edit_start;
+   private int edit_end;
+   private String insert_text;
+   private long initial_time;
+   
+   StyleDoer(BfixCorrector corr,BumpProblem bp,int rsoff,int reoff,
+         int soff,int eoff,String txt) {
+      for_corrector = corr;
+      range_start = rsoff;
+      range_end = reoff+1;
+      edit_start = soff;
+      edit_end = eoff;
+      insert_text = txt;
+      initial_time = corr.getStartTime();
+    }
+   
+   @Override public Boolean call() {
+      BaleWindow win = for_corrector.getEditor();
+      BaleWindowDocument doc = win.getWindowDocument();
+      BaleFileOverview view = doc.getBaseWindowDocument();
+      if (for_corrector.getStartTime() != initial_time) return false;
+      int soff = view.mapOffsetToJava(edit_start);
+      int eoff = view.mapOffsetToJava(edit_end);
+      if (!BfixAdapter.checkSafePosition(for_corrector,range_start,range_end)) return false;
+      
+      BoardLog.logD("BSTYLE","Making style fix " + soff + " " + eoff + " " + insert_text);
+      
+      BoardMetrics.noteCommand("BSTYLE","StyleCorrection_" + for_corrector.getBubbleId());
+      doc.replace(soff,eoff-soff,insert_text,false,false);
+      BoardMetrics.noteCommand("BSTYLE","DoneStyleCorrection_" + for_corrector.getBubbleId());
+      
+      return true;
+    }
+   
+   @Override public double getPriority()			{ return 0; }
+   
+}	// end of inner class StyleDoer
 
 
 

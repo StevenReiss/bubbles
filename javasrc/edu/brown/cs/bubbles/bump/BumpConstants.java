@@ -222,6 +222,11 @@ interface BumpProblem {
  *      Return the category for the error (default IDE)
  **/
    String getCategory();
+   
+/**
+ *      Return data associated with the problem
+ **/
+   String getData();
 
 }	// end of inner interface BumpProblem
 

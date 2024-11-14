@@ -172,14 +172,14 @@ BeamProblemBubble(String typs,boolean task)
       if (allow_types.contains(bp.getErrorType())) active_problems.add(bp);
     }
 
-   bump_client.addProblemHandler(null,this);
-
    problem_table = new ProblemTable();
    base_height = problem_table.getRowHeight();
 
    JScrollPane sp = new JScrollPane(problem_table);
    sp.setSize(new Dimension(beam_properties.getInt(PROBLEM_WIDTH),beam_properties.getInt(PROBLEM_HEIGHT)));
-
+   
+   bump_client.addProblemHandler(null,this);
+   
    setContentPane(sp,null);
 }
 
@@ -226,6 +226,8 @@ BeamProblemBubble(String typs,boolean task)
 
 @Override public void handleProblemsDone()
 {
+   if (problem_table == null) return;
+   
    problem_table.modelUpdated();
 }
 
