@@ -205,7 +205,7 @@ private void outputViolation(Violation v,BstyleFile bf,IvyXmlWriter xw)
    xw.begin("PROBLEM");
    xw.field("CATEGORY","BSTYLE");
    xw.field("MSGID",Integer.toString(v.hashCode()));
-   xw.field("DATA",v.getModuleId());
+   xw.field("DATA",v.getKey());
    xw.field("MESSAGE",msg);
    xw.field("FILE",bf.getUserFile().getPath()); 
    xw.field("LINE",v.getLineNo());
@@ -224,6 +224,16 @@ private void outputViolation(Violation v,BstyleFile bf,IvyXmlWriter xw)
    xw.field("END",pos.y);
    xw.field("COLUMN",v.getColumnNo());
    xw.field("COLIDX",v.getColumnCharIndex());
+   
+// xw.begin("ARG");
+// xw.field("KEY","MODULE");
+// xw.text(v.getModuleId());
+// xw.end("ARG");
+// xw.begin("ARG");
+// xw.field("KEY","KEY");
+// xw.text(v.getKey());
+// xw.end("ARG");
+  
    xw.end("PROBLEM");
 }
 

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -39,8 +40,6 @@ import edu.brown.cs.bubbles.bfix.BfixConstants.BfixRunnableFix;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
-
-import com.ibm.icu.util.StringTokenizer;
 
 abstract class BstyleFixer
 {
@@ -193,6 +192,7 @@ protected static Pattern generatePattern(String pat,Matcher m)
 abstract static class GenericPatternFixer extends BstyleFixer {
 
    private Pattern error_pattern;
+   private Pattern data_pattern;
    private String code_pattern;
    private boolean explicit_only;
 
@@ -201,15 +201,30 @@ abstract static class GenericPatternFixer extends BstyleFixer {
     }
    
    GenericPatternFixer(String p1,String p2,boolean explicit) {
-      error_pattern = generatePattern("Style: " + p1 + "\\.");
+      if (p1.contains(" ")) {
+         error_pattern = generatePattern("Style: " + p1 + "\\.");
+         data_pattern = null;
+       }
+      else {
+         data_pattern = Pattern.compile(Pattern.quote(p1));
+         error_pattern = null;
+       }
       code_pattern = p2;
       explicit_only = explicit;
     }
 
    @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {
       if (explicit_only && !explicit) return null;
-      Matcher m0 = error_pattern.matcher(bp.getMessage());
+      Matcher m0 = null;
+      if (error_pattern != null) {
+         m0 = error_pattern.matcher(bp.getMessage());
+       }
+      else if (data_pattern != null) {
+         m0 = data_pattern.matcher(bp.getData());
+       }
+      else return null;
       if (!m0.find()) return null;
+      
       BaleWindow win = corr.getEditor();
       BaleWindowDocument doc = win.getWindowDocument();
       int lsoff = doc.findLineOffset(bp.getLine());

@@ -348,7 +348,13 @@ static void outputProblem(IProject proj,IProblem ip,IvyXmlWriter xw)
        }
     }
 
-   for (String s : ip.getArguments()) { xw.textElement("ARG",s); }
+   int idx = 0;
+   for (String s : ip.getArguments()) { 
+      xw.begin("ARG");
+      xw.field("KEY",++idx);
+      xw.text(s);
+      xw.end("ARG");
+    }
 
    BedrockPlugin.getPlugin().addFixes(ip,xw);
 
