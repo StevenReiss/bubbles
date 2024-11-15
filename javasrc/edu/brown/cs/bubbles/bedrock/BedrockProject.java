@@ -1273,19 +1273,19 @@ Collection<File> findFilteredFiles(File basefile,FileFilter ff,Collection<File> 
 {
    if (rslt == null) rslt = new HashSet<>();
    if (basefile == null) return rslt;
-   
+
    FileSystemView fsv = FileSystemView.getFileSystemView();
 
    if (basefile.isHidden() || fsv.isLink(basefile)) return rslt;
-   
+
    if (basefile.isFile()) {
       if (ff == null || ff.accept(basefile)) {
-         rslt.add(basefile);
+	 rslt.add(basefile);
        }
     }
    else if (basefile.isDirectory()) {
       for (File f : basefile.listFiles()) {
-         findFilteredFiles(f,ff,rslt);
+	 findFilteredFiles(f,ff,rslt);
        }
     }
 
@@ -1305,7 +1305,7 @@ Collection<File> findProjectSourceFiles(IJavaProject jp)
 	 if (ent.getEntryKind() != IClasspathEntry.CPE_SOURCE) continue;
 	 SourceFileFilter sff = new SourceFileFilter(ent);
 	 IPath p = ent.getPath();
-         File f1 = BedrockUtil.getFileForPath(p,ip);
+	 File f1 = BedrockUtil.getFileForPath(p,ip);
 	 String sp = p.toOSString();
 	 IFolder pf = ip.getFolder(f1.getPath());
 	 BedrockPlugin.logD("Lookup source path " + p + " " +
@@ -1327,7 +1327,7 @@ Collection<File> findProjectSourceFiles(IJavaProject jp)
 
 private static final class SourceFileFilter implements FileFilter {
 
-   private List<IvyPathPattern> include_patterns; 
+   private List<IvyPathPattern> include_patterns;
    private List<IvyPathPattern> exclude_patterns;
 
    SourceFileFilter(IClasspathEntry ent) {
@@ -1354,8 +1354,8 @@ private static final class SourceFileFilter implements FileFilter {
 	     }
 	  }
 	 if (!fnd) {
-            return false;
-          }
+	    return false;
+	  }
        }
       for (IvyPathPattern fpat : exclude_patterns) {
 	 if (fpat.doesMatch(f)) {
@@ -1843,20 +1843,20 @@ private void addSourceFiles(IJavaProject jp,IvyXmlWriter xw,FileFilter ff)
    Collection<IFile> fls = new HashSet<>();
    Collection<File> ffls = new HashSet<>();
    IProject ir = jp.getProject();
-   
+
    if (ff != null) {
       fls = findSourceFiles(ir,fls);
       for (IFile ifl : fls) {
-         IPath ip = ifl.getLocation();
-         File f = ip.toFile();
-         ffls.add(f);
+	 IPath ip = ifl.getLocation();
+	 File f = ip.toFile();
+	 ffls.add(f);
        }
     }
    else {
       ffls = findProjectSourceFiles(jp);
       for (File f : ffls) {
-         IFile ifl = ir.getFile(f.getPath());
-         fls.add(ifl);
+	 IFile ifl = ir.getFile(f.getPath());
+	 fls.add(ifl);
        }
     }
 
@@ -1875,14 +1875,14 @@ private void addSourceFiles(IJavaProject jp,IvyXmlWriter xw,FileFilter ff)
 	 else xw.field("TYPENAME",cid);
 	 xw.field("NAME",f.getName());
 	 if (!f.canWrite()) xw.field("READONLY",true);
-// 	 if (!ifl.isSynchronized(IResource.DEPTH_ONE)) xw.field("SYNC",false);
-// 	 xw.field("PROJPATH",ipr.toOSString());
+//	 if (!ifl.isSynchronized(IResource.DEPTH_ONE)) xw.field("SYNC",false);
+//	 xw.field("PROJPATH",ipr.toOSString());
 	 String path = f.getAbsolutePath();
 	 xw.field("PATH",path);
 	 if (bem != null) xw.field("ISOPEN",bem.isFileOpen(path));
 	 xw.text(f.getPath());
 	 xw.end("FILE");
-         
+	
        }
     }
 }

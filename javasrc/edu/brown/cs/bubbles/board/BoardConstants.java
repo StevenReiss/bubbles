@@ -609,6 +609,8 @@ String [] BOARD_BINARY_FILES = new String [] {
       "cloudcheckssh",
       "cloudrunner",
       "cloudbb",
+      "extcodebb",
+      "say",
 };
 
 

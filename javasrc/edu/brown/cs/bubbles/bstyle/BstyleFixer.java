@@ -86,6 +86,9 @@ static {
    style_fixers.add(new MustUseBraces());
    style_fixers.add(new OnlyOneDefinition());
    style_fixers.add(new RedundantModifier());
+   style_fixers.add(new PreviousLine());
+   style_fixers.add(new ConditionalLogic());
+   style_fixers.add(new VarDeclarations());
 }
 
 
@@ -214,6 +217,23 @@ abstract static class GenericPatternFixer extends BstyleFixer {
     }
 
    @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {
+      Matcher m0 = useFix(bp,explicit);
+      if (m0 == null) return null;
+      
+      BaleWindow win = corr.getEditor();
+      BaleWindowDocument doc = win.getWindowDocument();
+      int l0 = getStartLine(bp.getLine());
+      int l1 = getEndLine(bp.getLine());
+      int lsoff = doc.findLineOffset(l0);
+      int leoff = doc.findLineOffset(l1+1);
+      String text = doc.getWindowText(lsoff,leoff-lsoff);
+      Pattern find = generatePattern(code_pattern,m0);
+      Matcher m1 = find.matcher(text);
+      if (!m1.find()) return null;
+      return buildFix(corr,bp,lsoff,m1);
+    }
+   
+   protected Matcher useFix(BumpProblem bp,boolean explicit) {
       if (explicit_only && !explicit) return null;
       Matcher m0 = null;
       if (error_pattern != null) {
@@ -224,16 +244,7 @@ abstract static class GenericPatternFixer extends BstyleFixer {
        }
       else return null;
       if (!m0.find()) return null;
-      
-      BaleWindow win = corr.getEditor();
-      BaleWindowDocument doc = win.getWindowDocument();
-      int lsoff = doc.findLineOffset(bp.getLine());
-      int leoff = doc.findLineOffset(bp.getLine()+1);
-      String text = doc.getWindowText(lsoff,leoff-lsoff);
-      Pattern find = generatePattern(code_pattern,m0);
-      Matcher m1 = find.matcher(text);
-      if (!m1.find()) return null;
-      return buildFix(corr,bp,lsoff,m1);
+      return m0;
     }
 
    protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,
@@ -247,14 +258,19 @@ abstract static class GenericPatternFixer extends BstyleFixer {
       int re0 = getCheckEnd(m1)+lsoff;
       return new StyleDoer(corr,bp,rs0,re0,s0,e0,txt);
     }
-
+   
    protected String getEditReplace(Matcher m1)          { return ""; }
    protected int getEditStart(Matcher m1)               { return m1.start(); }
    protected int getEditEnd(Matcher m1)                 { return m1.end(); }
    protected int getCheckStart(Matcher m1)              { return m1.start(); }
    protected int getCheckEnd(Matcher m1)                { return m1.end(); }
+   protected int getStartLine(int line)                 { return line; }
+   protected int getEndLine(int line)                   { return line; }
    
 }	// end of inner class GenericPatternFixer
+
+
+
 
 
 
@@ -567,8 +583,72 @@ private static class RedundantModifier extends GenericPatternFixer {
    
    @Override protected int getEditStart(Matcher m)      { return m.start(1); }
    
-}
+}       // end of inner class RedundantModifier
+
+
+private static class PreviousLine extends GenericPatternFixer {
+   
+   PreviousLine() {
+      super("'[^']+' (at column ([0-9]+ )?should be on the previous line",
+         "\\h*\\n(\\h*)($1$)(\\s*)",true);
+    }
+   
+   @Override protected int getStartLine(int line)       { return line-1; }
+   @Override protected int getEditEnd(Matcher m1)       { return m1.end(3); }      
+   @Override protected String getEditReplace(Matcher m1) {
+      return " " + m1.group(2) + "\n" + m1.group(1);
+    }
+   
+}       // end of inner class LeftCurlyPreviousLine
       
+
+
+private static class ConditionalLogic extends GenericPatternFixer {
+   
+   ConditionalLogic() {
+      super("Conditional logic can be removed",
+      "if\\s*($E$)\\s*return\\s+($B$);\\s*else\\s+return\\s+($B$);");
+    }
+   
+   @Override protected String getEditReplace(Matcher m1) {
+      String b1 = m1.group(2);
+      String b2 = m1.group(3);
+      if (b1.equals("true") && b2.equals("false")) {
+         return "return " + m1.group(1) + ";";
+       }
+      else if (b1.equals("false") && b2.equals("true")) {
+         return "return !(" + m1.group(1) + ");";
+       }
+      return null;
+    }
+   
+}       // end of inner class ConditionalLogic
+
+
+private static class VarDeclarations extends GenericPatternFixer {
+
+   VarDeclarations() {
+      super("Each variable must be in its own statement",
+            "^(\\s*)($T$)\\s+($N$)(\\s*,\\s*$N$)+;");
+    }
+   
+   @Override protected int getEditStart(Matcher m)      { return m.start(4); }
+   @Override protected String getEditReplace(Matcher m) {
+      StringBuffer buf = new StringBuffer();
+      
+      buf.append(";");
+      String others = m.group(4);
+      StringTokenizer tok = new StringTokenizer(others,",");
+      while (tok.hasMoreTokens()) {
+         String var = tok.nextToken().trim();
+         buf.append("\n" + m.group(1) + m.group(2) + " " + var + ";");
+       }
+      
+      return buf.toString();
+    }
+   
+}       // end of inner class VarDeclarations
+
 
 
 /********************************************************************************/

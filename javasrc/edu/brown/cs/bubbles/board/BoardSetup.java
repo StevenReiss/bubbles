@@ -2251,7 +2251,7 @@ private void checkBinFiles()
 
    File libd = getLibraryDirectory();
    File libp = libd.getParentFile();
-   File bind = new File(libp,"bin");
+   File bind = new File(libp,BOARD_INSTALL_BINARY);
    if (!bind.exists()) bind.mkdir();
 
    for (String s : BOARD_BINARY_FILES) {

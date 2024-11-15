@@ -169,6 +169,7 @@
 	 <fileset dir='${BUBBLES}/lib' includes='words' />
 	 <fileset dir='${BUBBLES}/bin' includes='cloud*' />
 	 <fileset dir='${BUBBLES}/bin' includes='extcodebb' />
+	 <fileset dir='${BUBBLES}/bin' includes='say' />
 	 <fileset dir='${BUBBLES}/lib' includes='speech.properties' />
       </jar>
       <copy file='bubbles.jar' tofile='${BUBBLES}/bubbles.jar' />

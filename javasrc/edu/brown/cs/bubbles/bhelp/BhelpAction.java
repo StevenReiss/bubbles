@@ -141,14 +141,16 @@ private final static double	MAC_DELTA = 2.0;
 static {
    BoardProperties props = BoardProperties.getProperties("Bhelp");
    String osv = System.getProperty("os.name");
+   String dflt = null;
    if (osv.startsWith("Mac")) {
       speed_delta = MAC_DELTA;
-      native_command = props.getString("Bhelp.say.command","/usr/bin/say \"@@@\"");
+      dflt = "/usr/bin/say \"@@@\"";
     }
-   // might wan to use /pro/bubbles/bin/say on linux
-   else {
-      native_command = props.getString("Bhelp.say.command",null);
+   else if (osv.startsWith("Linux")) {
+      dflt = BoardSetup.getSetup().getBinaryPath("say") + " \"@@@\"";
     }
+  
+   native_command = props.getString("Bhelp.say.command",dflt);
    speed_delta = props.getDouble("Bhelp.speed.delta",speed_delta);
 }
 
@@ -167,6 +169,11 @@ protected BhelpAction(Element xml)
 
 static void setup()
 {
+   if (native_command != null && !native_command.isEmpty()) {
+      // might want to check if native command exists on the machine
+      return;
+    }
+   
    SynthSetup ss = new SynthSetup();
    ss.start();
 }
@@ -1002,7 +1009,10 @@ private static class MarySpeechAction extends BhelpAction {
    @Override int getEquivalentPause()		{ return equiv_pause; }
 
    @Override void executeAction(BhelpContext ctx) throws BhelpException {
-      if (speech_synth == null) return;
+      if (speech_synth == null) {
+         speakNative();
+         return;
+       }
       try {
          waitFor();
          if (!ctx.checkMouse()) return;
@@ -1021,7 +1031,9 @@ private static class MarySpeechAction extends BhelpAction {
     }
 
    private boolean speakNative() {
-      if (native_command == null || native_command.isEmpty()) return false;
+      if (native_command == null || native_command.isEmpty()) {
+         return false;
+       }
       String txt = speech_text;
    // txt = speech_text.replace(".",", ");
    
