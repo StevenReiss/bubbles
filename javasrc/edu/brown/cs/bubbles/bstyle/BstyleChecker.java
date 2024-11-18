@@ -35,6 +35,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.puppycrawl.tools.checkstyle.Checker;
 import com.puppycrawl.tools.checkstyle.ConfigurationLoader;
@@ -64,7 +65,8 @@ private BstyleMain			bstyle_main;
 private Map<String,ConfigData>	        project_configs;
 private ConfigData    			default_config;
 private Map<String,ProjectChecker>      project_checkers;
-private Map<String,Set<Violation>>      all_errors;        
+private Map<String,Set<Violation>>      all_errors; 
+private Map<Violation,String>           module_names;
 
 private static final long               CHANGE_TIME = 50;
 
@@ -83,6 +85,7 @@ BstyleChecker(BstyleMain bm)
    default_config = null;
    project_checkers = new HashMap<>();
    all_errors = new HashMap<>();
+   module_names = new ConcurrentHashMap<>();
 
    BoardProperties bp = BoardProperties.getProperties("Bstyle");
 
@@ -153,6 +156,7 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
     }
 
    all_errors.clear();
+   module_names.clear();
    List<File> base = new ArrayList<>();
    for (BstyleFile bf : files) {
       base.add(bf.getFile());
@@ -166,9 +170,12 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
     }
    
    Map<String,Set<Violation>> errs  = null;
+   Map<Violation,String> mods = null;
    synchronized (all_errors) {
       errs = new HashMap<>(all_errors);
+      mods = new HashMap<>(module_names);
       all_errors.clear();
+      module_names.clear();
     }
    
    IvyLog.logD("BSTYLE","Handle results with " + errs.size() + " files");
@@ -184,7 +191,7 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
       xw.field("FILE",bf.getUserFile());
       xw.begin("MESSAGES");
       for (Violation v : ent.getValue()) {
-         outputViolation(v,bf,xw);
+         outputViolation(v,bf,mods.get(v),xw);
        }
       xw.end("MESSAGES");
       bstyle_main.finishMessage(xw);
@@ -193,7 +200,7 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
 
 
 
-private void outputViolation(Violation v,BstyleFile bf,IvyXmlWriter xw)
+private void outputViolation(Violation v,BstyleFile bf,String mod,IvyXmlWriter xw)
 {
    String fnm = v.getSourceName();
    int idx = fnm.lastIndexOf(".");
@@ -201,11 +208,17 @@ private void outputViolation(Violation v,BstyleFile bf,IvyXmlWriter xw)
    
    Point pos = bf.getStartAndEndPosition(v.getLineNo(),v.getColumnCharIndex()); 
    String msg = "Style: " + v.getViolation();
+   if (mod == null) {
+      mod = v.getModuleId();
+    }
+   if (mod == null) {
+      mod = v.getKey();
+    }
    
    xw.begin("PROBLEM");
    xw.field("CATEGORY","BSTYLE");
    xw.field("MSGID",Integer.toString(v.hashCode()));
-   xw.field("DATA",v.getKey());
+   xw.field("DATA",mod);
    xw.field("MESSAGE",msg);
    xw.field("FILE",bf.getUserFile().getPath()); 
    xw.field("LINE",v.getLineNo());
@@ -224,15 +237,6 @@ private void outputViolation(Violation v,BstyleFile bf,IvyXmlWriter xw)
    xw.field("END",pos.y);
    xw.field("COLUMN",v.getColumnNo());
    xw.field("COLIDX",v.getColumnCharIndex());
-   
-// xw.begin("ARG");
-// xw.field("KEY","MODULE");
-// xw.text(v.getModuleId());
-// xw.end("ARG");
-// xw.begin("ARG");
-// xw.field("KEY","KEY");
-// xw.text(v.getKey());
-// xw.end("ARG");
   
    xw.end("PROBLEM");
 }
@@ -334,6 +338,20 @@ private Configuration buildConfiguration(String proj,String configpath)
    if (v == null) return;
    String fnm = e.getFileName();
    
+   String mod = v.getModuleId();
+   if (mod == null) {
+      String k0 = e.getSourceName();
+      int idx = k0.lastIndexOf(".");
+      String k1 = k0;
+      if (idx > 0) k1 = k0.substring(idx+1);
+      if (k1.endsWith("Check")) {
+         int eidx = k1.length() - 5;
+         k1 = k1.substring(0,eidx);
+       }
+      module_names.put(v,k1);
+      mod = k1;
+    }
+   
    Set<Violation> vset = all_errors.get(fnm);
    if (vset == null) {
       fileStarted(e);           // this synchronizes on all_errors
@@ -346,7 +364,7 @@ private Configuration buildConfiguration(String proj,String configpath)
    
    IvyLog.logD("BSTYLE","Event Add error " +
       e.getFileName() + " " + e.getLine() + " " + e.getColumn() + " " +
-      e.getMessage() + " " + e.getModuleId() + " " + e.getSeverityLevel());
+      e.getMessage() + " " + e.getModuleId() + " " + e.getSeverityLevel() + " " + mod);
 }
 
 
