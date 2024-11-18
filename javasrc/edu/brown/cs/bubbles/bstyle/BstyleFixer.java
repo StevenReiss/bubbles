@@ -198,12 +198,18 @@ abstract static class GenericPatternFixer extends BstyleFixer {
    private Pattern data_pattern;
    private String code_pattern;
    private boolean explicit_only;
+   private int prior_lines;
+   private int post_lines;
 
    GenericPatternFixer(String p1,String p2) {
       this(p1,p2,false);
     }
    
    GenericPatternFixer(String p1,String p2,boolean explicit) {
+      this(p1,p2,explicit,0,0);
+    }
+      
+   GenericPatternFixer(String p1,String p2,boolean explicit,int prior,int post) {
       if (p1.contains(" ")) {
          error_pattern = generatePattern("Style: " + p1 + "\\.");
          data_pattern = null;
@@ -214,6 +220,13 @@ abstract static class GenericPatternFixer extends BstyleFixer {
        }
       code_pattern = p2;
       explicit_only = explicit;
+      prior_lines = prior;
+      post_lines = post;
+      if (prior_lines != 0 || post_lines != 0) {
+         if (!code_pattern.contains("\\n") && !code_pattern.contains("$L$")) {
+            code_pattern = code_pattern + "$L$";
+          }
+       }
     }
 
    @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {
@@ -224,8 +237,8 @@ abstract static class GenericPatternFixer extends BstyleFixer {
       BaleWindowDocument doc = win.getWindowDocument();
       int l0 = getStartLine(bp.getLine());
       int l1 = getEndLine(bp.getLine());
-      int lsoff = doc.findLineOffset(l0);
-      int leoff = doc.findLineOffset(l1+1);
+      int lsoff = doc.findLineOffset(l0-prior_lines);
+      int leoff = doc.findLineOffset(l1+post_lines+1);
       String text = doc.getWindowText(lsoff,leoff-lsoff);
       Pattern find = generatePattern(code_pattern,m0);
       Matcher m1 = find.matcher(text);
@@ -590,7 +603,7 @@ private static class PreviousLine extends GenericPatternFixer {
    
    PreviousLine() {
       super("'[^']+' (at column ([0-9]+ )?should be on the previous line",
-         "\\h*\\n(\\h*)($1$)(\\s*)",true);
+         "\\h*\\n(\\h*)($1$)(\\s*)",true,1,0);
     }
    
    @Override protected int getStartLine(int line)       { return line-1; }

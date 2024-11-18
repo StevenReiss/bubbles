@@ -28,5 +28,6 @@
 <entry key="Bema.plugin.39">edu.brown.cs.bubbles.bvfm.BvfmFactory</entry>
 <entry key="Bema.web.url">http://bubbles.cs.brown.edu:8080/mint/mint</entry>
 <entry key="Bema.plugin.40">edu.brown.cs.bubbles.bmvn.BmvnFactory</entry>
+<entry key="Bema.plugin.41">edu.brown.cs.bubbles.bstyle.BstyleFactory</entry>
 <entry key="Bema.pluginfolder">dropins plugins</entry>
 </properties>

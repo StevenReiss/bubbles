@@ -107,7 +107,9 @@ public static void setup()
 public static void initialize(BudaRoot root)
 {
    BoardLog.logD("BSTYLE","Initialize called");
-
+   
+   if (!BumpClient.getBump().getOptionBool("bubbles.useBstyle")) return;
+      
    BudaRoot.registerMenuButton(BSTYLE_CONFIG_BUTTON,new ConfigAction());
 
    BumpClient bc = BumpClient.getBump();
