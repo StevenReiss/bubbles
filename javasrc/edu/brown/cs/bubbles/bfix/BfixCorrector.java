@@ -527,7 +527,7 @@ private void addProblem(BumpProblem bp)
    int soff = for_document.mapOffsetToJava(bp.getStart());
    if (soff < 0) {
       BoardLog.logD("BFIX","Problem has no offset: " + bp.getStart() + " " + bp.getEnd() + 
-            " " + bp.getLine());
+            " " + bp.getLine() + " " + bp.getFile());
       return;
     }
 

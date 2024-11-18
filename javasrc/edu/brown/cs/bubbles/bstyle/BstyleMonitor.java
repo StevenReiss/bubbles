@@ -513,6 +513,7 @@ private class EclipseHandler implements MintHandler {
             break;
          case "EDIT" :
             String bid = IvyXml.getAttrString(e,"BID");
+            
             if (bid.equals(SOURCE_ID)) {
                msg.replyTo();// 
                break;

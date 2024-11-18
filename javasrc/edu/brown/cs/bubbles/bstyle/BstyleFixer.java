@@ -533,7 +533,7 @@ private static class CastNotFollowedByWhite extends GenericPatternFixer {
    
    CastNotFollowedByWhite() {
       super("'typecast' is not followed by whitespace",
-            "\\(($E)\\)(\\()");
+            "\\(($T$)\\)(\\()");
     }
    @Override protected int getEditStart(Matcher m)      { return m.start(2); }
    @Override protected int getEditEnd(Matcher m)        { return m.start(2); }

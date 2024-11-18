@@ -73,7 +73,7 @@ private static BstyleFactory the_factory = null;
 /********************************************************************************/
 
 public synchronized static BstyleFactory getFactory()
-{
+{ 
    if (the_factory == null) {
       the_factory = new BstyleFactory();
     }
@@ -168,7 +168,8 @@ private final static class ConfigAction implements BudaConstants.ButtonListener 
 
 
 
-/********************************************************************************//*										*/
+/********************************************************************************/
+/*										*/
 /*	Server code								*/
 /*										*/
 /********************************************************************************/

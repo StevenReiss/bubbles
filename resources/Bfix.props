@@ -9,6 +9,7 @@
 <entry key="Bfix.adapter.6">edu.brown.cs.bubbles.bfix.BfixAdapterNoReturn</entry>
 <entry key="Bfix.adapter.7">edu.brown.cs.bubbles.bfix.BfixAdapterAddCatch</entry>
 <entry key="Bfix.adapter.8">edu.brown.cs.bubbles.bfix.BfixAdapterVisibility</entry>
+<entry key="Bfix.adapter.20">edu.brown.cs.bubbles.bstyle.BstyleFixAdapter</entry>
 <entry key="Bfix.correct.spelling.edits">2</entry>
 <entry key="Bfix.correct.spelling.user">5</entry>
 <entry key="Bfix.correct.spelling.problem.1">put,get</entry>

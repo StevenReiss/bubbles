@@ -186,6 +186,10 @@ Point getStartAndEndPosition(int lno,int coffset)
        }
     }
    
+   if (lno == 1 && coffset == 0) {
+      return new Point(0,0);
+    }
+   
    if (doc != null) {
       try {
          int start = doc.getLineOffset(lno-1);
@@ -205,14 +209,12 @@ Point getStartAndEndPosition(int lno,int coffset)
          return new Point(start+coffset,start+cend);
        }
       catch (BadLocationException e) {
-         IvyLog.logE("BSTYLE","Problem converting  line/col to position");
+         IvyLog.logE("BSTYLE","Problem converting  line/col to position " +
+               lno + " " + coffset + " " + for_file + " " + user_file,e);
        }
     }
    
-   if (lno == 1 && coffset == 0) {
-      return new Point(0,0);
-    }
-   
+  
    return null;
 }
 

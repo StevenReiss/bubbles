@@ -1645,7 +1645,10 @@ private static final class ProblemHover implements BaleContextListener {
       List<BumpProblem> probs = bd.getProblemsAtLocation(cfg.getOffset());
       if (probs != null) {
          for (BumpProblem bp : probs) {
-            menu.add(new QuickFix(cfg.getEditor(),bp));
+            if (bp.getCategory().equals("BSTYLE")) ;
+            else {
+               menu.add(new QuickFix(cfg.getEditor(),bp));
+             }
           }
        }
     }

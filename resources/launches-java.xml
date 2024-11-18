@@ -1,6 +1,6 @@
 <LANGUAGE NAME='JAVA'>
 <OPTIONS>
-   <OPTION NAME='bubbles.useBstyle VALUE='TRUE' />
+   <OPTION NAME='bubbles.useBstyle' VALUE='TRUE' />
    <OPTION NAME='bubbles.useBanal' VALUE='TRUE' />
    <OPTION NAME='bubbles.useS6' VALUE='TRUE' />
    <OPTION NAME='bubbles.useFait' VALUE='TRUE' />

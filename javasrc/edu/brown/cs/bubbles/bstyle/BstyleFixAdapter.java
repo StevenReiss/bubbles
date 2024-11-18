@@ -28,6 +28,7 @@ import edu.brown.cs.bubbles.bfix.BfixAdapter;
 import edu.brown.cs.bubbles.bfix.BfixConstants;
 import edu.brown.cs.bubbles.bfix.BfixCorrector;
 import edu.brown.cs.bubbles.bfix.BfixFixer;
+import edu.brown.cs.bubbles.board.BoardLog;
 
 public class BstyleFixAdapter extends BfixAdapter implements BstyleConstants, BfixConstants
 {
@@ -80,7 +81,9 @@ public void addFixers(BfixCorrector bc,BumpProblem bp,boolean explicit,
 
 public BfixRunnableFix findStyleFixer(BfixCorrector bc,BumpProblem bp,boolean explicit)
 {
-   if (!bp.getCategory().equals("BSTYLE")) return null; 
+   if (!bp.getCategory().equals("BSTYLE")) return null;
+   
+   BoardLog.logD("BSTYLE","Work on problem " + bp.getData() + " " + bp.getMessage());
    
    for (BstyleFixer bf : fixer_set) {
       BfixRunnableFix rf = bf.findFix(bc,bp,explicit);  

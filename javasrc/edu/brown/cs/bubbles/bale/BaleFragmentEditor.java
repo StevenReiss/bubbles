@@ -844,7 +844,14 @@ private static class ProblemAnnot implements BaleAnnotation {
    @Override public boolean getForceVisible(BudaBubble bb)	{ return false; }
    @Override public int getPriority()				{ return 10; }
    @Override public void addPopupButtons(Component c,JPopupMenu m) {
-      m.add(new BaleFactory.QuickFix(c,for_problem));
+      switch (for_problem.getCategory()) {
+         case "BSTYLE" :
+            break;
+         case "IDE" :
+         default :
+            m.add(new BaleFactory.QuickFix(c,for_problem));
+            break;
+       }
    }
 
 }	// end of inner class ProblemAnnot

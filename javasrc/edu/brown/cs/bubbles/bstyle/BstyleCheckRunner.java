@@ -359,8 +359,10 @@ private SortedSet<Violation> processFileText(File f,FileText ft)
          BstyleFileManager fm = bstyle_main.getFileManager();
          BstyleFile bf = fm.findFile(f);
          bf.setHasErrors(true);
-         IvyLog.logE("BSTYLE","Problem processing file " + f + " for " + fsc,t);
+         IvyLog.logD("BSTYLE","Problem processing file " + f + " for " + fsc,t);
          // add error violation
+         // other checks will fail as well == ignore
+         break;
        }
     }
    
