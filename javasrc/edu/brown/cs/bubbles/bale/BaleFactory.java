@@ -35,6 +35,7 @@ import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
+import edu.brown.cs.bubbles.bowi.BowiFactory;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaBubbleLink;
@@ -73,6 +74,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -1721,6 +1723,53 @@ static class QuickFix extends AbstractAction {
     }
 
 }	// end of inner class QuickFix
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Style fix button action                                                 */
+/*                                                                              */
+/********************************************************************************/
+
+static class StyleFix extends AbstractAction {
+
+   private BaleDocument for_document;
+   private transient BumpProblem for_problem;
+   
+   private static final long serialVersionUID = 1;
+   
+   StyleFix(BaleDocument root,BumpProblem bp) {
+      super("Try to fix: " + fixMessage(bp));
+      for_problem = bp;
+      for_document = root;
+    }
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+      Method fixmethod = null;
+      try {
+         Class<?> c = Class.forName("edu.brown.cs.bubbles.bfix.BfixFactory");
+         fixmethod = c.getMethod("fixErrorsInRegion",BaleWindowDocument.class,int.class,int.class);
+       }
+      catch (Exception e) { 
+         return;
+       }
+      int lno = for_problem.getLine();
+      int soffset = for_document.findLineOffset(lno);
+      int eoffset = for_document.findLineOffset(lno+1);
+      BowiFactory.startTask();
+      try {
+         fixmethod.invoke(null,for_document,soffset,eoffset);
+       }
+      catch (Throwable t) {
+         BoardLog.logE("BALE","Problem invoking fix errors",t);
+       }
+      finally {
+         BowiFactory.stopTask();
+       }
+      BoardMetrics.noteCommand("BALE","FixStyleOption");
+    }
+
+}	// end of inner class StyleFix
 
 
 private static String fixMessage(BumpProblem bp)

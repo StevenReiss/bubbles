@@ -41,6 +41,8 @@ import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
 
+import edu.brown.cs.ivy.file.IvyLog;
+
 abstract class BstyleFixer
 {
 
@@ -178,7 +180,7 @@ protected static Pattern generatePattern(String pat,Matcher m)
       return Pattern.compile(pat0,flags);
     }
    catch (PatternSyntaxException e) {
-      BoardLog.logE("BSTYLE","Bad regex pattern " + pat + " = " + pat0);
+      BoardLog.logE("BSTYLE","Bad regex pattern " + pat + " = " + pat0,e);
       return Pattern.compile(Pattern.quote("*IGNORE ME -- BAD PATTERN*"));
     }
 }
@@ -232,6 +234,8 @@ abstract static class GenericPatternFixer extends BstyleFixer {
    @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {
       Matcher m0 = useFix(bp,explicit);
       if (m0 == null) return null;
+      
+      IvyLog.logD("BSTYLE","Match error message for problem " + this.getClass());
       
       BaleWindow win = corr.getEditor();
       BaleWindowDocument doc = win.getWindowDocument();
@@ -321,7 +325,7 @@ private static class ArrayBracketPosition extends GenericPatternFixer {
 private static class ClassFinal extends GenericPatternFixer {
 
    ClassFinal() {
-      super("Class ($N$) should be declared final","class $1$");
+      super("Class ($N$) should be declared as final","class $1$");
     }
 
    @Override protected int getEditEnd(Matcher m1)       { return m1.start(); }
@@ -337,7 +341,7 @@ private static class EmptyXBlock extends GenericPatternFixer {
     }
    
    @Override protected int getEditStart(Matcher m)      { return m.start(2); }
-   @Override protected int getEditEnd(Matcher m)        { return m.start(2); }
+   @Override protected int getEditEnd(Matcher m)        { return m.end(2); }
    @Override protected String getEditReplace(Matcher m) { return ";"; }
 
 }	// end of innter class EmptyXBlock
@@ -517,13 +521,15 @@ private static class LineByItself extends GenericPatternFixer {
 private static class LineBreakAfter extends GenericPatternFixer {
    
    LineBreakAfter() {
-      super("'\\{' at column ([0-9]+) should have a liine break after",
+      super("'\\{' at column ([0-9]+) should have line break after",
             "(\\s*)(.*)(\\{)(\\s*)(\\S.*)\\}",true);
     }
    
    @Override protected int getEditStart(Matcher m)      { return m.start(4); }
    @Override protected String getEditReplace(Matcher m) { 
-      return "\n" + m.group(1) + "   " + m.group(3) + "\n" + m.group(1) + "}";
+      String cnts = m.group(5);
+      if (cnts == null || cnts.isEmpty()) cnts = "// do nothing";
+      return "\n" + m.group(1) + "   " + cnts + "\n" + m.group(1) + "}";
     }
    
 }       // end of inner class LineBreakAfter
@@ -602,7 +608,7 @@ private static class RedundantModifier extends GenericPatternFixer {
 private static class PreviousLine extends GenericPatternFixer {
    
    PreviousLine() {
-      super("'[^']+' (at column ([0-9]+ )?should be on the previous line",
+      super("'[^']+' (at column ([0-9]+ ))?should be on the previous line",
          "\\h*\\n(\\h*)($1$)(\\s*)",true,1,0);
     }
    

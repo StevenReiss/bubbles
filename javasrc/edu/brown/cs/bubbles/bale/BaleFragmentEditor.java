@@ -846,6 +846,7 @@ private static class ProblemAnnot implements BaleAnnotation {
    @Override public void addPopupButtons(Component c,JPopupMenu m) {
       switch (for_problem.getCategory()) {
          case "BSTYLE" :
+            m.add(new BaleFactory.StyleFix(for_document,for_problem));
             break;
          case "IDE" :
          default :

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
+<!--
 <entry key="Bstyle.config.file">sun_checks.xml</entry>
+<entry key="Bstyle.config.file">sun_checks.xml</entry>
+-->
+<entry key="Bstyle.config.file">*</entry>
 </properties>
 
 
@@ -31,7 +35,7 @@
 
 
 
-											
+										
 
 
 

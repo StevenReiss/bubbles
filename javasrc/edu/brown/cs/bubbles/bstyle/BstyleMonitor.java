@@ -300,7 +300,10 @@ private void handleEdit(MintMessage msg,String bid,File file,int len,int offset,
       boolean complete,boolean remove,String txt)
 {
    BstyleFile bf = bstyle_main.getFileManager().findFile(file);
-   if (bf == null) return;
+   if (bf == null) {
+      IvyLog.logD("BSTYLE","File not found for edit " + file);
+      return;
+    }
    
    bf.editFile(len,offset,txt,complete);
    bf.setHasErrors(true);
@@ -513,9 +516,8 @@ private class EclipseHandler implements MintHandler {
             break;
          case "EDIT" :
             String bid = IvyXml.getAttrString(e,"BID");
-            
-            if (bid.equals(SOURCE_ID)) {
-               msg.replyTo();// 
+            if (bid != null && !bid.equals(SOURCE_ID)) {
+               msg.replyTo();
                break;
              }
             String txt = IvyXml.getText(e);
@@ -531,6 +533,7 @@ private class EclipseHandler implements MintHandler {
                   IvyXml.getAttrInt(e,"LENGTH"),
                   IvyXml.getAttrInt(e,"OFFSET"),
                   complete,remove,txt);
+            msg.replyTo("<OK/>");
             break;
          case "RESOURCE" :
             for (Element re : IvyXml.children(e,"DELTA")) {

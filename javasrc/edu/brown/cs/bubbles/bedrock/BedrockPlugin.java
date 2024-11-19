@@ -772,7 +772,8 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       getElements(xml,"FILE"),xw);
 	 break;
       case "CREATEPRIVATE" :
-	 bedrock_editor.createPrivateBuffer(proj,IvyXml.getAttrString(xml,"BID","*"),
+	 bedrock_editor.createPrivateBuffer(proj,
+               IvyXml.getAttrString(xml,"BID","*"),
 	       IvyXml.getAttrString(xml,"PID"),
 	       IvyXml.getAttrString(xml,"FILE"),
 	       IvyXml.getAttrString(xml,"FROMPID"),xw);

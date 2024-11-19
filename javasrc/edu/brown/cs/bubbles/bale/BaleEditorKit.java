@@ -3332,11 +3332,11 @@ private static class FixErrorsAction extends TextAction {
    FixErrorsAction() {
       super("FixErrorsInRegion");
       try {
-	 Class<?> c = Class.forName("edu.brown.cs.bubbles.bfix.BfixFactory");
-	 fix_method = c.getMethod("fixErrorsInRegion",BaleWindowDocument.class,int.class,int.class);
+         Class<?> c = Class.forName("edu.brown.cs.bubbles.bfix.BfixFactory");
+         fix_method = c.getMethod("fixErrorsInRegion",BaleWindowDocument.class,int.class,int.class);
       }
       catch (Exception e) { }
-
+   
     }
 
    @Override public void actionPerformed(ActionEvent e) {

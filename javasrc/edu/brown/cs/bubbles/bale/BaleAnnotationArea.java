@@ -609,11 +609,14 @@ private boolean checkElement(BaleElement be)
 	 if (r1 == null) y0 = r.y + r.height;
 	 else y0 = r1.y;
        }
-      catch (BadLocationException e) { return chng; }
+      catch (BadLocationException e) {
+         // shouldn't happen
+         return false;
+       }
       int lno = for_document.findLineNumber(off)-start_line;
       if (lno < 0 || lno >= line_data.length) ;
       else if (line_data[lno] == null) {
-	 line_data[lno] = new LineData(start_line+lno,r.y,y0);//-1);
+	 line_data[lno] = new LineData(start_line+lno,r.y,y0); //-1);
 	 chng = true;
        }
       else chng |= line_data[lno].set(start_line+lno,r.y,y0);//-1);
