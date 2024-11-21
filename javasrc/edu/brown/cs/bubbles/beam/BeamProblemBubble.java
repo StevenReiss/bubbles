@@ -87,6 +87,7 @@ class BeamProblemBubble extends BudaBubble implements BeamConstants, BumpConstan
 
 private transient BumpClient	bump_client;
 private transient List<BumpProblem> active_problems;
+private transient List<BumpProblem> display_problems;
 private ProblemTable		problem_table;
 private transient Set<BumpErrorType> allow_types;
 private boolean 		for_tasks;
@@ -137,6 +138,7 @@ BeamProblemBubble(String typs,boolean task)
 {
    bump_client = BumpClient.getBump();
    active_problems = new ArrayList<>();
+   display_problems = new ArrayList<>();
    for_tasks = task;
    base_font = beam_properties.getFont("Beam.problem.font");
 
@@ -220,7 +222,9 @@ BeamProblemBubble(String typs,boolean task)
 
 @Override public void handleClearProblems()
 {
-   active_problems.clear();
+   synchronized (active_problems) {
+      active_problems.clear();
+    }
 }
 
 
@@ -312,7 +316,7 @@ private String getErrorType(BumpProblem bp)
          return "H";
     }
 
-   return null;
+   return "?";
 }
 
 
@@ -327,7 +331,7 @@ private String getDescription(BumpProblem bp)
 private String getResource(BumpProblem bp)
 {
    File f = bp.getFile();
-   if (f == null) return null;
+   if (f == null) return "?";
    return f.getName();
 }
 
@@ -336,7 +340,7 @@ private String getResource(BumpProblem bp)
 private Integer getLine(BumpProblem bp)
 {
    int ln = bp.getLine();
-   if (ln == 0) return null;
+   if (ln == 0) return -1;
    return Integer.valueOf(ln);
 }
 
@@ -353,9 +357,9 @@ private String getToolTip(BumpProblem bp)
    int ht = base_height;
    if (sf != 1) {
       float fsz = base_font.getSize();
-      fsz = ((float)(fsz * sf));
+      fsz = ((float) (fsz * sf));
       ft = base_font.deriveFont(fsz);
-      ht = (int)(base_height * sf + 0.5);
+      ht = (int) (base_height * sf + 0.5);
     }
    problem_table.setFont(ft);
    problem_table.setRowHeight(ht);
@@ -444,7 +448,17 @@ private class ProblemTable extends JTable implements MouseListener,
     }
 
    void modelUpdated() {
-      ((ProblemModel) getModel()).fireTableDataChanged();
+      List<BumpProblem> probs = null;
+      synchronized (active_problems) {
+         probs = new ArrayList<>(active_problems);
+       }
+      synchronized (display_problems) {
+         display_problems.clear();
+         display_problems.addAll(probs);
+       }
+      synchronized (display_problems) {
+         ((ProblemModel) getModel()).fireTableDataChanged();            // prevent updates while we recompute table
+       }
     }
 
    @Override public TableCellRenderer getCellRenderer(int row,int col) {
@@ -496,8 +510,8 @@ private class ProblemTable extends JTable implements MouseListener,
       // showBubble(f,ln);
     }
 
-   @Override public void mouseEntered(MouseEvent _e)			{ }
-   @Override public void mouseExited(MouseEvent _e)			{ }
+   @Override public void mouseEntered(MouseEvent e)			{ }
+   @Override public void mouseExited(MouseEvent e)			{ }
    @Override public void mouseReleased(MouseEvent e)			{ }
    @Override public void mousePressed(MouseEvent e)			{ }
 
@@ -517,7 +531,7 @@ private class ProblemTable extends JTable implements MouseListener,
     // }
 
    @Override protected void paintComponent(Graphics g) {
-      synchronized (active_problems) {
+      synchronized (display_problems) {
 	 if (top_color.getRGB() != bottom_color.getRGB()) {
 	    Graphics2D g2 = (Graphics2D) g.create();
 	    Dimension sz = getSize();
@@ -563,13 +577,25 @@ private class ProblemModel extends AbstractTableModel {
    @Override public String getColumnName(int idx)	{ return col_names[idx]; }
    @Override public Class<?> getColumnClass(int idx)	{ return col_types[idx]; }
    @Override public boolean isCellEditable(int r,int c) { return false; }
-   @Override public int getRowCount()			{ return active_problems.size(); }
+   @Override public int getRowCount()			{ return display_problems.size(); }
 
    @Override public Object getValueAt(int r,int c) {
       BumpProblem bp;
-      synchronized (active_problems) {
-	 if (r < 0 || r >= active_problems.size()) return null;
-	 bp = active_problems.get(r);
+      synchronized (display_problems) {
+	 if (r < 0 || r >= display_problems.size()) {
+            switch (c) {
+               case 0 :
+                  return "?";
+               case 1 :
+                  return "";
+               case 2 :
+                  return "?";
+               case 3 :
+                  return -1;
+             }
+            return null;
+          }
+	 bp = display_problems.get(r);
        }
       switch (c) {
 	 case 0 :
@@ -598,7 +624,7 @@ private BumpProblem getActualProblem(int idx)
 {
    if (idx < 0) return null;
 
-   synchronized (active_problems) {
+   synchronized (display_problems) {
       if (problem_table != null) {
 	 RowSorter<?> rs = problem_table.getRowSorter();
 	 try {
@@ -609,8 +635,8 @@ private BumpProblem getActualProblem(int idx)
 	  }
        }
 
-      if (idx >= active_problems.size()) return null;
-       return active_problems.get(idx);
+      if (idx >= display_problems.size()) return null;
+       return display_problems.get(idx);
     }
 }
 

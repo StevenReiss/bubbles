@@ -185,7 +185,6 @@ void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
 	    if (found.contains(bp)) continue;
 	    if (!fileMatch(forfile,bp)) continue;
             if (cat != null && !cat.equals(bp.getCategory())) continue;
-	    // if (bp.getErrorType() == BumpErrorType.NOTICE) continue; // notes not returned on recompile -- seems fixed
 	    if (deled == null) deled = new ArrayList<>();
 	    deled.add(bp);
             BoardLog.logD("BUMP","Remove problem " + bp);
