@@ -61,9 +61,11 @@ private BaleCrumbBar			parent_component;
 private int				nat_width;
 private int				nat_height;
 private RoundRectangle2D.Double 	draw_oval;
-private boolean 			rolled_over, my_search_up;
+private boolean 			rolled_over;
+private boolean                         my_search_up;
 private String				my_arrow;
-private String				package_name, shown_text;
+private String				package_name;
+private String                          shown_text;
 private BaleCrumbBarComponent		brother_component;
 private Color				draw_color;
 private boolean 			is_dirty;
@@ -174,10 +176,10 @@ String getPackageName()
  */
 int getWidthLocation()
 {
-   if(brother_component == null){
+   if (brother_component == null){
       return getWidth();
    }
-   else{
+   else {
       return brother_component.getWidthLocation() + getWidth();
    }
 }
@@ -200,7 +202,7 @@ void append(String toAp, Color c)
       StyleConstants.setForeground(attr,c);
       getStyledDocument().insertString(getStyledDocument().getLength(),toAp,attr);
     }
-   catch(BadLocationException e) { }
+   catch (BadLocationException e) { }
 
    if (getHeight() == 0) 
       System.err.println("BAD HEIGHT4 " + getText());
@@ -282,7 +284,7 @@ int addedWidthIfGrown()
 {
    super.paint(g);
    
-   Graphics2D brush = (Graphics2D)g;
+   Graphics2D brush = (Graphics2D) g;
    if (rolled_over && package_name != null){
       brush.setColor(BoardColors.getColor(BALE_CRUMB_ROLLOVER_COLOR_PROP));
       brush.fill(draw_oval);
@@ -319,11 +321,11 @@ void handleRequest(){
 /*										*/
 /********************************************************************************/
 
-private class Mouser extends MouseAdapter
+private final class Mouser extends MouseAdapter
 {
 
    @Override public void mouseClicked(MouseEvent e) {
-      if(package_name!=null) handleRequest();
+      if (package_name!=null) handleRequest();
    }
 
    @Override public void mouseEntered(MouseEvent e) {

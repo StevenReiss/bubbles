@@ -65,7 +65,7 @@ public interface BaleConstants extends BumpConstants, BoardConstants {
 /*										*/
 /********************************************************************************/
 
-static BoardProperties	 BALE_PROPERTIES = BoardProperties.getProperties("Bale");
+BoardProperties	 BALE_PROPERTIES = BoardProperties.getProperties("Bale");
 
 
 

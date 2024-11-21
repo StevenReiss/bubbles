@@ -237,7 +237,7 @@ private synchronized void removeContext()
 
 
 
-private class EditMouser extends MouseAdapter {
+private final class EditMouser extends MouseAdapter {
 
    @Override public void mousePressed(MouseEvent e) {
       removeContext();
@@ -246,7 +246,7 @@ private class EditMouser extends MouseAdapter {
 }	// end of inner class EditMouser
 
 
-private class EditKeyer extends KeyAdapter {
+private final class EditKeyer extends KeyAdapter {
 
    @Override public void keyPressed(KeyEvent e) {
       if (the_panel == null) return;
@@ -290,7 +290,7 @@ private class EditKeyer extends KeyAdapter {
 
 
 
-private class EditFocus extends FocusAdapter {
+private final class EditFocus extends FocusAdapter {
 
   @Override public void focusLost(FocusEvent e) {
      removeContext();
@@ -621,7 +621,7 @@ private class CompletionGetter implements Runnable {
 
 
 
-private class CompletionShower implements ActionListener {
+private final class CompletionShower implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       handleShow();
@@ -631,7 +631,7 @@ private class CompletionShower implements ActionListener {
 
 
 
-private static class CompletionComparator implements Comparator<BumpCompletion> {
+private static final class CompletionComparator implements Comparator<BumpCompletion> {
 
    @Override public int compare(BumpCompletion c1,BumpCompletion c2) {
       int v = 0;
@@ -677,7 +677,7 @@ private static class CompletionComparator implements Comparator<BumpCompletion> 
 
 private class CompletionPanel extends JPanel implements MouseListener {
 
-   CompletionList item_list;
+   private CompletionList item_list;
 
    private static final long serialVersionUID = 1;
 
@@ -714,16 +714,14 @@ private class CompletionPanel extends JPanel implements MouseListener {
    }
 
    void decCurrentIndex(){
-      if (item_list.getSelectedIndex() > 0)
-      {
-	 setCurrentIndex(item_list.getSelectedIndex() -1);
+      if (item_list.getSelectedIndex() > 0) {
+      	 setCurrentIndex(item_list.getSelectedIndex() -1);
       }
    }
 
    void incCurrentIndex(){
-      if (item_list.getSelectedIndex() < (item_list.getModel().getSize()-1))
-      {
-	 setCurrentIndex(item_list.getSelectedIndex()+1);
+      if (item_list.getSelectedIndex() < (item_list.getModel().getSize()-1)) {
+      	 setCurrentIndex(item_list.getSelectedIndex()+1);
       }
    }
 
@@ -753,7 +751,7 @@ private class CompletionPanel extends JPanel implements MouseListener {
 
 private static class CompletionList extends JList<CompletionItem> {
 
-   CompletionModel item_model;
+   private CompletionModel item_model;
 
    private static final long serialVersionUID = 1;
 
@@ -800,11 +798,12 @@ private static class CompletionModel extends DefaultListModel<CompletionItem> {
 
 
 
-private static class CompletionListCellRenderer extends DefaultListCellRenderer {
+private static final class CompletionListCellRenderer extends DefaultListCellRenderer {
 
    private static final long serialVersionUID = 1;
 
-   @Override public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+   @Override public Component getListCellRendererComponent(JList<?> list, Object value, 
+         int index, boolean isSelected, boolean cellHasFocus)
      {
 	 Component renderedcomp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 	 CompletionItem ci = (CompletionItem) value;
@@ -825,7 +824,7 @@ private static class CompletionListCellRenderer extends DefaultListCellRenderer 
 /*										*/
 /********************************************************************************/
 
-private static abstract class CompletionItem {
+private abstract static class CompletionItem {
 
    protected String param_types;
    protected String return_type;
@@ -920,12 +919,15 @@ private static class CompletionItemNewMethod extends CompletionItem implements
       try {
 	 link_point = doc.createPosition(editor.getCaretPosition());
        }
-      catch (BadLocationException e) { return; }
+      catch (BadLocationException e) {
+         return; 
+      }
 
       String proj = doc.getProjectName();
 
-      BaleFactory.getFactory().createNewMethod(proj,class_name + "." + method_name,null,null,0,true,null,
-						  editor,link_point,true,true);
+      BaleFactory.getFactory().createNewMethod(proj,class_name + "." + method_name,null,null,
+            0,true,null,
+            editor,link_point,true,true);
     }
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {
@@ -953,7 +955,7 @@ private static class CompletionItemNewMethod extends CompletionItem implements
 
 private static class CompletionItemBump extends CompletionItem {
 
-   BumpCompletion bump_completion;
+   private BumpCompletion bump_completion;
 
    CompletionItemBump(BumpCompletion bc) {
       bump_completion = bc;
@@ -1023,7 +1025,7 @@ private static class CompletionItemBump extends CompletionItem {
 
 private static class CompletionItemBumpCall extends CompletionItem {
 
-   BumpCompletion bump_completion;
+   private BumpCompletion bump_completion;
 
    CompletionItemBumpCall(BumpCompletion bc) {
       bump_completion = bc;

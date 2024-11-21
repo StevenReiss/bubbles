@@ -1253,28 +1253,28 @@ private class LaunchConfig implements BumpLaunchConfig {
 
    void update(Element xml) {
       BoardLog.logD("BUMP","Found Launch Config " + IvyXml.convertXmlToString(xml));
-
+   
       launch_xml = xml;
-
+   
       String tnm = IvyXml.getAttrString(xml, "TYPE");
       Element type = IvyXml.getChild(xml,"TYPE");
       if (type != null) {
-	 tnm = IvyXml.getAttrString(type,"NAME");
+         tnm = IvyXml.getAttrString(type,"NAME");
        }
       String tnm1 = tnm;
       if (tnm.equals("JUnit")) tnm1 = "JUnit Test";
       launch_type = null;
       BumpLaunchType dflttype = null;
       for (BumpLaunchType blt : launch_types) {
-	 if (blt.getName().equals(tnm) || blt.getDescription().equals(tnm) ||
-	       blt.getName().equals(tnm1) || blt.getDescription().equals(tnm1)) {
-	    launch_type = blt;
-	    break;
+         if (blt.getName().equals(tnm) || blt.getDescription().equals(tnm) ||
+               blt.getName().equals(tnm1) || blt.getDescription().equals(tnm1)) {
+            launch_type = blt;
+            break;
           }
          else if (dflttype == null) dflttype = blt;
        }
       if (launch_type == null) {
-	 BoardLog.logX("BUMP","Can't find launch type " + tnm + " " + tnm1);
+         BoardLog.logD("BUMP","Can't find launch type " + tnm + " " + tnm1);
          launch_type = dflttype;
        }
     }

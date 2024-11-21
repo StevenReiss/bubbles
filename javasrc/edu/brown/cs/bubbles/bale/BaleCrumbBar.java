@@ -118,7 +118,7 @@ BaleCrumbBar(BaleEditorPane be, String name)
    addComponentListener(new ResizeListener());
 
    setBackground(BoardColors.getColor(BALE_EDITOR_TOP_COLOR_PROP));
-   if(name == null) setFragmentName("*.New Fragment",false);
+   if (name == null) setFragmentName("*.New Fragment",false);
    else setFragmentName(name, false);
 
    SwingUtilities.invokeLater(new CheckNames());
@@ -348,7 +348,7 @@ private synchronized void setFragmentName(String name,boolean dirty)
 }
 
 
-private class CheckNames implements Runnable {
+private final class CheckNames implements Runnable {
 
    @Override public void run() {
       checkNames();
@@ -416,7 +416,7 @@ private synchronized void handleResize()
 /*										*/
 /********************************************************************************/
 
-private class ResizeListener extends ComponentAdapter {
+private final class ResizeListener extends ComponentAdapter {
 
    /**
       * This method alters the way in which the components break down as the bubble gets smaller or larger

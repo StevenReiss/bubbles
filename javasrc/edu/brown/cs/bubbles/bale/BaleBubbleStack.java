@@ -439,8 +439,8 @@ private abstract class GenericStackEntry implements BussEntry {
       return item_bubble;
     }
 
-   @Override abstract public String getEntryName();
-   abstract protected BaleFragmentEditor createFullFragment();
+   @Override public abstract String getEntryName();
+   protected abstract BaleFragmentEditor createFullFragment();
 
    @Override public void dispose() {
       if (item_bubble != null) item_bubble.disposeBubble();

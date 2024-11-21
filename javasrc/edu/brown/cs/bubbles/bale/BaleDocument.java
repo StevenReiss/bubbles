@@ -622,11 +622,11 @@ Iterable<BumpProblem> getProblems()
 /*										*/
 /********************************************************************************/
 
-@Override abstract public int findLineNumber(int offset);
-@Override abstract public int findLineOffset(int linenumber);
+@Override public abstract int findLineNumber(int offset);
+@Override public abstract int findLineOffset(int linenumber);
 
-@Override abstract public int mapOffsetToEclipse(int offset);
-@Override abstract public int mapOffsetToJava(int offset);
+@Override public abstract int mapOffsetToEclipse(int offset);
+@Override public abstract int mapOffsetToJava(int offset);
 
 
 int getColumnPosition(int offset)

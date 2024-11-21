@@ -190,7 +190,8 @@ private class BudAction extends TextAction {
       BaleEditorPane target = getBaleEditor(e);
       if (!checkEditor(target)) return false;
       BaleDocument bd = target.getBaleDocument();
-      BaleRegion r0,r1;
+      BaleRegion r0;
+      BaleRegion r1;
       Rectangle startpos = null;
       BaleFragmentType ftyp = BaleFragmentType.NONE;
    

@@ -640,7 +640,7 @@ private boolean checkForNameChange(BaleElement be)
        }
       String id = be.getFullName();
       if (id == null) return false;
-      if(!id.contains("(")) id += "(...)";
+      if (!id.contains("(")) id += "(...)";
       fragment_name = id;
       return true;
     }
@@ -911,7 +911,7 @@ private BaleElementEvent setupOrphanElement()
 
 private static class OrphanPosition implements Position
 {
-   int base_position;
+   private int base_position;
 
    OrphanPosition(int pos)			{ base_position = pos; }
 

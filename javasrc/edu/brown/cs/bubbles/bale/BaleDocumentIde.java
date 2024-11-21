@@ -1286,7 +1286,7 @@ private void setupLineOffsets(Reader r,String nl)
 
 
 
-private class LineOffsetListener implements DocumentListener {
+private final class LineOffsetListener implements DocumentListener {
 
    @Override public void changedUpdate(DocumentEvent e) 	{ }
 
@@ -1376,7 +1376,7 @@ private static class FragmentData {
 /*										*/
 /********************************************************************************/
 
-private class EclipseUpdater implements DocumentListener {
+private final class EclipseUpdater implements DocumentListener {
 
    @Override public void changedUpdate(DocumentEvent e) { }
 

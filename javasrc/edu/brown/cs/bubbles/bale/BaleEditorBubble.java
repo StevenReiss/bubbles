@@ -434,7 +434,7 @@ private class CallPathCompute implements Runnable {
 
 
 
-private class EditorBubbleListener extends ComponentAdapter {
+private final class EditorBubbleListener extends ComponentAdapter {
 
 
    @Override public void componentMoved(ComponentEvent e) {

@@ -95,82 +95,82 @@ class BaleEditorKit extends DefaultEditorKit implements BaleConstants, ViewFacto
 /*										*/
 /********************************************************************************/
 
-private final static long serialVersionUID = 1;
+private static final long serialVersionUID = 1;
 
 private static transient BaleLanguageKit language_kit;
 private transient Action []	  bale_actions;
 
-private static final Action undo_action = BurpHistory.getUndoAction();
-private static final Action redo_action = BurpHistory.getRedoAction();
-private static final Action undo_selection_action = BurpHistory.getUndoSelectionAction();
-private static final Action redo_selection_action = BurpHistory.getRedoSelectionAction();
-private static final Action tab_action = new TabAction();
-private static final Action newline_action = new NewlineAction();
-private static final Action default_key_action = new DefaultKeyAction();
-private static final Action backspace_action = new BackspaceAction();
-private static final Action toggle_insert_action = new ToggleInsertAction();
-private static final Action find_action = new FindAction(false);
-private static final Action find_next_action = new FindNextAction(1);
-private static final Action find_prev_action = new FindNextAction(-1);
-private static final Action replace_action = new FindAction(true);
-private static final Action delete_line_action = new DeleteLineAction();
-private static final Action delete_to_eol_action = new DeleteToEolAction();
-private static final Action insert_line_above_action = new InsertLineAboveAction();
-private static final Action insert_line_below_action = new InsertLineBelowAction();
-private static final Action indent_lines_action = new IndentLinesAction();
-private static final Action join_lines_action = new JoinLinesAction();
-private static final Action duplicate_action = new DuplicateAction();
-private static final Action comment_lines_action = new CommentLinesAction();
-private static final Action smart_paste_action = new SmartPasteAction();
-private static final Action move_lines_down_action = new MoveLinesAction(1);
-private static final Action move_lines_up_action = new MoveLinesAction(-1);
-private static final Action start_line_action = new StartLineAction(false);
-private static final Action start_line_select_action = new StartLineAction(true);
-private static final Action begin_line_action = new BeginLineAction(false);
-private static final Action begin_line_select_action = new BeginLineAction(true);
-private static final Action end_line_action = new EndLineAction(false);
-private static final Action end_line_select_action = new EndLineAction(true);
-private static final Action next_brace_action = new NextItemAction(BaleTokenType.RBRACE);
-private static final Action select_line_action = new SelectLineAction();
-private static final Action select_word_action = new SelectWordAction();
-private static final Action select_paragraph_action = new SelectParagraphAction();
-private static final Action save_action = new SaveAction();
-private static final Action save_all_action = new SaveAllAction();
-private static final Action revert_action = new RevertAction();
-private static final Action force_save_action = new ForceSaveAction();
-private static final Action explicit_elision_action = new ExplicitElisionAction();
-private static final Action redo_elision_action = new RedoElisionAction();
-private static final Action remove_elision_action = new RemoveElisionAction(false);
-private static final Action remove_code_elision_action = new RemoveElisionAction(true);
-private static final Action autocomplete_action = new AutoCompleteAction();
-private static final Action rename_action = new RenameAction();
-private static final Action extract_method_action = new ExtractMethodAction();
-private static final Action format_action = new FormatAction();
-private static final Action fixindents_action = new FixIndentsAction();
-private static final Action expand_action = new ExpandAction();
-private static final Action expandxy_action = new ExpandXYAction(false);
-private static final Action expandxy_code_action = new ExpandXYAction(true);
-private static final Action toggle_editable_action = new ToggleEditableAction();
+private static Action undo_action = BurpHistory.getUndoAction();
+private static Action redo_action = BurpHistory.getRedoAction();
+private static Action undo_selection_action = BurpHistory.getUndoSelectionAction();
+private static Action redo_selection_action = BurpHistory.getRedoSelectionAction();
+private static Action tab_action = new TabAction();
+private static Action newline_action = new NewlineAction();
+private static Action default_key_action = new DefaultKeyAction();
+private static Action backspace_action = new BackspaceAction();
+private static Action toggle_insert_action = new ToggleInsertAction();
+private static Action find_action = new FindAction(false);
+private static Action find_next_action = new FindNextAction(1);
+private static Action find_prev_action = new FindNextAction(-1);
+private static Action replace_action = new FindAction(true);
+private static Action delete_line_action = new DeleteLineAction();
+private static Action delete_to_eol_action = new DeleteToEolAction();
+private static Action insert_line_above_action = new InsertLineAboveAction();
+private static Action insert_line_below_action = new InsertLineBelowAction();
+private static Action indent_lines_action = new IndentLinesAction();
+private static Action join_lines_action = new JoinLinesAction();
+private static Action duplicate_action = new DuplicateAction();
+private static Action comment_lines_action = new CommentLinesAction();
+private static Action smart_paste_action = new SmartPasteAction();
+private static Action move_lines_down_action = new MoveLinesAction(1);
+private static Action move_lines_up_action = new MoveLinesAction(-1);
+private static Action start_line_action = new StartLineAction(false);
+private static Action start_line_select_action = new StartLineAction(true);
+private static Action begin_line_action = new BeginLineAction(false);
+private static Action begin_line_select_action = new BeginLineAction(true);
+private static Action end_line_action = new EndLineAction(false);
+private static Action end_line_select_action = new EndLineAction(true);
+private static Action next_brace_action = new NextItemAction(BaleTokenType.RBRACE);
+private static Action select_line_action = new SelectLineAction();
+private static Action select_word_action = new SelectWordAction();
+private static Action select_paragraph_action = new SelectParagraphAction();
+private static Action save_action = new SaveAction();
+private static Action save_all_action = new SaveAllAction();
+private static Action revert_action = new RevertAction();
+private static Action force_save_action = new ForceSaveAction();
+private static Action explicit_elision_action = new ExplicitElisionAction();
+private static Action redo_elision_action = new RedoElisionAction();
+private static Action remove_elision_action = new RemoveElisionAction(false);
+private static Action remove_code_elision_action = new RemoveElisionAction(true);
+private static Action autocomplete_action = new AutoCompleteAction();
+private static Action rename_action = new RenameAction();
+private static Action extract_method_action = new ExtractMethodAction();
+private static Action format_action = new FormatAction();
+private static Action fixindents_action = new FixIndentsAction();
+private static Action expand_action = new ExpandAction();
+private static Action expandxy_action = new ExpandXYAction(false);
+private static Action expandxy_code_action = new ExpandXYAction(true);
+private static Action toggle_editable_action = new ToggleEditableAction();
 
-private static final Action goto_definition_action = new GotoDefinitionAction();
-private static final Action goto_implementation_action = new GotoImplementationAction();
-private static final Action goto_reference_action = new GotoReferenceAction();
-private static final Action goto_doc_action = new GotoDocAction();
-private static final Action goto_search_action = new GotoSearchAction();
-private static final Action goto_type_action = new GotoTypeAction();
-private static final Action class_search_action = new ClassSearchAction();
-private static final Action bud_action;
-private static final Action fragment_action;
-private static final Action quick_fix_action = new QuickFixAction();
-private static final Action marquis_comment_action = new CommentAction("MarquisComment",BuenoType.NEW_MARQUIS_COMMENT);
-private static final Action block_comment_action = new CommentAction("BlockComment",BuenoType.NEW_BLOCK_COMMENT);
-private static final Action javadoc_comment_action = new CommentAction("JavadocComment",BuenoType.NEW_JAVADOC_COMMENT);
-private static final Action fix_errors_action = new FixErrorsAction();
-private static final Action finish_action = new FinishAction();
-private static final Action infer_decl_action = new InferDeclarationAction();
-private static final Action smart_delete_next_character_action = new SmartDeleteNextCharacterAction();
-public static final Action python_unindent_action = new PythonUnindentAction();
-public static final Action python_backspace_action = new PythonBackspaceAction();
+private static Action goto_definition_action = new GotoDefinitionAction();
+private static Action goto_implementation_action = new GotoImplementationAction();
+private static Action goto_reference_action = new GotoReferenceAction();
+private static Action goto_doc_action = new GotoDocAction();
+private static Action goto_search_action = new GotoSearchAction();
+private static Action goto_type_action = new GotoTypeAction();
+private static Action class_search_action = new ClassSearchAction();
+private static Action bud_action;
+private static Action fragment_action;
+private static Action quick_fix_action = new QuickFixAction();
+private static Action marquis_comment_action = new CommentAction("MarquisComment",BuenoType.NEW_MARQUIS_COMMENT);
+private static Action block_comment_action = new CommentAction("BlockComment",BuenoType.NEW_BLOCK_COMMENT);
+private static Action javadoc_comment_action = new CommentAction("JavadocComment",BuenoType.NEW_JAVADOC_COMMENT);
+private static Action fix_errors_action = new FixErrorsAction();
+private static Action finish_action = new FinishAction();
+private static Action infer_decl_action = new InferDeclarationAction();
+private static Action smart_delete_next_character_action = new SmartDeleteNextCharacterAction();
+public static Action python_unindent_action = new PythonUnindentAction();
+public static Action python_backspace_action = new PythonBackspaceAction();
 
 
 
@@ -182,7 +182,7 @@ static {
 }
 
 
-private static final Action [] local_actions = {
+private static Action [] local_actions = {
    undo_action,
    redo_action,
    undo_selection_action,
@@ -256,7 +256,7 @@ private static final Action [] local_actions = {
 };
 
 
-private static final SwingKey [] skey_defs = new SwingKey[] {
+private static SwingKey [] skey_defs = new SwingKey[] {
    new SwingKey("CODEEDIT",null,findDefaultAction(copyAction),"menu C"),
    new SwingKey("CODEEDIT",null,findDefaultAction(cutAction),"menu X"),
    new SwingKey("CODEEDIT",null,findDefaultAction(selectAllAction),"menu A"),
@@ -553,7 +553,7 @@ static class FragmentKit extends BaleEditorKit {
    private BaleFragmentType fragment_type;
    private transient List<BaleRegion> fragment_regions;
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    FragmentKit(BaleDocumentIde base,BaleFragmentType typ,List<BaleRegion> rgns) {
       super(base.getLanguage());
@@ -770,7 +770,9 @@ private static boolean isFirstCharacter(BaleEditorPane target,int pos)
    try {
       txt = target.getText(pos-delta,delta);
     }
-   catch (BadLocationException e) { return false; }
+   catch (BadLocationException e) {
+      return false; 
+   }
 
    for (int i = txt.length()-1; i >= 0; --i) {
       char ch = txt.charAt(i);
@@ -791,7 +793,9 @@ private static boolean matchesText(BaleEditorPane target,int pos,String match)
    try {
       txt = target.getText(pos-delta,delta+1);
     }
-   catch (BadLocationException e) { return false; }
+   catch (BadLocationException e) {
+      return false; 
+   }
 
    if (txt == null) return false;
 
@@ -2603,7 +2607,7 @@ private static class ExpandAction extends TextAction {
       javax.swing.plaf.TextUI tui = target.getUI();
       View root = tui.getRootView(target);
       View v1 = root.getView(0);
-      int vx = (int)(Math.ceil(v1.getMaximumSpan(View.X_AXIS)+0.5));
+      int vx = (int) (Math.ceil(v1.getMaximumSpan(View.X_AXIS)+0.5));
       Dimension d = target.getSize();
       if (vx <= d.width) return;
       BudaBubble bb = BudaRoot.findBudaBubble(target);
@@ -2636,8 +2640,8 @@ private static class ExpandXYAction extends TextAction {
       javax.swing.plaf.TextUI tui = target.getUI();
       View root = tui.getRootView(target);
       View v1 = root.getView(0);
-      int vx = (int)(Math.ceil(v1.getMaximumSpan(View.X_AXIS)+0.5));
-      int vy = (int)(Math.ceil(v1.getMaximumSpan(View.Y_AXIS)+0.5));
+      int vx = (int) (Math.ceil(v1.getMaximumSpan(View.X_AXIS)+0.5));
+      int vy = (int) (Math.ceil(v1.getMaximumSpan(View.Y_AXIS)+0.5));
       vy = Math.min(vy,800);
       BudaBubble bb = BudaRoot.findBudaBubble(target);
       if (bb == null) return;
@@ -2806,7 +2810,8 @@ private static class GotoReferenceAction extends TextAction {
 
    @Override public void actionPerformed(ActionEvent e) {
       BowiFactory.startTask();
-      try {	 BaleEditorPane target = getBaleEditor(e);
+      try {	
+         BaleEditorPane target = getBaleEditor(e);
          if (!checkReadEditor(target)) return;
          BaleDocument bd = target.getBaleDocument();
          int soff = target.getSelectionStart();
@@ -3294,8 +3299,8 @@ private static class CommentAction extends TextAction {
 
 private static class CommentLocation extends BuenoLocation {
 
-   BaleEditorPane editor_pane;
-   int cur_offset;
+   private BaleEditorPane editor_pane;
+   private int cur_offset;
 
    CommentLocation(BaleEditorPane be,int offset) {
       editor_pane = be;

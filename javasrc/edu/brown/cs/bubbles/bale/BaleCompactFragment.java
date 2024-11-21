@@ -72,12 +72,12 @@ private transient List<ContentData> content_data_list;
 
 private SwingRoundedCornerLabel rounded_corner_label = null;
 
-private final static long serialVersionUID = 1;
+private static final long serialVersionUID = 1;
 
-private final static String HIGHLIGHT_START = "<span style='background:$(HILITE)'>";
-private final static String HIGHLIGHT_END = "</span>";
-private final static Font COMPACT_FONT = BoardFont.getFont(Font.MONOSPACED,Font.PLAIN,9);
-private final static String COMPACT_FONT_PROP = "Bale.compact.font";
+private static final String HIGHLIGHT_START = "<span style='background:$(HILITE)'>";
+private static final String HIGHLIGHT_END = "</span>";
+private static final Font COMPACT_FONT = BoardFont.getFont(Font.MONOSPACED,Font.PLAIN,9);
+private static final String COMPACT_FONT_PROP = "Bale.compact.font";
 
 private static int INIT_HEIGHT = 22;
 
@@ -224,7 +224,7 @@ private void initContentData()
 
 private void setupLabel()
 {
-   if(rounded_corner_label != null)
+   if (rounded_corner_label != null)
       remove(rounded_corner_label);
 
    StringBuffer buf = new StringBuffer();
@@ -301,7 +301,7 @@ private String trimString(String s, int length)
 
    length -= ELLIPSIS_LENGTH;
 
-   StringBuffer sb = new StringBuffer(s.substring(0, (int)(s.length() * (double) length / sLength)));
+   StringBuffer sb = new StringBuffer(s.substring(0,(int) (s.length() * (double) length / sLength)));
    sb.append("...");
 
    return sb.toString();
@@ -320,7 +320,7 @@ private int[] computeCodeSegementOffset(String strBeforeHighlight, String firstH
       length -= ELLIPSIS_LENGTH;
 
       aryOffset[0] = strBeforeHighlight.length();
-      aryOffset[1] = (int)((1 - (double) length / sLength) * firstHighlightStr.length()) + strAfterHighlight.length();
+      aryOffset[1] = (int) ((1 - (double) length / sLength) * firstHighlightStr.length()) + strAfterHighlight.length();
 
       return aryOffset;
     }
@@ -334,7 +334,7 @@ private int[] computeCodeSegementOffset(String strBeforeHighlight, String firstH
    if (afterSLength > beforeSLength) {
       if (beforeSLength > beforeLength) {
 	 beforeLength -= ELLIPSIS_LENGTH;
-	 aryOffset[0] = (int)(strBeforeHighlight.length() * (1 - (double) beforeLength / beforeSLength));
+	 aryOffset[0] = (int) (strBeforeHighlight.length() * (1 - (double) beforeLength / beforeSLength));
        }
       else {
 	 aryOffset[0] = 0;
@@ -343,7 +343,7 @@ private int[] computeCodeSegementOffset(String strBeforeHighlight, String firstH
 
       if (afterSLength > afterLength) {
 	 afterLength -= ELLIPSIS_LENGTH;
-	 aryOffset[1] = (int)(strAfterHighlight.length() * (1 - (double) afterLength / afterSLength));
+	 aryOffset[1] = (int) (strAfterHighlight.length() * (1 - (double) afterLength / afterSLength));
        }
       else {
 	 aryOffset[1] = 0;
@@ -352,7 +352,7 @@ private int[] computeCodeSegementOffset(String strBeforeHighlight, String firstH
    else {
       if (afterSLength > afterLength) {
 	 afterLength -= ELLIPSIS_LENGTH;
-	 aryOffset[1] = (int)(strAfterHighlight.length() * (1 - (double) afterLength / afterSLength));
+	 aryOffset[1] = (int) (strAfterHighlight.length() * (1 - (double) afterLength / afterSLength));
        }
       else {
 	 aryOffset[1] = 0;
@@ -361,7 +361,7 @@ private int[] computeCodeSegementOffset(String strBeforeHighlight, String firstH
 
       if (beforeSLength > beforeLength) {
 	 beforeLength -= ELLIPSIS_LENGTH;
-	 aryOffset[0] = (int)(strBeforeHighlight.length() * (1 - (double) beforeLength / beforeSLength));
+	 aryOffset[0] = (int) (strBeforeHighlight.length() * (1 - (double) beforeLength / beforeSLength));
        }
       else {
 	 aryOffset[0] = 0;
@@ -509,7 +509,7 @@ private class ContentData {
       else first_highlight_str = "";
       StringBuffer afterhighlightstrbuf = new StringBuffer();
 
-      for(int i = 2;i<ary_str.length;i++) {
+      for (int i = 2; i<ary_str.length; i++) {
 	 afterhighlightstrbuf.append(ary_str[i]);
        }
 
@@ -520,9 +520,11 @@ private class ContentData {
    private void updateWidth(int contentWidth) {
       local_width = contentWidth;
 
-      int[] aryoffset = computeCodeSegementOffset(before_highlight_str, first_highlight_str, after_highlight_str, (int) (local_width * 0.95));
+      int [] aryoffset = computeCodeSegementOffset(before_highlight_str, first_highlight_str, 
+            after_highlight_str, (int) (local_width * 0.95));
 
-      generateHTML(aryoffset[0], before_highlight_str.length() + first_highlight_str.length() + after_highlight_str.length() - aryoffset[1]);
+      generateHTML(aryoffset[0], 
+            before_highlight_str.length() + first_highlight_str.length() + after_highlight_str.length() - aryoffset[1]);
    }
 
    private void generateHTML(int startIndex, int endIndex) {
@@ -570,12 +572,12 @@ private class ContentData {
             middleHtmlBuf.append(htmlEncode(ary_str[index]));
             middleHtmlBuf.append(HIGHLIGHT_END);
           }
-         else{
+         else {
             middleHtmlBuf.append(htmlEncode(ary_str[index]));
           }
        }
    
-      if(startIndex > 0) htmlBuf.append("...");
+      if (startIndex > 0) htmlBuf.append("...");
    
       if (startAryIndex == endAryIndex) {
          if ((startAryIndex % 2) == 1) {
@@ -587,7 +589,7 @@ private class ContentData {
             htmlBuf.append(htmlEncode(ary_str[startAryIndex]));
           }
        }
-      else{
+      else {
          if ((startAryIndex % 2) == 1) {
             htmlBuf.append(hilitestart);
             htmlBuf.append(htmlEncode(ary_str[startAryIndex].substring(startStrIndex)));
@@ -604,7 +606,7 @@ private class ContentData {
             htmlBuf.append(htmlEncode(ary_str[endAryIndex].substring(0, endStrIndex)));
             htmlBuf.append(HIGHLIGHT_END);
           }
-         else{
+         else {
             htmlBuf.append(htmlEncode(ary_str[endAryIndex].substring(0, endStrIndex)));
           }
        }

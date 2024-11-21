@@ -52,7 +52,7 @@ static List<BhelpAction> createAction(Element xml)
 
    String typ = IvyXml.getAttrString(xml,"TYPE");
    if (typ == null) return null;
-   switch(typ) {
+   switch (typ) {
       case "FINDBUBBLE":
 	 res.add(new FindBubbleAction(xml));
 	 break;
@@ -102,8 +102,8 @@ private static List<BhelpAction> handleLoopingActions(Element xml)
 {
    List<BhelpAction> res = new ArrayList<BhelpAction>();
    Integer iters = IvyXml.getAttrInteger(xml, "ITERS");
-   for(int i = 0; i < iters; ++i) {
-      for(Element element : IvyXml.children(xml,"ACTION")) {
+   for (int i = 0; i < iters; ++i) {
+      for (Element element : IvyXml.children(xml,"ACTION")) {
 	 List<BhelpAction> act = createAction(element);
 	 if (act != null) res.addAll(act);
        }
@@ -116,10 +116,10 @@ private static List<BhelpAction> handleLoopingActions(Element xml)
 
 static PauseAction speechToPause(BhelpAction ba)
 {
-   Integer p_duration = ba.getEquivalentPause();
-   p_duration = p_duration == null ? 0 : p_duration;
-   String new_xml = "<ACTION TYPE='PAUSE' DURATION='" + p_duration + "' />";
-   Element x = IvyXml.convertStringToXml(new_xml);
+   Integer pduration = ba.getEquivalentPause();
+   pduration = pduration == null ? 0 : pduration;
+   String newxml = "<ACTION TYPE='PAUSE' DURATION='" + pduration + "' />";
+   Element x = IvyXml.convertStringToXml(newxml);
 
    return new PauseAction(x);
 }
@@ -136,7 +136,7 @@ private static double	speed_delta = 1.0;
 private static String	native_command = null;
 private static LocalMaryInterface speech_synth = null;
 
-private final static double	MAC_DELTA = 2.0;
+private static final double	MAC_DELTA = 2.0;
 
 static {
    BoardProperties props = BoardProperties.getProperties("Bhelp");
@@ -151,6 +151,9 @@ static {
     }
   
    native_command = props.getString("Bhelp.say.command",dflt);
+   if (native_command != null && native_command.equals("*")) native_command = null;
+   if (native_command != null && native_command.isEmpty()) native_command = null;
+   
    speed_delta = props.getDouble("Bhelp.speed.delta",speed_delta);
 }
 
