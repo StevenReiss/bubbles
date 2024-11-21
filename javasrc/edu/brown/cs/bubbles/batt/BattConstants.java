@@ -181,7 +181,7 @@ enum NewTestOp {
 
    private String op_text;
 
-   private NewTestOp(String t) {
+   NewTestOp(String t) {
       op_text = t;
     }
 

@@ -152,7 +152,7 @@ private static boolean isEnabled()
 /*										*/
 /********************************************************************************/
 
-public void log(Component src,BnoteEntryType type,Object ... args)
+public void log(Component src,BnoteEntryType type,Object... args)
 {
    if (src == null || !isEnabled()) return;
    BudaBubble bb = BudaRoot.findBudaBubble(src);

@@ -41,7 +41,6 @@ import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
 
-import edu.brown.cs.ivy.file.IvyLog;
 
 abstract class BstyleFixer
 {
@@ -200,18 +199,11 @@ abstract static class GenericPatternFixer extends BstyleFixer {
    private Pattern data_pattern;
    private String code_pattern;
    private boolean explicit_only;
-   private int prior_lines;
-   private int post_lines;
-
    GenericPatternFixer(String p1,String p2) {
       this(p1,p2,false);
     }
    
    GenericPatternFixer(String p1,String p2,boolean explicit) {
-      this(p1,p2,explicit,0,0);
-    }
-      
-   GenericPatternFixer(String p1,String p2,boolean explicit,int prior,int post) {
       if (p1.contains(" ")) {
          error_pattern = generatePattern("Style: " + p1 + "\\.");
          data_pattern = null;
@@ -222,31 +214,31 @@ abstract static class GenericPatternFixer extends BstyleFixer {
        }
       code_pattern = p2;
       explicit_only = explicit;
-      prior_lines = prior;
-      post_lines = post;
-      if (prior_lines != 0 || post_lines != 0) {
-         if (!code_pattern.contains("\\n") && !code_pattern.contains("$L$")) {
-            code_pattern = code_pattern + "$L$";
-          }
-       }
     }
 
    @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {
       Matcher m0 = useFix(bp,explicit);
-      if (m0 == null) return null;
+      if (m0 == null) {
+         BoardLog.logD("BSTYLE","No match for " + this.getClass());
+         return null;
+       }
       
-      IvyLog.logD("BSTYLE","Match error message for problem " + this.getClass());
+      BoardLog.logD("BSTYLE","Match error message for problem " + this.getClass());
       
       BaleWindow win = corr.getEditor();
       BaleWindowDocument doc = win.getWindowDocument();
       int l0 = getStartLine(bp.getLine());
       int l1 = getEndLine(bp.getLine());
-      int lsoff = doc.findLineOffset(l0-prior_lines);
-      int leoff = doc.findLineOffset(l1+post_lines+1);
+      int lsoff = doc.findLineOffset(l0);
+      int leoff = doc.findLineOffset(l1+1);
       String text = doc.getWindowText(lsoff,leoff-lsoff);
       Pattern find = generatePattern(code_pattern,m0);
+      BoardLog.logD("BSTYLE","Use pattern " + find);
       Matcher m1 = find.matcher(text);
-      if (!m1.find()) return null;
+      if (!m1.find()) {
+         BoardLog.logD("BSTYLE","Pattern doesn't match " + text);
+         return null;
+       }
       return buildFix(corr,bp,lsoff,m1);
     }
    
@@ -316,7 +308,7 @@ private static class ArrayBracketPosition extends GenericPatternFixer {
    
    @Override protected int getEditStart(Matcher m1)     { return m1.start(1); }
    @Override protected String getEditReplace(Matcher m1) {
-      return "[] " + m1.group(2);
+      return " [] " + m1.group(2);
     }
 
 }	// end of inner class ArrayBracketPosition
@@ -374,7 +366,7 @@ private static final String [] MOD_ORDER = {
 private static class ModifierOrder extends GenericPatternFixer {
 
    ModifierOrder() {
-      super("'($N$)' modifier out of order with respect to JLS suggestions","(($M$\\s+)+)\\S");
+      super("'$N$' modifier out of order with the JLS suggestions","((($M$)\\s+)+)\\S");
     }
    
    @Override protected int getEditStart(Matcher m)      { return m.start(1); }
@@ -394,6 +386,10 @@ private static class ModifierOrder extends GenericPatternFixer {
             buf.append(" ");
           }
        }
+      
+      BoardLog.logD("BSTYLE","MODIFIER EDIT REPLACE " + modstr + " " +
+            mods.size() + " " + buf.toString());
+      
       return buf.toString();
     }
    
@@ -415,25 +411,25 @@ private static class FollowedByWhitespace extends GenericPatternFixer {
 private static class InnerAssignments extends GenericPatternFixer {
 
    InnerAssignments() {
-      super("Inner assignments should be avoided","^(\\s*)((($N$\\s*\\=\\s*)+)($E$)\\;");
+      super("Inner assignments should be avoided","^(\\s*)(($N$\\s*\\=\\s*)+)($E$)\\;");
     }
    
    @Override protected int getEditStart(Matcher m)      { return m.start(2); }
    @Override protected int getEditEnd(Matcher m)        { return m.end(4); }
    @Override protected int getCheckStart(Matcher m)     { return m.start(2); }
    @Override protected String getEditReplace(Matcher m) {
+      String ind = m.group(1);
       String asgstr = m.group(2);
       String expr = m.group(4);
       List<String> terms = new ArrayList<>();
       StringTokenizer tok = new StringTokenizer(asgstr,"=");
-      String ind = m.group(1);
       while (tok.hasMoreTokens()) {
          String term = tok.nextToken().trim();
-         terms.add(term);
+         if (!term.isEmpty()) terms.add(term);
        }
       
       StringBuffer buf = new StringBuffer();
-      if (expr.matches("[0-9a-zA-Z\\.]+")) {
+      if (expr.matches("\\-?[0-9a-zA-Z_\\.]+")) {
          // simple expression
          for (int i = 0; i < terms.size(); ++i) {
             String t = terms.get(i);
@@ -454,6 +450,11 @@ private static class InnerAssignments extends GenericPatternFixer {
             e = t;
           }
        }
+      
+      BoardLog.logD("BSTYLE","Inner assignment result: " + buf.toString() + " " +
+            ind.length() + " " + m.end(4) + " " + expr + " " + terms.size() + " " +
+            asgstr);
+      
       return buf.toString();
     }
    
@@ -608,8 +609,8 @@ private static class RedundantModifier extends GenericPatternFixer {
 private static class PreviousLine extends GenericPatternFixer {
    
    PreviousLine() {
-      super("'[^']+' (at column ([0-9]+ ))?should be on the previous line",
-         "\\h*\\n(\\h*)($1$)(\\s*)",true,1,0);
+      super("'([^']+)' (at column ([0-9]+ ))?should be on the previous line",
+         "\\h*\\n(\\h*)($1$)(\\s*)",true);
     }
    
    @Override protected int getStartLine(int line)       { return line-1; }
@@ -618,7 +619,7 @@ private static class PreviousLine extends GenericPatternFixer {
       return " " + m1.group(2) + "\n" + m1.group(1);
     }
    
-}       // end of inner class LeftCurlyPreviousLine
+}       // end of inner class PreviousLine
       
 
 
@@ -647,7 +648,7 @@ private static class ConditionalLogic extends GenericPatternFixer {
 private static class VarDeclarations extends GenericPatternFixer {
 
    VarDeclarations() {
-      super("Each variable must be in its own statement",
+      super("Each variable declaration must be in its own statement",
             "^(\\s*)($T$)\\s+($N$)(\\s*,\\s*$N$)+;");
     }
    

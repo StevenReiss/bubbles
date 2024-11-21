@@ -78,7 +78,7 @@ private static final long serialVersionUID = 1;
 /*										*/
 /********************************************************************************/
 
-public BwizAccessibilityPanel(int fgs)
+BwizAccessibilityPanel(int fgs)
 {
    use_constraints = new GridBagConstraints();
 

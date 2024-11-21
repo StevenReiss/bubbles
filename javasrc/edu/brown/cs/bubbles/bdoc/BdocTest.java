@@ -39,7 +39,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import javax.swing.SwingUtilities;
 
 
-public class BdocTest implements BdocConstants
+public final class BdocTest implements BdocConstants
 {
 
 
@@ -85,27 +85,6 @@ private BdocTest(String [] args)
 /*	Testing methods 							*/
 /*										*/
 /********************************************************************************/
-
-/*******************
-private void runTest0()
-{
-   try {
-      BdocRepository bt = new BdocRepository();
-      bt.addJavadoc(new URL("file:///pro/java/linux/jdk1.6.0/docs/api/index.html"));
-      bt.addJavadoc(new URL("file:///pro/clime/doc/index.html"));
-      bt.addJavadoc(new URL("http://help.eclipse.org/galileo/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/api/index.html"));
-      int ct = 0;
-      for (BassConstants.BassName br : bt.getAllNames()) {
-	 ++ct;
-       }
-      System.err.println("FOUND " + ct + " items");
-    }
-   catch (Throwable t) {
-      System.err.println("Error building database: " + t);
-    }
-}
-***********************/
-
 
 private void runTest()
 {

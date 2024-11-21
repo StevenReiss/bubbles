@@ -379,7 +379,7 @@ private Map<Integer,Collection<BaleAnnotation>> setupAnnotationMap()
 
 
 
-private static class AnnotComparator implements Comparator<BaleAnnotation> {
+private static final class AnnotComparator implements Comparator<BaleAnnotation> {
 
    @Override public int compare(BaleAnnotation a1,BaleAnnotation a2) {
       int d1 = a1.getPriority() - a2.getPriority();
@@ -619,7 +619,7 @@ private boolean checkElement(BaleElement be)
 	 line_data[lno] = new LineData(start_line+lno,r.y,y0); //-1);
 	 chng = true;
        }
-      else chng |= line_data[lno].set(start_line+lno,r.y,y0);//-1);
+      else chng |= line_data[lno].set(start_line+lno,r.y,y0); //-1);
     }
    else if (be.isElided()) {
       int soff = be.getStartOffset();
@@ -628,16 +628,18 @@ private boolean checkElement(BaleElement be)
          r = SwingText.modelToView2D(for_editor,soff);
 	 if (r == null) return chng;
        }
-      catch (BadLocationException e) { return chng; }
+      catch (BadLocationException e) {
+         return chng; 
+       }
       int slno = for_document.findLineNumber(soff)-start_line;
       int elno = for_document.findLineNumber(eoff)-start_line;
       if (slno < 0) slno = elno+1;
       for (int lno = slno; lno <= elno; ++lno) {
 	 if (line_data[lno] == null) {
-	    line_data[lno] = new LineData(start_line+lno,r.y,r.y+r.height);//-1);
+	    line_data[lno] = new LineData(start_line+lno,r.y,r.y+r.height); //-1);
 	    chng = true;
 	  }
-	 else chng |= line_data[lno].set(start_line+lno,r.y,r.y+r.height);//-1);
+	 else chng |= line_data[lno].set(start_line+lno,r.y,r.y+r.height); //-1);
        }
     }
    else if (!be.isLeaf()) {
@@ -686,7 +688,7 @@ private boolean checkElement(BaleElement be)
 
 
 
-private class LineChecker implements Runnable {
+private final class LineChecker implements Runnable {
 
    @Override public void run() {
       recheckLines();
@@ -702,7 +704,7 @@ private class LineChecker implements Runnable {
 /*										*/
 /********************************************************************************/
 
-private class CheckUpdater extends ComponentAdapter {
+private final class CheckUpdater extends ComponentAdapter {
 
    @Override public void componentResized(ComponentEvent e)	{ update_needed = true; }
 
@@ -749,7 +751,7 @@ private static class LineData {
 /*										*/
 /********************************************************************************/
 
-private class Mouser extends MouseAdapter {
+private final class Mouser extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent evt) {
       int lno = findLine(evt);

@@ -66,7 +66,9 @@ protected URI			ref_url;
 
 private static Map<String,ItemRelation> sub_types;
 
-private static final String [] HTML_REMOVALS = new String [] { "<P>", "<DL>", "<DD>", "</DD>", "</P>", "<HR>", " ", "\n" };
+private static final String [] HTML_REMOVALS = new String [] {
+   "<P>", "<DL>", "<DD>", "</DD>", "</P>", "<HR>", " ", "\n"
+};
 
 
 static {

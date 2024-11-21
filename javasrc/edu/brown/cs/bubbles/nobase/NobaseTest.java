@@ -133,7 +133,8 @@ private void runTest()
    sendCommand("COMMIT",proj,"SAVE='T'",null);
 
    sendCommand("PATTERNSEARCH",proj,"PATTERN='database.createSession()' DEFS='true' REFS='false' FOR='METHOD'",null);
-   sendCommand("FINDDEFINITIONS",proj,"FILE='/gpfs/main/home/spr/home/twiex/output.js' START='2437' END='2437' IMPLS='T'",null);
+   sendCommand("FINDDEFINITIONS",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/output.js' START='2437' END='2437' IMPLS='T'",null);
 
 
    sendCommand("EDITPARAM",null,"NAME='AUTOELIDE' VALUE='TRUE'",null);
@@ -141,31 +142,64 @@ private void runTest()
    sendCommand("PATTERNSEARCH",proj,"PATTERN='search.getMaxZip()' DEFS='true' REFS='false' FOR='METHOD'",null);
    sendCommand("PATTERNSEARCH",proj,"PATTERN='server.errorHandler()' DEFS='true' REFS='false' FOR='METHOD'",null);
    sendCommand("STARTFILE",proj,"FILE='/gpfs/main/home/spr/home/twiex/server.js' ID='" + (edit_id++) + "'",null);
-   sendCommand("ELIDESET",proj,"FILE='/gpfs/main/home/spr/home/twiex/server.js' COMPUTE='true'","<REGION START='2358' END='2515' />");
+   sendCommand("ELIDESET",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/server.js' COMPUTE='true'","<REGION START='2358' END='2515' />");
    sendCommand("PATTERNSEARCH",proj,"PATTERN='server.start()' DEFS='true' REFS='false' FOR='METHOD'",null);
-   sendCommand("ELIDESET",proj,"FILE='/gpfs/main/home/spr/home/twiex/server.js' COMPUTE='true'","<REGION START='2358' END='2515' /><REGION START='4060' END='4955' />");
-   sendCommand("FINDREFERENCES",proj,"FILE='/gpfs/main/home/spr/home/twiex/server.js' START='4088' END='4088' RONLY='T' EXACT='true' EQUIV='true'",null);
-   sendCommand("FINDREFERENCES",proj,"FILE='/gpfs/main/home/spr/home/twiex/server.js' START='4088' END='4088' EXACT='true' EQUIV='true'",null);
-   sendCommand("FINDREFERENCES",proj,"FILE='/gpfs/main/home/spr/home/twiex/server.js' START='4093' END='4093' EXACT='true' EQUIV='true'",null);
-   sendCommand("FINDREFERENCES",proj,"FILE='/gpfs/main/home/spr/home/twiex/server.js' START='2389' END='2389' EXACT='true' EQUIV='true'",null);
-   sendCommand("FINDREFERENCES",proj,"FILE='/gpfs/main/home/spr/home/twiex/server.js' START='2389' END='2389' RONLY='T' EXACT='true' EQUIV='true'",null);
-   sendCommand("GETFULLYQUALIFIEDNAME",proj,"FILE='/gpfs/main/home/spr/home/twiex/server.js' START='4217' END='4217' EXACT='true' EQUIV='true'",null);
+   sendCommand("ELIDESET",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/server.js' COMPUTE='true'",
+         "<REGION START='2358' END='2515' /><REGION START='4060' END='4955' />");
+   sendCommand("FINDREFERENCES",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/server.js' START='4088' END='4088' RONLY='T' EXACT='true' EQUIV='true'",
+         null);
+   sendCommand("FINDREFERENCES",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/server.js' START='4088' END='4088' EXACT='true' EQUIV='true'",
+         null);
+   sendCommand("FINDREFERENCES",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/server.js' START='4093' END='4093' EXACT='true' EQUIV='true'",
+         null);
+   sendCommand("FINDREFERENCES",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/server.js' START='2389' END='2389' EXACT='true' EQUIV='true'",
+         null);
+   sendCommand("FINDREFERENCES",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/server.js' START='2389' END='2389' RONLY='T' EXACT='true' EQUIV='true'",
+         null);
+   sendCommand("GETFULLYQUALIFIEDNAME",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/server.js' START='4217' END='4217' EXACT='true' EQUIV='true'",
+         null);
    sendCommand("FINDREGIONS",proj,"CLASS='output' FIELDS='T' FILE='/gpfs/main/home/spr/home/twiex/output.js'",null);
    sendCommand("FINDREGIONS",proj,"CLASS='output' PREFIX='T' FILE='/gpfs/main/home/spr/home/twiex/output.js'",null);
    sendCommand("FINDREGIONS",proj,"CLASS='output' STATICS='T' FILE='/gpfs/main/home/spr/home/twiex/output.js'",null);
-   sendCommand("FINDREGIONS",proj,"CLASS='output' IMPORTS='T' PACKAGE='T' TOPDELCS='T' FILE='/gpfs/main/home/spr/home/twiex/output.js'",null);
+   sendCommand("FINDREGIONS",proj,
+         "CLASS='output' IMPORTS='T' PACKAGE='T' TOPDELCS='T' FILE='/gpfs/main/home/spr/home/twiex/output.js'",
+         null);
    sendCommand("PATTERNSEARCH",proj,"PATTERN='database.createSession()' DEFS='true' REFS='false' FOR='METHOD'",null);
    sendCommand("STARTFILE",proj,"FILE='/gpfs/main/home/spr/home/twiex/output.js' ID='" + (edit_id++) + "'",null);
-   sendCommand("ELIDESET",proj,"FILE='/gpfs/main/home/spr/home/twiex/output.js' COMPUTE='true'","<REGION START='7359' END='8064' />");
+   sendCommand("ELIDESET",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/output.js' COMPUTE='true'",
+         "<REGION START='7359' END='8064' />");
 
-   sendCommand("FINDDEFINITIONS",proj,"FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5321' END='5321' IMPLS='T'",null);
-   sendCommand("FINDREFERENCES",proj,"FILE='/gpfs/main/home/spr/home/twiex/output.js' START='7372' END='7372' EXACT='T' EQUIV='T'",null);
+   sendCommand("FINDDEFINITIONS",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5321' END='5321' IMPLS='T'",
+         null);
+   sendCommand("FINDREFERENCES",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/output.js' START='7372' END='7372' EXACT='T' EQUIV='T'",
+         null);
 
-   sendCommand("FINDDEFINITIONS",proj,"FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5523' END='5523' IMPLS='T'",null);
-   sendCommand("GETFULLYQUALIFIEDNAME",proj,"FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5523' END='5523' EXACT='true' EQUIV='true'",null);
-   sendCommand("FINDDEFINITIONS",proj,"FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5535' END='5535' IMPLS='T'",null);
-   sendCommand("GETFULLYQUALIFIEDNAME",proj,"FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5535' END='5535' EXACT='true' EQUIV='true'",null);
-   sendCommand("FINDDEFINITIONS",proj,"FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5415' END='5415' IMPLS='T'",null);
+   sendCommand("FINDDEFINITIONS",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5523' END='5523' IMPLS='T'",
+         null);
+   sendCommand("GETFULLYQUALIFIEDNAME",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5523' END='5523' EXACT='true' EQUIV='true'",
+         null);
+   sendCommand("FINDDEFINITIONS",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5535' END='5535' IMPLS='T'",
+         null);
+   sendCommand("GETFULLYQUALIFIEDNAME",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5535' END='5535' EXACT='true' EQUIV='true'",
+         null);
+   sendCommand("FINDDEFINITIONS",proj,
+         "FILE='/gpfs/main/home/spr/home/twiex/output.js' START='5415' END='5415' IMPLS='T'",
+         null);
 
    // no item returned on this
    sendCommand("PATTERNSEARCH",proj,"PATTERN='search.addTable()' DEFS='true' REFS='false' FOR='METHOD'",null);

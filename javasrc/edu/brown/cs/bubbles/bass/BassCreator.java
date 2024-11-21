@@ -545,7 +545,8 @@ private class NewTypeAction extends NewAction implements BuenoConstants.BuenoBub
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","NewType");
       BudaRoot.hideSearchBubble(e);
-      BuenoFactory.getFactory().createClassDialog(search_bubble,access_point,create_type,property_set,for_location,null,this);
+      BuenoFactory.getFactory().createClassDialog(search_bubble,access_point,
+            create_type,property_set,for_location,null,this);
     }
 
    @Override public void createBubble(String proj,String name,BudaBubbleArea bba,Point p) {

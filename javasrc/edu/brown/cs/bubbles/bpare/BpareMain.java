@@ -29,7 +29,7 @@ import java.util.List;
 
 
 
-public class BpareMain implements BpareConstants
+public final class BpareMain implements BpareConstants
 {
 
 

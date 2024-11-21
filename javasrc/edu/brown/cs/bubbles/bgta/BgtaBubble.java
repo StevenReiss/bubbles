@@ -142,7 +142,9 @@ private BgtaBubble(String username)
 
    history_area = new SwingTextPane();
    history_area.setOpaque(false);
-   history_pane = new JScrollPane(history_area,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+   history_pane = new JScrollPane(history_area,
+         ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+         ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
    history_pane.setOpaque(false);
    history_pane.getViewport().setOpaque(false);
    history_pane.setBorder(new EmptyBorder(0,0,0,0));

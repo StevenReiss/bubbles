@@ -793,7 +793,9 @@ private void handleEvent(DocumentEvent e,BaleElementEvent ee)
 {
    checkWriteLock();
 
-   if (fragment_name == null && getDefaultRootElement() instanceof BaleElement) checkForNameChange((BaleElement) getDefaultRootElement());
+   if (fragment_name == null && getDefaultRootElement() instanceof BaleElement) {
+      checkForNameChange((BaleElement) getDefaultRootElement());
+    }
 
    int doff = e.getOffset();
    int foff = getFragmentOffset(doff);

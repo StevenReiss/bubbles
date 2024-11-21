@@ -443,17 +443,17 @@ private class DisplayBar extends JPanel {
    @Override public void paintComponent(Graphics g) {
       Graphics2D g2 = (Graphics2D) g;
       List<BattTestCase> tests = batt_model.getAllTests();
-
-      int counts[] = new int[NUM_BAR_TYPES];
+   
+      int[] counts = new int[NUM_BAR_TYPES];
       Arrays.fill(counts,0);
       double total = 0;
-
+   
       for (BattTestCase btc :tests) {
-	 BarType bt = getTestType(btc);
-	 counts[bt.ordinal()]++;
-	 total++;
+         BarType bt = getTestType(btc);
+         counts[bt.ordinal()]++;
+         total++;
        }
-
+   
       Dimension d = getSize();
       double y0 = BAR_INSET;
       double y1 = d.height - BAR_INSET;
@@ -464,12 +464,12 @@ private class DisplayBar extends JPanel {
       g2.setColor(BoardColors.getColor("Batt.BarTypeNone"));
       g2.fill(r2);
       for (int i = 0; i < NUM_BAR_TYPES; ++i) {
-	 if (counts[i] == 0) continue;
-	 double w = (x1-x0)*counts[i]/total;
-	 g2.setPaint(bar_colors[i]);
-	 r2.setRect(x,y0,w,y1-y0);
-	 g2.fill(r2);
-	 x += w;
+         if (counts[i] == 0) continue;
+         double w = (x1-x0)*counts[i]/total;
+         g2.setPaint(bar_colors[i]);
+         r2.setRect(x,y0,w,y1-y0);
+         g2.fill(r2);
+         x += w;
        }
     }
 

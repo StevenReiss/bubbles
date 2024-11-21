@@ -193,8 +193,8 @@ public void setStyle(float w,BudaLinkStyle sty)
 	 break;
       case STYLE_REFERENCE :
       case STYLE_FLIP_REFERENCE :
-	 link_stroke = new BasicStroke(w,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND);//DoubleStroke(w);
-	 finish_type = BudaPortEndType.END_TRIANGLE_FILLED;
+	 link_stroke = new BasicStroke(w,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND); //DoubleStroke(w);
+	 finish_type = BudaPortEndType.END_TRIANGLE_FILLED; 
 	 //TODO: make more different somehow...
 	 break;
       default:
@@ -501,7 +501,7 @@ private void drawCircle(Graphics g,Point2D fp,Point2D tp,boolean fill)
    double cx0 = tp.getX() + t*(fp.getX() - tp.getX());
    double cy0 = tp.getY() + t*(fp.getY() - tp.getY());
 
-   int x0 = (int)(cx0 - BUDA_LINK_END_SIZE+1);
+   int x0 = (int) (cx0 - BUDA_LINK_END_SIZE+1);
    int y0 = (int)(cy0 - BUDA_LINK_END_SIZE+1);
    int wd = (int)(2 * BUDA_LINK_END_SIZE - 1);
    int ht = (int)(2 * BUDA_LINK_END_SIZE - 1);

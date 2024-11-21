@@ -60,7 +60,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-class BaleBubbleStack implements BaleConstants, BudaConstants, BussConstants
+final class BaleBubbleStack implements BaleConstants, BudaConstants, BussConstants
 {
 
 
@@ -330,7 +330,7 @@ private BussBubble setupStack(BudaLinkStyle link)
     }
 
    contentwidth = DEFAULT_CONTENT_WIDTH;
-   for(BussEntry entry : entries){
+   for (BussEntry entry : entries){
       BaleCompactFragment component = (BaleCompactFragment) entry.getCompactComponent();
       component.init(contentwidth);
     }

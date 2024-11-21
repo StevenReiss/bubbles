@@ -262,11 +262,13 @@ private class TableButton extends AbstractCellEditor
       if (button != null) delete_map.put(newrow, button);
     }
 
-   @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focus, final int row, final int column) {
+   @Override public Component getTableCellRendererComponent(JTable table, Object value,
+         boolean selected, boolean focus, final int row, final int column) {
       return getButton(row,column);
     }
 
-   @Override public Component getTableCellEditorComponent(JTable table, Object value, boolean selected, int row, int column) {
+   @Override public Component getTableCellEditorComponent(JTable table, Object value, 
+         boolean selected, int row, int column) {
       return getButton(row,column);
     }
 

@@ -308,7 +308,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
 
       boolean fnd = false;
       for (BumpProblem bp : totry) {
-         BoardLog.logD("BFIX","Work on problem " + bp);
+         BoardLog.logD("BFIX","Work on problem in region " + bp);
 	 RegionFixer fx = new RegionFixer(bp);
 	 checkProblemFixable(fx);
 	 BfixRunnableFix rslt = fx.waitForDone();
@@ -325,9 +325,10 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
           }
       }
       for (BumpProblem bp : sytletry) {
-         BoardLog.logD("BFIX","Work on style problem " + bp);
+         BoardLog.logD("BFIX","Work on style problem in region " + bp);
          BfixRunnableFix rslt = checkStyleProblemFixable(bp,force); 
          if (rslt != null) { 
+            BoardLog.logD("BFIX","Starting style fix");
 	    BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
 	    RunAndWait rw = new RunAndWait(rslt);
             rw.runFix();
@@ -393,6 +394,9 @@ private class RunAndWait implements BumpProblemHandler {
      done_status = false;
      BumpClient.getBump().addProblemHandler(for_document.getFile(),this);
      try {
+        BoardLog.logD("BFIX","Run fixer " + 
+              SwingUtilities.isEventDispatchThread());
+        
         if (SwingUtilities.isEventDispatchThread()) {
            done_status = fixer_run.call();
          }
@@ -402,8 +406,9 @@ private class RunAndWait implements BumpProblemHandler {
            done_status = sr.getResult();
          }
       }
-     catch (Exception e) {
-        done_status = false;
+     catch (Throwable e) {
+        BoardLog.logE("BSTYLE","Problem with corrector",e);
+        handleProblemsDone();
       }
      
      if (!done_status) handleProblemsDone();
@@ -450,6 +455,7 @@ private class SwingRunner implements Runnable {
          fixer_result = fixer_run.call();
        }
       catch (Exception e) {
+         BoardLog.logE("BFIX","Problem running fixer",e);
          fixer_result = false;
        }
     }

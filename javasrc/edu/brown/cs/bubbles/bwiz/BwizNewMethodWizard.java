@@ -101,10 +101,11 @@ BwizNewMethodWizard(BuenoLocation loc)
 
 /********************************************************************************/
 /*                                                                              */
-/*      Method Creator                                                          *//*                                                                              */
+/*      Method Creator                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-private class MethodCreator extends Creator {
+private final class MethodCreator extends Creator {
    
    @Override protected BudaBubble doCreate(BudaBubbleArea bba,Point pt,String fullname,BuenoProperties bp) {
       BudaBubble nbbl = null;

@@ -1916,7 +1916,17 @@ private synchronized FileData findFile(String proj,String file,String bid)
 		throws BedrockException
 {
    FileData fd = file_map.get(file);
-
+   
+   File f1 = null;
+   if (fd == null) {
+      f1 = new File(file);
+      f1 = IvyFile.getCanonical(f1);
+      fd = file_map.get(f1.getPath());
+      if (fd != null) {
+         file_map.put(file,fd);
+       }
+    }
+   
    if (fd == null) {
       ICompilationUnit icu = null;
       icu = our_plugin.getProjectManager().getCompilationUnit(proj,file);
@@ -1924,11 +1934,7 @@ private synchronized FileData findFile(String proj,String file,String bid)
 	 icu = our_plugin.getProjectManager().getCompilationUnit(null,file);
 	 if (icu != null) proj = null;
        }
-
       if (icu == null) return null;
-
-      File f1 = new File(file);
-      f1 = IvyFile.getCanonical(f1);
 
       BedrockPlugin.logD("START FILE " + proj + " " + file + " " + bid + " " +
 			    icu.isWorkingCopy() + " " + icu.hasResourceChanged() + " " +
@@ -2223,30 +2229,32 @@ private class FileData implements IBufferChangedListener {
 
    void applyEdit(String bid,TextEdit xe,String id) throws BedrockException {
       boolean chngfg = hasChanged();
-
+   
       if (bid != null && buffer_map.get(bid) != null) {
-	 // handle private buffers
-	 PrivateBufferData bd = buffer_map.get(bid);
-	 bd.applyEdit(xe);
+         // handle private buffers
+         PrivateBufferData bd = buffer_map.get(bid);
+         bd.applyEdit(xe);
        }
       else {
-	 try {
-	    synchronized (this) {
-	       last_edit = bid;
-	       working_unit.applyTextEdit(xe,null);
-	       setCurrentId(bid,id);
-	       last_edit = null;
-	       last_ast = null;
-	     }
-	  }
-	 catch (JavaModelException e) {
-	    throw new BedrockException("Problem applying text edit",e);
-	  }
-	 if (!chngfg && hasChanged()) {
-	    IvyXmlWriter xw = our_plugin.beginMessage("FILECHANGE");
-	    xw.field("FILE",file_name);
-	    our_plugin.finishMessage(xw);
-	  }
+         try {
+            synchronized (this) {
+               last_edit = bid;
+               BedrockPlugin.logD("APPLY EDIT FOR " + bid);
+               working_unit.applyTextEdit(xe,null);
+               setCurrentId(bid,id);
+               BedrockPlugin.logD("END APPLY EDIT");
+               last_edit = null;
+               last_ast = null;
+             }
+          }
+         catch (JavaModelException e) {
+            throw new BedrockException("Problem applying text edit",e);
+          }
+         if (!chngfg && hasChanged()) {
+            IvyXmlWriter xw = our_plugin.beginMessage("FILECHANGE");
+            xw.field("FILE",file_name);
+            our_plugin.finishMessage(xw);
+          }
        }
     }
 
@@ -2355,18 +2363,20 @@ private class FileData implements IBufferChangedListener {
 
    private UserData getUser(String sid) {
       if (sid == null) return null;
-
+   
       synchronized (buffer_users) {
-	 UserData ud = buffer_users.get(sid);
-	 if (ud == null) {
-	    if (buffer_map.get(sid) != null || sid.startsWith("PID_")) {
-	       BedrockPlugin.logX("Attempt to get user for private buffer");
-	       return null;
-	     }
-	    ud = new UserData(this,sid,comp_unit,false);
-	    buffer_users.put(sid,ud);
-	  }
-	 return ud;
+         UserData ud = buffer_users.get(sid);
+         if (ud == null) {
+            if (buffer_map.get(sid) != null || sid.startsWith("PID_")) {
+               BedrockPlugin.logX("Attempt to get user for private buffer");
+               return null;
+             }
+            ud = new UserData(this,sid,comp_unit,false);
+            buffer_users.put(sid,ud);
+            BedrockPlugin.logD("ADD USER " + sid + " FOR " + file_name + " " +
+                  buffer_users.size());
+          }
+         return ud;
        }
    }
 
@@ -2423,7 +2433,7 @@ private class FileData implements IBufferChangedListener {
 
 
    @Override public void bufferChanged(BufferChangedEvent evt) {
-      BedrockPlugin.logD("Buffer check change " + doing_change + " " +
+      BedrockPlugin.logD("Buffer check change " + doing_change + " " + last_edit + " " +
         		    System.identityHashCode(evt.getBuffer()));
       if (doing_change) return;
       doing_change = true;

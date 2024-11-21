@@ -161,7 +161,7 @@ private class ProgressViewer implements Runnable {
 /*										*/
 /********************************************************************************/
 
-@Override synchronized public void handleProgress(long sid,String id,String kind,
+@Override public synchronized void handleProgress(long sid,String id,String kind,
       String task,String subtask,double work)
 {
    String tnm = task;
@@ -268,7 +268,7 @@ private class ProgressDisplay extends JLabel {
 
    @Override public void paintComponent(Graphics g) {
       Dimension sz = getSize();
-      int w = (int)(sz.width * part_done / 100.0);
+      int w = (int) (sz.width * part_done / 100.0);
    
       g.setColor(todo_color);
       // g.fillRect(0,w,sz.width-w,sz.height);

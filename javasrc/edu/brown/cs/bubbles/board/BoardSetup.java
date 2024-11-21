@@ -2018,7 +2018,7 @@ public boolean checkInstall()
 //	 if (ins == null) ins = getClass().getClassLoader().getResourceAsStream(s);
 	 if (ins == null) {
 	    ok = false;
-	    BoardLog.logE("BOARD","Setup failed on " + s);
+	    BoardLog.logD("BOARD","File not found in jar " + s);
 	  }
 	 else ins.close();
        }

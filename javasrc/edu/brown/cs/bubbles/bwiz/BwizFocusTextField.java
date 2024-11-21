@@ -167,7 +167,7 @@ private void focusSelection()
 /*										*/
 /********************************************************************************/
 
-private class Focuser extends FocusAdapter {
+private final class Focuser extends FocusAdapter {
 
    @Override public void focusGained(FocusEvent e) {
       if (hint_text != null) {

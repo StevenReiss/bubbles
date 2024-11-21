@@ -123,7 +123,7 @@ static {
    id_types.put("LOCALDECL",BaleAstIdType.LOCAL_DECL);
    id_types.put("UNDEF",BaleAstIdType.UNDEF);
    id_types.put("ANNOT",BaleAstIdType.ANNOT);
-   id_types.put("BUILTIN",BaleAstIdType.BUILTIN) ;
+   id_types.put("BUILTIN",BaleAstIdType.BUILTIN);
    id_types.put("MODULE",BaleAstIdType.MODULE);
    id_types.put("LABEL",BaleAstIdType.LABEL);
    id_types.put("KEYWORD",BaleAstIdType.KEYWORD);

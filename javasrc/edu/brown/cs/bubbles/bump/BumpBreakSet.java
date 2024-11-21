@@ -247,7 +247,10 @@ BumpBreakSet(BumpClient bc)
    Iterator<BumpBreakpoint> it = bump_client.getAllBreakpoints().iterator();
    while (it.hasNext()) {
       BumpBreakpoint bp = it.next();
-      if (file == null ||(bp.getFile() != null && bp.getFile().equals(file))) enableBreakpoint(bp.getFile(), bp.getLineNumber());
+      if (file == null ||(bp.getFile() != null &&
+            bp.getFile().equals(file))) {
+         enableBreakpoint(bp.getFile(), bp.getLineNumber());
+       }
    }
 }
 

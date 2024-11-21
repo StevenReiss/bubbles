@@ -299,7 +299,7 @@ void commitVersion(String msg)
    mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
    Element rslt = rply.waitForXml();
    if (rslt == null) {
-
+        // do something here
     }
    // check statsus
 

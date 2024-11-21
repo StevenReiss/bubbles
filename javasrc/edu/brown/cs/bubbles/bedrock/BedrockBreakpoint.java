@@ -331,7 +331,7 @@ private void setAllExceptionBreakpoint()
 	    // breakpoint already set, ignore
 	    return;
 	  }
-	 catch (CoreException e ) { }
+	 catch (CoreException e) { }
        }
     }
 

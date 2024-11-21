@@ -211,7 +211,7 @@ void outputXml(BudaXmlWriter xw)
 /*										*/
 /********************************************************************************/
 
-private class Transferer extends TransferHandler {
+private final class Transferer extends TransferHandler {
 
    private static final long serialVersionUID = 1;
 

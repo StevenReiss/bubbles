@@ -105,7 +105,7 @@ void server()
       while (!is_done) {
 	 checkEclipse();
 	 try {
-	    wait(60000l);
+	    wait(60000L);
 	  }
 	 catch (InterruptedException e) { }
        }

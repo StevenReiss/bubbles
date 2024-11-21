@@ -260,7 +260,7 @@ static int getEditSize(Element xml)
 /*										*/
 /********************************************************************************/
 
-private static class EditSorter implements Comparator<Element> {
+private static final class EditSorter implements Comparator<Element> {
 
    @Override public int compare(Element e1,Element e2) {
       int off1 = IvyXml.getAttrInt(e1,"OFFSET");
