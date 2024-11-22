@@ -23,8 +23,10 @@
 package edu.brown.cs.bubbles.bstyle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -56,7 +58,7 @@ abstract class BstyleFixer
 
 private static final String TYPE_PATTERN = "[A-Za-z0-9_<>]+";
 private static final String EXPR_PATTERN = "\\p{Graph}+";
-private static final String NAME_PATTERN = "[A-Za-z0-9_]+";
+private static final String NAME_PATTERN = "[A-Za-z0-9_\\.]+";
 private static final String MODIFIER_PATTERN =
 	"public|private|protected|static|final|abstract|transient|volatile|" +
 	"native|strict|synchronized";
@@ -67,31 +69,59 @@ private static final String BOOLEAN_PATTERN = "true|false";
 private static final Pattern ARG_PATTERN = Pattern.compile("\\$([0-9]+)\\$");
 
 private static List<BstyleFixer> style_fixers;
+private static Map<String,List<BstyleFixer>> fixers_map;
 
 static {
    style_fixers = new ArrayList<>();
-   style_fixers.add(new PrecededByWhitespace());
-   style_fixers.add(new ArrayBracketPosition());
-   style_fixers.add(new ClassFinal());
-   style_fixers.add(new EmptyXBlock());
-   style_fixers.add(new FileNewline());
-   style_fixers.add(new ModifierOrder());
-   style_fixers.add(new FollowedByWhitespace());
-   style_fixers.add(new InnerAssignments());
-   style_fixers.add(new UppercaseL());
-   style_fixers.add(new ExpressionSimplified());
-   style_fixers.add(new LineByItself());
-   style_fixers.add(new LineBreakAfter());
-   style_fixers.add(new CastNotFollowedByWhite());
-   style_fixers.add(new NotFollowedByWhite());
-   style_fixers.add(new MustUseBraces());
-   style_fixers.add(new OnlyOneDefinition());
-   style_fixers.add(new RedundantModifier());
-   style_fixers.add(new PreviousLine());
-   style_fixers.add(new ConditionalLogic());
-   style_fixers.add(new VarDeclarations());
+   fixers_map = new HashMap<>();
+
+   BstyleFixer precededbywhite = new PrecededByWhitespace();
+   BstyleFixer notfollowedbywhite = new NotFollowedByWhite();
+   
+   addFixer("NoWhitespaceBefore",precededbywhite);
+   addFixer("ArrayTypeStyle",new ArrayBracketPosition());
+   addFixer("FinalClass",new ClassFinal());
+   addFixer("EmptyBlock",new EmptyXBlock());
+   addFixer("NewlineAtEndOfFile",new FileNewline());
+   addFixer("ModifierOrder",new ModifierOrder());
+   addFixer("ParenPad",new FollowedByWhitespace(),precededbywhite);
+   addFixer("InnerAssignment",new InnerAssignments());
+   addFixer("UpperEll",new UppercaseL());
+   addFixer("SimplifyBooleanExpression",new ExpressionSimplified());
+   addFixer("RightCurly",new LineByItself());
+   addFixer("LeftCurly",new LineBreakAfter());
+   addFixer("WhitespaceAfter",new CastNotFollowedByWhite(),notfollowedbywhite);
+   addFixer("EmptyForIteratorPad",notfollowedbywhite);
+   addFixer("TypecastParenPad",precededbywhite);
+   addFixer("NeedBraces",new MustUseBraces());
+   addFixer("MultipleVariableDeclarations",new OnlyOneDefinition());
+   addFixer("RedundantModifier",new RedundantModifier());
+   addFixer("OperatorWrap",new PreviousLine());
+   addFixer("SimplifyBooleanReturn",new ConditionalLogic());
+   addFixer("MultipleVariableDeclarations",new VarDeclarations());
 }
 
+
+private static void addFixer(String when,BstyleFixer... fixers)
+{
+   for (BstyleFixer f : fixers) {
+      if (when != null) {
+         StringTokenizer tok = new StringTokenizer(when);
+         while (tok.hasMoreTokens()) {
+            String w = tok.nextToken();
+            List<BstyleFixer> bfl = fixers_map.get(w);
+            if (bfl == null) {
+               bfl = new ArrayList<>();
+               fixers_map.put(w,bfl);
+             }
+            bfl.add(f);
+          }
+         if (!style_fixers.contains(f)) {
+            style_fixers.add(f);
+          }
+       }
+    }
+}
 
 
 
@@ -123,6 +153,11 @@ static List<BstyleFixer> getStyleFixers()
    return style_fixers;
 }
 
+static Map<String,List<BstyleFixer>> getStyleFixerMap() 
+{
+   return fixers_map;
+}
+
 
 
 /********************************************************************************/
@@ -149,6 +184,8 @@ protected static Pattern generatePattern(String pat)
 
 protected static Pattern generatePattern(String pat,Matcher m)
 {
+   if (pat == null) return null;
+   
    int flags = 0;
    String pat0 = pat.replace("$T$",TYPE_PATTERN);
    pat0 = pat0.replace("$E$",EXPR_PATTERN);
@@ -234,10 +271,13 @@ abstract static class GenericPatternFixer extends BstyleFixer {
       String text = doc.getWindowText(lsoff,leoff-lsoff);
       Pattern find = generatePattern(code_pattern,m0);
       BoardLog.logD("BSTYLE","Use pattern " + find);
-      Matcher m1 = find.matcher(text);
-      if (!m1.find()) {
-         BoardLog.logD("BSTYLE","Pattern doesn't match " + text);
-         return null;
+      Matcher m1 = null;
+      if (find != null) {
+         m1 = find.matcher(text);
+         if (!m1.find()) {
+            BoardLog.logD("BSTYLE","Pattern doesn't match " + text);
+            return null;
+          }
        }
       return buildFix(corr,bp,lsoff,m1);
     }
@@ -480,11 +520,11 @@ private static class UppercaseL extends GenericPatternFixer {
 private static class ExpressionSimplified extends GenericPatternFixer {
 
    ExpressionSimplified() {
-      super("Expression can be simplified","\\(($E$)\\?\\s*($B$)\\s*\\:($B$)\\)");
+      super("Expression can be simplified","\\([^?]+)\\?\\s*($B$)\\s*\\:($B$)\\)");
     }
    
    @Override protected String getEditReplace(Matcher m) {
-      String expr = m.group(1);
+      String expr = m.group(1).trim();
       String btrue = m.group(2);
       String bfalse = m.group(3);
       
@@ -523,12 +563,13 @@ private static class LineBreakAfter extends GenericPatternFixer {
    
    LineBreakAfter() {
       super("'\\{' at column ([0-9]+) should have line break after",
-            "(\\s*)(.*)(\\{)(\\s*)(\\S.*)\\}",true);
+            "(\\s*)([^{]*)(\\{)(\\s*)([^}]*)\\}",true);
     }
    
    @Override protected int getEditStart(Matcher m)      { return m.start(4); }
    @Override protected String getEditReplace(Matcher m) { 
       String cnts = m.group(5);
+      if (cnts != null) cnts = cnts.trim();
       if (cnts == null || cnts.isEmpty()) cnts = "// do nothing";
       return "\n" + m.group(1) + "   " + cnts + "\n" + m.group(1) + "}";
     }
@@ -540,7 +581,7 @@ private static class CastNotFollowedByWhite extends GenericPatternFixer {
    
    CastNotFollowedByWhite() {
       super("'typecast' is not followed by whitespace",
-            "\\(($T$)\\)(\\()");
+            "\\([^)]+\\)($N$|(\\())");
     }
    @Override protected int getEditStart(Matcher m)      { return m.start(2); }
    @Override protected int getEditEnd(Matcher m)        { return m.start(2); }
@@ -649,19 +690,22 @@ private static class VarDeclarations extends GenericPatternFixer {
 
    VarDeclarations() {
       super("Each variable declaration must be in its own statement",
-            "^(\\s*)($T$)\\s+($N$)(\\s*,\\s*$N$)+;");
+            "^(\\s*)(($M$)\\s+)*($T$)\\s+($N$)(\\s*,\\s*$N$)+;");
     }
    
-   @Override protected int getEditStart(Matcher m)      { return m.start(4); }
+   @Override protected int getEditStart(Matcher m)      { return m.start(6); }
    @Override protected String getEditReplace(Matcher m) {
       StringBuffer buf = new StringBuffer();
+      String pfx = m.group(2);
+      if (pfx == null) pfx = "";
+      pfx += m.group(4);
       
       buf.append(";");
-      String others = m.group(4);
+      String others = m.group(6);
       StringTokenizer tok = new StringTokenizer(others,",");
       while (tok.hasMoreTokens()) {
          String var = tok.nextToken().trim();
-         buf.append("\n" + m.group(1) + m.group(2) + " " + var + ";");
+         buf.append("\n" + m.group(1) + pfx + " " + var + ";");
        }
       
       return buf.toString();

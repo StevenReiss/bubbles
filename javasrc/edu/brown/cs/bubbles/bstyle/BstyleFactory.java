@@ -48,7 +48,7 @@ import edu.brown.cs.ivy.mint.MintControl;
 import edu.brown.cs.ivy.mint.MintDefaultReply;
 import edu.brown.cs.ivy.xml.IvyXml;
 
-public class BstyleFactory implements BstyleConstants, MintConstants
+public final class BstyleFactory implements BstyleConstants, MintConstants
 {
 
 
@@ -72,7 +72,7 @@ private static BstyleFactory the_factory = null;
 /*										*/
 /********************************************************************************/
 
-public synchronized static BstyleFactory getFactory()
+public static synchronized BstyleFactory getFactory()
 { 
    if (the_factory == null) {
       the_factory = new BstyleFactory();
@@ -147,7 +147,7 @@ private static boolean useBstyleForProject(String proj)
 /*										*/
 /********************************************************************************/
 
-private final static class ConfigAction implements BudaConstants.ButtonListener {
+private static final class ConfigAction implements BudaConstants.ButtonListener {
 
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
       if (bba == null) return;
@@ -188,7 +188,7 @@ void startBstyleServer()
       BoardProperties bp = BoardProperties.getProperties("Bstyle");
       String dbgargs = bp.getProperty("Bstyle.jvm.args");
       if (dbgargs != null && dbgargs.contains("###")) {
-	 int port = (int)(Math.random() * 1000 + 3000);
+	 int port = (int) (Math.random() * 1000 + 3000);
 	 BoardLog.logI("BVCR","Bvcr debugging port " + port);
 	 dbgargs = dbgargs.replace("###",Integer.toString(port));
        }
@@ -289,7 +289,7 @@ private synchronized void waitForSetup()
     }
 }
 
-private static class BstyleStarter implements Runnable {
+private static final class BstyleStarter implements Runnable {
 
    @Override public void run() {
       getFactory().startBstyleServer();
@@ -299,7 +299,7 @@ private static class BstyleStarter implements Runnable {
 
 
 
-private class ServerSetup implements Runnable {
+private final class ServerSetup implements Runnable {
 
    @Override public void run() {
       // do any setup operations here

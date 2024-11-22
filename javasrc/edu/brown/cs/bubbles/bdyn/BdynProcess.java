@@ -121,7 +121,7 @@ synchronized void handleTraceEvent(Element xml)
 
 
 
-private static class EventComparator implements Comparator<Element> {
+private static final class EventComparator implements Comparator<Element> {
 
    @Override public int compare(Element e1,Element e2) {
       int i1 = IvyXml.getAttrInt(e1,"SEQ");

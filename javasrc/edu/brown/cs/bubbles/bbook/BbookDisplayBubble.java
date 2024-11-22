@@ -144,7 +144,7 @@ private class ComputeDisplay implements Runnable {
 /*										*/
 /********************************************************************************/
 
-private static class Linker implements HyperlinkListener {
+private static final class Linker implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {

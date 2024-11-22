@@ -103,7 +103,7 @@ void addPanel()
 /*										*/
 /********************************************************************************/
 
-private class BugReportListener implements ActionListener {
+private final class BugReportListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       String url = "https://github.com/StevenReiss/bubbles/issues";

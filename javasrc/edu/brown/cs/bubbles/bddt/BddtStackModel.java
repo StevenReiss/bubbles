@@ -370,7 +370,7 @@ void updateValues()
 /*										*/
 /********************************************************************************/
 
-private class RunEventHandler implements BumpRunEventHandler {
+private final class RunEventHandler implements BumpRunEventHandler {
 
    @Override public void handleThreadEvent(BumpRunEvent evt) {
       if (evt.getThread() != getThread()) return;
@@ -395,7 +395,7 @@ private class RunEventHandler implements BumpRunEventHandler {
 
 
 
-private class ValueUpdater implements Runnable {
+private final class ValueUpdater implements Runnable {
  
    @Override public void run() {
       updateValues();
@@ -643,7 +643,7 @@ protected abstract class AbstractNode implements ValueTreeNode, TreeNode {
 /*										*/
 /********************************************************************************/
 
-private static class ValueSorter implements Comparator<AbstractNode> {
+private static final class ValueSorter implements Comparator<AbstractNode> {
 
    @Override public int compare(AbstractNode n1,AbstractNode n2) {
       if (n1.getType() != n2.getType()) {

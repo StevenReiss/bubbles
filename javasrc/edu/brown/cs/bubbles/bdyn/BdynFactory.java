@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class BdynFactory implements BdynConstants, BumpConstants
+public final class BdynFactory implements BdynConstants, BumpConstants
 {
 
 
@@ -140,7 +140,7 @@ BdynProcess getBdynProcess(BumpProcess bp)
 static BdynOptions getOptions() 		{ return bdyn_options; }
 
 
-private class ProcessHandler implements BumpRunEventHandler {
+private final class ProcessHandler implements BumpRunEventHandler {
 
    @Override public synchronized void handleProcessEvent(BumpRunEvent evt) {
       BumpProcess proc = evt.getProcess();
@@ -181,7 +181,7 @@ private class ProcessHandler implements BumpRunEventHandler {
 /*										*/
 /********************************************************************************/
 
-private static class TaskAction implements BudaConstants.ButtonListener {
+private static final class TaskAction implements BudaConstants.ButtonListener {
 
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
       BdynTaskWindow tw = new BdynTaskWindow();

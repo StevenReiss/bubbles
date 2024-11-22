@@ -229,7 +229,7 @@ synchronized FileState usesClasses(Map<String,FileState> clsmap)
 
 
 
-@Override synchronized public UseMode usesMethod(String mthd)
+@Override public synchronized UseMode usesMethod(String mthd)
 {
    if (count_data == null) return UseMode.UNKNOWN;
 

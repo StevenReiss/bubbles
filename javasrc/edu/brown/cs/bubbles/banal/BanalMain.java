@@ -29,7 +29,7 @@ import edu.brown.cs.ivy.exec.IvySetup;
 
 
 
-public class BanalMain implements BanalConstants {
+public final class BanalMain implements BanalConstants {
 
 
 

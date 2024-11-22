@@ -38,7 +38,7 @@ import java.io.File;
 
 
 
-public class BconTest implements BconConstants
+public final class BconTest implements BconConstants
 {
 
 

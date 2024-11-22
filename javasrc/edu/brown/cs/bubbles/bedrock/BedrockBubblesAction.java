@@ -69,7 +69,7 @@ private static final String BUBBLES_URL =
    "https://www.cs.brown.edu/people/spr/bubbles/bubbles.jar";
 // private static final long BUBBLES_LENGTH = 110*1024*1024;
 
-private final static String BUBBLES_DIR = ".bubbles";
+private static final String BUBBLES_DIR = ".bubbles";
 // private static final String BUBBLES_DIR = ".bubbles.test";
 
 

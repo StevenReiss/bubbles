@@ -28,7 +28,11 @@ package edu.brown.cs.bubbles.bandaid;
 
 
 import java.lang.management.ThreadInfo;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 class BandaidAgentHistory extends BandaidAgent implements BandaidConstants {
@@ -47,7 +51,7 @@ private Map<String,StopData>	stop_data;
 private long [] 		sample_time;
 private int			sample_count;
 
-private final static int	BUFFER_SIZE = 50;
+private static final int	BUFFER_SIZE = 50;
 
 
 
@@ -187,10 +191,10 @@ boolean generateHistory(BandaidXmlWriter xw,String tnm)
 
 private static class ThreadData {
 
-   int current_count;
-   long [] stack_time;
-   ThreadInfo [] thread_state;
-   StackTraceElement [][] thread_stack;
+   private int current_count;
+   private long [] stack_time;
+   private ThreadInfo [] thread_state;
+   private StackTraceElement [][] thread_stack;
 
    ThreadData(ThreadInfo ti) {
       current_count = 0;
@@ -281,7 +285,7 @@ private static class ThreadData {
 
 private class StopData {
 
-   List<ThreadData> thread_history;
+   private List<ThreadData> thread_history;
    private long start_time;
    private long stop_time;
 

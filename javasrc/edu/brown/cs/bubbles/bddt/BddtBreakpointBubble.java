@@ -302,7 +302,7 @@ private void showBubble(File f,int line)
 }
 
 
-private class DataChanger implements Runnable {
+private final class DataChanger implements Runnable {
 
    @Override public void run() {
       table_model.fireTableDataChanged();
@@ -322,34 +322,34 @@ private class DataChanger implements Runnable {
 
 private class BreakpointToolBar extends JToolBar implements ActionListener {
 
-   private JButton enableAll;
-   private JButton disableAll;
-   private JButton remove;
+   private JButton enable_all;
+   private JButton disable_all;
+   private JButton remove_btn;
 
    private static final long serialVersionUID = 1;
 
    BreakpointToolBar() {
-      enableAll = new JButton("Enable All",new ImageIcon(BoardImage
+      enable_all = new JButton("Enable All",new ImageIcon(BoardImage
 							    .getImage("checkedbox.png")));
-      disableAll = new JButton("Disable All",new ImageIcon(BoardImage
+      disable_all = new JButton("Disable All",new ImageIcon(BoardImage
 							      .getImage("emptybox.png")));
-      remove = new JButton("Remove Selected",new ImageIcon(BoardImage.getImage("no.png")));
-      enableAll.setText("Enable All");
-      disableAll.setText("Disable All");
-      remove.setText("Remove Selected");
-      enableAll.setMargin(BDDT_BREAKPOINT_BUTTON_MARGIN);
-      disableAll.setMargin(BDDT_BREAKPOINT_BUTTON_MARGIN);
-      remove.setMargin(BDDT_BREAKPOINT_BUTTON_MARGIN);
-      enableAll.addActionListener(this);
-      disableAll.addActionListener(this);
-      remove.addActionListener(this);
-      add(enableAll);
-      add(disableAll);
-      add(remove);
+      remove_btn = new JButton("Remove Selected",new ImageIcon(BoardImage.getImage("no.png")));
+      enable_all.setText("Enable All");
+      disable_all.setText("Disable All");
+      remove_btn.setText("Remove Selected");
+      enable_all.setMargin(BDDT_BREAKPOINT_BUTTON_MARGIN);
+      disable_all.setMargin(BDDT_BREAKPOINT_BUTTON_MARGIN);
+      remove_btn.setMargin(BDDT_BREAKPOINT_BUTTON_MARGIN);
+      enable_all.addActionListener(this);
+      disable_all.addActionListener(this);
+      remove_btn.addActionListener(this);
+      add(enable_all);
+      add(disable_all);
+      add(remove_btn);
     }
 
    @Override public void actionPerformed(ActionEvent e) {
-      if (e.getSource() == enableAll) {
+      if (e.getSource() == enable_all) {
 	 BumpClient client = BumpClient.getBump();
 	 Iterator<BumpBreakpoint> it = client.getAllBreakpoints().iterator();
 	 while (it.hasNext()) {
@@ -358,7 +358,7 @@ private class BreakpointToolBar extends JToolBar implements ActionListener {
 	  }
 	 //break_model.enableAllBreakpoints(null);
        }
-      else if (e.getSource() == disableAll) {
+      else if (e.getSource() == disable_all) {
 	 BumpClient client = BumpClient.getBump();
 	 Iterator<BumpBreakpoint> it = client.getAllBreakpoints().iterator();
 	 while (it.hasNext()) {
@@ -367,7 +367,7 @@ private class BreakpointToolBar extends JToolBar implements ActionListener {
 	  }
 	 //break_model.disableAllBreakpoints(null);
        }
-      else if (e.getSource() == remove) {
+      else if (e.getSource() == remove_btn) {
 	 int[] rows = breakpoint_table.getSelectedRows();
 	 BumpBreakpoint[] bps = new BumpBreakpoint[rows.length];
 	 for (int i = 0; i < rows.length; i++) {
@@ -745,7 +745,7 @@ private static class NewFieldWatchAction extends AbstractAction {
 /*                                                                              */
 /********************************************************************************/
 
-private class Mouser extends BoardMouser {
+private final class Mouser extends BoardMouser {
    
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getSource() == breakpoint_table && e.getClickCount() > 1) {

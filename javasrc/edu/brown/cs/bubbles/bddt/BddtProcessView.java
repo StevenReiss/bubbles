@@ -239,7 +239,7 @@ private class ConsoleAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private class ProcessHandler implements BumpRunEventHandler
+private final class ProcessHandler implements BumpRunEventHandler
 {
    @Override public void handleProcessEvent(BumpRunEvent evt) {
       BumpProcess blp;
@@ -411,7 +411,7 @@ private class ProcessTable extends JTable implements BudaConstants.BudaBubbleOut
 /*                                                                              */
 /********************************************************************************/
 
-private class ProcessMouser extends BoardMouser {
+private final class ProcessMouser extends BoardMouser {
    
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2) {

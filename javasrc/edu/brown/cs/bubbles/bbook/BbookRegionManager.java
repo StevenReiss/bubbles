@@ -130,7 +130,7 @@ private static boolean isBubbleRelevant(BudaBubble bb)
 /*										*/
 /********************************************************************************/
 
-private class BubbleViewer implements BudaConstants.BubbleViewCallback
+private final class BubbleViewer implements BudaConstants.BubbleViewCallback
 {
    @Override public void bubbleAdded(BudaBubble bb) {
       if (isBubbleRelevant(bb)) handleBubbleAdded(bb);
@@ -172,7 +172,7 @@ private class BubbleViewer implements BudaConstants.BubbleViewCallback
 /*										*/
 /********************************************************************************/
 
-private class FileHandler implements BumpChangeHandler {
+private final class FileHandler implements BumpChangeHandler {
 
    
    
@@ -194,7 +194,7 @@ private class FileHandler implements BumpChangeHandler {
 /*										*/
 /********************************************************************************/
 
-private class ChangeListener implements DocumentListener {
+private final class ChangeListener implements DocumentListener {
 
    @Override public void changedUpdate(DocumentEvent e) {
       noteDocumentChanged(e.getDocument());

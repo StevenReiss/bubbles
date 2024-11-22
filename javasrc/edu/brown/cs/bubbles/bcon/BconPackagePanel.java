@@ -165,7 +165,7 @@ private void resetGraph()
 /*										*/
 /********************************************************************************/
 
-private class Sizer extends ComponentAdapter {
+private final class Sizer extends ComponentAdapter {
 
    @Override public void componentResized(ComponentEvent e) {
       resetGraph();
@@ -403,7 +403,7 @@ private class LayoutAction implements ActionListener {
 /*										*/
 /********************************************************************************/
 
-private class FilterAction implements ActionListener {
+private final class FilterAction implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JTextField tfld = (JTextField) evt.getSource();
@@ -430,7 +430,7 @@ private class FilterAction implements ActionListener {
 /*										*/
 /********************************************************************************/
 
-private class PackagePanel extends SwingGridPanel
+private final class PackagePanel extends SwingGridPanel
       implements BudaConstants.BudaBubbleOutputer {
    
    private static final long serialVersionUID = 1;

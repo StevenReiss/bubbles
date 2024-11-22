@@ -67,7 +67,7 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 
-public class BattFactory implements BattConstants, BudaConstants.ButtonListener,
+public final class BattFactory implements BattConstants, BudaConstants.ButtonListener,
 		MintConstants, BaleConstants, BudaConstants
 {
 
@@ -95,7 +95,7 @@ private static BattFactory	the_factory = null;
 /*										*/
 /********************************************************************************/
 
-public synchronized static BattFactory getFactory()
+public static synchronized BattFactory getFactory()
 {
    if (the_factory == null) {
       the_factory = new BattFactory();
@@ -496,7 +496,7 @@ void startBattServer()
 
 private static class BattContexter implements BaleContextListener {
 
-   BattModeler batt_model;
+   private BattModeler batt_model;
 
    BattContexter(BattFactory bf) {
       batt_model = bf.batt_model;

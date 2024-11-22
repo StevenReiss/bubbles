@@ -160,7 +160,7 @@ private static final int	MOD_PROTECTION = MOD_PUBLIC | MOD_PRIVATE |
 						 MOD_PROTECTED | MOD_PACKAGE;
 
 
-private static enum Protections {
+private enum Protections {
    PUBLIC,
    PROTECTED,
    PACKAGE,
@@ -177,7 +177,7 @@ private static final int	ALL_MODS =
 	MOD_PACKAGEDECL | MOD_IMPORT | MOD_TOPDECL;
 
 
-private static final DataFlavor region_flavor = new DataFlavor(ListTransfer.class,"File Region Set");
+private static final DataFlavor REGION_FLAVOR = new DataFlavor(ListTransfer.class,"File Region Set");
 
 
 
@@ -448,7 +448,7 @@ private void updateSelection(int off,int on)
 
 
 
-private class ProtectionUpdater implements ChangeListener {
+private final class ProtectionUpdater implements ChangeListener {
 
    @Override public void stateChanged(ChangeEvent evt) {
       Protections p = protect_options.getValue();
@@ -808,7 +808,7 @@ void addHeaderRegion(BumpLocation bl,RegionType rt,Segment s,int offset)
 /*										*/
 /********************************************************************************/
 
-private static class RegionComparator implements Comparator<BconRegion> {
+private static final class RegionComparator implements Comparator<BconRegion> {
 
    @Override public int compare(BconRegion r1,BconRegion r2) {
       int v = r1.getStartOffset() - r2.getStartOffset();
@@ -860,7 +860,7 @@ private class ClassList extends JList<BconRegion> {
 
 
 
-private class ClassMouser extends MouseAdapter {
+private final class ClassMouser extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       JList<?> lst = (JList<?>) e.getSource();
@@ -964,7 +964,7 @@ private static class Selector {
 /*										*/
 /********************************************************************************/
 
-private class ClassPanel extends SwingGridPanel implements BudaConstants.BudaBubbleOutputer {
+private final class ClassPanel extends SwingGridPanel implements BudaConstants.BudaBubbleOutputer {
    
    private static final long serialVersionUID = 1;
    
@@ -988,7 +988,7 @@ private class ClassPanel extends SwingGridPanel implements BudaConstants.BudaBub
 /*										*/
 /********************************************************************************/
 
-private class ClassListModel extends AbstractListModel<BconRegion> {
+private final class ClassListModel extends AbstractListModel<BconRegion> {
 
    private List<BconRegion> use_regions;
    private int cur_size;
@@ -1152,7 +1152,7 @@ private class ListMover extends TransferHandler {
    ListMover()				{ }
 
    @Override public boolean canImport(TransferHandler.TransferSupport sup) {
-      if (sup.isDataFlavorSupported(region_flavor)) return true;
+      if (sup.isDataFlavorSupported(REGION_FLAVOR)) return true;
       return super.canImport(sup);
    }
 
@@ -1163,7 +1163,7 @@ private class ListMover extends TransferHandler {
    @Override protected void exportDone(JComponent src,Transferable d,int act) {
       if (act == MOVE) {
          try {
-            ListTransfer lt = (ListTransfer) d.getTransferData(region_flavor);
+            ListTransfer lt = (ListTransfer) d.getTransferData(REGION_FLAVOR);
             lt.removeText();
           }
          catch (IOException e) { }
@@ -1181,7 +1181,7 @@ private class ListMover extends TransferHandler {
    @Override public boolean importData(TransferHandler.TransferSupport sup) {
       Transferable trn = sup.getTransferable();
       try {
-	 ListTransfer lt = (ListTransfer) trn.getTransferData(region_flavor);
+	 ListTransfer lt = (ListTransfer) trn.getTransferData(REGION_FLAVOR);
 	 JList.DropLocation loc = (JList.DropLocation) sup.getDropLocation();
 	 String txt = lt.getText(getComponent());
 	 int idx = loc.getIndex();
@@ -1222,17 +1222,17 @@ private class ListTransfer implements Transferable, BudaConstants.BudaDragBubble
     }
 
    @Override public Object getTransferData(DataFlavor f) {
-      if (f == region_flavor || f == BudaRoot.getBubbleTransferFlavor()) return this;
+      if (f == REGION_FLAVOR || f == BudaRoot.getBubbleTransferFlavor()) return this;
       return null;
     }
 
    @Override public DataFlavor [] getTransferDataFlavors() {
-      return new DataFlavor [] { region_flavor, BudaRoot.getBubbleTransferFlavor() };
+      return new DataFlavor [] { REGION_FLAVOR, BudaRoot.getBubbleTransferFlavor() };
     }
 
    @Override public boolean isDataFlavorSupported(DataFlavor f) {
       if (f == null) return false;
-      return f.equals(region_flavor) || f.equals(BudaRoot.getBubbleTransferFlavor());
+      return f.equals(REGION_FLAVOR) || f.equals(BudaRoot.getBubbleTransferFlavor());
     }
 
    @Override public BudaBubble [] createBubbles() {
@@ -1542,7 +1542,7 @@ private class ResetAction extends AbstractAction {
 }	// end of inner class ResetAction
 
 
-private static class FilterAction implements ActionListener {
+private static final class FilterAction implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JTextField tfld = (JTextField) evt.getSource();

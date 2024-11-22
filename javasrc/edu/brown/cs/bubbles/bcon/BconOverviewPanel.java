@@ -116,7 +116,7 @@ BconOverviewPanel(BudaBubbleArea bba,Point base)
 
 @Override public void dispose()
 {
-   BudaRoot.removeBubbleViewCallback(this) ;
+   BudaRoot.removeBubbleViewCallback(this);
 }
 
 
@@ -423,7 +423,9 @@ private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOut
       if (ct == 0) return;
    
       // compute size of each file region
-      double wd,ht;
+      double wd;
+      double ht;
+      
       Rectangle2D.Double trex;
       if (is_vertical) {
          wd = (d.width - 2 * LR_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
@@ -483,7 +485,8 @@ private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOut
       if (ct == 0) return null;
 
       Dimension d = getSize();
-      double wd,ht;
+      double wd;
+      double ht;
       if (is_vertical) {
 	 wd = (d.width - 2 * LR_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
 		  ct * NAME_SPACE)/ct;
@@ -506,7 +509,11 @@ private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOut
       for (BconOverviewClass cv : class_views.values()) {
 	 int lct = cv.getLineCount();
 	 double sz0 = getRelativeHeight(lct,mxln);
-	 double ln0,x0,y0,x1,y1;
+	 double ln0;
+         double x0;
+         double y0;
+         double x1;
+         double y1;
 
 	 if (is_vertical) {
 	    x0 = LR_MARGIN_SPACE + idx * (SEPARATION_SPACE + NAME_SPACE + wd);
@@ -540,7 +547,8 @@ private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOut
       if (ct == 0) return;
 
       Dimension d = getSize();
-      double wd,ht;
+      double wd;
+      double ht;
       if (is_vertical) {
 	 wd = (d.width - 2 * LR_MARGIN_SPACE - (ct-1) * SEPARATION_SPACE -
 		  ct * NAME_SPACE)/ct;
@@ -563,7 +571,11 @@ private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOut
       for (BconOverviewClass cv : class_views.values()) {
 	 int lct = cv.getLineCount();
 	 double sz0 = getRelativeHeight(lct,mxln);
-	 double ln0,x0,y0,x1,y1;
+	 double ln0;
+         double x0;
+         double y0;
+         double x1;
+         double y1;
 
 	 if (is_vertical) {
 	    x0 = LR_MARGIN_SPACE + idx * (SEPARATION_SPACE + NAME_SPACE + wd);
@@ -581,7 +593,7 @@ private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOut
 	  }
 
 	 if (e.getX() >= x1 && e.getX() <= x1+wd0 && e.getY() >= y1 && e.getY() <= y1+ht0) {
-	    cv.handleMousePress(e,(int)(ln0 + 0.5));
+	    cv.handleMousePress(e,(int) (ln0 + 0.5));
 	    return;
 	  }
 

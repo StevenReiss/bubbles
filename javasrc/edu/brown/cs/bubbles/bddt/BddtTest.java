@@ -34,7 +34,7 @@ import javax.swing.SwingUtilities;
 
 
 
-public class BddtTest implements BddtConstants, BumpConstants
+public final class BddtTest implements BddtConstants, BumpConstants
 {
 
 
@@ -93,7 +93,10 @@ private void runTest()
    BddtFactory.initialize(root);
    root.restoreConfiguration(null);
 
-   try { Thread.sleep(5000); } catch (InterruptedException e) { }
+   try { 
+      Thread.sleep(5000);
+    } 
+   catch (InterruptedException e) { }
 
    SwingUtilities.invokeLater(new CreateBddt(root));
 }

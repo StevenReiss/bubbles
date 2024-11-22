@@ -27,14 +27,29 @@ package edu.brown.cs.bubbles.bandaid;
 
 
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.lang.management.*;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Method;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.security.ProtectionDomain;
-import java.util.*;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 
 public final class BandaidController implements BandaidConstants {
@@ -372,7 +387,7 @@ private void setupClassTypes()
 
 
 
-/********************************************************************************/		      ;
+/********************************************************************************/;
 /*										*/
 /*	Access methods								*/
 /*										*/
@@ -610,7 +625,7 @@ private void enableMonitoring(boolean fg)
 private long  getNextDelayTime()
 {
    if (monitor_enabled) {
-      return (long)(-delay_time * Math.log(Math.random())) + 1;
+      return (long) (-delay_time * Math.log(Math.random())) + 1;
     }
    else if (reports_enabled || need_report) return disable_time;
    else return -1;

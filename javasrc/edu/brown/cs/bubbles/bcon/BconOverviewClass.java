@@ -488,7 +488,7 @@ String computeToolTip(int ln0,int ln1)
 /*										*/
 /********************************************************************************/
 
-private static class FileListener implements DocumentListener {
+private static final class FileListener implements DocumentListener {
 
    @Override public void changedUpdate(DocumentEvent e) {
       // update data

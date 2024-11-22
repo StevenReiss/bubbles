@@ -252,7 +252,7 @@ private void sendFeedback(SwingGridPanel panel)
 /*										*/
 /********************************************************************************/
 
-private class FeedbackReportListener implements ActionListener {
+private final class FeedbackReportListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JPanel pnl = createFeedbackPanel();
@@ -280,7 +280,7 @@ private static boolean isLiLaPresent()
 
 
 
-private static class AngryListener implements ActionListener {
+private static final class AngryListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       try {

@@ -73,10 +73,10 @@ private Map<String,Set<ArcType>> collapse_nodes;
 private static boolean use_methods = true;
 private static boolean same_class = false;
 
-static Map<PackageRelationType,ArcType> relation_map;
+private static Map<PackageRelationType,ArcType> relation_map;
 
-static Map<ArcType,Integer> node_priority;
-static Map<ArcType,Integer> collapse_priority;
+private static Map<ArcType,Integer> node_priority;
+private static Map<ArcType,Integer> collapse_priority;
 
 static {
    relation_map = new HashMap<PackageRelationType,ArcType>();
@@ -824,8 +824,9 @@ private abstract class GraphNode implements BconGraphNode {
 
    protected void addLocalArcs() {
       if (node_set == null) return;
-      for (BanalPackageNode cls : node_set)
+      for (BanalPackageNode cls : node_set) {
 	 addLocalLinks(cls);
+       }
    }
 
 
@@ -981,7 +982,7 @@ private class GraphArc implements BconGraphArc {
    private RelationData relation_data;
    private GraphNode from_node;
    private GraphNode to_node;
-   boolean flip_flop;
+   private boolean flip_flop;
 
    GraphArc(GraphNode frm,GraphNode to,BanalPackageLink lnk) {
       forward_links = new ArrayList<BanalPackageLink>();

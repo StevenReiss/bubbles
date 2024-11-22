@@ -836,7 +836,7 @@ private class DropToFrameAction extends AbstractAction {
 
 
 
-private class StartDebug implements Runnable {
+private final class StartDebug implements Runnable {
 
    @Override public void run() {
       bump_client.saveAll();
@@ -858,7 +858,7 @@ private class StartDebug implements Runnable {
          return;
        }
    
-      String id = "B_" + Integer.toString(((int)(Math.random() * 100000)));
+      String id = "B_" + Integer.toString(((int) (Math.random() * 100000)));
       BumpProcess bp = bump_client.startDebug(launch_config,id);
       if (bp != null && cur_process == null) setProcess(bp);
       if (bp != null) setLaunchState(LaunchState.RUNNING);
@@ -1076,7 +1076,7 @@ private class RunEventHandler implements BumpRunEventHandler {
 
    @Override public void handleLaunchEvent(BumpRunEvent evt) { }
 
-   @Override synchronized public void handleProcessEvent(BumpRunEvent evt) {
+   @Override public synchronized void handleProcessEvent(BumpRunEvent evt) {
       BumpLaunchConfig elc = evt.getLaunchConfiguration();
       switch (evt.getEventType()) {
 	 case PROCESS_TRIE :
@@ -1136,7 +1136,7 @@ private class RunEventHandler implements BumpRunEventHandler {
        }
     }
 
-   @Override synchronized public void handleThreadEvent(BumpRunEvent evt) {
+   @Override public synchronized void handleThreadEvent(BumpRunEvent evt) {
       if (evt.getProcess() != cur_process) return;
       BumpThread bt = evt.getThread();
       BumpThreadState ost = thread_states.get(bt);
@@ -1710,7 +1710,7 @@ private static String formatRunValue(BumpRunValue rv,int lvl)
 /*										*/
 /********************************************************************************/
 
-private class EditorContextListener implements BaleFactory.BaleContextListener {
+private final class EditorContextListener implements BaleFactory.BaleContextListener {
 
 
 
@@ -1859,7 +1859,7 @@ private static class EvaluationListener implements BumpEvaluationHandler, Expres
       long start = System.currentTimeMillis();
       while (!is_done) {
 	 try {
-	    wait(1000l);
+	    wait(1000L);
 	  }
 	 catch (InterruptedException e) { }
 	 if ((System.currentTimeMillis() - start) > 10000) {

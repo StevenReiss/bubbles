@@ -212,7 +212,8 @@ private static class ProcessName extends BassNameBase {
       if (for_process.getLaunch() == null) return "???";
       else if (for_process.getLaunch().getConfiguration() == null) return "???";
    
-      return BDDT_PROCESS_PREFIX + for_process.getLaunch().getConfiguration().getConfigName() + "." + for_process.getId();
+      return BDDT_PROCESS_PREFIX + for_process.getLaunch().getConfiguration().getConfigName() +
+            "." + for_process.getId();
     }
 
    @Override protected String getParameters()		{ return null; }
@@ -237,7 +238,7 @@ private static class ProcessName extends BassNameBase {
 /*										*/
 /********************************************************************************/
 
-private class ModelHandler implements BumpConstants.BumpRunEventHandler {
+private final class ModelHandler implements BumpConstants.BumpRunEventHandler {
 
    @Override public void handleLaunchEvent(BumpRunEvent evt) {
       BumpLaunchConfig blc = evt.getLaunchConfiguration();

@@ -365,7 +365,7 @@ private void setAssertionBreakpoint()
 	    // breakpoint already set, ignore
 	    return;
 	  }
-	 catch (CoreException e ) { }
+	 catch (CoreException e) { }
        }
     }
    
@@ -644,8 +644,8 @@ private static class BreakpointLocator extends ASTVisitor {
    @Override public boolean visit(AnnotationTypeDeclaration node) {
       if (visit(node, false)) {
 	 List<?> bodyDeclaration= node.bodyDeclarations();
-	 for (Iterator<?> iter= bodyDeclaration.iterator(); iter.hasNext();) {
-	    ((BodyDeclaration)iter.next()).accept(this);
+	 for (Iterator<?> iter= bodyDeclaration.iterator(); iter.hasNext(); ) {
+	    ((BodyDeclaration) iter.next()).accept(this);
 	  }
        }
       return false;
@@ -675,7 +675,7 @@ private static class BreakpointLocator extends ASTVisitor {
 	 if (lhs instanceof Name) {
 	    int startline = getLineNumber(node.getStartPosition());
 	    if (line_number < startline) {
-	       IVariableBinding binding = (IVariableBinding)((Name)lhs).resolveBinding();
+	       IVariableBinding binding = (IVariableBinding) ((Name) lhs).resolveBinding();
 	       if (binding != null && (!binding.isField() || Modifier.isStatic(binding.getModifiers())))  {
 		  node.getRightHandSide().accept(this);
 		}
@@ -725,8 +725,8 @@ private static class BreakpointLocator extends ASTVisitor {
    @Override public boolean visit(EnumConstantDeclaration node) {
       if (visit(node,false)) {
 	 List<?> arguments= node.arguments();
-	 for (Iterator<?> iter= arguments.iterator(); iter.hasNext();) {
-	    ((Expression)iter.next()).accept(this);
+	 for (Iterator<?> iter= arguments.iterator(); iter.hasNext(); ) {
+	    ((Expression) iter.next()).accept(this);
 	  }
 	 AnonymousClassDeclaration decl= node.getAnonymousClassDeclaration();
 	 if (decl != null) {
@@ -739,12 +739,12 @@ private static class BreakpointLocator extends ASTVisitor {
    @Override public boolean visit(EnumDeclaration node) {
       if (visit(node,false)) {
 	 List<?> enumConstants= node.enumConstants();
-	 for (Iterator<?> iter = enumConstants.iterator(); iter.hasNext();) {
+	 for (Iterator<?> iter = enumConstants.iterator(); iter.hasNext(); ) {
 	    ((EnumConstantDeclaration) iter.next()).accept(this);
 	  }
 	 List<?> bodyDeclaration= node.bodyDeclarations();
-	 for (Iterator<?> iter= bodyDeclaration.iterator(); iter.hasNext();) {
-	    ((BodyDeclaration)iter.next()).accept(this);
+	 for (Iterator<?> iter= bodyDeclaration.iterator(); iter.hasNext(); ) {
+	    ((BodyDeclaration) iter.next()).accept(this);
 	  }
        }
       return false;
@@ -767,8 +767,8 @@ private static class BreakpointLocator extends ASTVisitor {
 	       // return false;
 	     // }
 	  // }
-	 for (Iterator<?> iter= fragments.iterator(); iter.hasNext();) {
-	    ((VariableDeclarationFragment)iter.next()).accept(this);
+	 for (Iterator<?> iter= fragments.iterator(); iter.hasNext(); ) {
+	    ((VariableDeclarationFragment) iter.next()).accept(this);
 	  }
        }
       return false;
@@ -810,7 +810,7 @@ private static class BreakpointLocator extends ASTVisitor {
 	     }
 	    else firstconstant= null;
 	    List<?> extendedoperands= node.extendedOperands();
-	    for (Iterator<?> iter= extendedoperands.iterator(); iter.hasNext();) {
+	    for (Iterator<?> iter = extendedoperands.iterator(); iter.hasNext(); ) {
 	       Expression operand= (Expression) iter.next();
 	       if (visit(operand,false)) {
 		  if (firstconstant == null || !isReplacedByConstantValue(operand)) {
@@ -935,8 +935,8 @@ private static class BreakpointLocator extends ASTVisitor {
       if (visit(node,false)) {
 	 // visit only the elements of the type declaration
 	 List<?> bodydeclaration= node.bodyDeclarations();
-	 for (Iterator<?> iter= bodydeclaration.iterator(); iter.hasNext();) {
-	    ((BodyDeclaration)iter.next()).accept(this);
+	 for (Iterator<?> iter = bodydeclaration.iterator(); iter.hasNext(); ) {
+	    ((BodyDeclaration) iter.next()).accept(this);
 	  }
        }
       return false;
@@ -993,17 +993,17 @@ private static class BreakpointLocator extends ASTVisitor {
             return true;
          case ASTNode.SIMPLE_NAME:
          case ASTNode.QUALIFIED_NAME:
-            return isReplacedByConstantValue((Name)node);
+            return isReplacedByConstantValue((Name) node);
          case ASTNode.FIELD_ACCESS:
-            return isReplacedByConstantValue((FieldAccess)node);
+            return isReplacedByConstantValue((FieldAccess) node);
          case ASTNode.SUPER_FIELD_ACCESS:
-            return isReplacedByConstantValue((SuperFieldAccess)node);
+            return isReplacedByConstantValue((SuperFieldAccess) node);
          case ASTNode.INFIX_EXPRESSION:
-            return isReplacedByConstantValue((InfixExpression)node);
+            return isReplacedByConstantValue((InfixExpression) node);
          case ASTNode.PREFIX_EXPRESSION:
-            return isReplacedByConstantValue((PrefixExpression)node);
+            return isReplacedByConstantValue((PrefixExpression) node);
          case ASTNode.CAST_EXPRESSION:
-            return isReplacedByConstantValue(((CastExpression)node).getExpression());
+            return isReplacedByConstantValue(((CastExpression) node).getExpression());
          default:
             return false;
        }
@@ -1037,7 +1037,7 @@ private static class BreakpointLocator extends ASTVisitor {
       // if node is a variable with a constant value (static final field)
       IBinding binding= node.resolveBinding();
       if (binding != null && binding.getKind() == IBinding.VARIABLE) {
-	 return ((IVariableBinding)binding).getConstantValue() != null;
+	 return ((IVariableBinding) binding).getConstantValue() != null;
        }
       return false;
     }
@@ -1056,7 +1056,7 @@ private static class BreakpointLocator extends ASTVisitor {
       // if the field is static final
       IVariableBinding binding= node.resolveFieldBinding();
       if (binding != null) {
-	 return binding.getConstantValue() != null;
+         return binding.getConstantValue() != null;
        }
       return false;
     }

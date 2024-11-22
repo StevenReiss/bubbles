@@ -204,8 +204,8 @@ BdynEventTrace getEventTrace()			{ return event_trace; }
 	 double t0 = lv * omax / MAX_SCROLL_TIME + min_time;
 	 double t1 = rv * omax / MAX_SCROLL_TIME + min_time;
 	 if (rv == MAX_SCROLL_TIME) t1 = max_time;
-	 int it0 = (int)Math.round((t0 - min_time)/nmxv * MAX_SCROLL_TIME);
-	 int it1 = (int)Math.round((t1 - min_time)/nmxv * MAX_SCROLL_TIME);
+	 int it0 = (int) Math.round((t0 - min_time)/nmxv * MAX_SCROLL_TIME);
+	 int it1 = (int) Math.round((t1 - min_time)/nmxv * MAX_SCROLL_TIME);
 	 time_bar.setValues(it0,it1);
 	 task_panel.setTimes((long) t0,(long) t1);
        }
@@ -222,8 +222,8 @@ BdynEventTrace getEventTrace()			{ return event_trace; }
 /********************************************************************************/
 
 @Override public void adjustmentValueChanged(AdjustmentEvent ev) {
-   long mint = (long)(min_time + time_bar.getLeftValue() * (max_time-min_time)/MAX_SCROLL_TIME + 0.5);
-   long maxt = (long)(min_time + time_bar.getRightValue() * (max_time-min_time)/MAX_SCROLL_TIME + 0.5);
+   long mint = (long) (min_time + time_bar.getLeftValue() * (max_time-min_time)/MAX_SCROLL_TIME + 0.5);
+   long maxt = (long) (min_time + time_bar.getRightValue() * (max_time-min_time)/MAX_SCROLL_TIME + 0.5);
    task_panel.setTimes(mint,maxt);
 }
 
@@ -236,7 +236,7 @@ BdynEventTrace getEventTrace()			{ return event_trace; }
 /*										*/
 /********************************************************************************/
 
-private class RunHandler implements BumpConstants.BumpRunEventHandler {
+private final class RunHandler implements BumpConstants.BumpRunEventHandler {
 
    @Override public void handleProcessEvent(BumpRunEvent evt) {
       BumpProcess blp;
@@ -282,7 +282,7 @@ private class RunHandler implements BumpConstants.BumpRunEventHandler {
 
 private class TaskBubble extends BudaBubble {
 
-   BdynTaskWindow task_window;
+   private BdynTaskWindow task_window;
    private static final long serialVersionUID = 1;
    
    TaskBubble(BdynTaskWindow w) {

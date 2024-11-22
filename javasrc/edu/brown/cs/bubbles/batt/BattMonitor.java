@@ -367,7 +367,7 @@ void sendMessageAndWait(String typ,String cnts)
 /*										*/
 /********************************************************************************/
 
-private class EclipseHandler implements MintHandler {
+private final class EclipseHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
@@ -465,7 +465,7 @@ private class EclipseHandler implements MintHandler {
 
 
 
-private class ExitHandler implements MintHandler {
+private final class ExitHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       serverDone();
@@ -481,7 +481,7 @@ private class ExitHandler implements MintHandler {
 /*										*/
 /********************************************************************************/
 
-private class CommandHandler implements MintHandler {
+private final class CommandHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);

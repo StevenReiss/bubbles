@@ -65,7 +65,7 @@ import java.util.TreeSet;
 
 
 
-public class BbookFactory implements BbookConstants, BudaConstants
+public final class BbookFactory implements BbookConstants, BudaConstants
 {
 
 
@@ -294,7 +294,7 @@ private static class BbookAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private static class TaskConfig implements BubbleConfigurator {
+private static final class TaskConfig implements BubbleConfigurator {
 
    @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml) {
       return null;

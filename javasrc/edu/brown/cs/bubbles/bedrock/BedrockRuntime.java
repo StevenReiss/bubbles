@@ -1509,8 +1509,8 @@ private class DetailListener implements IValueDetailListener {
 /*										*/
 /********************************************************************************/
 
-static Map<String,Integer> kind_values;
-static Map<String,Integer> detail_values;
+private static Map<String,Integer> kind_values;
+private static Map<String,Integer> detail_values;
 
 static {
    kind_values = new HashMap<String,Integer>();
@@ -2146,7 +2146,9 @@ private boolean matchVariable(String id,IVariable v)
 	    try {
 	       if (ijv.isLocal()) return true;
 	     }
-	    catch (DebugException e) { return false; }
+	    catch (DebugException e) {
+	       return false; 
+	    }
 	  }
 	 return true;
        }

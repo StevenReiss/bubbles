@@ -76,7 +76,7 @@ import java.util.TreeSet;
  *	the various debugging bubbles and environment.
  **/
 
-public class BddtFactory implements BddtConstants, BudaConstants.ButtonListener,
+public final class BddtFactory implements BddtConstants, BudaConstants.ButtonListener,
 					BumpConstants, BaleConstants, BudaConstants
 {
 
@@ -441,7 +441,7 @@ private static class DebuggingPanel extends SwingGridPanel
 	 Paint p = new GradientPaint(0f, 0f, tc, 0f, this.getHeight(), bc);
 	 g.setPaint(p);
        }
-      g.fillRect(0, 0, this.getWidth() , this.getHeight());
+      g.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
 
 }	// end of inner class DebuggingPanel
@@ -681,7 +681,7 @@ void addNewConfigurationActions(JPopupMenu menu)
 
 
 
-private class ConfigSelector extends BoardMouser {
+private final class ConfigSelector extends BoardMouser {
 
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getButton() == MouseEvent.BUTTON3) {
@@ -765,7 +765,7 @@ private static class CreateConfigAction extends AbstractAction {
 
 
 
-private static class ConfigComparator implements Comparator<BumpLaunchConfig> {
+private static final class ConfigComparator implements Comparator<BumpLaunchConfig> {
 
    @Override public int compare(BumpLaunchConfig l1,BumpLaunchConfig l2) {
       return l1.getConfigName().compareTo(l2.getConfigName());
@@ -782,7 +782,7 @@ private static class ConfigComparator implements Comparator<BumpLaunchConfig> {
 /*										*/
 /********************************************************************************/
 
-private static class DebugContextListener implements BaleContextListener {
+private static final class DebugContextListener implements BaleContextListener {
 
    
 
@@ -833,7 +833,7 @@ private static class BreakpointAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private class DebugBubbleChecker implements BubbleViewCallback {
+private final class DebugBubbleChecker implements BubbleViewCallback {
 
    @Override public void workingSetRemoved(BudaWorkingSet ws) {
       if (working_sets.contains(ws)) {

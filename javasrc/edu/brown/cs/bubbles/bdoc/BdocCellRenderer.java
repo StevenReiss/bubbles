@@ -325,7 +325,7 @@ private void paintFocus(Graphics g, int x, int y, int w, int h, Color notcolor)
 /*										*/
 /********************************************************************************/
 
-private class DocLinker implements HyperlinkListener {
+private final class DocLinker implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {

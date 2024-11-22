@@ -24,18 +24,29 @@
 
 package edu.brown.cs.bubbles.bandaid;
 
-import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.*;
+import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.ClassReader;
+import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.ClassVisitor;
+import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.ClassWriter;
+import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.MethodVisitor;
+import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.Opcodes;
 import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.commons.CodeSizeEvaluator;
 import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.util.CheckMethodAdapter;
 import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.util.Textifier;
 import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.util.TraceMethodVisitor;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Writer;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.security.ProtectionDomain;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 
 public class BandaidAgentTracer extends BandaidAgent implements BandaidConstants,
@@ -88,7 +99,7 @@ BandaidAgentTracer(BandaidController bc)
    trace_enabled = true;
    max_size = ENTRY_COUNT*32;
    long mxmem = Runtime.getRuntime().maxMemory();
-   max_size = Math.min(max_size,(int)(mxmem/100));
+   max_size = Math.min(max_size,(int) (mxmem/100));
 
    start_time = System.nanoTime();
    last_output = 0;

@@ -287,7 +287,7 @@ void clearCallbacks()
    Dimension dim = getSize();
    int rows = task_win.getThreads().size();
    double yinc = dim.getHeight()/rows;
-   int row = (int)(evt.getY()/yinc);
+   int row = (int) (evt.getY()/yinc);
    if (row >= task_win.getThreads().size()) return "Task Panel";
    BdynEntryThread thr = task_win.getThreads().get(row);
    if (thr == null) return "Task Panel";
@@ -354,7 +354,7 @@ void handleContextMenu(JPopupMenu menu,Point p,MouseEvent evt)
    double t1 = 0;
    int rows = task_win.getThreads().size();
    double yinc = dim.getHeight()/rows;
-   int row = (int)(p.getY()/yinc);
+   int row = (int) (p.getY()/yinc);
    if (row < task_win.getThreads().size()) {
       thr = task_win.getThreads().get(row);
       if (thr != null) {
@@ -536,7 +536,7 @@ private long getTimeAtPosition(double pos)
 
    if (cur_mouse < 0) {
       double ttot = task_max_time - task_min_time;
-      long t0 = (long)(task_min_time + (pos * ttot/w) + 0.5);
+      long t0 = (long) (task_min_time + (pos * ttot/w) + 0.5);
       return t0;
     }
 
@@ -547,7 +547,7 @@ private long getTimeAtPosition(double pos)
     }
    double x = findPosition(cur_delta,cur_mouse,w,tdelta,pos);
    // System.err.println("MAP " + pos + " " + x);
-   return (long)(task_min_time + x + 0.5);
+   return (long) (task_min_time + x + 0.5);
 }
 
 
@@ -560,7 +560,7 @@ private double findDistance(double m,double w,double t)
 
    double d0 = 0;
    double d1 = t;
-   int mx = (int)(Math.log(t)/Math.log(2));
+   int mx = (int) (Math.log(t)/Math.log(2));
 
    for (int i = 0; i < mx; ++i) {
       double d = (d0+d1)/2.0;
@@ -582,7 +582,8 @@ private double findPosition(double d,double m,double w,double t,double i)
    double v = t * m/w;
 
    double x = 0;
-   double a4,a5;
+   double a4;
+   double a5;
 
    if (m < 0 || d == 0) return i * t/w;
 

@@ -147,8 +147,8 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
       isproj= true;
       ispkg = false;
     }
-   else if (forname == null && fullname != null && fullname.contains(":")
-         && BoardSetup.getSetup().getLanguage() == BoardLanguage.JAVA) {
+   else if (forname == null && fullname != null && fullname.contains(":") &&
+         BoardSetup.getSetup().getLanguage() == BoardLanguage.JAVA) {
       isproj = true;
     }
          
@@ -186,14 +186,14 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
        }
       bdata = getButtonData("FIXIMPORTS");
       if (bdata != null && forname != null) {
-         if (bass_properties.getBoolean("Bass.fix.imports") && forname.getProject() != null) {
+         if (BASS_PROPERTIES.getBoolean("Bass.fix.imports") && forname.getProject() != null) {
             Action act = new FixImportsAction("Project " + forname.getProject(),
                   forname.getProject(),fullname,bb);
             actions.put("FIXIMPORTS",act);
           }
        }
       bdata = getButtonData("FORMAT");
-      if (bdata != null && forname != null && bass_properties.getBoolean("Bass.fix.format")) {
+      if (bdata != null && forname != null && BASS_PROPERTIES.getBoolean("Bass.fix.format")) {
          Action act = new FormatAction("Project " + forname.getProject(),
                forname.getProject(),fullname,bb);
          actions.put("FORMAT",act);
@@ -234,7 +234,7 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
             actions.put("NEWFILE",new NewFileAction(loc));
           }
          bdata = getButtonData("DELETECLASS");
-	 if (bdata != null && bass_properties.getBoolean("Bass.delete.class")) {
+	 if (bdata != null && BASS_PROPERTIES.getBoolean("Bass.delete.class")) {
 	    if (pnm != null) {
 	       cnm = cnm.substring(pnm.length()+1);
 	       if (!cnm.contains(".")) {
@@ -246,7 +246,7 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
 	     }
 	  }
          bdata = getButtonData("DELETEFILE");
-	 if (bdata != null && bass_properties.getBoolean("Bass.delete.file")) {
+	 if (bdata != null && BASS_PROPERTIES.getBoolean("Bass.delete.file")) {
             if (!IvyXml.getAttrBool(bdata,"NOCLASS") || actions.get("DELETECLASS") == null) {
                File f = loc.getFile();
                if (f != null) {
@@ -255,13 +255,13 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
              }
 	  }
          bdata = getButtonData("MOVECLASS");
-	 if (bdata != null && bass_properties.getBoolean("Bass.move.class")) {
+	 if (bdata != null && BASS_PROPERTIES.getBoolean("Bass.move.class")) {
 	    if (pnm != null && inner == null) {
                actions.put("MOVECLASS",new MoveClassAction(proj,loc.getClassName(),pnm,bb));
 	     }
           }
          bdata = getButtonData("FIXIMPORTS");
-	 if (bdata != null  && bass_properties.getBoolean("Bass.fix.imports")) {
+	 if (bdata != null  && BASS_PROPERTIES.getBoolean("Bass.fix.imports")) {
 	    if (pnm != null && inner == null) {
 	       File f = loc.getFile();
 	       if (f != null) {
@@ -270,7 +270,7 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
 	     }
 	  }
          bdata = getButtonData("FORMAT");
-         if (bdata != null && bass_properties.getBoolean("Bass.fix.format")) {
+         if (bdata != null && BASS_PROPERTIES.getBoolean("Bass.fix.format")) {
             if (pnm != null && inner == null) {
 	       File f = loc.getFile();
 	       if (f != null) {
@@ -281,18 +281,18 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
        }
       else if (!fullname.contains("@")) {
          bdata = getButtonData("DELETEPACKAGE");
-	 if (bdata != null && bass_properties.getBoolean("Bass.delete.package"))
+	 if (bdata != null && BASS_PROPERTIES.getBoolean("Bass.delete.package"))
 	    actions.put("DELETEPACKAGE",new DeletePackageAction(proj,fullname,bb));
          bdata = getButtonData("DELETEPROJECT");
-	 if (bdata != null && bass_properties.getBoolean("Bass.delete.project")) {
+	 if (bdata != null && BASS_PROPERTIES.getBoolean("Bass.delete.project")) {
 	    actions.put("DELETEPROJECT",new DeleteProjectAction(proj,bb));
 	  }
          bdata = getButtonData("FIXIMPORTS");
-         if (bdata != null && bass_properties.getBoolean("Bass.fix.imports")) {
+         if (bdata != null && BASS_PROPERTIES.getBoolean("Bass.fix.imports")) {
             actions.put("FIXIMPORTS",new FixImportsAction("Package " + fullname,proj,fullname,bb));
           }
          bdata = getButtonData("FORMAT");
-         if (bdata != null && bass_properties.getBoolean("Bass.fix.format")) {
+         if (bdata != null && BASS_PROPERTIES.getBoolean("Bass.fix.format")) {
             actions.put("FORMAT",new FixImportsAction("Package " + fullname,proj,fullname,bb));
           }
        }
@@ -305,7 +305,7 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
       memblocs.add(loc);
       if (loc.getPackage() != null) clsloc = loc;
       bdata = getButtonData("DELETEMETHOD");
-      if (bdata != null && bass_properties.getBoolean("Bass.delete.method")) {
+      if (bdata != null && BASS_PROPERTIES.getBoolean("Bass.delete.method")) {
 	 switch (forname.getNameType()) {
 	    case METHOD :
 	    case CONSTRUCTOR :
@@ -437,7 +437,7 @@ private abstract class NewAction extends AbstractAction implements Runnable {
    private BudaBubbleArea result_area;
    private Point result_point;
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    NewAction(BuenoType typ,BuenoLocation loc) {
       super(loc.getTitle(typ));
@@ -473,7 +473,7 @@ private abstract class NewAction extends AbstractAction implements Runnable {
 
 private class NewMethodAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    NewMethodAction(BuenoLocation loc) {
       super(BuenoType.NEW_METHOD,loc);
@@ -504,7 +504,7 @@ private class NewMethodAction extends NewAction implements BuenoConstants.BuenoB
 
 private class NewFieldAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    NewFieldAction(BuenoLocation loc) {
       super(BuenoType.NEW_FIELD,loc);
@@ -532,7 +532,7 @@ private class NewFieldAction extends NewAction implements BuenoConstants.BuenoBu
 
 private class NewTypeAction extends NewAction implements BuenoConstants.BuenoBubbleCreator, Runnable {
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    NewTypeAction(BuenoType typ,BuenoLocation loc) {
       super(typ,loc);
@@ -562,7 +562,7 @@ private class NewTypeAction extends NewAction implements BuenoConstants.BuenoBub
 
 private class NewInnerTypeAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    NewInnerTypeAction(BuenoLocation loc) {
       super(BuenoType.NEW_INNER_TYPE,loc);
@@ -588,7 +588,7 @@ private class NewInnerTypeAction extends NewAction implements BuenoConstants.Bue
 
 private class NewPackageAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    NewPackageAction(BuenoLocation loc) {
       super(BuenoType.NEW_PACKAGE,loc);
@@ -612,7 +612,7 @@ private class NewPackageAction extends NewAction implements BuenoConstants.Bueno
 
 private class NewDirectoryAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
    
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
    
    NewDirectoryAction(BuenoLocation loc) {
       super(BuenoType.NEW_DIRECTORY,loc);
@@ -639,7 +639,7 @@ private class NewDirectoryAction extends NewAction implements BuenoConstants.Bue
 
 private class NewFileAction extends NewAction implements BuenoConstants.BuenoBubbleCreator {
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
    
    NewFileAction(BuenoLocation loc) { 
       super(BuenoType.NEW_FILE,loc);
@@ -728,7 +728,7 @@ private static class DeleteProjectAction extends AbstractAction implements Runna
     }
 
    @Override public void actionPerformed(ActionEvent e) {
-      if (bass_properties.getBoolean("Bass.delete.confirm",true)) {
+      if (BASS_PROPERTIES.getBoolean("Bass.delete.confirm",true)) {
 	 int sts = JOptionPane.showConfirmDialog(null,"Do you really want to delete project " + project_name,
 						    "Confirm Delete Project",
 						    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
@@ -739,7 +739,7 @@ private static class DeleteProjectAction extends AbstractAction implements Runna
 
    @Override public void run() {
       BumpClient bc = BumpClient.getBump();
-      bc.delete(project_name,"PROJECT",project_name,bass_properties.getBoolean("Bass.delete.rebuild",true));
+      bc.delete(project_name,"PROJECT",project_name,BASS_PROPERTIES.getBoolean("Bass.delete.rebuild",true));
     }
 }	// end of inner class DeleteProjectAction
 
@@ -761,7 +761,7 @@ private static class DeletePackageAction extends AbstractAction implements Runna
     }
 
    @Override public void actionPerformed(ActionEvent e) {
-      if (bass_properties.getBoolean("Bass.delete.confirm",true)) {
+      if (BASS_PROPERTIES.getBoolean("Bass.delete.confirm",true)) {
 	 int sts = JOptionPane.showConfirmDialog(null,"Do you really want to delete all of package " + package_name,
 						    "Confirm Delete Package",
 						    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
@@ -772,7 +772,7 @@ private static class DeletePackageAction extends AbstractAction implements Runna
 
    @Override public void run() {
       BumpClient bc = BumpClient.getBump();
-      bc.delete(project_name,"PACKAGE",package_name,bass_properties.getBoolean("Bass.delete.rebuild",true));
+      bc.delete(project_name,"PACKAGE",package_name,BASS_PROPERTIES.getBoolean("Bass.delete.rebuild",true));
     }
 
 }	// end of inner class DeletePackageAction
@@ -794,7 +794,7 @@ private static class DeleteFileAction extends AbstractAction implements Runnable
     }
 
    @Override public void actionPerformed(ActionEvent e) {
-      if (bass_properties.getBoolean("Bass.delete.confirm",true)) {
+      if (BASS_PROPERTIES.getBoolean("Bass.delete.confirm",true)) {
 	 int sts = JOptionPane.showConfirmDialog(null,"Do you really want to delete file " + file_name.getPath(),
 						    "Confirm Delete File",
 						    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
@@ -805,7 +805,7 @@ private static class DeleteFileAction extends AbstractAction implements Runnable
 
    @Override public void run() {
       BumpClient bc = BumpClient.getBump();
-      bc.delete(project_name,"FILE",file_name.getAbsolutePath(),bass_properties.getBoolean("Bass.delete.rebuild",true));
+      bc.delete(project_name,"FILE",file_name.getAbsolutePath(),BASS_PROPERTIES.getBoolean("Bass.delete.rebuild",true));
     }
 }	// end of inner class DeleteFileAction
 
@@ -908,9 +908,9 @@ private static class ImportFixer implements Runnable  {
    
    @Override public void run() {
       if (edit_result == null) {
-         String order = bass_properties.getString("Bass.import.order");
-         int demand = bass_properties.getInt("Bass.import.ondemand.threshold");
-         int sdemand = bass_properties.getInt("Bass.import.static.ondemand.threshold");
+         String order = BASS_PROPERTIES.getString("Bass.import.order");
+         int demand = BASS_PROPERTIES.getInt("Bass.import.ondemand.threshold");
+         int sdemand = BASS_PROPERTIES.getInt("Bass.import.static.ondemand.threshold");
          BumpClient bc = BumpClient.getBump();
          Element edits = bc.fixImports(project_name,file_name,order,demand,sdemand,null);
          if (edits != null) {
@@ -974,7 +974,7 @@ private static class DeleteClassAction extends AbstractAction implements Runnabl
     }
 
    @Override public void actionPerformed(ActionEvent e) {
-      if (bass_properties.getBoolean("Bass.delete.confirm",true)) {
+      if (BASS_PROPERTIES.getBoolean("Bass.delete.confirm",true)) {
 	 int sts = JOptionPane.showConfirmDialog(null,"Do you really want to delete the class " + class_name,
 						    "Confirm Delete Class",
 						    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
@@ -985,7 +985,7 @@ private static class DeleteClassAction extends AbstractAction implements Runnabl
 
    @Override public void run() {
       BumpClient bc = BumpClient.getBump();
-      if (!bc.delete(project_name,"CLASS",class_name,bass_properties.getBoolean("Bass.delete.rebuild",true))) {
+      if (!bc.delete(project_name,"CLASS",class_name,BASS_PROPERTIES.getBoolean("Bass.delete.rebuild",true))) {
 	 JOptionPane.showMessageDialog(null, "Class Delete Failed");
       }
     }
@@ -1014,7 +1014,7 @@ private static class DeleteMethodAction extends AbstractAction {
       BaleConstants.BaleFileOverview bfo = BaleFactory.getFactory().getFileOverview(bloc.getProject(),bloc.getFile());
       if (bfo == null) return;
    
-      if (bass_properties.getBoolean("Bass.delete.confirm",true)) {
+      if (BASS_PROPERTIES.getBoolean("Bass.delete.confirm",true)) {
          int sts = JOptionPane.showConfirmDialog(null,"Do you really want to delete the method " +
                method_location.getDisplayName(),
                "Confirm Delete Class",
@@ -1058,7 +1058,8 @@ private static class MoveClassAction extends AbstractAction implements Runnable 
    }
 
    @Override public void actionPerformed(ActionEvent e) {
-      combo_box = new SwingComboBox<String>("Package",new String [] { "Generating list of available and relevant packages" });
+      combo_box = new SwingComboBox<String>("Package",
+            new String [] { "Generating list of available and relevant packages" });
       SwingUtilities.invokeLater(this);
       String cnm = class_name;
       int idx = cnm.lastIndexOf(".");

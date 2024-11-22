@@ -407,7 +407,9 @@ static void outputMarker(IMarker xmk,File fil,IvyXmlWriter xw)
       try {
 	 mtyp = xmk.getType();
        }
-      catch (CoreException e) { return; }
+      catch (CoreException e) {
+         return; 
+       }
       if (mtyp.contains("Breakpoint")) return;
 
       xw.begin("PROBLEM");
@@ -1090,7 +1092,7 @@ private static void outputJavaElementImpl(IJavaElement elt,Set<String> files,boo
 	     }
 	    catch (JavaModelException e) {
 	       BedrockPlugin.logE("Package framgent " + elt.getElementName() + " not open");
-	       return ;
+	       return;
 	     }
 	  }
 	 try {
@@ -1106,7 +1108,7 @@ private static void outputJavaElementImpl(IJavaElement elt,Set<String> files,boo
 	     }
 	  }
 	 catch (JavaModelException e) {
-	    return ;
+	    return;
 	  }
 	 outputNameDetails(pfr,xw);
 	 break;
@@ -1861,9 +1863,12 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 	    if (len <= sz && lvls > 0) {
 	       for (int i = 0; i < len; ++i) {
 		  try {
-		     outputValue(arr.getValue(i),null,"[" + i + "]",lvls-1,arraysz,donestatics,xw);
+		     outputValue(arr.getValue(i),null,"[" + i + "]",
+                           lvls-1,arraysz,donestatics,xw);
 		   }
-		  catch (DebugException e) { break; }
+		  catch (DebugException e) {
+                     break; 
+                   }
 		}
 	     }
 	    else if (lvls > 0) {
@@ -1872,7 +1877,9 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 		  try {
 		     outputValue(arr.getValue(i),null,"[" + i + "]",lvls-1,arraysz,donestatics,xw);
 		   }
-		  catch (DebugException e) { break; }
+		  catch (DebugException e) { 
+                     break; 
+                   }
 		}
 	     }
 	  }

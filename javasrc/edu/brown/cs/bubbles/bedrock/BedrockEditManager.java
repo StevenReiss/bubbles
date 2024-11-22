@@ -139,7 +139,7 @@ private int java_version;
 private static final int	QUEUE_SIZE = 1000;
 private static final int	CORE_SIZE = 1;
 private static final int	MAX_SIZE = 8;
-private static final long	KEEP_ALIVE = 1000l;
+private static final long	KEEP_ALIVE = 1000L;
 private static final TimeUnit	KEEP_ALIVE_UNIT = TimeUnit.SECONDS;
 private static final int	DEAD_COUNT = 10;
 
@@ -1143,7 +1143,7 @@ public void handleFixImports(String proj,String bid,String file,int demand,int s
     }
    BedrockPlugin.logD("IMPORT prefs done: " + demand + " " + staticdemand + " " + order);
 
-   boolean keepfg = (add == null ? false : true);
+   boolean keepfg = (add != null);
    try {
       ImportRewrite imp = null;
       imp = ImportRewrite.create(cu,keepfg);
@@ -1489,7 +1489,7 @@ String createPrivateBuffer(String proj,String bid,String pid,String file,String 
 
    if (pid == null) {
       for (int i = 0; i < 100; ++i) {
-	 int v = (int)(Math.random() * 10000000);
+	 int v = (int) (Math.random() * 10000000);
 	 pid = "PID_" + v;
 	 pbd = fd.createPrivateBuffer(pid,frompid);
 	 if (pbd != null) break;
@@ -1506,7 +1506,9 @@ String createPrivateBuffer(String proj,String bid,String pid,String file,String 
    try {
       if (icu != null && icu.getSource() == null) icu = null;
     }
-   catch (Throwable t) { icu = null; }
+   catch (Throwable t) {
+      icu = null; 
+   }
    if (icu == null) {
       fd.removePrivateBuffer(pid);
       throw new BedrockException("Problem creating private buffer");
@@ -2013,7 +2015,9 @@ private class EditTask implements Runnable {
       if (delay > 0) {
          synchronized (thread_pool) {
             if (active_waits == 0) {
-               try { thread_pool.wait(delay); }
+               try {
+                  thread_pool.wait(delay); 
+               }
                catch (InterruptedException e) { }
              }
           }

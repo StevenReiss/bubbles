@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class BanalFactory implements BanalConstants, MintConstants
+public final class BanalFactory implements BanalConstants, MintConstants
 {
 
 

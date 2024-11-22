@@ -662,7 +662,7 @@ private boolean isRelevant(BumpLocation bl)
 
 
 
-private class Searcher implements Runnable {
+private final class Searcher implements Runnable {
 
    @Override public void run() {
       loadNames();

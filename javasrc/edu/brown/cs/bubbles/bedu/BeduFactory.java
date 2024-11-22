@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class BeduFactory implements BeduConstants, BoardConstants {
+public final class BeduFactory implements BeduConstants, BoardConstants {
 
 
 
@@ -265,7 +265,7 @@ private class Documenter implements BudaConstants.ButtonListener {
 
 
 
-private class Helper implements BudaConstants.ButtonListener {
+private final class Helper implements BudaConstants.ButtonListener {
 
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
       showPage(course_data.getHelpUrl());
@@ -314,7 +314,7 @@ private void setupProperties(File dir)
 
 
 
-private static class PropsFilter implements FilenameFilter {
+private static final class PropsFilter implements FilenameFilter {
 
 @Override public boolean accept(File dir,String nm) {
    return nm.endsWith(".props");

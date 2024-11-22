@@ -247,7 +247,7 @@ Point getPosition(BumpThread t)
 /*										*/
 /********************************************************************************/
 
-private class ClickHandler extends BoardMouser {
+private final class ClickHandler extends BoardMouser {
 
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2) {
@@ -484,7 +484,7 @@ private class HistoryAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private class ThreadHandler implements BumpRunEventHandler
+private final class ThreadHandler implements BumpRunEventHandler
 {
    @Override public void handleThreadEvent(BumpRunEvent evt) {
       BumpProcess bp = evt.getProcess();
@@ -597,7 +597,7 @@ private BumpThread getActualThread(int idx)
 /*										*/
 /********************************************************************************/
 
-private static class ThreadComparator implements Comparator<BumpThread> {
+private static final class ThreadComparator implements Comparator<BumpThread> {
 
    @Override public int compare(BumpThread t1,BumpThread t2) {
       if (t1.getThreadType() != t2.getThreadType()) {
@@ -902,7 +902,7 @@ private class CellDrawer implements TableCellRenderer {
 /*										*/
 /********************************************************************************/
 
-private class Transferer extends TransferHandler {
+private final class Transferer extends TransferHandler {
 
    private static final long serialVersionUID = 1;
 

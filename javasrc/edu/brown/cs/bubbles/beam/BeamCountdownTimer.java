@@ -88,7 +88,7 @@ private static final long serialVersionUID = 1;
 /*										*/
 /********************************************************************************/
 
-public BeamCountdownTimer()
+BeamCountdownTimer()
 {
    super(null,BudaBorder.RECTANGLE);
    cur_hours = 0;
@@ -236,7 +236,7 @@ private class CountdownPanel extends Box {
 /*										*/
 /********************************************************************************/
 
-private class TimeAction extends AbstractAction {
+private final class TimeAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
@@ -259,7 +259,7 @@ private class TimeAction extends AbstractAction {
 
 
 
-private class StartAction extends AbstractAction {
+private final class StartAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
@@ -279,7 +279,7 @@ private class StartAction extends AbstractAction {
 
 
 
-private class PauseAction extends AbstractAction {
+private final class PauseAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
@@ -312,7 +312,7 @@ private void reset()
 }
 
 
-private class ResetAction extends AbstractAction {
+private final class ResetAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
@@ -328,7 +328,7 @@ private class ResetAction extends AbstractAction {
 }	// end of inner class ResetAction
 
 
-private class TickAction extends AbstractAction {
+private final class TickAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 

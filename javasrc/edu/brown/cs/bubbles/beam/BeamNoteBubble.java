@@ -173,7 +173,7 @@ static {
 
 
 private static final long serialVersionUID = 1;
-private static final Pattern temp_name = Pattern.compile("Note_\\d{12}_\\d{1,4}.html");
+private static final Pattern TEMP_NAME = Pattern.compile("Note_\\d{12}_\\d{1,4}.html");
 
 
 
@@ -224,7 +224,7 @@ private static Action [] default_actions = new Action [] {
 static {
    NoteEditorKit nek = new NoteEditorKit();
    Action [] acts = nek.getActions();
-   SwingKey [] skey_defs = new SwingKey [] {
+   SwingKey [] skeydefs = new SwingKey [] {
       new SwingKey("NOTE",findAction(acts,NoteEditorKit.copyAction),"menu C"),
       new SwingKey("NOTE",findAction(acts,NoteEditorKit.cutAction),"menu X"),
       new SwingKey("NOTE",findAction(acts,NoteEditorKit.pasteAction),"menu V"),
@@ -253,7 +253,7 @@ static {
    Keymap dflt = JTextComponent.getKeymap(JTextComponent.DEFAULT_KEYMAP);
    SwingText.fixKeyBindings(dflt);
    note_keymap = JTextComponent.addKeymap("NOTE",dflt);
-   for (SwingKey sk : skey_defs) {
+   for (SwingKey sk : skeydefs) {
       sk.addToKeyMap(note_keymap);
     }
 }
@@ -482,7 +482,8 @@ private class SetColorAction extends AbstractAction {
 	    JOptionPane.OK_CANCEL_OPTION,
 	    JOptionPane.QUESTION_MESSAGE,null,null,null);
       if (sts == JOptionPane.OK_OPTION) {
-	 Color tc, bc;
+	 Color tc;
+	 Color bc;
 	 if (crc !=  null) {
 	    tc = crc.getFirstColor();
 	    bc = crc.getSecondColor();
@@ -828,7 +829,7 @@ private void createFileName()
 {
    if (note_name != null) return;
 
-   String rid = Integer.toString((int)(Math.random() * 10000));
+   String rid = Integer.toString((int) (Math.random() * 10000));
    String fnm = "Note_" + file_dateformat.format(new Date()) + "_" + rid + ".html";
    note_name = fnm;
 }
@@ -847,7 +848,7 @@ private boolean isUserName()
 
 private static boolean isUserName(String name)
 {
-   Matcher m = temp_name.matcher(name);
+   Matcher m = TEMP_NAME.matcher(name);
    if (m.matches()) return false;
    return true;
 }
@@ -1144,7 +1145,7 @@ private static class StrikeThruAction extends StyledEditorKit.StyledTextAction {
 	 StyledEditorKit kit = getStyledEditorKit(editor);
 	 MutableAttributeSet attr = kit.getInputAttributes();
 	 boolean on = (StyleConstants.isStrikeThrough(attr));
-	 boolean val = (on ? false : true);
+	 boolean val = !on;
 	 SimpleAttributeSet sas = new SimpleAttributeSet();
 	 StyleConstants.setStrikeThrough(sas,val);
 	 setCharacterAttributes(editor,sas,false);
@@ -1190,7 +1191,7 @@ private static class SaveAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private class ComponentHandler extends ComponentAdapter {
+private final class ComponentHandler extends ComponentAdapter {
 
    @Override public void componentHidden(ComponentEvent e) {
       if (note_name != null && note_area != null) {
@@ -1208,7 +1209,7 @@ private class ComponentHandler extends ComponentAdapter {
 /*										*/
 /********************************************************************************/
 
-private class LinkListener extends HTMLEditorKit.LinkController {
+private final class LinkListener extends HTMLEditorKit.LinkController {
 
    private static final long serialVersionUID = 1;
 
@@ -1343,7 +1344,7 @@ private class GotoLine {
 
 
 
-private static class HyperListener implements HyperlinkListener {
+private static final class HyperListener implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {

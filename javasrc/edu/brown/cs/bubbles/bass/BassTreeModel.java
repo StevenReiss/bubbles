@@ -50,13 +50,13 @@ interface BassTreeModel extends TreeModel, BassConstants {
 /*										*/
 /********************************************************************************/
 
-public int getLeafCount();
+int getLeafCount();
 
-public BassName getSingleton();
+BassName getSingleton();
 
-public TreePath getTreePath(String nm);
+TreePath getTreePath(String nm);
 
-public int [] getIndicesOfFirstMethod();
+int [] getIndicesOfFirstMethod();
 
 
 
@@ -67,11 +67,11 @@ public int [] getIndicesOfFirstMethod();
 /*										*/
 /********************************************************************************/
 
-public void prune(String pat,boolean upd);
+void prune(String pat,boolean upd);
 
-public void reset(String pat,boolean upd);
+void reset(String pat,boolean upd);
 
-public void globalUpdate();
+void globalUpdate();
 
 
 
@@ -81,11 +81,11 @@ public void globalUpdate();
 /*										*/
 /********************************************************************************/
 
-public void outputXml(BudaXmlWriter xw);
+void outputXml(BudaXmlWriter xw);
 
 
 
-public void rebuild(BassRepository br);
+void rebuild(BassRepository br);
 
 
 /********************************************************************************/

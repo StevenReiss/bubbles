@@ -165,7 +165,7 @@ static void stopApplication()
 
 
 
-private static class Shutdown implements Runnable {
+private static final class Shutdown implements Runnable {
 
    @Override public void run() {
       BedrockPlugin.logD("BEDROCK SHUTDOWN " + show_atend + " " + exit_atend);
@@ -301,7 +301,9 @@ private synchronized void noteSetup()
       else if (s.startsWith("-btiny")) tiny_display = true;
       else if (s.startsWith("-bhide")) hide_display = true;
       else if (s.startsWith("-bnone")) {
-	 use_display = tiny_display = hide_display = false;
+	 use_display = false;
+	 tiny_display = false;
+	 hide_display = false;
        }
       else hide_display = true; 		// default
     }
@@ -504,7 +506,7 @@ void startedBubbles(boolean hide)
 /*										*/
 /********************************************************************************/
 
-private class WbAdvisor extends WorkbenchAdvisor {
+private final class WbAdvisor extends WorkbenchAdvisor {
 
    @Override public String getInitialWindowPerspectiveId() {
       return null;
@@ -621,7 +623,7 @@ private class WbWindowAdvisor extends WorkbenchWindowAdvisor {
 }	// end of inner class WbWindowAdvisor
 
 
-private class WbShellRemover extends ShellAdapter {
+private final class WbShellRemover extends ShellAdapter {
 
    @Override public void shellDeiconified(ShellEvent e) {
       BedrockPlugin.logD("BEDROCK: DEICON SHELL");

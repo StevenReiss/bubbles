@@ -144,9 +144,9 @@ void handleQuickFix(String proj,String bid,String file,int off,int len,List<Elem
 
 private class WJob extends WorkbenchJob {
 
-   FixContext fix_context;
-   ProblemContext [] problem_contexts;
-   IvyXmlWriter xml_writer;
+   private FixContext fix_context;
+   private ProblemContext [] problem_contexts;
+   private IvyXmlWriter xml_writer;
 
    WJob(FixContext fc,ProblemContext [] pcs,IvyXmlWriter xw) {
       super(BedrockApplication.getDisplay(),"quickfixer");
@@ -253,8 +253,8 @@ private List<CategorizedProblem> getProblems(CompilationUnit cu,List<Element> xm
       int sln = IvyXml.getAttrInt(e,"START");
       if (sln < 0) continue;
       for (IProblem ip : probs) {
-	 BedrockPlugin.logD("Consider problem " + ip.getID() + " " + ip.getSourceStart() + " "
-	       + ip.getArguments() + " " + mid);
+	 BedrockPlugin.logD("Consider problem " + ip.getID() + " " + ip.getSourceStart() + " " +
+	       ip.getArguments() + " " + mid);
 	 if (!(ip instanceof CategorizedProblem)) continue;
 	 if (ip.getID() != mid) continue;
 	 if (Math.abs(ip.getSourceStart() - sln) > 2) continue;
@@ -295,7 +295,8 @@ private boolean isUsable(IJavaCompletionProposal p)
 {
    if (p == null) return false;
 
-// if (p.getClass().getName().equals("org.eclipse.jdt.internal.ui.text.correction.proposals.LinkedNamesAssistProposal")) {
+// if (p.getClass().getName().equals(
+//        "org.eclipse.jdt.internal.ui.text.correction.proposals.LinkedNamesAssistProposal")) {
 //
 //    return false;
 //  }

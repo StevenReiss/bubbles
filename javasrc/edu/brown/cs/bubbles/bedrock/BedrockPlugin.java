@@ -491,7 +491,9 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 {
    BedrockPlugin.logI("Handle command " + cmd + " for " + proj);
    long start = System.currentTimeMillis();
-   String h1,h2,h3;
+   String h1;
+   String h2;
+   String h3;
 
    IvyXmlWriter xw = new IvyXmlWriter();
    xw.begin("RESULT");
@@ -533,7 +535,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 try {
 	    bedrock_project.importExistingProject(proj);
 	  }
-	 catch(Throwable t) {
+	 catch (Throwable t) {
 	    xw.close();
 	    throw new BedrockException("Exception constructing project: " + t.getMessage());
 	  }
@@ -909,7 +911,9 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 log_level = IvyXml.getAttrEnum(xml,"LEVEL",BedrockLogLevel.ERROR);
 	 break;
       case "GETHOST" :
-	 h1 = h2 = h3 = null;
+	 h1 = null;
+	 h2 = null;
+	 h3 = null;
 	 try {
 	    InetAddress lh = InetAddress.getLocalHost();
 	    h1 = lh.getHostAddress();
@@ -1164,7 +1168,7 @@ private void getProxyForHost(String host,IvyXmlWriter xw)
 /*										*/
 /********************************************************************************/
 
-private class CommandHandler implements MintHandler {
+private final class CommandHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg, MintArguments args) {
       String cmd = args.getArgument(1);

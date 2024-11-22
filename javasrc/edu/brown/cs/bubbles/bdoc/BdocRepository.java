@@ -258,7 +258,7 @@ private synchronized void waitForSearches()
       try {
 	 wait();
       }
-      catch(InterruptedException e) { }
+      catch (InterruptedException e) { }
    }
 }
 

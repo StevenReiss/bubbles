@@ -299,7 +299,7 @@ int BATT_NAME_COL_PREF_WIDTH = 150;
 
 interface BattPopupHandler extends EventListener {
    
-   public void handlePopupMenu(BattTest test,BudaBubble bbl,JPopupMenu menu);
+   void handlePopupMenu(BattTest test,BudaBubble bbl,JPopupMenu menu);
    
 }
 

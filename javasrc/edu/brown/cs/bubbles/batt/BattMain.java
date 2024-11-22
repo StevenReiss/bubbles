@@ -51,7 +51,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 
-public class BattMain implements BattConstants
+public final class BattMain implements BattConstants
 {
 
 
@@ -619,7 +619,8 @@ private void processRun(boolean listonly,Set<String> testclss)
 	  }
 	 catch (UnknownHostException e) { }
 	 nm += "@" + host;
-	 fnm = cntfnm = nm;
+	 fnm = nm;
+	 cntfnm = nm;
        }
 
       StringBuffer buf = new StringBuffer();
@@ -693,7 +694,7 @@ private void processRun(boolean listonly,Set<String> testclss)
 
       reportTestStatus(false);
 
-      System.err.print("BATTM: RUN" );
+      System.err.print("BATTM: RUN");
       for (String s : args) {
 	 System.err.print(" " + s);
        }
@@ -755,7 +756,8 @@ private boolean runOneTest(BattTestCase testcase)
 	  }
 	 catch (UnknownHostException e) { }
 	 nm += "@" + host;
-	 fnm = cntfnm = nm;
+	 fnm = nm;
+	 cntfnm = nm;
        }
 
       StringBuffer buf = new StringBuffer();
@@ -810,7 +812,7 @@ private boolean runOneTest(BattTestCase testcase)
 
       reportTestStatus(false);
 
-      System.err.print("BATTM: RUN" );
+      System.err.print("BATTM: RUN");
       for (String s : args) {
 	 System.err.print(" " + s);
        }
@@ -1072,7 +1074,7 @@ private class Client extends IvyXmlReaderThread {
    @Override protected void processXmlMessage(String msg) {
       Element e = IvyXml.convertStringToXml(msg);
    
-      synchronized(message_lock) {
+      synchronized (message_lock) {
          System.err.println("BATTM: CLIENT MSG: " + client_socket.getLocalPort() + " " + msg);
          
          if (IvyXml.isElement(e,"TESTCASE")) {

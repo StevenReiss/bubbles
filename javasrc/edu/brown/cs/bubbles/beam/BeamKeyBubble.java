@@ -106,7 +106,7 @@ BeamKeyBubble()
 /*										*/
 /********************************************************************************/
 
-private synchronized static void setupTableModel()
+private static synchronized void setupTableModel()
 {
    if (table_model != null) return;
 
@@ -154,7 +154,7 @@ private static TableModel loadFromSwingKey(String menu,String xalt)
 
 
 
-private static Vector<String> vector(String ... data)
+private static Vector<String> vector(String... data)
 {
    Vector<String> rslt = new Vector<>();
    for (String s : data) rslt.add(s);

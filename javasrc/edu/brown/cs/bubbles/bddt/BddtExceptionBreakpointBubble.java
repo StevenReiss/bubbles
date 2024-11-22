@@ -162,7 +162,7 @@ private void createBreakpoint()
 /*										*/
 /********************************************************************************/
 
-private class ExceptionSet implements Runnable {
+private final class ExceptionSet implements Runnable {
 
    @Override public void run() {
       Set<String> etypes = new TreeSet<String>();

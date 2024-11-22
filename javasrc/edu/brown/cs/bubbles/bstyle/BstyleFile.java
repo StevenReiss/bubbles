@@ -128,6 +128,12 @@ boolean setHasErrors(boolean fg)
 }
 
 
+void noteChanged()
+{
+   // force reread of file if not buffered
+   if (edit_document == null) file_text = null;
+}
+
 String getNewLineString()
 {
    return newline_string;
@@ -213,7 +219,6 @@ Point getStartAndEndPosition(int lno,int coffset)
                lno + " " + coffset + " " + for_file + " " + user_file,e);
        }
     }
-   
   
    return null;
 }

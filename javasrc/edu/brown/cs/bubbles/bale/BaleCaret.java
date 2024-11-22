@@ -351,6 +351,14 @@ private void damageBlock(Rectangle r)
 }
 
 
+@Override public int hashCode()
+{
+   int v = super.hashCode();
+   v += caret_style.hashCode();
+   v += width;
+   return v;
+}
+
 
 
 }	// end of class BaleCaret

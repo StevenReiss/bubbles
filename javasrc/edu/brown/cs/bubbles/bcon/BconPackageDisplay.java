@@ -599,7 +599,7 @@ private class BconPetalNode extends PetalNodeDefault {
 
 private class BconPetalArc extends PetalArcDefault {
 
-   BconGraphArc for_arc;
+   private BconGraphArc for_arc;
    private static final long serialVersionUID = 1;
    
    BconPetalArc(BconGraphArc ga) {
@@ -620,7 +620,7 @@ private class BconPetalArc extends PetalArcDefault {
       int mxn = for_arc.getRelationTypes().getRelationshipCount();
       ArcType prt = for_arc.getRelationTypes().getPrimaryRelationship();
       if (mxn > 0) {
-         float wd = (float)(1 + Math.log(mxn));
+         float wd = (float) (1 + Math.log(mxn));
          Stroke s = new BasicStroke(wd);
          setStroke(s);
       }
@@ -699,7 +699,8 @@ private static class GraphComponent extends JPanel {
       switch (use_shape) {
 	 case SQUARE :
 	 default :
-	    r.x = r.y = 0;
+	    r.x = 0;
+            r.y = 0;
 	    s = r;
 	    break;
 	 case TRIANGLE :
@@ -742,9 +743,9 @@ private static class GraphComponent extends JPanel {
 	 case PENTAGON :
 	    poly_shape = new Polygon();
 	    double a1 = Math.tan(Math.toRadians(54));
-	    int h1 = (int)(r.width / 2.0 / a1);
+	    int h1 = (int) (r.width / 2.0 / a1);
 	    double a2 = Math.tan(Math.toRadians(18));
-	    int h2 = (int)(a2 * (r.height - h1));
+	    int h2 = (int) (a2 * (r.height - h1));
 	    poly_shape.addPoint(r.width/2,0);
 	    poly_shape.addPoint(r.width,h1);
 	    poly_shape.addPoint(r.width - h2,r.height);
@@ -823,7 +824,7 @@ private class GraphModel extends PetalModelBase {
 
 
 
-private static class NodeSorter implements Comparator<PetalNode> {
+private static final class NodeSorter implements Comparator<PetalNode> {
 
    @Override public int compare(PetalNode p1,PetalNode p2) {
       int d1 = ((BconPetalNode) p1).getArcCount() - ((BconPetalNode) p2).getArcCount();
@@ -871,12 +872,13 @@ private class CompactAction extends AbstractAction {
    private Set<ArcType> compact_type;
    private static final long serialVersionUID = 1;
    
-   CompactAction(BconGraphNode gn,ArcType ... at ) {
+   CompactAction(BconGraphNode gn,ArcType... at) {
       super("Compact node for " + at[0].toString());
       for_node = gn;
       compact_type = EnumSet.of(at[0]);
-      for (int i = 1; i < at.length; ++i)
+      for (int i = 1; i < at.length; ++i) {
 	 compact_type.add(at[i]);
+       }
     }
 
    @Override public void actionPerformed(ActionEvent e) {
@@ -1088,7 +1090,7 @@ private class ComputeGraph implements Runnable {
 
 
 
-private class SetupGraph implements Runnable {
+private final class SetupGraph implements Runnable {
 
    @Override public void run() {
       setupGraphModel();

@@ -75,7 +75,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *	and their associated repositories.
  **/
 
-public class BassFactory implements BudaRoot.SearchBoxCreator, BassConstants, BudaConstants
+public final class BassFactory implements BudaRoot.SearchBoxCreator, BassConstants, BudaConstants
 {
 
 
@@ -146,7 +146,8 @@ public static synchronized void setup()
    BudaRoot.addBubbleConfigurator("BASS",new BassConfigurator());
    package_explorers = new HashMap<>();
 
-   BudaRoot.registerMenuButton("Package Explorer",new PackageExplorerButton(),"Add/Remove the package explorer panel for easier browsing");
+   BudaRoot.registerMenuButton("Package Explorer",new PackageExplorerButton(),
+         "Add/Remove the package explorer panel for easier browsing");
    BudaRoot.registerMenuButton("Text Search",new TextSearchButton(null),"Search for a string or pattern in all files");
 
    BudaRoot.addToolbarButton("DefaultMenu",new TextSearchButton(null),"Text search",BoardImage.getImage("search"));
@@ -172,7 +173,7 @@ public static void initialize(BudaRoot br)
 {
    BoardLog.logD("BASS","Initialize");
 
-   if (bass_properties.getBoolean(BASS_PACK_ON_START_NAME) &&
+   if (BASS_PROPERTIES.getBoolean(BASS_PACK_ON_START_NAME) &&
 	  !BoardSetup.getConfigurationFile().exists()) {
       BudaBubbleArea bba = br.getCurrentBubbleArea();
       addPackageExplorer(bba);
@@ -426,7 +427,7 @@ public boolean checkMethodName(String proj,String fullname,String args)
 }
 
 
-private static class MethodFinder implements BuenoConstants.BuenoClassMethodFinder {
+private static final class MethodFinder implements BuenoConstants.BuenoClassMethodFinder {
 
    @Override public List<BumpLocation> findClassMethods(String cls) {
       return bass_repository.findClassMethods(cls);
@@ -537,7 +538,7 @@ private static class TextSearchButton extends AbstractAction implements BudaCons
 	ActionListener
 {
    private String for_project;
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    TextSearchButton(String proj) {
       super("Text Search" + (proj == null ? "" : " in " + proj));
@@ -616,7 +617,7 @@ static BassTreeModelBase getModelBase(BassRepository br)
 /*										*/
 /********************************************************************************/
 
-private static class ProjectProps implements BassPopupHandler {
+private static final class ProjectProps implements BassPopupHandler {
 
    @Override public void addButtons(BudaBubble bb,Point where,JPopupMenu menu,
         			       String fullname,BassName bn) {

@@ -288,7 +288,7 @@ private class EndScroll implements DocumentListener, Runnable {
 /*										*/
 /********************************************************************************/
 
-private class AutoScrollAction implements ActionListener {
+private final class AutoScrollAction implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JCheckBoxMenuItem itm = (JCheckBoxMenuItem) evt.getSource();
@@ -330,7 +330,7 @@ private class InputHandler implements ActionListener {
 /*										*/
 /********************************************************************************/
 
-private class GotoMouser extends BoardMouser {
+private final class GotoMouser extends BoardMouser {
 
    @Override public void mouseClicked(MouseEvent evt) {
       GotoLine gl = checkForGoto(evt.getPoint());

@@ -39,7 +39,7 @@ import java.awt.Point;
 
 
 
-public class BassTest implements BassConstants
+public final class BassTest implements BassConstants
 {
 
 
@@ -120,7 +120,7 @@ private static class CreateSearch implements Runnable {
 /*										*/
 /********************************************************************************/
 
-private static class CloseBedrock extends Thread {
+private static final class CloseBedrock extends Thread {
 
    @Override public void run() {
       BumpClient.getBump().stopIDE();

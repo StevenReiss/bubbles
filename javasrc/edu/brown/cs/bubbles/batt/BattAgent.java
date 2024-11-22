@@ -48,7 +48,7 @@ import java.util.StringTokenizer;
 
 
 
-public class BattAgent implements BattConstants
+public final class BattAgent implements BattConstants
 {
 
 
@@ -509,7 +509,7 @@ private static class IndexTable {
 /*										*/
 /********************************************************************************/
 
-private static abstract class RtItem {
+private abstract static class RtItem {
 
    protected int item_index;
    protected int start_line;
@@ -517,7 +517,8 @@ private static abstract class RtItem {
 
    protected RtItem(int idx) {
       item_index = idx;
-      start_line = end_line = -1;
+      start_line = -1;
+      end_line = -1;
     }
 
    int getIndex()			{ return item_index; }

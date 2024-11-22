@@ -258,7 +258,7 @@ private class TaskSelector extends TaskDialog implements ActionListener {
             setupTasks();
           }
        }
-      else if (cmd.equals("Task")) { }
+      else if (cmd.equals("Task")) ;
       else if (cmd.equals("Cancel")) {
          result_status = -1;
          closeDialog(evt);
@@ -348,7 +348,7 @@ private class TaskSelector extends TaskDialog implements ActionListener {
 
 
 
-private static class TaskTimeCompare implements Comparator<BnoteTask> {
+private static final class TaskTimeCompare implements Comparator<BnoteTask> {
 
    @Override public int compare(BnoteTask t1,BnoteTask t2) {
       long v1 = t1.getLastTime().getTime();

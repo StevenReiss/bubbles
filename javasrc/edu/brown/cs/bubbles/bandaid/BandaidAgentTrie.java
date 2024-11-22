@@ -26,7 +26,12 @@ package edu.brown.cs.bubbles.bandaid;
 
 
 import java.lang.management.ThreadInfo;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.WeakHashMap;
 
 
 class BandaidAgentTrie extends BandaidAgent implements BandaidConstants

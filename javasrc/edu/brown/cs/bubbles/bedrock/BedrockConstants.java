@@ -118,9 +118,9 @@ String	BEDROCK_LAUNCH_IGNORE_PROP = "edu.brown.cs.bubbles.bedrock.IGNORE";
 
 interface EditData {
 
-   public int getOffset();
-   public int getLength();
-   public String getText();
+   int getOffset();
+   int getLength();
+   String getText();
 
 }	// end of subinterface EditData
 

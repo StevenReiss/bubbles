@@ -123,7 +123,7 @@ BassTextSearch(String proj)
    Color bptc = BoardColors.getColor(BASS_PANEL_TOP_COLOR_PROP);
    BoardColors.setColors(this,bptc); 
    
-   Font ft = bass_properties.getFontOption(BASS_TEXT_FONT_PROP,BASS_TEXT_FONT);
+   Font ft = BASS_PROPERTIES.getFontOption(BASS_TEXT_FONT_PROP,BASS_TEXT_FONT);
 
    int y = 0;
    String ttl = "Text Search";
@@ -228,7 +228,7 @@ private class Searcher implements Runnable {
    private String searcher_text;
    private String search_project;
    private Collection<BumpLocation> search_result;
-   Rectangle search_location;
+   private Rectangle search_location;
 
    Searcher(String txt,String proj,boolean inp) {
       searcher_text = txt;
@@ -243,7 +243,7 @@ private class Searcher implements Runnable {
          BowiFactory.startTask();
          try {
             BumpClient bc = BumpClient.getBump();
-            int max = bass_properties.getInt("Bass.text.search.max",512);
+            int max = BASS_PROPERTIES.getInt("Bass.text.search.max",512);
             Collection<BumpLocation> locs = bc.textSearch(search_project,searcher_text,
         	     search_literal,
         	     !search_case,

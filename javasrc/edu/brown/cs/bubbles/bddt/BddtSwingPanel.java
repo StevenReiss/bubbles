@@ -565,7 +565,7 @@ private class StackNode extends CommonNode {
 /*										*/
 /********************************************************************************/
 
-private class ClickHandler extends MouseAdapter {
+private final class ClickHandler extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2) {

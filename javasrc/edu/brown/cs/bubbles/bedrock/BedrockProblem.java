@@ -194,7 +194,9 @@ private String [] getArguments(IMarker im)
    try { 
       narg = Integer.parseInt(v.substring(0,idx)); 
     }
-   catch (NumberFormatException e) { return null; }
+   catch (NumberFormatException e) {
+      return null; 
+   }
    
    String [] rslt;
    if (narg == 0) rslt = new String [0];

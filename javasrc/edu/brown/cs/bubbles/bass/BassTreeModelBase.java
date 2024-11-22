@@ -75,7 +75,7 @@ private ReadWriteLock	tree_lock;
 private SwingEventListenerList<BassTreeUpdateListener> listener_set;
 private Rebuilder	cur_rebuilder;
 
-private static long REBUILD_DELAY = bass_properties.getLong("Bass.rebuild.delay",500);
+private static long REBUILD_DELAY = BASS_PROPERTIES.getLong("Bass.rebuild.delay",500);
 
 
 
@@ -288,7 +288,7 @@ private static void computeBranchType(BassName nm,Branch p)
 
 
 
-private static class TreeSorter implements Comparator<BassName> {
+private static final class TreeSorter implements Comparator<BassName> {
 
    @Override public int compare(BassName b1,BassName b2) {
       String b1pfx = b1.getProject();
@@ -480,7 +480,7 @@ private static class UpdateEvent implements BassTreeUpdateEvent {
 /*										*/
 /********************************************************************************/
 
-private static abstract class BassTreeImpl implements BassTreeBase, BassTreeNode {
+private abstract static class BassTreeImpl implements BassTreeBase, BassTreeNode {
 
    protected Branch parent_node;
 
@@ -490,12 +490,12 @@ private static abstract class BassTreeImpl implements BassTreeBase, BassTreeNode
 
    Branch getBassParent()				{ return parent_node; }
 
-   @Override abstract public int getChildCount();
-   @Override abstract public BassTreeBase getChildAt(int idx);
+   @Override public abstract int getChildCount();
+   @Override public abstract BassTreeBase getChildAt(int idx);
    @Override public int getIndex(BassTreeBase chld)	{ return -1; }
 
-   @Override abstract public String getLocalName();
-   @Override abstract public boolean isLeaf();
+   @Override public abstract String getLocalName();
+   @Override public abstract boolean isLeaf();
    @Override public BassName getBassName()		{ return null; }
    @Override public Icon getExpandIcon()		{ return null; }
    @Override public Icon getCollapseIcon()		{ return null; }
@@ -510,7 +510,7 @@ private static abstract class BassTreeImpl implements BassTreeBase, BassTreeNode
    abstract void addAllNames(Collection<BassName> rslt);
 
    abstract int getMaxCount();
-   @Override abstract public int getLeafCount();
+   @Override public abstract int getLeafCount();
 
 
 }	// end of inner class BassTreeImpl
@@ -923,8 +923,8 @@ private static class Branch extends BassTreeImpl {
          return bb;
        }
       else if ((bn.getNameType() == BassNameType.CLASS || bn.getNameType() == BassNameType.INTERFACE ||
-            bn.getNameType() == BassNameType.ENUM || bn.getNameType() == BassNameType.ANNOTATION)
-            && bn.getClassName() != null &&
+            bn.getNameType() == BassNameType.ENUM || bn.getNameType() == BassNameType.ANNOTATION) &&
+            bn.getClassName() != null &&
             parent.getBranchType() == BranchNodeType.PACKAGE) {
          if (parent.getFullName().endsWith(bn.getName())) {
             computeBranchType(bn,parent);

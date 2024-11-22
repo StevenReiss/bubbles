@@ -364,7 +364,7 @@ private class InteractEditor extends SwingEditorPane implements CaretListener {
 /*										*/
 /********************************************************************************/
 
-private class ExprTypein implements ActionListener {
+private final class ExprTypein implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JTextField tfld = (JTextField) evt.getSource();

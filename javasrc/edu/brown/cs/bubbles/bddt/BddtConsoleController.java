@@ -365,7 +365,7 @@ BddtConsoleBubble createConsole(BumpProcess bp)
 /*										*/
 /********************************************************************************/
 
-private class ConsoleHandler implements BumpConstants.BumpRunEventHandler {
+private final class ConsoleHandler implements BumpConstants.BumpRunEventHandler {
 
    @Override public void handleConsoleMessage(BumpProcess bp,BumpConsoleMode mode,boolean eof,String msg) {
       TextMode md = TextMode.STDOUT;

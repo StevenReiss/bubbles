@@ -56,7 +56,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
  *
  **/
 
-public class BdocFactory implements BdocConstants, BudaConstants.DocBoxCreator
+public final class BdocFactory implements BdocConstants, BudaConstants.DocBoxCreator
 {
 
 

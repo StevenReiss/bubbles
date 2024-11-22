@@ -449,7 +449,7 @@ private class ConfigData {
 /*                                                                              */
 /********************************************************************************/
 
-private class ProjectChecker extends Thread {
+private final class ProjectChecker extends Thread {
    
    private String project_name;
    private Set<BstyleFile> todo_files;

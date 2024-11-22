@@ -104,11 +104,11 @@ private double                  reset_totals;
 private double                  reset_time;
 private Map<String,PerfNode>	node_map;
 
-private static final String [] column_names = new String[] {
+private static final String [] COLUMN_NAME = new String[] {
    "Package", "Class", "Method", "Line", "Base Time", "Base %", "Total Time", "Total %"
 };
 
-private static final Class<?> [] column_class = new Class<?>[] {
+private static final Class<?> [] COLUMN_CLASS = new Class<?>[] {
    String.class, String.class, String.class, Integer.class, Double.class, Double.class,
    Double.class, Double.class
 };
@@ -324,7 +324,7 @@ private class ClickHandler extends BoardMouser {
 /*										*/
 /********************************************************************************/
 
-private class PerfEventHandler implements BumpRunEventHandler {
+private final class PerfEventHandler implements BumpRunEventHandler {
 
    @Override public void handleProcessEvent(BumpRunEvent evt) {
 //    System.err.println("PEVT " + evt.getEventType() + " " + evt.getProcess() + " " + launch_control.getProcess());
@@ -484,7 +484,7 @@ private static class CellDrawer implements TableCellRenderer {
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
 							       boolean foc,int r,int c) {
-      Class<?> cc = column_class[c];
+      Class<?> cc = COLUMN_CLASS[c];
       if (v != null && !cc.isAssignableFrom(v.getClass())) {
 	 System.err.println("Handle bad object");
        }
@@ -530,18 +530,18 @@ private class PerfModel extends AbstractTableModel {
    void unlock()				{ model_lock.unlock(); }
 
    @Override public int getColumnCount() {
-      return column_names.length;
+      return COLUMN_NAME.length;
     }
 
    @Override public int getRowCount()		{ return node_set.size(); }
 
 
    @Override public String getColumnName(int col) {
-      return column_names[col];
+      return COLUMN_NAME[col];
     }
 
    @Override public Class<?> getColumnClass(int col) {
-      return column_class[col];
+      return COLUMN_CLASS[col];
     }
 
    @Override public Object getValueAt(int row,int col) {

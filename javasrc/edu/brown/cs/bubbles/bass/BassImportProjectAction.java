@@ -142,7 +142,7 @@ private class WorkingSetConfirmDialog extends BudaBubble implements ActionListen
       setContentPane(new ConfirmContentPane());
     }
 
-   private class ConfirmContentPane extends JPanel {
+   private final class ConfirmContentPane extends JPanel {
 
       private static final long serialVersionUID = 1L;
 
@@ -183,8 +183,8 @@ private void loadWorkingSets()
    File wsdir = fsv.createFileObject(proj_dir,"workingsets");
    for (String filename : wsdir.list()) {
       File wsf = fsv.createFileObject(wsdir,filename);
-      if (wsf.getName().contains(".")
-	     && wsf.getName().substring(wsf.getName().lastIndexOf('.')).equals(".xml")) {
+      if (wsf.getName().contains(".") &&
+	     wsf.getName().substring(wsf.getName().lastIndexOf('.')).equals(".xml")) {
 	 Element xml = IvyXml.loadXmlFromFile(wsf);
 	 fixFilePaths(xml, proj_dir.getName());
 
@@ -218,8 +218,9 @@ private void copyR(File src,File dest) throws IOException
 
       byte[] buf = new byte[1024];
       int len;
-      while ((len = in.read(buf)) > 0)
+      while ((len = in.read(buf)) > 0) {
 	 out.write(buf, 0, len);
+       }
 
       in.close();
       out.close();
@@ -234,8 +235,8 @@ private void fixFilePaths(Element xml,String proj)
 {
    String attr = xml.getAttribute("FILE");
    if (attr != null && attr.contains(proj)) {
-      xml.setAttribute("FILE", BoardSetup.getSetup().getDefaultWorkspace()
-			  + File.separator + attr.substring(attr.indexOf(proj)));
+      xml.setAttribute("FILE", BoardSetup.getSetup().getDefaultWorkspace() +
+			  File.separator + attr.substring(attr.indexOf(proj)));
     }
 
    NodeList nl = xml.getChildNodes();

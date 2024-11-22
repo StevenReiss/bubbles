@@ -29,7 +29,14 @@ package edu.brown.cs.bubbles.bandaid;
 
 import java.lang.management.LockInfo;
 import java.lang.management.ThreadInfo;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 class BandaidAgentDeadlock extends BandaidAgent implements BandaidConstants {
@@ -59,7 +66,7 @@ private static int			check_every = 10;
 /*										*/
 /********************************************************************************/
 
-BandaidAgentDeadlock(BandaidController bc)
+BandaidAgentDeadlock(BandaidController bc) 
 {
    super(bc,"Deadlock");
 
@@ -186,7 +193,7 @@ private void analyzeLocks()
 
 private static class LockNode {
 
-   LockInfo for_lock;
+   private LockInfo for_lock;
 
    LockNode(LockInfo li) {
       for_lock = li;

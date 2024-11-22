@@ -118,7 +118,7 @@ private transient Reseter cur_reseter;
 private transient Set<String> local_expands;
 
 private JScrollPane scroll_pane;
-private BassSearchBox self;
+private BassSearchBox our_self;
 
 private String		old_text;
 
@@ -137,7 +137,7 @@ private static Icon courses_expand_image = null;
 private static Icon courses_collapse_image = null;
 
 
-private static final boolean bk_reset = true;
+private static boolean bk_reset = true;
 
 private static final long serialVersionUID = 1;
 
@@ -161,7 +161,7 @@ BassSearchBox(BassTreeModel mdl,boolean common)
    setInsets(4);
    setOpaque(false);
 
-   Font ft = bass_properties.getFontOption(BASS_TEXT_FONT_PROP,BASS_TEXT_FONT);
+   Font ft = BASS_PROPERTIES.getFontOption(BASS_TEXT_FONT_PROP,BASS_TEXT_FONT);
    Font ftb = ft.deriveFont(Font.BOLD);
 
    loadImages();
@@ -242,9 +242,9 @@ BassSearchBox(BassTreeModel mdl,boolean common)
 
    new Hoverer();
 
-   self = this;
+   our_self = this;
 
-   int mxl = bass_properties.getInt(MAX_LEAF_FOR_EXPANDALL_PROP,MAX_LEAF_FOR_EXPANDALL);
+   int mxl = BASS_PROPERTIES.getInt(MAX_LEAF_FOR_EXPANDALL_PROP,MAX_LEAF_FOR_EXPANDALL);
    if (tree_model.getLeafCount() <= mxl) expandAll();
 
    tree_model.addTreeModelListener(new UpdateHandler());
@@ -343,7 +343,7 @@ void setDefaultText(String text)
 
 @Override public void setScaleFactor(double sf)
 {
-   Font ft = bass_properties.getFontOption(BASS_TEXT_FONT_PROP,BASS_TEXT_FONT);
+   Font ft = BASS_PROPERTIES.getFontOption(BASS_TEXT_FONT_PROP,BASS_TEXT_FONT);
    float f = ft.getSize2D();
    if (f != 1.0) {
       f *= (float) sf;
@@ -391,10 +391,10 @@ void setDefaultText(String text)
 
 private void fixupDisplay(String txt)
 {
-   int kys = bass_properties.getInt(KEYSTROKES_FOR_AUTO_EXPAND_PROP,KEYSTROKES_FOR_AUTO_EXPAND);
-   int mxl = bass_properties.getInt(MAX_LEAF_FOR_EXPANDALL_PROP,MAX_LEAF_FOR_EXPANDALL);
-   int mxea = bass_properties.getInt(MAX_LEAF_FOR_AUTO_EXPAND_PROP,MAX_LEAF_FOR_AUTO_EXPAND);
-   int mnl = bass_properties.getInt(MIN_LEAF_FOR_AUTO_EXPAND_PROP,MIN_LEAF_FOR_AUTO_EXPAND);
+   int kys = BASS_PROPERTIES.getInt(KEYSTROKES_FOR_AUTO_EXPAND_PROP,KEYSTROKES_FOR_AUTO_EXPAND);
+   int mxl = BASS_PROPERTIES.getInt(MAX_LEAF_FOR_EXPANDALL_PROP,MAX_LEAF_FOR_EXPANDALL);
+   int mxea = BASS_PROPERTIES.getInt(MAX_LEAF_FOR_AUTO_EXPAND_PROP,MAX_LEAF_FOR_AUTO_EXPAND);
+   int mnl = BASS_PROPERTIES.getInt(MIN_LEAF_FOR_AUTO_EXPAND_PROP,MIN_LEAF_FOR_AUTO_EXPAND);
 
    if (txt.trim().length() >= kys) {
       if (tree_model.getLeafCount() <= mxl) expandAll();
@@ -409,7 +409,7 @@ private void fixupDisplay(String txt)
        }
       int[] aryIndices = tree_model.getIndicesOfFirstMethod();
       int index = 0;
-      for(int i=0;i<aryIndices.length;i++) index += aryIndices[i];
+      for (int i=0; i<aryIndices.length; i++) index += aryIndices[i];
       active_options.setSelectionRow(index);
     }
    else {
@@ -513,7 +513,7 @@ private class Reseter implements Runnable {
 
 
 
-private class TreeUpdater implements Runnable {
+private final class TreeUpdater implements Runnable {
 
    @Override public void run() {
       tree_model.globalUpdate();
@@ -589,7 +589,7 @@ void addAndLocateBubble(BudaBubble bb, int ypos,Point ploc)
    else if (bb != null) {
       Iterable<BudaBubble> cbb = root.getCurrentBubbleArea().getBubbles();
       Rectangle r;
-      for(BudaBubble b : cbb){
+      for (BudaBubble b : cbb) {
 	 r = b.getBounds();
 	 if (b != obb && r.contains(loc.getLocation())) {
 	    loc.x = r.x + r.width + BUBBLE_CREATION_NEAR_SPACE;
@@ -629,7 +629,7 @@ private void addAndLocateBubbleGroup(BudaBubbleGroup bbg, int ypos,Point ploc)
 
    Iterable<BudaBubble> cbb = root.getCurrentBubbleArea().getBubbles();
    Rectangle r;
-   for(BudaBubble b : cbb) {
+   for (BudaBubble b : cbb) {
       r = b.getBounds();
       if (b != obb && r.contains(loc.getLocation())) {
 	 loc.x = r.x + r.width + BUBBLE_CREATION_NEAR_SPACE;
@@ -663,7 +663,9 @@ private BudaBubble createPreviewBubble(BassName bn, int xpos, int ypos)
 
    if (x0 + bsz.width > r.x + r.width) x0 = r.x + r.width - bsz.width;
    if (x0 < r.x) x0 = r.x;
-   if (y0 + bsz.height > r.y + r.height) y0 = y0 - bsz.height - active_options.getRowBounds(0).height;//r.y + r.height - bsz.height;
+   if (y0 + bsz.height > r.y + r.height) {
+      y0 = y0 - bsz.height - active_options.getRowBounds(0).height; 
+    }
    if (y0 < r.y) y0 = r.y;
 
    bba.add(previewbubble, new BudaConstraint(BudaBubblePosition.HOVER,x0,y0));
@@ -926,7 +928,7 @@ private static class TextSearchAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.noteCommand("BASS","TextSearch");
-      for(Component c = (Component) e.getSource(); c != null; c = c.getParent()) {
+      for (Component c = (Component) e.getSource(); c != null; c = c.getParent()) {
 	 if (c instanceof BassSearchBox) {
 	    ((BassSearchBox) c).createTextSearchBubble();
 	    break;
@@ -1005,7 +1007,7 @@ private class ClearInputAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private class Transferer extends TransferHandler {
+private final class Transferer extends TransferHandler {
 
    private static final long serialVersionUID = 1;
 
@@ -1161,7 +1163,7 @@ private class Hoverer extends BudaHover {
     }
 
    @Override public void handleHover(MouseEvent e) {
-      if (!bass_properties.getBoolean(BASS_HOVER_OPTION_NAME)) return;
+      if (!BASS_PROPERTIES.getBoolean(BASS_HOVER_OPTION_NAME)) return;
       TreePath tp = active_options.getPathForLocation(e.getX(), e.getY());
 
       if (tp != null) {
@@ -1217,7 +1219,7 @@ private class Hoverer extends BudaHover {
 
    @Override public void endHover(MouseEvent e) {
       if (preview_bubble != null){
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(self);
+	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(our_self);
 	 if (bba != null) bba.removeBubble(preview_bubble);
 	 preview_bubble.disposeBubble();
 	 preview_bubble = null;
@@ -1288,11 +1290,11 @@ private static class SearchBoxCellRenderer extends DefaultTreeCellRenderer imple
          else icn = process_expand_image;
        }
       else if (vnm.equals(BASS_COURSE_LIST_NAME)){
-         if(expanded) icn = courses_collapse_image;
+         if (expanded) icn = courses_collapse_image;
          else icn = courses_expand_image;
        }
       else if (leaf) {
-         BassName bn = ((BassTreeNode)value).getBassName();
+         BassName bn = ((BassTreeNode) value).getBassName();
          icn = bn.getDisplayIcon();
        }
       else {
@@ -1340,7 +1342,7 @@ private static class OverlayIcon implements Icon {
 
    private List<Icon> icon_set;
 
-   OverlayIcon(Icon ... base) {
+   OverlayIcon(Icon... base) {
       icon_set = new ArrayList<Icon>();
       for (Icon ic : base) {
 	 icon_set.add(ic);
@@ -1494,7 +1496,8 @@ private void useLocalExpandedNodes()
 
 @Override public void treeExpanded(TreeExpansionEvent evt)
 {
-   TreePath tp = evt.getPath();   String nm = getPathName(tp);
+   TreePath tp = evt.getPath();    
+   String nm = getPathName(tp);
    if (is_common) expanded_nodes.add(nm);
    synchronized (local_expands) {
       local_expands.add(nm);
@@ -1524,7 +1527,7 @@ private String getPathName(TreePath tp)
 /*										*/
 /********************************************************************************/
 
-private class UpdateHandler implements TreeModelListener {
+private final class UpdateHandler implements TreeModelListener {
 
    @Override public void treeNodesChanged(TreeModelEvent e)		{ }
 
@@ -1533,7 +1536,7 @@ private class UpdateHandler implements TreeModelListener {
    @Override public void treeNodesRemoved(TreeModelEvent e)		{ }
 
    @Override public void treeStructureChanged(TreeModelEvent e) {
-      int mxl = bass_properties.getInt(MAX_LEAF_FOR_EXPANDALL_PROP,MAX_LEAF_FOR_EXPANDALL);
+      int mxl = BASS_PROPERTIES.getInt(MAX_LEAF_FOR_EXPANDALL_PROP,MAX_LEAF_FOR_EXPANDALL);
       if (tree_model.getLeafCount() <= mxl) expandAll();
       else useLocalExpandedNodes();
     }

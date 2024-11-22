@@ -797,7 +797,7 @@ private static class FindHandler extends SearchRequestor {
 
 
 
-private static interface FindFilter {
+private interface FindFilter {
 
    boolean checkMatch(SearchMatch mat);
 

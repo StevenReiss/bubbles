@@ -197,7 +197,7 @@ private void addProjectSelector(SwingGridPanel pnl)
 }
 
 
-private class ProjectHandler implements ActionListener {
+private final class ProjectHandler implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
@@ -255,7 +255,7 @@ private void resetTasks()
 
 
 
-private class TaskHandler implements ActionListener {
+private final class TaskHandler implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       Object itm = task_selector.getSelectedItem();
@@ -316,7 +316,7 @@ private void resetUsers()
 
 
 
-private class UserHandler implements ActionListener {
+private final class UserHandler implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       String unm = (String) user_selector.getSelectedItem();
@@ -467,7 +467,7 @@ private void addClassSets(String nm,int idx,Map<String,Set<String>> found,Set<St
 
 
 
-private class NameHandler implements ActionListener {
+private final class NameHandler implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
@@ -491,7 +491,7 @@ private class NameHandler implements ActionListener {
 /*										*/
 /********************************************************************************/
 
-private class OrderHandler implements ActionListener {
+private final class OrderHandler implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JComboBox<?> cbx = (JComboBox<?>) evt.getSource();
@@ -532,7 +532,7 @@ private void closeDialog(ActionEvent evt) {
 
 
 
-private class DisplayHandler implements ActionListener {
+private final class DisplayHandler implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();

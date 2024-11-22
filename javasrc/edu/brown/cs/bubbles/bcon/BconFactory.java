@@ -50,7 +50,7 @@ import java.util.Map;
  *	the various context view bubbles.
  **/
 
-public class BconFactory implements BconConstants, BudaConstants.ButtonListener
+public final class BconFactory implements BconConstants, BudaConstants.ButtonListener
 {
 
 

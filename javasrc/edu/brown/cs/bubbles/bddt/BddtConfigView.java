@@ -303,7 +303,7 @@ private static class NewAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private class ModelHandler implements BumpConstants.BumpRunEventHandler {
+private final class ModelHandler implements BumpConstants.BumpRunEventHandler {
 
    @Override public void handleLaunchEvent(BumpRunEvent evt) {
       switch (evt.getEventType()) {
@@ -452,7 +452,7 @@ private class ConfigTable extends JTable implements BudaConstants.BudaBubbleOutp
 }	// end of inner class ConfigTable
 
 
-private class ConfigMouser extends BoardMouser {
+private final class ConfigMouser extends BoardMouser {
    
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2) {

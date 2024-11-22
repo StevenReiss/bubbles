@@ -400,13 +400,13 @@ private class DocPanel extends SwingGridPanel implements Scrollable, BudaConstan
       super.paintComponent(g0);
     }
 
-    @Override public void scrollRectToVisible( Rectangle r ) {}
+    @Override public void scrollRectToVisible(Rectangle r) {}
 
 }	// end of inner class DocPanel
 
 
 
-private class PanelWidthManager extends ComponentAdapter {
+private final class PanelWidthManager extends ComponentAdapter {
 
    @Override public void componentResized(ComponentEvent e) {
       Dimension d = the_panel.getSize();
@@ -458,7 +458,7 @@ private class DescriptionView extends SwingEditorPane {
 
 
 
-private class DocLinker implements HyperlinkListener {
+private final class DocLinker implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -525,7 +525,7 @@ private void checkExpandPanel()
 
 
 
-private class TreeListener implements TreeExpansionListener {
+private final class TreeListener implements TreeExpansionListener {
 
    @Override public void treeCollapsed(TreeExpansionEvent e)	{ }
 
@@ -543,7 +543,7 @@ private class TreeListener implements TreeExpansionListener {
 /*										*/
 /********************************************************************************/
 
-private class TitleMouser extends MouseAdapter {
+private final class TitleMouser extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       try {
@@ -560,7 +560,7 @@ private class TitleMouser extends MouseAdapter {
 }	// end of inner class TitleMouser
 
 
-private class ItemMouser extends MouseAdapter {
+private final class ItemMouser extends MouseAdapter {
 
    @Override public void mousePressed(MouseEvent e) {
       JTree tree = (JTree) e.getSource();

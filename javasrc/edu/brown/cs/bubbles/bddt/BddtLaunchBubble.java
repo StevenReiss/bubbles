@@ -291,7 +291,12 @@ private static class ChoiceItem {
       }
       return false;
    }
-}
+   
+   @Override public int hashCode() {
+      return display_value.hashCode() + use_value.hashCode();
+    }
+   
+}       // end of inner class ChoiceItem
 
 
 

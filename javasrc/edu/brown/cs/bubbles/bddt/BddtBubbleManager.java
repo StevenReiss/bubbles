@@ -673,7 +673,7 @@ BumpStackFrame getFrameForBubble(BudaBubble bb)
 {
    BubbleData bd = bubble_map.get(bb);
    if (bd == null) return null;
-   if (bd.getFrame() == null || true) { 		// recompute as needed
+   if (bd.getFrame() == null) { 		// recompute as needed
       BumpStackFrame frm = launch_control.getActiveFrame();
       if (frm == null || bd.getBubble() == null) return null;
       if (bd.getBubble().getContentType() == BudaContentNameType.METHOD) {
@@ -978,7 +978,7 @@ private Point findSpaceForBubble(int xpos,int ypos,int ht,int wd,boolean godown)
 /*										*/
 /********************************************************************************/
 
-private class BubbleUpdater implements BubbleViewCallback {
+private final class BubbleUpdater implements BubbleViewCallback {
 
    @Override public void bubbleAdded(BudaBubble bb) {
       if (bb.isTransient()) return;
@@ -999,7 +999,7 @@ private class BubbleUpdater implements BubbleViewCallback {
 }
 
 
-private class ChannelListener implements ContainerListener {
+private final class ChannelListener implements ContainerListener {
 
    @Override public void componentAdded(ContainerEvent e) { }
 

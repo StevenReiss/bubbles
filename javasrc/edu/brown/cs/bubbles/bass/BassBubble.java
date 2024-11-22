@@ -126,9 +126,9 @@ void resetTreeModel(BassRepository br)
 
 
 @Override public void paintOverview(Graphics2D g)
-{
+{ 
    //to keep package explorer from appearing in overview
-   if (bass_properties.getBoolean(BASS_PACK_IN_OVERVIEW)) super.paintOverview(g);
+   if (BASS_PROPERTIES.getBoolean(BASS_PACK_IN_OVERVIEW)) super.paintOverview(g); 
    else {
       Shape s0 = getShape();
       g.setColor(getBorderColor());

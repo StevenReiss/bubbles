@@ -135,7 +135,7 @@ private class WaitForExit extends Thread {
          for ( ; ; ) {
             if (checkEclipse()) break;
             try {
-               mon.wait(30000l);
+               mon.wait(30000L);
              }
             catch (InterruptedException e) { }
           }
@@ -144,7 +144,7 @@ private class WaitForExit extends Thread {
             if (!checkEclipse()) is_done = true;
             else {
                try {
-                  mon.wait(30000l);
+                  mon.wait(30000L);
                 }
                catch (InterruptedException e) { }
              }
@@ -376,7 +376,7 @@ private void handleBuildDone(Element xml)
 
 
 
-
+ 
 private void handleResourceChange(Element res)
 {
    String k = IvyXml.getAttrString(res,"KIND");
@@ -404,6 +404,8 @@ private void handleResourceChange(Element res)
             break;
          default :
             IvyLog.logI("BSTYLE","CHANGE FILE " + fp + " IN " + proj);
+            bf = bstyle_main.getFileManager().findFile(fp); 
+            if (bf != null) bf.noteChanged();
             // TODO: remove old binary from jcode
             break;
        }
@@ -445,7 +447,7 @@ private String processCommand(String cmd,String sid,Element e)
 /*                                                                              */
 /********************************************************************************/
 
-private class BstyleHandler implements MintHandler {
+private final class BstyleHandler implements MintHandler {
    
    @Override public void receive(MintMessage msg,MintArguments args) {
       IvyLog.logI("BSTYLE","Process command: " + msg.getText());
@@ -488,7 +490,7 @@ private class BstyleHandler implements MintHandler {
 }       // end of inner class BstyleHandler
 
 
-private class EclipseHandler implements MintHandler {
+private final class EclipseHandler implements MintHandler {
    
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
@@ -562,7 +564,7 @@ private class EclipseHandler implements MintHandler {
 }       // end of inner class EclipseHandler
 
 
-private class BubblesHandler implements MintHandler {
+private final class BubblesHandler implements MintHandler {
    
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);

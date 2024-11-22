@@ -65,7 +65,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 
-public class BattJUnit implements BattConstants
+public final class BattJUnit implements BattConstants
 {
 
 
@@ -707,7 +707,7 @@ private String shortenTrace(String t)
 /*										*/
 /********************************************************************************/
 
-private class ListFilter extends Filter {
+private final class ListFilter extends Filter {
 
    @Override public String describe()			{ return "List test cases"; }
 
@@ -866,7 +866,7 @@ private static class ExitException extends SecurityException {
 
 
 @SuppressWarnings("all")
-private static class NoExitManager extends SecurityManager {
+private static final class NoExitManager extends SecurityManager {
 
    @Override public void checkPermission(Permission p)			{ }
    @Override public void checkPermission(Permission p,Object ctx)	{ }

@@ -59,7 +59,7 @@ public interface BassConstants extends BumpConstants, BudaConstants {
 /**
  * bass properties
  */
-static final BoardProperties bass_properties = BoardProperties.getProperties("Bass");
+BoardProperties BASS_PROPERTIES = BoardProperties.getProperties("Bass");
 
 
 /********************************************************************************/
@@ -364,12 +364,12 @@ String DOT_SUBSTITUTE = "^^";
  * This interface defines a routine for popping up a menu to create a new method or class
  */
 
-public interface BassNewItemCreator {
+interface BassNewItemCreator {
 
    /**
     * show the menu for the component and treepath
     */
-   public void showMenu(Component c, Stack<String> items, BassName bn, Rectangle rowrect, boolean killparent);
+   void showMenu(Component c, Stack<String> items, BassName bn, Rectangle rowrect, boolean killparent);
 }
 
 
@@ -380,7 +380,7 @@ public interface BassNewItemCreator {
 
 interface BassPopupHandler extends EventListener {
 
-   public void addButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname);
+   void addButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname);
 
 }	// end of inner interface BassPopupHandler
 
@@ -394,7 +394,7 @@ interface BassPopupHandler extends EventListener {
 
 interface BassFlagger extends EventListener {
 
-   public BassFlag getFlagForName(BassName bnm,String fullname);
+   BassFlag getFlagForName(BassName bnm,String fullname);
 
 }	// end of interface BassFlagger
 

@@ -302,7 +302,10 @@ private void setupBedrock(String dir,String mint,String proj)
 	  }
 	 if (i == 0) new IvyExec(cmd);
 	 else {
-	    try { Thread.sleep(100); } catch (InterruptedException e) { }
+	    try { 
+               Thread.sleep(100);
+             } 
+            catch (InterruptedException e) { }
 	  }
        }
     }
@@ -355,7 +358,7 @@ private void issueBuild()
 }
 
 
-private class TestEclipseHandler implements MintHandler {
+private final class TestEclipseHandler implements MintHandler {
    
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);

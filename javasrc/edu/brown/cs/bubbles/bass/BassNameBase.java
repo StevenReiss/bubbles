@@ -46,7 +46,7 @@ import javax.swing.Icon;
  *	simpler components.
  **/
 
-abstract public class BassNameBase implements BassName, BassConstants, BumpConstants
+public abstract class BassNameBase implements BassName, BassConstants, BumpConstants
 {
 
 
@@ -95,14 +95,14 @@ protected BassNameBase()
 /*										*/
 /********************************************************************************/
 
-@Override abstract public String getProject();
+@Override public abstract String getProject();
 
 /**
  *	Return the local name of the symbol.  This should be a fully qualified name, but
  *	does not include parameters for methods.
  **/
 
-abstract protected String getSymbolName();
+protected abstract String getSymbolName();
 
 
 /**
@@ -111,7 +111,7 @@ abstract protected String getSymbolName();
  *	fully qualified if possible.
  **/
 
-abstract protected String getParameters();
+protected abstract String getParameters();
 
 
 
@@ -120,7 +120,7 @@ abstract protected String getParameters();
  *	the same if they have the same key.
  **/
 
-abstract protected String getKey();
+protected abstract String getKey();
 
 
 @Override public BassNameType getNameType()	{ return name_type; }
@@ -382,7 +382,7 @@ protected String stripTemplates(String nm)
 /*										*/
 /********************************************************************************/
 
-@Override abstract public BudaBubble createBubble();
+@Override public abstract BudaBubble createBubble();
 
 @Override public BudaBubble createPreviewBubble()
 {

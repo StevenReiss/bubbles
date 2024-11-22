@@ -209,21 +209,6 @@ protected void paintContentOverview(Graphics2D g)
    AffineTransform tr = AffineTransform.getTranslateInstance(-getSize().width/1.5, -getSize().height/1.5);
    sc.concatenate(tr);
    g.drawImage(overview_image, sc, null);
-
-
-   /***************
-   at.scale(3,3);		// make it large enough to see in the overview
-   Dimension d = getSize();
-   at.translate(-d.width/3,-d.height/3);
-   /****************
-   AffineTransform affine = g.getTransform();
-   AffineTransform a = g.getTransform();
-   //at = a;
-   sc.setToScale(OVERVIEW_SCALE_X/a.getScaleX(), 1);
-   //at = new AffineTransform(OVERVIEW_SCALE_X, affine.getShearY(), affine.getShearX(), affine.getScaleY(), affine.getTranslateX(), affine.getTranslateY());
-   //g.setTransform(a);
-   g.drawImage(_OverviewImage,sc,null);
-   g.setTransform(affine);*/
 }
 
 
@@ -234,7 +219,7 @@ protected void paintContentOverview(Graphics2D g)
 /*										*/
 /********************************************************************************/
 
-private class ChevronMouseEvents extends MouseAdapter
+private final class ChevronMouseEvents extends MouseAdapter
 {
 
    @Override public void mouseClicked(MouseEvent arg0) {
@@ -277,7 +262,7 @@ private class ChevronMouseEvents extends MouseAdapter
 
 
 
-private class FlagContextMenuEvents implements ActionListener
+private final class FlagContextMenuEvents implements ActionListener
 {
 
    @Override public void actionPerformed(ActionEvent arg0) {
@@ -291,7 +276,7 @@ private class FlagContextMenuEvents implements ActionListener
 
 
 
-private class FlagMouseEvents extends MouseAdapter
+private final class FlagMouseEvents extends MouseAdapter
 {
 
    @Override public void mouseEntered(MouseEvent arg0) {
@@ -302,7 +287,9 @@ private class FlagMouseEvents extends MouseAdapter
 
    @Override public void mouseExited(MouseEvent arg0) {
       if ((0 <= arg0.getX()) && (arg0.getX() < flag_size) &&
-            (0 <= arg0.getY()) && (arg0.getY() < flag_size)) { }
+            (0 <= arg0.getY()) && (arg0.getY() < flag_size)) {
+         // do nothing
+       }
       else {
 	 chevron_label.setVisible(false);
 	 repaint();

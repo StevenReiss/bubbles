@@ -585,7 +585,7 @@ private static class GraphLink {
 /*										*/
 /********************************************************************************/
 
-private static class HistoryCompare implements Comparator<GraphObject>
+private static final class HistoryCompare implements Comparator<GraphObject>
 {
 
    @Override public int compare(GraphObject t0,GraphObject t1) {
@@ -720,7 +720,8 @@ private void drawLinks(Graphics2D g,GraphObject go)
       GraphObject got = gl.getToObject();
       double x1 = graph_locations.get(got);
       double y0 = getTimeY(gl.getTime());
-      double x3,x4;
+      double x3;
+      double x4;
       if (x0 < x1) {
 	 x3 = x0 + active_width/2;
 	 x4 = x1 - active_width/2;
@@ -773,7 +774,7 @@ private Color getThreadBlockColor(BumpThread bt)
 	    if ((p0 & 1) == 0) p0 = 2*p1 - p0 + 1;
 	    v = v * p0;
 	  }
-	 float h = (float)(v * 0.8);
+	 float h = (float) (v * 0.8);
 	 float s = 0.7f;
 	 float b = 1.0f;
 	 int rgb = Color.HSBtoRGB(h,s,b);
@@ -791,7 +792,7 @@ private void checkSizes()
 {
    Dimension vsz = scroll_pane.getViewport().getViewSize();
    Dimension csz = draw_area.getSize();
-   Dimension nsz = new Dimension((int)(vsz.width * x_scale),(int)(vsz.height * y_scale));
+   Dimension nsz = new Dimension((int) (vsz.width * x_scale),(int) (vsz.height * y_scale));
    boolean chng = false;
 
    if (nsz.width > csz.width) {
@@ -929,7 +930,7 @@ private GraphObject getObjectAtPoint(int x,int y)
 
    GraphObject gobj = null;
 
-   int idx = (int)((x - left_right_margin)/(object_width + object_hspacing));
+   int idx = (int) ((x - left_right_margin)/(object_width + object_hspacing));
    if (idx >= 0 && idx < history_graph.getNumObjects()) {
       double xoff = x - (left_right_margin + idx*(object_width + object_hspacing));
       xoff -= object_width/2;

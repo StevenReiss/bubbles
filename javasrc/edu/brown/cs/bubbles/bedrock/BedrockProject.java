@@ -346,7 +346,7 @@ void openProject(String name,boolean fil,boolean pat,boolean cls,boolean opt,boo
 
 
 
-void closeProject(String name,IvyXmlWriter _xw) throws BedrockException
+void closeProject(String name,IvyXmlWriter xw) throws BedrockException
 {
    detachProject(findProject(name));
 }
@@ -798,7 +798,7 @@ IProject findProject(String name) throws BedrockException
 
 
 
-private static class JavaSourceFilter implements FileFilter {
+private static final class JavaSourceFilter implements FileFilter {
 
    @Override public boolean accept(File f) {
       return f.getPath().endsWith(".java");
@@ -1211,7 +1211,7 @@ private boolean setProjectPreferences(IProject ip,Element xml)
 }
 
 
-private static class PreferenceLister implements IPreferenceNodeVisitor {
+private static final class PreferenceLister implements IPreferenceNodeVisitor {
 
    @Override public boolean visit(IEclipsePreferences node) {
       BedrockPlugin.logD("PREF " + node.name());

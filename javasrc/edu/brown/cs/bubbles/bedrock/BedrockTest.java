@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
 
 
 
-public class BedrockTest implements MintConstants {
+public final class BedrockTest implements MintConstants {
 
 
 
@@ -251,8 +251,10 @@ private void processRunEvent(Element re)
        }
     }
    else if (kind.equals("RESUME")) {
+      // do nothing
     }
    else if (kind.equals("CHANGE")) {
+      // do nothing
     }
    else if (kind.equals("SUSPEND")) {
       if (thr != null) {

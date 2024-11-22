@@ -178,8 +178,8 @@ private void setupPanel()
 	 long end = IvyXml.getAttrLong(xml,"STOP");
 	 base_time = start;
 	 time_slider.setMinimum(0);
-	 time_slider.setMaximum((int)(end-start));
-	 time_slider.setValue((int)((end - start)/2));
+	 time_slider.setMaximum((int) (end-start));
+	 time_slider.setValue((int) ((end - start)/2));
        }
     }
 }

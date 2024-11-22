@@ -175,7 +175,7 @@ void setup()
 
 
 
-private class CallbackLoader implements Runnable {
+private final class CallbackLoader implements Runnable {
 
    @Override public void run() {
       loadCallbacks();
@@ -521,7 +521,7 @@ private class CallbackUpdater implements Runnable {
 
 void saveCallbacks()
 {
-   synchronized(callback_methods) {
+   synchronized (callback_methods) {
       try {
 	 IvyXmlWriter xw = new IvyXmlWriter(callback_file);
 	 xw.begin("CALLBACKS");

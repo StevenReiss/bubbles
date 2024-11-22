@@ -54,7 +54,7 @@ public interface BassName {
  *	Create a bubble corresponding to this name.  This might be a code bubble, a
  *	documentation bubble, or something else.
  **/
-public BudaBubble createBubble();
+BudaBubble createBubble();
 
 /**
  *      Create a group of bubbles for this name.  This is an alternative to creating
@@ -62,7 +62,7 @@ public BudaBubble createBubble();
  *      null.
  **/
 
-default public BudaBubbleGroup createBubbleGroup(BudaBubbleArea bba)    { return null; }     
+default BudaBubbleGroup createBubbleGroup(BudaBubbleArea bba)    { return null; }     
 
 
 
@@ -71,13 +71,13 @@ default public BudaBubbleGroup createBubbleGroup(BudaBubbleArea bba)    { return
  *	Create a preview bubble corresponding to this name.  This might be a code bubble, a
  *	documentation bubble, or something else.
  **/
-public BudaBubble createPreviewBubble();
+BudaBubble createPreviewBubble();
 
 
 /**
  *	Create the string to display for preview purposes.
  **/
-public String createPreviewString();
+String createPreviewString();
 
 
 
@@ -85,7 +85,7 @@ public String createPreviewString();
  *	Return the project (if any) associated with the name.  Returning null implies
  *	there is no associated project.
  **/
-public String getProject();
+String getProject();
 
 
 /**
@@ -93,7 +93,7 @@ public String getProject();
  *      if the project includes mutltiple top-level source directories
  **/
 
-public default String getSubProject()
+default String getSubProject()
 {
    return null;
 }
@@ -102,88 +102,88 @@ public default String getSubProject()
 /**
  *	Return the package associated with this name.
  **/
-public String getPackageName();
+String getPackageName();
 
 
 /**
  *	Return the class associated with this name.
  **/
-public String getClassName();
+String getClassName();
 
 
 /**
  *	Return the local name for this name.
  **/
-public String getName();
+String getName();
 
 
 /**
  *	Return the fully qualified name.
  **/
-public String getFullName();
+String getFullName();
 
 
 /**
  *	Return the fully qualified name and include the parameter types if the name is
  *	a method or constructor.
  **/
-public String getNameWithParameters();
+String getNameWithParameters();
 
 
 /**
  *	Return the components comprising the name.  This is used to create name trees.	For
  *	example for a.b.c.field, this would return { "a", "b", "c", "field" }.
  **/
-public String [] getNameComponents();
+String [] getNameComponents();
 
 
 /**
  *	Return the symbol type of this name.
  **/
-public BassNameType getNameType();
+BassNameType getNameType();
 
 
 /**
  *	Return the Java modifiers associated with this name.
  **/
-public int getModifiers();
+int getModifiers();
 
 
 /**
  *	Return the sort priority.  Lower values are inserted before higher ones
  **/
-public int getSortPriority();
+int getSortPriority();
 
 
 /**
  *	Return the icon if any to be displayed with this name.	This can return null
  *	if the name should be displayed without an icon.
  **/
-public Icon getDisplayIcon();
+Icon getDisplayIcon();
 
 
 /**
  *	Return the text to be displayed in the tree for this name.
  **/
-public String getDisplayName();
+String getDisplayName();
 
 
 /**
  *	Return the bump location associated with the name if there is one
  **/
-public BumpLocation getLocation();
+BumpLocation getLocation();
 
 
 
 /**
  *      Return the set of locations associated with the name if there is more than one
  **/
-public Collection<BumpLocation> getLocations();
+Collection<BumpLocation> getLocations();
 
 /**
  *	Return the prefix for the name.
  **/
-public String getNameHead();
+String getNameHead();
 
 
 }	// end of interface BassName

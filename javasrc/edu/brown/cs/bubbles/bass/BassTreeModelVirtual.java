@@ -49,7 +49,7 @@ import java.util.StringTokenizer;
 
 
 
-class BassTreeModelVirtual implements BassConstants, TreeModel, BassTreeModel,
+final class BassTreeModelVirtual implements BassConstants, TreeModel, BassTreeModel,
 		BassTreeModel.BassTreeUpdateListener
 {
 

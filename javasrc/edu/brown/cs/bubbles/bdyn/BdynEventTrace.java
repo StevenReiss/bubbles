@@ -421,7 +421,9 @@ private class ThreadData implements Comparable<ThreadData>, BdynEntryThread {
       BdynCallback cb = bdyn_factory.getCallback(te.getEntryLocation());
       if (cb == null) return;
       
-      if (trace_writer != null) trace_writer.println("PROCESS " + te.getEntryLocation() + " " + te.isExit() + " " + te.getTime());
+      if (trace_writer != null) {
+         trace_writer.println("PROCESS " + te.getEntryLocation() + " " + te.isExit() + " " + te.getTime());
+       }
    
       if (current_transaction == null) {
          OutputTask ot = null;
@@ -454,7 +456,10 @@ private class ThreadData implements Comparable<ThreadData>, BdynEntryThread {
                OutputEntry poe = output_stack.get(i);
                if (poe != null) {
         	  poe.finishAt(te.getTime());
-        	  if (trace_writer != null) trace_writer.println("FINISHINT " + poe.getEntryTask().getId() + " " + nest_level + " " + poe.getTotalTime(0) + " " + poe.hashCode());
+        	  if (trace_writer != null) {
+                     trace_writer.println("FINISHINT " + poe.getEntryTask().getId() + " " + 
+                           nest_level + " " + poe.getTotalTime(0) + " " + poe.hashCode());
+                   }
         	  break;
         	}
              }
@@ -478,17 +483,25 @@ private class ThreadData implements Comparable<ThreadData>, BdynEntryThread {
             // TODO: max_delta doesn't take into account calls that haven't ended yet
             max_delta = Math.max(max_delta,te.getTime() - oe.getStartTime());
             oe.finishAt(te.getTime());
-            if (trace_writer != null) trace_writer.println("FINISH " + oe.getEntryTask().getId() + " " + nest_level + " " + oe.getTotalTime(0) + " " + oe.hashCode());
+            if (trace_writer != null) {
+               trace_writer.println("FINISH " + oe.getEntryTask().getId() + " " + 
+                     nest_level + " " + oe.getTotalTime(0) + " " + oe.hashCode());
+             }
             if (!oe.isRelevant()) {
                output_set.remove(oe);
-               if (trace_writer != null) trace_writer.println("REMOVE KEY " + oe.getEntryTask().getId() + " " + nest_level);
+               if (trace_writer != null) {
+                  trace_writer.println("REMOVE KEY " + oe.getEntryTask().getId() + " " + nest_level);
+                }
                // System.err.println("REMOVE KEY " + oe.getEntryTask().getDisplayName());
                oe = null;
                for (int i = output_stack.size()-1; i >= 0; --i) {
                   OutputEntry poe = output_stack.get(i);
                   if (poe != null) {
                      poe.finishAt(0);
-                     if (trace_writer != null) trace_writer.println("NO END " + poe.getEntryTask().getId() + " " + nest_level + " " + poe.hashCode());
+                     if (trace_writer != null) {
+                        trace_writer.println("NO END " + poe.getEntryTask().getId() + " " + 
+                              nest_level + " " + poe.hashCode());
+                      }
                      break;
                    }
                 }
@@ -514,7 +527,10 @@ private class ThreadData implements Comparable<ThreadData>, BdynEntryThread {
         	  if (!poe.isSignificant()) {
         	     output_set.remove(poe);
         	   }
-        	  if (trace_writer != null) trace_writer.println("NEST KEY " + poe.getEntryTask().getId() + " " + nest_level + " " + poe.isSignificant());
+        	  if (trace_writer != null) {
+                     trace_writer.println("NEST KEY " + poe.getEntryTask().getId() + " " + 
+                           nest_level + " " + poe.isSignificant());
+                   }
         	  oe = new OutputEntry(te.getTime(),0,this,current_transaction,poe.getEntryTask());
         	  oe.setDeletable();
         	  output_set.add(oe);
@@ -537,7 +553,10 @@ private class ThreadData implements Comparable<ThreadData>, BdynEntryThread {
       OutputEntry oe = new OutputEntry(te.getTime(),0,this,current_transaction,cb);
       if (te.getUseCount() > 1) oe.setUse(te.getUseCount(),te.getFractionUsed());
       output_set.add(oe);
-      if (trace_writer != null) trace_writer.println("START " + cb.getId() + " " + nest_level + " " + te.getTime() + " " + oe.hashCode());
+      if (trace_writer != null) {
+         trace_writer.println("START " + cb.getId() + " " + 
+               nest_level + " " + te.getTime() + " " + oe.hashCode());
+       }
       return oe;
     }
 
@@ -629,7 +648,7 @@ private static class TraceEntry {
 }	// end of inner class TraceEntry
 
 
-private static class EntryComparator implements Comparator<TraceEntry>
+private static final class EntryComparator implements Comparator<TraceEntry>
 {
 
    @Override public int compare(TraceEntry e1,TraceEntry e2) {
@@ -730,7 +749,7 @@ private static class OutputEntry implements Comparable<OutputEntry>, BdynEntry {
       num_traces += oe.num_traces;
       double tot = getTotalTime(0) + oe.getTotalTime(0);
       finish_time = oe.finish_time;
-      trace_fraction = ((float)(tot / (finish_time - start_time)));
+      trace_fraction = ((float) (tot / (finish_time - start_time)));
     }
 
    @Override public int compareTo(OutputEntry e) {

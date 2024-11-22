@@ -95,7 +95,7 @@ import java.util.Map;
  *	This class implements the factory for a host of miscellanous bubbles.
  **/
 
-public class BeamFactory implements BeamConstants, BudaConstants.ButtonListener
+public final class BeamFactory implements BeamConstants, BudaConstants.ButtonListener
 {
 
 
@@ -524,7 +524,7 @@ private static class NoteAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private static class NoteServer implements MintHandler {
+private static final class NoteServer implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String name = args.getArgument(0);
@@ -545,7 +545,7 @@ private static class NoteServer implements MintHandler {
 
 
 
-private static class NoteClient implements MintHandler {
+private static final class NoteClient implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String name = args.getArgument(0);
@@ -579,7 +579,7 @@ private static class SearchProblemFlags implements BassFlagger, BumpProblemHandl
       BassFactory.getFactory().addFlagChecker(this);
     }
 
-   @Override synchronized  public BassFlag getFlagForName(BassName bnm,String nm) {
+   @Override public synchronized BassFlag getFlagForName(BassName bnm,String nm) {
       if (flag_map == null) computeFlagMap();
       ProblemFlag pf = flag_map.get(nm);
    
@@ -666,7 +666,7 @@ private static class ProblemFlag implements BassFlag {
 
 
 
-private static class FlagUpdater implements Runnable {
+private static final class FlagUpdater implements Runnable {
 
    @Override public void run() {
       // System.err.println("FLAGS UPDATED");
@@ -683,7 +683,7 @@ private static class FlagUpdater implements Runnable {
 /*										*/
 /********************************************************************************/
 
-private static class SaveButton implements ActionListener, Runnable
+private static final class SaveButton implements ActionListener, Runnable
 {
 
    @Override public void actionPerformed(ActionEvent e)  {
@@ -708,7 +708,7 @@ private static class SaveButton implements ActionListener, Runnable
 
 
 
-private static class BuildButton implements ActionListener, Runnable
+private static final class BuildButton implements ActionListener, Runnable
 {
    @Override public void actionPerformed(ActionEvent e)  {
       BoardThreadPool.start(this);
@@ -730,7 +730,7 @@ private static class BuildButton implements ActionListener, Runnable
 
 
 
-private static class RefreshButton implements ActionListener, Runnable
+private static final class RefreshButton implements ActionListener, Runnable
 {
    @Override public void actionPerformed(ActionEvent e)  {
       BoardThreadPool.start(this);

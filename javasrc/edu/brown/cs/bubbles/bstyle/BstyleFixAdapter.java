@@ -22,7 +22,9 @@
 
 package edu.brown.cs.bubbles.bstyle;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import edu.brown.cs.bubbles.bfix.BfixAdapter;
 import edu.brown.cs.bubbles.bfix.BfixConstants;
@@ -41,6 +43,7 @@ public class BstyleFixAdapter extends BfixAdapter implements BstyleConstants, Bf
 /********************************************************************************/
 
 private List<BstyleFixer> fixer_set;
+private Map<String,List<BstyleFixer>> fixer_map;
 
 
 
@@ -55,6 +58,7 @@ public BstyleFixAdapter()
    super("StyleFixer");
    
    fixer_set = BstyleFixer.getStyleFixers(); 
+   fixer_map = BstyleFixer.getStyleFixerMap(); 
 }
 
 
@@ -85,11 +89,32 @@ public BfixRunnableFix findStyleFixer(BfixCorrector bc,BumpProblem bp,boolean ex
    
    BoardLog.logD("BSTYLE","Work on problem " + bp.getData() + " " + bp.getMessage());
    
-   for (BstyleFixer bf : fixer_set) {
-      BfixRunnableFix rf = bf.findFix(bc,bp,explicit);  
-      if (rf != null) return rf;
+   String d = bp.getData();
+   if (d == null) d = "";
+   List<BstyleFixer> totry = fixer_map.get(d);
+   if (totry != null) {
+      for (BstyleFixer bf : totry) {
+         BfixRunnableFix rf = bf.findFix(bc,bp,explicit);  
+         if (rf != null) return rf;
+       }
     }
    
+   for (BstyleFixer bf : fixer_set) {
+      if (totry != null && totry.contains(bf)) continue;
+      BfixRunnableFix rf = bf.findFix(bc,bp,explicit);  
+      if (rf != null) {
+         if (d != null && !d.isEmpty()) {
+            BoardLog.logE("BSTYLE","Missing fixer for type " + d + " " +
+                  bf.getClass());
+            if (totry == null) {
+               totry = new ArrayList<>();
+               fixer_map.put(d,totry);
+             }
+            totry.add(bf);
+          }
+         return rf;
+       }
+    }
    
    return null;
 }

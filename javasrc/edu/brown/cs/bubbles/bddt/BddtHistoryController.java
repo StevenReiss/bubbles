@@ -171,7 +171,7 @@ void clearHistory(BumpProcess bp)
 /*										*/
 /********************************************************************************/
 
-private class HistoryHandler implements BumpConstants.BumpRunEventHandler {
+private final class HistoryHandler implements BumpConstants.BumpRunEventHandler {
 
    @Override public void handleProcessEvent(BumpRunEvent evt) {
       switch (evt.getEventType()) {

@@ -207,7 +207,7 @@ BddtEvaluationBubble(BddtLaunchControl ctrl)
 /*										*/
 /********************************************************************************/
 
-private class ExprAdder implements ActionListener {
+private final class ExprAdder implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JTextField tfld = (JTextField) evt.getSource();

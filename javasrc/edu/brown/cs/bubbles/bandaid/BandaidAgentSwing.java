@@ -24,18 +24,25 @@
 
 package edu.brown.cs.bubbles.bandaid;
 
-import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.*;
+import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.ClassReader;
+import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.ClassVisitor;
+import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.ClassWriter;
+import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.MethodVisitor;
+import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.Opcodes;
 import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.commons.CodeSizeEvaluator;
 import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.util.Textifier;
 import edu.brown.cs.bubbles.bandaid.org.objectweb.asm.util.TraceMethodVisitor;
-
-import javax.swing.SwingUtilities;
-
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Window;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
-import java.util.*;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.WeakHashMap;
+import javax.swing.SwingUtilities;
 
 
 public class BandaidAgentSwing extends BandaidAgent implements BandaidConstants,
@@ -53,7 +60,7 @@ private static Map<Object,StackTraceElement []>     create_map;
 
 private static final int ASM_API = Opcodes.ASM9;
 
-private static final boolean do_debug = false;
+private static boolean do_debug = false;
 
 
 static {
@@ -143,7 +150,7 @@ public static void handleComponent(Object c)
 /*										*/
 /********************************************************************************/
 
-private class Correlator {
+private final class Correlator {
 
    boolean correlate(BandaidXmlWriter xw,int x,int y) {
       Window [] wins = Window.getWindows();

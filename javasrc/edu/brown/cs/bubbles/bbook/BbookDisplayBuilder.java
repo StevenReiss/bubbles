@@ -76,7 +76,7 @@ private String			for_method;
 
 private Orderings		order_by;
 
-private static final SimpleDateFormat date_format = new SimpleDateFormat("dd MMM yy @ HH:mm");
+private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yy @ HH:mm");
 
 private static Map<String,String> mime_info;
 
@@ -422,7 +422,7 @@ private void outputEntryData(BnoteEntry ent,GenContext ctx,StringBuffer buf)
    long ld = ctx.getLastTime();
    if (ld > 0 && when - ld > 1000*60*30) {
       setState(ctx,ContextState.INFO,buf);
-      buf.append("<h3>Date: " + date_format.format(ent.getTime()) + "</h3>");
+      buf.append("<h3>Date: " + DATE_FORMAT.format(ent.getTime()) + "</h3>");
     }
    ctx.setLastTime(when);
 
@@ -509,8 +509,8 @@ private void outputEntryData(BnoteEntry ent,GenContext ctx,StringBuffer buf)
 		  int h1 = bi.getHeight();
 		  double scl = 1.0;
 		  if (h1 > h) scl = ((double) h) / h1;
-		  h = (int)(h1 * scl);						
-		  w = (int)(w1 * scl);
+		  h = (int) (h1 * scl);						
+		  w = (int) (w1 * scl);
 		}
 	       catch (Exception e) { }
 	       buf.append("<A HREF='file://" + fn.getPath() + "'>");

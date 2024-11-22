@@ -309,7 +309,7 @@ private void setupPanel()
 /*                                                                              */
 /********************************************************************************/
 
-private class Selector implements ListSelectionListener {
+private final class Selector implements ListSelectionListener {
    
    @Override public void valueChanged(ListSelectionEvent e) {
       int ct = display_table.getSelectedRowCount();
@@ -378,16 +378,16 @@ enum BarType {
 private static final int NUM_BAR_TYPES = 8;
 private static final int BAR_INSET = 3;
 
-private static final Paint [] bar_colors;
+private static final Paint [] BAR_COLORS;
 
 private static Pattern LOCATION_PATTERN =
    Pattern.compile("at ([a-zA-Z0-9<>$_.]+)\\(([a-zA-Z0-9_]+\\.java)\\:([0-9]+)\\)");
 
 static {
-   bar_colors = new Paint[BarType.values().length];
+   BAR_COLORS = new Paint[BarType.values().length];
    for (BarType bt : BarType.values()) {
       Color c1 = BoardColors.getColor("Batt.BarType." + bt.toString());
-      bar_colors[bt.ordinal()] = c1;
+      BAR_COLORS[bt.ordinal()] = c1;
     }
 }
 
@@ -466,7 +466,7 @@ private class DisplayBar extends JPanel {
       for (int i = 0; i < NUM_BAR_TYPES; ++i) {
          if (counts[i] == 0) continue;
          double w = (x1-x0)*counts[i]/total;
-         g2.setPaint(bar_colors[i]);
+         g2.setPaint(BAR_COLORS[i]);
          r2.setRect(x,y0,w,y1-y0);
          g2.fill(r2);
          x += w;
@@ -524,8 +524,8 @@ private class DisplayTable extends JTable implements MouseListener {
       sa.actionPerformed(null);
     }
 
-   @Override public void mouseEntered(MouseEvent _e)			{ }
-   @Override public void mouseExited(MouseEvent _e)			{ }
+   @Override public void mouseEntered(MouseEvent e)			{ }
+   @Override public void mouseExited(MouseEvent e)			{ }
    @Override public void mouseReleased(MouseEvent e)			{ }
    @Override public void mousePressed(MouseEvent e)			{ }
 
@@ -575,7 +575,7 @@ private class DisplayTable extends JTable implements MouseListener {
 /*										*/
 /********************************************************************************/
 
-private static class SetupBatt implements Runnable {
+private static final class SetupBatt implements Runnable {
 
    @Override public void run() {
       BattFactory.getFactory().startBattServer();

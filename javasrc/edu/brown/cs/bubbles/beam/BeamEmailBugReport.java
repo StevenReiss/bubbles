@@ -221,7 +221,7 @@ private void sendEmail(SwingGridPanel panel)
    String body = setupReportText(panel);
  
    List<File> added = null;
-   JCheckBox cb = (JCheckBox) panel.getComponentForLabel(SCREEN_PROMPT );
+   JCheckBox cb = (JCheckBox) panel.getComponentForLabel(SCREEN_PROMPT);
    if (cb.isSelected()) {
       File f = BoardMetrics.createScreenDump("png");
       if (f != null) {
@@ -332,7 +332,7 @@ private void sendReport(SwingGridPanel panel)
 /*										*/
 /********************************************************************************/
 
-private class BugReportListener implements ActionListener {
+private final class BugReportListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JPanel pnl = emailReportPanel();

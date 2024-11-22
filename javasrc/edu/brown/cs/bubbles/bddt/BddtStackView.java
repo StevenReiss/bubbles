@@ -379,7 +379,7 @@ void expandFrame(BumpStackFrame frm)
 
 
 
-private class ClickHandler extends BoardMouser {
+private final class ClickHandler extends BoardMouser {
 
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2 || e.getClickCount() == 3) {
@@ -538,7 +538,7 @@ private class SourceAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private class RunEventHandler implements BumpRunEventHandler {
+private final class RunEventHandler implements BumpRunEventHandler {
 
    @Override public void handleThreadEvent(BumpRunEvent evt) {
       if (evt.getThread() != for_thread) return;
@@ -752,7 +752,7 @@ private static class TreeCellRenderer extends DefaultTreeCellRenderer {
 /*										*/
 /********************************************************************************/
 
-private class LabelUpdater implements TreeModelListener {
+private final class LabelUpdater implements TreeModelListener {
 
    @Override public void treeNodesChanged(TreeModelEvent e) {
       if (value_model == null || title_bar == null) return;
@@ -773,7 +773,7 @@ private class LabelUpdater implements TreeModelListener {
 
 
 
-private class ValueUpdater implements TreeModelListener {
+private final class ValueUpdater implements TreeModelListener {
 
    @Override public void treeNodesChanged(TreeModelEvent e) {
       updateValueArea();
@@ -865,7 +865,7 @@ private static class ExpandNodes implements Runnable {
 
 
 
-private class Selector implements ListSelectionListener {
+private final class Selector implements ListSelectionListener {
 
    @Override public void valueChanged(ListSelectionEvent evt) {
       int row = evt.getFirstIndex();
@@ -934,7 +934,7 @@ private void updateValueArea()
 /*										*/
 /********************************************************************************/
 
-private class Transferer extends TransferHandler {
+private final class Transferer extends TransferHandler {
 
    private static final long serialVersionUID = 1;
 
