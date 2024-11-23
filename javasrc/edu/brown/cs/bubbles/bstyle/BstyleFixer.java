@@ -87,7 +87,8 @@ static {
    addFixer("ParenPad",new FollowedByWhitespace(),precededbywhite);
    addFixer("InnerAssignment",new InnerAssignments());
    addFixer("UpperEll",new UppercaseL());
-   addFixer("SimplifyBooleanExpression",new ExpressionSimplified());
+   addFixer("SimplifyBooleanExpression",new ExpressionSimplified(),
+         new ExpressionAndTrue());
    addFixer("RightCurly",new LineByItself());
    addFixer("LeftCurly",new LineBreakAfter());
    addFixer("WhitespaceAfter",new CastNotFollowedByWhite(),notfollowedbywhite);
@@ -520,7 +521,7 @@ private static class UppercaseL extends GenericPatternFixer {
 private static class ExpressionSimplified extends GenericPatternFixer {
 
    ExpressionSimplified() {
-      super("Expression can be simplified","\\([^?]+)\\?\\s*($B$)\\s*\\:($B$)\\)");
+      super("Expression can be simplified","\\(([^?]+)\\?\\s*($B$)\\s*\\:\\s*($B$)\\s*\\)");
     }
    
    @Override protected String getEditReplace(Matcher m) {
@@ -542,6 +543,18 @@ private static class ExpressionSimplified extends GenericPatternFixer {
       return e;
     }
    
+}       // end of inner class ExpressionSimplified
+
+
+
+private static class ExpressionAndTrue extends GenericPatternFixer {
+
+   ExpressionAndTrue() {
+      super("Expression can be simplified","\\s*\\&\\&\\s*true");
+    }
+   
+   @Override protected String getEditReplace(Matcher m) { return ""; }
+
 }       // end of inner class ExpressionSimplified
 
 
@@ -581,10 +594,10 @@ private static class CastNotFollowedByWhite extends GenericPatternFixer {
    
    CastNotFollowedByWhite() {
       super("'typecast' is not followed by whitespace",
-            "\\([^)]+\\)($N$|(\\())");
+            "\\)([A-Za-z0-9(])");
     }
-   @Override protected int getEditStart(Matcher m)      { return m.start(2); }
-   @Override protected int getEditEnd(Matcher m)        { return m.start(2); }
+   @Override protected int getEditStart(Matcher m)      { return m.start(1); }
+   @Override protected int getEditEnd(Matcher m)        { return m.start(1); }
    @Override protected String getEditReplace(Matcher m) { return " "; }
    
 }       // end of innter class CastNotFollowedByWhite
