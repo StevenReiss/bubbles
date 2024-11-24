@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BoardFileSystemView extends FileSystemView implements BoardConstants, MintConstants
+public final class BoardFileSystemView extends FileSystemView implements BoardConstants, MintConstants
 {
 
 
@@ -72,7 +72,7 @@ private static FileSystemView	board_view = null;
 /*										*/
 /********************************************************************************/
 
-public synchronized static FileSystemView getFileSystemView()
+public static synchronized FileSystemView getFileSystemView()
 {
    if (board_view == null) {
       switch (BoardSetup.getSetup().getRunMode()) {
@@ -102,7 +102,7 @@ private BoardFileSystemView() { }
 /*										*/
 /********************************************************************************/
 
-synchronized static void setupRemoteServer()
+static synchronized void setupRemoteServer()
 {
    switch (BoardSetup.getSetup().getRunMode()) {
       case NORMAL :
@@ -239,7 +239,7 @@ private static void startServer()
 }
 
 
-private static class HideFilter implements java.io.FileFilter {
+private static final class HideFilter implements java.io.FileFilter {
 
    @Override public boolean accept(File f) {
       return !f.isHidden();
@@ -827,7 +827,7 @@ private static class FileServer implements MintHandler {
 
 
 
-private static class ExitHandler implements MintHandler {
+private static final class ExitHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       System.exit(0);

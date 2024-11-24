@@ -526,7 +526,7 @@ private class EclipseDownloader extends Thread {
 /*										*/
 /********************************************************************************/
 
-private class HyperListener implements HyperlinkListener {
+private final class HyperListener implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {

@@ -189,7 +189,8 @@ private void setupDisplay()
    tab_pane = new JTabbedPane(SwingConstants.LEFT);
    for (SubPanel pnl : sub_panels) {
       tab_pane.addTab(pnl.getName(),pnl.getDisplay());
-      // System.err.println("BOPP: " + pnl.getName() + " " + pnl.getDisplay().getPreferredSize() + " " + pnl.getDisplay());
+      // System.err.println("BOPP: " + pnl.getName() + " " + pnl.getDisplay().getPreferredSize() + 
+      //    " " + pnl.getDisplay());
     }
    JScrollPane jsp = new JScrollPane(tab_pane);
    display_panel.addGBComponent(jsp,0,1,0,1,10,10);
@@ -215,7 +216,7 @@ private void setupDisplay()
 }
 
 
-private static class Mouser extends MouseInputAdapter { }
+private static final class Mouser extends MouseInputAdapter { }
 
 
 
@@ -226,7 +227,7 @@ private static class Mouser extends MouseInputAdapter { }
 /*										*/
 /********************************************************************************/
 
-private class SearchKeyListener extends KeyAdapter {
+private final class SearchKeyListener extends KeyAdapter {
 
    @Override public void keyReleased(KeyEvent e) {
       search();
@@ -235,7 +236,7 @@ private class SearchKeyListener extends KeyAdapter {
 }	// end of inner class SearchKeyListener
 
 
-private class VisibleListener extends ComponentAdapter {
+private final class VisibleListener extends ComponentAdapter {
 
    @Override public void componentShown(ComponentEvent e) {
       search_field.requestFocus();
@@ -363,7 +364,7 @@ private static class SubPanel {
 /*										*/
 /********************************************************************************/
 
-private static class OptionPanel extends SwingGridPanel implements Scrollable {
+private static final class OptionPanel extends SwingGridPanel implements Scrollable {
 
    private static final long serialVersionUID = 1;
    

@@ -72,7 +72,7 @@ String BFIX_MODEL_UPDATE_BUTTON = "Admin.Admin.Update Fix Models";
 /*										*/
 /********************************************************************************/
 
-public class ElementComparator implements Comparator<BfixOrderElement> {
+class ElementComparator implements Comparator<BfixOrderElement> {
 
    @Override public int compare(BfixOrderElement r1,BfixOrderElement r2) {
       int v = r1.getStartOffset() - r2.getStartOffset();
@@ -142,7 +142,7 @@ interface BfixRunnableFix extends Callable<Boolean>, Runnable {
 
    double getPriority();
 
-   default public void run() {
+   default void run() {
       // only called when result isn't needed
       try {
 	 call();

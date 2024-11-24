@@ -52,20 +52,20 @@ private static Dimension  DEFAULT_DIMENSION	= new Dimension(250,200);
 private BeduStudentTicket student_ticket;
 
 
-BeduTATicketViewBubble(BeduStudentTicket t,BeduTAXMPPClient a_client)
+BeduTATicketViewBubble(BeduStudentTicket t,BeduTAXMPPClient client)
 {
    student_ticket = t;
-   setContentPane(new TicketViewPanel(t,this,new ChatStartListener(this,a_client)));
+   setContentPane(new TicketViewPanel(t,this,new ChatStartListener(this,client)));
 }
 
 
 
 
-private static class TicketViewPanel extends JPanel {
+private static final class TicketViewPanel extends JPanel {
 
    private static final long serialVersionUID = 1L;
 
-   private TicketViewPanel(BeduStudentTicket t,BeduTATicketViewBubble a_bubble,
+   private TicketViewPanel(BeduStudentTicket t,BeduTATicketViewBubble bubble,
         		      ChatStartListener listener) {
       setOpaque(false);
    
@@ -74,7 +74,7 @@ private static class TicketViewPanel extends JPanel {
    
       GridBagConstraints c = new GridBagConstraints();
    
-      JLabel ticket_area_label = new JLabel("Problem description: ");
+      JLabel ticketarelabel = new JLabel("Problem description: ");
       c.gridx = 0;
       c.gridy = 0;
       c.gridwidth = 2;
@@ -83,14 +83,14 @@ private static class TicketViewPanel extends JPanel {
       c.anchor = GridBagConstraints.PAGE_START;
       c.insets = new Insets(0,0,10,0);
       // c.fill = GridBagConstraints.HORIZONTAL;
-      add(ticket_area_label, c);
+      add(ticketarelabel, c);
       c.insets = new Insets(0,0,0,0);
    
-      JTextArea ticket_pane = new SwingTextArea();
-      ticket_pane.setOpaque(false);
-      ticket_pane.setText(t.getText());
-      ticket_pane.setLineWrap(true);
-      JScrollPane scroll = new JScrollPane(ticket_pane);
+      JTextArea ticketpane = new SwingTextArea();
+      ticketpane.setOpaque(false);
+      ticketpane.setText(t.getText());
+      ticketpane.setLineWrap(true);
+      JScrollPane scroll = new JScrollPane(ticketpane);
       scroll.setOpaque(false);
       scroll.getViewport().setOpaque(false);
       // scroll.setBorder(null);
@@ -104,8 +104,8 @@ private static class TicketViewPanel extends JPanel {
       c.weighty = 1;
       add(scroll, c);
    
-      JButton submit_button = new JButton("Chat with student");
-      submit_button.addActionListener(listener);
+      JButton submitbutton = new JButton("Chat with student");
+      submitbutton.addActionListener(listener);
       c.anchor = GridBagConstraints.PAGE_END;
       c.gridx = 1;
       c.gridy = 2;
@@ -114,7 +114,7 @@ private static class TicketViewPanel extends JPanel {
       c.weightx = .4;
       c.weighty = 0;
       c.fill = GridBagConstraints.NONE;
-      add(submit_button, c);
+      add(submitbutton, c);
     }
 
    @Override public void paintComponent(Graphics g) {
@@ -133,22 +133,22 @@ private static class TicketViewPanel extends JPanel {
 }	// end of inner class TicketViewPanel'
 
 
-private static class ChatStartListener implements ActionListener {
+private static final class ChatStartListener implements ActionListener {
    private BeduTATicketViewBubble parent_bubble;
-   private BeduTAXMPPClient	  ta_client;
+   private BeduTAXMPPClient	  t_client;
 
 
-   private ChatStartListener(BeduTATicketViewBubble a_bubble,BeduTAXMPPClient a_client) {
-      parent_bubble = a_bubble;
-      ta_client = a_client;
+   private ChatStartListener(BeduTATicketViewBubble bubble,BeduTAXMPPClient client) {
+      parent_bubble = bubble;
+      t_client = client;
     }
 
 
    @Override public void actionPerformed(ActionEvent e) {
-      BgtaChat c = ta_client.acceptTicketAndAlertPeers(parent_bubble.student_ticket);
-      BudaBubble chat_bub = new BeduTAChatBubble(ta_client,c);
+      BgtaChat c = t_client.acceptTicketAndAlertPeers(parent_bubble.student_ticket);
+      BudaBubble chatbub = new BeduTAChatBubble(t_client,c);
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(parent_bubble);
-      bba.addBubble(chat_bub, parent_bubble, null, PLACEMENT_LOGICAL | PLACEMENT_GROUPED);
+      bba.addBubble(chatbub, parent_bubble, null, PLACEMENT_LOGICAL | PLACEMENT_GROUPED);
     }
 
 }	// end of inner class ChatStartListener

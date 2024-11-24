@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaBuddy.java							*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaBuddy.java                                                  */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -37,25 +37,25 @@ class BgtaBuddy extends BassNameBase implements PacketListener, BgtaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private String	    user_name;
-private String	    connection_name;
+private String      user_name;
+private String      connection_name;
 private BgtaManager the_manager;
-private Icon	    avail_icon;
+private Icon        avail_icon;
 private Presence    is_available;
-private int	    sort_prior;
+private int         sort_prior;
 // private boolean     has_bubble;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BgtaBuddy(String username,BgtaManager man,boolean hasbub)
@@ -82,9 +82,9 @@ BgtaBuddy(String username,BgtaManager man,boolean hasbub)
 
 
 /********************************************************************************/
-/*										*/
-/*	Creation methods							*/
-/*										*/
+/*                                                                              */
+/*      Creation methods                                                        */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble()
@@ -101,9 +101,9 @@ BgtaBuddy(String username,BgtaManager man,boolean hasbub)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 BgtaManager getManager()
@@ -124,9 +124,9 @@ String getDigestedName()
 
 
 /********************************************************************************/
-/*										*/
-/*	BassNameBase methods							*/
-/*										*/
+/*                                                                              */
+/*      BassNameBase methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override protected String getKey()
@@ -162,9 +162,9 @@ String getDigestedName()
 
 
 /********************************************************************************/
-/*										*/
-/*	Presence getting methods						*/
-/*										*/
+/*                                                                              */
+/*      Presence getting methods                                                */
+/*                                                                              */
 /********************************************************************************/
 
 Presence getAvailability()
@@ -181,22 +181,22 @@ private void changeSortPriority()
    if (ty == Presence.Type.available) {
       if (mo == null || mo == Presence.Mode.available) sort_prior = BGTA_AVAIL_PRIORITY;
       else {
-	 switch (mo) {
-	    case chat:
-	       sort_prior = BGTA_CHATTY_PRIORITY;
-	       break;
-	    case away:
-	       sort_prior = BGTA_IDLE_PRIORITY;
-	       break;
-	    case xa:
-	       sort_prior = BGTA_XA_PRIORITY;
-	       break;
-	    case dnd:
-	       sort_prior = BGTA_DND_PRIORITY;
-	       break;
-	    default:
-	       sort_prior = BASS_DEFAULT_SORT_PRIORITY;
-	  }
+         switch (mo) {
+            case chat:
+               sort_prior = BGTA_CHATTY_PRIORITY;
+               break;
+            case away:
+               sort_prior = BGTA_IDLE_PRIORITY;
+               break;
+            case xa:
+               sort_prior = BGTA_XA_PRIORITY;
+               break;
+            case dnd:
+               sort_prior = BGTA_DND_PRIORITY;
+               break;
+            default:
+               sort_prior = BASS_DEFAULT_SORT_PRIORITY;
+          }
        }
     }
    else sort_prior = BGTA_OFFLINE_PRIORITY;
@@ -205,9 +205,9 @@ private void changeSortPriority()
 
 
 /********************************************************************************/
-/*										*/
-/*	Packet Listener methods 						*/
-/*										*/
+/*                                                                              */
+/*      Packet Listener methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void processPacket(Packet p)
@@ -216,18 +216,18 @@ private void changeSortPriority()
       Presence pr = (Presence) p;
       String fromuser = pr.getFrom().substring(0, pr.getFrom().indexOf("/"));
       if (fromuser.equals(connection_name)) {
-	 is_available = pr;
-	 if (pr.getType() == Presence.Type.available
-		|| pr.getType() == Presence.Type.unavailable) 
-	    avail_icon = BgtaManager.iconFor(is_available);
-	 changeSortPriority();
+         is_available = pr;
+         if (pr.getType() == Presence.Type.available ||
+                pr.getType() == Presence.Type.unavailable) 
+            avail_icon = BgtaManager.iconFor(is_available);
+         changeSortPriority();
        }
     }
 }
 
 
 
-}	// end of class BgtaBuddy
+}       // end of class BgtaBuddy
 
 
 

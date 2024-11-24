@@ -54,7 +54,7 @@ import java.util.List;
 
 
 
-public class BpareFactory implements BpareConstants, MintConstants
+public final class BpareFactory implements BpareConstants, MintConstants
 {
 
 
@@ -91,7 +91,7 @@ private static String []	eclipse_jars = new String [] {
 /*										*/
 /********************************************************************************/
 
-public synchronized static BpareFactory getFactory()
+public static synchronized BpareFactory getFactory()
 {
    if (the_factory == null) the_factory = new BpareFactory();
    return the_factory;
@@ -256,7 +256,7 @@ void startBpareServer()
 /*										*/
 /********************************************************************************/
 
-private static class BpareContexter implements BaleConstants.BaleContextListener {
+private static final class BpareContexter implements BaleConstants.BaleContextListener {
 
    
 

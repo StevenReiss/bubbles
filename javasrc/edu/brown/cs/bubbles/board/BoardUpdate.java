@@ -82,7 +82,7 @@ import java.util.concurrent.TimeUnit;
  *	to do the update.
  **/
 
-public class BoardUpdate {
+public final class BoardUpdate {
 
 
 /********************************************************************************/
@@ -970,7 +970,7 @@ private Element loadXmlFromStream(InputStream inf)
 
 private static class XmlParser {
 
-   DocumentBuilder parser_object;
+   private DocumentBuilder parser_object;
    
    XmlParser(boolean ns) {
       DocumentBuilderFactory dbf = null;

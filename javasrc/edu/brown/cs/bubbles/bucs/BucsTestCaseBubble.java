@@ -339,7 +339,7 @@ private class SearchRequest implements BucsSearchRequest {
 /*										*/
 /********************************************************************************/
 
-private class TestPanel extends SwingGridPanel {
+private final class TestPanel extends SwingGridPanel {
 
    private static final long serialVersionUID = 1;
 
@@ -466,7 +466,9 @@ private void scanForKeywords()
 	    bump_location.getDefinitionEndOffset() - bump_location.getDefinitionOffset());
 
     }
-   catch (BadLocationException e) { return; }
+   catch (BadLocationException e) {
+      return;
+   }
 
    boolean inlinecmmt = false;
    boolean inareacmmt = false;
@@ -605,7 +607,7 @@ private List<String> parseKeywords()
 
 
 
-private class SearchListener implements ActionListener, UndoableEditListener {
+private final class SearchListener implements ActionListener, UndoableEditListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       if (e.getSource() == type_field) {

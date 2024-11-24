@@ -30,76 +30,79 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
  *
  */
 public class BowiFactory {
-   /********************************************************************************/
-   /*										*/
-   /*	Private Storage 							*/
-   /*										*/
-   /********************************************************************************/
-   private static BowiFactory the_factory = new BowiFactory();
-   private static BowiTaskManager my_task_manager;
 
-   /********************************************************************************/
-   /*										*/
-   /*	Constructors								*/
-   /*										*/
-   /********************************************************************************/
 
-   /**
-    *	Return the singleton instance of the Bass search bubble factory.
-    **/
+/********************************************************************************/
+/*										*/
+/*	Private Storage 							*/
+/*										*/
+/********************************************************************************/
 
-   public static BowiFactory getFactory()
-   {
-      return the_factory;
-   }
+private static BowiFactory the_factory = new BowiFactory();
+private static BowiTaskManager my_task_manager;
 
-   private BowiFactory()				{ }
+/********************************************************************************/
+/*										*/
+/*	Constructors								*/
+/*										*/
+/********************************************************************************/
 
-   /********************************************************************************/
-   /*										*/
-   /*	Setup methods								*/
-   /*										*/
-   /********************************************************************************/
-   
-   /**
-    *	Called by initialization to ensure that the search package is set up correctly.
-    **/
-   
-   public static void setup()
-   {
-      // work is done by the static initializer
-   }
+/**
+ *	Return the singleton instance of the Bass search bubble factory.
+ **/
 
-   /**
-    *	Called to initialize once BudaRoot is setup
-    **/
+public static BowiFactory getFactory()
+{
+   return the_factory;
+}
 
-   public static void initialize(BudaRoot br)
-   {
-      my_task_manager = new BowiTaskManager(br);
-   }
-   
-   /********************************************************************************/
-   /*										*/
-   /*	Task methods								*/
-   /*										*/
-   /********************************************************************************/
-   
-   /**
-    * Method to start a task
-    */
-   public static void startTask() {
-      if (my_task_manager != null)
-         my_task_manager.startTask();
-   }
-   
-   /**
-    * Method to end a task
-    * @param tostop
-    */
-   public static void stopTask() {
-      if (my_task_manager != null)
-         my_task_manager.stopTask();
-   }
+private BowiFactory()				{ }
+
+/********************************************************************************/
+/*										*/
+/*	Setup methods								*/
+/*										*/
+/********************************************************************************/
+
+/**
+ *	Called by initialization to ensure that the search package is set up correctly.
+ **/
+
+public static void setup()
+{
+   // work is done by the static initializer
+}
+
+/**
+ *	Called to initialize once BudaRoot is setup
+ **/
+
+public static void initialize(BudaRoot br)
+{
+   my_task_manager = new BowiTaskManager(br);
+}
+
+/********************************************************************************/
+/*										*/
+/*	Task methods								*/
+/*										*/
+/********************************************************************************/
+
+/**
+ * Method to start a task
+ */
+public static void startTask() {
+   if (my_task_manager != null)
+      my_task_manager.startTask();
+}
+
+/**
+ * Method to end a task
+ * @param tostop
+ */
+public static void stopTask() {
+   if (my_task_manager != null)
+      my_task_manager.stopTask();
+}
 
 }

@@ -212,7 +212,7 @@ private class SearchRequest implements BucsSearchRequest {
 
 private class ImageViewer extends JPanel {
 
-   private final static long serialVersionUID = 1;
+   private static final long serialVersionUID = 1;
 
    ImageViewer() {
       setMinimumSize(new Dimension(100,100));
@@ -223,7 +223,8 @@ private class ImageViewer extends JPanel {
       Graphics2D g2 = (Graphics2D) g;
 
       Rectangle r = getBounds();
-      r.x = r.y = 0;
+      r.x = 0;
+      r.y = 0;
       g.clearRect(0,0,r.width,r.height);
 
       if (image_list == null || image_index < 0) {
@@ -276,8 +277,8 @@ private static class UIImage {
       double scale = Math.min(ws,hs);
       if (scale > 1) scale = 1;
       if (scale != 1) {
-	 int nw = (int)(uw*scale);
-	 int nh = (int)(uh*scale);
+	 int nw = (int) (uw*scale);
+	 int nh = (int) (uh*scale);
 	 scaled_image = new BufferedImage(nw,nh,BufferedImage.TYPE_INT_ARGB);
 	 Graphics g = scaled_image.createGraphics();
 	 g.drawImage(orig_image,0,0,nw,nh,null);

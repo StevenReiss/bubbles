@@ -10,29 +10,42 @@
 
 package edu.brown.cs.bubbles.bhelp;
 
-import edu.brown.cs.bubbles.board.*;
-import edu.brown.cs.bubbles.buda.*;
+import edu.brown.cs.bubbles.board.BoardLog;
+import edu.brown.cs.bubbles.board.BoardProperties;
+import edu.brown.cs.bubbles.board.BoardSetup;
+import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.bubbles.buda.BudaBubbleArea;
+import edu.brown.cs.bubbles.buda.BudaBubbleGroup;
+import edu.brown.cs.bubbles.buda.BudaConstants;
+import edu.brown.cs.bubbles.buda.BudaRoot;
+import edu.brown.cs.bubbles.buda.BudaTopBar;
 import edu.brown.cs.bubbles.buda.BudaConstants.BudaHelpRegion;
 import edu.brown.cs.ivy.exec.IvyExec;
 import edu.brown.cs.ivy.swing.SwingText;
 import edu.brown.cs.ivy.xml.IvyXml;
-import marytts.LocalMaryInterface;
-import marytts.util.data.audio.AudioPlayer;
-
-import org.w3c.dom.Element;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.geom.*;
+import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import javax.swing.SwingUtilities;
+import javax.swing.JPopupMenu;
+import javax.sound.sampled.AudioInputStream;
+import org.w3c.dom.Element; 
+import marytts.util.data.audio.AudioPlayer;
+import marytts.LocalMaryInterface;
+
 
 
 
@@ -307,8 +320,8 @@ private static class FindGroupAction extends BhelpAction {
        }
 
       pt = SwingUtilities.convertPoint(br,pt,bba);
-      for(BudaBubbleGroup bbg : ctx.getBubbleArea().getBubbleGroups()) {
-	 for(BudaBubble bb : bbg.getBubbles()) {
+      for (BudaBubbleGroup bbg : ctx.getBubbleArea().getBubbleGroups()) {
+	 for (BudaBubble bb : bbg.getBubbles()) {
 	    Rectangle r1 = BudaRoot.findBudaLocation(bb);
 	    if (!rv.contains(r1)) continue;
 	    double score = pt.distance(r1.x + r1.width/2, r1.y + r1.height/2);
@@ -486,16 +499,24 @@ private static class FindBackgroundAction extends BhelpAction {
       for (int i = 0; i < 200; ++i) {
 	 pt.x = pts.x+i;
 	 pt.y = pts.y;
-	 if (checkPoint(ctx,pt)) { fnd = true; break; }
+	 if (checkPoint(ctx,pt)) {
+	    fnd = true; break;
+	 }
 	 pt.x = pts.x-i;
 	 pt.y = pts.y;
-	 if (checkPoint(ctx,pt)) { fnd = true; break; }
+	 if (checkPoint(ctx,pt)) {
+	    fnd = true; break;
+	 }
 	 pt.x = pts.x;
 	 pt.y = pts.y+i;
-	 if (checkPoint(ctx,pt)) { fnd = true; break; }
+	 if (checkPoint(ctx,pt)) {
+	    fnd = true; break;
+	 }
 	 pt.x = pts.x;
 	 pt.y = pts.y-i;
-	 if (checkPoint(ctx,pt)) { fnd = true; break; }
+	 if (checkPoint(ctx,pt)) {
+	    fnd = true; break;
+	 }
        }
 
       int delta = 1;		// pixel delta for search
@@ -504,12 +525,16 @@ private static class FindBackgroundAction extends BhelpAction {
 	 if (checkPoint(ctx,pt)) break;
 	 for (int j = 0; j < Math.abs(incr); ++j) {
 	    pt.x += (incr > 0 ? delta : -delta);
-	    if (checkPoint(ctx,pt)) { fnd = true; break; }
+	    if (checkPoint(ctx,pt)) {
+	       fnd = true; break;
+	    }
 	  }
 	 if (fnd) break;
 	 for (int j = 0; j < Math.abs(incr); ++j) {
 	    pt.y += (incr > 0 ? delta : -delta);
-	    if (checkPoint(ctx,pt)) { fnd = true; break; }
+	    if (checkPoint(ctx,pt)) {
+	       fnd = true; break;
+	    }
 	  }
 	 if (fnd) break;
 	 int v = Math.abs(incr) + 1;
@@ -575,14 +600,14 @@ private static class FindBackgroundAction extends BhelpAction {
 	  }
 	 else if (area_type.startsWith("TOPBARWORKINGSET")) {
 	    if (cnm.contains("BudaTopBar")) {
-	       BudaTopBar temp_tb = c instanceof BudaTopBar ? (BudaTopBar) c : null;
-	       if (temp_tb != null) {
-		  if (temp_tb.isOverWorkingSet(pt.x)) {
+	       BudaTopBar temptb = c instanceof BudaTopBar ? (BudaTopBar) c : null;
+	       if (temptb != null) {
+		  if (temptb.isOverWorkingSet(pt.x)) {
 		     //Make sure we're at edge
 		     if (area_type.equals("TOPBARWORKINGSET_EAST")) {
 			Point check = new Point(pt.x, pt.y);
 			int count = 0;
-			for ( ; temp_tb.isOverWorkingSet(check.x) ; ++check.x) {
+			for (; temptb.isOverWorkingSet(check.x); ++check.x) {
 			   if (++count > 1) return false;
 			 }
 		      }
@@ -590,7 +615,7 @@ private static class FindBackgroundAction extends BhelpAction {
 		     else if (area_type.equals("TOPBARWORKINGSET_WEST")) {
 			Point check = new Point(pt.x, pt.y);
 			int count = 0;
-			for ( ; temp_tb.isOverWorkingSet(check.x) ; --check.x) {
+			for (; temptb.isOverWorkingSet(check.x); --check.x) {
 			   if (++count > 1) return false;
 			 }
 		      }
@@ -598,7 +623,7 @@ private static class FindBackgroundAction extends BhelpAction {
 		     else if (area_type.equals("TOPBARWORKINGSET_INSIDE")) {
 			Point check = new Point(pt.x, pt.y);
 			for (int offset = -5; offset <= 5; ++offset) {
-			   if (!temp_tb.isOverWorkingSet(check.x + offset)) return false;
+			   if (!temptb.isOverWorkingSet(check.x + offset)) return false;
 			 }
 		      }
 
@@ -614,16 +639,16 @@ private static class FindBackgroundAction extends BhelpAction {
 	     }
 	  }
 	 else if (area_type.equals("BUBBLEMENU")) {
-	    JPopupMenu bubble_menu = br.getTopBar().getBubbleMenu();
-	    if (bubble_menu != null) {
-	       Point where = SwingUtilities.convertPoint(bubble_menu, bubble_menu.getLocation(), br);
+	    JPopupMenu bubblemenu = br.getTopBar().getBubbleMenu();
+	    if (bubblemenu != null) {
+	       Point where = SwingUtilities.convertPoint(bubblemenu, bubblemenu.getLocation(), br);
 	       return where.equals(pt);
 	     }
 	  }
 	 else if (area_type.equals("WORKINGSETMENU")) {
-	    JPopupMenu workingset_menu = br.getTopBar().getWorkingsetMenu();
-	    if (workingset_menu != null && workingset_menu.isVisible()) {
-	       Point where = SwingUtilities.convertPoint(workingset_menu, workingset_menu.getLocation(), br);
+	    JPopupMenu workingsetmenu = br.getTopBar().getWorkingsetMenu();
+	    if (workingsetmenu != null && workingsetmenu.isVisible()) {
+	       Point where = SwingUtilities.convertPoint(workingsetmenu, workingsetmenu.getLocation(), br);
 	       return where.equals(pt);
 	     }
 	  }
@@ -899,7 +924,7 @@ private static class TypeAction extends BhelpAction {
       String knm = "";
       for (char c : (text_to_enter).toCharArray()) {
 	 if (Character.isLowerCase(c)) {  //Lowercase letters
-	    knm = "VK_" + (char)(c - 32);
+	    knm = "VK_" + (char) (c - 32);
 	  }
 	 else if (Character.isUpperCase(c)) {	    //Uppercase letters
 	    knm = "VK_" + c;
@@ -930,7 +955,7 @@ private static class TypeAction extends BhelpAction {
       pause(500);
 
       if (back_space) {
-	 for(int i = 0; i < text_to_enter.length(); ++i) {
+	 for (int i = 0; i < text_to_enter.length(); ++i) {
 	    ctx.keyPress(KeyEvent.VK_BACK_SPACE);
 	    pause(20);
 	    ctx.keyRelease(KeyEvent.VK_BACK_SPACE);
@@ -940,7 +965,7 @@ private static class TypeAction extends BhelpAction {
 
    private void pause(long milliseconds) {
       long time = System.currentTimeMillis();
-      while(true) {
+      while (true) {
 	 long test = System.currentTimeMillis();
 	 if (test - time >= milliseconds) {
 	    break;
@@ -961,16 +986,16 @@ private static class TypeAction extends BhelpAction {
 
 private static class PauseAction extends BhelpAction {
 
-   private long duration;
+   private long pause_duration;
 
    PauseAction(Element xml) {
       super(xml);
-      duration = IvyXml.getAttrLong(xml,"DURATION");
+      pause_duration = IvyXml.getAttrLong(xml,"DURATION");
     }
 
    @Override void executeAction(BhelpContext ctx) throws BhelpException {
       try {
-	 Thread.sleep(duration);
+	 Thread.sleep(pause_duration);
        }
       catch (InterruptedException e) {
 	 BoardLog.logE("BHELP", "(PauseAction) Thread interrupted.");

@@ -64,16 +64,16 @@ private static PipedOutputStream pipe_err;
 // result bools for the routing test that have
 // to be members so we can set them inside
 // anonymous message listeners
-private boolean 	  t2ToS1Received = false;
-private boolean 	  t1ToS2Received = false;
-private BgtaChat		 bs1ToT2;
-private BgtaChat		 bs2ToT1;
+private boolean 	  t2ToS1_received = false;
+private boolean 	  t1ToS2_received = false;
+private BgtaChat		 bs1_to_T2;
+private BgtaChat		 bs2_to_T1;
 
 
 @BeforeClass public static void setUpOnce() throws XMPPException
 {
    try {
-      BeduChatFactory.DEBUG = true;
+//    BeduChatFactory.DEBUG = true;
       ta_client = new BeduTAXMPPClient(new TACourse("testcourse",ta_login,"brownbears",
 						       "jabber.org"));
       ta_client.connectAndLogin("TA1");
@@ -254,7 +254,7 @@ private BgtaChat		 bs2ToT1;
 	    new MessageListener() {
 	       @Override public void processMessage(Chat c,Message m)
 	       {
-		  if (m.getBody().equals("t2ToS1")) t2ToS1Received = true;
+		  if (m.getBody().equals("t2ToS1")) t2ToS1_received = true;
 	       }
 	    });
 
@@ -262,12 +262,12 @@ private BgtaChat		 bs2ToT1;
 	    new MessageListener() {
 	       @Override public void processMessage(Chat c,Message m)
 	       {
-		  if (m.getBody().equals("t1ToS2")) t1ToS2Received = true;
+		  if (m.getBody().equals("t1ToS2")) t1ToS2_received = true;
 	       }
 	    });
 
-   bs1ToT2 = BgtaUtil.bgtaChatForXMPPChat(student_conn1, s1ToT2);
-   bs2ToT1 = BgtaUtil.bgtaChatForXMPPChat(student_conn2, s2ToT1);
+   bs1_to_T2 = BgtaUtil.bgtaChatForXMPPChat(student_conn1, s1ToT2);
+   bs2_to_T1 = BgtaUtil.bgtaChatForXMPPChat(student_conn2, s2ToT1);
 
    // unforunately it isn't possible to test proper message routing without starting
    // the whole UI so here I'm testing the general methodology I used to make sure
@@ -275,7 +275,7 @@ private BgtaChat		 bs2ToT1;
    // which is inside BgtaResourceSwitchingBubble
    // actually testing that code has to be done by hand
 
-   bs1ToT2.getDocument().addDocumentListener(new DocumentListener() {
+   bs1_to_T2.getDocument().addDocumentListener(new DocumentListener() {
 
       @Override public void changedUpdate(DocumentEvent e)
       {
@@ -285,8 +285,8 @@ private BgtaChat		 bs2ToT1;
 
       @Override public void insertUpdate(DocumentEvent e)
       {
-	 String newDest = ((Message) bs1ToT2.getLastMessage()).getFrom();
-	 bs1ToT2 = BgtaUtil.bgtaChatForXMPPChat(student_conn1, student_conn1
+	 String newDest = ((Message) bs1_to_T2.getLastMessage()).getFrom();
+	 bs1_to_T2 = BgtaUtil.bgtaChatForXMPPChat(student_conn1, student_conn1
 		  .getChatManager().createChat(newDest, null));
 
       }
@@ -298,7 +298,7 @@ private BgtaChat		 bs2ToT1;
       }
    });
 
-   bs2ToT1.getDocument().addDocumentListener(new DocumentListener() {
+   bs2_to_T1.getDocument().addDocumentListener(new DocumentListener() {
 
       @Override public void changedUpdate(DocumentEvent e)
       {
@@ -308,8 +308,8 @@ private BgtaChat		 bs2ToT1;
 
       @Override public void insertUpdate(DocumentEvent e)
       {
-	 String newDest = ((Message) bs2ToT1.getLastMessage()).getFrom();
-	 bs2ToT1 = BgtaUtil.bgtaChatForXMPPChat(student_conn2, student_conn2
+	 String newDest = ((Message) bs2_to_T1.getLastMessage()).getFrom();
+	 bs2_to_T1 = BgtaUtil.bgtaChatForXMPPChat(student_conn2, student_conn2
 		  .getChatManager().createChat(newDest, null));
 
       }
@@ -351,13 +351,13 @@ private BgtaChat		 bs2ToT1;
    Thread.sleep(1000);
    t1ToS2.sendMessage("t1ToS2");
    Thread.sleep(1000);
-   bs1ToT2.sendMessage("s1toT2");
+   bs1_to_T2.sendMessage("s1toT2");
    Thread.sleep(2000);
-   bs2ToT1.sendMessage("s2toT1");
+   bs2_to_T1.sendMessage("s2toT1");
    Thread.sleep(1000);
 
-   assertTrue(t2ToS1Received);
-   assertTrue(t1ToS2Received);
+   assertTrue(t2ToS1_received);
+   assertTrue(t1ToS2_received);
 
 
    ta_client.endChatSession(t1ToS2);

@@ -69,7 +69,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
-public class BnoteStore implements BnoteConstants, MintConstants
+public final class BnoteStore implements BnoteConstants, MintConstants
 {
 
 
@@ -248,7 +248,7 @@ public static BnoteTask log(String project,BnoteTask task,BnoteEntryType type,Ma
 
 
 
-public static BnoteTask log(String project,BnoteTask task,BnoteEntryType type,Object ... args)
+public static BnoteTask log(String project,BnoteTask task,BnoteEntryType type,Object... args)
 {
    if (the_store == null) return null;
 
@@ -373,7 +373,7 @@ private class TaskEntry implements Callable<BnoteTask> {
 /*										*/
 /********************************************************************************/
 
-private class NoteServer implements MintHandler {
+private final class NoteServer implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       Element xml = msg.getXml();
@@ -608,7 +608,7 @@ private class RemoteClient {
          String k = ent.getKey();
          if (!field_strings.contains(k)) continue;
          Object v = ent.getValue();
-         if (v instanceof BnoteTask) xw.field(k,((BnoteTask)v).getTaskId());
+         if (v instanceof BnoteTask) xw.field(k,((BnoteTask) v).getTaskId());
          else xw.field(k,v.toString());
        }
    

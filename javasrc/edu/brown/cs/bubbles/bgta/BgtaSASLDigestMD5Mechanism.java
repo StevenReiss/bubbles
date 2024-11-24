@@ -110,7 +110,7 @@ public BgtaSASLDigestMD5Mechanism(SASLAuthentication saslAuthentication)
    // Build the challenge response stanza encoding the response text
    StringBuilder stanza = new StringBuilder();
 
-   byte response[];
+   byte [] response;
    if (challenge != null) {
       response = sc.evaluateChallenge(Base64.decode(challenge));
     }

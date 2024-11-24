@@ -107,8 +107,8 @@ protected BqstCheckBoxes(String qst,String help,String[] options,boolean require
       add(q_field, q_cons);
     }
 
-   setPreferredSize(new Dimension(CHECKBOX_SIZE.width,CHECKBOX_SIZE.height
-				     * q_buttons.size() + 90 + extra));
+   setPreferredSize(new Dimension(CHECKBOX_SIZE.width,CHECKBOX_SIZE.height *
+				     q_buttons.size() + 90 + extra));
 }
 
 

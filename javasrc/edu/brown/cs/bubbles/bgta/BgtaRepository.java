@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaRepository.java						*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaRepository.java                                             */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -37,13 +37,13 @@ class BgtaRepository implements BassRepository {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BassRepository	      complete_rep;
-private BassRepository	      original_rep;
+private BassRepository        complete_rep;
+private BassRepository        original_rep;
 private Vector<BgtaBuddyRepository> buddy_reps;
 private Vector<BgtaManager>   manager_list;
 
@@ -51,9 +51,9 @@ private Vector<BgtaManager>   manager_list;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BgtaRepository(Vector<BgtaManager> mans)
@@ -70,9 +70,9 @@ BgtaRepository(Vector<BgtaManager> mans)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 void addNewRep(BgtaBuddyRepository bbr)
@@ -85,9 +85,9 @@ void addNewRep(BgtaBuddyRepository bbr)
 
 
 /********************************************************************************/
-/*										*/
-/*	BassRepository methods							*/
-/*										*/
+/*                                                                              */
+/*      BassRepository methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Iterable<BassName> getAllNames()
@@ -121,9 +121,9 @@ BgtaBuddy getBuddyInfo(String buddyname)
 
 
 /********************************************************************************/
-/*										*/
-/*	Just Buddies name getter						*/
-/*										*/
+/*                                                                              */
+/*      Just Buddies name getter                                                */
+/*                                                                              */
 /********************************************************************************/
 
 List<String> getAllBuddyNames()
@@ -131,7 +131,7 @@ List<String> getAllBuddyNames()
    ArrayList<String> toreturn = new ArrayList<String>();
    for (BgtaBuddyRepository bbr : buddy_reps) {
       for (BassName bud : bbr.getAllNames()) {
-	 toreturn.add(((BgtaBuddy) bud).getConnectionName());
+         toreturn.add(((BgtaBuddy) bud).getConnectionName());
        }
     }
    return toreturn;
@@ -140,9 +140,9 @@ List<String> getAllBuddyNames()
 
 
 /********************************************************************************/
-/*										*/
-/*	Clean up								*/
-/*										*/
+/*                                                                              */
+/*      Clean up                                                                */
+/*                                                                              */
 /********************************************************************************/
 
 void removeManager(BgtaManager bm)
@@ -151,9 +151,9 @@ void removeManager(BgtaManager bm)
    BgtaBuddyRepository toremove = null;
    for (BgtaBuddyRepository bbr : buddy_reps) {
       if (!bbr.getManager().equals(bm))
-	 newrep = new BassRepositoryMerge(bbr,newrep);
+         newrep = new BassRepositoryMerge(bbr,newrep);
       else
-	 toremove = bbr;
+         toremove = bbr;
     }
    buddy_reps.remove(toremove);
    complete_rep = newrep;
@@ -161,7 +161,7 @@ void removeManager(BgtaManager bm)
 
 
 
-}	// end of class BgtaRepository
+}       // end of class BgtaRepository
 
 
 

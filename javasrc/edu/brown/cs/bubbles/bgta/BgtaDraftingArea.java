@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaDraftingArea.java						*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaDraftingArea.java                                           */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /* Copyright 2011 Brown University -- Sumner Warren            */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
@@ -39,23 +39,23 @@ class BgtaDraftingArea extends SwingTextArea {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BgtaChat	my_chat;
+private BgtaChat        my_chat;
 private BgtaLoggingArea my_log;
-private BgtaBubble	my_bubble;
+private BgtaBubble      my_bubble;
 
 private static final long serialVersionUID = 1L;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BgtaDraftingArea(BgtaLoggingArea bla,BgtaBubble mybub)
@@ -71,18 +71,18 @@ BgtaDraftingArea(BgtaLoggingArea bla,BgtaBubble mybub)
 }
 
 /********************************************************************************/
-/*										*/
-/*	Setters								*/
-/*										*/
+/*                                                                              */
+/*      Setters                                                         */
+/*                                                                              */
 /********************************************************************************/
 void setChat(BgtaChat chat) {
     my_chat = chat;
 }
 
 /********************************************************************************/
-/*										*/
-/*	Sending methods 							*/
-/*										*/
+/*                                                                              */
+/*      Sending methods                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 void send()
@@ -102,26 +102,26 @@ void send(String message)
 
 
 /********************************************************************************/
-/*										*/
-/*	 Listeners for handling input						*/
-/*										*/
+/*                                                                              */
+/*       Listeners for handling input                                           */
+/*                                                                              */
 /********************************************************************************/
 
-private class DraftingListener extends KeyAdapter {
+private final class DraftingListener extends KeyAdapter {
 
    @Override public void keyPressed(KeyEvent e) {
       if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-	 send();
-	 // Necessary because otherwise sending doesn't look good.
-	 e.setKeyCode(KeyEvent.VK_LEFT);
+         send();
+         // Necessary because otherwise sending doesn't look good.
+         e.setKeyCode(KeyEvent.VK_LEFT);
        }
     }
 
-}	// end of inner class DraftingListener
+}       // end of inner class DraftingListener
 
 
 
-private class FocusForLogListener implements FocusListener {
+private final class FocusForLogListener implements FocusListener {
 
    @Override public void focusGained(FocusEvent e) {
       my_log.unbold();
@@ -130,15 +130,15 @@ private class FocusForLogListener implements FocusListener {
 
    @Override public void focusLost(FocusEvent e) {
       if (my_bubble.reloadAltColor()) {
-	 my_log.bold();
+         my_log.bold();
        }
     }
 
-}	// end of inner class FocusForLogListener
+}       // end of inner class FocusForLogListener
 
 
 
-}	// end of class BgtaDraftingArea
+}       // end of class BgtaDraftingArea
 
 
 

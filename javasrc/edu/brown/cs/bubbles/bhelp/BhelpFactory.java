@@ -29,25 +29,22 @@ import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaRoot;
-
 import edu.brown.cs.ivy.xml.IvyXml;
-
-import org.w3c.dom.Element;
-
-import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-
 import java.awt.Component;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.AbstractAction;
+import javax.swing.JEditorPane;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.event.HyperlinkEvent;
+import org.w3c.dom.Element;
 
 
 
-public class BhelpFactory implements BhelpConstants
+public final class BhelpFactory implements BhelpConstants
 {
 
 
@@ -71,7 +68,7 @@ private static BhelpFactory	the_factory = null;
 /*										*/
 /********************************************************************************/
 
-public synchronized static BhelpFactory getFactory()
+public static synchronized BhelpFactory getFactory()
 {
    return the_factory;
 }
@@ -173,11 +170,11 @@ void startDemonstration(Component comp,String name)
 
 void displayDemoScreen(Component comp,String name,String backto)
 {
-   if(comp == null) {
+   if (comp == null) {
       comp = buda_root.getCurrentBubbleArea();
     }
    
-   if(comp instanceof JEditorPane) {
+   if (comp instanceof JEditorPane) {
       String text = "";
       
       //Bring stuff back to being visible
@@ -189,11 +186,11 @@ void displayDemoScreen(Component comp,String name,String backto)
       if (ins != null) {
 	 Element xml = IvyXml.loadXmlFromStream(ins);
 	 text += "<html>";
-	 if(!backto.equals("NULL")) {
+	 if (!backto.equals("NULL")) {
 	    text += getTextOfHelp(xml, "instructions");
 	  }
 	 text += getTextOfHelp(xml, name);
-	 if(!backto.equals("NULL")) {
+	 if (!backto.equals("NULL")) {
 	    text += "[<a class='tbutton' id='back' href='gotodemo:" +
                backto + ";backto:NULL'> BACK </a>]</p>";
 	  }
@@ -208,9 +205,9 @@ void displayDemoScreen(Component comp,String name,String backto)
 
 String getTextOfHelp(Element xml, String name)
 {
-   for(Element ex : IvyXml.children(xml, "HELP")) {
+   for (Element ex : IvyXml.children(xml, "HELP")) {
       String key = IvyXml.getAttrString(ex,"KEY");
-      if(name.equals(key)) {
+      if (name.equals(key)) {
 	 return IvyXml.getTextElement(ex,"TEXT");
        }
     }
@@ -261,7 +258,7 @@ private class Hyperlinker implements HyperlinkListener {
 /*										*/
 /********************************************************************************/
 
-private static class TestAction extends AbstractAction {
+private static final class TestAction extends AbstractAction {
    
    private static final long serialVersionUID = 1;
    

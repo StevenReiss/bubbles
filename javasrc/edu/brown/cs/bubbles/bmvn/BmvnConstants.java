@@ -57,7 +57,7 @@ interface BmvnCommand extends Action {
    String getName();
    BmvnModel getModel();
    
-   @Override default public void actionPerformed(ActionEvent evt) {
+   @Override default void actionPerformed(ActionEvent evt) {
       execute();
     }
    

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaLabel.java							*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaLabel.java                                                  */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -45,16 +45,16 @@ class BgtaLabel extends JPanel implements PacketListener {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
 private JLabel          my_label;
-private ImageIcon	my_icon;
+private ImageIcon       my_icon;
 private JButton         my_button;
-private String		user_name;
-private Presence	my_presence;
+private String          user_name;
+private Presence        my_presence;
 
 
 private static final long serialVersionUID = 1L;
@@ -62,9 +62,9 @@ private static final long serialVersionUID = 1L;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BgtaLabel(String username,String displayname)
@@ -114,9 +114,9 @@ void setPresence(Presence p)
 }
 
 /********************************************************************************/
-/*										*/
-/*	PacketListener								*/
-/*										*/
+/*                                                                              */
+/*      PacketListener                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void processPacket(Packet p)
@@ -125,18 +125,18 @@ void setPresence(Presence p)
       Presence pr = (Presence) p;
       String fromuser = pr.getFrom().substring(0, pr.getFrom().indexOf("/"));
       if (fromuser.equals(user_name)) {
-	 my_presence = pr;
-	 if (pr.getType() == Presence.Type.available) {
-	    my_icon = (ImageIcon) BgtaManager.iconFor(my_presence);
-	    my_label.setIcon(my_icon);
+         my_presence = pr;
+         if (pr.getType() == Presence.Type.available) {
+            my_icon = (ImageIcon) BgtaManager.iconFor(my_presence);
+            my_label.setIcon(my_icon);
             if (my_presence.getMode() != null)
                 my_label.setToolTipText(my_presence.getMode().toString());
-	 }
-	 else if (pr.getType() == Presence.Type.unavailable) {
-	    my_icon = (ImageIcon) BgtaManager.iconFor(my_presence);
-	    my_label.setIcon(my_icon);
-	    my_label.setToolTipText("unavailable");
-	 }
+         }
+         else if (pr.getType() == Presence.Type.unavailable) {
+            my_icon = (ImageIcon) BgtaManager.iconFor(my_presence);
+            my_label.setIcon(my_icon);
+            my_label.setToolTipText("unavailable");
+         }
       }
    }
 }
@@ -146,7 +146,7 @@ void setPresence(Presence p)
 
 
 
-}	// end of class BgtaLabel
+}       // end of class BgtaLabel
 
 
 

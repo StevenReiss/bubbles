@@ -64,8 +64,8 @@ private Image		bubbles_image;
 
 private boolean 	show_bubbles;
 
-private static final Color  first_color = new Color(0,0,255);
-private static final Color  second_color = new Color(128,128,255);
+private static final Color  FIRST_COLOR = new Color(0,0,255);
+private static final Color  SECOND_COLOR = new Color(128,128,255);
 
 private static boolean scale_image = false;
 private static int splash_width = 450;
@@ -204,10 +204,10 @@ Color getBubbleColor(int v0,int v1)
 {
    double v = v0/255.0;
 
-   int c0 = first_color.getRGB();
-   int c1 = second_color.getRGB();
+   int c0 = FIRST_COLOR.getRGB();
+   int c1 = SECOND_COLOR.getRGB();
 
-   int c2 = (int)(c0 * v + c1 * (1-v));
+   int c2 = (int) (c0 * v + c1 * (1-v));
 
    return new Color(c2);
 }
@@ -262,8 +262,8 @@ private class BubblePanel extends JPanel implements Runnable {
    private int		bubble_stepper;
    private int [][]	bubble_record;
 
-   final static private int MAX_BUBBLES = 125;
-   final static private long SLEEP_TIME = 50;
+   private static final int MAX_BUBBLES = 125;
+   private static final long SLEEP_TIME = 50;
 
    private static final long serialVersionUID = 1;
 
@@ -272,7 +272,7 @@ private class BubblePanel extends JPanel implements Runnable {
       setOpaque(false);
       int wd = splash_width;
       int ht = splash_height;
-      Dimension sz = new Dimension(wd,ht+splash_delta - 4);//amc6
+      Dimension sz = new Dimension(wd,ht+splash_delta - 4); //amc6
       setMinimumSize(sz);
       setPreferredSize(sz);
       setMaximumSize(sz);
@@ -311,22 +311,24 @@ private class BubblePanel extends JPanel implements Runnable {
     }
 
 
-   private void move_bubble(int x, int y, int r, int step, Graphics g) {
+   private void moveBubble(int x, int y, int r, int step, Graphics g) {
       int i;
 
       for (i=x-r; i<=x+r; i++) {     // Draws the upper edge of a circle
-	 g.drawLine(i, y - (int)(Math.sqrt( r*r - ( (i-x)*(i-x) ))),
-		       i, y + step - (int)(Math.sqrt( r*r - ( (i-x)*(i-x) ))));
+	 g.drawLine(i, y - (int) (Math.sqrt(r*r - ((i-x)*(i-x)))),
+		       i, y + step - (int) (Math.sqrt(r*r - ((i-x)*(i-x)))));
        }
       g.setColor(getBackground());
       for (i=x-r; i<=x+r; i++) {     // Draws the lower edge of the circle
-	 g.drawLine(i, y + (int)(Math.sqrt( r*r - ( (i-x)*(i-x) ))),
-		       i, y + step + (int)(Math.sqrt( r*r - ( (i-x)*(i-x) ))));
+	 g.drawLine(i, y + (int) (Math.sqrt(r*r - ((i-x)*(i-x)))),
+		       i, y + step + (int) (Math.sqrt(r*r - ((i-x)*(i-x)))));
        }
     }
 
    @Override public void paint(Graphics g) {
-      int i, j, tmp;
+      int i;
+      int j;
+      int tmp;
       Dimension d = getSize();
       Color col;
    
@@ -334,11 +336,11 @@ private class BubblePanel extends JPanel implements Runnable {
       // g.drawImage(splash_image,0,0,this);
    
       if (bubble_count < MAX_BUBBLES || this_bubble < MAX_BUBBLES) {
-         bubble_record[this_bubble][0]=(int)(Math.random() * d.width);
+         bubble_record[this_bubble][0]=(int) (Math.random() * d.width);
          bubble_record[this_bubble][1]=d.height+50;
-         bubble_record[this_bubble][2]=(int)(Math.random() * d.width)/20;
-         bubble_record[this_bubble][3]=(int)(Math.random() * 255);
-         bubble_record[this_bubble][4]=(int)(Math.random() * 255);
+         bubble_record[this_bubble][2]=(int) (Math.random() * d.width)/20;
+         bubble_record[this_bubble][3]=(int) (Math.random() * 255);
+         bubble_record[this_bubble][4]=(int) (Math.random() * 255);
          col = getBubbleColor(bubble_record[this_bubble][3],bubble_record[this_bubble][4]);
          g.setColor(col);
          g.fillOval(bubble_record[this_bubble][0]-bubble_record[this_bubble][2],
@@ -356,16 +358,17 @@ private class BubblePanel extends JPanel implements Runnable {
             bubble_record[i][1] -= 1;
             col = new Color(bubble_record[i][3], bubble_record[i][4], 255);
             g.setColor(col);
-            move_bubble(bubble_record[i][0], bubble_record[i][1], bubble_record[i][2], 1, g);
+            moveBubble(bubble_record[i][0], bubble_record[i][1], bubble_record[i][2], 1, g);
             for (j=0; j<i; j++) {   // Checks for touching bubbles, pops one
-               tmp = ( (bubble_record[i][1]-bubble_record[j][1])*(bubble_record[i][1]-bubble_record[j][1]) +
-        		  (bubble_record[i][0]-bubble_record[j][0])*(bubble_record[i][0]-bubble_record[j][0]) );
+               tmp = ((bubble_record[i][1]-bubble_record[j][1])*(bubble_record[i][1]-bubble_record[j][1]) +
+        		  (bubble_record[i][0]-bubble_record[j][0])*(bubble_record[i][0]-bubble_record[j][0]));
                if (j != i && Math.sqrt(tmp) < bubble_record[i][2] + bubble_record[j][2]) {
         	  g.setColor(getBackground());
-        	  for (tmp = bubble_record[i][2]; tmp >= -1; tmp = tmp - 2)
+        	  for (tmp = bubble_record[i][2]; tmp >= -1; tmp = tmp - 2) {
         	     g.fillOval(bubble_record[i][0]-(bubble_record[i][2]-tmp),
         			   bubble_record[i][1]-(bubble_record[i][2]-tmp),
         			   (bubble_record[i][2]-tmp)*2, (bubble_record[i][2]-tmp)*2);
+                   }
         	  col = getBubbleColor(bubble_record[j][3],bubble_record[j][4]);
         	  g.setColor(col);
         	  g.fillOval(bubble_record[j][0]-bubble_record[j][2], bubble_record[j][1]-bubble_record[j][2],
@@ -377,7 +380,7 @@ private class BubblePanel extends JPanel implements Runnable {
          if (bubble_record[i][1]+bubble_record[i][2] < 0 && bubble_count >= MAX_BUBBLES) {
             this_bubble = i;
           }
-         bubble_stepper=(int)(Math.random()*10);
+         bubble_stepper=(int) (Math.random()*10);
          col = null;
        }
     }

@@ -844,7 +844,10 @@ private class TaskImpl implements BnoteTask, BnoteValue {
 
    private void loadDates() {
       List<Date> dts = getDatesForTask(task_project,this);
-      if (dts == null || dts.size() == 0) start_date = end_date = new Date();
+      if (dts == null || dts.size() == 0) {
+         start_date = new Date();
+         end_date = start_date;
+       }
       else {
 	 start_date = dts.get(0);
 	 end_date = dts.get(dts.size()-1);

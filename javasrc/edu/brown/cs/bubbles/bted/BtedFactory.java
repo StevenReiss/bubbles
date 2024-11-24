@@ -68,7 +68,7 @@ import java.util.Vector;
 import java.util.regex.Pattern;
 
 
-public class BtedFactory implements BtedConstants, BumpConstants,
+public final class BtedFactory implements BtedConstants, BumpConstants,
 	 BudaConstants.ButtonListener {
 
 
@@ -183,8 +183,8 @@ private Vector<String> getExtensions(String str)
 	 inExt = true;
 	 start = i;
       }
-      else if ((ch == ' ' || ch == ',' || ch == ';' || ch == '\n' || ch == '\r' || ch == Character.MIN_VALUE)
-	       && inExt) {
+      else if ((ch == ' ' || ch == ',' || ch == ';' || ch == '\n' || ch == '\r' || ch == Character.MIN_VALUE) &&
+	       inExt) {
 	 inExt = false;
 	 rslt.add(str.substring(start, i));
       }

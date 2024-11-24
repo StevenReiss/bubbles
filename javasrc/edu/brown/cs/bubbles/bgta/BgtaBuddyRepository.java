@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaBuddyRepository.java					*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaBuddyRepository.java                                        */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -40,21 +40,21 @@ class BgtaBuddyRepository implements BassConstants, BassRepository {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Set<BgtaBuddy>	all_names;
-private boolean 	is_ready;
-private BgtaManager	the_manager;
+private Set<BgtaBuddy>  all_names;
+private boolean         is_ready;
+private BgtaManager     the_manager;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BgtaBuddyRepository(BgtaManager man)
@@ -68,9 +68,9 @@ BgtaBuddyRepository(BgtaManager man)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 BgtaManager getManager()
@@ -81,19 +81,19 @@ BgtaManager getManager()
 
 
 /********************************************************************************/
-/*										*/
-/*	BassRepository methods							*/
-/*										*/
+/*                                                                              */
+/*      BassRepository methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public Iterable<BassName> getAllNames()
 {
    synchronized (this) {
       while (!is_ready) {
-	 try {
-	    wait();
-	  }
-	 catch (InterruptedException e) {}
+         try {
+            wait();
+          }
+         catch (InterruptedException e) {}
        }
       return new ArrayList<BassName>(all_names);
     }
@@ -104,10 +104,10 @@ BgtaManager getManager()
 {
    synchronized (this) {
       while (!is_ready) {
-	 try {
-	    wait();
-	  }
-	 catch (InterruptedException e) {}
+         try {
+            wait();
+          }
+         catch (InterruptedException e) {}
        }
       return all_names.isEmpty();
     }
@@ -116,9 +116,9 @@ BgtaManager getManager()
 
 
 /********************************************************************************/
-/*										*/
-/*	Buddy Identification methods						*/
-/*										*/
+/*                                                                              */
+/*      Buddy Identification methods                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BgtaBuddy getBuddyInfo(String buddyname)
@@ -136,7 +136,7 @@ private boolean isEquivalent(BgtaBuddyRepository bbr)
    synchronized (all_names) {
       Iterable<BassName> theirnames = bbr.getAllNames();
       for (BassName bn : theirnames) {
-	 if (!all_names.contains(bn)) return false;
+         if (!all_names.contains(bn)) return false;
        }
       return true;
     }
@@ -145,9 +145,9 @@ private boolean isEquivalent(BgtaBuddyRepository bbr)
 
 
 /********************************************************************************/
-/*										*/
-/*	Name loader								*/
-/*										*/
+/*                                                                              */
+/*      Name loader                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private void loadNames()
@@ -168,9 +168,9 @@ private void loadNames()
 
 
 /********************************************************************************/
-/*										*/
-/*	Initializer								*/
-/*										*/
+/*                                                                              */
+/*      Initializer                                                             */
+/*                                                                              */
 /********************************************************************************/
 
 private void initialize()
@@ -197,11 +197,11 @@ private class Searcher extends Thread {
       loadNames();
     }
 
-}	// end of inner class Searcher
+}       // end of inner class Searcher
 
 
 
-}	// end of class BgtaBuddyRepository
+}       // end of class BgtaBuddyRepository
 
 
 

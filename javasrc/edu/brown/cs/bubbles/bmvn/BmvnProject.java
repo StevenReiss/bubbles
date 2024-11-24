@@ -264,7 +264,7 @@ void addButtons(String name,BudaBubble relbbl,Point where,JPopupMenu menu)
 /*                                                                              */
 /********************************************************************************/
 
-private class FileSorter implements Comparator<File> {
+private final class FileSorter implements Comparator<File> {
    
    @Override public int compare(File f1,File f2) {
       String p1 = f1.getPath();

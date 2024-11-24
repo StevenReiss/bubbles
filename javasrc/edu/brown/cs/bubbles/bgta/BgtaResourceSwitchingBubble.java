@@ -29,35 +29,34 @@ public class BgtaResourceSwitchingBubble extends BgtaBubble
 {
    private static final long serialVersionUID = 1L;
 
-   private BgtaChat chat;
-   private BgtaManager man;
+   private BgtaChat the_chat;
+   private BgtaManager the_manager;
 
    public BgtaResourceSwitchingBubble(BgtaManager m, String username)
    {
       this(m.startChat(username));
-      man = m;
+      the_manager = m;
    }
 
    private BgtaResourceSwitchingBubble(BgtaChat c)
    {
       super(c);
-      chat = c;
+      the_chat = c;
    }
 
    @Override public void insertUpdate(DocumentEvent e)
    {
       super.insertUpdate(e);
-      Message msg = (Message)chat.getLastMessage();
-      if(msg == null)
-      {
-	 return;
+      Message msg = (Message) the_chat.getLastMessage();
+      if (msg == null) {
+      	 return;
       }
       try {
-	 if(!msg.getFrom().equals(chat.getChat().getParticipant()))
-	 {
-	    chat.setChat(man.startChat(msg.getFrom()).getChat());
+	 if (!msg.getFrom().equals(the_chat.getChat().getParticipant())) {
+	 	    the_chat.setChat(the_manager.startChat(msg.getFrom()).getChat());
 	 }
-      } catch (OperationNotSupportedException e1) {
+      }
+catch (OperationNotSupportedException e1) {
 	 // Do nothing
       }
    }

@@ -57,7 +57,7 @@ private int                     no_modifier_flags;
 private int                     protect_flags;
 private Pattern                 name_pattern;
 
-private static int PACKAGE = 0x800000;
+private static final int PACKAGE = 0x800000;
 private static Map<String,Integer> mod_names;
 
 private static final String FACTORY_PATTERN = "(new|create)[A-Z][A-Za-z0-9]*";

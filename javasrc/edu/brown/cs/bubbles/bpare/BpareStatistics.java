@@ -162,7 +162,7 @@ private Map<StructuralPropertyDescriptor,EmptyCount> empty_totals;
 private static AST dummy_ast;
 private static Map<Class<?>,Integer> astid_map = null;
 
-private static Class<?> [] ast_classes = new Class<?> [] {
+private static Class<?>[] ast_classes = new Class<?>[] {
    AnnotationTypeDeclaration.class,
    AnnotationTypeMemberDeclaration.class,
    AnonymousClassDeclaration.class,
@@ -748,8 +748,8 @@ private void updateEmpty(StructuralPropertyDescriptor spd,boolean empty)
 
 private static class EmptyCount {
 
-   int total_count;
-   double total_empty;
+   private int total_count;
+   private double total_empty;
 
    EmptyCount() {
       total_count = 0;
@@ -801,7 +801,7 @@ void dump()
        }
     }
 
-   System.err.println("EMPTY COUNTS: " );
+   System.err.println("EMPTY COUNTS: ");
    for (Map.Entry<StructuralPropertyDescriptor,EmptyCount> ent1 : empty_totals.entrySet()) {
       System.err.println("\t" + ent1.getKey().getId() + " @ " + ent1.getKey().getNodeClass().getName());
       System.err.println("\t    " + ent1.getValue().getTotal() + " @ " + ent1.getValue().getEmpty());

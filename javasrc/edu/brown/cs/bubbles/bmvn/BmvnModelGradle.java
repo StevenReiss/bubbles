@@ -55,12 +55,12 @@ private static final String [] GRADLE_COMMANDS = {
    "build", "clean", "jar", "publish", "test", "check", "distZip"
 };
 
-private static final Set<String> gradle_uses;
+private static final Set<String> GRADLE_USES;
 
 static {
-   gradle_uses = new HashSet<>();
+   GRADLE_USES = new HashSet<>();
    for (String s : GRADLE_COMMANDS) {
-      gradle_uses.add(s);
+      GRADLE_USES.add(s);
     }
    // possibly add commands from properties file
 }
@@ -121,7 +121,7 @@ private class SetupTasks extends Thread {
             int idx = ln.indexOf(" - ");
             if (idx < 0) continue;
             String cmd = ln.substring(0,idx);
-            if (gradle_uses.contains(cmd)) gradle_commands.add(cmd);
+            if (GRADLE_USES.contains(cmd)) gradle_commands.add(cmd);
           }
          br.close();
          exec.waitFor();

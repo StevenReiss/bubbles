@@ -6,7 +6,7 @@
 /*    A TableModel extension of ArrayList for holding StudentTickets            */
 /*										*/
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Andrew Kovacs									  */
+/*	Copyright 2011 Brown University -- Andrew Kovacs	                */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *

@@ -21,19 +21,30 @@
 
 package edu.brown.cs.bubbles.bqst;
 
-import edu.brown.cs.bubbles.board.*;
-
+import edu.brown.cs.bubbles.board.BoardColors;
+import edu.brown.cs.bubbles.board.BoardConstants;
+import edu.brown.cs.bubbles.board.BoardLog;
+import edu.brown.cs.bubbles.board.BoardProperties;
+import edu.brown.cs.bubbles.board.BoardUpload;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
-
-import javax.swing.*;
-
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 
 /**
@@ -302,17 +313,17 @@ private JPanel makeButtonPanel()
 
 private boolean checkForm()
 {
-   boolean filled_flag = true;
+   boolean filledflag = true;
    for (int i = 0; i < question_list.size(); i++) {
       if (question_list.get(i).getAnswer() == null) {
 	 question_list.get(i).markUnfilled();
-	 filled_flag = false;
+	 filledflag = false;
        }
       else {
 	 question_list.get(i).markFilled();
        }
     }
-   return filled_flag;
+   return filledflag;
 }
 
 
@@ -381,8 +392,9 @@ private void uploadOtherFiles()
 private void reset()
 {
    err_msg.setText("  ");
-   for (int i = 0; i < question_list.size(); i++)
+   for (int i = 0; i < question_list.size(); i++) {
       question_list.get(i).reset();
+    }
    form_scrollpane.getViewport().setViewPosition(new Point(0,0));
 }
 
@@ -395,7 +407,7 @@ private void reset()
 /*										*/
 /********************************************************************************/
 
-private class SubmitListener implements ActionListener {
+private final class SubmitListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent arg0) {
       if (checkForm()) {
@@ -418,7 +430,7 @@ private class SubmitListener implements ActionListener {
 
 
 
-private class ResetListener implements ActionListener {
+private final class ResetListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent arg0) {
       reset();
@@ -430,7 +442,7 @@ private class ResetListener implements ActionListener {
 
 
 
-private class CancelListener implements ActionListener {
+private final class CancelListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent arg0) {
       dispose();

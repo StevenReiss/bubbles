@@ -39,7 +39,7 @@ import java.util.Date;
  *	and not for normal users.
  **/
 
-public class BoardLog implements BoardConstants {
+public final class BoardLog implements BoardConstants {
 
 
 

@@ -11,13 +11,21 @@
 package edu.brown.cs.bubbles.bhelp;
 
 import edu.brown.cs.bubbles.board.BoardLog;
-import edu.brown.cs.bubbles.buda.*;
-
-import javax.swing.SwingUtilities;
-
-import java.awt.*;
+import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.bubbles.buda.BudaBubbleArea;
+import edu.brown.cs.bubbles.buda.BudaRoot;
+import java.awt.AWTException;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.SwingUtilities;
 
 
 class BhelpContext implements BhelpConstants

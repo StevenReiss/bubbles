@@ -47,10 +47,10 @@ private String course_name;
 private String ta_chat_jid;
 
 
-protected BeduCourse(String a_course_name,String a_jid)
+protected BeduCourse(String name,String chatid)
 {
-   course_name = a_course_name;
-   ta_chat_jid = a_jid;
+   course_name = name;
+   ta_chat_jid = chatid;
 }
 
 
@@ -118,8 +118,8 @@ BeduTATicketList getTicketList()
 
 @Override protected String getSymbolName()
 {
-   return BassConstants.BASS_COURSE_LIST_NAME + ".Enable " + getCourseName()
-	    + " chat hours";
+   return BassConstants.BASS_COURSE_LIST_NAME + ".Enable " + getCourseName() +
+	    " chat hours";
 }
 
 
@@ -147,10 +147,10 @@ static class StudentCourse extends BeduCourse {
 private String ta_chat_jid;
 
 
-StudentCourse(String a_course_name,String a_jid)
+StudentCourse(String name,String id)
 {
-   super(a_course_name,a_jid);
-   ta_chat_jid = a_jid;
+   super(name,id);
+   ta_chat_jid = id;
 }
 
 
@@ -255,4 +255,12 @@ String getCourseName()
    }
    else return false;
 }
+
+@Override public int hashCode()
+{
+   return course_name.hashCode() + ta_chat_jid.hashCode();
 }
+
+
+
+}       // end of class BeduCourse

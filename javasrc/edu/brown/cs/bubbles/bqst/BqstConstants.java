@@ -116,17 +116,20 @@ Dimension BUTTONPANE_SIZE  = new Dimension(330,60);
 /**
  *  Form instruction
  */
-String	  INSTRUCTION_TEXT = "<html>Please complete the form below. Required fields marked<FONT color=red>*</FONT></html>";
+String	  INSTRUCTION_TEXT = 
+   "<html>Please complete the form below. Required fields marked<FONT color=red>*</FONT></html>";
 
 /**
  *  Thank you message after submitting
  */
-String	  THANKS_TEXT	   = "<html><font color=red>Thank you! Your form has been submitted.</font></html>";
+String	  THANKS_TEXT	   = 
+   "<html><font color=red>Thank you! Your form has been submitted.</font></html>";
 
 /**
  *  Required fielded unfilled message
  */
-String	  UNFILLED_TEXT    = "<html><font color=red>You have questions that still needs to be filled out.</font></html>";
+String	  UNFILLED_TEXT    =
+   "<html><font color=red>You have questions that still needs to be filled out.</font></html>";
 
 
 }	// end of interface BqstConstants

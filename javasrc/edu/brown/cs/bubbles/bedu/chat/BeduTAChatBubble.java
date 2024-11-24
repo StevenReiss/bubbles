@@ -33,11 +33,11 @@ private static final long serialVersionUID = 1L;
 private BeduTAXMPPClient  my_client;
 private BgtaChat	  my_chat;
 
-BeduTAChatBubble(BeduTAXMPPClient a_client,BgtaChat a_chat)
+BeduTAChatBubble(BeduTAXMPPClient client,BgtaChat chat)
 {
-   super(a_chat);
-   my_client = a_client;
-   my_chat = a_chat;
+   super(chat);
+   my_client = client;
+   my_chat = chat;
 }
 
 

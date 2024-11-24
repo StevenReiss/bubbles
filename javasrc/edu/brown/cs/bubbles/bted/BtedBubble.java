@@ -415,7 +415,7 @@ private void saveFile()
 	 e.printStackTrace();
        }
       text_editor.setEditable(true);
-      BudaCursorManager.resetDefaults(this);// setCursor(Cursor.getDefaultCursor());
+      BudaCursorManager.resetDefaults(this); // setCursor(Cursor.getDefaultCursor());
     }
 }
 
@@ -428,8 +428,8 @@ private void saveAsFile()
 {
    JFileChooser chooser = new JFileChooser(BtedFactory.getLastDirectory(),getFileSystemView());
    int returnVal = chooser.showSaveDialog(this);
-   if (returnVal == JFileChooser.APPROVE_OPTION
-	  && !the_factory.isFileOpen(chooser.getSelectedFile())) {
+   if (returnVal == JFileChooser.APPROVE_OPTION &&
+	  !the_factory.isFileOpen(chooser.getSelectedFile())) {
       this.onClose();
       current_file = chooser.getSelectedFile();
       BtedFactory.setLastDirectory(current_file);
@@ -524,7 +524,7 @@ protected void onClose()
 /**
  * Listens for edits to the document
  */
-private class BtedUndoableEditListener implements UndoableEditListener {
+private final class BtedUndoableEditListener implements UndoableEditListener {
 
    @Override public void undoableEditHappened(UndoableEditEvent e) {
       undo_action.updateUndoState();
@@ -542,7 +542,7 @@ private class UndoAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
-   public UndoAction() {
+   UndoAction() {
       super("Undo");
       this.setEnabled(false);
     }
@@ -573,7 +573,7 @@ private class RedoAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
-   public RedoAction() {
+   RedoAction() {
       super("Redo");
       this.setEnabled(false);
     }
@@ -682,7 +682,7 @@ private class SaveFileAction extends AbstractAction {
 
 
 
-private class SaveFileAsAction extends AbstractAction {
+private final class SaveFileAsAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
@@ -702,7 +702,7 @@ private class FindAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
-   public FindAction() {
+   FindAction() {
       super("Find");
     }
 
@@ -729,7 +729,7 @@ private class NextFindAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
 
-   public NextFindAction() {
+   NextFindAction() {
       super("Find Next");
     }
 

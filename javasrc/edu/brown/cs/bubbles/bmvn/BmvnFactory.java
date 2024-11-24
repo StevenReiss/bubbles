@@ -47,7 +47,7 @@ import edu.brown.cs.bubbles.bump.BumpLocation;
 import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 
-public class BmvnFactory implements BmvnConstants
+public final class BmvnFactory implements BmvnConstants
 {
 
 
@@ -73,7 +73,7 @@ private static BmvnFactory      the_factory = null;
 /********************************************************************************/
 
 
-public synchronized static BmvnFactory getFactory()
+public static synchronized BmvnFactory getFactory()
 {
    if (the_factory == null) the_factory = new BmvnFactory();
    return the_factory;
@@ -134,7 +134,7 @@ private void setupModels()
 
 
 
-private class ModelSetup implements Runnable {
+private final class ModelSetup implements Runnable {
    
    @Override public void run() {
       BumpClient bc = BumpClient.getBump();
@@ -223,7 +223,7 @@ private void setupCallbacks()
 }
 
 
-private class BmvnButtons implements BassPopupHandler {
+private final class BmvnButtons implements BassPopupHandler {
    
    @Override public void addButtons(BudaBubble bb,Point where,JPopupMenu menu,
          String name,BassName forname) {

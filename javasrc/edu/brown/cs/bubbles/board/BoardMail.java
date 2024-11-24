@@ -47,7 +47,7 @@ import java.util.Properties;
  *	This class is used to create and send email messages.
  **/
 
-public class BoardMail implements BoardConstants {
+public final class BoardMail implements BoardConstants {
 
 
 
@@ -158,9 +158,9 @@ private static class MessageImpl implements BoardMailMessage
 
    @Override public void send() {
       // Sender's email ID needs to be mentioned
-      String from = "728238@gmail.com";//change accordingly
-      final String username = "728238";//change accordingly
-      final String password = "Read3Care";//change accordingly
+      String from = "728238@gmail.com"; //change accordingly
+      final String username = "728238"; //change accordingly
+      final String password = "Read3Care"; //change accordingly
    
       // Assuming you are sending email through relay.jangosmtp.net
       String host = "smtp.gmail.com";

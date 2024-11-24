@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaBubble.java 						*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaBubble.java                                                 */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -68,38 +68,38 @@ public class BgtaBubble extends BudaBubble implements BgtaConstants, DocumentLis
 
 
 /********************************************************************************/
-/*										*/
-/*	Private storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private BgtaManager	  the_manager;
-private String		  chat_username;
+private BgtaManager       the_manager;
+private String            chat_username;
 private BoardProperties   my_props;
 private BgtaLoggingArea   logging_area;
 private BgtaDraftingArea  draft_area;
-private BgtaLabel	  bubble_label;
-private BgtaChat	  my_chat;
-private JScrollPane	  log_pane;
-private JSeparator	  draft_sep;
-private JTextPane	  history_area;
-private JScrollPane	  history_pane;
-private JSeparator	  history_sep;
-private Dimension	  initial_size;
-private Dimension	  previous_size;
-private boolean 	  alt_color;
-private boolean 	  alt_color_is_on;
-private boolean 	  history_visible;
-private boolean 	  history_loaded;
+private BgtaLabel         bubble_label;
+private BgtaChat          my_chat;
+private JScrollPane       log_pane;
+private JSeparator        draft_sep;
+private JTextPane         history_area;
+private JScrollPane       history_pane;
+private JSeparator        history_sep;
+private Dimension         initial_size;
+private Dimension         previous_size;
+private boolean           alt_color;
+private boolean           alt_color_is_on;
+private boolean           history_visible;
+private boolean           history_loaded;
 
 private static final long serialVersionUID = 1L;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 private BgtaBubble(String username)
@@ -116,7 +116,7 @@ private BgtaBubble(String username)
    logging_area = new BgtaLoggingArea(this);
    draft_area = new BgtaDraftingArea(logging_area,this);
    log_pane = new JScrollPane(logging_area,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-	   ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
    BudaCursorManager.setCursor(log_pane,new Cursor(Cursor.HAND_CURSOR));
    log_pane.setOpaque(false);
@@ -127,15 +127,15 @@ private BgtaBubble(String username)
    JButton showHistoryButton = new JButton("Show History");
    showHistoryButton.addActionListener(new ActionListener() {
        @Override public void actionPerformed(ActionEvent e) {
-	   if (!history_visible) {
-	       showHistory();
-	       ((JButton) e.getSource()).setText("Hide History");
-	   }
-	   else {
-	       hideHistory();
-	       ((JButton) e.getSource()).setText("Show History");
-	   }
-	   history_visible = !history_visible;
+           if (!history_visible) {
+               showHistory();
+               ((JButton) e.getSource()).setText("Hide History");
+           }
+           else {
+               hideHistory();
+               ((JButton) e.getSource()).setText("Show History");
+           }
+           history_visible = !history_visible;
        }
    });
    bubble_label.setButton(showHistoryButton);
@@ -222,7 +222,7 @@ BgtaBubble(String username,BgtaManager man)
    else {
       setChat(the_manager.getExistingChat(chat_username));
       if (my_chat != null) {
-	 the_manager.addDuplicateBubble(this);
+         the_manager.addDuplicateBubble(this);
        }
     }
 
@@ -232,13 +232,12 @@ BgtaBubble(String username,BgtaManager man)
 @Override public void setVisible(boolean vis)
 {
    super.setVisible(vis);
-   if(the_manager != null)
-   {
-      if (!vis) {
-	  the_manager.removeBubble(this);
+   if (the_manager != null) {
+         if (!vis) {
+          the_manager.removeBubble(this);
        }
       else {
-	  the_manager.addDuplicateBubble(this);
+          the_manager.addDuplicateBubble(this);
        }
    }
 }
@@ -246,14 +245,14 @@ BgtaBubble(String username,BgtaManager man)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
-String getUsername()				{ return chat_username; }
+String getUsername()                            { return chat_username; }
 
-BgtaLoggingArea getLog()			{ return logging_area; }
+BgtaLoggingArea getLog()                        { return logging_area; }
 
 /**
  * Associates a chat object with this bubble.
@@ -278,9 +277,9 @@ void setChat(BgtaChat chat)
 }
 
 /********************************************************************************/
-/*			      */
-/* Helper methods			    */
-/*			      */
+/*                            */
+/* Helper methods                           */
+/*                            */
 /********************************************************************************/
 
 /**
@@ -297,7 +296,7 @@ private String getName(String username)
     String name = username;
     int idx = name.indexOf("@");
     if (idx > 0)
-	name = name.substring(0, idx);
+        name = name.substring(0, idx);
     name = whiteSpaceAwareReplace(name,".");
     name = whiteSpaceAwareReplace(name,"_");
     return name;
@@ -318,24 +317,24 @@ private String whiteSpaceAwareReplace(String input,String toreplace)
 {
     String current = input;
     while (current.indexOf(toreplace) != -1) {
-	if (current.charAt(current.indexOf(toreplace) + 1) != ' ') {
-	    String back = current.substring(current.indexOf(toreplace) + 1);
-	    String front = current.substring(0, current.indexOf(toreplace));
-	    current = front + " " + back;
-	}
-	else {
-	    String back = current.substring(current.indexOf(toreplace) + 1);
-	    String front = current.substring(0, current.indexOf(toreplace));
-	    current = front + back;
-	}
+        if (current.charAt(current.indexOf(toreplace) + 1) != ' ') {
+            String back = current.substring(current.indexOf(toreplace) + 1);
+            String front = current.substring(0, current.indexOf(toreplace));
+            current = front + " " + back;
+        }
+        else {
+            String back = current.substring(current.indexOf(toreplace) + 1);
+            String front = current.substring(0, current.indexOf(toreplace));
+            current = front + back;
+        }
     }
     return current;
 }
 
 /********************************************************************************/
-/*										*/
-/*	Messaging methods							*/
-/*										*/
+/*                                                                              */
+/*      Messaging methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 /**
@@ -353,9 +352,9 @@ public void sendMessage(String msg)
 
 
 /********************************************************************************/
-/*										*/
-/*	Metadata processing							*/
-/*										*/
+/*                                                                              */
+/*      Metadata processing                                                     */
+/*                                                                              */
 /********************************************************************************/
 
 void processMetadata(String data)
@@ -375,34 +374,34 @@ void processMetadata(String data)
 
 
 /********************************************************************************/
-/*										*/
-/*	Button press methods							*/
-/*										*/
+/*                                                                              */
+/*      Button press methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 void pressedButton(String msg)
 {
     try {
-	logging_area.getDocument().insertString(logging_area.getDocument().getLength(),msg,null);
+        logging_area.getDocument().insertString(logging_area.getDocument().getLength(),msg,null);
      }
     catch (BadLocationException e) {}
     bubble_label.setButton(null);
 }
 
-private class XMLListener implements ActionListener {
+private final class XMLListener implements ActionListener {
 
     private Element _xml;
 
     private XMLListener(Element xml) {
-	_xml = xml;
+        _xml = xml;
     }
 
     @Override public void actionPerformed(ActionEvent e) {
-	BgtaFactory.addTaskToRoot(_xml);
-	pressedButton(BGTA_TASK_DESCRIPTION);
+        BgtaFactory.addTaskToRoot(_xml);
+        pressedButton(BGTA_TASK_DESCRIPTION);
     }
 
-}	// end of private class XMLListener
+}       // end of private class XMLListener
 
 void showHistory()
 {
@@ -410,7 +409,7 @@ void showHistory()
    if (!history_loaded) {
       my_chat.loadHistory(history_area);
       history_loaded = true;
-	}
+        }
 
    // Reset sizing policy
    GridBagLayout lay = (GridBagLayout) ((ChatPanel) getContentPane()).getLayout();
@@ -475,9 +474,9 @@ void hideHistory()
 
 
 /********************************************************************************/
-/*										*/
-/*	Alt color methods							*/
-/*										*/
+/*                                                                              */
+/*      Alt color methods                                                       */
+/*                                                                              */
 /********************************************************************************/
 
 void setAltColorIsOn(boolean ison)
@@ -504,15 +503,15 @@ boolean getAltColorIsOn()
 
 
 /********************************************************************************/
-/*										*/
-/* Document listener methods							*/
-/*										*/
+/*                                                                              */
+/* Document listener methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public void changedUpdate(DocumentEvent e)
 {
     if (isVisible())
-	repaint();
+        repaint();
     logging_area.setCaretPosition(logging_area.getDocument().getLength());
 }
 
@@ -528,16 +527,16 @@ boolean getAltColorIsOn()
 @Override public void removeUpdate(DocumentEvent e)
 {
     if (isVisible())
-	repaint();
+        repaint();
     logging_area.setCaretPosition(logging_area.getDocument().getLength());
 }
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Object methods							*/
-/*										*/
+/*                                                                              */
+/*      Object methods                                                  */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public String toString()
@@ -548,9 +547,9 @@ boolean getAltColorIsOn()
 
 
 /********************************************************************************/
-/*										*/
-/*	Chat Panel implementation						*/
-/*										*/
+/*                                                                              */
+/*      Chat Panel implementation                                               */
+/*                                                                              */
 /********************************************************************************/
 
 private class ChatPanel extends JPanel implements BgtaConstants {
@@ -566,9 +565,10 @@ private class ChatPanel extends JPanel implements BgtaConstants {
       Graphics2D g2 = (Graphics2D) g.create();
       Dimension sz = getSize();
       if (initial_size == null)
-	 initial_size = sz;
+         initial_size = sz;
       Paint p;
-      Color tc,bc;
+      Color tc;
+      Color bc;
       if (!alt_color_is_on) {
          tc = BoardColors.getColor(BGTA_BUBBLE_TOP_COLOR_PROP);
          bc = BoardColors.getColor(BGTA_BUBBLE_BOTTOM_COLOR_PROP);
@@ -585,11 +585,11 @@ private class ChatPanel extends JPanel implements BgtaConstants {
       super.paintComponent(g);
     }
 
-}	// end of private class ChatPanel
+}       // end of private class ChatPanel
 
 
 
-}	// end of class BgtaBubble
+}       // end of class BgtaBubble
 
 
 

@@ -57,7 +57,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
-public class BfixFactory implements BfixConstants, BaleConstants,
+public final class BfixFactory implements BfixConstants, BaleConstants,
 	BudaConstants.ButtonListener
 {
 
@@ -81,7 +81,7 @@ private static int thread_counter = 0;
 
 
 
-public synchronized static BfixFactory getFactory()
+public static synchronized BfixFactory getFactory()
 {
    if (the_factory == null) {
       the_factory = new BfixFactory();
@@ -305,7 +305,7 @@ public static void fixErrorsInRegion(BaleWindowDocument doc,int soff,int eoff)
 /*										*/
 /********************************************************************************/
 
-private class Contexter implements BaleContextListener {
+private final class Contexter implements BaleContextListener {
 
    @Override public void addPopupMenuItems(BaleContextConfig ctx,JPopupMenu menu) {
       if (ctx.inAnnotationArea()) return;
@@ -365,7 +365,7 @@ private class Contexter implements BaleContextListener {
 /*                                                                              */
 /********************************************************************************/
 
-private static class SaveHandler implements BudaConstants.BudaFileHandler {
+private static final class SaveHandler implements BudaConstants.BudaFileHandler {
 
    @Override public void handleSaveRequest()            { }
    

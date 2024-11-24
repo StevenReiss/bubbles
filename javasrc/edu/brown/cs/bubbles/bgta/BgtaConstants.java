@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaConstants.java						*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaConstants.java                                              */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -35,9 +35,9 @@ interface BgtaConstants extends BassConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Constants for gradient background					*/
-/*										*/
+/*                                                                              */
+/*      Constants for gradient background                                       */
+/*                                                                              */
 /********************************************************************************/
 
 String BGTA_BUBBLE_TOP_COLOR_PROP = "Bgta.BubbleTopColor"; 
@@ -52,51 +52,51 @@ String BGTA_ALT_BUBBLE_BOTTOM_COLOR_PROP = "Bgta.AltBubbleBottomColor";
 
 
 /********************************************************************************/
-/*										*/
-/*	Constants for properties						*/
-/*										*/
+/*                                                                              */
+/*      Constants for properties                                                */
+/*                                                                              */
 /********************************************************************************/
 
-String	BGTA_NUM_ACCOUNTS	    = "Bgta.mans.num";
+String  BGTA_NUM_ACCOUNTS           = "Bgta.mans.num";
 
-String	BGTA_USERNAME_PREFIX	 = "Bgta.mans.username.";
+String  BGTA_USERNAME_PREFIX     = "Bgta.mans.username.";
 
-String	BGTA_PASSWORD_PREFIX	 = "Bgta.mans.password.";
+String  BGTA_PASSWORD_PREFIX     = "Bgta.mans.password.";
 
-String	BGTA_SERVER_PREFIX	   = "Bgta.mans.server.";
+String  BGTA_SERVER_PREFIX         = "Bgta.mans.server.";
 
-String	BGTA_ALT_COLOR_UPON_RECEIVE  = "Bgta.altcolor";
-
-
-
-/********************************************************************************/
-/*										*/
-/*	Constants for sort priority						*/
-/*										*/
-/********************************************************************************/
-
-int	BGTA_CHATTY_PRIORITY	 = BASS_DEFAULT_SORT_PRIORITY - 8;
-
-int	BGTA_AVAIL_PRIORITY	  = BASS_DEFAULT_SORT_PRIORITY - 7;
-
-int	BGTA_IDLE_PRIORITY	   = BASS_DEFAULT_SORT_PRIORITY - 6;
-
-int	BGTA_XA_PRIORITY	     = BASS_DEFAULT_SORT_PRIORITY - 5;
-
-int	BGTA_DND_PRIORITY	    = BASS_DEFAULT_SORT_PRIORITY - 4;
-
-int	BGTA_OFFLINE_PRIORITY	= BASS_DEFAULT_SORT_PRIORITY - 3;
-
-int	BGTA_SPEC_ACCOUNT_PRIORITY   = BASS_DEFAULT_SORT_PRIORITY - 2;
-
-int	BGTA_GEN_ACCOUNT_PRIORITY    = BASS_DEFAULT_SORT_PRIORITY - 1;
+String  BGTA_ALT_COLOR_UPON_RECEIVE  = "Bgta.altcolor";
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constants for remembering account information				*/
-/*										*/
+/*                                                                              */
+/*      Constants for sort priority                                             */
+/*                                                                              */
+/********************************************************************************/
+
+int     BGTA_CHATTY_PRIORITY     = BASS_DEFAULT_SORT_PRIORITY - 8;
+
+int     BGTA_AVAIL_PRIORITY       = BASS_DEFAULT_SORT_PRIORITY - 7;
+
+int     BGTA_IDLE_PRIORITY         = BASS_DEFAULT_SORT_PRIORITY - 6;
+
+int     BGTA_XA_PRIORITY             = BASS_DEFAULT_SORT_PRIORITY - 5;
+
+int     BGTA_DND_PRIORITY           = BASS_DEFAULT_SORT_PRIORITY - 4;
+
+int     BGTA_OFFLINE_PRIORITY   = BASS_DEFAULT_SORT_PRIORITY - 3;
+
+int     BGTA_SPEC_ACCOUNT_PRIORITY   = BASS_DEFAULT_SORT_PRIORITY - 2;
+
+int     BGTA_GEN_ACCOUNT_PRIORITY    = BASS_DEFAULT_SORT_PRIORITY - 1;
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Constants for remembering account information                           */
+/*                                                                              */
 /********************************************************************************/
 
 boolean BGTA_INITIAL_REM_SETTING     = false;
@@ -104,45 +104,46 @@ boolean BGTA_INITIAL_REM_SETTING     = false;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constants for Buddy List Prefices					*/
-/*										*/
+/*                                                                              */
+/*      Constants for Buddy List Prefices                                       */
+/*                                                                              */
 /********************************************************************************/
 
-String	BGTA_BUDDY_PREFIX	    = "@people.";
-
-
-
-/********************************************************************************/
-/*										*/
-/*	Constants for Logging area						*/
-/*										*/
-/********************************************************************************/
-
-int	BGTA_LOG_WIDTH	       = 275;
-
-int	BGTA_LOG_HEIGHT       = (int) (0.75 * BGTA_LOG_WIDTH);
-
-int	BGTA_DATA_BUTTON_WIDTH	     = 110;
-
-int	BGTA_DATA_BUTTON_HEIGHT      = 15;
+String  BGTA_BUDDY_PREFIX           = "@people.";
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constants for task loading						*/
-/*										*/
+/*                                                                              */
+/*      Constants for Logging area                                              */
+/*                                                                              */
 /********************************************************************************/
 
-String	BGTA_TASK_DESCRIPTION	= "To open the new data, right click on the top bar and choose it from the list of tasks.\n";
+int     BGTA_LOG_WIDTH         = 275;
+
+int     BGTA_LOG_HEIGHT       = (int) (0.75 * BGTA_LOG_WIDTH);
+
+int     BGTA_DATA_BUTTON_WIDTH       = 110;
+
+int     BGTA_DATA_BUTTON_HEIGHT      = 15;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Enum for chat_server values						*/
-/*										*/
+/*                                                                              */
+/*      Constants for task loading                                              */
+/*                                                                              */
+/********************************************************************************/
+
+String  BGTA_TASK_DESCRIPTION   =
+   "To open the new data, right click on the top bar and choose it from the list of tasks.\n";
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Enum for chat_server values                                             */
+/*                                                                              */
 /********************************************************************************/
 
 enum ChatServer {
@@ -159,26 +160,26 @@ enum ChatServer {
    private String chat_host;
    private boolean chat_ending;
 
-   private ChatServer(String selector,String server,String display,String host, boolean ending) {
+   ChatServer(String selector,String server,String display,String host, boolean ending) {
       chat_selector = selector;
       chat_server = server;
       if (display.equals(""))
-	 chat_display = server;
+         chat_display = server;
       else
-	 chat_display = display;
+         chat_display = display;
       if (host.equals(""))
-	 chat_host = server;
+         chat_host = server;
       else
-	 chat_host = host;
+         chat_host = host;
       chat_ending = ending;
     }
 
-   String selector()				{ return chat_selector; }
-   String server()				{ return chat_server; }
-   String display()				{ return chat_display; }
-   String host()				{ return chat_host; }
+   String selector()                            { return chat_selector; }
+   String server()                              { return chat_server; }
+   String display()                             { return chat_display; }
+   String host()                                { return chat_host; }
 
-   boolean hasEnding()				{ return chat_ending; }
+   boolean hasEnding()                          { return chat_ending; }
 
    String ending() {
       if (chat_ending) return chat_display;
@@ -187,20 +188,20 @@ enum ChatServer {
 
    public static ChatServer fromServer(String server) {
       for (ChatServer s : values()) {
-	 if (server.equals(s.server())) return s;
+         if (server.equals(s.server())) return s;
        }
       return null;
     }
 
    @Override public String toString() { return chat_selector + " - " + chat_display; }
 
-}	// end of enum ChatServer
+}       // end of enum ChatServer
 
 
 /********************************************************************************/
-/*										*/
-/*	Interfaces for XMPP and OSCAR compatibility				*/
-/*										*/
+/*                                                                              */
+/*      Interfaces for XMPP and OSCAR compatibility                             */
+/*                                                                              */
 /********************************************************************************/
 
 interface BgtaRoster {
@@ -222,7 +223,7 @@ interface BgtaRosterEntry {
 
 
 
-}	// end of inner interface BgtaConstants
+}       // end of inner interface BgtaConstants
 
 
 

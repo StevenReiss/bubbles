@@ -36,7 +36,7 @@ public class BeduChatFactory {
 /*										*/
 /********************************************************************************/
 
-static boolean			 DEBUG = false;
+static final boolean			 DEBUG = false;
 private static List<BeduTAXMPPClient> ta_sessions;
 
 static {

@@ -177,7 +177,8 @@ boolean propertiesMatch(String un,String se)
    if (!(o instanceof BgtaManager)) return false;
    BgtaManager man = (BgtaManager) o;
 
-   return user_name.equals(man.getUsername()) && user_password.equals(man.getPassword()) && user_server.equals(man.getServer());
+   return user_name.equals(man.getUsername()) && user_password.equals(man.getPassword()) &&
+         user_server.equals(man.getServer());
 }
 
 
@@ -254,17 +255,21 @@ void login(String username,String password,ChatServer server) throws XMPPExcepti
    try {
 	the_connection.connect();
 	the_connection.login(username, password);
-    } catch (XMPPException e) {
+    }
+catch (XMPPException e) {
        try {
 	  if (the_connection.isConnected())
 	     the_connection.disconnect();
-	} catch (Exception ex) {
+	}
+catch (Exception ex) {
 	    BoardLog.logE("BGTA", "Error disconnecting: " + ex.getMessage());
 	}
 	BoardLog.logE("BGTA","Error connecting to " + server.server() + ": " + e.getMessage());
 	throw new XMPPException("Could not login to " + server.server() + ". Please try again.");
     }
-    if (!the_connection.isAuthenticated()) throw new XMPPException("Could not login to " + server.server() + ". Please try again.");
+    if (!the_connection.isAuthenticated()) {
+       throw new XMPPException("Could not login to " + server.server() + ". Please try again.");
+     }
 
    // Add a listener for messages as well as for roster updates.
    Message m = new Message();
@@ -280,8 +285,9 @@ void disconnect()
 {
     BoardLog.logD("BGTA","Starting logout process for " + user_name + " on " + user_server.server());
     the_connection.disconnect();
-    for (BgtaChat ch : existing_chats.values())
+    for (BgtaChat ch : existing_chats.values()) {
 	ch.close();
+     }
     existing_chats.clear();
     roster_listener = null;
     BoardLog.logD("BGTA","Successful logout for " + user_name + " on " + user_server.server());
@@ -361,15 +367,14 @@ BgtaChat startChat(String username)
    if (!hasChat(username)) {
        Chat ch = the_connection.getChatManager().createChat(username,null);
        String name = username;
-       if(the_connection.getRoster().getEntry(ch.getParticipant()) != null)
+       if (the_connection.getRoster().getEntry(ch.getParticipant()) != null)
 	  name = the_connection.getRoster().getEntry(ch.getParticipant()).getName();
        chat = new BgtaChat(user_name,username,name,user_server,ch,getExistingDoc(username));
        existing_chats.put(username,chat);
        existing_docs.put(username,chat.getDocument());
     }
-   else
-   {
-      return existing_chats.get(username);
+   else {
+         return existing_chats.get(username);
    }
    return chat;
 }
@@ -495,7 +500,7 @@ public static Icon iconFor(Presence pres)
 }
 
 
-private class BgtaRosterListener implements RosterListener {
+private final class BgtaRosterListener implements RosterListener {
 
    @Override public void presenceChanged(Presence pres) { }
 

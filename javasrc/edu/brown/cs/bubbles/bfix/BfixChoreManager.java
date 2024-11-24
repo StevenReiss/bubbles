@@ -194,7 +194,7 @@ void validate(File f,boolean force)
 /*                                                                              */
 /********************************************************************************/
 
-private class ProblemHandler implements BumpConstants.BumpProblemHandler {
+private final class ProblemHandler implements BumpConstants.BumpProblemHandler {
    
    @Override public void handleProblemAdded(BumpProblem bp) { }
    
@@ -219,7 +219,7 @@ private class ProblemHandler implements BumpConstants.BumpProblemHandler {
 /*                                                                              */
 /********************************************************************************/
 
-private class ChangeHandler implements BumpConstants.BumpChangeHandler {
+private final class ChangeHandler implements BumpConstants.BumpChangeHandler {
    
    
    

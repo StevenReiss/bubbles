@@ -47,7 +47,7 @@ import java.util.StringTokenizer;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
-public class BoardColors implements BoardConstants
+public final class BoardColors implements BoardConstants
 {
 
 
@@ -68,7 +68,7 @@ private List<URL>		added_palettes;
 private Map<Object,Color>	default_colors;
 
 private static BoardColors	the_colors;
-public static Color TRANSPARENT = new Color(0,0,0,0);
+public static final Color TRANSPARENT = new Color(0,0,0,0);
 
 private static int MAX_COUNT =	16;		// check every so often
 
@@ -95,7 +95,7 @@ private BoardColors()
 }
 
 
-synchronized static BoardColors getColors()
+static synchronized BoardColors getColors()
 {
    if (the_colors == null) {
       the_colors = new BoardColors();
@@ -311,11 +311,11 @@ public static Color randomColor(double alpha)
 {
    if (alpha > 1) alpha = 1;
    if (alpha <= 0) alpha = 0.75;
-   int av = (int)(alpha * 255);
+   int av = (int) (alpha * 255);
    av &= 0xff;
    av <<= 24;
 
-   int rcol = Color.HSBtoRGB((float)(Math.random() * 0.8),0.75f,0.75f);
+   int rcol = Color.HSBtoRGB((float) (Math.random() * 0.8),0.75f,0.75f);
    rcol &= 0x00ffffff;
    rcol |= av;
 
@@ -403,7 +403,7 @@ public static void forceLoad()
 
 
 
-synchronized private Map<String,Color> loadPalette()
+private synchronized Map<String,Color> loadPalette()
 {
    if (palette_file != null && check_count++ >= MAX_COUNT) {
       if (palette_file.lastModified() > last_modified) {
@@ -621,7 +621,7 @@ public static Color invertColor(Color base)
     }
    else {
       double x = 299.0 + g * 587.0 / r + b * 114 / r;
-      rinv = (int)(invlum * 1000 / x);
+      rinv = (int) (invlum * 1000 / x);
       ginv = g * rinv / r;
       binv = b * rinv / r;
     }
@@ -642,7 +642,7 @@ public static Color invertColor(Color base)
 
    if (r + g + b > 256*3-200) {
       float [] rslt = Color.RGBtoHSB(rinv,binv,ginv,null);
-      int hval = (int)(360*rslt[0]);
+      int hval = (int) (360*rslt[0]);
       if (hval > 10 && hval < 350 && rslt[1] < 0.3 && rslt[2] < 0.25) {
 	 // pastel color
 	 rslt[1] = 0.3f;
@@ -687,7 +687,9 @@ public static Color invertColorW3(Color base)
    if (invlum == 0) return Color.BLACK;
    else if (rpct == 0) {
       if (gpct == 0 && bpct == 0) {
-         rinv = ginv = binv = invlum;
+         rinv = invlum;
+         ginv = invlum;
+         binv = invlum;
        }
       else if (gpct == 0) {
          binv = invlum / 0.0722;

@@ -50,15 +50,15 @@ class BeduManageCoursesRepository implements BassConstants.BassRepository {
    return br == this;
 }
 
-private static class BeduAddCoursesName extends BassNameBase {
-   private static final String name_str = "Manage courses";
+private static final class BeduAddCoursesName extends BassNameBase {
+   private static final String NAME_STR = "Manage courses";
 
    @Override public BudaBubble createBubble() {
       return new BeduManageCoursesBubble();
     }
 
    @Override protected String getKey() {
-      return name_str;
+      return NAME_STR;
     }
 
    @Override protected String getParameters() {
@@ -70,7 +70,7 @@ private static class BeduAddCoursesName extends BassNameBase {
     }
 
    @Override protected String getSymbolName() {
-      return BassConstants.BASS_COURSE_LIST_NAME + "." + name_str;
+      return BassConstants.BASS_COURSE_LIST_NAME + "." + NAME_STR;
     }
 
 }	// end of inner class BeduAddCoursesName

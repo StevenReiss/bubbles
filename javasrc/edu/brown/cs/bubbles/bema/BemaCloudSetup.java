@@ -335,7 +335,7 @@ private class ServerChecker extends Thread {
    private String actual_host;
    private String project_id;
    private CloudDialog for_dialog;
-   IvyExec our_process;
+   private IvyExec our_process;
 
    ServerChecker(CloudDialog cd,String s,String a,String p) {
       super("CheckSSHConnection");

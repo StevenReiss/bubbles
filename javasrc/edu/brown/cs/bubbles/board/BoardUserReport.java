@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class BoardUserReport implements BoardConstants
+public final class BoardUserReport implements BoardConstants
 {
 
 
@@ -323,7 +323,7 @@ private static class ReportData implements ActionListener {
 
 
 
-private static abstract class ReportField {
+private abstract static class ReportField {
    
    protected String field_name;
    

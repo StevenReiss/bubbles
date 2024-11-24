@@ -239,7 +239,7 @@ void removeBubble()
 @Override public void setVisible(boolean vis)
 {
    super.setVisible(vis);
-   if (vis == false) my_name.setHasBubble(false);
+   if (!vis) my_name.setHasBubble(false);
 }
 
 
@@ -267,7 +267,7 @@ void removeBubble()
 /*										*/
 /********************************************************************************/
 
-private class LogoutListener implements ActionListener {
+private final class LogoutListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
 	  // attempt to log out of the chosen server
@@ -286,7 +286,7 @@ private class LogoutListener implements ActionListener {
 }	// end of inner class LogoutListener
 
 
-private class RememberListener implements ItemListener {
+private final class RememberListener implements ItemListener {
 
    @Override public void itemStateChanged(ItemEvent e) {
       rem_user = !rem_user;
@@ -295,7 +295,7 @@ private class RememberListener implements ItemListener {
 }	// end of inner class RememberListener
 
 
-private class LoginListener implements ActionListener {
+private final class LoginListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       BowiFactory.startTask();
@@ -311,8 +311,8 @@ private class LoginListener implements ActionListener {
             if (selected_server.hasEnding() && !username.contains(selected_server.ending()))
                username += selected_server.ending();
             for (BgtaManager man : all_managers) {
-               if (man.propertiesMatch(username,selected_server.server())
-        	  && man.getPassword().equals(password)) {
+               if (man.propertiesMatch(username,selected_server.server()) &&
+        	  man.getPassword().equals(password)) {
                   newman = man;
                   putin = false;
                 }
@@ -356,7 +356,7 @@ private class LoginListener implements ActionListener {
 }	// end of inner class LoginListener
 
 
-private class EnterListener implements ActionListener {
+private final class EnterListener implements ActionListener {
 
    private JTextField next_field;
 
@@ -376,7 +376,7 @@ private class EnterListener implements ActionListener {
 }	// end of inner class EnterListener
 
 
-private static class FocusSelectionListener extends FocusAdapter {
+private static final class FocusSelectionListener extends FocusAdapter {
 
    @Override public void focusGained(FocusEvent e) {
       ((JTextField) e.getSource()).selectAll();
@@ -429,7 +429,7 @@ private static class LoginPanel extends JPanel implements BgtaConstants {
 /*										*/
 /********************************************************************************/
 
-private class ServerListener implements ActionListener {
+private final class ServerListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       JComboBox<?> cb = (JComboBox<?>) e.getSource();

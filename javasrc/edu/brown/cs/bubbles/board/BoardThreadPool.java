@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  *	the overhead of continually creating new threads.
  **/
 
-public class BoardThreadPool extends ThreadPoolExecutor
+public final class BoardThreadPool extends ThreadPoolExecutor
 	implements BoardConstants, ThreadFactory
 {
 

@@ -73,8 +73,8 @@ enum BoardHighlightStyle {
 enum BoardLanguage {
    JAVA("java","Eclipse",".bubbles","bubbles","bedrock","-java",null,true,
 	 ".java.","bubbles.jar","Eclipse Workspace"),
-   JAVA_IDEA("idea","IDEA",".bibbles","bibbles","bubjet","-idea",null,true
-	 ,".java.","bibbles.jar","Idea Project Directory"),
+   JAVA_IDEA("idea","IDEA",".bibbles","bibbles","bubjet","-idea",null,true,
+         ".java.","bibbles.jar","Idea Project Directory"),
    JS("js","JavaScript",".nobbles","nobbles","nobase","-js","-Xmx1536m",false,
 	 ".js.","nobbles.jar","Node/JS Workspace"),
    DART("dart","Dart",".dartbubbles","dartbub","dartbase","-dart",null,false,

@@ -53,7 +53,7 @@ import java.util.Vector;
  * bubbles
  **/
 
-public class BgtaFactory implements BgtaConstants
+public final class BgtaFactory implements BgtaConstants
 {
 
 /********************************************************************************/
@@ -89,7 +89,7 @@ static {
 public static void setup()
 {
    login_properties = BoardProperties.getProperties("Bgta");
-
+   
    // TODO: Needs to be altered to match spr's guidelines for property storage
    String username = null;
    ChatServer server = null;
@@ -112,7 +112,7 @@ public static void setup()
    BassFactory.registerRepository(BudaConstants.SearchType.SEARCH_PEOPLE, buddy_list);
    BassFactory.registerRepository(BudaConstants.SearchType.SEARCH_EXPLORER, buddy_list);
    BudaRoot.addBubbleConfigurator("BGTA", new BgtaConfigurator());
-
+   
 }
 
 /**
@@ -161,36 +161,38 @@ private BgtaFactory()
 
 static void addManagerProperties(String username,String password,ChatServer server)
 {
-	int newnum = login_properties.getInt(BGTA_NUM_ACCOUNTS) + 1;
-	login_properties.setProperty(BGTA_USERNAME_PREFIX + newnum,username);
-	login_properties.setProperty(BGTA_PASSWORD_PREFIX + newnum,password);
-	login_properties.setProperty(BGTA_SERVER_PREFIX + newnum,server.server());
-	login_properties.setProperty(BGTA_NUM_ACCOUNTS,newnum);
-	try {
-		login_properties.save();
-	} catch (IOException e) {
-	}
+   int newnum = login_properties.getInt(BGTA_NUM_ACCOUNTS) + 1;
+   login_properties.setProperty(BGTA_USERNAME_PREFIX + newnum,username);
+   login_properties.setProperty(BGTA_PASSWORD_PREFIX + newnum,password);
+   login_properties.setProperty(BGTA_SERVER_PREFIX + newnum,server.server());
+   login_properties.setProperty(BGTA_NUM_ACCOUNTS,newnum);
+   try {
+      login_properties.save();
+    }
+   catch (IOException e) {
+    }
 }
 
 static void clearManagerProperties()
 {
-	login_properties.clear();
-	login_properties.setProperty(BGTA_NUM_ACCOUNTS,0);
-	login_properties.setProperty(BGTA_ALT_COLOR_UPON_RECEIVE,rec_dif_back);
-	try {
-		login_properties.save();
-	} catch (IOException e) {
-	}
+   login_properties.clear();
+   login_properties.setProperty(BGTA_NUM_ACCOUNTS,0);
+   login_properties.setProperty(BGTA_ALT_COLOR_UPON_RECEIVE,rec_dif_back);
+   try {
+      login_properties.save();
+    }
+   catch (IOException e) {
+    }
 }
 
 static void altColorUponReceive(boolean b)
 {
-	login_properties.setProperty(BGTA_ALT_COLOR_UPON_RECEIVE,b);
-	rec_dif_back = b;
-	try {
-		login_properties.save();
-	} catch (IOException e) {
-	}
+   login_properties.setProperty(BGTA_ALT_COLOR_UPON_RECEIVE,b);
+   rec_dif_back = b;
+   try {
+      login_properties.save();
+    }
+   catch (IOException e) { }
 }
 
 
@@ -200,26 +202,26 @@ static void logoutAllAccounts()
 static boolean logoutAccount(String username,String server)
 {
    BgtaManager logout = null;
-	for (BgtaManager man : chat_managers) {
-		if (man.propertiesMatch(username,server)) {
-			buddy_list.removeManager(man);
-			man.disconnect();
-			logout = man;
-			BassFactory.reloadRepository(buddy_list);
-			break;
-		}
-	}
-	if (logout != null) {
-	   chat_managers.remove(logout);
-	   return true;
-	}
-	return false;
+   for (BgtaManager man : chat_managers) {
+      if (man.propertiesMatch(username,server)) {
+         buddy_list.removeManager(man);
+         man.disconnect();
+         logout = man;
+         BassFactory.reloadRepository(buddy_list);
+         break;
+       }
+    }
+   if (logout != null) {
+      chat_managers.remove(logout);
+      return true;
+    }
+   return false;
 }
 
 
 static BoardProperties getBgtaProperties()
 {
-	return login_properties;
+   return login_properties;
 }
 
 
@@ -231,18 +233,18 @@ static BoardProperties getBgtaProperties()
 /********************************************************************************/
 
 BudaBubble createChatBubble(String friendname,String myname,String password,
-		String server)
+      String server)
 {
-	BgtaManager newman;
-	BgtaBubble bb = null;
-	try {
-		newman = BgtaManager.getManager(myname,password,ChatServer.fromServer(server),buddy_list);
-		newman.login();
-		chat_managers.add(newman);
-		bb = new BgtaBubble(friendname,newman);
-	} catch (XMPPException e) {
-	}
-	return bb;
+   BgtaManager newman;
+   BgtaBubble bb = null;
+   try {
+      newman = BgtaManager.getManager(myname,password,ChatServer.fromServer(server),buddy_list);
+      newman.login();
+      chat_managers.add(newman);
+      bb = new BgtaBubble(friendname,newman);
+    }
+   catch (XMPPException e) { }
+   return bb;
 }
 
 /**
@@ -252,7 +254,7 @@ BudaBubble createChatBubble(String friendname,String myname,String password,
  */
 public static List<String> getChatters()
 {
-	return buddy_list.getAllBuddyNames();
+   return buddy_list.getAllBuddyNames();
 }
 
 /**
@@ -262,7 +264,7 @@ public static List<String> getChatters()
  */
 public static Iterator<BgtaManager> getManagers()
 {
-    return chat_managers.iterator();
+   return chat_managers.iterator();
 }
 
 private static BudaBubble createMetadataChatBubble(String friendname,String url)
@@ -296,16 +298,16 @@ private static BudaBubble createMetadataChatBubble(String friendname,String url)
  */
 public static BgtaBubble createReceivedChatBubble(String username,BgtaManager man)
 {
-	BgtaBubble bb = new BgtaBubble(username,man);
-	if (bb != null) {
-		rec_dif_back = login_properties.getBoolean(BGTA_ALT_COLOR_UPON_RECEIVE);
-		if (rec_dif_back) {
-			bb.setAltColorIsOn(true);
-		}
-		Rectangle vp = my_buda_root.getCurrentViewport();
-		my_buda_root.add(bb,new BudaConstraint(vp.x,vp.y));
-	}
-	return bb;
+   BgtaBubble bb = new BgtaBubble(username,man);
+   if (bb != null) {
+      rec_dif_back = login_properties.getBoolean(BGTA_ALT_COLOR_UPON_RECEIVE);
+      if (rec_dif_back) {
+         bb.setAltColorIsOn(true);
+       }
+      Rectangle vp = my_buda_root.getCurrentViewport();
+      my_buda_root.add(bb,new BudaConstraint(vp.x,vp.y));
+    }
+   return bb;
 }
 
 /********************************************************************************/
@@ -316,7 +318,7 @@ public static BgtaBubble createReceivedChatBubble(String username,BgtaManager ma
 
 static void addTaskToRoot(Element xml)
 {
-	my_buda_root.addTask(xml);
+   my_buda_root.addTask(xml);
 }
 
 
@@ -349,9 +351,9 @@ private static void addChatButton(JMenu menu,String id,String tt)
 /*										*/
 /********************************************************************************/
 
-private static class SendMetadataChatListener implements MenuListener
+private static final class SendMetadataChatListener implements MenuListener
 {
-
+   
    @Override public void menuSelected(MenuEvent e) {
       List<String> chatters = BgtaFactory.getChatters();
       Collections.sort(chatters);
@@ -360,20 +362,20 @@ private static class SendMetadataChatListener implements MenuListener
 	 addChatButton(metadata_menu,name,null);
        }
     }
-
+   
    @Override public void menuCanceled(MenuEvent e) { }
-
+   
    @Override public void menuDeselected(MenuEvent e) { }
-
-
+   
+   
 }	// end of inner class SendMetadataChatListener
 
 
 
 
-private static class ChatterListener implements ActionListener
+private static final class ChatterListener implements ActionListener
 {
-
+   
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       String url = "";
@@ -385,7 +387,7 @@ private static class ChatterListener implements ActionListener
       catch (IOException e1) { }
       createMetadataChatBubble(cmd,url);
     }
-
+   
 }	// End of inner class ChatterListener
 
 

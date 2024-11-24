@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaLoggingArea.java						*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaLoggingArea.java                                            */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /* Copyright 2011 Brown University -- Sumner Warren            */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
@@ -37,15 +37,15 @@ class BgtaLoggingArea extends SwingTextPane implements BgtaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-// private AttributeSet	is_bolded;
-//private AttributeSet	is_unbolded;
-//private AttributeSet	in_use;
-// private int		last_focused_caret_pos;
+// private AttributeSet is_bolded;
+//private AttributeSet  is_unbolded;
+//private AttributeSet  in_use;
+// private int          last_focused_caret_pos;
 
 private static final long serialVersionUID = 1L;
 
@@ -54,9 +54,9 @@ private static final long serialVersionUID = 1L;
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BgtaLoggingArea(BgtaBubble bub)
@@ -86,9 +86,9 @@ BgtaLoggingArea(BgtaBubble bub)
 
 
 /********************************************************************************/
-/*										*/
-/*	Access methods								*/
-/*										*/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public boolean getScrollableTracksViewportWidth()
@@ -99,9 +99,9 @@ BgtaLoggingArea(BgtaBubble bub)
 
 
 /********************************************************************************/
-/*										*/
-/*	Bolding methods (currently not in use, could be added back later)	*/
-/*										*/
+/*                                                                              */
+/*      Bolding methods (currently not in use, could be added back later)       */
+/*                                                                              */
 /********************************************************************************/
 
 void bold()
@@ -126,7 +126,7 @@ void unbold()
 
 
 
-}	// end of class BgtaLoggingArea
+}       // end of class BgtaLoggingArea
 
 
 

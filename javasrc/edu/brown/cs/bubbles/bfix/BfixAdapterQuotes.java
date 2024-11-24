@@ -228,7 +228,7 @@ private static class QuoteFix {
 private class QuoteFixer extends BfixFixer {
 
    private long initial_time;
-   List<QuoteFix> potential_fixes;
+   private List<QuoteFix> potential_fixes;
 
    QuoteFixer(BfixCorrector c,BumpProblem p,List<QuoteFix> fixes) {
       super(c,p);

@@ -25,8 +25,10 @@
 package edu.brown.cs.bubbles.bhelp;
 
 import edu.brown.cs.bubbles.board.BoardLog;
-
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -43,9 +45,9 @@ class BhelpWebServer implements BhelpConstants
 
 private ServerSocket    web_socket;
 
-private final static byte [] EOL_BYTES = "\r\n".getBytes();
-private final static String CRLF = "\r\n";
-private final static String LF = "\n";
+private static final byte [] EOL_BYTES = "\r\n".getBytes();
+private static final String CRLF = "\r\n";
+private static final String LF = "\n";
 
 
 

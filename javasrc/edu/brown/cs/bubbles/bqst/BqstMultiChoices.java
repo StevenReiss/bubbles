@@ -23,12 +23,13 @@
 
 package edu.brown.cs.bubbles.bqst;
 
-import javax.swing.*;
-
 import edu.brown.cs.ivy.swing.SwingTextField;
-
 import java.awt.Dimension;
 import java.util.ArrayList;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 
 /**
@@ -124,8 +125,8 @@ protected BqstMultiChoices(String qst,String help,String[] options,Icon[] icons,
       add(q_field, q_cons);
     }
 
-   setPreferredSize(new Dimension(MULTICHOICE_SIZE.width,MULTICHOICE_SIZE.height
-					  * q_buttons.size() + 90 + extra));
+   setPreferredSize(new Dimension(MULTICHOICE_SIZE.width,
+         MULTICHOICE_SIZE.height * q_buttons.size() + 90 + extra));
 }
 
 

@@ -187,7 +187,8 @@ private static class ImportFixer extends BfixFixer {
 
       ImportChecker ic = getImportCheckerForProject(for_problem.getProject());
       if (ic == null) return null;
-      Collection<String> types = ic.findImport(for_identifier,for_problem.getProject(),for_problem.getFile(),for_problem.getStart());
+      Collection<String> types = ic.findImport(for_identifier,for_problem.getProject(),
+            for_problem.getFile(),for_problem.getStart());
       if (types == null || types.size() == 0) return null;
 
       String accept = null;
@@ -263,7 +264,8 @@ private static class ImportFixer extends BfixFixer {
 
       if (body == null || body.length() == 0) return -1;
 
-      String pats = "\\s*((public|private|abstract|static)\\s+)*(class|interface|enum)\\s+(\\w+(<.*>)?)\\s+((extends\\s)|(implements\\s)|\\{)";
+      String pats = "\\s*((public|private|abstract|static)\\s+)*(class|interface|enum)" + 
+            "\\s+(\\w+(<.*>)?)\\s+((extends\\s)|(implements\\s)|\\{)";
       Pattern pat = Pattern.compile(pats,Pattern.MULTILINE);
       Matcher mat = pat.matcher(body);
       if (!mat.find()) return -1;
@@ -289,7 +291,7 @@ private static class ImportFixer extends BfixFixer {
 /*										*/
 /********************************************************************************/
 
-synchronized static void updateImports()
+static synchronized void updateImports()
 {
    for (ImportChecker ic : import_checkers.values()) {
       ic.loadProjectClasses();

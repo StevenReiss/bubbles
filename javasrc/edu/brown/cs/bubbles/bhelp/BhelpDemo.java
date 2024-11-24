@@ -24,15 +24,17 @@
 
 package edu.brown.cs.bubbles.bhelp;
 
-import edu.brown.cs.bubbles.board.*;
-import edu.brown.cs.bubbles.buda.*;
-
+import edu.brown.cs.bubbles.board.BoardLog;
+import edu.brown.cs.bubbles.board.BoardMetrics;
+import edu.brown.cs.bubbles.board.BoardThreadPool;
+import edu.brown.cs.bubbles.buda.BudaBubbleArea;
+import edu.brown.cs.bubbles.buda.BudaConstants;
+import edu.brown.cs.bubbles.buda.BudaHover;
+import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.ivy.xml.IvyXml;
-
-import org.w3c.dom.Element;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.w3c.dom.Element;
 
 
 

@@ -676,7 +676,7 @@ private synchronized void recordError(BumpProblem bp)
 /*										*/
 /********************************************************************************/
 
-private class DocHandler implements DocumentListener, CaretListener {
+private final class DocHandler implements DocumentListener, CaretListener {
 
    @Override public void changedUpdate(DocumentEvent e) {
       int len = e.getLength();
@@ -747,7 +747,7 @@ private class DocHandler implements DocumentListener, CaretListener {
 /*										*/
 /********************************************************************************/
 
-private class ProblemHandler implements BumpConstants.BumpProblemHandler {
+private final class ProblemHandler implements BumpConstants.BumpProblemHandler {
 
    @Override public void handleProblemAdded(BumpProblem bp) {
       addProblem(bp);
@@ -769,7 +769,7 @@ private class ProblemHandler implements BumpConstants.BumpProblemHandler {
 
 
 
-private class ProblemComparator implements Comparator<BumpProblem> {
+private final class ProblemComparator implements Comparator<BumpProblem> {
 
    @Override public int compare(BumpProblem p1,BumpProblem p2) {
       int d = p1.getStart() - p2.getStart();
@@ -780,7 +780,7 @@ private class ProblemComparator implements Comparator<BumpProblem> {
 }
 
 
-private class Checker implements Runnable {
+private final class Checker implements Runnable {
 
    @Override public void run() {
       checkForElementToFix();
@@ -868,7 +868,7 @@ private static class RegionFixer implements FixAdapter {
     }
 
    @Override public String getPrivateBufferId() 		{ return null; }
-   @Override synchronized public void noteFix(BfixRunnableFix fix) {
+   @Override public synchronized void noteFix(BfixRunnableFix fix) {
       if (fix_found == null && fix != null) fix_found = fix;
       else if (fix_found != null && fix != null) {
          if (fix_found.getPriority() < fix.getPriority()) {

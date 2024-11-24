@@ -530,9 +530,9 @@ private BpareMatchNormalizer createNormalizer()
 
 private static class MatchInfo {
 
-   ASTNode match_tree;
-   int match_count;
-   MatchType match_type;
+   private ASTNode match_tree;
+   private int match_count;
+   private MatchType match_type;
 
    MatchInfo(ASTNode n,MatchType type) {
       match_tree = n;

@@ -93,7 +93,7 @@ import java.util.zip.ZipEntry;
  *	Bubbles main program.
  **/
 
-public class BemaMain implements BemaConstants
+public final class BemaMain implements BemaConstants
 {
 
 
@@ -947,7 +947,7 @@ private void useCloud()
        }
     }
    if (mid == null) {
-      int mid1 = (int)(Math.random()*100000);
+      int mid1 = (int) (Math.random()*100000);
       mid = "BUBBLES_CLOUD_" + mid1 + "_" + System.getProperty("user.name");
       System.setProperty("edu.brown.cs.bubbles.MINT",mid);
 

@@ -48,93 +48,74 @@ private static Dimension  DEFAULT_DIMENSION     = new Dimension(200,200);
 private BeduTAXMPPClient  ta_client;
 
 
-BeduTATicketListBubble(BeduTATicketList list,BeduTAXMPPClient a_ta_client)
+BeduTATicketListBubble(BeduTATicketList list,BeduTAXMPPClient taclient)
 {
    TicketListPanel p = new TicketListPanel(list,this);
-   ta_client = a_ta_client;
+   ta_client = taclient;
    setContentPane(p);
 }
 
 @Override public void setVisible(boolean vis)
 {
-   if (vis == false) {
+   if (!vis) {
       ta_client.disconnect();
-   }
+    }
 }
 
 private class TicketListPanel extends JPanel implements MouseListener {
-private static final long serialVersionUID = 1L;
-private JTable	    ticket_table;
-private BeduTATicketList  ticket_list;
-private BudaBubble	parent_bubble;
-
-
-TicketListPanel(BeduTATicketList list,BudaBubble a_parent)
-{
-   super(new BorderLayout());
-   parent_bubble = a_parent;
-
-   ticket_list = list;
-   setOpaque(false);
-   setPreferredSize(DEFAULT_DIMENSION);
-   JLabel l = new JLabel("Tickets submitted by students:");
-   add(l, BorderLayout.NORTH);
-   ticket_table = new JTable(list);
-
-   ticket_table.getColumnModel().getColumn(1).setPreferredWidth(75);
-
-   ticket_table.getColumnModel().getColumn(0).setPreferredWidth(125);
-
-   ticket_table.setFillsViewportHeight(true);
-   JScrollPane p = new JScrollPane(ticket_table);
-   p.setPreferredSize(new Dimension(ticket_table.getPreferredSize().width,
+   private static final long serialVersionUID = 1L;
+   private JTable	    ticket_table;
+   private BeduTATicketList  ticket_list;
+   private BudaBubble	parent_bubble;
+   
+   
+   TicketListPanel(BeduTATicketList list,BudaBubble parent) {
+      super(new BorderLayout());
+      parent_bubble = parent;
+      
+      ticket_list = list;
+      setOpaque(false);
+      setPreferredSize(DEFAULT_DIMENSION);
+      JLabel l = new JLabel("Tickets submitted by students:");
+      add(l, BorderLayout.NORTH);
+      ticket_table = new JTable(list);
+      
+      ticket_table.getColumnModel().getColumn(1).setPreferredWidth(75);
+      
+      ticket_table.getColumnModel().getColumn(0).setPreferredWidth(125);
+      
+      ticket_table.setFillsViewportHeight(true);
+      JScrollPane p = new JScrollPane(ticket_table);
+      p.setPreferredSize(new Dimension(ticket_table.getPreferredSize().width,
 	    ticket_table.getRowHeight() * 2));
-   p.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-   ticket_table.setOpaque(false);
-   p.setOpaque(false);
-   ticket_table.addMouseListener(this);
-   add(p, BorderLayout.CENTER);
-}
-
-
-@Override public void mouseClicked(MouseEvent e)
-{
-   if (e.getClickCount() == 2) {
-      if (ticket_table.rowAtPoint(e.getPoint()) != -1) {
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
-	 BudaBubble ticket_view_bubble = new BeduTATicketViewBubble(
+      p.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+      ticket_table.setOpaque(false);
+      p.setOpaque(false);
+      ticket_table.addMouseListener(this);
+      add(p, BorderLayout.CENTER);
+    }
+   
+   
+   @Override public void mouseClicked(MouseEvent e) {
+      if (e.getClickCount() == 2) {
+         if (ticket_table.rowAtPoint(e.getPoint()) != -1) {
+            BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
+            BudaBubble ticketviewbubble = new BeduTATicketViewBubble(
 		  ticket_list.get(ticket_table.rowAtPoint(e.getPoint())),
 		  ta_client);
-	 bba.addBubble(ticket_view_bubble, parent_bubble, null, PLACEMENT_LOGICAL
-		  | PLACEMENT_GROUPED);
-      }
-   }
-}
-
-
-@Override public void mouseEntered(MouseEvent e)
-{
-
-}
-
-
-@Override public void mouseExited(MouseEvent e)
-{
-
-}
-
-
-@Override public void mousePressed(MouseEvent e)
-{
-
-}
-
-
-@Override public void mouseReleased(MouseEvent e)
-{
-
-}
-}
+            bba.addBubble(ticketviewbubble, parent_bubble, null, PLACEMENT_LOGICAL |
+		  PLACEMENT_GROUPED);
+          }
+       }
+    }
+   
+   
+   @Override public void mouseEntered(MouseEvent e) { }
+   @Override public void mouseExited(MouseEvent e) { }
+   @Override public void mousePressed(MouseEvent e) { }
+   @Override public void mouseReleased(MouseEvent e) { }
+   
+}       // end of inner class TicketListPanel
 
 
 @Override public void paintComponent(Graphics g)
@@ -142,14 +123,16 @@ TicketListPanel(BeduTATicketList list,BudaBubble a_parent)
    Graphics2D g2 = (Graphics2D) g.create();
    Dimension sz = getSize();
    Paint p = new GradientPaint(0f,0f,TA_TICKET_LIST_TOP_COLOR,0f,sz.height,
-	    TA_TICKET_LIST_BOTTOM_COLOR);
-
+         TA_TICKET_LIST_BOTTOM_COLOR);
+   
    Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
    g2.setColor(Color.orange);
    g2.fill(r);
    g2.setPaint(p);
    g2.fill(r);
-
+   
    super.paintComponent(g);
 }
-}
+
+
+}       // end of class BeduTATicketListBubble

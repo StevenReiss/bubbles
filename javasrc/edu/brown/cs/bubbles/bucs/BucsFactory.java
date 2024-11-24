@@ -42,7 +42,7 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 
 
-public class BucsFactory implements BucsConstants
+public final class BucsFactory implements BucsConstants
 {
 
 
@@ -78,7 +78,7 @@ public static void initialize(BudaRoot br)
 /*										*/
 /********************************************************************************/
 
-public synchronized static BucsFactory getFactory()
+public static synchronized BucsFactory getFactory()
 {
    if (the_factory == null) {
       the_factory = new BucsFactory();
@@ -138,7 +138,7 @@ private boolean createTestCaseBubble(BaleContextConfig cfg,BattConstants.NewTest
 /*										*/
 /********************************************************************************/
 
-private class BucsContexter implements BaleConstants.BaleContextListener {
+private final class BucsContexter implements BaleConstants.BaleContextListener {
 
    
 

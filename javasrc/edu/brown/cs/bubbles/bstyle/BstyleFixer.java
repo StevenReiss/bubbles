@@ -383,7 +383,7 @@ private static class EmptyXBlock extends GenericPatternFixer {
 private static class FileNewline extends GenericPatternFixer {
 
    FileNewline() {
-      super("File does not end with a newline",null);
+      super("NewlineAtEndOfFile",null);
     }
    
    @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {

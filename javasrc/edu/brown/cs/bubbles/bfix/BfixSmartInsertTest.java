@@ -85,7 +85,7 @@ public void setupFiles()
  * Test case for edu.brown.cs.bubbles.bfix.BfixSmartInsert.findProperRoot(BfixOrderElement)
  */
 
-@Test public void test_smartInsert()
+@Test public void testSmartInsert()
 {
    BfixSmartInsert smartie = new BfixSmartInsert(file1_corrector);
    BfixOrderNewElement newelt = new BfixOrderNewElement("edu.brown.cs.hump.HumpFile.getDocument",

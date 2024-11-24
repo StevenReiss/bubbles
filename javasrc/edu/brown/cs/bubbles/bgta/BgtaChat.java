@@ -1,21 +1,21 @@
 /********************************************************************************/
-/*			      */
-/*    BgtaChat.java		    */
-/*			      */
-/* Bubbles chat management	*/
-/*			      */
+/*                            */
+/*    BgtaChat.java                 */
+/*                            */
+/* Bubbles chat management      */
+/*                            */
 /********************************************************************************/
-/* Copyright 2011 Brown University -- Sumner Warren	       */
+/* Copyright 2011 Brown University -- Sumner Warren            */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.				 *
- *										 *
- *			  All Rights Reserved					 *
- *										 *
- * This program and the accompanying materials are made available under the	 *
+ *  Copyright 2011, Brown University, Providence, RI.                            *
+ *                                                                               *
+ *                        All Rights Reserved                                    *
+ *                                                                               *
+ * This program and the accompanying materials are made available under the      *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at								 *
- *	http://www.eclipse.org/legal/epl-v10.html				 *
- *										 *
+ * and is available at                                                           *
+ *      http://www.eclipse.org/legal/epl-v10.html                                *
+ *                                                                               *
  ********************************************************************************/
 
 
@@ -77,9 +77,9 @@ public class BgtaChat implements BgtaConstants {
 
 
 /********************************************************************************/
-/*			      */
-/* Private storage			     */
-/*			      */
+/*                            */
+/* Private storage                           */
+/*                            */
 /********************************************************************************/
 
 // used for all chats
@@ -93,7 +93,7 @@ private ChatHistory the_history;
 private File history_file;
 private boolean is_open;
 private static final String HISTORY_TIMESTAMP_FORMAT = "MM/dd/yyyy HH:mm:ss";
-private static final SimpleDateFormat date_format = new SimpleDateFormat(HISTORY_TIMESTAMP_FORMAT);
+private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(HISTORY_TIMESTAMP_FORMAT);
 
 // used for XMPP chats
 private Chat the_chat;
@@ -109,9 +109,9 @@ private MessageInfo last_minfo;
 private boolean is_xmpp;
 
 /********************************************************************************/
-/*			      */
-/* Constructors 			  */
-/*			      */
+/*                            */
+/* Constructors                           */
+/*                            */
 /********************************************************************************/
 
 protected BgtaChat(String username,String pUsername,String pDisplayname,ChatServer server,Object chat,Document doc)
@@ -160,9 +160,9 @@ protected BgtaChat(String username,String pUsername,String pDisplayname,ChatServ
 
 
 /********************************************************************************/
-/*			      */
-/* Access methods			    */
-/*			      */
+/*                            */
+/* Access methods                           */
+/*                            */
 /********************************************************************************/
 
 /**
@@ -178,7 +178,7 @@ public String getUsername()    { return user_name; }
  *
  * @return the name of the server hosting this chat.
  */
-ChatServer getServer()	{ return user_server; }
+ChatServer getServer()  { return user_server; }
 
 
 /**
@@ -194,7 +194,7 @@ public Document getDocument()  { return user_document; }
  *
  * @return true if this chat is over the XMPP protocol; false otherwise.
  */
-boolean isXMPP()	{ return is_xmpp; }
+boolean isXMPP()        { return is_xmpp; }
 
 /**
  * Returns the last message logged in this chat.
@@ -204,16 +204,16 @@ boolean isXMPP()	{ return is_xmpp; }
 public Object getLastMessage()
 {
     if (!is_xmpp)
-	return last_minfo;
+        return last_minfo;
     return last_message;
 }
 
 
 
 /********************************************************************************/
-/*			      */
-/* Comparison methods				*/
-/*			      */
+/*                            */
+/* Comparison methods                           */
+/*                            */
 /********************************************************************************/
 
 @Override public boolean equals(Object o)
@@ -221,7 +221,8 @@ public Object getLastMessage()
    if (!(o instanceof BgtaChat)) return false;
    BgtaChat chat = (BgtaChat) o;
 
-   return user_name.equals(chat.getUsername()) && user_server.equals(chat.getServer()) && user_document.equals(chat.getDocument());
+   return user_name.equals(chat.getUsername()) && user_server.equals(chat.getServer()) &&
+         user_document.equals(chat.getDocument());
 }
 
 @Override public int hashCode()
@@ -237,9 +238,9 @@ public Object getLastMessage()
 
 
 /********************************************************************************/
-/*			      */
-/* Messaging methods			       */
-/*			      */
+/*                            */
+/* Messaging methods                           */
+/*                            */
 /********************************************************************************/
 
 /**
@@ -247,7 +248,8 @@ public Object getLastMessage()
  * chat if it there are none. Handles metadata if present. Otherwise,
  * just logs the message to all existing chat bubbles.
  *
- * @param msg The received message object to be processed. Either an instance of Message or MessageInfo, depending on the protocol in use.
+ * @param msg The received message object to be processed. Either an instance of Message or MessageInfo, 
+ *    depending on the protocol in use.
  */
 void messageReceived(Object msg)
 {
@@ -267,10 +269,10 @@ void messageReceived(Object msg)
    BgtaManager man = null;
    if (man == null) {
        for (Iterator<BgtaManager> iter = BgtaFactory.getManagers(); iter.hasNext(); ) {
-	   man = iter.next();
-	   if (man.propertiesMatch(this_user, user_server.server()))
-	      break;
-	}
+           man = iter.next();
+           if (man.propertiesMatch(this_user, user_server.server()))
+              break;
+        }
     }
    if (!is_open) {
        BgtaFactory.createReceivedChatBubble(user_name,man);
@@ -280,10 +282,10 @@ void messageReceived(Object msg)
        logMessage("Working set received.","Bubbles");
        Collection<BgtaBubble> bubbles = man.getExistingBubbles(user_name);
        if (bubbles != null) {
-	   for (BgtaBubble bb : man.getExistingBubbles(user_name)) {
-	       bb.processMetadata(message);
-	    }
-	}
+           for (BgtaBubble bb : man.getExistingBubbles(user_name)) {
+               bb.processMetadata(message);
+            }
+        }
     }
    else
       logMessage(message);
@@ -313,7 +315,8 @@ void logMessage(String msg,String from)
       return;
    try {
        user_document.insertString(user_document.getLength(),from + ": " + msg + "\n",null);
-    } catch (BadLocationException e) {
+    }
+catch (BadLocationException e) {
        //System.out.println("bad loc");
     }
     String to = this_display;
@@ -321,7 +324,7 @@ void logMessage(String msg,String from)
       to = user_display;
       from = this_display;
     }
-   the_history.addHistoryItem(new ChatHistoryItem(from,to,msg,date_format.format(new Date())));
+   the_history.addHistoryItem(new ChatHistoryItem(from,to,msg,DATE_FORMAT.format(new Date())));
 }
 
 /**
@@ -341,10 +344,11 @@ public boolean sendMessage(String msg)
    boolean sent = true;
    try {
       if (is_xmpp && the_chat != null)
-	  the_chat.sendMessage(msg);
+          the_chat.sendMessage(msg);
       if (!is_xmpp && the_conversation != null)
-	  the_conversation.sendMessage(new SimpleMessage(wrapHTML(msg)));
-    } catch (XMPPException e) {
+          the_conversation.sendMessage(new SimpleMessage(wrapHTML(msg)));
+    }
+catch (XMPPException e) {
       sent = false;
       BoardLog.logE("BGTA","Error sending message: " + msg + " to: " + user_name);
       logMessage("Message not sent. Please try again.", "Error");
@@ -356,9 +360,9 @@ public boolean sendMessage(String msg)
 
 
 /********************************************************************************/
-/*			      */
-/* Helper methods			    */
-/*			      */
+/*                            */
+/* Helper methods                           */
+/*                            */
 /********************************************************************************/
 
 protected void setChat(Object chat)
@@ -419,14 +423,14 @@ private String whiteSpaceAwareReplace(String input,String toreplace)
    String current = input;
    while (current.indexOf(toreplace) != -1) {
       if (current.charAt(current.indexOf(toreplace) + 1) != ' ') {
-	 String back = current.substring(current.indexOf(toreplace) + 1);
-	 String front = current.substring(0, current.indexOf(toreplace));
-	 current = front + " " + back;
+         String back = current.substring(current.indexOf(toreplace) + 1);
+         String front = current.substring(0, current.indexOf(toreplace));
+         current = front + " " + back;
        }
       else {
-	 String back = current.substring(current.indexOf(toreplace) + 1);
-	 String front = current.substring(0, current.indexOf(toreplace));
-	 current = front + back;
+         String back = current.substring(current.indexOf(toreplace) + 1);
+         String front = current.substring(0, current.indexOf(toreplace));
+         current = front + back;
        }
     }
    return current;
@@ -467,16 +471,17 @@ private String replace(String input,String toreplace,String replacewith)
    String current = input;
    int pos = current.indexOf(toreplace);
    if (pos != -1) {
-      current = current.substring(0,pos) + replacewith + replace(current.substring(pos + toreplace.length()),toreplace,replacewith);
+      current = current.substring(0,pos) + replacewith + 
+         replace(current.substring(pos + toreplace.length()),toreplace,replacewith);
     }
    return current;
 }
 
 
 /********************************************************************************/
-/*			      */
-/* History methods			     */
-/*			      */
+/*                            */
+/* History methods                           */
+/*                            */
 /********************************************************************************/
 /**
  * Creates a file for the history to be saved in.
@@ -492,24 +497,24 @@ private void createHistoryFile()
    File dir = BoardSetup.getBubblesWorkingDirectory();
    if (dir != null) {
       try {
-	 String login_user = replace(this_display," ","").toLowerCase();
-	 String other_user = replace(user_display," ","").toLowerCase();
-	 for (int i = 0; i < 5; ++i) {
-	    String fnm = "history_" + login_user + "_" + other_user + ".xml";
-	    File f = new File(dir,fnm);
-	    if (f.createNewFile() || f.exists()) {
-	       history_file = f;
-	       break;
-	     }
-	    try {
-	       Thread.sleep(1000);
-	     }
-	    catch (InterruptedException e) { }
-	  }
+         String loginuser = replace(this_display," ","").toLowerCase();
+         String otheruser = replace(user_display," ","").toLowerCase();
+         for (int i = 0; i < 5; ++i) {
+            String fnm = "history_" + loginuser + "_" + otheruser + ".xml";
+            File f = new File(dir,fnm);
+            if (f.createNewFile() || f.exists()) {
+               history_file = f;
+               break;
+             }
+            try {
+               Thread.sleep(1000);
+             }
+            catch (InterruptedException e) { }
+          }
        }
       catch (IOException e) {
-	 BoardLog.logE("BGTA","Problem creating chat history file",e);
-	 return;
+         BoardLog.logE("BGTA","Problem creating chat history file",e);
+         return;
        }
     }
    BoardLog.logD("BGTA","Successfully created chat history file for " + this_display + " and " + user_display);
@@ -532,7 +537,8 @@ private synchronized void saveHistory()
       return;
     }
 
-   BoardLog.logD("BGTA","Saving chat history for " + this_display + " and " + user_display + " to " + history_file.getName());
+   BoardLog.logD("BGTA","Saving chat history for " + this_display + " and " +
+         user_display + " to " + history_file.getName());
    try {
       IvyXmlWriter xw = new IvyXmlWriter(new OutputStreamWriter(new FileOutputStream(history_file,true),"UTF-8"));
       the_history.outputXML(xw);
@@ -543,7 +549,8 @@ private synchronized void saveHistory()
       history_file = null;
       return;
     }
-   BoardLog.logD("BGTA","Successfully saved chat history for " + this_display + " and " + user_display + " to " + history_file.getName());
+   BoardLog.logD("BGTA","Successfully saved chat history for " + this_display +
+         " and " + user_display + " to " + history_file.getName());
 }
 
 /**
@@ -564,16 +571,17 @@ synchronized void loadHistory(JTextComponent c)
       return;
     }
 
-   BoardLog.logD("BGTA","Loading chat history for " + this_display + " and " + user_display + " from " + history_file.getName());
+   BoardLog.logD("BGTA","Loading chat history for " + this_display + " and " +
+         user_display + " from " + history_file.getName());
    Vector<Element> history = new Vector<Element>();
    try {
       IvyXmlReader xr = new IvyXmlReader(new InputStreamReader(new FileInputStream(history_file)));
       String xmlString = xr.readXml();
       Element e = null;
       while (xmlString != null && !xmlString.equals("")) {
-	 e = IvyXml.convertStringToXml(xmlString);
-	 history.add(e);
-	 xmlString = xr.readXml();
+         e = IvyXml.convertStringToXml(xmlString);
+         history.add(e);
+         xmlString = xr.readXml();
        }
       xr.close();
     }
@@ -588,33 +596,35 @@ synchronized void loadHistory(JTextComponent c)
        Element session = sessions.next();
        Iterator<Element> messages = IvyXml.getChildren(session);
        while (messages.hasNext()) {
-	   Element msg = messages.next();
-	   Iterator<Element> contents = IvyXml.getChildren(msg);
-	   while (contents.hasNext()) {
-	       String from = null;
-	       String text = null;
-	       String time = null;
-	       while (contents.hasNext()) {
-		   Element content = contents.next();
-		   if (content.getTagName().equalsIgnoreCase("FROM"))
-		       from = content.getTextContent();
-		   if (content.getTagName().equalsIgnoreCase("TEXT"))
-		       text = content.getTextContent();
-		   if (content.getTagName().equalsIgnoreCase("TIME"))
-		       time = content.getTextContent();
-		}
-	       if (from != null && !from.equals("") && text != null && !text.equals("") && time != null && !time.equals(""))
-		   c.setText(c.getText() + from + ": " + text + "\n");
-	    }
-	}
+           Element msg = messages.next();
+           Iterator<Element> contents = IvyXml.getChildren(msg);
+           while (contents.hasNext()) {
+               String from = null;
+               String text = null;
+               String time = null;
+               while (contents.hasNext()) {
+                   Element content = contents.next();
+                   if (content.getTagName().equalsIgnoreCase("FROM"))
+                       from = content.getTextContent();
+                   if (content.getTagName().equalsIgnoreCase("TEXT"))
+                       text = content.getTextContent();
+                   if (content.getTagName().equalsIgnoreCase("TIME"))
+                       time = content.getTextContent();
+                }
+               if (from != null && !from.equals("") && text != null && 
+                     !text.equals("") && time != null && !time.equals(""))
+                   c.setText(c.getText() + from + ": " + text + "\n");
+            }
+        }
     }
-   BoardLog.logD("BGTA","Successfully loaded chat history for " + this_display + " and " + user_display + " from " + history_file.getName());
+   BoardLog.logD("BGTA","Successfully loaded chat history for " + this_display +
+         " and " + user_display + " from " + history_file.getName());
 }
 
 /********************************************************************************/
-/*			      */
-/* Management methods				*/
-/*			      */
+/*                            */
+/* Management methods                           */
+/*                            */
 /********************************************************************************/
 /**
  * Closes this chat and saves the chat's history so it can be loaded
@@ -630,13 +640,13 @@ void close()
 /**
  * A class for processing received XMPP messages.
  */
-private class XMPPChatListener implements MessageListener {
+private final class XMPPChatListener implements MessageListener {
 
    @Override public void processMessage(Chat ch,Message msg) {
       if (!ch.equals(the_chat))
-	 return;
+         return;
       if (msg.getType() != Message.Type.chat)
-	 return;
+         return;
      messageReceived(msg);
     }
 
@@ -646,7 +656,7 @@ private class XMPPChatListener implements MessageListener {
 /**
  * A class for processing received AIM messages.
  */
-private class AIMChatListener implements ConversationListener {
+private final class AIMChatListener implements ConversationListener {
 
    @Override public void canSendMessageChanged(Conversation arg0, boolean arg1) { }
 
@@ -656,7 +666,7 @@ private class AIMChatListener implements ConversationListener {
 
    @Override public void gotMessage(Conversation con, MessageInfo msg) {
       if (!con.equals(the_conversation))
-	  return;
+          return;
       messageReceived(msg);
     }
 
@@ -676,8 +686,8 @@ private class AIMChatListener implements ConversationListener {
 private class ChatHistory {
 
     private Vector<ChatHistoryItem> my_items;
-    boolean has_changed;
-    int previous_size;
+    private boolean has_changed;
+    private int previous_size;
 
     /**
      * Creates an empty ChatHistory.
@@ -694,7 +704,7 @@ private class ChatHistory {
      *
      * @return true if the history has changed since it was last saved; false otherwise.
     */
-    boolean hasChanged()		      { return has_changed; }
+    boolean hasChanged()                      { return has_changed; }
 
     /**
      * Adds an item to this chat history.
@@ -715,18 +725,18 @@ private class ChatHistory {
      */
     void outputXML(IvyXmlWriter xw) {
        if (has_changed) {
-	  xw.begin("SESSION");
-	  xw.field("FROM",user_name);
-	  xw.field("TO",this_user);
-	  xw.field("SERVER",user_server.server());
-	  for (int i = previous_size; i < my_items.size(); ++i) {
-	     ChatHistoryItem item = my_items.get(i);
-	     item.outputXML(xw);
-	   }
-	  xw.end("SESSION");
-	  has_changed = false;
-	  previous_size = my_items.size();
-	}
+          xw.begin("SESSION");
+          xw.field("FROM",user_name);
+          xw.field("TO",this_user);
+          xw.field("SERVER",user_server.server());
+          for (int i = previous_size; i < my_items.size(); ++i) {
+             ChatHistoryItem item = my_items.get(i);
+             item.outputXML(xw);
+           }
+          xw.end("SESSION");
+          has_changed = false;
+          previous_size = my_items.size();
+        }
     }
 
 }  // end of inner class ChatHistory

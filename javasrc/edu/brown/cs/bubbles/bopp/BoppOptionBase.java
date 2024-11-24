@@ -206,7 +206,7 @@ void noteChange()
    option_set.noteChange(package_name,option_name);
 }
 
-void noteChange(String ... props)
+void noteChange(String... props)
 {
    if (doing_add) return;
 
@@ -314,8 +314,8 @@ private static class OptionColor extends BoppOptionBase implements ActionListene
 
    private String from_name;
    private String to_name;
-   SwingColorButton color_button;
-   SwingColorRangeChooser range_button;
+   private SwingColorButton color_button;
+   private SwingColorRangeChooser range_button;
 
    OptionColor(String pkgname,Element ox) {
       super(pkgname,ox);
@@ -678,7 +678,9 @@ private static class OptionFont extends BoppOptionBase implements ActionListener
       Element fx = IvyXml.getChild(ox,"PROPERTIES");
       if (fx == null) {
 	 font_prop = option_name;
-	 family_prop = size_prop = style_prop = null;
+	 family_prop = null;
+	 size_prop = null;
+	 style_prop = null;
        }
       else {
 	 font_prop = null;

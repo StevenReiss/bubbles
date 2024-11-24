@@ -155,8 +155,8 @@ private static class ModifierOrder extends BfixOrderOrdering {
 
    private List<Integer> mod_bits;
 
-   private static int NEGATE = 0x1000000;
-   private static int PACKAGE = 0x800000;
+   private static final int NEGATE = 0x1000000;
+   private static final int PACKAGE = 0x800000;
    private static Map<String,Integer> mod_names;
 
    static {

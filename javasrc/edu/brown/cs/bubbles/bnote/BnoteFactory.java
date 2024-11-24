@@ -44,7 +44,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class BnoteFactory implements BnoteConstants
+public final class BnoteFactory implements BnoteConstants
 {
 
 
@@ -85,7 +85,7 @@ public static BnoteFactory getFactory() 	{ return the_factory; }
 
 
 
-private class SetupStore implements Runnable {
+private final class SetupStore implements Runnable {
 
    @Override public void run() {
       the_store = BnoteStore.createStore();

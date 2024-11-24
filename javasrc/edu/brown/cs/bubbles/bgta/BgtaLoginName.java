@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaLoginName.java						*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaLoginName.java                                              */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -32,23 +32,23 @@ class BgtaLoginName extends BassNameBase implements BgtaConstants {
 
 
 /********************************************************************************/
-/*										*/
-/*	Private Storage 							*/
-/*										*/
+/*                                                                              */
+/*      Private Storage                                                         */
+/*                                                                              */
 /********************************************************************************/
 
-private Vector<BgtaManager>	manager_list;
-private String			my_text;
-private BgtaRepository		my_repository;
-private int			sort_prior;
-private boolean 		has_bubble;
+private Vector<BgtaManager>     manager_list;
+private String                  my_text;
+private BgtaRepository          my_repository;
+private int                     sort_prior;
+private boolean                 has_bubble;
 
 
 
 /********************************************************************************/
-/*										*/
-/*	Constructors								*/
-/*										*/
+/*                                                                              */
+/*      Constructors                                                            */
+/*                                                                              */
 /********************************************************************************/
 
 BgtaLoginName(String txt,Vector<BgtaManager> mans,BgtaRepository rep,int prior)
@@ -67,9 +67,9 @@ BgtaLoginName(String txt,Vector<BgtaManager> mans,BgtaRepository rep,int prior)
 
 
 /********************************************************************************/
-/*										*/
-/*	BassNameBase methods							*/
-/*										*/
+/*                                                                              */
+/*      BassNameBase methods                                                    */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble()
@@ -134,7 +134,7 @@ void setHasBubble(boolean has)
 
 
 
-}	// end of class BgtaLoginName
+}       // end of class BgtaLoginName
 
 
 

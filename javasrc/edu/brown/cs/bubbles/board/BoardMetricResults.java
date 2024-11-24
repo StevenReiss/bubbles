@@ -308,7 +308,7 @@ private  class BfixAnalyzer extends Analyzer {
    @Override void process(String type,long [] data) {
       switch (type) {
          case "CORRECTION" :
-            correction_times.add((double)data[6]);
+            correction_times.add((double) data[6]);
             break;
          case "EDITREGION" :
             session_edit += data[4];
@@ -390,13 +390,13 @@ private  class BfixAnalyzer extends Analyzer {
       out.println("Spell size var : " + fixDouble(spell_data[2]));
       out.println("Spell size std : " + fixDouble(spell_data[3]));
       out.println("Spell size mod : " + spell_data[5]);
-      out.println("Spell size cnt : " + fixPct(((double)spell_data[4])/spell_data[0]));
+      out.println("Spell size cnt : " + fixPct(((double) spell_data[4])/spell_data[0]));
       
       out.println("Import size avg: " + fixDouble(import_data[1]));
       out.println("Import size var: " + fixDouble(import_data[2]));
       out.println("Import size std: " + fixDouble(import_data[3]));
       out.println("Import size mod: " + import_data[5]);
-      out.println("Import size cnt: " + fixPct(((double)import_data[4])/import_data[0]));
+      out.println("Import size cnt: " + fixPct(((double) import_data[4])/import_data[0]));
       
       if (output_stream != null) output_stream.close();
     }

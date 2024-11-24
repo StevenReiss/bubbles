@@ -1,22 +1,22 @@
 /********************************************************************************/
-/*                         						 											  */
-/*    		BeduCourse.java     	            											  */
-/*                            																  */
-/* 	Bubbles for Education   																  */
-/* 	Represents a school course		 	      											  */
-/* 				               																  */
+/*										*/
+/*		BeduCourse.java 						*/
+/*										*/
+/*	Bubbles for Education							*/
+/*	Represents a school course						*/
+/*									*/
 /********************************************************************************/
-/* 	Copyright 2011 Brown University -- Andrew Kovacs         					  */
+/*	Copyright 2011 Brown University -- Andrew Kovacs						  */
 /*********************************************************************************
- *  Copyright 2011, Brown University, Providence, RI.                            *
- *                                                                               *
- *                        All Rights Reserved                                    *
- *                                                                               *
- * This program and the accompanying materials are made available under the      *
+ *  Copyright 2011, Brown University, Providence, RI.				 *
+ *										 *
+ *			  All Rights Reserved					 *
+ *										 *
+ * This program and the accompanying materials are made available under the	 *
  * terms of the Eclipse Public License v1.0 which accompanies this distribution, *
- * and is available at                                                           *
- *      http://www.eclipse.org/legal/epl-v10.html                                *
- *                                                                               *
+ * and is available at								 *
+ *	http://www.eclipse.org/legal/epl-v10.html				 *
+ *										 *
  ********************************************************************************/
 
 package edu.brown.cs.bubbles.bedu.chat;
@@ -36,27 +36,26 @@ import java.util.List;
 import java.util.Set;
 
 
-class BeduCourseRepository implements BassRepository {
-private final static String	 PROP_PREFIX = "Bedu.chat.course.";
-private static BeduCourseRepository instance;
+final class BeduCourseRepository implements BassRepository {
+private static final String	 PROP_PREFIX = "Bedu.chat.course.";
+private static BeduCourseRepository repo_instance;
 private List<BeduCourse>     my_courses;
 
 static BeduCourseRepository getInstance()
 {
-   if (instance == null) initialize();
-   return instance;
+   if (repo_instance == null) initialize();
+   return repo_instance;
 }
 
 
 /**
- * Initializes the CourseRepository by 
- * having it load courses from the props file 
- * and registering itself for display in the 
- * package explorer 
+ * Initializes the CourseRepository by
+ * having it load courses from the props file
+ * and registering itself for display in the
+ * package explorer
  */
 static void initialize()
 {
-
    ArrayList<BeduCourse> courses = new ArrayList<BeduCourse>();
 
    // grab courses out of the props file
@@ -81,8 +80,8 @@ static void initialize()
       }
 
       if (strRole.equals("TA")) {
-	 String xmpp_password = bp.getProperty(PROP_PREFIX + courseName
-		  + ".xmpp_password");
+	 String xmpp_password = bp.getProperty(PROP_PREFIX + courseName +
+		  ".xmpp_password");
 	 String server = bp.getProperty(PROP_PREFIX + courseName + ".server");
 
 	 c = new BeduCourse.TACourse(courseName,ta_jid,xmpp_password,server);
@@ -90,12 +89,12 @@ static void initialize()
 
       if (c != null) courses.add(c);
    }
-   instance = new BeduCourseRepository(courses);
+   repo_instance = new BeduCourseRepository(courses);
 
    BassRepositoryMerge fullRepo = new BassRepositoryMerge(
-	    new BeduManageCoursesRepository(),instance);
+	    new BeduManageCoursesRepository(),repo_instance);
    BassFactory.registerRepository(BudaConstants.SearchType.SEARCH_EXPLORER, fullRepo);
-   BassFactory.registerRepository(BudaConstants.SearchType.SEARCH_COURSES, instance);
+   BassFactory.registerRepository(BudaConstants.SearchType.SEARCH_COURSES, repo_instance);
 }
 
 private BeduCourseRepository(Collection<BeduCourse> c)
@@ -140,7 +139,7 @@ synchronized void addCourse(BeduCourse c)
       bp.setProperty(coursePrefix(c) + "xmpp_password", tc.getXMPPPassword());
       bp.setProperty(coursePrefix(c) + "server", tc.getXMPPServer());
    }
-   
+
 }
 
 synchronized void removeCourse(BeduCourse c)
@@ -153,7 +152,7 @@ synchronized void removeCourse(BeduCourse c)
       bp.remove(coursePrefix(c) + "xmpp_password");
       bp.remove(coursePrefix(c) + "server");
    }
-   
+
 }
 
 void saveConfigFile() throws IOException

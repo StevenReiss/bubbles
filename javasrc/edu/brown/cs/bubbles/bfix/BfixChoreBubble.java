@@ -68,8 +68,8 @@ private ChoreList		chore_list;
 private transient ChoreUpdater  chore_updater;
 
 
-static private Icon yes_icon = BoardImage.getIcon("accept",12,12);
-static private Icon no_icon = BoardImage.getIcon("no",12,12);
+private static Icon yes_icon = BoardImage.getIcon("accept",12,12);
+private static Icon no_icon = BoardImage.getIcon("no",12,12);
 
 private static final long serialVersionUID = 0;
 
@@ -192,7 +192,7 @@ private class ChoreTable extends AbstractTableModel {
 /*										*/
 /********************************************************************************/
 
-private class ChoreUpdater implements ListDataListener {
+private final class ChoreUpdater implements ListDataListener {
 
 
    @Override public void contentsChanged(ListDataEvent e) {

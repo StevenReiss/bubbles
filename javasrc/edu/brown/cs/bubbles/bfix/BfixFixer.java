@@ -105,14 +105,14 @@ protected String getMemoId()
    if (subfix_data == null) {
       if (r != null) SwingUtilities.invokeLater(r);
     }
-   else{
+   else {
       subfix_data.noteFix(r);
     }
 }
 
 
 
-abstract protected BfixRunnableFix findFix();
+protected abstract BfixRunnableFix findFix();
 
 
 

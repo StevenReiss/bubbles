@@ -102,7 +102,7 @@ import java.util.regex.Pattern;
  *
  **/
 
-public class BoardSetup implements BoardConstants, MintConstants {
+public final class BoardSetup implements BoardConstants, MintConstants {
 
 
 
@@ -621,7 +621,11 @@ public void setJavaArgs(Collection<String> args)
 public void setJavaArgs(String [] args)
 {
    java_args = new ArrayList<>();
-   if (args != null) for (String s : args) java_args.add(s);
+   if (args != null) {
+      for (String s : args) {
+         java_args.add(s);
+       }
+    }
 }
 
 
@@ -3445,7 +3449,7 @@ private static class BaseIDEDirectoryFilter extends FileFilter {
 
 
 
-private static class InstallDirectoryFilter extends FileFilter {
+private static final class InstallDirectoryFilter extends FileFilter {
 
    @Override public boolean accept(File f) {
       //return checkInstallDirectory(f);  //edited by amc6
@@ -3604,7 +3608,7 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
 
 
 
-private static class WorkspaceDirectoryFilter extends FileFilter {
+private static final class WorkspaceDirectoryFilter extends FileFilter {
 
    @Override public boolean accept(File f) {
       return true;
@@ -3669,9 +3673,9 @@ private Proxy getProxy(String d)
 
 private static class ProxyManager extends ProxySelector {
 
-   List<Proxy> proxy_list;
-   List<Proxy> null_list;
-   Set<String> local_hosts;
+   private List<Proxy> proxy_list;
+   private List<Proxy> null_list;
+   private Set<String> local_hosts;
 
    ProxyManager(List<Proxy> pl) {
       proxy_list = pl;

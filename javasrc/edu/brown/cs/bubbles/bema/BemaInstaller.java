@@ -79,7 +79,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
-public class BemaInstaller
+public final class BemaInstaller
 {
 
 
@@ -462,7 +462,7 @@ private abstract class InstallerPanel {
 /*										*/
 /********************************************************************************/
 
-private class SplashPanel extends InstallerPanel implements ActionListener {
+private final class SplashPanel extends InstallerPanel implements ActionListener {
 
    @Override JPanel getPanel() {
       SwingGridPanel pnl = new SwingGridPanel();
@@ -1001,7 +1001,7 @@ private class Downloader extends Thread {
                if (rlen <= 0) break;
                ots.write(buf,0,rlen);
                len += rlen;
-               int npct = (int)(len*100 / BUBBLES_LENGTH);
+               int npct = (int) (len*100 / BUBBLES_LENGTH);
                if (npct > pct) progress_panel.setProgress(npct);
                pct = npct;
              }

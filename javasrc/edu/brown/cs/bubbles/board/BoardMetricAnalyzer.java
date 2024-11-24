@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class BoardMetricAnalyzer implements BoardConstants {
+public final class BoardMetricAnalyzer implements BoardConstants {
 
 
 /********************************************************************************/
@@ -84,13 +84,13 @@ public static void main(String [] args)
 *
 ****/
 
-private final static String BASE_DIR = "/vol/web/html/bubbles/uploads";
-private final static String SSHCMD = "ssh conifer2";
-private final static String CMD = "find " + BASE_DIR + " -type f";
+private static final String BASE_DIR = "/vol/web/html/bubbles/uploads";
+private static final String SSHCMD = "ssh conifer2";
+private static final String CMD = "find " + BASE_DIR + " -type f";
 // private final static String LISTARGS = "-print -exec cat {} \\;";
-private final static String CMD_MATCH = "-name '*COMMAND*'";
-private final static String CFG_MATCH = "-name '*CONFIG*'";
-private final static String FILEARGS = "-print";
+private static final String CMD_MATCH = "-name '*COMMAND*'";
+private static final String CFG_MATCH = "-name '*CONFIG*'";
+private static final String FILEARGS = "-print";
 
 
 private List<String>	find_args;
@@ -192,7 +192,7 @@ private void process()
    String pfx = BASE_DIR + "/";
 
    String session = null;
-   long last_active = 0;
+   long lastactive = 0;
 
    try {
       if (output_file == null) output_writer = System.out;
@@ -219,7 +219,7 @@ private void process()
 	       anal.startSession(sess,id);
 	     }
 	    output_writer.println("ENDSESSION");
-	    last_active = 0;
+	    lastactive = 0;
 	    session = sess;
 	  }
 	 else if (Character.isDigit(ln.charAt(0))) continue;
@@ -238,10 +238,10 @@ private void process()
 	       args = s.split("_");
 	     }
 	    if (data[0].equals("ACTIVE")) {
-	       if (args[0].equals("inactive.start")) last_active = time;
-	       else if (args[0].equals("inactive.end") && last_active > 0) {
-		  long delta = time - last_active;
-		  last_active = 0;
+	       if (args[0].equals("inactive.start")) lastactive = time;
+	       else if (args[0].equals("inactive.end") && lastactive > 0) {
+		  long delta = time - lastactive;
+		  lastactive = 0;
 		  for (Analyzer anal : analyzer_set) {
 		     anal.inactive(delta,time);
 		   }
@@ -283,15 +283,15 @@ private BufferedReader getReader() throws IOException
 
    IvyExec ex = new IvyExec(cmdstr,IvyExec.ERROR_OUTPUT|IvyExec.READ_OUTPUT);
 
-   List<String> all_files = new ArrayList<String>();
+   List<String> allfiles = new ArrayList<String>();
    BufferedReader br = new BufferedReader(new InputStreamReader(ex.getInputStream()));
    for ( ; ; ) {
       String fn = br.readLine();
       if (fn == null) break;
-      all_files.add(fn);
+      allfiles.add(fn);
     }
    br.close();
-   Collections.sort(all_files,new FileSorter());
+   Collections.sort(allfiles,new FileSorter());
 
    File outf = null;
    if (output_data != null) outf = new File(output_data);
@@ -300,7 +300,7 @@ private BufferedReader getReader() throws IOException
       outf.deleteOnExit();
     }
    PrintWriter pw = new PrintWriter(outf);
-   for (String s : all_files) {
+   for (String s : allfiles) {
       pw.println(s);
       String catcmd = "cat " + s;
       String catstr = SSHCMD + " \"" + catcmd + "\"";
@@ -322,7 +322,7 @@ private BufferedReader getReader() throws IOException
 
 
 
-private static class FileSorter implements Comparator<String> {
+private static final class FileSorter implements Comparator<String> {
 
    @Override public int compare(String f1,String f2) {
       int idx1 = f1.lastIndexOf("/");
@@ -542,10 +542,10 @@ private class EditRegionAnalysis extends Analyzer {
 
 
 
-private final static int	BEFORE_DELTA = 4;
-private final static int	AFTER_DELTA = 10;
-private final static int	MIN_OPERATIONS = 10;
-private final static int	MIN_SIZE = 10;
+private static final int	BEFORE_DELTA = 4;
+private static final int	AFTER_DELTA = 10;
+private static final int	MIN_OPERATIONS = 10;
+private static final int	MIN_SIZE = 10;
 private static final int	IDLE_TIME = 10000;
 
 private class EditRegion {
@@ -1036,7 +1036,7 @@ private static class StatData {
 
 
    int intval(double v) {
-      return (int)(v*1000);
+      return (int) (v*1000);
     }
 
 }	// end of inner class StatData
@@ -1076,12 +1076,6 @@ private class SeedeAnalysis extends Analyzer {
     }
    
 }       // end of inner class SeedeAnalysis
-
-
-
-
-
-
 
 
 

@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										                                                  */
-/*		BgtaUtil.java							                                         */
-/*										                                                  */
-/*	Chat utility functions                                  		                 */
-/*										                                                  */
+/*			                                                        */
+/*		BgtaUtil.java							*/
+/*										*/
+/*	Chat utility functions                                  		*/
+/*										*/
 /********************************************************************************/
-/*	Copyright 2011 Brown University -- Andrew Kovacs      		                 */
+/*	Copyright 2011 Brown University -- Andrew Kovacs      		        */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -44,11 +44,11 @@ public class BgtaUtil implements BassConstants{
     * Returns a list of XMPP resources that are logged into the bare JID
     * at the given RosterEntry
     */
-   public static List<String> getFullJIDsForRosterEntry(Roster r, String bare_jid)
+   public static List<String> getFullJIDsForRosterEntry(Roster r, String barejid)
    {
       ArrayList<String> jids = new ArrayList<String>();
-      Iterator<Presence> it = r.getPresences(bare_jid);
-      while(it.hasNext()){
+      Iterator<Presence> it = r.getPresences(barejid);
+      while (it.hasNext()){
          Presence p = it.next();
          jids.add(p.getFrom());
       }
@@ -63,7 +63,8 @@ public class BgtaUtil implements BassConstants{
     */
    public static BgtaChat bgtaChatForXMPPChat(XMPPConnection conn, Chat c)
    {
-      return new BgtaChat(conn.getUser(), c.getParticipant(), null, ChatServer.fromServer(conn.getServiceName()), c, null);
+      return new BgtaChat(conn.getUser(), c.getParticipant(), null,
+            ChatServer.fromServer(conn.getServiceName()), c, null);
    }
    
    /**
@@ -72,11 +73,9 @@ public class BgtaUtil implements BassConstants{
     */
    public static BudaBubble getLoginBubble()
    {
-      for(BassName n : BassFactory.getRepository(BudaConstants.SearchType.SEARCH_PEOPLE).getAllNames())
-      {
-         if(n.getNameType() == BassNameType.CHAT_LOGIN)
-         {
-            return n.createBubble();
+      for (BassName n : BassFactory.getRepository(BudaConstants.SearchType.SEARCH_PEOPLE).getAllNames()) {
+               if (n.getNameType() == BassNameType.CHAT_LOGIN) {
+                     return n.createBubble();
          }
       }
       

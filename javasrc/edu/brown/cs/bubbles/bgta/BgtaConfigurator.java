@@ -1,11 +1,11 @@
 /********************************************************************************/
-/*										*/
-/*		BgtaConfigurator.java						*/
-/*										*/
-/*	Bubbles attribute and property management main setup routine		*/
-/*										*/
+/*                                                                              */
+/*              BgtaConfigurator.java                                           */
+/*                                                                              */
+/*      Bubbles attribute and property management main setup routine            */
+/*                                                                              */
 /********************************************************************************/
-/*	Copyright 2009 Brown University -- Ian Strickman		      */
+/*      Copyright 2009 Brown University -- Ian Strickman                      */
 /*********************************************************************************
  *  Copyright 2011, Brown University, Providence, RI.                            *
  *                                                                               *
@@ -39,9 +39,9 @@ class BgtaConfigurator implements BubbleConfigurator {
 
 
 /********************************************************************************/
-/*										*/
-/*	Bubble creation methods 						*/
-/*										*/
+/*                                                                              */
+/*      Bubble creation methods                                                 */
+/*                                                                              */
 /********************************************************************************/
 
 @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml)
@@ -78,14 +78,14 @@ class BgtaConfigurator implements BubbleConfigurator {
    
 
 
-@Override public void loadXml(BudaBubbleArea bba,Element root)		{ }
+@Override public void loadXml(BudaBubbleArea bba,Element root)          { }
 
-@Override public void outputXml(BudaXmlWriter xw,boolean history)	{ }
-
-
+@Override public void outputXml(BudaXmlWriter xw,boolean history)       { }
 
 
-}	// end of class BgtaConfigurator
+
+
+}       // end of class BgtaConfigurator
 
 
 

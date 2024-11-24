@@ -101,7 +101,7 @@ static {
  * Other packages in bubbles can define their own property sets as needed.
  **/
 
-public synchronized static BoardProperties getProperties(String id)
+public static synchronized BoardProperties getProperties(String id)
 {
    if (id.endsWith(".props")) {
       int idx = id.lastIndexOf(".");
@@ -187,7 +187,7 @@ public static InputStream getResourceFile(String name)
  * effect at the next restart.
  **/
 
-public synchronized static void resetDefaultProperties()
+public static synchronized void resetDefaultProperties()
 {
    BoardSetup setup = BoardSetup.getSetup();
 

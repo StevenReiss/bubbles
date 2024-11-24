@@ -76,7 +76,7 @@ import java.util.Set;
  *	improvements.
  **/
 
-public class BoardMetrics implements BoardConstants {
+public final class BoardMetrics implements BoardConstants {
 
 
 
@@ -133,7 +133,7 @@ static {
 }
 
 
-private static final String [] check_properties = {
+private static final String [] CHECK_PROPERTIES = {
    BOARD_METRIC_PROP_SCREENS,
    BOARD_METRIC_PROP_ACTIVE,
    BOARD_METRIC_PROP_COMMANDS,
@@ -232,7 +232,7 @@ public static long getLastActive()
  *	argument describes the command.
  **/
 
-public static void noteCommand(String src,Object ... cmd)
+public static void noteCommand(String src,Object... cmd)
 {
    BoardLog.logD("BOARD","COMMAND: " + src + ":" + Arrays.toString(cmd));
    if (the_metrics.collect_commands) {
@@ -382,7 +382,7 @@ private void setupOptions(boolean force)
 
    if (!force) {
       // ensure user is always asked about new properties
-      for (String s : check_properties) {
+      for (String s : CHECK_PROPERTIES) {
 	 if (!bp.containsKey(s)) force = true;
        }
     }
@@ -937,7 +937,7 @@ private File[] getOptionsFiles()
 
 
 
-private static class OptionFileFilter implements FileFilter {
+private static final class OptionFileFilter implements FileFilter {
 
    @Override public boolean accept(File path) {
       if (path.isDirectory()) return false;
@@ -1137,7 +1137,7 @@ private void sendFile(File f,String typ,boolean del) throws IOException
 /*										*/
 /********************************************************************************/
 
-private class ScreenDumpTask implements Runnable {
+private final class ScreenDumpTask implements Runnable {
 
    @Override public void run() {
       if (collect_screens) dumpScreen();
@@ -1151,7 +1151,7 @@ private class ScreenDumpTask implements Runnable {
 
 
 
-private class CommandDumpTask implements Runnable {
+private final class CommandDumpTask implements Runnable {
 
    @Override public void run() {
       if (collect_commands) dumpCommands();
@@ -1164,7 +1164,7 @@ private class CommandDumpTask implements Runnable {
 }	// end of inner class CommandDumpTask
 
 
-private class UserFeedbackTask implements Runnable {
+private final class UserFeedbackTask implements Runnable {
 
    @Override public void run() {
       if (collect_experience) BoardUserReport.noteReport("bubbles");
@@ -1182,7 +1182,7 @@ private class UserFeedbackTask implements Runnable {
 
 
 
-private class OptionsDumpTask implements Runnable {
+private final class OptionsDumpTask implements Runnable {
 
    @Override public void run() {
       if (collect_options) dumpOptions();
@@ -1196,7 +1196,7 @@ private class OptionsDumpTask implements Runnable {
 
 
 
-private class WorkingsetDumpTask implements Runnable {
+private final class WorkingsetDumpTask implements Runnable {
 
    @Override public void run() {
       if (collect_workingset) dumpWorkingset();
