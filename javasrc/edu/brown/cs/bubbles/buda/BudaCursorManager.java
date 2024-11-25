@@ -38,7 +38,7 @@ import java.util.WeakHashMap;
  *
  */
 
-public class BudaCursorManager {
+public final class BudaCursorManager {
 
 
 
@@ -188,9 +188,9 @@ private void resetDefaultCursor(Component comp)
    if (comp == null) return;
    comp.setCursor(default_cursors.get(comp));
    global_cursor_set.remove(comp);
-   if(!(comp instanceof Container)) return;
+   if (!(comp instanceof Container)) return;
    Container cont = (Container) comp;
-   for(Component c : cont.getComponents()) {
+   for (Component c : cont.getComponents()) {
       resetDefaultCursor(c);
     }
 }
@@ -203,7 +203,7 @@ private void localSetGlobalCursorForComponent(Component comp, Cursor curs)
    global_cursor_set.add(comp);
    if (!(comp instanceof Container)) return;
    Container cont = (Container) comp;
-   for(Component c : cont.getComponents()) {
+   for (Component c : cont.getComponents()) {
       localSetGlobalCursorForComponent(c, curs);
     }
 }

@@ -28,8 +28,103 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-
-import org.eclipse.wst.jsdt.core.dom.*;
+import org.eclipse.wst.jsdt.core.dom.ASTNode;
+import org.eclipse.wst.jsdt.core.dom.AnonymousClassDeclaration;
+import org.eclipse.wst.jsdt.core.dom.ArrayAccess;
+import org.eclipse.wst.jsdt.core.dom.ArrayCreation;
+import org.eclipse.wst.jsdt.core.dom.ArrayInitializer;
+import org.eclipse.wst.jsdt.core.dom.ArrayName;
+import org.eclipse.wst.jsdt.core.dom.ArrayType;
+import org.eclipse.wst.jsdt.core.dom.ArrowFunctionExpression;
+import org.eclipse.wst.jsdt.core.dom.Assignment;
+import org.eclipse.wst.jsdt.core.dom.AssignmentName;
+import org.eclipse.wst.jsdt.core.dom.Block;
+import org.eclipse.wst.jsdt.core.dom.BlockComment;
+import org.eclipse.wst.jsdt.core.dom.BooleanLiteral;
+import org.eclipse.wst.jsdt.core.dom.BreakStatement;
+import org.eclipse.wst.jsdt.core.dom.CatchClause;
+import org.eclipse.wst.jsdt.core.dom.CharacterLiteral;
+import org.eclipse.wst.jsdt.core.dom.ClassInstanceCreation;
+import org.eclipse.wst.jsdt.core.dom.ConditionalExpression;
+import org.eclipse.wst.jsdt.core.dom.ConstructorInvocation;
+import org.eclipse.wst.jsdt.core.dom.ContinueStatement;
+import org.eclipse.wst.jsdt.core.dom.DefaultASTVisitor;
+import org.eclipse.wst.jsdt.core.dom.DoStatement;
+import org.eclipse.wst.jsdt.core.dom.EmptyExpression;
+import org.eclipse.wst.jsdt.core.dom.EmptyStatement;
+import org.eclipse.wst.jsdt.core.dom.EnhancedForStatement;
+import org.eclipse.wst.jsdt.core.dom.ExportDeclaration;
+import org.eclipse.wst.jsdt.core.dom.Expression;
+import org.eclipse.wst.jsdt.core.dom.FieldAccess;
+import org.eclipse.wst.jsdt.core.dom.FieldDeclaration;
+import org.eclipse.wst.jsdt.core.dom.ForInStatement;
+import org.eclipse.wst.jsdt.core.dom.ForOfStatement;
+import org.eclipse.wst.jsdt.core.dom.ForStatement;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclarationStatement;
+import org.eclipse.wst.jsdt.core.dom.FunctionExpression;
+import org.eclipse.wst.jsdt.core.dom.FunctionInvocation;
+import org.eclipse.wst.jsdt.core.dom.FunctionRef;
+import org.eclipse.wst.jsdt.core.dom.IfStatement;
+import org.eclipse.wst.jsdt.core.dom.ImportDeclaration;
+import org.eclipse.wst.jsdt.core.dom.InferredType;
+import org.eclipse.wst.jsdt.core.dom.InfixExpression;
+import org.eclipse.wst.jsdt.core.dom.Initializer;
+import org.eclipse.wst.jsdt.core.dom.InstanceofExpression;
+import org.eclipse.wst.jsdt.core.dom.JSdoc;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
+import org.eclipse.wst.jsdt.core.dom.LabeledStatement;
+import org.eclipse.wst.jsdt.core.dom.LineComment;
+import org.eclipse.wst.jsdt.core.dom.ListExpression;
+import org.eclipse.wst.jsdt.core.dom.MemberRef;
+import org.eclipse.wst.jsdt.core.dom.MetaProperty;
+import org.eclipse.wst.jsdt.core.dom.Modifier;
+import org.eclipse.wst.jsdt.core.dom.ModuleSpecifier;
+import org.eclipse.wst.jsdt.core.dom.NullLiteral;
+import org.eclipse.wst.jsdt.core.dom.NumberLiteral;
+import org.eclipse.wst.jsdt.core.dom.ObjectLiteral;
+import org.eclipse.wst.jsdt.core.dom.ObjectLiteralField;
+import org.eclipse.wst.jsdt.core.dom.ObjectName;
+import org.eclipse.wst.jsdt.core.dom.PackageDeclaration;
+import org.eclipse.wst.jsdt.core.dom.ParenthesizedExpression;
+import org.eclipse.wst.jsdt.core.dom.PostfixExpression;
+import org.eclipse.wst.jsdt.core.dom.PrefixExpression;
+import org.eclipse.wst.jsdt.core.dom.PrimitiveType;
+import org.eclipse.wst.jsdt.core.dom.QualifiedName;
+import org.eclipse.wst.jsdt.core.dom.QualifiedType;
+import org.eclipse.wst.jsdt.core.dom.RegularExpressionLiteral;
+import org.eclipse.wst.jsdt.core.dom.RestElementName;
+import org.eclipse.wst.jsdt.core.dom.ReturnStatement;
+import org.eclipse.wst.jsdt.core.dom.SimpleName;
+import org.eclipse.wst.jsdt.core.dom.SimpleType;
+import org.eclipse.wst.jsdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.wst.jsdt.core.dom.SpreadElement;
+import org.eclipse.wst.jsdt.core.dom.StringLiteral;
+import org.eclipse.wst.jsdt.core.dom.SuperConstructorInvocation;
+import org.eclipse.wst.jsdt.core.dom.SuperFieldAccess;
+import org.eclipse.wst.jsdt.core.dom.SuperMethodInvocation;
+import org.eclipse.wst.jsdt.core.dom.SwitchCase;
+import org.eclipse.wst.jsdt.core.dom.SwitchStatement;
+import org.eclipse.wst.jsdt.core.dom.TagElement;
+import org.eclipse.wst.jsdt.core.dom.TemplateElement;
+import org.eclipse.wst.jsdt.core.dom.TemplateLiteral;
+import org.eclipse.wst.jsdt.core.dom.TextElement;
+import org.eclipse.wst.jsdt.core.dom.ThisExpression;
+import org.eclipse.wst.jsdt.core.dom.ThrowStatement;
+import org.eclipse.wst.jsdt.core.dom.TryStatement;
+import org.eclipse.wst.jsdt.core.dom.TypeDeclaration;
+import org.eclipse.wst.jsdt.core.dom.TypeDeclarationExpression;
+import org.eclipse.wst.jsdt.core.dom.TypeDeclarationStatement;
+import org.eclipse.wst.jsdt.core.dom.TypeLiteral;
+import org.eclipse.wst.jsdt.core.dom.UndefinedLiteral;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclaration;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclarationExpression;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclarationStatement;
+import org.eclipse.wst.jsdt.core.dom.VariableKind;
+import org.eclipse.wst.jsdt.core.dom.WhileStatement;
+import org.eclipse.wst.jsdt.core.dom.WithStatement;
+import org.eclipse.wst.jsdt.core.dom.YieldExpression;
 
 
 class NobaseValuePass extends DefaultASTVisitor implements NobaseConstants
@@ -1784,7 +1879,7 @@ private void localScopeEnd()
 /*										*/
 /********************************************************************************/
 
-private static class EvalPlus implements Evaluator {
+private static final class EvalPlus implements Evaluator {
 
    @Override public NobaseValue evaluate(NobaseFile forfile,List<NobaseValue> args,
          NobaseValue thisval) {
@@ -1843,7 +1938,7 @@ private static class EvalNumeric implements Evaluator {
       for (NobaseValue nv : args) {
          if (nv == null) return null;
          Object o = nv.getKnownValue();
-         if (o instanceof Number) vals.add(((Number)o));
+         if (o instanceof Number) vals.add(((Number) o));
          else return null;
        }
       

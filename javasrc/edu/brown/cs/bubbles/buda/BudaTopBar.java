@@ -482,7 +482,7 @@ private int getAreaOffset(double x)
    Rectangle r = getBounds();
    Dimension totsize = bubble_area.getSize();
 
-   return (int)(x * totsize.width / r.width);
+   return (int) (x * totsize.width / r.width);
 }
 
 
@@ -788,7 +788,7 @@ private class WorkingSetResizeContext {
       ++resize_count;
       int x1 = e.getX();
       int dx = x1 - initial_x;
-      int bx = (int)(ws_bound + dx * scale_factor + 0.5);
+      int bx = (int) (ws_bound + dx * scale_factor + 0.5);
       if (bx < 0) bx = 0;
       if (bx >= area_bounds.width) bx = area_bounds.width-1;
       Rectangle r = working_set.getRegion();
@@ -981,7 +981,8 @@ private class ChevronButton extends JButton {
       if (width == 0) width = 2;
       if (height == 0) height = 2;
 
-      setIcon(new ImageIcon(BoardImage.getImage("dropdown_chevron").getScaledInstance(width, height, Image.SCALE_SMOOTH)));
+      setIcon(new ImageIcon(BoardImage.getImage("dropdown_chevron").
+            getScaledInstance(width, height, Image.SCALE_SMOOTH)));
       setBounds(x, y, width, height);
       addActionListener(new ChevronButtonListener(this,ws));
       setFocusPainted(false);
@@ -1079,8 +1080,12 @@ private class Mouser extends MouseAdapter {
     }
 
    @Override public void mouseMoved(MouseEvent e) {
-      if (wouldStartWorkingSetSizing(e.getX()) != 0) BudaCursorManager.setTemporaryCursor(BudaTopBar.this, new Cursor(Cursor.E_RESIZE_CURSOR));
-      else BudaCursorManager.setTemporaryCursor(BudaTopBar.this, new Cursor(Cursor.DEFAULT_CURSOR));
+      if (wouldStartWorkingSetSizing(e.getX()) != 0) {
+         BudaCursorManager.setTemporaryCursor(BudaTopBar.this, new Cursor(Cursor.E_RESIZE_CURSOR));
+       }
+      else {
+         BudaCursorManager.setTemporaryCursor(BudaTopBar.this, new Cursor(Cursor.DEFAULT_CURSOR));
+       }
    }
 
    private boolean checkPopup(MouseEvent e) {
@@ -1135,7 +1140,7 @@ private static class ShelfMenu extends JMenu {
 /********************************************************************************/
 
 
-private class ShelfListener implements PopupMenuListener {
+private final class ShelfListener implements PopupMenuListener {
 
    @Override public void popupMenuCanceled(PopupMenuEvent e) { }
    @Override public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) { }

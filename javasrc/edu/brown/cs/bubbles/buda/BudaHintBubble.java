@@ -190,7 +190,7 @@ void setFade(double fade)
 /*										*/
 /********************************************************************************/
 
-private class RemoveAction implements ActionListener {
+private final class RemoveAction implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       setVisible(false);
@@ -210,7 +210,7 @@ private class RemoveAction implements ActionListener {
 /*										*/
 /********************************************************************************/
 
-private class FadeAction implements ActionListener {
+private final class FadeAction implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       double delta = System.currentTimeMillis() - start_time;

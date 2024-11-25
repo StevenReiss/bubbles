@@ -263,7 +263,7 @@ private class ExpandAllAction extends AbstractAction {
 /*                                                                              */
 /********************************************************************************/
 
-private class FileChangeHandler implements BumpChangeHandler, Runnable {
+private final class FileChangeHandler implements BumpChangeHandler, Runnable {
    
    @Override public void handleFileChanged(String p,String file) {
       noteChange(file,false);
@@ -343,7 +343,7 @@ private class FileTable extends SwingTreeTable {
 
 
 
-private class TableSelectionListener implements ListSelectionListener {
+private final class TableSelectionListener implements ListSelectionListener {
 
    @Override public void valueChanged(ListSelectionEvent e) {
       boolean enable = false;
@@ -415,16 +415,17 @@ private static class TreeCellRenderer extends DefaultTreeCellRenderer {
 	       break;
 	    default :
 	       break;
-	 }
-      }
+          }
+       }
       else if (value instanceof DirectoryNode) {
-      }
-
+         // do nothing
+       }
+      
       if (bkg != null) setBackground(bkg);
       else setBackground(BoardColors.transparent());
-
+      
       return super.getTreeCellRendererComponent(tree,value,sel,expanded,leaf,row,hasfocus);
-   }
+    }
 
 }	// end of inner class TreeCellRenderer
 
@@ -503,7 +504,7 @@ private class FileTableModel extends SwingTreeTable.AbstractTreeTableModel {
 /*										*/
 /********************************************************************************/
 
-private static abstract class GenericNode {
+private abstract static class GenericNode {
 
    private DirectoryNode	   parent_node;
 
@@ -659,7 +660,7 @@ private static class TreeComparator implements Comparator<GenericNode> {
 /*										*/
 /********************************************************************************/
 
-private class ShowButtons implements ChangeListener {
+private final class ShowButtons implements ChangeListener {
 
    @Override public void stateChanged(ChangeEvent e) {
       JToggleButton btn = (JToggleButton) e.getSource();
@@ -681,7 +682,7 @@ private class ShowButtons implements ChangeListener {
 
 
 
-private class FileStateUpdate implements ActionListener {
+private final class FileStateUpdate implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = null;

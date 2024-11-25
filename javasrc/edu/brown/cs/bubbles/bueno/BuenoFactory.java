@@ -63,7 +63,7 @@ import org.w3c.dom.Element;
 
 
 
-public class BuenoFactory implements BuenoConstants
+public final class BuenoFactory implements BuenoConstants
 {
 
 
@@ -502,7 +502,7 @@ public BudaBubble getCreateProjectBubble()
 }
 
 
-private static class CreateListener implements BudaConstants.ButtonListener {
+private static final class CreateListener implements BudaConstants.ButtonListener {
 
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {
       BuenoFactory bf = getFactory();
@@ -523,7 +523,7 @@ private static class CreateListener implements BudaConstants.ButtonListener {
 /*										*/
 /********************************************************************************/
 
-private static class TemplateImporter implements BudaConstants.ButtonListener {
+private static final class TemplateImporter implements BudaConstants.ButtonListener {
 
 
    @Override public void buttonActivated(BudaBubbleArea bba,String id,Point pt) {

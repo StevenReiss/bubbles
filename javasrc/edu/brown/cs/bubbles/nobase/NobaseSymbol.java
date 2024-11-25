@@ -25,10 +25,10 @@
 package edu.brown.cs.bubbles.nobase;
 
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
-
 import java.awt.Point;
-
-import org.eclipse.wst.jsdt.core.dom.*;
+import org.eclipse.wst.jsdt.core.dom.ASTNode;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclarationStatement;
 
 
 class NobaseSymbol implements NobaseConstants

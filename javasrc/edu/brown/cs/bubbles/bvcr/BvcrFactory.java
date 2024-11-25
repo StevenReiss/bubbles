@@ -62,7 +62,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 
-public class BvcrFactory implements BvcrConstants, BaleConstants, MintConstants
+public final class BvcrFactory implements BvcrConstants, BaleConstants, MintConstants
 {
 
 
@@ -87,7 +87,7 @@ private static BvcrFactory	the_factory = null;
 /*										*/
 /********************************************************************************/
 
-public synchronized static BvcrFactory getFactory()
+public static synchronized BvcrFactory getFactory()
 {
    if (the_factory == null) the_factory = new BvcrFactory();
    return the_factory;
@@ -246,7 +246,7 @@ void startBvcrServer()
       BoardProperties bp = BoardProperties.getProperties("Bvcr");
       String dbgargs = bp.getProperty("Bvcr.jvm.args");
       if (dbgargs != null && dbgargs.contains("###")) {
-	 int port = (int)(Math.random() * 1000 + 3000);
+	 int port = (int) (Math.random() * 1000 + 3000);
 	 BoardLog.logI("BVCR","Bvcr debugging port " + port);
 	 dbgargs = dbgargs.replace("###",Integer.toString(port));
        }
@@ -335,7 +335,7 @@ private synchronized void waitForSetup()
     }
 }
 
-private static class BvcrStarter implements Runnable {
+private static final class BvcrStarter implements Runnable {
 
    @Override public void run() {
       getFactory().startBvcrServer();
@@ -351,7 +351,7 @@ private static class BvcrStarter implements Runnable {
 /*										*/
 /********************************************************************************/
 
-private class BvcrContexter implements BaleContextListener, BassConstants.BassPopupHandler {
+private final class BvcrContexter implements BaleContextListener, BassConstants.BassPopupHandler {
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       // only if bvcr is running (i.e. under version management)
@@ -488,7 +488,7 @@ private class ControlAction extends AbstractAction {
 /*										*/
 /********************************************************************************/
 
-private class ServerSetup implements Runnable {
+private final class ServerSetup implements Runnable {
 
    @Override public void run() {
       if (server_running) {

@@ -164,7 +164,7 @@ private void addVersions(BvcrControlVersion ver,Set<BvcrControlVersion> rslt,
 
 
 
-private class VersionComparer implements Comparator<BvcrControlVersion> {
+private final class VersionComparer implements Comparator<BvcrControlVersion> {
    
    @Override public int compare(BvcrControlVersion v1,BvcrControlVersion v2) {
       return v2.getDate().compareTo(v1.getDate());

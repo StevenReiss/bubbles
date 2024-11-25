@@ -67,7 +67,7 @@ import java.util.Map;
  *
  **/
 
-public class BurpHistory implements BurpConstants {
+public final class BurpHistory implements BurpConstants {
 
 
 
@@ -100,7 +100,7 @@ private static UndoRedoAction		redo_selection_action = new UndoRedoAction(1,true
  *	Return the singular instance of the history module for all bubbles.
  **/
 
-public synchronized static BurpHistory getHistory()
+public static synchronized BurpHistory getHistory()
 {
    if (the_history == null) {
       the_history = new BurpHistory();
@@ -744,7 +744,7 @@ private void noteSave(File file)
 
 
 
-private class ChangeHandler implements BumpConstants.BumpChangeHandler {
+private final class ChangeHandler implements BumpConstants.BumpChangeHandler {
 
    
    

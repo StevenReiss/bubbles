@@ -92,7 +92,7 @@ void server()
       while (!is_done || delay_count > 0) {
 	 checkEclipse();
 	 try {
-	    wait(300000l);
+	    wait(300000L);
 	  }
 	 catch (InterruptedException e) { }
        }
@@ -385,7 +385,7 @@ private void handleStash(IvyXmlWriter xw,String proj,String msg)
 /*										*/
 /********************************************************************************/
 
-private class EclipseHandler implements MintHandler {
+private final class EclipseHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
@@ -446,7 +446,7 @@ private class EclipseHandler implements MintHandler {
 
 
 
-private class ExitHandler implements MintHandler {
+private final class ExitHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       serverDone();
@@ -463,7 +463,7 @@ private class ExitHandler implements MintHandler {
 /*										*/
 /********************************************************************************/
 
-private class CommandHandler implements MintHandler {
+private final class CommandHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);

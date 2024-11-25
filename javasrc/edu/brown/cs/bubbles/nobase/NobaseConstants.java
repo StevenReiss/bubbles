@@ -134,9 +134,9 @@ long NOBASE_POOL_KEEP_ALIVE_TIME = 2*60*1000;
 
 interface IEditData {
 
-   public int getOffset();
-   public int getLength();
-   public String getText();
+   int getOffset();
+   int getLength();
+   String getText();
 
 }	// end of subinterface EditData
 
@@ -274,7 +274,7 @@ enum BreakType {
 
 
 
-public class IdCounter {
+class IdCounter {
 
    private int counter_value;
 
@@ -282,18 +282,18 @@ public class IdCounter {
       counter_value = 1;
     }
 
-   synchronized public int nextValue() {
+   public synchronized int nextValue() {
       return counter_value++;
     }
 
-   synchronized public void noteValue(int v) {
+   public synchronized void noteValue(int v) {
       if (counter_value <= v) counter_value = v+1;
     }
 
 }	// end of inner class IdCounter
 
 
-public class NobaseDebugRefMap extends HashMap<String,NobaseDebugValue> {
+class NobaseDebugRefMap extends HashMap<String,NobaseDebugValue> {
 
    private NobaseDebugTarget for_target;
    private static final long serialVersionUID = 1;

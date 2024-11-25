@@ -398,7 +398,7 @@ void outputXml(BudaXmlWriter xw)
 /*                                                                              */
 /********************************************************************************/
 
-private class GrowCallback implements BubbleViewCallback {
+private final class GrowCallback implements BubbleViewCallback {
    
    @Override public void bubbleAdded(BudaBubble bb) {
       checkBubble(bb);

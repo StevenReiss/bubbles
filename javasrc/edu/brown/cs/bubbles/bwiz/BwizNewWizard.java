@@ -382,7 +382,7 @@ private List<String> getProjects()
 
 
 
-private class ChooseProject implements ActionListener {
+private final class ChooseProject implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
@@ -489,7 +489,7 @@ private class PackageFinder implements Runnable {
 
 
 
-private class ChoosePackage implements ActionListener {
+private final class ChoosePackage implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
@@ -604,7 +604,7 @@ private Font getRelativeFont(int x)
 
 
 
-private class ValidCallback implements BuenoValidatorCallback {
+private final class ValidCallback implements BuenoValidatorCallback {
 
    @Override public void validationDone(BuenoValidator v,boolean pass) {
       if (create_button == null) return;
@@ -681,7 +681,7 @@ private class ClassItemListener implements ItemChangeListener {
 /*										*/
 /********************************************************************************/
 
-private class AccessibilityChange implements ActionListener {
+private final class AccessibilityChange implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       updateAccessibility(e);
@@ -691,7 +691,7 @@ private class AccessibilityChange implements ActionListener {
 }	// end of inner class Accessibility Change
 
 
-private class TypeChange implements ActionListener {
+private final class TypeChange implements ActionListener {
    
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
@@ -708,7 +708,7 @@ private class TypeChange implements ActionListener {
 /*										*/
 /********************************************************************************/
 
-private class ModifierChange implements ItemListener {
+private final class ModifierChange implements ItemListener {
 
    @Override public void itemStateChanged(ItemEvent e) {
       JCheckBox cbx = (JCheckBox) e.getItem();
@@ -778,7 +778,7 @@ protected abstract class Creator implements ActionListener, Runnable {
       BoardThreadPool.start(this);
    }
 
-   abstract protected BudaBubble doCreate(BudaBubbleArea bba,Point pt,String nm,BuenoProperties bp);
+   protected abstract BudaBubble doCreate(BudaBubbleArea bba,Point pt,String nm,BuenoProperties bp);
 
    @Override public void run() {
       if (new_bubble != null) {

@@ -78,7 +78,7 @@ public class BussBubble extends BudaBubble implements BussConstants {
 private BussStackBox	stack_box;
 private BussTreeModel	tree_model;
 
-private BussBubble self;
+private BussBubble our_self;
 private BudaBubble source_bubble;
 private transient BudaConstants.LinkPort source_linkport;
 
@@ -122,7 +122,7 @@ BussBubble(Collection<BussEntry> ents, int contentWidth)
 
    BussViewport vp = new BussViewport(stack_box, layered_pane);
 
-   default_dim = (Dimension)stack_box.getPreferredSize().clone();
+   default_dim = (Dimension) stack_box.getPreferredSize().clone();
    stack_box.setSize(stack_box.getPreferredSize());
    link_style = BudaLinkStyle.STYLE_SOLID;
 
@@ -134,7 +134,7 @@ BussBubble(Collection<BussEntry> ents, int contentWidth)
 
    this.addComponentListener(new BussResizeListener());
 
-   self = this;
+   our_self = this;
    buss_hover = new Hoverer();
    buss_listeners = new SwingEventListenerList<>(BussListener.class);
 }
@@ -248,8 +248,8 @@ void setStackBoxSize(Dimension dim)
 {
    stack_box.setPreferredSize(dim);
 
-   Dimension dimension = new Dimension(Math.max(stack_box.getPreferredSize().width, self.getSize().width),
-				       Math.max(stack_box.getPreferredSize().height, self.getSize().height));
+   Dimension dimension = new Dimension(Math.max(stack_box.getPreferredSize().width, our_self.getSize().width),
+				       Math.max(stack_box.getPreferredSize().height, our_self.getSize().height));
 
    stack_box.setSize(dimension);
 }
@@ -294,32 +294,32 @@ BudaBubble getSourceBubble()		{ return source_bubble; }
 @Override public BudaBubble getActualBubble(int x, int y, boolean moved)
 {
    if (getEditorBubble() != null && stack_box.getSelectionRows() != null &&
-       stack_box.getSelectionRows().length > 0) {
+         stack_box.getSelectionRows().length > 0) {
       int row = stack_box.getSelectionRows()[0];
 
       Point loc = getLocation();
-      Rectangle selectedItemRect = stack_box.getRowBounds(row);
-      Rectangle view_portRect = view_port.getViewRect();
+      Rectangle selecteditemrect = stack_box.getRowBounds(row);
+      Rectangle viewportrect = view_port.getViewRect();
 
-      int diffx = Math.max(0, selectedItemRect.x - view_portRect.x);
-      int diffy = Math.max(0, selectedItemRect.y - view_portRect.y);
+      int diffx = Math.max(0, selecteditemrect.x - viewportrect.x);
+      int diffy = Math.max(0, selecteditemrect.y - viewportrect.y);
 
-      int locx = diffx + loc.x + (int)BudaConstants.BUBBLE_EDGE_SIZE + 1;
-      int locy = diffy + loc.y + (int)BudaConstants.BUBBLE_EDGE_SIZE + 1;
+      int locx = diffx + loc.x + (int) BudaConstants.BUBBLE_EDGE_SIZE + 1;
+      int locy = diffy + loc.y + (int) BudaConstants.BUBBLE_EDGE_SIZE + 1;
 
-      int startx = Math.max(selectedItemRect.x, view_portRect.x);
-      int endx = Math.min(selectedItemRect.x + getEditorBubble().getPreferredSize().width,
-			     view_portRect.x + view_portRect.width);
+      int startx = Math.max(selecteditemrect.x, viewportrect.x);
+      int endx = Math.min(selecteditemrect.x + getEditorBubble().getPreferredSize().width,
+			     viewportrect.x + viewportrect.width);
 
-      int starty = Math.max(selectedItemRect.y, view_portRect.y);
-      int endy = Math.min(selectedItemRect.y + getEditorBubble().getPreferredSize().height,
-			     view_portRect.y + view_portRect.height);
+      int starty = Math.max(selecteditemrect.y, viewportrect.y);
+      int endy = Math.min(selecteditemrect.y + getEditorBubble().getPreferredSize().height,
+			     viewportrect.y + viewportrect.height);
 
       int width = Math.max(0, endx - startx);
       int height = Math.max(0, endy - starty);
 
-      if(x >= locx && x <= (locx + width) && y >= locy && y <= (locy + height)){
-	 if(moved)
+      if (x >= locx && x <= (locx + width) && y >= locy && y <= (locy + height)){
+	 if (moved)
 	    tearOutEditorBubble();
 
 	 return getEditorBubble();
@@ -360,14 +360,14 @@ public Point getEditorBubbleLocation()
       int row = stack_box.getSelectionRows()[0];
 
       Point loc = getLocation();
-      Rectangle selectedItemRect = stack_box.getRowBounds(row);
-      Rectangle view_portRect = view_port.getViewRect();
+      Rectangle selecteditemrect = stack_box.getRowBounds(row);
+      Rectangle viewportrect = view_port.getViewRect();
 
-      int diffx = Math.max(0, selectedItemRect.x - view_portRect.x);
-      int diffy = Math.max(0, selectedItemRect.y - view_portRect.y);
+      int diffx = Math.max(0, selecteditemrect.x - viewportrect.x);
+      int diffy = Math.max(0, selecteditemrect.y - viewportrect.y);
 
-      return new Point(diffx + loc.x + (int)BudaConstants.BUBBLE_EDGE_SIZE + 1,
-				       diffy + loc.y + (int)BudaConstants.BUBBLE_EDGE_SIZE + 1);
+      return new Point(diffx + loc.x + (int) BudaConstants.BUBBLE_EDGE_SIZE + 1,
+				       diffy + loc.y + (int) BudaConstants.BUBBLE_EDGE_SIZE + 1);
     }
 
    return null;
@@ -385,16 +385,16 @@ void updateEditorBubbleSize()
 	 stack_box.getSelectionRows().length > 0) {
       int row = stack_box.getSelectionRows()[0];
 
-      Rectangle selectedItemRect = stack_box.getRowBounds(row);
-      Rectangle view_portRect = view_port.getViewRect();
+      Rectangle selecteditemrect = stack_box.getRowBounds(row);
+      Rectangle viewportrect = view_port.getViewRect();
 
-      int startx = Math.max(selectedItemRect.x, view_portRect.x);
-      int endx = Math.min(selectedItemRect.x + getEditorBubble().getPreferredSize().width,
-			     view_portRect.x + view_portRect.width);
+      int startx = Math.max(selecteditemrect.x, viewportrect.x);
+      int endx = Math.min(selecteditemrect.x + getEditorBubble().getPreferredSize().width,
+			     viewportrect.x + viewportrect.width);
 
-      int starty = Math.max(selectedItemRect.y, view_portRect.y);
-      int endy = Math.min(selectedItemRect.y + getEditorBubble().getPreferredSize().height,
-			     view_portRect.y + view_portRect.height);
+      int starty = Math.max(selecteditemrect.y, viewportrect.y);
+      int endy = Math.min(selecteditemrect.y + getEditorBubble().getPreferredSize().height,
+			     viewportrect.y + viewportrect.height);
 
       getEditorBubble().setSize(Math.max(0, endx - startx), Math.max(0, endy - starty));
     }
@@ -408,14 +408,14 @@ void tearOutEditorBubble()
    Rectangle loc = BudaRoot.findBudaLocation(this);
    if (bba == null || loc == null) return;
 
-   Rectangle selectedItemRect = stack_box.getRowBounds(stack_box.getSelectionRows()[0]);
-   Rectangle view_portRect = view_port.getViewRect();
+   Rectangle selecteditemrect = stack_box.getRowBounds(stack_box.getSelectionRows()[0]);
+   Rectangle viewportrect = view_port.getViewRect();
 
-   int diffx = Math.max(0, selectedItemRect.x - view_portRect.x);
-   int diffy = Math.max(0, selectedItemRect.y - view_portRect.y);
+   int diffx = Math.max(0, selecteditemrect.x - viewportrect.x);
+   int diffy = Math.max(0, selecteditemrect.y - viewportrect.y);
 
-   int locx = diffx + loc.x + (int)BudaConstants.BUBBLE_EDGE_SIZE + 1;
-   int locy = diffy + loc.y + (int)BudaConstants.BUBBLE_EDGE_SIZE + 1;
+   int locx = diffx + loc.x + (int) BudaConstants.BUBBLE_EDGE_SIZE + 1;
+   int locy = diffy + loc.y + (int) BudaConstants.BUBBLE_EDGE_SIZE + 1;
 
    int zindex = JLayeredPane.getLayer(this);
 
@@ -495,12 +495,12 @@ void noteEntryHovered(BussEntry be)
 
 
 
-private class BussResizeListener extends ComponentAdapter {
+private final class BussResizeListener extends ComponentAdapter {
 
    @Override public void componentResized(ComponentEvent e) {
       Dimension dimension = new Dimension(
-	 Math.max(stack_box.getPreferredSize().width, self.getSize().width),
-	    Math.max(stack_box.getPreferredSize().height, self.getSize().height));
+	 Math.max(stack_box.getPreferredSize().width, our_self.getSize().width),
+	    Math.max(stack_box.getPreferredSize().height, our_self.getSize().height));
 
       stack_box.setSize(dimension);
     }
@@ -552,7 +552,7 @@ private class Hoverer extends BudaHover implements ComponentListener {
    Hoverer() {
       super(stack_box);
 
-      self.addComponentListener(this);
+      our_self.addComponentListener(this);
 
       preview_bubble = null;
     }

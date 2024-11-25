@@ -183,7 +183,8 @@ private Collection<Adjustment> generateMoveSets(Configuration cur,Adjustment mvd
    List<Movement> mvmts = getBubbleProxyMovements(mvd.getMoved());
 
    // go through each bubble to see if it is in the path of a bubble that is being moved.
-   // If a bubble is in the path and that bubble has already been moved, then this can't be a valid configuration so we return
+   // If a bubble is in the path and that bubble has already been moved, then 
+   // this can't be a valid configuration so we return
    // Otherwise, we collect all the movement paths that overlap each bubble.
    for (BubbleProxy bp : cur.getBubbles()) {
       if (!mvd.contains(bp)) {

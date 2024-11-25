@@ -157,7 +157,7 @@ BwizNewPackageWizard(BuenoLocation loc)
 /*                                                                              */
 /********************************************************************************/
 
-private class PackageCreator extends Creator {
+private final class PackageCreator extends Creator {
 
    @Override protected BudaBubble doCreate(BudaBubbleArea bba,Point p,String fullname,
          BuenoProperties bp) {

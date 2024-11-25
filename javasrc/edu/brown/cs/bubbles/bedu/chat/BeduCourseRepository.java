@@ -73,18 +73,18 @@ static void initialize()
       BeduCourse c = null;
       String strRole = bp.getProperty(PROP_PREFIX + courseName + ".role");
 
-      String ta_jid = bp.getProperty(PROP_PREFIX + courseName + ".ta_jid");
+      String tajid = bp.getProperty(PROP_PREFIX + courseName + ".ta_jid");
 
       if (strRole.equals("STUDENT")) {
-	 c = new BeduCourse.StudentCourse(courseName,ta_jid);
+	 c = new BeduCourse.StudentCourse(courseName,tajid);
       }
 
       if (strRole.equals("TA")) {
-	 String xmpp_password = bp.getProperty(PROP_PREFIX + courseName +
+	 String xmpppassword = bp.getProperty(PROP_PREFIX + courseName +
 		  ".xmpp_password");
 	 String server = bp.getProperty(PROP_PREFIX + courseName + ".server");
 
-	 c = new BeduCourse.TACourse(courseName,ta_jid,xmpp_password,server);
+	 c = new BeduCourse.TACourse(courseName,tajid,xmpppassword,server);
       }
 
       if (c != null) courses.add(c);

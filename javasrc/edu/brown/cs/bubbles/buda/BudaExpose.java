@@ -125,7 +125,7 @@ private void restore(boolean aimAtBubble)
    // center_x = (int)(start_viewport.x / for_root.getScaleFactor()) + start_viewport.width;
    // center_y = (int)(start_viewport.y / for_root.getScaleFactor()) + start_viewport.height;
 
-   if(!aimAtBubble){
+   if (!aimAtBubble){
       // target_x = center_x;
       // target_y = center_y;
     }
@@ -156,8 +156,8 @@ private BudaBubble findBubble(int x,int y)
 {
    double sf = for_root.getScaleFactor();
 
-   int x0 = (int)(x / sf);
-   int y0 = (int)(y / sf);
+   int x0 = (int) (x / sf);
+   int y0 = (int) (y / sf);
 
    Component c = bubble_area.getComponentAt(x0,y0);
    if (c != null && c instanceof BudaBubble) return (BudaBubble) c;
@@ -174,7 +174,7 @@ private BudaBubble findBubble(int x,int y)
 /*										*/
 /********************************************************************************/
 
-private class Mouser extends MouseAdapter {
+private final class Mouser extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       Point p0 = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),
@@ -220,7 +220,7 @@ private class Mouser extends MouseAdapter {
 /*										*/
 /********************************************************************************/
 
-private class Keyer extends KeyAdapter {
+private final class Keyer extends KeyAdapter {
 
    @Override public void keyPressed(KeyEvent e) {
       if (e.getKeyCode() == KeyEvent.VK_ESCAPE || e.getKeyCode() == KeyEvent.VK_F9) {

@@ -50,7 +50,7 @@ import org.w3c.dom.Element;
 
 
 
-public class BwizFactory implements BwizConstants, BudaConstants
+public final class BwizFactory implements BwizConstants, BudaConstants
 {
 
 

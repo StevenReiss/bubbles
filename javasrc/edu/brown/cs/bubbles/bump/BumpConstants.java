@@ -1017,7 +1017,7 @@ interface BumpChangeHandler extends EventListener {
 /********************************************************************************/
 
 interface BumpOpenEditorBubbleHandler extends EventListener {
-   static final int DELAY_TIME = 300;
+   int DELAY_TIME = 300;
 
    void handleOpenEditorBubble(String projname, String resourcepath, String type);
 

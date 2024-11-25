@@ -211,12 +211,13 @@ private class VersionHistoryGraph extends JPanel {
    @Override public void paint(Graphics g) {
       for (PetalNode pn : petal_model.getNodes()) {
 	 if (pn instanceof Node) {
+            // fixup here?
 	  }
        }
       super.paint(g);
     }
 
-   private class Model extends PetalModelDefault {
+   private final class Model extends PetalModelDefault {
     }	// end of inner class Model
 
    private class Node extends PetalNodeDefault {
@@ -257,7 +258,7 @@ private class VersionHistoryGraph extends JPanel {
 /*										*/
 /********************************************************************************/
 
-private class ChangeVersionAction extends AbstractAction {
+private final class ChangeVersionAction extends AbstractAction {
    
    private static final long serialVersionUID = 1;
    
@@ -269,7 +270,7 @@ private class ChangeVersionAction extends AbstractAction {
 }	// end of inner class ChangeVersionAction
 
 
-private class ShowTableAction extends AbstractAction {
+private final class ShowTableAction extends AbstractAction {
    
    private static final long serialVersionUID = 1;
    

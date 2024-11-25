@@ -151,7 +151,8 @@ private static class Toolbar extends BudaBubble implements NoFreeze
       JButton b = new JButton();
    
       if (i != null) {
-         BufferedImage bi = new BufferedImage(BUDA_MENU_BUTTON_ICON_WIDTH, BUDA_MENU_BUTTON_ICON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+         BufferedImage bi = new BufferedImage(BUDA_MENU_BUTTON_ICON_WIDTH,
+               BUDA_MENU_BUTTON_ICON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
          Graphics2D g2 = bi.createGraphics();
          g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
          g2.drawImage(i, 0, 0, bi.getWidth(), bi.getHeight(),null);

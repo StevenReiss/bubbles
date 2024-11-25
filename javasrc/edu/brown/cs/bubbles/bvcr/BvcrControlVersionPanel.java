@@ -289,7 +289,7 @@ private class VersionTable extends AbstractTableModel {
 /*                                                                              */
 /********************************************************************************/
 
-private static class VersionSorter implements Comparator<BvcrControlVersion> {
+private static final class VersionSorter implements Comparator<BvcrControlVersion> {
    
    @Override public int compare(BvcrControlVersion v1,BvcrControlVersion v2) {
       return v2.getDate().compareTo(v1.getDate());
@@ -305,7 +305,7 @@ private static class VersionSorter implements Comparator<BvcrControlVersion> {
 /*                                                                              */
 /********************************************************************************/
 
-private class VersionSelector implements ListSelectionListener {
+private final class VersionSelector implements ListSelectionListener {
    
    @Override public void valueChanged(ListSelectionEvent evt) {
       ListSelectionModel lsm = (ListSelectionModel) evt.getSource();
@@ -370,7 +370,7 @@ private static class LogPanelAction extends AbstractAction {
 
 
 
-private class ChangeVersionAction extends AbstractAction {
+private final class ChangeVersionAction extends AbstractAction {
    
    private static final long serialVersionUID = 1;
    

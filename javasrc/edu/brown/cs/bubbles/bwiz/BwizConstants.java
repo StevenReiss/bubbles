@@ -113,14 +113,14 @@ interface VerificationListener extends EventListener
 
 enum Accessibility
 {
-   PUBLIC ("public"),
-   PRIVATE ("private"),
-   PROTECTED ("protected"),
-   DEFAULT ("default");
+   PUBLIC("public"),
+   PRIVATE("private"),
+   PROTECTED("protected"),
+   DEFAULT("default");
 
    private final String accessibility_label;
 
-   private Accessibility(String s) {
+   Accessibility(String s) {
       accessibility_label = s;
     }
 
@@ -163,7 +163,7 @@ enum CreateType {
 
    private final String type_label;
 
-   private CreateType(String s) {
+   CreateType(String s) {
       type_label = s;
     }
 
@@ -210,18 +210,18 @@ Font BWIZ_FONT_OPTION = BWIZ_FONT_SIZE_MAIN.deriveFont((float) 12);
 /*										*/
 /********************************************************************************/
 
-public static final String PAST_ASSIGNMENTS_TEXT = "Past Assignments";
-public static final String CURRENT_ASSIGNMENTS_TEXT = "Current Assignments";
+String PAST_ASSIGNMENTS_TEXT = "Past Assignments";
+String CURRENT_ASSIGNMENTS_TEXT = "Current Assignments";
 
-public final static String CREATE_WORKSPACE_TEXT = "Create New Workspace";
-public final static String OPEN_WORKSPACE_TEXT = "Open Workspace";
+String CREATE_WORKSPACE_TEXT = "Create New Workspace";
+String OPEN_WORKSPACE_TEXT = "Open Workspace";
 
-public final static String CREATE_CLASS_TEXT = "New Class";
-public final static String CREATE_PROJECT_TEXT = "Create New Project";
-public final static String OPEN_ASSIGNMENT_TEXT = "Start Assignment";
-public final static String OPEN_PROJECT_TEXT = "Open Existing Project";
-public final static String CREATE_INTERFACE_TEXT = "New Interface";
-public final static String CREATE_ENUM_TEXT = "New Enum";
+String CREATE_CLASS_TEXT = "New Class";
+String CREATE_PROJECT_TEXT = "Create New Project";
+String OPEN_ASSIGNMENT_TEXT = "Start Assignment";
+String OPEN_PROJECT_TEXT = "Open Existing Project";
+String CREATE_INTERFACE_TEXT = "New Interface";
+String CREATE_ENUM_TEXT = "New Enum";
 
 
 

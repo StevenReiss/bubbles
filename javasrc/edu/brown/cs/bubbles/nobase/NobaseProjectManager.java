@@ -27,11 +27,6 @@ package edu.brown.cs.bubbles.nobase;
 import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
-
-import org.w3c.dom.Element;
-
-import org.eclipse.wst.jsdt.core.dom.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +36,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import org.eclipse.wst.jsdt.core.dom.ASTNode;
+import org.eclipse.wst.jsdt.core.dom.Block;
+import org.eclipse.wst.jsdt.core.dom.DefaultASTVisitor;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
+import org.eclipse.wst.jsdt.core.dom.FunctionExpression;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
+import org.eclipse.wst.jsdt.core.dom.Statement;
+import org.eclipse.wst.jsdt.core.dom.TypeDeclarationStatement;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclarationStatement;
+import org.w3c.dom.Element;
 
 
 

@@ -94,7 +94,7 @@ interface BurpPlayableEdit {
    
 }	// end of interface BurpPlayableEdit
 
-static class BurpEditDelta {
+class BurpEditDelta {
    
    private int delta_offset;
    private int delta_delta;

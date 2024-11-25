@@ -340,7 +340,7 @@ public BudaToolTip()
 /*										*/
 /********************************************************************************/
 
-private static class ScrollableLabel extends JLabel implements Scrollable {
+private static final class ScrollableLabel extends JLabel implements Scrollable {
    
    private static final long serialVersionUID = 1;
    

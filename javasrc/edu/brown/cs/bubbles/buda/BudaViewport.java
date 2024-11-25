@@ -112,7 +112,7 @@ void outputXml(BudaXmlWriter xw)
    int res = 72;
    Dimension d0 = new Dimension(d);
 
-   int margin = (int)(res * 0.5);
+   int margin = (int) (res * 0.5);
    d.width -= 2*margin;
    d.height -= 2*margin;
 

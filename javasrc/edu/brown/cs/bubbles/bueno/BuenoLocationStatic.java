@@ -100,7 +100,7 @@ BuenoLocationStatic(String proj,String file,String nm,String ins,boolean after)
 	 if (idx > 0) package_name = snm.substring(0,idx);
        }
       else {
-         
+         // do nothing
        }
     }
    else if (file != null) {

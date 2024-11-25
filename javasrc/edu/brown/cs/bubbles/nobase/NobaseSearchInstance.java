@@ -25,9 +25,6 @@
 package edu.brown.cs.bubbles.nobase;
 
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
-
-import org.eclipse.wst.jsdt.core.dom.*;
-
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +33,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import org.eclipse.wst.jsdt.core.dom.ASTNode;
+import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
+import org.eclipse.wst.jsdt.core.dom.ArrayAccess;
+import org.eclipse.wst.jsdt.core.dom.Assignment;
+import org.eclipse.wst.jsdt.core.dom.Block;
+import org.eclipse.wst.jsdt.core.dom.DefaultASTVisitor;
+import org.eclipse.wst.jsdt.core.dom.Expression;
+import org.eclipse.wst.jsdt.core.dom.ExpressionStatement;
+import org.eclipse.wst.jsdt.core.dom.FieldAccess;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
+import org.eclipse.wst.jsdt.core.dom.FunctionExpression;
+import org.eclipse.wst.jsdt.core.dom.FunctionInvocation;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
+import org.eclipse.wst.jsdt.core.dom.ObjectLiteralField;
+import org.eclipse.wst.jsdt.core.dom.QualifiedName;
+import org.eclipse.wst.jsdt.core.dom.SimpleName;
+import org.eclipse.wst.jsdt.core.dom.Statement;
+import org.eclipse.wst.jsdt.core.dom.StructuralPropertyDescriptor;
+import org.eclipse.wst.jsdt.core.dom.TypeDeclaration;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclaration;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclarationStatement;
 
 class NobaseSearchInstance implements NobaseConstants
 {
@@ -695,7 +714,7 @@ private class RegionVisitor extends DefaultASTVisitor {
                 }
                Expression lhs = aop.getLeftHandSide();
                if (lhs instanceof FieldAccess) {
-                  Expression m1 = ((FieldAccess)lhs).getExpression();
+                  Expression m1 = ((FieldAccess) lhs).getExpression();
                   if (m1 instanceof SimpleName) {
                      SimpleName r1 = (SimpleName) m1;
                      if (r1.getIdentifier().equals("exports")) {

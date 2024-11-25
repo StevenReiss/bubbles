@@ -315,7 +315,7 @@ public void addModifierListener(ItemListener listener)
 
 
 
-private class TypeListener implements ActionListener {
+private final class TypeListener implements ActionListener {
    
    @Override public void actionPerformed(ActionEvent evt) {
      String cmd = evt.getActionCommand();

@@ -26,14 +26,6 @@ package edu.brown.cs.bubbles.nobase;
 
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
-
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
-import org.w3c.dom.Element;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,6 +33,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.w3c.dom.Element;
+import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
+import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.BadLocationException;
 
 
 class NobaseEditor implements NobaseConstants

@@ -198,7 +198,7 @@ private void handleProjectUpdated()
 /*										*/
 /********************************************************************************/
 
-private class FileChangeManager implements BumpConstants.BumpChangeHandler {
+private final class FileChangeManager implements BumpConstants.BumpChangeHandler {
    
    
    
@@ -228,7 +228,7 @@ private class FileChangeManager implements BumpConstants.BumpChangeHandler {
 
 
 
-private class SaveManager implements BudaConstants.BudaFileHandler {
+private final class SaveManager implements BudaConstants.BudaFileHandler {
    
    @Override public void handleSaveRequest()                    { }
    
@@ -247,7 +247,7 @@ private class SaveManager implements BudaConstants.BudaFileHandler {
 }
 
 
-private class UpdateManager implements BvcrProjectUpdated {
+private final class UpdateManager implements BvcrProjectUpdated {
    
    @Override public void projectUpdated(BvcrControlPanel pnl) {
       if (pnl == control_panel) {

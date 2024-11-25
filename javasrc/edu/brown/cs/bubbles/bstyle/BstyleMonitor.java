@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -288,6 +289,14 @@ private void handleErrors(String proj,String filename,Element messages)
       bstyle_main.getStyleChecker().processProject(proj,redo);
     }
 }
+
+
+void removeErrors(BstyleFile bf) 
+{
+   List<BstyleFile> redo = List.of(bf);
+   bstyle_main.getStyleChecker().processProject(bf.getProject(),redo);
+}
+
 
 
 /********************************************************************************/

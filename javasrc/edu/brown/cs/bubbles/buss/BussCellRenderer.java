@@ -126,7 +126,7 @@ BussCellRenderer(int contentwidth, BussBubble bussbubble)
    if (buss_bubble.getEditorBubble() != null) {
       buss_bubble.getLayeredPane().remove(buss_bubble.getEditorBubble());
 
-      if(buss_bubble.getEditorBubble().getLocation().y < selectedItemRect.y) {
+      if (buss_bubble.getEditorBubble().getLocation().y < selectedItemRect.y) {
 	 Component c = buss_bubble.getSelectedEntry().getCompactComponent();
 	 int h1 = 12;
 	 if (c != null) h1 = c.getPreferredSize().height;
@@ -140,7 +140,7 @@ BussCellRenderer(int contentwidth, BussBubble bussbubble)
    editorbubble.setLocation(selectedItemRect.getLocation());
 
    buss_bubble.getLayeredPane().add(editorbubble, Integer.valueOf(1), 0);
-   Dimension dim = (Dimension)buss_bubble.getStackBoxDim().clone();
+   Dimension dim = (Dimension) buss_bubble.getStackBoxDim().clone();
    int h1 = 12;
    Component c = ent.getCompactComponent();
    if (c != null) h1 = c.getPreferredSize().height;

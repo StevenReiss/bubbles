@@ -304,7 +304,7 @@ private static class TransferBubble implements Transferable, BudaConstants.BudaD
 /*										*/
 /********************************************************************************/
 
-private class Selector implements TreeSelectionListener
+private final class Selector implements TreeSelectionListener
 {
    @Override public void valueChanged(TreeSelectionEvent e) {
       TreePath tp = e.getNewLeadSelectionPath();

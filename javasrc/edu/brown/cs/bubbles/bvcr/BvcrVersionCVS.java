@@ -301,7 +301,7 @@ private void findCvsRoot()
 
 protected static class CvsDiffAnalyzer implements CommandCallback {
 
-   BvcrDifferenceSet diff_set;
+   private BvcrDifferenceSet diff_set;
    private int source_line;
    private int target_line;
    private int del_count;
@@ -351,7 +351,10 @@ protected static class CvsDiffAnalyzer implements CommandCallback {
         	  if (op == null) ln1 = Integer.parseInt(n);
         	}
                else if (Character.isDigit(t.charAt(0))) {
-        	  if (op == null) ln0 = ln1 = Integer.parseInt(t);
+        	  if (op == null) {
+                     ln0 = Integer.parseInt(t);
+                     ln1 = ln0;
+                   }
         	}
                else op = t;
              }

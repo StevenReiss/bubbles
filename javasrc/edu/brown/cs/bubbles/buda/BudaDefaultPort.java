@@ -253,8 +253,8 @@ private void computeAny(BudaBubble bb,double tx0,double ty0,double tx1,double ty
    double t = 0.5;
    double sf = 0.25;
    for ( ; ; ) {
-      int ix = (int)(px + t*(tx-px));
-      int iy = (int)(py + t*(ty-py));
+      int ix = (int) (px + t*(tx-px));
+      int iy = (int) (py + t*(ty-py));
       if (ix == lx && iy == ly) break;
       lx = ix;
       ly = iy;
@@ -333,7 +333,8 @@ private void computeEW(BudaBubble bb,double tx0,double ty0,double tx1,double ty1
    double tx = (tx0 + tx1)/2;
    double ty = (ty0 + ty1)/2;
 
-   double xt,yt;
+   double xt;
+   double yt;
 
    int lx = -1;
    int ly = -1;
@@ -357,8 +358,8 @@ private void computeEW(BudaBubble bb,double tx0,double ty0,double tx1,double ty1
    double t = 0.5;
    double sf = 0.25;
    for ( ; ; ) {
-      int ix = (int)(px + t*(xt-px));
-      int iy = (int)(py + t*(yt-py));
+      int ix = (int) (px + t*(xt-px));
+      int iy = (int) (py + t*(yt-py));
       if (ix == lx && iy == ly) break;
       lx = ix;
       ly = iy;
@@ -381,7 +382,8 @@ private void computeEWTop(BudaBubble bb,double tx0,double ty0,double tx1,double 
    double px = r.getX() + r.getWidth()/2;
    double py = r.getY() + r.getHeight()/2;
    Shape sh = bb.getShape();
-   double xt,yt;
+   double xt;
+   double yt;
 
    int lx = -1;
    int ly = -1;
@@ -395,8 +397,8 @@ private void computeEWTop(BudaBubble bb,double tx0,double ty0,double tx1,double 
    double t = 0.5;
    double sf = 0.25;
    for ( ; ; ) {
-      int ix = (int)(px + t*(xt-px));
-      int iy = (int)(py + t*(yt-py));
+      int ix = (int) (px + t*(xt-px));
+      int iy = (int) (py + t*(yt-py));
       if (ix == lx && iy == ly) break;
       lx = ix;
       ly = iy;
@@ -421,7 +423,8 @@ private void computeNS(BudaBubble bb,double tx0,double ty0,double tx1,double ty1
    double tx = (tx0 + tx1)/2;
    double ty = (ty0 + ty1)/2;
    Shape sh = bb.getShape();
-   double xt,yt;
+   double xt;
+   double yt;
 
    int lx = -1;
    int ly = -1;
@@ -444,8 +447,8 @@ private void computeNS(BudaBubble bb,double tx0,double ty0,double tx1,double ty1
    double t = 0.5;
    double sf = 0.25;
    for ( ; ; ) {
-      int ix = (int)(px + t*(xt-px));
-      int iy = (int)(py + t*(yt-py));
+      int ix = (int) (px + t*(xt-px));
+      int iy = (int) (py + t*(yt-py));
       if (ix == lx && iy == ly) break;
       lx = ix;
       ly = iy;

@@ -109,7 +109,8 @@ BudaTaskShelf(BudaTopBar topbar, BudaTask [] tasks, Point popuppoint)
       top = getTopNode(true, tasks);
    }
    else {
-      String[] gb = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","NUM","SYMB"};//"#","!"};
+      String[] gb = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P",
+            "Q","R","S","T","U","V","W","X","Y","Z","NUM","SYMB"}; //"#","!"};
       group_by = gb;
       top = getTopNode(false, tasks);
    }
@@ -124,12 +125,12 @@ BudaTaskShelf(BudaTopBar topbar, BudaTask [] tasks, Point popuppoint)
    TreeCellRenderer cellRenderer = new IconCellRenderer();
    task_tree.setCellRenderer(cellRenderer);
 
-   JPanel tree_view = new JPanel();
-   tree_view.setLayout(new BorderLayout());
-   tree_view.setBackground(BoardColors.getColor("Buda.TaskTreeBackground"));
-   tree_view.add(task_tree, BorderLayout.WEST);
+   JPanel treeview = new JPanel();
+   treeview.setLayout(new BorderLayout());
+   treeview.setBackground(BoardColors.getColor("Buda.TaskTreeBackground"));
+   treeview.add(task_tree, BorderLayout.WEST);
 
-   add(tree_view);
+   add(treeview);
    //setPreferredSize(new Dimension(task_tree.getPreferredSize().width+20, (/*tasks.length+*/groups_in_use)*18));
 
    for (int row=0; row < task_tree.getRowCount(); ++row) task_tree.collapseRow(row);
@@ -150,7 +151,7 @@ private static class IconCellRenderer extends DefaultTreeCellRenderer implements
 
    private static final long serialVersionUID = 1;
 
-   public IconCellRenderer() {
+   IconCellRenderer() {
       super();
     }
 
@@ -158,7 +159,7 @@ private static class IconCellRenderer extends DefaultTreeCellRenderer implements
 							      Object value, boolean sel,
 							      boolean expanded, boolean leaf,
 							      int row, boolean hasfocus) {
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
       Object obj = node.getUserObject();
 
       if (obj instanceof String) {
@@ -193,17 +194,17 @@ private int getAreaOffset(double x)
    Rectangle r = top_bar.getBounds();
    Dimension totsize = top_bar.getBubbleArea().getSize();
 
-   return (int)(x * totsize.width / r.width);
+   return (int) (x * totsize.width / r.width);
 }
 
 
 private long diffDayPeriods(Calendar start)
 {
    long startl	 =  start.getTimeInMillis() +
-				start.getTimeZone().getOffset(start.getTimeInMillis() );
+				start.getTimeZone().getOffset(start.getTimeInMillis());
 
    Calendar end = Calendar.getInstance();
-   long endl = end.getTimeInMillis() + end.getTimeZone().getOffset( end.getTimeInMillis() );
+   long endl = end.getTimeInMillis() + end.getTimeZone().getOffset(end.getTimeInMillis());
    return (endl - startl) / MILLISECS_PER_DAY;
 }
 
@@ -268,7 +269,7 @@ private DefaultMutableTreeNode setupByDate(BudaTask [] tasks) {
     }
 
    Calendar start = Calendar.getInstance();
-   for (int i=0; i<tasks.length;i++) {
+   for (int i=0; i<tasks.length; i++) {
       start.setTime(tasks[i].getDate());
       if (diffDayPeriods(start)==0) {
 	  task_nodes.get("Today").add(new DefaultMutableTreeNode(tasks[i]));
@@ -288,13 +289,13 @@ private DefaultMutableTreeNode setupByDate(BudaTask [] tasks) {
       else if (diffDayPeriods(start)>=183 && diffDayPeriods(start)<365) {
 	  task_nodes.get("This Year").add(new DefaultMutableTreeNode(tasks[i]));
        }
-      else{
+      else {
 	  task_nodes.get("More Than a Year").add(new DefaultMutableTreeNode(tasks[i]));
        }
     }
 
    //Update the number of children for each category.
-   for(int i=0; i<tasks.length; i++) {
+   for (int i=0; i<tasks.length; i++) {
       category = task_nodes.get(group_by[i]);
       category.setUserObject(group_by[i]+"("+category.getChildCount()+")");
     }
@@ -314,8 +315,8 @@ private DefaultMutableTreeNode setupAlphabetically(BudaTask [] tasks)
 
       String id;
       if (Character.isLetter(idc)) id = Character.toString(idc);
-      else if (Character.isDigit(idc)) id = "NUM";//"#";
-      else id = "SYMB";//"!";
+      else if (Character.isDigit(idc)) id = "NUM"; //"#";
+      else id = "SYMB"; //"!";
 
       DefaultMutableTreeNode cat = task_nodes.get(id);
       if (cat == null) {
@@ -338,13 +339,13 @@ private DefaultMutableTreeNode setupAlphabetically(BudaTask [] tasks)
 
 
 
-private class ExpansionListener implements TreeExpansionListener {
+private final class ExpansionListener implements TreeExpansionListener {
 
    @Override public void treeCollapsed(TreeExpansionEvent e) {
       Dimension d = task_tree.getPreferredSize();
       d.width +=20;
       d.height+=10;
-      my_popup.setPopupSize(getPreferredSize());//d);
+      my_popup.setPopupSize(getPreferredSize()); //d);
       my_popup.pack();
    }
 
@@ -352,7 +353,7 @@ private class ExpansionListener implements TreeExpansionListener {
       Dimension d = task_tree.getPreferredSize();
       d.width +=20;
       d.height+=10;
-      my_popup.setPopupSize(getPreferredSize());//d);
+      my_popup.setPopupSize(getPreferredSize()); //d);
       my_popup.pack();
    }
 

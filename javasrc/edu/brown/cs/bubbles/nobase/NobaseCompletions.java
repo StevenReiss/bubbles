@@ -108,7 +108,8 @@ void findCompletions(int offset,IvyXmlWriter xw)
       }
    }
    else if (node instanceof QualifiedName) {
-      spos = epos = offset;
+      spos = offset;
+      epos = offset;
       for (NobaseSymbol sym : scp.getDefinedNames()) {
 	 syms.add(sym);
       }

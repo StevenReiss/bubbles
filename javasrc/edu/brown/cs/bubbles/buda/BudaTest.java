@@ -42,7 +42,7 @@ import java.io.IOException;
 
 
 
-public class BudaTest implements BudaConstants {
+public final class BudaTest implements BudaConstants {
 
 
 
@@ -185,7 +185,7 @@ public static class EditorBubble extends BudaBubble {
 
 
 
-private static final String test_text =
+private static final String TEST_TEXT =
   "This is a test\nof the editor pane\nin a bubble\n" +
   "This is a test\nof the editor pane\nin a bubble\n" +
   "This is a test\nof the editor pane\nin a bubble\n" +
@@ -214,7 +214,7 @@ public static class BubbleEditor extends SwingEditorPane {
    private static final long serialVersionUID = 1L;
 
    public BubbleEditor() {
-      super("text/plain",test_text);
+      super("text/plain",TEST_TEXT);
       addMouseListener(new FocusOnEntry());
     }
 

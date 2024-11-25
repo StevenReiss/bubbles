@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
 import java.io.File;
 
 
-public class NobaseTest implements NobaseConstants, MintConstants
+public final class NobaseTest implements NobaseConstants, MintConstants
 {
 
 
@@ -286,7 +286,8 @@ private void runTestTrack()
    sendCommand("COMMIT",proj,"SAVE='T'",null);
 
    sendCommand("PATTERNSEARCH",proj,"PATTERN='server.start()' DEFS='true' REFS='false' FOR='METHOD'",null);
-   sendCommand("FINDDEFINITIONS",proj,"FILE='/research/people/spr/track/server/server.js' START='2437' END='2437' IMPLS='T'",null);
+   sendCommand("FINDDEFINITIONS",proj,
+         "FILE='/research/people/spr/track/server/server.js' START='2437' END='2437' IMPLS='T'",null);
 
    sendCommand("COMMIT",proj,"SAVE='T'",null);
 }
@@ -481,7 +482,7 @@ private static class ReplyHandler extends MintDefaultReply {
 /*										*/
 /********************************************************************************/
 
-private class MessageHandler implements MintHandler {
+private final class MessageHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       NobaseMain.logI("NOBASETEST: Message from NOBASE:");

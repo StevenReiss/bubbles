@@ -39,6 +39,7 @@ import org.w3c.dom.Element;
 import com.puppycrawl.tools.checkstyle.api.FileText;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 
+import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.mint.MintConstants.CommandArgs;
@@ -122,7 +123,11 @@ boolean setHasErrors(boolean fg)
    boolean rslt = (fg != has_errors);
    
    has_errors = fg;
-   if (fg) file_text = null;
+   if (fg) {
+      file_text = null;
+      List<BstyleFile> redo = List.of(this);
+      bstyle_main.getStyleChecker().processProject(getProject(),redo);
+    }
    
    return rslt;
 }

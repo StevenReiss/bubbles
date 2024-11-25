@@ -476,7 +476,8 @@ int computeLogicalPlacement(BudaBubble bbl,Rectangle r,int place,int delta)
       if (roomFor(bbl,r.x-delta-bbl.getWidth(),r.y,empty)) {
 	 place |= PLACEMENT_LEFT;
 	 return place;
-       }    }
+       }
+}
    else {
       if (roomFor(bbl,r.x+r.width+delta,r.y,empty)) {
 	 place |= PLACEMENT_RIGHT;

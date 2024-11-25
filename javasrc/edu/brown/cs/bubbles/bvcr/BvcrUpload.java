@@ -48,7 +48,7 @@ import java.util.Random;
 import java.util.zip.DeflaterOutputStream;
 
 
-class BvcrUpload implements BvcrConstants
+final class BvcrUpload implements BvcrConstants
 {
 
 
@@ -136,7 +136,6 @@ private BvcrUpload()
 /*										*/
 /********************************************************************************/
 
-@SuppressWarnings("resource")
 private void processUpload(String data,String uid,String rid,SecretKey key) throws IOException
 {
    String url = getRepoUrl() + "savebvcr.php";
@@ -157,34 +156,35 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
     }
    else bdata = data.getBytes();
 
-   InputStream is = new ByteArrayInputStream(bdata);
-
-   if (key != null) {
-      try {
-	 Cipher c = Cipher.getInstance(key.getAlgorithm());
-	 AlgorithmParameterSpec ps = new PBEParameterSpec(KEY_SALT,KEY_COUNT);
-	 c.init(Cipher.ENCRYPT_MODE,key,ps);
-	 is = new CipherInputStream(is,c);
+   try (InputStream is = new ByteArrayInputStream(bdata)) {
+      InputStream is1 = is;
+      if (key != null) {
+         try {
+            Cipher c = Cipher.getInstance(key.getAlgorithm());
+            AlgorithmParameterSpec ps = new PBEParameterSpec(KEY_SALT,KEY_COUNT);
+            c.init(Cipher.ENCRYPT_MODE,key,ps);
+            is1 = new CipherInputStream(is,c);
+          }
+         catch (Exception e) {
+            System.err.println("BVCR: Unable to create cipher: " + e);
+          }
        }
-      catch (Exception e) {
-	 System.err.println("BVCR: Unable to create cipher: " + e);
-       }
+      
+      setParameter("U",uid);
+      setParameter("R",rid);
+      setParameter("file","/tmp/" + uid + "_" + rid + ".bvcr",is1);
     }
-
-   setParameter("U",uid);
-   setParameter("R",rid);
-   setParameter("file","/tmp/" + uid + "_" + rid + ".bvcr",is);
-   is.close();
+   
    InputStream ins = post();
 
-   BufferedReader in = new BufferedReader(new InputStreamReader(ins));
-   for ( ; ; ) {
-      String ln = in.readLine();
-      if (ln == null) break;
-      System.err.println("BVCR: UPLOAD RESULT: " + ln);
+   try (BufferedReader in = new BufferedReader(new InputStreamReader(ins))) {
+      for ( ; ; ) {
+         String ln = in.readLine();
+         if (ln == null) break;
+         System.err.println("BVCR: UPLOAD RESULT: " + ln);
+       }
+      System.err.println("UPLOAD COMPLETE");
     }
-   System.err.println("UPLOAD COMPLETE");
-   in.close();
 }
 
 

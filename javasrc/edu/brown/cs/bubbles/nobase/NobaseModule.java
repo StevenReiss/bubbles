@@ -142,7 +142,7 @@ Evaluator getRequiresEvaluator()
 
 
 
-private class Requires implements Evaluator {
+private final class Requires implements Evaluator {
 
    @Override public NobaseValue evaluate(NobaseFile forfile,List<NobaseValue> args,
          NobaseValue thisval) {

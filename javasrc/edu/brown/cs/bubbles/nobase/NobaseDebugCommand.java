@@ -101,7 +101,7 @@ protected JSONObject getCommandArguments()
 
 void processResponse(JSONObject response)
 {
-   synchronized(this) {
+   synchronized (this) {
       response_object = new NobaseDebugResponse(response);
       notifyAll();
     }
@@ -788,9 +788,9 @@ static class RuntimeCallFunctionOn extends NobaseDebugCommand {
 
 static class RuntimeCompileScript extends NobaseDebugCommand {
 
-   String expression_text;
-   String source_url;
-   boolean is_persistent;
+   private String expression_text;
+   private String source_url;
+   private boolean is_persistent;
 
    RuntimeCompileScript(NobaseDebugTarget tgt,String expr,String source,boolean keep) {
       super(tgt,"Runtime.compileScript");

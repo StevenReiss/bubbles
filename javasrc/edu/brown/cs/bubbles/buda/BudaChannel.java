@@ -189,7 +189,7 @@ Rectangle getViewport()
 }
 
 
-private class ViewportHandler implements ChangeListener {
+private final class ViewportHandler implements ChangeListener {
 
    @Override public void stateChanged(ChangeEvent e) {
       Rectangle vr = bubble_view.getViewRect();
@@ -201,7 +201,7 @@ private class ViewportHandler implements ChangeListener {
 
 
 
-private class ViewportCallback implements BubbleAreaCallback {
+private final class ViewportCallback implements BubbleAreaCallback {
 
    @Override public void updateOverview()		{ }
 

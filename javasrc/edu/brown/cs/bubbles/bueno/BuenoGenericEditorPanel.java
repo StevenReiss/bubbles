@@ -402,7 +402,7 @@ private void closeWindow(Component c)
 }
 
 
-private static class BinaryFileFilter extends FileFilter {
+private static final class BinaryFileFilter extends FileFilter {
 
    @Override public String getDescription()	{ return "Java Class File Directory"; }
 

@@ -799,7 +799,7 @@ private class LineData {
 }	// end of inner class LineData
 
 
-private class NodeSorter implements Comparator<HistoryNode> {
+private final class NodeSorter implements Comparator<HistoryNode> {
 
    @Override public int compare(HistoryNode n1,HistoryNode n2) {
       Integer i1 = node_order.get(n1);
@@ -986,7 +986,7 @@ private class HistoryGraph extends JPanel implements HistoryCallback {
       super.paint(g);
     }
 
-   private class Model extends PetalModelDefault {
+   private final class Model extends PetalModelDefault {
     }	// end of inner class Model
 
    private class Node extends PetalNodeDefault {
@@ -1260,7 +1260,7 @@ private class LineDrawingArea extends JPanel {
 	    }
 	   if (prev != null) {
 	      int idxp = node_order.get(prev);
-	      colorRegion(g2,x0,xw,narea,prev,idxp+1,(int)(narea-1),false,i,ht);
+	      colorRegion(g2,x0,xw,narea,prev,idxp+1,(int) (narea-1),false,i,ht);
 	    }
 	  }
        }
@@ -1321,7 +1321,7 @@ private class LineDrawingArea extends JPanel {
 	 return buf.toString();
        }
       else {
-	 int delta = (int)(narea - (int)((evt.getX() - x0)/xw) - 1);
+	 int delta = (int) (narea - (int) ((evt.getX() - x0)/xw) - 1);
 	 HistoryNode chng = null;
 	 LineData ld = getLineData(lno);
 	 if (ld != null) {
@@ -1523,7 +1523,7 @@ private class AuthorWindow extends JPanel implements HistoryCallback, Scrollable
 /*										*/
 /********************************************************************************/
 
-private class ColorComputer implements HistoryCallback {
+private final class ColorComputer implements HistoryCallback {
 
    @Override public void handleFileHistory(HistoryNode root,List<LineData> lines) {
       setupColors(root);

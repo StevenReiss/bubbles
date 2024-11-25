@@ -118,7 +118,8 @@ Rectangle getViewPosition()
 {
    if (view_position == null) return null;
 
-   return new Rectangle((int)view_position.x, (int)view_position.y, (int)view_position.width, (int)view_position.height);
+   return new Rectangle((int) view_position.x, (int) view_position.y,
+         (int) view_position.width, (int) view_position.height);
 }
 
 
@@ -135,10 +136,15 @@ void setViewPosition(Rectangle r)
 	  r.x == (int) view_position.getX() && r.y == (int) view_position.getY() &&
 	  r.width == (int) view_position.getWidth() && r.height == (int) view_position.getHeight())
       return;
-
-   if (BUDA_PROPERTIES.getBoolean(OVERVIEW_STYLIZED_VIEW_BOOL)) view_position = new RoundRectangle2D.Double(r.x, r.y, r.width, r.height, OVERVIEW_VIEW_ARCWIDTH, OVERVIEW_VIEW_ARCHEIGHT);
-   else view_position = new RoundRectangle2D.Double(r.x, r.y, r.width, r.height, 0, 0);
-
+   
+   if (BUDA_PROPERTIES.getBoolean(OVERVIEW_STYLIZED_VIEW_BOOL)) {
+      view_position = new RoundRectangle2D.Double(r.x, r.y, r.width, r.height,
+            OVERVIEW_VIEW_ARCWIDTH, OVERVIEW_VIEW_ARCHEIGHT);
+    }
+   else {
+      view_position = new RoundRectangle2D.Double(r.x, r.y, r.width, r.height, 0, 0);
+    }
+   
    for_root.repaint();
 }
 
@@ -199,15 +205,15 @@ void setViewPosition(Rectangle r)
 	    Color c = BoardColors.getColor(OVERVIEW_STYLIZED_VIEW_BORDER_COLOR_PROP);
 	    g.setColor(c);
 	    g.setStroke(new BasicStroke(100));
-	    setViewPosition(new Rectangle((int)view_position.x, (int)view_position.y,
-		  (int)view_position.width, (int)view_position.height));
+	    setViewPosition(new Rectangle((int) view_position.x, (int) view_position.y,
+		  (int) view_position.width, (int) view_position.height));
 	    g.draw(view_position);
 	 }
 	 else {
 	    Color c = BoardColors.getColor(OVERVIEW_NONSTYLIZED_VIEW_BORDER_COLOR_PROP);
 	    g.setColor(c);
-	    setViewPosition(new Rectangle((int)view_position.x,
-		  (int)view_position.y, (int)view_position.width, (int)view_position.height));
+	    setViewPosition(new Rectangle((int) view_position.x,
+		  (int) view_position.y, (int) view_position.width, (int) view_position.height));
 	    g.draw(view_position);
 	 }
        }
@@ -217,16 +223,16 @@ void setViewPosition(Rectangle r)
 
 
 
-private void drawFakeWorkingSet (Graphics2D g)
+private void drawFakeWorkingSet(Graphics2D g)
 {
    Dimension sz = bubble_area.getSize();
    Point loc = getLocation();
    Color ct = BoardColors.getColor(OVERVIEW_FAKE_TOP_COLOR_PROP);
    Color cb = BoardColors.getColor(OVERVIEW_FAKE_BOTTOM_COLOR_PROP);
-   Paint p = new GradientPaint((int)view_position.x, loc.y, ct,
-	 (int)(view_position.x + view_position.width), loc.y + sz.height, cb);
+   Paint p = new GradientPaint((int) view_position.x, loc.y, ct,
+	 (int) (view_position.x + view_position.width), loc.y + sz.height, cb);
    g.setPaint(p);
-   g.fillRect((int)view_position.x, loc.y, (int)view_position.width, sz.height);
+   g.fillRect((int) view_position.x, loc.y, (int) view_position.width, sz.height);
 }
 
 
@@ -336,7 +342,7 @@ private abstract class MouseContext {
     }
 
    void finish() {
-      BudaCursorManager.resetDefaults(BudaOverviewBar.this);//setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+      BudaCursorManager.resetDefaults(BudaOverviewBar.this);
     }
 
    abstract void next(MouseEvent e);
@@ -355,7 +361,7 @@ private class PanelMoveContext extends MouseContext {
 
    PanelMoveContext(MouseEvent e) {
       super(e);
-      initial_position = new Point((int)view_position.x, (int)view_position.y);
+      initial_position = new Point((int) view_position.x, (int) view_position.y);
       Dimension sz = getSize();
       area_bounds = bubble_area.getSize();
       scale_x = sz.getWidth() / area_bounds.getWidth();
@@ -365,7 +371,8 @@ private class PanelMoveContext extends MouseContext {
 
    @Override void next(MouseEvent e) {
       ++move_count;
-      BudaCursorManager.setGlobalCursorForComponent(BudaOverviewBar.this, Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+      BudaCursorManager.setGlobalCursorForComponent(BudaOverviewBar.this, 
+            Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
       Point p0 = e.getPoint();
       double x0 = initial_position.x + (p0.x - initial_mouse.x)/scale_x;
       double y0 = initial_position.y + (p0.y - initial_mouse.y)/scale_y;
@@ -410,7 +417,8 @@ private class BubbleMoveContext extends MouseContext {
 
    @Override void next(MouseEvent e) {
       ++move_count;
-      BudaCursorManager.setGlobalCursorForComponent(BudaOverviewBar.this, Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+      BudaCursorManager.setGlobalCursorForComponent(BudaOverviewBar.this, 
+            Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
       Point p0 = e.getPoint();
       int x1 = p0.x;
       int y1 = p0.y;
@@ -487,7 +495,7 @@ private void setViewport(int x,int y)
 /*										*/
 /********************************************************************************/
 
-private class Mouser extends MouseAdapter {
+private final class Mouser extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       handleMouseEvent(e);

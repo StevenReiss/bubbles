@@ -253,7 +253,7 @@ boolean useShare(BudaShare bs,BudaBubbleArea bba,int offset)
 /*										*/
 /********************************************************************************/
 
-private class ShareHandler implements MintHandler {
+private final class ShareHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
@@ -354,7 +354,7 @@ private class Updater implements Runnable {
 /*										*/
 /********************************************************************************/
 
-private class BubbleChecker implements BubbleAreaCallback, BubbleViewCallback {
+private final class BubbleChecker implements BubbleAreaCallback, BubbleViewCallback {
 
    @Override public void moveDelta(int dx,int dy)		{ }
    
@@ -393,7 +393,7 @@ private void sendUpdate(Share s)
 }
 
 
-private synchronized static int getSerialNumber()
+private static synchronized int getSerialNumber()
 {
    return ++serial_number;
 }

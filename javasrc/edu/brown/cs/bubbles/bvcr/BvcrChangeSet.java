@@ -219,7 +219,8 @@ private static class SubInputStream extends FilterInputStream {
     }
 
    @Override public void close() {
-      sub_length = sub_ptr = 0;
+      sub_length = 0;
+      sub_ptr = 0;
     }
 
    @Override public boolean markSupported()		{ return false; }

@@ -70,13 +70,23 @@ private static final Pattern ARG_PATTERN = Pattern.compile("\\$([0-9]+)\\$");
 
 private static List<BstyleFixer> style_fixers;
 private static Map<String,List<BstyleFixer>> fixers_map;
+private static Set<String> ignore_errors;
 
 static {
    style_fixers = new ArrayList<>();
    fixers_map = new HashMap<>();
+   ignore_errors = new HashSet<>();
+   
+   ignore_errors.add("MemberName");
+   ignore_errors.add("HiddenField");
+   ignore_errors.add("StaticVariableName");
+   ignore_errors.add("AvoidStarImport");
+   ignore_errors.add("LineLength");
 
    BstyleFixer precededbywhite = new PrecededByWhitespace();
    BstyleFixer notfollowedbywhite = new NotFollowedByWhite();
+   BstyleFixer previousline = new PreviousLine();
+   BstyleFixer followedbywhite = new FollowedByWhitespace();
    
    addFixer("NoWhitespaceBefore",precededbywhite);
    addFixer("ArrayTypeStyle",new ArrayBracketPosition());
@@ -84,22 +94,25 @@ static {
    addFixer("EmptyBlock",new EmptyXBlock());
    addFixer("NewlineAtEndOfFile",new FileNewline());
    addFixer("ModifierOrder",new ModifierOrder());
-   addFixer("ParenPad",new FollowedByWhitespace(),precededbywhite);
+   addFixer("ParenPad",followedbywhite,precededbywhite);
+   addFixer("MethodParenPad",precededbywhite);
    addFixer("InnerAssignment",new InnerAssignments());
    addFixer("UpperEll",new UppercaseL());
-   addFixer("SimplifyBooleanExpression",new ExpressionSimplified(),
+   addFixer("SimplifyBooleanExpression",
+         new ExpressionSimplified(),
          new ExpressionAndTrue());
    addFixer("RightCurly",new LineByItself());
-   addFixer("LeftCurly",new LineBreakAfter());
+   addFixer("LeftCurly",new LineBreakAfter(),previousline);
    addFixer("WhitespaceAfter",new CastNotFollowedByWhite(),notfollowedbywhite);
    addFixer("EmptyForIteratorPad",notfollowedbywhite);
    addFixer("TypecastParenPad",precededbywhite);
    addFixer("NeedBraces",new MustUseBraces());
    addFixer("MultipleVariableDeclarations",new OnlyOneDefinition());
    addFixer("RedundantModifier",new RedundantModifier());
-   addFixer("OperatorWrap",new PreviousLine());
+   addFixer("OperatorWrap",previousline);
    addFixer("SimplifyBooleanReturn",new ConditionalLogic());
    addFixer("MultipleVariableDeclarations",new VarDeclarations());
+   addFixer("GenericWhitespace",followedbywhite);
 }
 
 
@@ -116,6 +129,7 @@ private static void addFixer(String when,BstyleFixer... fixers)
                fixers_map.put(w,bfl);
              }
             bfl.add(f);
+            ignore_errors.remove(w);
           }
          if (!style_fixers.contains(f)) {
             style_fixers.add(f);
@@ -157,6 +171,11 @@ static List<BstyleFixer> getStyleFixers()
 static Map<String,List<BstyleFixer>> getStyleFixerMap() 
 {
    return fixers_map;
+}
+
+static Set<String> getIgnoreErrors()
+{
+   return ignore_errors;
 }
 
 
@@ -387,8 +406,12 @@ private static class FileNewline extends GenericPatternFixer {
     }
    
    @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {
-      // NEED TO CREATE A SPECIAL StyleDoer for the overall file
-      return null;
+      BoardLog.logD("BSTYLE","Looking at file missing new line");
+      BaleWindow win = corr.getEditor();
+      BaleWindowDocument doc = win.getWindowDocument();
+      BaleFileOverview doc0 = doc.getBaseWindowDocument();
+      int off = doc0.getLength();
+      return new StyleDoer(corr,bp,off,off,off,off,"\n");
     }
    
 }       // end of inner class FileNewline

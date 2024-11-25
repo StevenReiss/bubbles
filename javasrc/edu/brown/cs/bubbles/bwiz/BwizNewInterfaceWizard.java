@@ -95,7 +95,7 @@ BwizNewInterfaceWizard(BuenoLocation loc)
 /*										*/
 /********************************************************************************/
 
-private class InterfaceCreator extends Creator {
+private final class InterfaceCreator extends Creator {
 
    @Override protected BudaBubble doCreate(BudaBubbleArea bba,Point pt,String fullname,BuenoProperties bp) {
       BudaBubble nbbl = null;

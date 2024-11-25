@@ -140,7 +140,7 @@ File getRootDirectory() 			{ return root_directory; }
 
 void setIncludeIgnored(boolean fg)
 {
-   if (do_ignored == fg) return ;
+   if (do_ignored == fg) return;
    do_ignored = fg;
    if (fg) startUpdate();
 }
@@ -334,7 +334,9 @@ void pushVersion()
       String cmd = "<BVCR DO='COMMIT' PROJECT='" + for_project + "' />";
       mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
       Element rslt = rply.waitForXml();
-      if (rslt != null) { }
+      if (rslt == null) { 
+         // report error?
+       }
     }
 
    MintControl mc = BoardSetup.getSetup().getMintControl();
@@ -342,7 +344,9 @@ void pushVersion()
    String cmd = "<BVCR DO='PUSH' PROJECT='" + for_project + "' />";
    mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
    Element rslt = rply.waitForXml();
-   if (rslt != null) { }
+   if (rslt == null) {
+      // report error
+    }
 
    startUpdate();
 }
@@ -626,7 +630,7 @@ private static class ControlPanelBubble extends BudaBubble implements BvcrProjec
 /*										*/
 /********************************************************************************/
 
-private class FileChangeManager implements BumpConstants.BumpChangeHandler {
+private final class FileChangeManager implements BumpConstants.BumpChangeHandler {
 
    
    

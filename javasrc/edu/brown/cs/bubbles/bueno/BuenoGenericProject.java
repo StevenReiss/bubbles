@@ -209,7 +209,7 @@ public void checkStatus()
 }
 
 
-private class NameAction implements ActionListener, UndoableEditListener {
+private final class NameAction implements ActionListener, UndoableEditListener {
    
    @Override public void actionPerformed(ActionEvent evt) {
       setProjectDirectory();
@@ -245,7 +245,7 @@ private class NameAction implements ActionListener, UndoableEditListener {
 
 
 
-private class CreateAction implements ActionListener, Runnable {
+private final class CreateAction implements ActionListener, Runnable {
    
    @Override public void actionPerformed(ActionEvent evt) {
       JComponent c = (JComponent) evt.getSource();
@@ -267,7 +267,7 @@ private class CreateAction implements ActionListener, Runnable {
 }	// end of inner class CreateAction
 
 
-private class TypeAction implements ActionListener {
+private final class TypeAction implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JComboBox<?> fld = (JComboBox<?>) evt.getSource();
@@ -439,7 +439,7 @@ private JPanel getEditorPanel(Element projxml,Element editxml)
 
 
 
-private class EditListener implements ActionListener {
+private final class EditListener implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       project_editor.saveProject();

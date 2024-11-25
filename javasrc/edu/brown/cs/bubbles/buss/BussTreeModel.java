@@ -165,7 +165,7 @@ void disposeBubbles()
 /*										*/
 /********************************************************************************/
 
-private static abstract class BussTreeImpl implements BussTreeNode, TreeNode {
+private abstract static class BussTreeImpl implements BussTreeNode, TreeNode {
 
    protected Branch parent_node;
 

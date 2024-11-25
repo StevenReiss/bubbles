@@ -142,9 +142,9 @@ private Stroke		copy_stroke;
 
 private static final long serialVersionUID = 1L;
 
-protected static final Cursor default_cursor = Cursor.getDefaultCursor();
+protected static final Cursor DEFAULT_CURSOR = Cursor.getDefaultCursor();
 
-private static final Map<Object,Object> hint_map;
+private static final Map<Object,Object> HINT_MAP;
 
 
 private static float [] DASH_BORDER = new float [] { 8,8 };
@@ -153,9 +153,9 @@ private static boolean no_freeze = BUDA_PROPERTIES.getBoolean("Buda.nofreeze");
 
 
 static {
-   hint_map = new HashMap<Object,Object>();
-   hint_map.put(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-   hint_map.put(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+   HINT_MAP = new HashMap<Object,Object>();
+   HINT_MAP.put(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+   HINT_MAP.put(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
    // hint_map.put(RenderingHints.KEY_FRACTIONALMETRICS,RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 }
 
@@ -719,7 +719,7 @@ private void setRealPane(Component c,Component f)
    if (c != null) {
       content_pane.addComponentListener(child_manager);
       focus_pane.addFocusListener(child_manager);
-      BudaCursorManager.setCursor(c,default_cursor);
+      BudaCursorManager.setCursor(c,DEFAULT_CURSOR);
       add(c);
       Point p0 = new Point((int) getContentLeftOffset(),(int) getContentTopOffset());
       c.setLocation(p0);
@@ -783,7 +783,9 @@ public Document getContentDocument()		{ return null; }
 
 String getContentKey()
 {
-   String p1,p2,p3;
+   String p1;
+   String p2;
+   String p3;
    
    p1 = getContentProject();
    if (getContentFile() == null) p2 = "";
@@ -1007,8 +1009,8 @@ private void setContentSizeFromBubble()
    if (content_pane != null) {
       Dimension d = getSize();
 
-      int w1 = (int)(d.width - getContentLeftOffset() - getContentRightOffset());
-      int h1 = (int)(d.height - getContentTopOffset() - getContentBottomOffset());
+      int w1 = (int) (d.width - getContentLeftOffset() - getContentRightOffset());
+      int h1 = (int) (d.height - getContentTopOffset() - getContentBottomOffset());
 
       Dimension dc = content_pane.getSize();
       if (dc.width != w1 || dc.height != h1) {
@@ -1212,8 +1214,8 @@ private class NewUpdater implements ActionListener {
          new_color = null;
        }
       else {
-         double f = 1.0 - ((double)(delta))/NEW_BUBBLE_SHOW_TIME;
-         int alpha = (int)(f * new_color.getAlpha());
+         double f = 1.0 - ((double) (delta))/NEW_BUBBLE_SHOW_TIME;
+         int alpha = (int) (f * new_color.getAlpha());
          new_color = BoardColors.transparent(new_color,alpha);
        }
    
@@ -1280,7 +1282,7 @@ public boolean connectTo(BudaBubble bb,MouseEvent evt)
 @Override public void paintComponent(Graphics g0)
 {
    Graphics2D g2 = (Graphics2D) g0.create();
-   g2.setRenderingHints(hint_map);
+   g2.setRenderingHints(HINT_MAP);
 
    Shape s0 = getShape();
 
@@ -1301,7 +1303,7 @@ public boolean connectTo(BudaBubble bb,MouseEvent evt)
       Font ft = g2.getFont();
       g2 = (Graphics2D) g0.create();
       g2.scale(scale_factor,scale_factor);
-      float f = (float)(base_font_size * scale_factor);
+      float f = (float) (base_font_size * scale_factor);
       ft = ft.deriveFont(f);
       g2.setFont(ft);
     }
@@ -1374,7 +1376,7 @@ Point scalePoint(Point p0)
    double sf = getScaleFactor();
    if (sf == 1) return p0;
 
-   return new Point((int)(p0.x * sf),(int)(p0.y * sf));
+   return new Point((int) (p0.x * sf),(int) (p0.y * sf));
 }
 
 
@@ -1566,7 +1568,7 @@ protected Cursor getBubbleCursor()
 
 
 
-private class BubbleManager extends ComponentAdapter {
+private final class BubbleManager extends ComponentAdapter {
 
    @Override public void componentResized(ComponentEvent e) {
       setContentSizeFromBubble();
@@ -1577,7 +1579,7 @@ private class BubbleManager extends ComponentAdapter {
 
 
 
-private class ChildManager extends ComponentAdapter implements FocusListener {
+private final class ChildManager extends ComponentAdapter implements FocusListener {
 
    @Override public void componentResized(ComponentEvent e) {
       setSizeFromContent();
@@ -1727,7 +1729,7 @@ protected void noteResize(int owd,int oht)
    int res = 72;
    Dimension d0 = new Dimension(d);
 
-   int margin = (int)(res * 0.5);
+   int margin = (int) (res * 0.5);
    d.width -= 2*margin;
    d.height -= 2*margin;
 

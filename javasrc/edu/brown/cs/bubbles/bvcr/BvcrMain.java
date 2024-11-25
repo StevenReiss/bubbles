@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class BvcrMain implements BvcrConstants
+public final class BvcrMain implements BvcrConstants
 {
 
 

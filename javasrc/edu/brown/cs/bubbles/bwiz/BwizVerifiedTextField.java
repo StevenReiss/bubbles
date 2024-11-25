@@ -54,7 +54,7 @@ class BwizVerifiedTextField extends BwizFocusTextField
 /*										*/
 /********************************************************************************/
 
-private BwizConstants.IVerifier verifier;
+private BwizConstants.IVerifier the_verifier;
 private boolean previous_failure;
 private Color normal_color;
 private SwingEventListenerList<BwizConstants.VerificationListener> verification_listeners;
@@ -73,7 +73,7 @@ private static final long serialVersionUID = 1;
 static BwizVerifiedTextField getStyledField(String text, String tooltip,
 					       BwizConstants.IVerifier verifier)
 {
-   BwizVerifiedTextField field=new BwizVerifiedTextField(text, verifier);
+   BwizVerifiedTextField field = new BwizVerifiedTextField(text, verifier);
 
    if (tooltip=="")
       field.setToolTipText(text);
@@ -104,8 +104,8 @@ BwizVerifiedTextField(String text, BwizConstants.IVerifier v)
 {
    super(text);
    previous_failure = false;
-   verifier=v;
-   verification_listeners=new SwingEventListenerList<>(BwizConstants.VerificationListener.class);
+   the_verifier = v;
+   verification_listeners = new SwingEventListenerList<>(BwizConstants.VerificationListener.class);
 
    setupVerification();
 }
@@ -120,14 +120,14 @@ BwizVerifiedTextField(String text, BwizConstants.IVerifier v)
 
 void setVerifier(BwizConstants.IVerifier v)
 {
-   verifier=v;
+   the_verifier=v;
 }
 
 
 
 BwizConstants.IVerifier getVerifier()
 {
-   return verifier;
+   return the_verifier;
 }
 
 
@@ -152,8 +152,8 @@ private void setupVerification()
 
 private boolean verify(String input)
 {
-   if (verifier!=null)
-      return verifier.verify(input);
+   if (the_verifier!=null)
+      return the_verifier.verify(input);
    else
       return true;
 }
@@ -179,14 +179,14 @@ private void verificationSuccess()
 {
    //Currently colors the text back to normalColor
    this.setForeground(normal_color);
-   previous_failure=false;
+   previous_failure = false;
 
    fireVerificationSuccess();
 }
 
 
 
-private class DocHandler implements DocumentListener {
+private final class DocHandler implements DocumentListener {
 
    @Override public void insertUpdate(DocumentEvent e) {
       try {
@@ -200,7 +200,7 @@ private class DocHandler implements DocumentListener {
 	 else
 	    verificationSuccess();
        }
-      catch(BadLocationException ex) {}
+      catch (BadLocationException ex) {}
     }
 
    @Override public void changedUpdate(DocumentEvent e) {
@@ -215,7 +215,7 @@ private class DocHandler implements DocumentListener {
 	 else
 	    verificationSuccess();
        }
-      catch(BadLocationException ex) {}
+      catch (BadLocationException ex) {}
     }
 
    @Override public void removeUpdate(DocumentEvent e) {
@@ -230,7 +230,7 @@ private class DocHandler implements DocumentListener {
 	 else
 	    verificationSuccess();
        }
-      catch(BadLocationException ex) {}
+      catch (BadLocationException ex) {}
     }
 
 }	// end of inner class DocHandler
@@ -251,17 +251,15 @@ void addVerificationListener(BwizConstants.VerificationListener listener)
 
 private void fireVerificationSuccess()
 {
-   for (BwizConstants.VerificationListener listener : verification_listeners)
-      {
-      listener.verificationEvent(this, true);
+   for (BwizConstants.VerificationListener listener : verification_listeners) {
+            listener.verificationEvent(this, true);
     }
 }
 
 private void fireVerificationFailure()
 {
-   for (BwizConstants.VerificationListener listener : verification_listeners)
-      {
-      listener.verificationEvent(this, false);
+   for (BwizConstants.VerificationListener listener : verification_listeners) {
+            listener.verificationEvent(this, false);
     }
 }
 

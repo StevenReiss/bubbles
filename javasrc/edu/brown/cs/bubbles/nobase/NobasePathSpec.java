@@ -61,7 +61,7 @@ NobasePathSpec(Element xml)
    if (fnm == null) fnm = IvyXml.getTextElement(xml,"BINARY");
    if (fnm == null) {
       // old form
-      fnm = IvyXml.getTextElement(xml,"DIR") ;
+      fnm = IvyXml.getTextElement(xml,"DIR");
       is_user = IvyXml.getAttrBool(xml,"USER");
       is_exclude = IvyXml.getAttrBool(xml,"EXCLUDE");
     }

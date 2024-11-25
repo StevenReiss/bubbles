@@ -82,7 +82,7 @@ static NobaseType createFunction()		{ return new CompletionType(); }
 
 static NobaseType createAnyType()		{ return any_type; }
 
-static NobaseType createUnion(NobaseType ... typs)
+static NobaseType createUnion(NobaseType... typs)
 {
    return new UnionType(typs);
 }
@@ -339,7 +339,7 @@ private static class UnionType extends NobaseType {
    
    private List<NobaseType> base_types;
    
-   UnionType(NobaseType... typs ) {
+   UnionType(NobaseType... typs) {
       super("*UNION*");
       setupBaseTypes(typs);
     }
@@ -375,7 +375,7 @@ private static class UnionType extends NobaseType {
 }       // end of inner class UnionType
 
   
-private static class TypeComparator implements Comparator<NobaseType> {
+private static final class TypeComparator implements Comparator<NobaseType> {
    
    @Override public int compare(NobaseType t0,NobaseType t1) {
       return t0.getName().compareTo(t1.getName());

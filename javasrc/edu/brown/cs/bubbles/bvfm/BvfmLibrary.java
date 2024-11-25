@@ -200,7 +200,7 @@ void loadLibrary()
 }
 
 
-private static class VirtualFileFilter implements FileFilter {
+private static final class VirtualFileFilter implements FileFilter {
 
    @Override public boolean accept(File f) {
       if (f.isDirectory()) return false;
@@ -219,7 +219,7 @@ private static class VirtualFileFilter implements FileFilter {
 /*										*/
 /********************************************************************************/
 
-private class BvfmCodeRepository implements BassUpdatableRepository {
+private final class BvfmCodeRepository implements BassUpdatableRepository {
 
    @Override public Iterable<BassName> getAllNames() {
       List<BassName> rslt = new ArrayList<>();
@@ -258,7 +258,7 @@ private class BvfmCodeRepository implements BassUpdatableRepository {
 /*										*/
 /********************************************************************************/
 
-private class BvfmGroupRepository implements BassUpdatableRepository {
+private final class BvfmGroupRepository implements BassUpdatableRepository {
 
    @Override public Iterable<BassName> getAllNames() {
       List<BassName> rslt = new ArrayList<>();

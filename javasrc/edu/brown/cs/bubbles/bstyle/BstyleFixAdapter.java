@@ -25,6 +25,7 @@ package edu.brown.cs.bubbles.bstyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import edu.brown.cs.bubbles.bfix.BfixAdapter;
 import edu.brown.cs.bubbles.bfix.BfixConstants;
@@ -44,6 +45,7 @@ public class BstyleFixAdapter extends BfixAdapter implements BstyleConstants, Bf
 
 private List<BstyleFixer> fixer_set;
 private Map<String,List<BstyleFixer>> fixer_map;
+private Set<String> ignore_errors;
 
 
 
@@ -59,6 +61,7 @@ public BstyleFixAdapter()
    
    fixer_set = BstyleFixer.getStyleFixers(); 
    fixer_map = BstyleFixer.getStyleFixerMap(); 
+   ignore_errors = BstyleFixer.getIgnoreErrors(); 
 }
 
 
@@ -91,6 +94,8 @@ public BfixRunnableFix findStyleFixer(BfixCorrector bc,BumpProblem bp,boolean ex
    
    String d = bp.getData();
    if (d == null) d = "";
+   if (ignore_errors.contains(d)) return null;
+   
    List<BstyleFixer> totry = fixer_map.get(d);
    if (totry != null) {
       for (BstyleFixer bf : totry) {

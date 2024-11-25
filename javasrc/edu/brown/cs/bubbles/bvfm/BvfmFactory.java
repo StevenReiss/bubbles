@@ -38,7 +38,7 @@ import edu.brown.cs.bubbles.buda.BudaBubbleGroup;
 import edu.brown.cs.bubbles.buda.BudaConstants;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 
-public class BvfmFactory implements BvfmConstants
+public final class BvfmFactory implements BvfmConstants
 {
 
 
@@ -112,7 +112,7 @@ BvfmLibrary getLibrary()                        { return vfm_library; }
 /*                                                                              */
 /********************************************************************************/
 
-private class ViewCallback implements BudaConstants.BubbleViewCallback {
+private final class ViewCallback implements BudaConstants.BubbleViewCallback {
    
    @Override public void addGroupButtons(BudaBubbleGroup grp,JPopupMenu menu) {
       if (grp == null || menu == null) return;
@@ -218,7 +218,7 @@ private class RemoveAction extends AbstractAction {
 /*                                                                              */
 /********************************************************************************/
 
-private class BvfmButtonHandler implements BassPopupHandler {
+private final class BvfmButtonHandler implements BassPopupHandler {
    
    @Override public void addButtons(BudaBubble bb,Point where,JPopupMenu menu,
          String fullname,BassName forname) {

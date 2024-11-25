@@ -50,7 +50,7 @@ import java.util.Set;
 
 
 
-public class BumpDebugServer implements BumpConstants, MintConstants
+public final class BumpDebugServer implements BumpConstants, MintConstants
 {
 
 
@@ -324,7 +324,9 @@ private class Connection extends Thread {
          try {
             output_writer = new PrintWriter(client_socket.getOutputStream());
           }
-         catch (IOException e) { return; }
+         catch (IOException e) {
+            return;
+         }
        }
       output_writer.println(msg);
       output_writer.flush();
@@ -342,7 +344,7 @@ private class Connection extends Thread {
 /*										*/
 /********************************************************************************/
 
-private class BandaidHandler implements MintHandler {
+private final class BandaidHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
@@ -356,7 +358,7 @@ private class BandaidHandler implements MintHandler {
 
 
 
-private class BumpHandler implements MintHandler {
+private final class BumpHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
@@ -373,7 +375,7 @@ private class BumpHandler implements MintHandler {
 
 
 
-private class ExitHandler implements MintHandler {
+private final class ExitHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       System.exit(0);

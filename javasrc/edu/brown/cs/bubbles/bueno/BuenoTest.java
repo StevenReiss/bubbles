@@ -32,7 +32,7 @@ import edu.brown.cs.bubbles.bump.BumpLocation;
 import java.util.List;
 
 
-public class BuenoTest implements BuenoConstants, BuenoConstants.BuenoInserter
+public final class BuenoTest implements BuenoConstants, BuenoConstants.BuenoInserter
 {
 
 

@@ -25,12 +25,12 @@
 package edu.brown.cs.bubbles.nobase;
 
 
-import org.eclipse.wst.jsdt.core.dom.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.eclipse.wst.jsdt.core.dom.ASTNode;
+import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
 
 
 class NobaseResolver implements NobaseConstants
@@ -78,7 +78,7 @@ void unresolve(ASTNode node)
 }
 
 
-private static class UnresolveVisitor extends ASTVisitor {
+private static final class UnresolveVisitor extends ASTVisitor {
 
    @Override public void postVisit(ASTNode n) {
       NobaseAst.clearResolve(n);
@@ -134,7 +134,7 @@ static boolean isGeneratedName(String name)
    if (name.equals("MISSING")) return true;
    if (name.equals("await")) return true;
    if (name.equals("async")) return true;
-   Matcher m = INTERNAL_NAME.matcher(name);return m.matches();
+   Matcher m = INTERNAL_NAME.matcher(name); return m.matches();
 }
 
 

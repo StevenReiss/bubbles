@@ -332,7 +332,8 @@ String getRelativePath(File f)
 
 private static final Pattern LINE_PAT = Pattern.compile("@@ \\-(\\d+),(\\d+) \\+(\\d+),(\\d+) @@.*");
 private static final Pattern LINE_PAT1 = Pattern.compile("@@ \\-(\\d+) \\+(\\d+) @@.*");
-private static final Pattern LINE_PAT2 = Pattern.compile("@@@ \\-(\\d+),(\\d+) \\-(\\d+),(\\d+) \\+(\\d+),(\\d+) @@@.*");
+private static final Pattern LINE_PAT2 = 
+   Pattern.compile("@@@ \\-(\\d+),(\\d+) \\-(\\d+),(\\d+) \\+(\\d+),(\\d+) @@@.*");
 private static final Pattern SOURCE_PAT = Pattern.compile("\\-\\-\\- (\\S+)\\s+\\(revision (\\w+)\\)");
 
 private static final Pattern GIT_INDEX = Pattern.compile("index ([0-9a-f.]+)(\\s|,).*");
@@ -342,7 +343,7 @@ private static final Pattern GIT_SOURCE = Pattern.compile("\\-\\-\\- a[/\\\\](\\
 
 protected class DiffAnalyzer implements CommandCallback {
 
-   BvcrDifferenceSet diff_set;
+   private BvcrDifferenceSet diff_set;
    private int source_line;
    private int target_line;
    private int del_count;

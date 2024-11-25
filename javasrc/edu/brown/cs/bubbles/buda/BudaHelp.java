@@ -320,7 +320,7 @@ private class HelpArea extends JEditorPane {
 /*										*/
 /********************************************************************************/
 
-private class HyperListener implements HyperlinkListener {
+private final class HyperListener implements HyperlinkListener {
 
    @Override public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -349,10 +349,11 @@ private class HyperListener implements HyperlinkListener {
 }	// end of inner class HyperListener
 
 
-private class Mouser extends MouseAdapter implements KeyListener {
+private final class Mouser extends MouseAdapter implements KeyListener {
 
    @Override public void mouseEntered(MouseEvent e) {
-      // System.err.println("MOUSE ENTERED " + (e.getSource() == scroll_area) + " " + (e.getSource() == help_area) + " " + e);
+      // System.err.println("MOUSE ENTERED " + (e.getSource() == scroll_area) + 
+      //    " " + (e.getSource() == help_area) + " " + e);
       mouse_inside = true;
    }
 
@@ -410,7 +411,7 @@ private static class Parser2 {
    private Map<String, List<String>> when_map;
 
    //Constructor
-   public Parser2(String f, String o) {
+   Parser2(String f, String o) {
       input_filename = f;
       output_filename = o;
       when_block = new ArrayList<String>();
@@ -427,56 +428,56 @@ private static class Parser2 {
 
    //Determines whether each help element is a node (when) element or leaf (demo) element
    private void sort() {
-      Element file_as_element = IvyXml.loadXmlFromFile(input_filename);
-      List<Element> demo_elements = new ArrayList<Element>();
-      List<Element> when_elements = new ArrayList<Element>();
+      Element fileaselement = IvyXml.loadXmlFromFile(input_filename);
+      List<Element> demoelements = new ArrayList<>();
+      List<Element> whenelements = new ArrayList<>();
    
-      for(Element help_element : IvyXml.children(file_as_element, "HELP")) {
-         String key = IvyXml.getAttrString(help_element,"KEY");
+      for (Element helpelement : IvyXml.children(fileaselement, "HELP")) {
+         String key = IvyXml.getAttrString(helpelement,"KEY");
          if (key.startsWith("spec_")) {
-            demo_elements.add(help_element);
+            demoelements.add(helpelement);
           }
          else {
-            when_elements.add(help_element);
+            whenelements.add(helpelement);
           }
        }
    
-      for(Element when_element : when_elements) {
-         makeWhenMap(when_element);
+      for (Element whenelement : whenelements) {
+         makeWhenMap(whenelement);
        }
    
-      for(Element demo_element : demo_elements) {
-         makeDemoMap(demo_element);
+      for (Element demoelement : demoelements) {
+         makeDemoMap(demoelement);
        }
     }
 
    //Creates a mapping from when elements to their constitutent demo elements
-   private void makeWhenMap(Element when_element) {
+   private void makeWhenMap(Element whenelement) {
       //Retrieve necessary information
-      String key = IvyXml.getAttrString(when_element, "KEY");
-      String when = IvyXml.getAttrString(when_element, "WHEN");
-      String body = IvyXml.getTextElement(when_element, "TEXT");
+      String key = IvyXml.getAttrString(whenelement, "KEY");
+      String when = IvyXml.getAttrString(whenelement, "WHEN");
+      String body = IvyXml.getTextElement(whenelement, "TEXT");
 
       //Construct the key and regex
-      String map_key = key + "|" + when;
+      String mapkey = key + "|" + when;
       Pattern p = Pattern.compile(".*<a href='gotodemo:(.*);backto:.*'>(.*)</a>.*");
 
       //Locate demos that happen during this when, and map to them
-      for(String line : body.split("\n")) {
+      for (String line : body.split("\n")) {
 	 Matcher m = p.matcher(line);
-	 if(m.matches()) {
-	    if(!when_map.containsKey(map_key)) {
-	       when_map.put(map_key, new ArrayList<String>());
+	 if (m.matches()) {
+	    if (!when_map.containsKey(mapkey)) {
+	       when_map.put(mapkey, new ArrayList<String>());
 	     }
-	    when_map.get(map_key).add(m.group(1) + "|" + m.group(2));
+	    when_map.get(mapkey).add(m.group(1) + "|" + m.group(2));
 	  }
        }
     }
 
    //Creates a mapping from demo elements to their body of text
-   private void makeDemoMap(Element demo_element) {
-      String key = IvyXml.getAttrString(demo_element, "KEY");
-      String body = IvyXml.getTextElement(demo_element, "TEXT");
+   private void makeDemoMap(Element demoelement) {
+      String key = IvyXml.getAttrString(demoelement, "KEY");
+      String body = IvyXml.getTextElement(demoelement, "TEXT");
       demo_map.put(key, body);
     }
 
@@ -484,16 +485,16 @@ private static class Parser2 {
       when_block.add("<div class='whenblock'>");
       demo_block.add("<div class='demoblock'>");
 
-      for(String key : when_map.keySet()) {
+      for (String key : when_map.keySet()) {
 	 //Retrieve necessary information
 	 int indexOfBar = key.indexOf("|");
 	 String id = key.substring(0, indexOfBar);
-	 String long_id = key.substring(indexOfBar + 1);
+	 String longid = key.substring(indexOfBar + 1);
 
 	 //Put title for when section
 	 when_block.add("<div class='whenitem'>");
 	 when_block.add("<div class='whenitemtitle'>");
-	 when_block.add("<a href='#" + id + "'>" + long_id + "</a>");
+	 when_block.add("<a href='#" + id + "'>" + longid + "</a>");
 	 when_block.add("</div>");
 	 when_block.add("<ul>");
 
@@ -501,19 +502,19 @@ private static class Parser2 {
 	 demo_block.add("<div class='whendemoblock'>");
 	 demo_block.add("<a id='" + id + "'></a>");
 	 demo_block.add("<div class='wdb-title'>");
-	 demo_block.add("<h2>" + long_id + "</h2>");
+	 demo_block.add("<h2>" + longid + "</h2>");
 	 demo_block.add("</div>");
 
 	 //Put elements in the list under this block
-	 for(String demo : when_map.get(key)) {
+	 for (String demo : when_map.get(key)) {
 	    indexOfBar = demo.indexOf("|");
 	    String name = demo.substring(0, indexOfBar);
-	    String long_name = demo.substring(indexOfBar + 1);
-	    when_block.add("<li> To <a href='#" + name + "'>" + long_name + "</a></li>");
+	    String longname = demo.substring(indexOfBar + 1);
+	    when_block.add("<li> To <a href='#" + name + "'>" + longname + "</a></li>");
 
 	    demo_block.add("<div class='demoitem'>");
-	    if(demo_map.containsKey(name)) {
-	       demo_block.addAll(parseIndividualDemo(demo_map.get(name), long_name, name));
+	    if (demo_map.containsKey(name)) {
+	       demo_block.addAll(parseIndividualDemo(demo_map.get(name), longname, name));
 	     }
 	    else {
 	       //ERROR with names
@@ -529,7 +530,7 @@ private static class Parser2 {
       demo_block.add("</div>");
     }
 
-   private List<String> parseIndividualDemo(String demo, String long_name, String name) {
+   private List<String> parseIndividualDemo(String demo, String longname, String name) {
       //Remove buttons
       Pattern p = Pattern.compile("\\[.*\\]");
       Matcher m = p.matcher(demo);
@@ -546,20 +547,22 @@ private static class Parser2 {
       demo = m.replaceAll("</span>");
 
       //Construct list to return and return it
-      List<String> return_value = new ArrayList<String>();
-      return_value.add("<a id='" + name + "'></a>");
-      return_value.add("<h3>&raquo; To " + long_name + "</h3>");
-      return_value.add("<p class='explanation'>");
-      return_value.add(demo);
-      return_value.add("</p>");
-      return_value.add("<p class='demolinks'>");
-      return_value.add("<form>");
-      return_value.add("<span class='tbutton' onclick='demo(\"" + name.substring(name.indexOf("_") + 1) + "\");'>Tell me</span>");
-      return_value.add("<span class='tbutton' onclick='demo(\"" + name.substring(name.indexOf("_") + 1) + "_silent\");'>Show me</span>");
-      return_value.add("</form>");
-      return_value.add("</p>");
+      List<String> returnvalue = new ArrayList<>();
+      returnvalue.add("<a id='" + name + "'></a>");
+      returnvalue.add("<h3>&raquo; To " + longname + "</h3>");
+      returnvalue.add("<p class='explanation'>");
+      returnvalue.add(demo);
+      returnvalue.add("</p>");
+      returnvalue.add("<p class='demolinks'>");
+      returnvalue.add("<form>");
+      returnvalue.add("<span class='tbutton' onclick='demo(\"" +
+            name.substring(name.indexOf("_") + 1) + "\");'>Tell me</span>");
+      returnvalue.add("<span class='tbutton' onclick='demo(\"" +
+            name.substring(name.indexOf("_") + 1) + "_silent\");'>Show me</span>");
+      returnvalue.add("</form>");
+      returnvalue.add("</p>");
 
-      return return_value;
+      return returnvalue;
     }
 
    private void output() {
@@ -593,11 +596,11 @@ private static class Parser2 {
          pw.println("<h1>The <span id='codebubbles'>CodeBubbles</span> Help Page</h1>");
          pw.println("</div>");
    
-         for(String line : when_block) {
+         for (String line : when_block) {
             pw.println(line);
           }
    
-         for(String line : demo_block) {
+         for (String line : demo_block) {
             pw.println(line);
           }
    

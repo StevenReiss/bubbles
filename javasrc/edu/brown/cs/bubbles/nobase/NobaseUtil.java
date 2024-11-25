@@ -48,50 +48,50 @@ abstract class NobaseUtil implements NobaseConstants
 /********************************************************************************/
 
 static void outputProblem(NobaseMessage m,ISemanticData isd,IvyXmlWriter xw)
-   {
-      NobaseFile ifd = isd.getFileData();
-      IDocument doc = ifd.getDocument();
-      int sln = m.getStartLine(doc);
-      int scl = m.getStartCol(doc);
-      int eln = m.getEndLine(doc);
-      int ecl = m.getEndCol(doc);
-      String msg = m.getMessage();
-      List<String> ls = m.getAdditionalInfo();
-
-      xw.begin("PROBLEM");
-      xw.field("PROJECT",isd.getProject().getName());
-      xw.field("FILE",ifd.getFile().getPath());
-     // xw.field("MSGID",m.getType());
-      xw.field("MESSAGE",msg);
-      xw.field("LINE",sln);
-
-      switch (m.getSeverity()) {
-	 case INFO :
-	 default :
-	    break;
-	 case WARNING :
-	    xw.field("WARNING",true);
-	    break;
-	 case ERROR :
-	    xw.field("ERROR",true);
-	    break;
-       }
-
-      try {
-	 if (sln != 0) {
-	    xw.field("START",doc.getLineOffset(sln-1) + scl - 1);
-	    xw.field("END",doc.getLineOffset(eln-1) + ecl - 1);
-	  }
-       }
-      catch (BadLocationException e) { }
-
-      if (ls != null) {
-	 for (String s : ls) {
-	    xw.textElement("ARG",s);
-	  }
-       }
-      xw.end("PROBLEM");
+{
+   NobaseFile ifd = isd.getFileData();
+   IDocument doc = ifd.getDocument();
+   int sln = m.getStartLine(doc);
+   int scl = m.getStartCol(doc);
+   int eln = m.getEndLine(doc);
+   int ecl = m.getEndCol(doc);
+   String msg = m.getMessage();
+   List<String> ls = m.getAdditionalInfo();
+   
+   xw.begin("PROBLEM");
+   xw.field("PROJECT",isd.getProject().getName());
+   xw.field("FILE",ifd.getFile().getPath());
+   // xw.field("MSGID",m.getType());
+   xw.field("MESSAGE",msg);
+   xw.field("LINE",sln);
+   
+   switch (m.getSeverity()) {
+      case INFO :
+      default :
+         break;
+      case WARNING :
+         xw.field("WARNING",true);
+         break;
+      case ERROR :
+         xw.field("ERROR",true);
+         break;
     }
+   
+   try {
+      if (sln != 0) {
+         xw.field("START",doc.getLineOffset(sln-1) + scl - 1);
+         xw.field("END",doc.getLineOffset(eln-1) + ecl - 1);
+       }
+    }
+   catch (BadLocationException e) { }
+   
+   if (ls != null) {
+      for (String s : ls) {
+         xw.textElement("ARG",s);
+       }
+    }
+   xw.end("PROBLEM");
+}
 
 
 
@@ -239,21 +239,42 @@ static String convertWildcardToRegex(String s)
       if (bkfg) {
 	 if (c == '\\') qtfg = true;
 	 else if (!qtfg && c == ']') bkfg = false;
-	 else { nb.append(c); qtfg = false; continue; }
+	 else {
+	    nb.append(c); qtfg = false; continue;
+	 }
        }
       if (c == '/' || c == '\\') {
 	 if (File.separatorChar == '\\') nb.append("\\\\");
 	 else nb.append(File.separatorChar);
        }
-      else if (c == '@') nb.append(".*");
-      else if (c == '*') nb.append(star);
-      else if (c == '.') nb.append("\\.");
-      else if (c == '{') { nb.append("("); ++brct; }
-      else if (c == '}') { nb.append(")"); --brct; }
-      else if (brct > 0 && c == ',') nb.append('|');
-      else if (c == '?') nb.append(".");
-      else if (c == '[') { nb.append(c); bkfg = true; }
-      else nb.append(c);
+      else if (c == '@') {
+         nb.append(".*");
+       }
+      else if (c == '*') {
+         nb.append(star);
+       }
+      else if (c == '.') {
+         nb.append("\\.");
+       }
+      else if (c == '{') {
+         nb.append("("); ++brct;
+       }
+      else if (c == '}') { 
+         nb.append(")"); 
+         --brct; 
+       }
+      else if (brct > 0 && c == ',') {
+         nb.append('|');
+       }
+      else if (c == '?') {
+         nb.append(".");
+       }
+      else if (c == '[') {
+         nb.append(c); bkfg = true;
+       }
+      else {
+         nb.append(c);
+       }
     }
 
    nb.append('$');

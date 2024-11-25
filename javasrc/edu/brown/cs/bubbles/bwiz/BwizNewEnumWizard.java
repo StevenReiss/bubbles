@@ -91,10 +91,11 @@ BwizNewEnumWizard(BuenoLocation loc)
 
 /********************************************************************************/
 /*                                                                              */
-/*      Enum Creator                                                            *//*                                                                              */
+/*      Enum Creator                                                            */
+/*                                                                              */
 /********************************************************************************/
-
-private class EnumCreator extends Creator {
+ 
+private final class EnumCreator extends Creator {
    
    @Override protected BudaBubble doCreate(BudaBubbleArea bba,Point pt,String fullname,BuenoProperties bp) {
       BudaBubble nbbl = null;

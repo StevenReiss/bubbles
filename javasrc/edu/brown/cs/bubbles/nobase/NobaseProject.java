@@ -28,12 +28,6 @@ import edu.brown.cs.ivy.exec.IvyExec;
 import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
-
-import org.json.JSONObject;
-import org.w3c.dom.Element;
-
-import org.eclipse.wst.jsdt.core.dom.*;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -51,6 +45,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
+import org.w3c.dom.Element;
+import org.json.JSONObject;
 
 class NobaseProject implements NobaseConstants
 {
@@ -1062,7 +1059,7 @@ private ISemanticData parseFile(NobaseFile fd)
 
 
 
-private static class SourceFilter implements FileFilter {
+private static final class SourceFilter implements FileFilter {
 
    @Override public boolean accept(File path) {
       if (path.isDirectory()) return true;
@@ -1117,7 +1114,7 @@ private NobaseFile getNobaseFile(File tgt)
 {
    if (!tgt.exists()) {
       String pth = tgt.getPath();
-      for (String s : new String [] { ".js", ".json", "node" } ) {
+      for (String s : new String [] { ".js", ".json", "node" }) {
 	 File ntgt = new File(pth + s);
 	 if (ntgt.exists()) {
             if (s.equals(".json")) {

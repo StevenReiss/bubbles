@@ -271,7 +271,7 @@ public Point getCenter()
       else r0.add(bb.getBounds());
     }
    if (r0 == null) return null;
-   return new Point( r0.x + r0.width/2,r0.y + r0.height/2);
+   return new Point(r0.x + r0.width/2,r0.y + r0.height/2);
 }
 
 
@@ -478,7 +478,7 @@ void drawGroup(Graphics2D g,boolean overview)
       title_shape = title_region;
       title_field.setVisible(true);
     }
-   else if(group_bubbles.size() <= 1 && title_field != null && !overview) {
+   else if (group_bubbles.size() <= 1 && title_field != null && !overview) {
       setTitle(null);
       title_field.setVisible(false);
     }

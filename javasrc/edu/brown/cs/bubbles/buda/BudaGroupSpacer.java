@@ -58,7 +58,7 @@ class BudaGroupSpacer implements BudaConstants {
 private BudaBubbleArea		bubble_area;
 private Configuration		start_config;
 
-private static final int	BUBBLE_SPACE = (int)Math.ceil(GROUP_AURA_BUFFER);
+private static final int	BUBBLE_SPACE = (int) Math.ceil(GROUP_AURA_BUFFER);
 
 private static final long	MAX_SPACING_TIME = 1500;
 
@@ -158,7 +158,8 @@ private Collection<Adjustment> generateMoveSets(Configuration cur,Adjustment mvd
    Map<GroupProxy,List<GroupProxy>> overlapped = new HashMap<GroupProxy,List<GroupProxy>>();
 
    // go through each bubble group to see if it is in the path of a bubble that is being moved.
-   // If a bubble is in the path and that bubble has already been moved, then this can't be a valid configuration so we return
+   // If a bubble is in the path and that bubble has already been moved, then this can't
+   //    be a valid configuration so we return
    // Otherwise, we collect all the moved bubble that overlap bubbles yet to be moved.
    for (GroupProxy gp : cur.getBubbleGroups()) {
 
@@ -252,7 +253,7 @@ private List<GroupProxy> generateBubbleMoves(Configuration cur,GroupProxy group,
 
       Rectangle unionRect = group.getPlacement().union(gp2.getPlacement());
 
-      if(mv.getX() >= 0){
+      if (mv.getX() >= 0){
 	 Area movingArea = adjustAreaForMovement(new Point(1, 0), unionRect, group);
 	 Area movedArea = adjustAreaForMovement(new Point(-1, 0), unionRect, gp2);
 
@@ -260,11 +261,11 @@ private List<GroupProxy> generateBubbleMoves(Configuration cur,GroupProxy group,
 
 	 int currentOffset = getMaxOffestX(movingArea);
 
-	 if(currentOffset > offestright)
+	 if (currentOffset > offestright)
 	    offestright = currentOffset;
       }
 
-      if(mv.getX() <= 0){
+      if (mv.getX() <= 0){
 	 Area movingArea = adjustAreaForMovement(new Point(-1, 0), unionRect, group);
 	 Area movedArea = adjustAreaForMovement(new Point(1, 0), unionRect, gp2);
 
@@ -272,11 +273,11 @@ private List<GroupProxy> generateBubbleMoves(Configuration cur,GroupProxy group,
 
 	 int currentOffset = getMaxOffestX(movingArea);
 
-	 if(currentOffset > offestleft)
+	 if (currentOffset > offestleft)
 		 offestleft = currentOffset;
        }
 
-      if(mv.getY() >= 0){
+      if (mv.getY() >= 0){
 	 Area movingArea = adjustAreaForMovement(new Point(0, 1), unionRect, group);
 	 Area movedArea = adjustAreaForMovement(new Point(0, -1), unionRect, gp2);
 
@@ -284,10 +285,10 @@ private List<GroupProxy> generateBubbleMoves(Configuration cur,GroupProxy group,
 
 	 int currentOffset = getMaxOffestY(movingArea);
 
-	 if(currentOffset > offestdown)
+	 if (currentOffset > offestdown)
 		 offestdown = currentOffset;
        }
-      if(mv.getY() <= 0){
+      if (mv.getY() <= 0){
 	 Area movingArea = adjustAreaForMovement(new Point(0, -1), unionRect, group);
 	 Area movedArea = adjustAreaForMovement(new Point(0, 1), unionRect, gp2);
 
@@ -295,7 +296,7 @@ private List<GroupProxy> generateBubbleMoves(Configuration cur,GroupProxy group,
 
 	 int currentOffset = getMaxOffestY(movingArea);
 
-	 if(currentOffset > offestup)
+	 if (currentOffset > offestup)
 	    offestup = currentOffset;
        }
     }
@@ -376,53 +377,56 @@ private Area adjustAreaForMovement(Point dir, Rectangle bounds, GroupProxy gp){
    Movement mv = gp.getMovement();
 
    if (dir.x > 0) {
-      for(BudaBubble bb : gp.getBubbleGroup().getBubbles()){
+      for (BudaBubble bb : gp.getBubbleGroup().getBubbles()){
 	 Rectangle rect = getFullBounds(bb);
 
 	 rect.x += mv.getX();
 	 rect.y += mv.getY();
 
-	 if(rect.x <= (bounds.x + bounds.width)){
+	 if (rect.x <= (bounds.x + bounds.width)){
 	    rect.width = (bounds.x + bounds.width) - rect.x;
 
 	    resultArea.add(new Area(rect));
 	  }
        }
-    }else if (dir.x < 0) {
-      for(BudaBubble bb : gp.getBubbleGroup().getBubbles()){
+    }
+else if (dir.x < 0) {
+      for (BudaBubble bb : gp.getBubbleGroup().getBubbles()){
 	 Rectangle rect = getFullBounds(bb);
 
 	 rect.x += mv.getX();
 	 rect.y += mv.getY();
 
-	 if(rect.x <= (bounds.x + bounds.width)){
+	 if (rect.x <= (bounds.x + bounds.width)){
 	    rect.width = (rect.x + rect.width) - bounds.x;
 	    rect.x = bounds.x;
 
 	    resultArea.add(new Area(rect));
 	  }
 	}
-     }else if (dir.y > 0) {
-	for(BudaBubble bb : gp.getBubbleGroup().getBubbles()){
+     }
+else if (dir.y > 0) {
+	for (BudaBubble bb : gp.getBubbleGroup().getBubbles()){
 	   Rectangle rect = getFullBounds(bb);
 
 	   rect.x += mv.getX();
 	   rect.y += mv.getY();
 
-	   if(rect.y <= (bounds.y + bounds.height)){
+	   if (rect.y <= (bounds.y + bounds.height)){
 	      rect.height = (bounds.y + bounds.height) - rect.y;
 
 	      resultArea.add(new Area(rect));
 	    }
 	}
-     }else if (dir.y < 0) {
-       for(BudaBubble bb : gp.getBubbleGroup().getBubbles()){
+     }
+else if (dir.y < 0) {
+       for (BudaBubble bb : gp.getBubbleGroup().getBubbles()){
 	  Rectangle rect = getFullBounds(bb);
 
 	  rect.x += mv.getX();
 	  rect.y += mv.getY();
 
-	  if(rect.y <= (bounds.y + bounds.height)){
+	  if (rect.y <= (bounds.y + bounds.height)){
 	     rect.height = (rect.y + rect.height) - bounds.y;
 	     rect.y = bounds.y;
 
@@ -445,8 +449,8 @@ private int getMaxOffestX(Area area){
 
    for (PathIterator i = area.getPathIterator(null); !i.isDone(); i.next()) {
       int type = i.currentSegment(pos);
-      int x = (int)pos[0];
-      int y = (int)pos[1];
+      int x = (int) pos[0];
+      int y = (int) pos[1];
 
       switch (type) {
 	 case PathIterator.SEG_MOVETO:
@@ -456,7 +460,7 @@ private int getMaxOffestX(Area area){
 
 	    break;
 	 case PathIterator.SEG_LINETO:
-	    if(x == prevPoint.x){
+	    if (x == prevPoint.x){
 	       int lowerBound = Math.min(prevPoint.y, y);
 	       int upperBound = Math.max(prevPoint.y, y);
 
@@ -471,7 +475,7 @@ private int getMaxOffestX(Area area){
 	    break;
 
 	 case PathIterator.SEG_CLOSE:
-	    if(x == startPoint.x){
+	    if (x == startPoint.x){
 	       int lowerBound = Math.min(startPoint.y, y);
 	       int upperBound = Math.max(startPoint.y, y);
 
@@ -487,14 +491,14 @@ private int getMaxOffestX(Area area){
 
    int maxOffset = 0;
 
-   for(Integer key : keys){
+   for (Integer key : keys){
       int[] bounds = {Integer.MAX_VALUE, Integer.MIN_VALUE};
 
-      for(BoundEntry be : boundEntryList){
-	 if(be.isInRange(key.intValue())){
-	    if(be.getValue() > bounds[1])
+      for (BoundEntry be : boundEntryList){
+	 if (be.isInRange(key.intValue())){
+	    if (be.getValue() > bounds[1])
 	       bounds[1] = be.getValue();
-	    if(be.getValue() < bounds[0])
+	    if (be.getValue() < bounds[0])
 	       bounds[0] = be.getValue();
 	  }
        }
@@ -516,8 +520,8 @@ private int getMaxOffestY(Area area){
 
    for (PathIterator i = area.getPathIterator(null); !i.isDone(); i.next()) {
       int type = i.currentSegment(pos);
-      int x = (int)pos[0];
-      int y = (int)pos[1];
+      int x = (int) pos[0];
+      int y = (int) pos[1];
 
       switch (type) {
 	 case PathIterator.SEG_MOVETO:
@@ -527,7 +531,7 @@ private int getMaxOffestY(Area area){
 
 	    break;
 	 case PathIterator.SEG_LINETO:
-	    if(y == prevPoint.y){
+	    if (y == prevPoint.y){
 	       int lowerBound = Math.min(prevPoint.x, x);
 	       int upperBound = Math.max(prevPoint.x, x);
 
@@ -541,7 +545,7 @@ private int getMaxOffestY(Area area){
 
 	    break;
 	 case PathIterator.SEG_CLOSE:
-	    if(y == startPoint.y){
+	    if (y == startPoint.y){
 	       int lowerBound = Math.min(startPoint.x, x);
 	       int upperBound = Math.max(startPoint.x, x);
 
@@ -557,14 +561,14 @@ private int getMaxOffestY(Area area){
 
    int maxOffset = 0;
 
-   for(Integer key : keys){
+   for (Integer key : keys){
       int[] bounds = {Integer.MAX_VALUE, Integer.MIN_VALUE};
 
-      for(BoundEntry be : boundEntryList){
-	 if(be.isInRange(key.intValue())){
-	    if(be.getValue() > bounds[1])
+      for (BoundEntry be : boundEntryList){
+	 if (be.isInRange(key.intValue())){
+	    if (be.getValue() > bounds[1])
 	       bounds[1] = be.getValue();
-	    if(be.getValue() < bounds[0])
+	    if (be.getValue() < bounds[0])
 	       bounds[0] = be.getValue();
 	  }
        }
@@ -602,7 +606,7 @@ private List<GroupProxy> moveBubbleGroup(GroupProxy gp,List<Movement> movements,
 
       GroupProxy newGp = new GroupProxy(gp,r,gp.isMoved());
 
-      if(!newGp.overlaps(moved, false))
+      if (!newGp.overlaps(moved, false))
 	 rslt.add(newGp);
     }
 
@@ -687,7 +691,7 @@ private static class BoundEntry {
    private int upper_bound;
    private int bound_value;
 
-   public BoundEntry(int lowerBound, int upperBound, int value){
+   BoundEntry(int lowerBound, int upperBound, int value){
       lower_bound = lowerBound;
       upper_bound = upperBound;
       bound_value = value;
@@ -910,7 +914,7 @@ private static class GroupProxy {
       Area intersectArea = gp.getArea();
       Area thisArea = getArea();
 
-      if(!intersectArea.getBounds().intersects(thisArea.getBounds()))
+      if (!intersectArea.getBounds().intersects(thisArea.getBounds()))
 	 return false;
 
       intersectArea.intersect(thisArea);
@@ -925,12 +929,12 @@ private static class GroupProxy {
       Area thisArea = getArea();
 
       for (GroupProxy gp : all) {
-	 if(gp == this)
+	 if (gp == this)
 	    continue;
 
 	 Area intersectArea = gp.getArea();
 
-	 if((movedonly && !gp.isMoved()) || !intersectArea.getBounds().intersects(thisArea.getBounds()))
+	 if ((movedonly && !gp.isMoved()) || !intersectArea.getBounds().intersects(thisArea.getBounds()))
 	    continue;
 
 	 intersectArea.intersect(thisArea);

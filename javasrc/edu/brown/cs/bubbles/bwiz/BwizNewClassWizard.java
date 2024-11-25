@@ -103,7 +103,7 @@ BwizNewClassWizard(BuenoLocation loc)
 /*										*/
 /********************************************************************************/
 
-private class ClassCreator extends Creator {
+private final class ClassCreator extends Creator {
 
    @Override protected BudaBubble doCreate(BudaBubbleArea bba,Point pt,String fullname,BuenoProperties bp) {
       BudaBubble nbbl = null;

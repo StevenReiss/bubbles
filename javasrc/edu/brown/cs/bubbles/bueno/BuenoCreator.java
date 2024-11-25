@@ -440,7 +440,7 @@ protected void setupSetter(StringBuffer buf,BuenoProperties props)
 {
    String fnm = props.getFieldName();
    String argnm = null;
-   String args[] = props.getParameters();
+   String [] args = props.getParameters();
    String ftyp = props.getStringProperty(BuenoKey.KEY_FIELD_TYPE);
    if (args == null || args.length == 0) {
       argnm = fnm.toLowerCase();
@@ -1065,7 +1065,8 @@ private static void outputList(String [] itms,String pfx,String sep,StringBuffer
 
 
 
-private static void getFormattedValue(String key,BuenoProperties props,String pfx,String sfx,String eol,StringBuffer buf)
+private static void getFormattedValue(String key,BuenoProperties props,String pfx,
+      String sfx,String eol,StringBuffer buf)
 {
    int p0 = pfx.length() + key.length() + 3;   // ${ ... }
    int p2 = 0;
@@ -1090,8 +1091,14 @@ private static void getFormattedValue(String key,BuenoProperties props,String pf
       buf.append(v0);
       int v1 = v0.length() + pfx.length();
       if (sfx != null) {
-	 if (v1 >= p0) buf.append(" ");
-	 else for (int i = v1; i < p0; ++i) buf.append(" ");
+	 if (v1 >= p0) {
+            buf.append(" ");
+          }
+	 else {
+            for (int i = v1; i < p0; ++i) {
+               buf.append(" ");
+             }
+          }
 	 buf.append(sfx);
       }
       buf.append(eol);
@@ -1103,8 +1110,14 @@ private static void getFormattedValue(String key,BuenoProperties props,String pf
    buf.append(value);
    int v2 = value.length() + pfx.length();
    if (sfx != null) {
-      if (v2 >= p0) buf.append(" ");
-      else for (int i = v2; i < p0; ++i) buf.append(" ");
+      if (v2 >= p0) {
+         buf.append(" ");
+       }
+      else {
+         for (int i = v2; i < p0; ++i) {
+            buf.append(" ");
+          }
+       }
       buf.append(sfx);
    }
 }
@@ -1116,12 +1129,13 @@ private static String expandTabs(String self,int tabstop)
 {
    int index;
 
-   while ((index = self.indexOf('\t')) != - 1) {
+   while ((index = self.indexOf('\t')) != -1) {
       StringBuilder builder = new StringBuilder(self);
       int count = tabstop - index % tabstop;
       builder.deleteCharAt(index);
-      for (int i = 0; i < count; i++)
+      for (int i = 0; i < count; i++) {
 	 builder.insert(index," ");
+       }
       self = builder.toString();
     }
 

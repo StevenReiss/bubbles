@@ -201,7 +201,7 @@ private void update()
 }
 
 
-private class ValidCallback implements BuenoValidatorCallback {
+private final class ValidCallback implements BuenoValidatorCallback {
 
    @Override public void validationDone(BuenoValidator bv,boolean fg) {
       if (accept_button != null) {

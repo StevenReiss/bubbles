@@ -122,7 +122,7 @@ BumpProblemImpl(Element d,String id,int eid,String proj)
 @Override public String getCategory()                           { return error_category; } 
 @Override public String getData()                               { return problem_data; } 
 
-@Override synchronized public List<BumpFix> getFixes()
+@Override public synchronized List<BumpFix> getFixes()
 {
    if (!computed_fixes) {
       Element r = BumpClient.getBump().computeQuickFix(this,start_position,end_position-start_position,true);

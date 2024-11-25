@@ -208,24 +208,28 @@ BumpRunManager()
   BoardProperties bpa = BoardProperties.getProperties("Bandaid");
   if (bpa.getBoolean("bandaid.record.trie")) {
      File f1 = BoardLog.getBubblesLogFile();
-     File f2 = f1.getParentFile();
-     File f3 = new File(f2,f1.getName() + ".trie");
-     try {
-	trie_writer = new PrintWriter(new FileWriter(f3));
-      }
-     catch (IOException e) {
-	BoardLog.logE("BUMP","Can't create trie output data file");
+     if (f1 != null) {
+        File f2 = f1.getParentFile();
+        File f3 = new File(f2,f1.getName() + ".trie");
+        try {
+           trie_writer = new PrintWriter(new FileWriter(f3));
+         }
+        catch (IOException e) {
+           BoardLog.logE("BUMP","Can't create trie output data file");
+         }
       }
    }
   if (bpa.getBoolean("bandaid.record.perf")) {
      File f1 = BoardLog.getBubblesLogFile();
-     File f2 = f1.getParentFile();
-     File f3 = new File(f2,f1.getName() + ".perf");
-     try {
-	perf_writer = new PrintWriter(new FileWriter(f3));
-      }
-     catch (IOException e) {
-	BoardLog.logE("BUMP","Can't create perf output data file");
+     if (f1 != null) {
+        File f2 = f1.getParentFile();
+        File f3 = new File(f2,f1.getName() + ".perf");
+        try {
+           perf_writer = new PrintWriter(new FileWriter(f3));
+         }
+        catch (IOException e) {
+           BoardLog.logE("BUMP","Can't create perf output data file");
+         }
       }
    }
 
@@ -1351,7 +1355,7 @@ private class LaunchConfig implements BumpLaunchConfig {
       return getAttribute(launch_xml,nm);
    }
 
-   @Override public boolean getBoolAttribute(String nm ) {
+   @Override public boolean getBoolAttribute(String nm) {
       return getBoolean(launch_xml,nm,false);
    }
 
@@ -2383,7 +2387,7 @@ private class StepUserFilter implements BumpThreadFilter {
 
 }	// end of inner class StepUserFilter
 
-;
+
 
 private boolean isTempFile(File f)
 {
@@ -2409,7 +2413,7 @@ private boolean isIgnore(BumpStackFrame frm)
 /*										*/
 /********************************************************************************/
 
-private class BandaidHandler implements MintHandler {
+private final class BandaidHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String pid = args.getArgument(0);
@@ -2426,7 +2430,7 @@ private class BandaidHandler implements MintHandler {
 
 
 
-private class BandaidHistoryHandler implements MintHandler {
+private final class BandaidHistoryHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String pid = args.getArgument(0);
@@ -2583,7 +2587,7 @@ private static class ProcessTraceEvent extends BaseEvent {
 /*										*/
 /********************************************************************************/
 
-private class BandaidSwingHandler implements MintHandler {
+private final class BandaidSwingHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String pid = args.getArgument(0);

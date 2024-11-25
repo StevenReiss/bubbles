@@ -170,12 +170,13 @@ private static final Action block_comment_action = new CommentAction("BlockComme
 private static final Action javadoc_comment_action = new CommentAction("JavadocComment",
       BuenoType.NEW_JAVADOC_COMMENT);
 private static final Action fix_errors_action = new FixErrorsAction();
+private static final Action  goto_next_error_action = new GotoNextErrorAction();
 private static final Action finish_action = new FinishAction();
 private static final Action infer_decl_action = new InferDeclarationAction();
 private static final Action smart_delete_next_character_action = new SmartDeleteNextCharacterAction();
 public static final Action python_unindent_action = new PythonUnindentAction();
 public static final Action python_backspace_action = new PythonBackspaceAction();
-// CHECKSTYLE: ON
+// CHECKSTYLE:ON
 
 
 
@@ -256,6 +257,7 @@ private static Action [] local_actions = {
    block_comment_action,
    javadoc_comment_action,
    fix_errors_action,
+   goto_next_error_action,
    infer_decl_action
 };
 
@@ -330,6 +332,7 @@ private static SwingKey [] skey_defs = new SwingKey[] {
    new SwingKey("CODEEDIT",null,infer_decl_action,"menu shift W"),
    new SwingKey("CODEEDIT",null,smart_delete_next_character_action,"shift DELETE"),
    new SwingKey("CODEEDIT",null,toggle_editable_action,"menu F15"),
+   new SwingKey("CODEEDIT",null,goto_next_error_action,"menu shift N"),
 };
 
 
@@ -2848,8 +2851,10 @@ private static class GotoReferenceAction extends TextAction {
          if (fullnm == null) {
             if (be.isIdentifier())
                BaleInfoBubble.createInfoBubble(target, be.getName(), BaleInfoBubbleType.UNDEFINED, sp);
-            else
-               BaleInfoBubble.createInfoBubble(target, be.getName(), BaleInfoBubbleType.NOIDENTIFIER, sp);
+            else {
+               BaleInfoBubble.createInfoBubble(target, be.getName(),
+                     BaleInfoBubbleType.NOIDENTIFIER, sp);
+             }
             Action act = findAction(beepAction);
             if (act != null) act.actionPerformed(e);
             return;
@@ -2988,16 +2993,16 @@ private static class GotoSearchAction extends TextAction {
       BaleDocument bd = target.getBaleDocument();
       int soff = target.getSelectionStart();
       int eoff = target.getSelectionEnd();
-
+   
       BumpClient bc = BumpClient.getBump();
       Collection<BumpLocation> locs = bc.findDefinition(null,
-							   bd.getFile(),
-							   bd.mapOffsetToEclipse(soff),
-							   bd.mapOffsetToEclipse(eoff));
+        						   bd.getFile(),
+        						   bd.mapOffsetToEclipse(soff),
+        						   bd.mapOffsetToEclipse(eoff));
       if (locs == null || locs.size() == 0) return;
-
+   
       handleSearchAction(e,locs);
-
+   
       BoardMetrics.noteCommand("BALE","GoToSearch");
     }
 
@@ -3268,6 +3273,70 @@ private static class QuickFixAction extends TextAction {
 
 
 
+private static class GotoNextErrorAction extends TextAction {
+   
+   private static final long serialVersionUID = 1;
+   
+   GotoNextErrorAction() {
+      super("GotoNextError");
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) {
+      BaleEditorPane target = getBaleEditor(e);
+      if (!checkReadEditor(target)) return;
+      BumpClient bc = BumpClient.getBump();
+      BaleDocument bd = target.getBaleDocument();
+      int soff = target.getSelectionStart();
+      int lno = bd.findLineNumber(soff);
+      int slno = bd.findLineNumber(0);
+      int elno = bd.findLineNumber(bd.getLength()-1);
+      File f = bd.getFile();
+      List<BumpProblem> probs = bc.getProblems(f);
+      BumpProblem best = null;
+      int blno = -1;
+      for (BumpProblem bp : probs) {
+         if (bp.getLine() > lno && bp.getLine() <= elno) {
+            if (blno < 0 || blno > bp.getLine()) {
+               blno = bp.getLine();
+               best = bp;
+             }
+          }
+       }
+      if (best == null) {
+         for (BumpProblem bp : probs) {
+            if (bp.getLine() >= slno) {
+               if (blno < 0 || blno > bp.getLine()) {
+                  blno = bp.getLine();
+                  best = bp;
+                }
+             }
+          }
+       }
+      if (best == null || blno < 0) return;
+      int pos = bd.findLineOffset(blno);
+      
+      bd.baleWriteLock();
+      try {
+         target.setCaretPosition(pos);
+         target.scrollRectToVisible(SwingText.modelToView2D(target,pos));
+         BaleElement cur = bd.getCharacterElement(pos);
+         // might want to set cur to first non-space
+         if (cur == null) return;
+         if (cur.isElided()) {
+            cur.setElided(false);
+            bd.handleElisionChange();
+            target.increaseSizeForElidedElement(cur);
+            BoardMetrics.noteCommand("BALE","GotoErrorUnElision");
+            BaleEditorBubble.noteElision(target);
+          }
+       }
+      catch (BadLocationException ex) { }
+      finally {
+         bd.baleWriteUnlock();
+       }    
+    }
+   
+}       // end of inner class GotoNextErrorAction
 
 
 /********************************************************************************/

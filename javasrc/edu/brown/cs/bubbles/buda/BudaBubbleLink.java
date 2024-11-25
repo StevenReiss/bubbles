@@ -350,7 +350,7 @@ private class RemoveAction extends AbstractAction {
 
 private class StyleAction extends AbstractAction {
 
-   BudaLinkStyle set_style;
+   private BudaLinkStyle set_style;
    private static final long serialVersionUID = 1;
    
    StyleAction(String id,BudaLinkStyle sty) {
@@ -502,9 +502,9 @@ private void drawCircle(Graphics g,Point2D fp,Point2D tp,boolean fill)
    double cy0 = tp.getY() + t*(fp.getY() - tp.getY());
 
    int x0 = (int) (cx0 - BUDA_LINK_END_SIZE+1);
-   int y0 = (int)(cy0 - BUDA_LINK_END_SIZE+1);
-   int wd = (int)(2 * BUDA_LINK_END_SIZE - 1);
-   int ht = (int)(2 * BUDA_LINK_END_SIZE - 1);
+   int y0 = (int) (cy0 - BUDA_LINK_END_SIZE+1);
+   int wd = (int) (2 * BUDA_LINK_END_SIZE - 1);
+   int ht = (int) (2 * BUDA_LINK_END_SIZE - 1);
 
    if (fill) g.fillOval(x0,y0,wd,ht);
    else g.drawOval(x0,y0,wd,ht);
@@ -570,10 +570,10 @@ private void drawSquare(Graphics g,Point2D fp,Point2D tp,boolean fill)
    double dy = (fp.getY() - tp.getY())/d*BUDA_LINK_END_SIZE*0.5;
 
    Polygon p = new Polygon();
-   p.addPoint((int)(tp.getX()-dy),(int)(tp.getY()-dx));
-   p.addPoint((int)(tp.getX()+dy),(int)(tp.getY()+dx));
-   p.addPoint((int)(tp.getX()-2*dx-dy),(int)(tp.getY()-2*dy-dx));
-   p.addPoint((int)(tp.getX()-2*dx+dy),(int)(tp.getY()-2*dy+dx));
+   p.addPoint((int) (tp.getX()-dy),(int) (tp.getY()-dx));
+   p.addPoint((int) (tp.getX()+dy),(int) (tp.getY()+dx));
+   p.addPoint((int) (tp.getX()-2*dx-dy),(int) (tp.getY()-2*dy-dx));
+   p.addPoint((int) (tp.getX()-2*dx+dy),(int) (tp.getY()-2*dy+dx));
 
    if (fill) g.fillPolygon(p);
    else g.drawPolygon(p);

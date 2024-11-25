@@ -151,11 +151,13 @@ void createMenuAndSearch(BudaRoot br,Point pt,BudaBubble search)
    MenuPanel menu = createMenu(pt,search.getWidth());
    if (menu != null) {
       menu.setTransparent();
-      Dimension sz = menu.getPreferredSize();//search.getPreferredSize();
+      Dimension sz = menu.getPreferredSize(); //search.getPreferredSize();
       //Point p1 = new Point(pt.x + sz.width + MENU_DELTA,pt.y);//-sz.height-MENU_DELTA);
       Point p1 = new Point(pt.x, pt.y-sz.height-MENU_DELTA);
       Rectangle viewport = br.getCurrentViewport();
-      if (!viewport.contains(p1)) p1 = new Point(pt.x, pt.y+search.getSize().height+MENU_DELTA);//p1 = new Point(pt.x - menu.getSize().width - MENU_DELTA, pt.y);
+      if (!viewport.contains(p1)) {
+         p1 = new Point(pt.x, pt.y+search.getSize().height+MENU_DELTA);
+       }
       BudaBubble bb = new MenuBubble(menu);
       MenuData md = new MenuData(search,bb);
       active_menus.add(md);
@@ -434,7 +436,7 @@ private static class MenuPanel extends SwingGridPanel implements FocusListener,
 
 
 
-private static interface MenuComponent {
+private interface MenuComponent {
 
    void setTransparent(Color c);
    void setNontransparent(Color c);
@@ -529,14 +531,15 @@ private static class MenuSubBtn extends JMenu implements MenuComponent {
    @Override public void setPopupMenuVisible(boolean b) {
       boolean isVisible = isPopupMenuVisible();
       if (b != isVisible) {
-	 if ((b==true) && isShowing()) {
+	 if (b && isShowing()) {
 	    getPopupMenu().show(this, getWidth(), 0);
-	 } else {
+          }
+         else {
 	    getPopupMenu().setVisible(false);
-	 }
-      }
-   }
-
+          }
+       }
+    }
+   
 }	// end of inner class MenuSubBtn
 
 
@@ -663,7 +666,7 @@ private class MenuData extends ComponentAdapter {
 /*										*/
 /********************************************************************************/
 
-private class MenuConfigurator implements BubbleConfigurator {
+private final class MenuConfigurator implements BubbleConfigurator {
 
    @Override public BudaBubble createBubble(BudaBubbleArea bba,Element xml) {
       Element cnt = IvyXml.getChild(xml,"CONTENT");

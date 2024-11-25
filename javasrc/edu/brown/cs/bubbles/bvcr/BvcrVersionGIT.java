@@ -413,7 +413,7 @@ private void findGitRoot()
    if (ign) cmd += " --ignored";
    StringCommand cm = new StringCommand(cmd);
 
-   Map<File,FileData> file_map = new HashMap<File,FileData>();
+   Map<File,FileData> filemap = new HashMap<File,FileData>();
 
    StringTokenizer tok = new StringTokenizer(cm.getContent(),"\n\r");
    while (tok.hasMoreTokens()) {
@@ -468,7 +468,7 @@ private void findGitRoot()
 	    break;
        }
       FileData fd = new FileData(sts,tofile);
-      file_map.put(nf,fd);
+      filemap.put(nf,fd);
       if (push) fd.pushNeeded();
     }
 
@@ -480,15 +480,15 @@ private void findGitRoot()
       if (Character.isWhitespace(fnm.charAt(0))) continue;
       fnm = fnm.trim();
       File nf = new File(git_root,fnm);
-      FileData fd = file_map.get(nf);
+      FileData fd = filemap.get(nf);
       if (fd == null) {
 	 fd = new FileData(null,"UNMODIFIED");
-	 file_map.put(nf,fd);
+	 filemap.put(nf,fd);
        }
       fd.pushNeeded();
     }
 
-   for (Map.Entry<File,FileData> ent : file_map.entrySet()) {
+   for (Map.Entry<File,FileData> ent : filemap.entrySet()) {
       xw.begin("FILE");
       xw.field("NAME",ent.getKey().getPath());
       ent.getValue().outputXml(xw);

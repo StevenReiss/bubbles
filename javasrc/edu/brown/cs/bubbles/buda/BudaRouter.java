@@ -163,8 +163,10 @@ private void computeRoute(BudaBubbleLink bbl)
 	  }
 	 else x1 = x0 - TARGET_DELTA;
 	 x0 = addHPivot(bbl,x0,y0,x1,tgt.getY());
-	 validleft = validright = false;
-	 validup = validdown = true;
+	 validleft = false;
+	 validright = false;
+	 validup = true;
+	 validdown = true;
        }
       else if (validright) {
 	 double x1;
@@ -178,8 +180,10 @@ private void computeRoute(BudaBubbleLink bbl)
 	  }
 	 else x1 = x0 + TARGET_DELTA;
 	 x0 = addHPivot(bbl,x0,y0,x1,tgt.getY());
-	 validleft = validright = false;
-	 validup = validdown = true;
+	 validleft = false;
+	 validright = false;
+	 validup = true;
+	 validdown = true;
        }
       else if (validup) {
 	 double y1;
@@ -193,8 +197,10 @@ private void computeRoute(BudaBubbleLink bbl)
 	  }
 	 else y1 = y0 - TARGET_DELTA;
 	 y0 = addVPivot(bbl,x0,y0,y1,tgt.getX());
-	 validleft = validright = true;
-	 validup = validdown = false;
+	 validleft = true;
+	 validright = true;
+	 validup = false;
+	 validdown = false;
        }
       else if (validdown) {
 	 double y1;
@@ -208,8 +214,10 @@ private void computeRoute(BudaBubbleLink bbl)
 	  }
 	 else y1 = y0 + TARGET_DELTA;
 	 y0 = addVPivot(bbl,x0,y0,y1,tgt.getX());
-	 validleft = validright = true;
-	 validup = validdown = false;
+	 validleft = true;
+	 validright = true;
+	 validup = false;
+	 validdown = false;
        }
     }
 

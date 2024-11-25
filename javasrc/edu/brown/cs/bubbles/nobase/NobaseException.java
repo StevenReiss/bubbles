@@ -47,14 +47,14 @@ private static final long serialVersionUID = 1;
 /*										*/
 /********************************************************************************/
 
-public NobaseException(String msg)
+NobaseException(String msg)
 {
    super(msg);
 }
 
 
 
-public NobaseException(String msg,Throwable cause)
+NobaseException(String msg,Throwable cause)
 {
    super(msg,cause);
 }

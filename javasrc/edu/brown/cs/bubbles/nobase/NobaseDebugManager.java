@@ -326,7 +326,7 @@ void setExceptionBreakpoint(String proj,
 }
 
 
-void editBreakpoint(String id,String ... pv)
+void editBreakpoint(String id,String... pv)
 	throws NobaseException
 {
    NobaseDebugBreakpoint bp = break_map.get(id);

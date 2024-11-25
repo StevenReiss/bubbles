@@ -65,7 +65,7 @@ public interface BudaConstants {
 /**
  * Properties file
  */
-static final BoardProperties BUDA_PROPERTIES = BoardProperties.getProperties("Buda");
+BoardProperties BUDA_PROPERTIES = BoardProperties.getProperties("Buda");
 
 
 /********************************************************************************/
@@ -892,8 +892,8 @@ enum BudaContentNameType {
 
 interface BubbleAreaCallback extends EventListener {
 
-   public void updateOverview();
-   public void moveDelta(int dx,int dy);
+   void updateOverview();
+   void moveDelta(int dx,int dy);
 
 }	// end of inner interface BubbleAreaCallback
 
@@ -1113,7 +1113,7 @@ interface PortConfigurator {
 
 interface ButtonListener extends EventListener {
 
-   public void buttonActivated(BudaBubbleArea bba,String id,Point pt);
+   void buttonActivated(BudaBubbleArea bba,String id,Point pt);
 
 }
 

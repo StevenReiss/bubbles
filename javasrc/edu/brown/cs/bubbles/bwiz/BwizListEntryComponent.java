@@ -194,7 +194,7 @@ private void setup()
 
    //Creates the title area
    title_label=new JLabel(ui_title);
-   title_label.setFont(BWIZ_FONT_SIZE_MAIN.deriveFont((float)24));
+   title_label.setFont(BWIZ_FONT_SIZE_MAIN.deriveFont((float) 24));
    title_label.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 
    subpanel.add(title_label);
@@ -202,7 +202,7 @@ private void setup()
 
    //Creates a textfield with default styling for the input area
    input_field = BwizVerifiedTextField.getStyledField("", "", the_verifier);
-   input_field.setFont(BWIZ_FONT_SIZE_MAIN.deriveFont((float)24));
+   input_field.setFont(BWIZ_FONT_SIZE_MAIN.deriveFont((float) 24));
    input_field.setColumns(8);
    input_field.setAlignmentY(Component.BOTTOM_ALIGNMENT);
    //Add a handler for when the user hits enter
@@ -222,7 +222,7 @@ private void setup()
    //A button for adding values to the list
    add_button=new BwizHoverButton();
    add_button.setText("+");
-   add_button.setFont(BWIZ_FONT_SIZE_MAIN.deriveFont((float)14));
+   add_button.setFont(BWIZ_FONT_SIZE_MAIN.deriveFont((float) 14));
    add_button.addActionListener(new InputAction());
    add_button.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 
@@ -231,7 +231,7 @@ private void setup()
    //A button for removing values from the list
    remove_button=new BwizHoverButton();
    remove_button.setText("-");
-   remove_button.setFont(BWIZ_FONT_SIZE_MAIN.deriveFont((float)14));
+   remove_button.setFont(BWIZ_FONT_SIZE_MAIN.deriveFont((float) 14));
    remove_button.addActionListener(new RemoveAction());
    remove_button.setAlignmentY(Component.BOTTOM_ALIGNMENT);
    remove_button.setEnabled(false);
@@ -241,7 +241,7 @@ private void setup()
 
    //Creates a UI list area
    ui_list = new JList<String>(list_data);
-   ui_list.setFont(BWIZ_FONT_SIZE_MAIN.deriveFont((float)14));
+   ui_list.setFont(BWIZ_FONT_SIZE_MAIN.deriveFont((float) 14));
    ui_list.setVisibleRowCount(0);
    ui_list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
    ui_list.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -435,7 +435,7 @@ protected void setTextFont(Font f)
 /*										*/
 /********************************************************************************/
 
-private class InputAction implements ActionListener {
+private final class InputAction implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent e) {
       addItem(input_field.getText());
@@ -445,7 +445,7 @@ private class InputAction implements ActionListener {
 
 
 
-private class RemoveAction implements ActionListener
+private final class RemoveAction implements ActionListener
 {
     @Override public void actionPerformed(ActionEvent e) {
        removeSelected();
@@ -454,7 +454,7 @@ private class RemoveAction implements ActionListener
 
 
 
-private class KeyAction extends KeyAdapter {
+private final class KeyAction extends KeyAdapter {
 
    @Override public void keyPressed(KeyEvent e) {
       int keyCode=e.getKeyCode();
@@ -488,8 +488,10 @@ private class PaddedListCellRenderer implements ListCellRenderer<String>
       default_renderer = new DefaultListCellRenderer();
     }
 
-   @Override public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
-      JLabel renderer = (JLabel) default_renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+   @Override public Component getListCellRendererComponent(JList<? extends String> list, 
+         String value, int index, boolean isSelected, boolean cellHasFocus) {
+      JLabel renderer = (JLabel) default_renderer.getListCellRendererComponent(list, value, 
+            index, isSelected, cellHasFocus);
       renderer.setBorder((instance_padding==null) ? cell_padding : instance_padding);
 
       return renderer;

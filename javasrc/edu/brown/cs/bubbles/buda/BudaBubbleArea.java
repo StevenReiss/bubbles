@@ -212,7 +212,8 @@ BudaBubbleArea(BudaRoot br,Element cfg,BudaChannelSet cs)
 
    Toolkit t = getToolkit();
    Dimension d = t.getBestCursorSize(32,32);
-   if (d.width == 32 && d.height == 32) palm_cursor= t.createCustomCursor(BoardImage.getImage("palm3"), new Point(16,16), "PALM_CURSOR");
+   if (d.width == 32 && d.height == 32) palm_cursor= t.createCustomCursor(
+         BoardImage.getImage("palm3"), new Point(16,16), "PALM_CURSOR");
    else palm_cursor = new Cursor(Cursor.MOVE_CURSOR);
 
    BudaRoot.registerHelp(this,this);
@@ -575,7 +576,7 @@ private void localRemoveBubble(BudaBubble bb)
    // routes_valid = false;	// if we take bubbles into account when routing
 
    if (grp != null) {
-      synchronized(bubble_groups) {
+      synchronized (bubble_groups) {
 	 checkGroup(grp);
        }
     }
@@ -1097,7 +1098,7 @@ void collapseLinks(Collection<BudaBubbleLink> lnks0)
 }
 
 
-private static class LinkComparator implements Comparator<BudaBubbleLink> {
+private static final class LinkComparator implements Comparator<BudaBubbleLink> {
 
    @Override public int compare(BudaBubbleLink l1,BudaBubbleLink l2) {
       BudaBubble b1 = l1.getSource();
@@ -2037,8 +2038,8 @@ private class ScrollAnimator extends javax.swing.Timer implements ActionListener
        }
       else {
          double t1 = -t0*t0 + 2 * t0;
-         int x0 = (int)((target_x - start_x)*t1) + start_x;
-         int y0 = (int)((target_y - start_y)*t1) + start_y;
+         int x0 = (int) ((target_x - start_x)*t1) + start_x;
+         int y0 = (int) ((target_y - start_y)*t1) + start_y;
          dx = x0 - cur_viewport.x;
          dy = y0 - cur_viewport.y;
        }
@@ -2097,8 +2098,8 @@ private Point setDockedLocation(BudaBubble bb)
 	    bb.setSize(cur_viewport.width, bb.getHeight());
 	    bb.setLocation(new Point(cur_viewport.x,p.y));
 	  }
-	 else bb.setLocation(new Point(cur_viewport.x + cur_viewport.width
-					  - bb.getWidth(),p.y));
+	 else bb.setLocation(
+               new Point(cur_viewport.x + cur_viewport.width - bb.getWidth(),p.y));
 	 havehadhoriz = true;
        }
       else if (bbdi == BudaBubbleDock.WEST) {
@@ -2147,7 +2148,7 @@ private Point setDockedLocation(BudaBubble bb)
 
 public boolean setBubbleFloating(BudaBubble bb, boolean fg)
 {
-   synchronized(active_bubbles) {
+   synchronized (active_bubbles) {
       if (!active_bubbles.contains(bb)) return false;
     }
 
@@ -2482,6 +2483,7 @@ private void handleMouseEvent(MouseEvent e)
        }
       else if (mr.getGroup() != null) {
 	 if (e.getClickCount() == 1) {
+            // do nothing
 	  }
 	 else if (e.getClickCount() == 2) {
 	    userRemoveGroup(mr.getGroup());
@@ -2491,7 +2493,7 @@ private void handleMouseEvent(MouseEvent e)
 	 removeLink(mr.getLink());
        }
     }
-   else if(e.getID() == MouseEvent.MOUSE_PRESSED && e.getButton() == MouseEvent.BUTTON1) {
+   else if (e.getID() == MouseEvent.MOUSE_PRESSED && e.getButton() == MouseEvent.BUTTON1) {
       if (pr != null && mr.getBubble() != null && pr.getRegion() != mr.getRegion() && pr.getBubble() != null) {
 	 int deltax = Math.abs(pr.getLocation().x - mr.getLocation().x);
 	 int deltay = Math.abs(pr.getLocation().y - mr.getLocation().y);
@@ -3004,7 +3006,8 @@ private class GroupMoveContext extends MouseContext {
       for (BudaBubble b : move_bubbles) b.forceFreeze();
 
       ++move_count;
-      BudaCursorManager.setGlobalCursorForComponent(BudaBubbleArea.this, Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+      BudaCursorManager.setGlobalCursorForComponent(BudaBubbleArea.this,
+            Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
       Point p1 = e.getPoint();
       Point p0 = e.getPoint();
       // int dx = (int)((p1.x - mouse_point.x) / scale_factor);
@@ -3113,7 +3116,8 @@ private class BubbleConnectContext extends MouseContext {
 
    @Override void next(MouseEvent e) {
       if (draw_panel == null) {
-	 BudaCursorManager.setGlobalCursorForComponent(BudaBubbleArea.this, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+	 BudaCursorManager.setGlobalCursorForComponent(BudaBubbleArea.this,
+               Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 	 draw_panel = new DrawPanel();
 	 draw_panel.setOpaque(false);
 	 Dimension d = getSize();
@@ -3348,7 +3352,8 @@ private void checkMoveViewport(Point p)
 {
    // BoardLog.logD("Buda","POINT " + p + " " + cur_viewport);
 
-   int ax = 0, ay = 0;
+   int ax = 0;
+   int ay = 0;
    if (p.x < cur_viewport.x) ax = -1;
    else if (p.x > cur_viewport.x + cur_viewport.width) ax = 1;
    if (p.y < cur_viewport.y) ay = -1;
@@ -3497,7 +3502,7 @@ private class BubbleManager implements ComponentListener, ContainerListener {
 /*										*/
 /********************************************************************************/
 
-private static class BudaLayoutManager implements LayoutManager {
+private static final class BudaLayoutManager implements LayoutManager {
 
    @Override public void addLayoutComponent(String name,Component c)		{ }
 

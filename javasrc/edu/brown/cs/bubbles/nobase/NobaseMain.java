@@ -57,7 +57,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
-public class NobaseMain implements NobaseConstants, MintConstants
+public final class NobaseMain implements NobaseConstants, MintConstants
 {
 
 
@@ -113,7 +113,7 @@ private Timer			nobase_timer;
 private Pinger			nobase_pinger;
 private NobasePreferences	system_prefs;
 
-static private NobaseMain		nobase_main;
+private static NobaseMain		nobase_main;
 
 private static PrintStream log_file = null;
 private static NobaseLogLevel log_level = NobaseLogLevel.DEBUG;
@@ -696,7 +696,7 @@ private static class EditDataImpl implements IEditData {
 /*										*/
 /********************************************************************************/
 
-private class CommandHandler implements MintHandler {
+private final class CommandHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg, MintArguments args) {
       String cmd = args.getArgument(1);
@@ -747,23 +747,23 @@ private class CommandHandler implements MintHandler {
 /*										*/
 /********************************************************************************/
 
-static public void logE(String msg,Throwable t) { log(NobaseLogLevel.ERROR,msg,t); }
+public static void logE(String msg,Throwable t) { log(NobaseLogLevel.ERROR,msg,t); }
 
-static public void logE(String msg)		{ log(NobaseLogLevel.ERROR,msg,null); }
+public static void logE(String msg)		{ log(NobaseLogLevel.ERROR,msg,null); }
 
-static public void logW(String msg)		{ log(NobaseLogLevel.WARNING,msg,null); }
+public static void logW(String msg)		{ log(NobaseLogLevel.WARNING,msg,null); }
 
-static public void logI(String msg)		{ log(NobaseLogLevel.INFO,msg,null); }
+public static void logI(String msg)		{ log(NobaseLogLevel.INFO,msg,null); }
 
-static public  void logD(String msg)		{ log(NobaseLogLevel.DEBUG,msg,null); }
+public static void logD(String msg)		{ log(NobaseLogLevel.DEBUG,msg,null); }
 
-static public  void logDX(String msg)
+public static void logDX(String msg)
 {
    log(NobaseLogLevel.DEBUG,msg,new Throwable(msg));
 }
 
 
-static public void logX(String msg)
+public static void logX(String msg)
 {
    Throwable t = new Throwable(msg);
    logE(msg,t);
@@ -771,11 +771,11 @@ static public void logX(String msg)
 
 
 
-static public void log(String msg)		{ logI(msg); }
+public static void log(String msg)		{ logI(msg); }
 
 
 
-static public void log(NobaseLogLevel lvl,String msg,Throwable t)
+public static void log(NobaseLogLevel lvl,String msg,Throwable t)
 {
    if (lvl.ordinal() > log_level.ordinal()) return;
 
@@ -797,7 +797,7 @@ static public void log(NobaseLogLevel lvl,String msg,Throwable t)
 
 
 
-static private void dumpTrace(String pfx,Throwable t) {
+private static void dumpTrace(String pfx,Throwable t) {
    if (t == null) return;
    if (log_file != null) {
       if (pfx != null) log_file.print(pfx);

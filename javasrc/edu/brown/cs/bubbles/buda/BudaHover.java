@@ -261,7 +261,7 @@ protected void clearHover(MouseEvent e)
 /*										*/
 /********************************************************************************/
 
-private class Mouser extends MouseAdapter {
+private final class Mouser extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       clearHover(e);
@@ -307,7 +307,7 @@ private class Mouser extends MouseAdapter {
 
 
 
-private class Keyer extends KeyAdapter {
+private final class Keyer extends KeyAdapter {
 
    @Override public void keyPressed(KeyEvent e) {
       clearHover(null);
@@ -317,7 +317,7 @@ private class Keyer extends KeyAdapter {
 
 
 
-private class Comper extends ComponentAdapter implements HierarchyListener {
+private final class Comper extends ComponentAdapter implements HierarchyListener {
 
    @Override public void componentHidden(ComponentEvent e) {
       clearHover(null);

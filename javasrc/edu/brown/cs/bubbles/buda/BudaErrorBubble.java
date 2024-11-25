@@ -79,7 +79,7 @@ public BudaErrorBubble(final String errmsg,Color c)
 /*										*/
 /********************************************************************************/
 
-private class ErrorContentPane extends JPanel
+private final class ErrorContentPane extends JPanel
 {
    private static final long serialVersionUID = 1L;
 
@@ -93,7 +93,7 @@ private class ErrorContentPane extends JPanel
 }	// end of inner class ErrorContentPane
 
 
-private class QuitAction extends MouseAdapter {
+private final class QuitAction extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       setVisible(false);

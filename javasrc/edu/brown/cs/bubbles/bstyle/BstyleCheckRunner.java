@@ -337,7 +337,10 @@ private void processFileTexts(List<FileText> files) throws CheckstyleException
          fireErrors(fnm,errs);
        }
       catch (Throwable t) {
-         IvyLog.logE("BSTYLE","Problem processing file " + f,t);
+         IvyLog.logE("BSTYLE","Problem processing file texts " + f,t);
+         BstyleFileManager fm = bstyle_main.getFileManager();
+         BstyleFile bf = fm.findFile(f);
+         bf.setHasErrors(true);
        }
       finally {
          fireFileFinished(fnm);
@@ -359,7 +362,7 @@ private SortedSet<Violation> processFileText(File f,FileText ft)
          BstyleFileManager fm = bstyle_main.getFileManager();
          BstyleFile bf = fm.findFile(f);
          bf.setHasErrors(true);
-         IvyLog.logD("BSTYLE","Problem processing file " + f + " for " + fsc,t);
+         IvyLog.logD("BSTYLE","Problem processing file text " + f + " for " + fsc,t);
          // add error violation
          // other checks will fail as well == ignore
          break;

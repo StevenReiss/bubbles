@@ -59,8 +59,8 @@ private List<Assignment> avail_assignments;
 
 private static final long serialVersionUID = 1;
 
-protected final static Border EMPTY_BORDER=BorderFactory.createEmptyBorder(2,2,2,2);
-protected final static Border HOVER_BORDER=BorderFactory.createLineBorder(Color.RED, 2);
+protected static final Border EMPTY_BORDER=BorderFactory.createEmptyBorder(2,2,2,2);
+protected static final Border HOVER_BORDER=BorderFactory.createLineBorder(Color.RED, 2);
 
 
 
@@ -139,7 +139,7 @@ private void setDropDown()
 /*										*/
 /********************************************************************************/
 
-private class ChooseAction implements ActionListener {
+private final class ChooseAction implements ActionListener {
 
    @Override
    public void actionPerformed(ActionEvent evt) {

@@ -319,7 +319,7 @@ private void checkSizes()
 
 
 
-private class SizeListener extends ComponentAdapter {
+private final class SizeListener extends ComponentAdapter {
 
    @Override public void componentResized(ComponentEvent e) {
       checkSizes();

@@ -65,8 +65,8 @@ interface BvcrEventHandler {
 /********************************************************************************/
 
 byte [] KEY_SALT = new byte [] {
-   (byte)0xa9,(byte)0x9b,(byte)0xc8,(byte)0x32,
-   (byte)0x56,(byte)0x35,(byte)0xe3,(byte)0x03
+   (byte) 0xa9,(byte) 0x9b,(byte) 0xc8,(byte) 0x32,
+   (byte) 0x56,(byte) 0x35,(byte) 0xe3,(byte) 0x03
 };
 
 int KEY_COUNT = 19;

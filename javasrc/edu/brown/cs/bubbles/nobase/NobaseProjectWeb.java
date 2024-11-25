@@ -54,13 +54,13 @@ class NobaseProjectWeb extends NobaseProject
 /*										*/
 /********************************************************************************/
 
-private static final Set<String> html_extensions;
+private static final Set<String> HTML_EXTENSIONS;
 
 static {
-   html_extensions = new HashSet<String>();
-   html_extensions.add(".html");
-   html_extensions.add(".vel");
-   html_extensions.add(".handlebars");
+   HTML_EXTENSIONS = new HashSet<String>();
+   HTML_EXTENSIONS.add(".html");
+   HTML_EXTENSIONS.add(".vel");
+   HTML_EXTENSIONS.add(".handlebars");
 }
 
 
@@ -99,7 +99,7 @@ NobaseProjectWeb(NobaseMain pm,String name,File base)
        }
       String mnm = f.getName();
       int idx = mnm.lastIndexOf(".");
-      if (idx > 0 && html_extensions.contains(mnm.substring(idx).toLowerCase())) {
+      if (idx > 0 && HTML_EXTENSIONS.contains(mnm.substring(idx).toLowerCase())) {
 	 findScripts(f);
 	 return;
        }

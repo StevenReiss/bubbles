@@ -280,7 +280,7 @@ BfixSmartInsert getInserter()
 
 void fixErrorsInRegion(int startoff,int endoff,boolean force)
 {
-   Set<BumpProblem> done = new HashSet<BumpProblem>();
+   Set<BumpProblem> done = new HashSet<>();
 
    // need to maintain region bounds correctly after fixes
 

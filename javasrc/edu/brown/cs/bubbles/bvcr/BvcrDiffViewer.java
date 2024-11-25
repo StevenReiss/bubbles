@@ -336,7 +336,7 @@ private Color getColorForChange(ChangeType ct,boolean bkg)
 
 private void historyReady()
 {
-   synchronized(version_lock) {
+   synchronized (version_lock) {
       left_version = null;
       current_label.setText("CURRENT FILE");
       right_version = null;
@@ -365,7 +365,7 @@ private void historyReady()
 }
 
 
-private class VersionSorter implements Comparator<BvcrFileVersion> {
+private final class VersionSorter implements Comparator<BvcrFileVersion> {
    
    @Override public int compare(BvcrFileVersion v1,BvcrFileVersion v2) {
       return v2.getVersionTime().compareTo(v1.getVersionTime());
@@ -441,7 +441,7 @@ private class FinishSetup implements Runnable {
 
 
 
-private class VersionSelect implements ActionListener {
+private final class VersionSelect implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       int selidx = known_versions.getSelectedIndex();
@@ -643,12 +643,12 @@ private class ChangeHighlighter implements Highlighter.HighlightPainter {
          Dimension sz = c.getSize();
          Rectangle pt;
          if (off0 == off1) {
-            int nht = (int)(r0.getY() + r0.getHeight());
+            int nht = (int) (r0.getY() + r0.getHeight());
             pt = new Rectangle(0,nht,sz.width,1);
           }
          else {
             Rectangle2D r1 = SwingText.modelToView2D(c,off1-1);
-            int nht = (int)(r1.getY() + r1.getHeight() - r0.getY());
+            int nht = (int) (r1.getY() + r1.getHeight() - r0.getY());
             pt = new Rectangle(0,(int) r0.getY(),sz.width,nht);
           }
          g.setColor(color);
@@ -924,7 +924,8 @@ private class RevisionBar extends JPanel {
          ChangeType ct = ChangeType.CHANGE;
          if (add == null) ct = ChangeType.DELETE;
          if (del == null) ct = ChangeType.INSERT;
-         double sln0,sln1;
+         double sln0;
+         double sln1;
          if (is_left) {
             sln0 = chng.getTargetLine();
             sln1 = sln0;
@@ -1037,7 +1038,7 @@ private class VScrollSync implements AdjustmentListener {
 }       // end of inner class VScrollSync
 
 
-private class LeftScrollPaneLayout extends ScrollPaneLayout {
+private final class LeftScrollPaneLayout extends ScrollPaneLayout {
    
    private static final long serialVersionUID = 1;
 

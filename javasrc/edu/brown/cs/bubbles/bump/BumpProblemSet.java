@@ -225,9 +225,10 @@ void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
 
 
 
-void clearProblems(String proj,String category)
+void clearProblems(String proj,File file,String category)
 {
    BoardLog.logD("BUMP","Clear Problems " + proj);
+   File fcanon = null;
    List<BumpProblemImpl> clear;
    synchronized (current_problems) {
       if (proj == null) {
@@ -239,12 +240,23 @@ void clearProblems(String proj,String category)
          for (Iterator<BumpProblemImpl> it = current_problems.values().iterator();
             it.hasNext(); ) {
             BumpProblemImpl bp = it.next();
+            if (file != null) {
+               File f1 = bp.getFile();
+               if (f1 == null) continue;
+               if (!f1.equals(file) && f1.getName().equals(file.getName())) {
+                  if (fcanon == null) fcanon = IvyFile.getCanonical(file);
+                  File f2 = IvyFile.getCanonical(f1);
+                  if (!fcanon.equals(f2)) continue;
+                  BoardLog.logD("BUMP","REMOVE FILE PROBLEM " + bp);
+                  clear.add(bp);
+                  it.remove();
+                }
+             }
             if (bp.getProject() == null) {
                BoardLog.logE("BUMP","Problem lacks a project " + bp.getFile() + " " +
                      bp.getMessage());
-               continue;
              }
-            if (bp.getProject().equals(proj)) {
+            if (bp.getProject() != null && proj != null && bp.getProject().equals(proj)) {
                if (category == null || bp.getCategory() == null ||
                      category.equals(bp.getCategory())) {
                   BoardLog.logD("BUMP","REMOVE PROBLEM " + bp);

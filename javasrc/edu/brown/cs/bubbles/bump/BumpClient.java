@@ -76,7 +76,7 @@ import java.util.regex.Pattern;
  *
  **/
 
-abstract public class BumpClient implements BumpConstants, BoardConstants, MintConstants {
+public abstract class BumpClient implements BumpConstants, BoardConstants, MintConstants {
 
 
 
@@ -130,7 +130,7 @@ private static final int STACK_DELAY = 20000;
  *	Get the singular instance of the IDE interface.
  **/
 
-public synchronized static BumpClient getBump()
+public static synchronized BumpClient getBump()
 {
    if (default_client == null) {
       BoardLanguage bl = BoardSetup.getSetup().getLanguage();
@@ -192,7 +192,7 @@ protected BumpClient()
 
    debug_jvm_args = new ArrayList<>();
 
-   collect_id = (int)(Math.random() * 10000);
+   collect_id = (int) (Math.random() * 10000);
 
    source_id = "BUBBLES_" + IvyExecQuery.getHostName() + "_" + IvyExecQuery.getProcessId();
 
@@ -786,7 +786,7 @@ public File remoteFileAction(String act,File lcl,String kind,File rem)
 
 
 
-private class FileGetServerHandler implements MintHandler {
+private final class FileGetServerHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       Element xml = msg.getXml();
@@ -863,7 +863,7 @@ private class FileGetServerHandler implements MintHandler {
 
 
 
-private class StartDebugHandler implements MintHandler {
+private final class StartDebugHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       Element xml = msg.getXml();
@@ -930,7 +930,7 @@ private static class FileGetClientHandler implements MintHandler {
 /*										*/
 /********************************************************************************/
 
-private class ServerExitHandler implements MintHandler {
+private final class ServerExitHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       BoardLog.logD("BUMP","SERVER EXIT RECEIVED");
@@ -950,7 +950,7 @@ private class ServerExitHandler implements MintHandler {
 /*										*/
 /********************************************************************************/
 
-private class SaveWorkspaceHandler implements MintHandler {
+private final class SaveWorkspaceHandler implements MintHandler {
 
 @Override public void receive(MintMessage msg,MintArguments args) {
    BoardLog.logD("BUMP","SAVE WORKSPACE RECEIVED");
@@ -962,7 +962,7 @@ private class SaveWorkspaceHandler implements MintHandler {
 
 
 
-private class ForceServerExit extends Thread {
+private final class ForceServerExit extends Thread {
 
    @Override public void run() {
       BoardLog.logD("BUMP","Force server exit");
@@ -1065,8 +1065,8 @@ public void build(String proj,boolean clean,boolean full,boolean refresh)
    String q = "REFRESH='" + Boolean.toString(refresh) + "'";
    q += " CLEAN='" + Boolean.toString(clean) + "'";
    q += " FULL='" + Boolean.toString(full) + "'";
-
-   problem_set.clearProblems(proj,"IDE");
+ 
+   problem_set.clearProblems(proj,null,"IDE");
 
    Element probs = getXmlReply("BUILDPROJECT",proj,q,null,BUILD_DELAY);
    problem_set.handleErrors(proj,null,"IDE",0,probs);
@@ -2584,7 +2584,7 @@ boolean clearLineBreakpoint(String proj,File file,String cls,int line)
  *	Edit breakpoint properties
  **/
 
-public boolean editBreakpoint(String id,String prop,String ... args)
+public boolean editBreakpoint(String id,String prop,String... args)
 {
    String q = "ID='" + id + "' PROP='" + prop + "'";
    if (args.length > 0) {
@@ -2795,6 +2795,11 @@ public List<BumpProblem> getProblems(File f)
    return problem_set.getProblems(f);
 }
 
+
+public void removeCategoryProblemsForFile(File f,String category)
+{
+   problem_set.clearProblems(null,f,category);
+}
 
 
 /********************************************************************************/
@@ -3536,7 +3541,7 @@ protected void sendMessage(String cmd,String proj,String flds,String cnts,MintRe
 /*										*/
 /********************************************************************************/
 
-private static class ReplyHandler extends MintDefaultReply {
+private static final class ReplyHandler extends MintDefaultReply {
 
    @Override public synchronized void handleReply(MintMessage msg,MintMessage rply) {
       super.handleReply(msg,rply);
@@ -3799,7 +3804,7 @@ private void buildAllProjects(boolean clean,boolean full,boolean refresh,boolean
       else {
          BoardLog.logD("BUMP","Start working on problems: " + IvyXml.convertXmlToString(probs));
          if (clean || full || refresh) {
-            problem_set.clearProblems(pnm,"IDE");
+            problem_set.clearProblems(pnm,null,"IDE");
          }
          problem_set.handleErrors(pnm,null,"IDE",0,probs);
        }
@@ -4072,7 +4077,7 @@ protected static class NameCollector {
 /*										*/
 /********************************************************************************/
 
-private class CloseIDE extends Thread {
+private final class CloseIDE extends Thread {
 
    @Override public void run() {
       stopIDE();

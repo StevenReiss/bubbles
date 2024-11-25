@@ -163,7 +163,7 @@ String getHtmlDescription()
 private void outputRow(String key,String val,StringBuffer buf) 
 {
    buf.append("<tr><td style='border: 1px solid black;'>");
-   buf.append(key + ":" );
+   buf.append(key + ":");
    buf.append("</td><td style='border: 1px solid black;'>");
    buf.append(val);
    buf.append("</td></tr>");

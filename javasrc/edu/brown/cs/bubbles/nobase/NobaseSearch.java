@@ -25,15 +25,17 @@
 package edu.brown.cs.bubbles.nobase;
 
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
-
-import org.eclipse.jface.text.IDocument;
-
-import org.eclipse.wst.jsdt.core.dom.*;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import org.eclipse.wst.jsdt.core.dom.ASTNode;
+import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
+import org.eclipse.wst.jsdt.core.dom.FunctionExpression;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
+import org.eclipse.wst.jsdt.core.dom.VariableDeclarationStatement;
+import org.eclipse.jface.text.IDocument;
 
 
 

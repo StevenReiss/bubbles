@@ -203,7 +203,7 @@ void startDebug() throws NobaseException
 private int findPort()
 {
    for ( ; ; ) {
-      int portid = ((int)(Math.random() * 50000)) + 4000;
+      int portid = ((int) (Math.random() * 50000)) + 4000;
       try {
 	 Socket s = new Socket("localhost",portid);
 	 s.close();

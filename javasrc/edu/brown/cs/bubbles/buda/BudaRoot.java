@@ -206,7 +206,7 @@ static {
    group_colors = cols.toArray(group_colors);
 
    int ln = group_colors.length;
-   color_index = (int)(Math.random() * ln);
+   color_index = (int) (Math.random() * ln);
    int st = ln / 3;
    for (int i = 0; i < ln; ++i) {
       for (int j = 0; j < 2; ++j) {
@@ -976,7 +976,7 @@ public void noteSearchUsed(JComponent window)
 
 
 
-private class SearchSingleton extends ComponentAdapter {
+private final class SearchSingleton extends ComponentAdapter {
 
    @Override public void componentHidden(ComponentEvent e) {
       if (e.getSource() == search_bubble) {
@@ -1334,7 +1334,7 @@ double getScaleFactor() 	{ return getCurrentBubbleArea().getScaleFactor(); }
 
 
 
-private class ViewportHandler implements ChangeListener {
+private final class ViewportHandler implements ChangeListener {
 
    @Override public void stateChanged(ChangeEvent e) {
       Rectangle vr = bubble_view.getViewRect();
@@ -1353,7 +1353,7 @@ private class ViewportHandler implements ChangeListener {
 
 
 
-private class ViewportCallback implements BubbleAreaCallback {
+private final class ViewportCallback implements BubbleAreaCallback {
 
    @Override public void updateOverview()		{ }
 
@@ -1639,7 +1639,7 @@ private synchronized void setShadeDelta(int d)
 }
 
 
-private class OverviewListener extends MouseMotionAdapter {
+private final class OverviewListener extends MouseMotionAdapter {
 
    @Override public void mouseMoved(MouseEvent e) {
       JComponent twin = getRootPane();
@@ -1690,7 +1690,7 @@ private class ShadeUpdater implements ActionListener {
    @Override public void actionPerformed(ActionEvent e) {
       long now = System.currentTimeMillis();
       long delta = now-last_time;
-      int move = (int)(move_delta * delta * shade_delta);
+      int move = (int) (move_delta * delta * shade_delta);
    
       boolean done = false;
       int curht = bubble_overview.getHeight() + bubble_topbar.getHeight();
@@ -1844,7 +1844,7 @@ private class SearchKeyHandler extends AbstractAction {
    }
 
    @Override public void actionPerformed(ActionEvent e) {
-      Point pt = MouseInfo.getPointerInfo().getLocation();//getCurrentBubbleArea().getCurrentMouse();
+      Point pt = MouseInfo.getPointerInfo().getLocation(); //getCurrentBubbleArea().getCurrentMouse();
       SwingUtilities.convertPointFromScreen(pt, getCurrentBubbleArea());
       if (pt == null) return;
 
@@ -1987,7 +1987,7 @@ private class FloaterHandler extends AbstractAction implements ActionListener {
       BudaBubbleArea focbubarea = getCurrentBubbleArea();
       BudaBubble focbub = focbubarea.getFocusBubble();
       if (focbub != null) {
-	 if(focbub.isFloating()) focbubarea.setBubbleFloating(focbub,false);
+	 if (focbub.isFloating()) focbubarea.setBubbleFloating(focbub,false);
 	 else focbubarea.setBubbleFloating(focbub,true);
 	 focbubarea.repaint();
        }
@@ -2021,7 +2021,7 @@ private class FocusDirectionHandler extends AbstractAction implements ActionList
       BudaBubble notbadcandidate = null;
       int shortdist = getViewport().width/2;
       int badshortdist = shortdist;
-      for(BudaBubble bb : ibb) {
+      for (BudaBubble bb : ibb) {
 	 if (bb != focbub) {
 	    int appropriatecalc = 0;
 	    int baddist = 0;
@@ -2043,7 +2043,8 @@ private class FocusDirectionHandler extends AbstractAction implements ActionList
 		  baddist = Math.abs(focbub.getX() - bb.getX());
 		  break;
 	    }
-	    if (appropriatecalc < shortdist && appropriatecalc > 0 && (int)(baddist*bad_dist_factor) < appropriatecalc) {
+	    if (appropriatecalc < shortdist && appropriatecalc > 0 && 
+                  (int) (baddist*bad_dist_factor) < appropriatecalc) {
 	       bestcandidate = bb;
 	       shortdist = appropriatecalc;
 	       badshortdist = appropriatecalc;
@@ -2081,8 +2082,8 @@ private class PanHandler extends AbstractAction implements ActionListener {
    }
 
    @Override public void actionPerformed(ActionEvent e) {
-      int xmove = x_direction * (int)(getViewport().width*pan_scale);
-      int ymove = y_direction * (int)(getViewport().height*pan_scale);
+      int xmove = x_direction * (int) (getViewport().width*pan_scale);
+      int ymove = y_direction * (int) (getViewport().height*pan_scale);
       moveViewport(xmove, ymove);
    }
 
@@ -2306,7 +2307,7 @@ public LinkPort createPort(BudaBubble bb,Element e)
 
 
 
-private static class DefaultPortConfigurator implements PortConfigurator {
+private static final class DefaultPortConfigurator implements PortConfigurator {
 
    @Override public LinkPort createPort(BudaBubble bb,Element e) {
       return new BudaDefaultPort(e);
@@ -2644,7 +2645,7 @@ Collection<BudaTask> getAllTasks()
 
 
 
-private static class TaskComparator implements Comparator<BudaTask> {
+private static final class TaskComparator implements Comparator<BudaTask> {
 
    @Override public int compare(BudaTask t1,BudaTask t2) {
       String name1 = t1.getName();
@@ -2950,7 +2951,7 @@ private class Stopper implements Runnable {
 
 
 
-private class WindowCloser extends WindowAdapter {
+private final class WindowCloser extends WindowAdapter {
 
    @Override public void windowClosing(WindowEvent e) {
       handleCloseRequest(true);
@@ -2998,7 +2999,7 @@ private class ButtonPanel extends JPanel
    private static final long serialVersionUID = 1;
 
 
-   public ButtonPanel() {
+   ButtonPanel() {
       super();
       this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
       this.add(Box.createVerticalStrut(BUDA_BUTTON_SEPARATION));
@@ -3015,7 +3016,7 @@ private class ButtonPanel extends JPanel
       Paint p = new GradientPaint(0f, 0f,tc, 0f, BUBBLE_OVERVIEW_HEIGHT, bc);
 
       g.setPaint(p);
-      g.fillRect(0, 0, this.getWidth() , this.getHeight());
+      g.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
 
 }	// end of inner class ButtonPanel
@@ -3055,7 +3056,7 @@ private class CheckpointTimer implements ActionListener {
 /*										*/
 /********************************************************************************/
 
-private static class MouseEventQueue extends EventQueue {
+private static final class MouseEventQueue extends EventQueue {
 
    private BudaBubbleArea drag_area = null;
    private Component base_component = null;
@@ -3160,7 +3161,7 @@ private static class MouseEventQueue extends EventQueue {
 /*										*/
 /********************************************************************************/
 
-private class ClientHandler implements MintHandler {
+private final class ClientHandler implements MintHandler {
 
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);

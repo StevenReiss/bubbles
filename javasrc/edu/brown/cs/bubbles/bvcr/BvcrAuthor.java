@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 
-class BvcrAuthor implements BvcrConstants, Comparable<BvcrAuthor>
+final class BvcrAuthor implements BvcrConstants, Comparable<BvcrAuthor>
 {
 
 

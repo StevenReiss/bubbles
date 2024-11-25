@@ -39,7 +39,7 @@ import java.util.Collection;
  *	This class provides the entries to create stack bubbles
  **/
 
-public class BussFactory implements BussConstants
+public final class BussFactory implements BussConstants
 {
 
 

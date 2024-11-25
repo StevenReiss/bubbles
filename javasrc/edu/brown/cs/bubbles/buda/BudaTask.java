@@ -70,7 +70,7 @@ private String task_text;
 /*										*/
 /********************************************************************************/
 
-public BudaTask(Element xml)
+BudaTask(Element xml)
 {
    task_name = IvyXml.getAttrString(xml,"NAME");
    task_xml = xml;

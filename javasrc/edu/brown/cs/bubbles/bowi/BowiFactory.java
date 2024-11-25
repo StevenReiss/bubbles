@@ -29,7 +29,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
  * when actions take significant amounts of time
  *
  */
-public class BowiFactory {
+public final class BowiFactory {
 
 
 /********************************************************************************/
