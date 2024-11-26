@@ -2780,9 +2780,9 @@ public List<BumpProblem> getAllProblems()
 }
 
 
-public BumpErrorType getErrorType()
+public BumpErrorType getErrorType(String cat)
 {
-   return problem_set.getErrorType();
+   return problem_set.getErrorType(cat);
 }
 
 

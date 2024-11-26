@@ -844,7 +844,7 @@ private final class StartDebug implements Runnable {
       if (br == null) return;
       br.handleSaveAllRequest();
    
-      BumpErrorType etyp = bump_client.getErrorType();
+      BumpErrorType etyp = bump_client.getErrorType("IDE");
    
       if (etyp == BumpErrorType.ERROR) {
          int sts = JOptionPane.showConfirmDialog(BddtLaunchControl.this,

@@ -129,11 +129,14 @@ List<BumpProblem> getProblems(File f)
    return rslt;
 }
 
-BumpErrorType getErrorType() 
+BumpErrorType getErrorType(String cat) 
 {
    BumpErrorType er = BumpErrorType.NOTICE;
    synchronized (current_problems) {
       for (BumpProblemImpl bp : current_problems.values()) {
+        if (cat != null && bp.getCategory() != null && !cat.equals(bp.getCategory())) {
+           continue;
+         }
         BumpErrorType en = bp.getErrorType();
         if (er == null || en.ordinal() < er.ordinal()) er = en;
        }

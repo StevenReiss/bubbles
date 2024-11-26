@@ -261,7 +261,7 @@ private void handleErrors(String proj,String filename,Element messages)
    List<BstyleFile> redo = new ArrayList<>();
    
    for (Element pelt : IvyXml.children(messages,"PROBLEM")) {
-      String cat = IvyXml.getAttrString(pelt,"CATEGEORY","IDE");
+      String cat = IvyXml.getAttrString(pelt,"CATEGORY","IDE");
       if (cat.equals("BSTYLE")) continue;
       String fnm = IvyXml.getAttrString(pelt,"FILE");
       if (fnm != null) {
