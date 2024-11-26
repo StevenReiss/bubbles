@@ -185,7 +185,9 @@ void createUserStackBubble(BubbleData bd,boolean godown)
 
 
 
+// CHECKSTYLE:OFF
 private BudaBubble createSourceBubble(BumpThreadStack stk,int frm,BubbleType typ,boolean frc,boolean godown)
+// CHECKSTYLE:ON   
 {
    setupBubbleArea();
 

@@ -275,7 +275,9 @@ private JMenuItem addButton(JComponent menu,String id,String tt)
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 @Override public void actionPerformed(ActionEvent e)
+// CHECKSTYLE:ON   
 {
    String cmd = e.getActionCommand();
    BoardMetrics.noteCommand("BUDA","topbar" + cmd);

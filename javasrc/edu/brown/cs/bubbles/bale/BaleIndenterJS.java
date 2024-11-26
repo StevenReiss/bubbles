@@ -392,9 +392,11 @@ private int findCommentPosition()
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 @SuppressWarnings("fallthrough")
 private int findReferencePosition(boolean danglingelse,boolean matchbrace,
 				     boolean matchparen,boolean matchbracket,boolean matchcase)
+// CHECKSTYLE:ON
 {
    cur_indent = 0; // the indentation modification type filter text
    cur_align = -1;

@@ -321,8 +321,11 @@ private class DefaultIndenter {
       return false;
    }
 
+   // CHECKSTYLE:OFF
    @SuppressWarnings("fallthrough")
-   int computeIndent() {
+   int computeIndent()
+   // CHECKSTYLE:ON   
+   {
       getLine();
       int x = 0;
    

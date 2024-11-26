@@ -465,7 +465,9 @@ private final class ExitHandler implements MintHandler {
 
 private final class CommandHandler implements MintHandler {
 
+   // CHECKSTYLE:OFF
    @Override public void receive(MintMessage msg,MintArguments args) {
+   // CHECKSTYLE:ON   
       String cmd = args.getArgument(0);
       Element e = msg.getXml();
       String rply = null;

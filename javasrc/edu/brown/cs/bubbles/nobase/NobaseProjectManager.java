@@ -521,9 +521,11 @@ void handleKeySearch(String proj,String file,String key,IvyXmlWriter xw)
 
 
 
+// CHECKSTYLE:OFF
 void handleFindAll(String proj,String file,int soffset,int eoffset,boolean defs,
       boolean refs,boolean imps,
       boolean type,boolean ronly,boolean wonly,IvyXmlWriter xw)
+// CHECKSTYLE:ON
 {
    NobaseProject rp = getProject(proj,file);
    if (rp != null) {
@@ -546,9 +548,11 @@ void getFullyQualifiedName(String proj,String file,int spos,int epos,IvyXmlWrite
 
 
 
+// CHECKSTYLE:OFF
 void getTextRegions(String proj,String bid,String file,String cls,boolean pfx,
       boolean statics,boolean compunit,boolean imports,boolean pkg,
       boolean topdecls,boolean fields,boolean all,IvyXmlWriter xw) throws NobaseException
+// CHECKSTYLE:ON                
 {
    NobaseProject rp = getProject(proj,file);
    if (rp != null) rp.getTextRegions(bid,file,cls,pfx,statics,compunit,imports,pkg,topdecls,fields,all,xw);

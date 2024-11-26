@@ -244,7 +244,9 @@ private static class SpellFixer extends BfixFixer {
 
    @Override protected String getMemoId()	{ return for_identifier; }
 
+   // CHECKSTYLE:OFF
    @Override protected BfixRunnableFix findFix() {
+   // CHECKSTYLE:ON   
       String proj = for_document.getProjectName();
       File file = for_document.getFile();
       String filename = file.getAbsolutePath();

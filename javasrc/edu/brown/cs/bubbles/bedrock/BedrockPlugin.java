@@ -487,7 +487,9 @@ String finishMessageWait(IvyXmlWriter xw,long delay)
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 private String handleCommand(String cmd,String proj,Element xml) throws BedrockException
+// CHECKSTYLE:ON
 {
    BedrockPlugin.logI("Handle command " + cmd + " for " + proj);
    long start = System.currentTimeMillis();

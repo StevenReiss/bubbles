@@ -94,8 +94,10 @@ enum BoardLanguage {
    private String jar_runner;
    private String workspace_label;
 
+   // CHECKSTYLE:OFF
    BoardLanguage(String name,String ttl,String dir,String log,String backlog,String arg,
-	 String vm,boolean showclass,String exts,String jar,String ws) {
+         String vm,boolean showclass,String exts,String jar,String ws) {
+   // CHECKSTYLE:ON   
       language_name = name;
       language_title = ttl;
       property_directory = dir;
@@ -107,7 +109,7 @@ enum BoardLanguage {
       language_extensions = new HashSet<>();
       StringTokenizer tok = new StringTokenizer(exts,".");
       while (tok.hasMoreTokens()) {
-	 language_extensions.add("." + tok.nextToken());
+         language_extensions.add("." + tok.nextToken());
        }
       jar_runner = jar;
       workspace_label = ws;

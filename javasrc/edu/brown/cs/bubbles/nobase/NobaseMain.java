@@ -307,7 +307,9 @@ public File getRootDirectory()				{ return root_directory; }
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 private String handleCommand(String cmd,String proj,Element xml) throws NobaseException
+// CHECKSTYLE:ON
 {
    logI("Handle command " + cmd + " for " + proj);
    logD("Full command " + IvyXml.convertXmlToString(xml));

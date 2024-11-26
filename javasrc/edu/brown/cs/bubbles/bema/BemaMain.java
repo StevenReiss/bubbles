@@ -334,7 +334,9 @@ private void badArgs()
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 private void start()
+// CHECKSTYLE:ON
 {
    // first setup the environment
    BoardSetup bs = BoardSetup.getSetup();
@@ -346,31 +348,7 @@ private void start()
       return;
     }
 
-   if (for_language != null) {
-      // should be done first since it can change system properties
-      bs.setLanguage(for_language);
-    }
-
-   if (new_workspace) bs.setCreateWorkspace(use_workspace);
-   else if (use_workspace != null) bs.setDefaultWorkspace(use_workspace);
-
-   if (course_name != null) bs.setCourseName(course_name);
-
-   if (skip_setup) bs.setSkipSetup();
-   if (force_setup) bs.setForceSetup(true);
-   if (force_update) bs.setForceUpdate(true);
-   if (force_metrics) bs.setForceMetrics(true);
-   if (skip_splash) bs.setSkipSplash();
-   if (allow_debug) bs.setAllowDebug();
-   if (ask_workspace != null) bs.setAskWorkspace(ask_workspace);
-   if (run_mode != null) bs.setRunMode(run_mode);
-   bs.setJavaArgs(java_args);
-   if (auto_update != null) bs.setAutoUpdate(auto_update);
-   if (no_bedrock) bs.setPluginRunning();
-
-   if (bs.getCourseName() != null) {
-      BeduFactory.getFactory();
-    }
+   setOptions(bs);
 
    BoardLog.logI("BEMA","Start setup");
 
@@ -531,6 +509,37 @@ private void start()
    if (IvyXml.getChild(xe,"PROJECT") == null) {
       ProjectBubbleAdder pba = new ProjectBubbleAdder(root);
       SwingUtilities.invokeLater(pba);
+    }
+}
+
+
+
+private void setOptions(BoardSetup bs)
+{
+   if (for_language != null) {
+      // should be done first since it can change system properties
+      bs.setLanguage(for_language);
+    }
+   
+   if (new_workspace) bs.setCreateWorkspace(use_workspace);
+   else if (use_workspace != null) bs.setDefaultWorkspace(use_workspace);
+   
+   if (course_name != null) bs.setCourseName(course_name);
+   
+   if (skip_setup) bs.setSkipSetup();
+   if (force_setup) bs.setForceSetup(true);
+   if (force_update) bs.setForceUpdate(true);
+   if (force_metrics) bs.setForceMetrics(true);
+   if (skip_splash) bs.setSkipSplash();
+   if (allow_debug) bs.setAllowDebug();
+   if (ask_workspace != null) bs.setAskWorkspace(ask_workspace);
+   if (run_mode != null) bs.setRunMode(run_mode);
+   bs.setJavaArgs(java_args);
+   if (auto_update != null) bs.setAutoUpdate(auto_update);
+   if (no_bedrock) bs.setPluginRunning();
+   
+   if (bs.getCourseName() != null) {
+      BeduFactory.getFactory();
     }
 }
 

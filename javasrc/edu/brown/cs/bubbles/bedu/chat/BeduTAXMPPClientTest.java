@@ -223,7 +223,9 @@ private BgtaChat		 bs2_to_T1;
  * manual testing is required
  * @throws Exception
  */
+// CHECKSTYLE:OFF
 @Test public void testMessageRouting() throws Exception
+// CHECKSTYLE:ON
 {
    assertTrue(ta_client != null);
    assertTrue(ta_client2 != null);

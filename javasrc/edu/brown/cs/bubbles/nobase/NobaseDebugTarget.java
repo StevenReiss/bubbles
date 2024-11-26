@@ -823,10 +823,10 @@ private static class DebugWebSocket extends WebSocketClient {
       NobaseMain.logD("DEBUG Socket CLOSE " + status + " " + reason + " " + remote);
       remote_target.noteExit();
       synchronized (response_queue) {
-         accept_messages = false;
-         for (NobaseDebugCommand cmd : response_queue.values()) {
-            cmd.processResponse(null);
-          }
+	 accept_messages = false;
+	 for (NobaseDebugCommand cmd : response_queue.values()) {
+	    cmd.processResponse(null);
+	  }
        }
     }
 
@@ -1152,4 +1152,3 @@ private class BreakData {
 
 
 /* end of NobaseDebugTarget.java */
-

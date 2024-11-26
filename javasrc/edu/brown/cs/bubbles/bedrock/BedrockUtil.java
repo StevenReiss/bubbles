@@ -1284,7 +1284,9 @@ private static void outputNameDetails(IJavaProject ijp,IvyXmlWriter xw)
 
 
 
+// CHECKSTYLE:OFF
 private static void outputSymbol(IJavaElement elt,String what,String nm,String key,IvyXmlWriter xw)
+// CHECKSTYLE:ON 
 {
    if (what == null || nm == null) return;
 

@@ -126,7 +126,9 @@ BassCreator()
 
 
 
+// CHECKSTYLE:OFF
 private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String fullname,BassName forname)
+// CHECKSTYLE:ON
 {
    Map<String,Object> actions = new HashMap<>();
    Element bdata = null;

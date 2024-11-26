@@ -362,7 +362,7 @@ private SortedSet<Violation> processFileText(File f,FileText ft)
          BstyleFileManager fm = bstyle_main.getFileManager();
          BstyleFile bf = fm.findFile(f);
          bf.setHasErrors(true);
-         IvyLog.logD("BSTYLE","Problem processing file text " + f + " for " + fsc,t);
+         IvyLog.logD("BSTYLE","Problem processing file text " + f + " for " + fsc);
          // add error violation
          // other checks will fail as well == ignore
          break;

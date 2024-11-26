@@ -86,6 +86,7 @@ BedrockRenamer(BedrockPlugin bp)
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 void rename(String proj,String bid,String file,int start,int end,String name,String handle,
 	       String newname,
 	       boolean keeporig, boolean getters,boolean setters, boolean dohier,
@@ -93,6 +94,7 @@ void rename(String proj,String bid,String file,int start,int end,String name,Str
 	       boolean doedit,
 	       String filespat,IvyXmlWriter xw)
 	throws BedrockException
+// CHECKSTYLE:ON
 {
    ICompilationUnit icu = our_plugin.getCompilationUnit(proj,file);
 

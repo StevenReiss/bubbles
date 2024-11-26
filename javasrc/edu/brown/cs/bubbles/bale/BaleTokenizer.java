@@ -242,7 +242,9 @@ BaleToken getNextToken(int start,int end,BaleTokenState st)
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 BaleToken getNextToken()
+// CHECKSTYLE:ON
 {
    token_start = cur_offset;
 

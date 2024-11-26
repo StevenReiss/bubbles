@@ -406,6 +406,9 @@ private static class FileNewline extends GenericPatternFixer {
     }
    
    @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {
+      Matcher m0 = useFix(bp,explicit);
+      if (m0 == null) return null;
+      
       BoardLog.logD("BSTYLE","Looking at file missing new line");
       BaleWindow win = corr.getEditor();
       BaleWindowDocument doc = win.getWindowDocument();

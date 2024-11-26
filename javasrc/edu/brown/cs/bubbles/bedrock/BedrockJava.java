@@ -278,10 +278,12 @@ private class NameThread extends Thread {
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 void handleFindAll(String proj,String file,int start,int end,boolean defs,boolean refs,
 		      boolean impls,boolean equiv,boolean exact,boolean system,boolean typeof,
 		      boolean ronly,boolean wonly,
 		      IvyXmlWriter xw) throws BedrockException
+// CHECKSTYLE:ON
 {
    IJavaProject ijp = getJavaProject(proj);
    IPath fp = new Path(file);
@@ -630,10 +632,12 @@ private static class FindTypeHandler extends TypeNameRequestor {
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 void handlePatternSearch(String proj,String bid,String patstr,String foritems,
 			 boolean defs,boolean refs,boolean impls,
 			 boolean equiv,boolean exact,boolean system,
 			 IvyXmlWriter xw) throws BedrockException
+// CHECKSTYLE:ON
 {
    IJavaProject ijp = getJavaProject(proj);
 

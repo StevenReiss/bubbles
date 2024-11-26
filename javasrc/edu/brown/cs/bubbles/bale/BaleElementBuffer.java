@@ -503,10 +503,12 @@ private synchronized BaleElementEvent replaceParent(BaleElement.Branch par,boole
 
 
 
+// CHECKSTYLE:OFF
 private List<BaleElement> scanText(String text,int baseoffset,
 				      BaleTokenState sstate,BaleTokenState estate,
 				      IdentifierMap idmap,
 				      boolean top)
+// CHECKSTYLE:ON                                      
 {
    BaleTokenizer toks = BaleTokenizer.create(text,sstate,base_document.getLanguage());
    BaleDocument doc = root_element.getBaleDocument();

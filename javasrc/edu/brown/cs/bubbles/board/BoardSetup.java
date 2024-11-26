@@ -1422,7 +1422,9 @@ public void doInstall()
  *	method returns, bubbles should be ready to use.
  **/
 
+// CHECKSTYLE:OFF
 public boolean doSetup()
+// CHECKSTYLE:ON
 {
    if (do_uninstall) {
       uninstall();

@@ -848,8 +848,10 @@ private void dumpFrames(IThread thread,int count,int vdepth,int arraysz,IvyXmlWr
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 void getVariableValue(String tname,String frid,String vname,int lvls,int arraymax,IvyXmlWriter xw)
 		throws BedrockException
+// CHECKSTYLE:ON
 {
    IThread thrd = null;
    IStackFrame sfrm = null;
@@ -1160,9 +1162,11 @@ private static class CallFormatter {
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 void evaluateExpression(String proj,String bid,String expr,String tname,String frid,boolean impl,
 			   boolean bkpt,String eid,int lvl,int arraysz,String saveid,boolean allframes,
 			   IvyXmlWriter xw) throws BedrockException
+// CHECKSTYLE:ON
 {
    IProject ip = our_plugin.getProjectManager().findProject(proj);
    IJavaProject jproj = JavaCore.create(ip);

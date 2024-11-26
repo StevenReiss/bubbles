@@ -751,6 +751,7 @@ public BaleFileOverview getFileOverview(String proj,File file,boolean lcl)
  *	created bubble.
  **/
 
+// CHECKSTYLE:OFF
 public BudaBubble createNewMethod(String proj,
 					   String name,
 					   String params,
@@ -762,6 +763,7 @@ public BudaBubble createNewMethod(String proj,
 					   Position pos,
 					   boolean link,
 					   boolean add)
+// CHECKSTYLE:ON   
 {
    String clsnm; 
    String mthdnm;

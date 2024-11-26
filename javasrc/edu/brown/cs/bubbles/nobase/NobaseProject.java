@@ -974,10 +974,12 @@ void getFullyQualifiedName(String file,int spos,int epos,IvyXmlWriter xw)
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 synchronized void getTextRegions(String bid,String file,String cls,boolean pfx,boolean statics,
       boolean compunit,boolean imports,boolean pkg,
       boolean topdecls,boolean fields,boolean all,IvyXmlWriter xw)
 	throws NobaseException
+// CHECKSTYLE:ON
 {
    if (file == null) {
       String mnm = cls;

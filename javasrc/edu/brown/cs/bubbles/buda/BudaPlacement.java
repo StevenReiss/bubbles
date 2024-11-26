@@ -105,7 +105,9 @@ BudaPlacement(BudaBubbleArea bba)
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 void placeBubble(BudaBubble bbl,Component rcom,Point relpt,int place,BudaBubblePosition pos)
+// CHECKSTYLE:ON
 {
    if (bbl == null) return;
 

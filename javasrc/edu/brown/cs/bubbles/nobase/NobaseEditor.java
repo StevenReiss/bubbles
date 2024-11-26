@@ -333,12 +333,14 @@ private void commitFile(NobaseProject pp,NobaseFile ifd,String bid,boolean refre
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 void handleRename(String proj,String bid,String file,int start,int end,String name,String handle,
-      String newname,
-      boolean refs,
-      boolean doedit,
-      String filespat,IvyXmlWriter xw)
-	throws NobaseException
+         String newname,
+         boolean refs,
+         boolean doedit,
+         String filespat,IvyXmlWriter xw)
+      throws NobaseException
+// CHECKSTYLE:ON
 {
    NobaseProject pp = nobase_main.getProjectManager().findProject(proj);
    NobaseFile fd = nobase_main.getFileManager().getFileData(file);

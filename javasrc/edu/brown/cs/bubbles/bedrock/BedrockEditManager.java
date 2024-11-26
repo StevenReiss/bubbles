@@ -582,6 +582,7 @@ synchronized void updateFiles(String proj)
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 void rename(String proj,String bid,String file,int start,int end,String name,String handle,
 	       String newname,
 	       boolean keeporig, boolean getters,boolean setters, boolean dohier,
@@ -589,6 +590,7 @@ void rename(String proj,String bid,String file,int start,int end,String name,Str
 	       boolean doedit,
 	       String filespat,IvyXmlWriter xw)
 	throws BedrockException
+// CHECKSTYLE:ON
 {
    FileData fd = file_map.get(file);
    ICompilationUnit icu;
@@ -776,11 +778,13 @@ void renameResource(String proj,String bid,String file,String newname,IvyXmlWrit
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 void moveElement(String proj,String bid,String what,
       String file,int start,int end,String name,String handle,
       String target,boolean qual,boolean refs,boolean doedit,
       IvyXmlWriter xw)
 	throws BedrockException
+// CHECKSTYLE:ON
 {
    FileData fd = findFile(proj,file,null);
    IJavaElement relt = null;
@@ -1211,6 +1215,7 @@ void handleGetExpectedType(String proj,String bid,String file,int line,IvyXmlWri
 /*										*/
 /********************************************************************************/
 
+// CHECKSTYLE:OFF
 void getTextRegions(String proj,String bid,String file,String cls,boolean pfx,
 		       boolean statics,
 		       boolean compunit,
@@ -1221,6 +1226,7 @@ void getTextRegions(String proj,String bid,String file,String cls,boolean pfx,
 		       boolean all,
 		       IvyXmlWriter xw)
 	throws BedrockException
+// CHECKSTYLE:ON        
 {
    if (file == null) {
       file = getFileFromClass(proj,cls);
