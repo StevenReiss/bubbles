@@ -315,7 +315,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
          
 	 if (rslt != null) {
 	    BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
-	    RunAndWait rw = new RunAndWait(rslt);
+	    RunAndWait rw = new RunAndWait(rslt,1);
             rw.runFix();
 	    done.add(bp);
 	    if (rw.waitForDone()) {
@@ -330,7 +330,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
          if (rslt != null) { 
             BoardLog.logD("BFIX","Starting style fix");
 	    BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
-	    RunAndWait rw = new RunAndWait(rslt);
+	    RunAndWait rw = new RunAndWait(rslt,2);
             rw.runFix();
 	    done.add(bp);
 	    if (rw.waitForDone()) {
@@ -382,11 +382,13 @@ private class RunAndWait implements BumpProblemHandler {
    private BfixRunnableFix fixer_run;
    private boolean  is_done;
    private boolean  done_status;
+   private int num_waits;
 
-   RunAndWait(BfixRunnableFix r) {
+   RunAndWait(BfixRunnableFix r,int nwait) {
       fixer_run = r;
       is_done = false;
       done_status = false;
+      num_waits = nwait;
     }
 
   void runFix() {
@@ -429,6 +431,10 @@ private class RunAndWait implements BumpProblemHandler {
    @Override public void handleClearProblems()			{ }
 
    @Override public void handleProblemsDone() {
+      BoardLog.logD("BFIX","Problems done " + num_waits);
+      if (--num_waits > 0) {
+         return;
+       }
       synchronized (this) {
          is_done = true;
          notifyAll();
@@ -627,7 +633,7 @@ private void checkForElementToFix()
    for (BumpProblem bp : styletry) {
       BfixRunnableFix fix = checkStyleProblemFixable(bp,false);
       if (fix != null) {
-         RunAndWait rw = new RunAndWait(fix);
+         RunAndWait rw = new RunAndWait(fix,2);
          rw.runFix();
          break;
        }

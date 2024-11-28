@@ -57,8 +57,9 @@ abstract class BstyleFixer
 /********************************************************************************/
 
 private static final String TYPE_PATTERN = "[A-Za-z0-9_<>]+";
-private static final String EXPR_PATTERN = "\\p{Graph}+";
+private static final String EXPR_PATTERN = "\\p{Print}+";
 private static final String NAME_PATTERN = "[A-Za-z0-9_\\.]+";
+private static final String LHS_PATTERN = "[^ \\t\\n=]+";
 private static final String MODIFIER_PATTERN =
 	"public|private|protected|static|final|abstract|transient|volatile|" +
 	"native|strict|synchronized";
@@ -87,8 +88,9 @@ static {
    BstyleFixer notfollowedbywhite = new NotFollowedByWhite();
    BstyleFixer previousline = new PreviousLine();
    BstyleFixer followedbywhite = new FollowedByWhitespace();
-   
+
    addFixer("NoWhitespaceBefore",precededbywhite);
+   addFixer("NoWhitespaceAfter",followedbywhite);
    addFixer("ArrayTypeStyle",new ArrayBracketPosition());
    addFixer("FinalClass",new ClassFinal());
    addFixer("EmptyBlock",new EmptyXBlock());
@@ -112,7 +114,7 @@ static {
    addFixer("OperatorWrap",previousline);
    addFixer("SimplifyBooleanReturn",new ConditionalLogic());
    addFixer("MultipleVariableDeclarations",new VarDeclarations());
-   addFixer("GenericWhitespace",followedbywhite);
+   addFixer("GenericWhitespace",followedbywhite,precededbywhite);
 }
 
 
@@ -214,6 +216,7 @@ protected static Pattern generatePattern(String pat,Matcher m)
    pat0 = pat0.replace("$W$",WHITE_PATTERN);
    pat0 = pat0.replace("$w$",OPT_WHITE_PATTERN);
    pat0 = pat0.replace("$B$",BOOLEAN_PATTERN);
+   pat0 = pat0.replace("$L$",LHS_PATTERN);
 
    if (m != null) {
       Matcher m0 = ARG_PATTERN.matcher(pat0);
@@ -290,6 +293,7 @@ abstract static class GenericPatternFixer extends BstyleFixer {
       int leoff = doc.findLineOffset(l1+1);
       String text = doc.getWindowText(lsoff,leoff-lsoff);
       Pattern find = generatePattern(code_pattern,m0);
+
       BoardLog.logD("BSTYLE","Use pattern " + find);
       Matcher m1 = null;
       if (find != null) {
@@ -389,7 +393,7 @@ private static class ClassFinal extends GenericPatternFixer {
 private static class EmptyXBlock extends GenericPatternFixer {
 
    EmptyXBlock() {
-      super("Empty ($N$) block","$1$\\s*($E$)\\s+(\\{\\s*\\})");
+      super("Empty ($N$) block","$1$\\s*\\(($E$)\\)\\s+(\\{\\s*\\})");
     }
    
    @Override protected int getEditStart(Matcher m)      { return m.start(2); }
@@ -647,12 +651,14 @@ private static class MustUseBraces extends GenericPatternFixer {
    
    MustUseBraces() {
       super("'($N$)' construct must use '\\{\\}'s",
-            "(\\s*)$1$\\s*($E$)\\;");
+            "^(\\h*)$1$\\s*\\(($E$)\\))\\h*\\n(\\s*$E$)\\;(\\s*)$");
     }
    
+   @Override protected int getEndLine(int lno)          { return lno+1; }
+   @Override protected int getEditStart(Matcher m)      { return m.end(2); }
+   @Override protected int getEditEnd(Matcher m)        { return m.start(4); }
    @Override protected String getEditReplace(Matcher m) {
-      // this has to find the end of the construct to find location for { ... }
-      return null;
+      return " {\\n" + m.group(3) + ";\\n" + m.group(1) + "}";
     }
    
 }       // end of inner class MustUseBraces

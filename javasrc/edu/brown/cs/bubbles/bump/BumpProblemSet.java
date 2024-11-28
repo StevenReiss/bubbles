@@ -129,16 +129,16 @@ List<BumpProblem> getProblems(File f)
    return rslt;
 }
 
-BumpErrorType getErrorType(String cat) 
+BumpErrorType getErrorType(String cat)
 {
    BumpErrorType er = BumpErrorType.NOTICE;
    synchronized (current_problems) {
       for (BumpProblemImpl bp : current_problems.values()) {
-        if (cat != null && bp.getCategory() != null && !cat.equals(bp.getCategory())) {
-           continue;
-         }
-        BumpErrorType en = bp.getErrorType();
-        if (er == null || en.ordinal() < er.ordinal()) er = en;
+	if (cat != null && bp.getCategory() != null && !cat.equals(bp.getCategory())) {
+	   continue;
+	 }
+	BumpErrorType en = bp.getErrorType();
+	if (er == null || en.ordinal() < er.ordinal()) er = en;
        }
     }
    return er;
@@ -167,13 +167,13 @@ void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
 	 BumpProblemImpl bp = current_problems.get(pid);
 	 if (bp == null) {
 	    bp = new BumpProblemImpl(e,pid,eid,proj);
-            BoardLog.logD("BUMP","Add problem " + bp);
+	    BoardLog.logD("BUMP","Add problem " + bp);
 	    current_problems.put(pid,bp);
 	    if (added == null) added = new ArrayList<>();
 	    added.add(bp);
 	  }
 	 else {
-            BoardLog.logD("BUMP","Update problem " + bp);
+	    BoardLog.logD("BUMP","Update problem " + bp);
 	    bp.setEditId(eid);
 	    bp.update(e);
 	  }
@@ -187,41 +187,41 @@ void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
 	    BumpProblemImpl bp = it.next();
 	    if (found.contains(bp)) continue;
 	    if (!fileMatch(forfile,bp)) continue;
-            if (cat != null && !cat.equals(bp.getCategory())) continue;
+	    if (cat != null && !cat.equals(bp.getCategory())) continue;
 	    if (deled == null) deled = new ArrayList<>();
 	    deled.add(bp);
-            BoardLog.logD("BUMP","Remove problem " + bp);
+	    BoardLog.logD("BUMP","Remove problem " + bp);
 	    it.remove();
 	 }
       }
     }
 
-   if (added == null && deled == null) return;
-
-   for (BumpProblemHandler bph : handler_set) {
-      File f;
-      synchronized (problem_handlers) {
+   synchronized (problem_handlers) {
+      for (BumpProblemHandler bph : handler_set) {
+	 File f;
 	 f = problem_handlers.get(bph);
 	 if (f == null && !problem_handlers.containsKey(bph)) continue;
-       }
-      int ct = 0;
-      if (deled != null) {
-	 for (BumpProblemImpl bp : deled) {
-	    if (fileMatch(f,bp)) {
-	       bph.handleProblemRemoved(bp);
-	       ++ct;
+	 int ct = 0;
+	 if (deled != null) {
+	    for (BumpProblemImpl bp : deled) {
+	       if (fileMatch(f,bp)) {
+		  bph.handleProblemRemoved(bp);
+		  ++ct;
+		}
 	     }
 	  }
-       }
-      if (added != null) {
-	 for (BumpProblemImpl bp : added) {
-	    if (fileMatch(f,bp)) {
-	       bph.handleProblemAdded(bp);
-	       ++ct;
+	 if (added != null) {
+	    for (BumpProblemImpl bp : added) {
+	       if (fileMatch(f,bp)) {
+		  bph.handleProblemAdded(bp);
+		  ++ct;
+		}
 	     }
 	  }
+//    if (ct > 0) bph.handleProblemsDone();
+	 BoardLog.logD("BUMP","FINISHED WITH PROBLEMS " + ct);
+	 bph.handleProblemsDone();
        }
-      if (ct > 0) bph.handleProblemsDone();
     }
 }
 
@@ -240,44 +240,46 @@ void clearProblems(String proj,File file,String category)
        }
       else {
 	 clear = new ArrayList<>();
-         for (Iterator<BumpProblemImpl> it = current_problems.values().iterator();
-            it.hasNext(); ) {
-            BumpProblemImpl bp = it.next();
-            if (file != null) {
-               File f1 = bp.getFile();
-               if (f1 == null) continue;
-               if (!f1.equals(file) && f1.getName().equals(file.getName())) {
-                  if (fcanon == null) fcanon = IvyFile.getCanonical(file);
-                  File f2 = IvyFile.getCanonical(f1);
-                  if (!fcanon.equals(f2)) continue;
-                  BoardLog.logD("BUMP","REMOVE FILE PROBLEM " + bp);
-                  clear.add(bp);
-                  it.remove();
-                }
-             }
-            if (bp.getProject() == null) {
-               BoardLog.logE("BUMP","Problem lacks a project " + bp.getFile() + " " +
-                     bp.getMessage());
-             }
-            if (bp.getProject() != null && proj != null && bp.getProject().equals(proj)) {
-               if (category == null || bp.getCategory() == null ||
-                     category.equals(bp.getCategory())) {
-                  BoardLog.logD("BUMP","REMOVE PROBLEM " + bp);
-                  clear.add(bp);
-                  it.remove();
-                }
-             }
-          }
+	 for (Iterator<BumpProblemImpl> it = current_problems.values().iterator();
+	    it.hasNext(); ) {
+	    BumpProblemImpl bp = it.next();
+	    if (file != null) {
+	       File f1 = bp.getFile();
+	       if (f1 == null) continue;
+	       if (!f1.equals(file) && f1.getName().equals(file.getName())) {
+		  if (fcanon == null) fcanon = IvyFile.getCanonical(file);
+		  File f2 = IvyFile.getCanonical(f1);
+		  if (!fcanon.equals(f2)) continue;
+		  BoardLog.logD("BUMP","REMOVE FILE PROBLEM " + bp);
+		  clear.add(bp);
+		  it.remove();
+		}
+	     }
+	    if (bp.getProject() == null) {
+	       BoardLog.logE("BUMP","Problem lacks a project " + bp.getFile() + " " +
+		     bp.getMessage());
+	     }
+	    if (bp.getProject() != null && proj != null && bp.getProject().equals(proj)) {
+	       if (category == null || bp.getCategory() == null ||
+		     category.equals(bp.getCategory())) {
+		  BoardLog.logD("BUMP","REMOVE PROBLEM " + bp);
+		  clear.add(bp);
+		  it.remove();
+		}
+	     }
+	  }
        }
     }
 
-   if (clear.size() > 0) {
-      for (BumpProblemHandler bph : handler_set) {
-	 for (BumpProblemImpl bp : clear) {
-	    bph.handleProblemRemoved(bp);
+   synchronized (problem_handlers) {
+      if (clear.size() > 0) {
+	 for (BumpProblemHandler bph : handler_set) {
+	    for (BumpProblemImpl bp : clear) {
+	       bph.handleProblemRemoved(bp);
+	     }
+	    bph.handleClearProjectProblems(proj);
+	    bph.handleProblemsDone();
 	  }
-         bph.handleClearProjectProblems(proj);
-	 bph.handleProblemsDone();
        }
     }
 }
@@ -289,7 +291,7 @@ void fireClearAll(String proj)
       bph.handleClearProjectProblems(proj);
     }
 }
-       
+
 
 
 /********************************************************************************/
@@ -336,7 +338,7 @@ Collection<BumpProblem> getPrivateErrors(String privid)
       while (!private_problems.containsKey(privid)) {
 	 if ((System.currentTimeMillis() - start) > 10000) break;
 	 try {
- 	    private_problems.wait(1000);
+	    private_problems.wait(1000);
 	  }
 	 catch (InterruptedException e) {
 	    BoardLog.logE("BUMP","Interrupted getting Private problems " + privid);
@@ -365,8 +367,8 @@ private boolean fileMatch(File forfile,BumpProblemImpl bp)
    if (forfile == null) return true;
    if (forfile.equals(f1)) return true;
    if (!forfile.getName().equals(f1.getName())) return false;
-   
-   return IvyFile.getCanonical(forfile).equals(IvyFile.getCanonical(f1));     
+
+   return IvyFile.getCanonical(forfile).equals(IvyFile.getCanonical(f1));
 }
 
 
@@ -392,4 +394,108 @@ private String getProblemId(Element e)
 
 
 /* end of BumpProblemSet.java */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
