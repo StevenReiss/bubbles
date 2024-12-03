@@ -651,7 +651,7 @@ private static class MustUseBraces extends GenericPatternFixer {
    
    MustUseBraces() {
       super("'($N$)' construct must use '\\{\\}'s",
-            "^(\\h*)$1$\\s*\\(($E$)\\))\\h*\\n(\\s*$E$)\\;(\\s*)$");
+            "^(\\h*)$1$\\s*(\\(($E$)\\))\\h*\\n(\\s*$E$)\\;(\\s*)$");
     }
    
    @Override protected int getEndLine(int lno)          { return lno+1; }
