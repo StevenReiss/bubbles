@@ -156,8 +156,11 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
     }
    else bdata = data.getBytes();
 
-   try (InputStream is = new ByteArrayInputStream(bdata)) {
-      InputStream is1 = is;
+   InputStream is = null;
+   InputStream is1 = null;
+   try {
+      is = new ByteArrayInputStream(bdata);
+      is1 = is;
       if (key != null) {
          try {
             Cipher c = Cipher.getInstance(key.getAlgorithm());
@@ -173,6 +176,10 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
       setParameter("U",uid);
       setParameter("R",rid);
       setParameter("file","/tmp/" + uid + "_" + rid + ".bvcr",is1);
+    }
+   finally {
+      if (is != null) is.close();
+      if (is1 != null) is1.close();
     }
    
    InputStream ins = post();
