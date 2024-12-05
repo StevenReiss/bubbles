@@ -26,6 +26,7 @@ package edu.brown.cs.bubbles.bvcr;
 
 
 import edu.brown.cs.ivy.exec.IvyExec;
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -77,7 +78,7 @@ static BvcrVersionManager createVersionManager(BvcrProject bp,BvcrMonitor mon)
 
    BvcrVersionManager bvm = null;
 
-   System.err.println("BVCR: check repository for " + f);
+   IvyLog.logD("BVCR","Check repository for " + f);
 
    if (bvm == null) bvm = BvcrVersionGIT.getRepository(bp,f);
    if (bvm == null) bvm = BvcrVersionSVN.getRepository(bp,f);
@@ -151,8 +152,7 @@ private void generateRepositoryId(File f)
       fw.close();
     }
    catch (IOException e) {
-      System.err.println("BVCR: Can't create .uid file " + f.getAbsolutePath());
-      e.printStackTrace();
+      IvyLog.logE("BVCR","Can't create .uid file " + f.getAbsolutePath(),e);
       return;
     }
 
@@ -235,7 +235,7 @@ protected String runCommand(String cmd,CommandCallback cb)
 
    try {
       IvyExec ex = new IvyExec(cmd,getRootDirectory(),IvyExec.READ_OUTPUT);
-      System.err.println("BVCR: Run " + ex.getCommand());
+      IvyLog.logD("BVCR","Run " + ex.getCommand());
       InputStream ins = ex.getInputStream();
       try (BufferedReader br = new BufferedReader(new InputStreamReader(ins))) {
          for ( ; ; ) {
@@ -247,7 +247,7 @@ protected String runCommand(String cmd,CommandCallback cb)
       cb.handleDone(ex.waitFor());
     }
    catch (IOException e) {
-      System.err.println("BVCR: Problem running command: " + cmd + ": " + e);
+      IvyLog.logE("BVCR","Problem running command: " + cmd,e);
     }
    finally {
       if (for_monitor != null) for_monitor.endDelay();
@@ -300,7 +300,7 @@ protected class XmlCommand extends StringCommand {
 String getRelativePath(File f)
 {
    File f1 = getRootDirectory();
-   // System.err.println("GET REL PATH " + f + " " + f1);
+   // IvyLog.logD("BVCR","GET REL PATH " + f + " " + f1);
 
    String s = f.getPath();
    if (!f.isAbsolute() || f1 == null) return s;
@@ -313,7 +313,7 @@ String getRelativePath(File f)
     }
    catch (IOException e) { }
 
-   // System.err.println("CHECK PATH " + s2 + " " + s1);
+   // IvyLog.logD("BVCR","CHECK PATH " + s2 + " " + s1);
    if (s2.startsWith(s1)) {
       int ln = s1.length() + 1;
       s = s2.substring(ln);
@@ -402,13 +402,13 @@ protected class DiffAnalyzer implements CommandCallback {
                if (m1.matches()) {
         	  String fil = m1.group(1);
         	  String ver = m1.group(2);
-        	  // System.err.println("BVCR: start file " + fil + " " + ver);
+        	  // IvyLog.logD("BVCR","Start file " + fil + " " + ver);
         	  diff_set.beginFile(fil,ver);
         	}
                else if (m2.matches()) {
         	  String fil = m2.group(1);
         	  File f = new File(getRootDirectory(),fil);
-        	  // System.err.println("BVCR: start git file " + fil + " " + getRootDirectory() + " " + f);
+        	  // IvyLog.logD("BVCR","Start git file " + fil + " " + getRootDirectory() + " " + f);
         	  diff_set.beginFile(f.getPath(),base_version);
         	}
              }

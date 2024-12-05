@@ -26,6 +26,7 @@ package edu.brown.cs.bubbles.bvcr;
 
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.ivy.file.IvyFile;
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import java.io.File;
@@ -96,7 +97,7 @@ BvcrVersionGIT(BvcrProject bp)
 	 if (v.equals("*")) star = true;
 	 else {
 	    if (star) {
-	       System.err.println("BVCR: FOUND BRANCH " + v);
+	       IvyLog.logD("BVCR","FOUND BRANCH " + v);
 	       current_version = v;
 	     }
 	    star = false;
@@ -122,7 +123,7 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
    while (fp != null && fp.exists() && fp.isDirectory()) {
       File f2 = new File(fp,".git");
       if (f2.exists() && f2.isDirectory()) {
-	 System.err.println("BVCR: HANDLE GIT REPOSITORY " + srcdir);
+	 IvyLog.logD("BVCR","HANDLE GIT REPOSITORY " + srcdir);
 	 return new BvcrVersionGIT(bp);
        }
       fp = fp.getParentFile();
@@ -201,7 +202,7 @@ private void findGitRoot()
       f = fp;
     }
 
-   System.err.println("BVCR: GIT root = " + f);
+   IvyLog.logD("BVCR","GIT root = " + f);
 
    git_root = f;
 }
@@ -245,7 +246,7 @@ private void findGitRoot()
 	  }
        }
       catch (Throwable t) {
-	 System.err.println("BVCR: Problem parsing priors log entry: " + t);
+	 IvyLog.logE("BVCR","Problem parsing priors log entry",t);
        }
     }
 
@@ -301,7 +302,7 @@ private void findGitRoot()
 	 if (bdy.length() > 2) fv.addVersionBody(bdy);
        }
       catch (Throwable e) {
-	 System.err.println("BVCR: Problem parsing log entry: " + e);
+	 IvyLog.logE("BVCR","Problem parsing log entry",e);
        }
     }
 
@@ -394,7 +395,7 @@ private void findGitRoot()
 	 xw.end("VERSION");
        }
       catch (Throwable e) {
-	 System.err.println("BVCR: Problem parsing log entry: " + e);
+	 IvyLog.logE("BVCR","Problem parsing log entry",e);
        }
     }
 }
@@ -627,7 +628,7 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
       cmd += " -m '" + msg + "'";
     }
    StringCommand cmd1 = new StringCommand(cmd);
-   System.err.println("RESULT OF COMMIT: " + cmd1.getContent()+ " " + cmd1.getStatus());
+   IvyLog.logD("BVCR","RESULT OF COMMIT: " + cmd1.getContent()+ " " + cmd1.getStatus());
    // comvert output to xml using xw
 
    if (f != null) f.delete();
@@ -641,7 +642,7 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 {
    String cmd = git_command + " push origin master";
    StringCommand rslt = new StringCommand(cmd);
-   System.err.println("RESULT OF PUSH: " + rslt.getContent() + " " + rslt.getStatus());
+   IvyLog.logD("BVCR","RESULT OF PUSH: " + rslt.getContent() + " " + rslt.getStatus());
 
    if (rslt.getStatus() == 0) xw.textElement("OK",rslt.getContent());
    else xw.textElement("ERROR",rslt.getContent());
@@ -656,11 +657,11 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 
    String cmd = git_command + " pull " + args;
    StringCommand rslt = new StringCommand(cmd);
-   System.err.println("RESULT OF PULL: " + rslt.getContent() + " " + rslt.getStatus());
+   IvyLog.logD("BVCR","RESULT OF PULL: " + rslt.getContent() + " " + rslt.getStatus());
    if (rslt.getStatus() != 0) {
       cmd = git_command + " pull " + args + " origin master";
       rslt = new StringCommand(cmd);
-      System.err.println("RESULT OF PULL: " + rslt.getContent() + " " + rslt.getStatus());
+      IvyLog.logD("BVCR","RESULT OF ORIGIN PULL: " + rslt.getContent() + " " + rslt.getStatus());
     }
 
    if (rslt.getStatus() == 0) xw.textElement("OK",rslt.getContent());
@@ -672,7 +673,7 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 {
    String cmd = git_command + " checkout " + ver;
    StringCommand rslt = new StringCommand(cmd);
-   System.err.println("RESULT OF CHECKOUT: " + rslt.getContent() + " " + rslt.getStatus());
+   IvyLog.logD("BVCR","RESULT OF CHECKOUT: " + rslt.getContent() + " " + rslt.getStatus());
 
    if (rslt.getStatus() == 0) xw.textElement("OK",rslt.getContent());
    else xw.textElement("ERROR",rslt.getContent());
@@ -688,7 +689,7 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 
    String cmd = git_command + " stash " + msg;
    StringCommand rslt = new StringCommand(cmd);
-   System.err.println("RESULT OF STASH: " + rslt.getContent() + " " + rslt.getStatus());
+   IvyLog.logD("BVCR","RESULT OF STASH: " + rslt.getContent() + " " + rslt.getStatus());
 
    if (rslt.getStatus() == 0) xw.textElement("OK",rslt.getContent());
    else xw.textElement("ERROR",rslt.getContent());
@@ -719,7 +720,7 @@ private void addPriors(BvcrFileVersion fv,String id,Map<String,BvcrFileVersion> 
 
    List<String> prs = priors.get(id);
    if (prs == null) {
-      System.err.println("BVCR: Can't find prior version " + id);
+      IvyLog.logE("BVCR","Can't find prior version " + id);
       return;
     }
 

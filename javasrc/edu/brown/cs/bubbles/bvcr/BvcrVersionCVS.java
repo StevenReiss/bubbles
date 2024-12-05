@@ -25,7 +25,7 @@
 package edu.brown.cs.bubbles.bvcr;
 
 import edu.brown.cs.bubbles.board.BoardProperties;
-
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import java.io.File;
@@ -89,7 +89,7 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
    File f1 = new File(srcdir,"CVS");
    if (f1.exists() && f1.isDirectory()) {
-      System.err.println("BVCR: HANDLE CVS REPOSITORY " + srcdir);
+      IvyLog.logD("BVCR","HANDLE CVS REPOSITORY " + srcdir);
       return new BvcrVersionCVS(bp);
     }
 

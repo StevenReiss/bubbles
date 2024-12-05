@@ -25,6 +25,7 @@
 
 package edu.brown.cs.bubbles.bvcr;
 
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.mint.MintArguments;
 import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
@@ -103,7 +104,7 @@ void server()
 
 private synchronized void serverDone()
 {
-   System.err.println("BVCR: Server done");
+   IvyLog.logI("BVCR","Server done");
 
    is_done = true;
    notifyAll();
@@ -119,7 +120,7 @@ private void checkEclipse()
    String r = rply.waitForString(120000);
    if (r == null) {
       is_done = true;
-      System.err.println("BVCR: Eclipse ping failed");
+      IvyLog.logI("BVCR","Eclipse ping failed");
     }
 }
 
@@ -160,7 +161,7 @@ void loadProjects()
    Element r = rply.waitForXml();
 
    if (!IvyXml.isElement(r,"RESULT")) {
-      System.err.println("BVCR: Problem getting project information: " +
+      IvyLog.logE("BVCR","Problem getting project information: " +
 	    IvyXml.convertXmlToString(r));
       System.exit(2);
     }
@@ -173,7 +174,7 @@ void loadProjects()
       mint_control.send(pmsg,prply,MINT_MSG_FIRST_NON_NULL);
       Element pr = prply.waitForXml();
       if (!IvyXml.isElement(pr,"RESULT")) {
-	 System.err.println("BVCR: Problem opening project " + pnm + ": " +
+	 IvyLog.logE("BVCR","Problem opening project " + pnm + ": " +
 	       IvyXml.convertXmlToString(pr));
 	 continue;
        }
@@ -436,8 +437,7 @@ private final class EclipseHandler implements MintHandler {
           }
        }
       catch (Throwable t) {
-         System.err.println("BVCR: Problem processing Eclipse command: " + t);
-         t.printStackTrace();
+         IvyLog.logE("BVCR","Problem processing Eclipse command",t);
        }
     }
 
@@ -472,7 +472,7 @@ private final class CommandHandler implements MintHandler {
       Element e = msg.getXml();
       String rply = null;
       
-      System.err.println("BVCR: RECEIVED COMMAND " + cmd + ": " + msg.getText());
+      IvyLog.logD("BVCR","RECEIVED COMMAND " + cmd + ": " + msg.getText());
       
       try {
          if (cmd == null) return;
@@ -608,15 +608,14 @@ private final class CommandHandler implements MintHandler {
          if (rply == null && xw != null) rply = xw.toString();
        }
       catch (Throwable t) {
-         System.err.println("BVCR: Problem processing BVCR command: " + t);
-         t.printStackTrace();
+         IvyLog.logE("BVCR","Problem processing BVCR command",t);
        }
       
       if (rply != null) {
-         rply = "<RESULT>" + rply + "</RESULT>";
+         rply = "<RESULT>\n" + rply + "</RESULT>";
        }
       
-      System.err.println("BVCR: RESULT: " + rply);
+      IvyLog.logD("BVCR","RESULT: " + rply);
       
       msg.replyTo(rply);
    }

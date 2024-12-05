@@ -26,6 +26,7 @@ package edu.brown.cs.bubbles.bvcr;
 
 
 import edu.brown.cs.ivy.exec.IvySetup;
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import javax.crypto.SecretKey;
@@ -175,7 +176,7 @@ private void process()
 {
    String s = BvcrUpload.getRepoUrl();
    if (s == null) {
-      System.err.println("BVCR: No repository configured");
+      IvyLog.logI("BVCR","No repository configured");
       System.exit(0);
     }
 
@@ -183,7 +184,7 @@ private void process()
    the_monitor.loadProjects();
 
    for (BvcrProject bp : project_map.values()) {
-      System.err.println("BVCR: check project " + bp.getName());
+      IvyLog.logD("BVCR","Check project " + bp.getName());
       BvcrVersionManager bvm = BvcrVersionManager.createVersionManager(bp,the_monitor);
       if (bvm != null) {
 	 manager_map.put(bp.getName(),bvm);
@@ -191,7 +192,7 @@ private void process()
     }
 
    if (manager_map.size() == 0) {
-      System.err.println("BVCR: No projects under version management");
+      IvyLog.logI("BVCR","No projects under version management");
       System.exit(0);
     }
 
@@ -261,8 +262,7 @@ private void setupKeys()
 	    key_map.put(proj,sk);
 	  }
 	 catch (Exception e) {
-	    System.err.println("BVCR: Problem constructing key: " + e);
-	    e.printStackTrace();
+	    IvyLog.logE("BVCR","Problem constructing key",e);
 	  }
        }
       String nm = bvm.getRepositoryName();
@@ -275,6 +275,7 @@ private void setupKeys()
       uid = getEncodedName(uid,"U");
       user_map.put(proj,uid);
       change_map.put(proj,new BvcrChangeSet(this,proj,nm,uid,sk));
+      IvyLog.logD("BVCR","Change set initialized for " + proj);
     }
 }
 
@@ -298,7 +299,7 @@ private String getEncodedName(String nm,String pfx)
       nm = pfx + Long.toString(rslt);
     }
    catch (NoSuchAlgorithmException e) {
-      System.err.println("BVCR: Problem creating encrypted id: " + e);
+      IvyLog.logE("BVCR","Problem creating encrypted id",e);
       e.printStackTrace();
     }
 
@@ -332,7 +333,7 @@ private void processChanges()
 	 String rid = id_map.get(id);
 	 String uid = user_map.get(id);
 	 if (uid != null && rid != null && !BvcrUpload.upload(xw.toString(),uid,rid,sk)) {
-	    System.err.println("BVCR: Upload failed");
+	    IvyLog.logE("BVCR","Upload failed");
 	  }
        }
     }
@@ -400,9 +401,7 @@ private void processUpdates()
       xw.end("FILE");
     }
 
-
-   System.err.println("CHANGES:");
-   System.err.println(xw.toString());
+   IvyLog.logD("BVCR","CHANGES: " + xw.toString());
 }
 
 

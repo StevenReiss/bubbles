@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.bvcr;
 
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -150,7 +151,7 @@ private static class FileChange implements BvcrFileChange {
 	 add_lines = add.toArray(add_lines);
        }
       if (source_line < 0 || target_line < 0) {
-	 System.err.println("BVCR: Bad source/target line " + slno + " " + tlno + " " + add.size() + " " + del.size());
+	 IvyLog.logE("BVCR","Bad source/target line " + slno + " " + tlno + " " + add.size() + " " + del.size());
 	 Thread.dumpStack();
        }
     }

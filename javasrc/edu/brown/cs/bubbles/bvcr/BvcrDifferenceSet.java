@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.bvcr;
 
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import java.io.File;
@@ -236,7 +237,7 @@ String getRelativePath(File f)
       f1 = f1.substring(ln);
     }
    else {
-      System.err.println("BVCR: File " + f + " not in source directory " + p1);
+      IvyLog.logE("BVCR","File " + f + " not in source directory " + p1);
     }
 
    return f1;

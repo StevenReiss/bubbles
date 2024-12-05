@@ -26,6 +26,7 @@ package edu.brown.cs.bubbles.bvcr;
 
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleContextConfig;
 import edu.brown.cs.bubbles.board.BoardColors;
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.buda.BudaBubble;
@@ -1032,7 +1033,7 @@ private class VScrollSync implements AdjustmentListener {
       if (left) rline = center_panel.getRightLine(line);
       else rline = center_panel.getLeftLine(line);
       fv2.scrollToLine(rline);
-      System.err.println("SCROLL " + left + " " + line + " " + rline);
+      BoardLog.logD("BVCR","SCROLL " + left + " " + line + " " + rline);
     }
    
 }       // end of inner class VScrollSync

@@ -30,6 +30,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
+import edu.brown.cs.ivy.file.IvyLog;
+
 
 public class BvcrGenerateUid implements BvcrConstants
 {
@@ -48,7 +50,7 @@ public static void main(String [] args)
 
    File f = new File(".uid");
    if (f.exists()) {
-      System.err.println("BVCR: .uid file already exists in this directory");
+      IvyLog.logD("BVCR",".uid file already exists in this directory");
     }
    else {
       try {
@@ -57,7 +59,7 @@ public static void main(String [] args)
 	 fw.close();
        }
       catch (IOException e) {
-	 System.err.println("BVCR: Can't create .uid file in " + f.getAbsolutePath());
+	 IvyLog.logE("BVCR","Can't create .uid file in " + f.getAbsolutePath(),e);
        }
     }
 }

@@ -25,6 +25,7 @@
 package edu.brown.cs.bubbles.bvcr;
 
 
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -134,11 +135,11 @@ private void update()
 	       sins = new CipherInputStream(sins,c);
 	     }
 	    catch (Exception e) {
-	       System.err.println("BVCR: Unable to create cipher: " + e);
+	       IvyLog.logE("BVCR","Unable to create cipher",e);
 	     }
 
 	    if (KEY_COMPRESS) sins = new InflaterInputStream(sins);
-	    System.err.println("BVCR: Work on : " + user_id + " " + repo_id + " " + len);
+	    IvyLog.logD("BVCR","Work on : " + user_id + " " + repo_id + " " + len);
 	    Element e = IvyXml.loadXmlFromStream(sins);
 	    addChanges(e);
 	  }
@@ -147,7 +148,7 @@ private void update()
       last_update = now;
     }
    catch (IOException e) {
-      System.err.println("BVCR: Problem downloading data: " + e);
+      IvyLog.logE("BVCR","Problem downloading data",e);
     }
 }
 
@@ -165,7 +166,7 @@ private int [] readHeader(InputStream ins) throws IOException
 	 if (ch == '\n') break;
 	 buf.append(ch);
        }
-      // System.err.println("BVCR: READ HEADER: " + buf);
+      IvyLog.logD("BVCR","READ HEADER: " + buf);
       if (buf.length() > 0 && Character.isDigit(buf.charAt(0))) break;
       buf = new StringBuffer();
     }
@@ -201,7 +202,7 @@ private static class SubInputStream extends FilterInputStream {
       if (sub_ptr >= sub_length) return -1;
       int rslt = super.read();
       if (rslt >= 0) ++sub_ptr;
-      System.err.println("BVCR READ " + rslt);
+      IvyLog.logD("BVCR","Read: " + rslt);
       return rslt;
     }
 
@@ -210,7 +211,7 @@ private static class SubInputStream extends FilterInputStream {
       if (sub_ptr + len > sub_length) len = sub_length - sub_ptr;
       int ct = super.read(b,off,len);
       sub_ptr += ct;
-      System.err.println("BVCR READ " + off + " " + len + " " + ct);
+      IvyLog.logD("BVC","READ " + off + " " + len + " " + ct);
       return ct;
     }
 
@@ -239,7 +240,7 @@ private static class SubInputStream extends FilterInputStream {
 
 private void addChanges(Element xml)
 {
-   System.err.println("CHANGE SET = " + IvyXml.convertXmlToString(xml));
+   IvyLog.logD("BVCR","CHANGE SET = " + IvyXml.convertXmlToString(xml));
 
    File root = for_main.getRootDirectory(project_name);
    String oroot = IvyXml.getAttrString(xml,"ROOT");

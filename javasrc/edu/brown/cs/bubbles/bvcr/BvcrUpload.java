@@ -26,6 +26,7 @@ package edu.brown.cs.bubbles.bvcr;
 
 
 import edu.brown.cs.bubbles.board.BoardProperties;
+import edu.brown.cs.ivy.file.IvyLog;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -85,8 +86,7 @@ static boolean upload(String data,String user,String rid,SecretKey key)
       bu.processUpload(data,user,rid,key);
     }
    catch (IOException e) {
-      System.err.println("BVCR: Upload status: " + e);
-      e.printStackTrace();
+      IvyLog.logE("BVCR: Upload failed",e);
       return false;
     }
 
@@ -169,7 +169,7 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
             is1 = new CipherInputStream(is,c);
           }
          catch (Exception e) {
-            System.err.println("BVCR: Unable to create cipher: " + e);
+            IvyLog.logE("BVCR","Unable to create cipher",e);
           }
        }
       
@@ -188,9 +188,9 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
       for ( ; ; ) {
          String ln = in.readLine();
          if (ln == null) break;
-         System.err.println("BVCR: UPLOAD RESULT: " + ln);
+         IvyLog.logD("BVCR","UPLOAD RESULT: " + ln);
        }
-      System.err.println("UPLOAD COMPLETE");
+      IvyLog.logD("BVCR","UPLOAD COMPLETE");
     }
 }
 
@@ -214,7 +214,8 @@ private InputStream processDownload(String uid,String rid,long dlm) throws IOExc
    setParameter("R",rid);
    setParameter("D",Long.toString(dlm));
 
-   System.err.println("BVCR: URL = " + url + "?U=" + uid + "&R=" + rid + "&D=" + Long.toString(dlm));
+   IvyLog.logD("BVCR","Download URL = " + url + "?U=" + uid + 
+         "&R=" + rid + "&D=" + Long.toString(dlm));
 
    InputStream ins = post();
 
@@ -257,11 +258,11 @@ private void setupConnection(String url) throws IOException
       url_connection = new URI(url).toURL().openConnection();
     }
    catch (MalformedURLException | URISyntaxException e) {
-      System.err.println("BVCR: Failed to connect to server while uploading: " + e);
+      IvyLog.logE("BVCR","Failed to connect to server while uploading",e);
       throw new IOException("Failed to connect to upload server",e);
     }
    catch (IOException e) {
-      System.err.println("BVCR: Failed to connect to server while uploading: " + e);
+      IvyLog.logE("BVCR","Failed to connect to server while uploading",e);
       throw new IOException("Failed to connect to upload server",e);
     }
 
@@ -269,7 +270,7 @@ private void setupConnection(String url) throws IOException
    url_connection.setReadTimeout(time_out);
    url_connection.setDoOutput(true);
    url_connection.setRequestProperty("Content-Type",
-					"multipart/form-data; boundary=" + boundary_string);
+         "multipart/form-data; boundary=" + boundary_string);
 }
 
 

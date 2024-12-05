@@ -25,7 +25,7 @@
 package edu.brown.cs.bubbles.bvcr;
 
 import edu.brown.cs.bubbles.board.BoardProperties;
-
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -93,7 +93,7 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
    File f1 = new File(srcdir,".svn");
    if (f1.exists() && f1.isDirectory()) {
-      System.err.println("BVCR: HANDLE SVN REPOSITORY " + srcdir);
+      IvyLog.logD("BVCR","HANDLE SVN REPOSITORY " + srcdir);
       return new BvcrVersionSVN(bp);
     }
 
@@ -205,7 +205,7 @@ private void findSvnRoot()
 	 d = SVN_DATE.parse(IvyXml.getTextElement(le,"date"));
        }
       catch (ParseException e) {
-	 System.err.println("BVCR: Problem parsing date: " + e);
+	 IvyLog.logE("BVCR","Problem parsing date",e);
        }
       BvcrFileVersion fv = new BvcrFileVersion(f,rev,d,auth,msg);
       if (prior != null) prior.addPriorVersion(fv);

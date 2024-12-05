@@ -432,7 +432,8 @@ private HistoryMap loadVersionDifferences(BvcrFileVersion cur)
    Element fe1 = IvyXml.getChild(de1,"FILE");
    if (fe1 != null) {
       BvcrDifferenceFile bdf = new BvcrDifferenceFile(fe1);
-      BvcrFileVersion cfv = new BvcrFileVersion(for_file,null,new Date(),System.getProperty("user.name"),
+      BvcrFileVersion cfv = new BvcrFileVersion(for_file,null,new Date(),
+            System.getProperty("user.name"),
 	    "Current Version");
       if (cur != null) {
 	 cfv.addPriorVersion(cur);
@@ -1420,7 +1421,7 @@ private String getChangeDescription(LineData ld,HistoryNode node)
 	    int nadd = (add == null ? 0 : add.length);
 	    if (actualline >= chng.getSourceLine() &&
 		     actualline <= chng.getSourceLine() + nadd - ndel) {
-	       System.err.println("CHECK CHANGE " + actualline + " " +
+	       BoardLog.logD("BVCR","CHECK CHANGE " + actualline + " " +
 			ld.getOriginalLineNumber() + " " +
 			chng.getSourceLine() + " " +
 			chng.getTargetLine() + " " +
