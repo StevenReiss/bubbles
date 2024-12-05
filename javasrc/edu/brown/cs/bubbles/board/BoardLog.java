@@ -302,6 +302,11 @@ public static LogLevel getLogLevel()
    return the_logger.log_level;
 }
 
+public static boolean getUseStdErr()
+{
+   return the_logger.use_stderr;
+}
+
 
 
 /********************************************************************************/

@@ -54,6 +54,7 @@ import javax.swing.JPopupMenu;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -266,6 +267,23 @@ void startBvcrServer()
       args.add("-S");
       args.add("-m");
       args.add(bs.getMintName());
+      
+      String lvl = BoardLog.getLogLevel().toString();
+      lvl = bp.getProperty("Bvcr.log.level",lvl);
+      boolean stderr = BoardLog.getUseStdErr();
+      stderr = bp.getBoolean("Bvcr.use.stderr",stderr);
+      File log = BoardLog.getBubblesLogFile();
+      String nm = log.getName();
+      String nm1 = nm.replace("bubbles","bvcr");
+      if (nm1.equals(nm)) nm1 = "bvcr_" + nm;
+      nm1 = bp.getProperty("Bvcr.log.name",nm1);
+      File nlog = new File(log.getParent(),nm1);
+      
+      args.add("-V");
+      args.add(lvl);
+      if (stderr) args.add("-E");
+      args.add("-L");
+      args.add(nlog.getPath());
 
       for (int i = 0; i < 100; ++i) {
 	 MintDefaultReply rply = new MintDefaultReply();
@@ -492,12 +510,12 @@ private final class ServerSetup implements Runnable {
 
    @Override public void run() {
       if (server_running) {
-	 BoardSetup bs = BoardSetup.getSetup();
-	 MintControl mc = bs.getMintControl();
-	 MintDefaultReply rply = new MintDefaultReply();
-	 String cmd = "<BVCR DO='PROJECTS' />";
-	 mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
-	 Element e = rply.waitForXml(60000);
+         BoardSetup bs = BoardSetup.getSetup();
+         MintControl mc = bs.getMintControl();
+         MintDefaultReply rply = new MintDefaultReply();
+         String cmd = "<BVCR DO='PROJECTS' />";
+         mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
+         Element e = rply.waitForXml(60000);
          if (e == null) {
             server_running = false;
           }

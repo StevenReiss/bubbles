@@ -209,8 +209,7 @@ private void handleFileChanged(String proj,String file)
 }
 
 
-private void handleFileError(String proj,String file,boolean err)
-{ }
+
 
 
 
@@ -391,25 +390,14 @@ private final class EclipseHandler implements MintHandler {
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
       Element e = msg.getXml();
+      IvyLog.logD("BVCR","ECLIPSE COMMAND " + cmd);
    
       try {
          if (cmd == null) return;
          else if (cmd.equals("EDIT")) {
             msg.replyTo();
           }
-         else if (cmd.equals("FILEERROR")) {
-            boolean haserrs = false;
-            Element msgs = IvyXml.getChild(e,"MESSAGES");
-            if (msgs != null) {
-               for (Element pm : IvyXml.children(msgs,"PROBLEM")) {
-        	  if (IvyXml.getAttrBool(pm,"ERROR")) haserrs = true;
-        	}
-             }
-            String proj = IvyXml.getAttrString(e,"PROJECT");
-            synchronized (this) {
-               handleFileError(proj,IvyXml.getAttrString(e,"FILE"),haserrs);
-             }
-          }
+         else if (cmd.equals("FILEERROR")) ;
          else if (cmd.equals("LAUNCHCONFIGEVENT")) {
             // handle changes to saved launch configurations
           }

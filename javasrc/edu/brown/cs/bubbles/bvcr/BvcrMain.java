@@ -145,6 +145,31 @@ private void scanArgs(String [] args)
 	    if (update_files == null) update_files = new ArrayList<String>();
 	    update_files.add(args[++i]);
 	  }
+         else if (args[i].startsWith("-V") && i+1 < args.length) {      // -V <loglevel>
+            String lvl = args[++i];
+            switch (lvl.charAt(0)) {
+               case 'E' :
+                  IvyLog.setLogLevel(IvyLog.LogLevel.ERROR);
+                  break;
+               case 'W' :
+                  IvyLog.setLogLevel(IvyLog.LogLevel.WARNING);
+                  break;
+               case 'I' :
+                  IvyLog.setLogLevel(IvyLog.LogLevel.INFO);
+                  break;
+               default :
+               case 'D' :
+                  IvyLog.setLogLevel(IvyLog.LogLevel.DEBUG);
+                  break;
+             }
+          }
+         else if (args[i].startsWith("-L") && i+1 < args.length) {
+            String path = args[++i];
+            IvyLog.setLogFile(path);
+          }
+         else if (args[i].startsWith("-E")) {
+            IvyLog.useStdErr(true);
+          }
 	 else badArgs();
        }
       else if (process_mode == ProcessMode.UPDATE) {
@@ -317,22 +342,27 @@ private String getEncodedName(String nm,String pfx)
 
 private void processChanges()
 {
+   IvyLog.logD("BVCR","Process changes");
+   
    for (Map.Entry<String,BvcrVersionManager> ent : manager_map.entrySet()) {
       BvcrVersionManager bvm = ent.getValue();
       String id = ent.getKey();
-      BvcrDifferenceSet ds = diff_map.get(id);
-      if (ds == null) {
-	 ds = new BvcrDifferenceSet(this,findProject(id));
-	 diff_map.put(id,ds);
-       }
+      BvcrDifferenceSet ds = getDifferenceSet(id);
+      if (ds == null) continue;
       if (ds.computationNeeded()) {
+         IvyLog.logD("BVCR","Process changes for " + id);
 	 bvm.getDifferences(ds);
 	 IvyXmlWriter xw = new IvyXmlWriter();
 	 ds.outputXml(xw);
 	 SecretKey sk = key_map.get(id);
 	 String rid = id_map.get(id);
 	 String uid = user_map.get(id);
-	 if (uid != null && rid != null && !BvcrUpload.upload(xw.toString(),uid,rid,sk)) {
+         
+         IvyLog.logD("BVCR","Change set result " + uid + " " +
+               rid + " " + xw.toString());
+         
+	 if (uid != null && rid != null &&
+               !BvcrUpload.upload(xw.toString(),uid,rid,sk)) {
 	    IvyLog.logE("BVCR","Upload failed");
 	  }
        }
@@ -343,8 +373,23 @@ private void processChanges()
 
 void handleFileChanged(String proj,File file)
 {
-   BvcrDifferenceSet ds = diff_map.get(proj);
+   BvcrDifferenceSet ds = getDifferenceSet(proj);
    if (ds != null) ds.handleFileChanged(file);
+}
+
+
+private BvcrDifferenceSet getDifferenceSet(String proj)
+{
+   BvcrDifferenceSet ds = null;
+   synchronized (diff_map) {
+      ds = diff_map.get(proj);
+      if (ds == null) {
+         ds = new BvcrDifferenceSet(this,findProject(proj));
+         diff_map.put(proj,ds);
+       }
+    }
+   
+   return ds;
 }
 
 

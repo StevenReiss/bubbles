@@ -196,32 +196,37 @@ void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
       }
     }
 
+   List<BumpProblemHandler> bphl = new ArrayList<>();
    synchronized (problem_handlers) {
-      for (BumpProblemHandler bph : handler_set) {
-	 File f;
-	 f = problem_handlers.get(bph);
-	 if (f == null && !problem_handlers.containsKey(bph)) continue;
-	 int ct = 0;
-	 if (deled != null) {
-	    for (BumpProblemImpl bp : deled) {
-	       if (fileMatch(f,bp)) {
-		  bph.handleProblemRemoved(bp);
-		  ++ct;
-		}
-	     }
-	  }
-	 if (added != null) {
-	    for (BumpProblemImpl bp : added) {
-	       if (fileMatch(f,bp)) {
-		  bph.handleProblemAdded(bp);
-		  ++ct;
-		}
-	     }
-	  }
-//    if (ct > 0) bph.handleProblemsDone();
-	 BoardLog.logD("BUMP","FINISHED WITH PROBLEMS " + ct);
-	 bph.handleProblemsDone();
+     for (BumpProblemHandler bph : handler_set) {
+        bphl.add(bph);
+      }
+    }
+   
+   for (BumpProblemHandler bph : bphl) {
+      File f;
+      f = problem_handlers.get(bph);
+      if (f == null && !problem_handlers.containsKey(bph)) continue;
+      int ct = 0;
+      if (deled != null) {
+         for (BumpProblemImpl bp : deled) {
+            if (fileMatch(f,bp)) {
+               bph.handleProblemRemoved(bp);
+               ++ct;
+             }
+          }
        }
+      if (added != null) {
+         for (BumpProblemImpl bp : added) {
+            if (fileMatch(f,bp)) {
+               bph.handleProblemAdded(bp);
+               ++ct;
+             }
+          }
+       }
+//    if (ct > 0) bph.handleProblemsDone();
+      BoardLog.logD("BUMP","FINISHED WITH PROBLEMS " + ct);
+      bph.handleProblemsDone();
     }
 }
 

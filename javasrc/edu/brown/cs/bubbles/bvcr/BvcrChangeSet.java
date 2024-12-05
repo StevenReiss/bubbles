@@ -25,6 +25,8 @@
 package edu.brown.cs.bubbles.bvcr;
 
 
+import edu.brown.cs.bubbles.board.BoardProperties;
+
 import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
@@ -114,7 +116,6 @@ void findChanges(File f,IvyXmlWriter xw)
 /*										*/
 /********************************************************************************/
 
-@SuppressWarnings("resource")
 private void update()
 {
    long now = System.currentTimeMillis();
@@ -125,24 +126,29 @@ private void update()
       int [] lens = readHeader(ins);
       if (lens == null) return;
       for (int len : lens) {
-	 InputStream sins = new SubInputStream(ins,len);
-
-	 if (repo_key != null) {
-	    try {
-	       Cipher c = Cipher.getInstance(repo_key.getAlgorithm());
-	       AlgorithmParameterSpec ps = new PBEParameterSpec(KEY_SALT,KEY_COUNT);
-	       c.init(Cipher.DECRYPT_MODE,repo_key,ps);
-	       sins = new CipherInputStream(sins,c);
-	     }
-	    catch (Exception e) {
-	       IvyLog.logE("BVCR","Unable to create cipher",e);
-	     }
-
-	    if (KEY_COMPRESS) sins = new InflaterInputStream(sins);
-	    IvyLog.logD("BVCR","Work on : " + user_id + " " + repo_id + " " + len);
-	    Element e = IvyXml.loadXmlFromStream(sins);
-	    addChanges(e);
-	  }
+         InputStream sins = null;
+         try {
+            sins = new SubInputStream(ins,len);
+            if (repo_key != null) {
+               try {
+                  Cipher c = Cipher.getInstance(repo_key.getAlgorithm());
+                  AlgorithmParameterSpec ps = new PBEParameterSpec(KEY_SALT,KEY_COUNT);
+                  c.init(Cipher.DECRYPT_MODE,repo_key,ps);
+                  sins = new CipherInputStream(sins,c);
+                }
+               catch (Exception e) {
+                  IvyLog.logE("BVCR","Unable to create cipher",e);
+                }
+               
+               if (KEY_COMPRESS) sins = new InflaterInputStream(sins);
+               IvyLog.logD("BVCR","Work on : " + user_id + " " + repo_id + " " + len);
+               Element e = IvyXml.loadXmlFromStream(sins);
+               addChanges(e);
+             }
+          }
+         finally {
+            if (sins != null) sins.close();
+          }
        }
       ins.close();
       last_update = now;
@@ -242,12 +248,21 @@ private void addChanges(Element xml)
 {
    IvyLog.logD("BVCR","CHANGE SET = " + IvyXml.convertXmlToString(xml));
 
+   BoardProperties bp = BoardProperties.getProperties("Bvcr");
+   long days = bp.getLong("Bvcr.max.days",183);
+   long delta = days*24*60*60*1000;
+   long now = System.currentTimeMillis();
    File root = for_main.getRootDirectory(project_name);
    String oroot = IvyXml.getAttrString(xml,"ROOT");
    String user = IvyXml.getAttrString(xml,"USER");
 
    for (Element fe : IvyXml.children(xml,"FILE")) {
       File f1 = new File(root,IvyXml.getAttrString(fe,"NAME"));
+      long dlm = IvyXml.getAttrLong(fe,"DLM",0);
+      if (dlm != 0 && delta != 0 && dlm < now - delta) {
+         IvyLog.logD("BVCR","Ignore old change to " + f1); 
+         continue;
+       }
       FileChanges fc = change_map.get(f1);
       if (fc == null) {
 	 fc = new FileChanges();

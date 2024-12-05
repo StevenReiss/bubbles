@@ -93,6 +93,8 @@ BvcrDifferenceSet(BvcrMain bm,BvcrProject proj)
 
 void handleFileChanged(File f)
 {
+   IvyLog.logD("BVCR","Note file changed " + f + " " + (files_todo == null));
+   
    if (files_todo == null) return;	// will do everything
    files_todo.add(f);
 }
