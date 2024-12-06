@@ -596,14 +596,14 @@ private final class CommandHandler implements MintHandler {
          if (rply == null && xw != null) rply = xw.toString();
        }
       catch (Throwable t) {
-         IvyLog.logE("BVCR","Problem processing BVCR command",t);
+         IvyLog.logE("BVCR","Problem processing BVCR command " + cmd,t);
        }
       
       if (rply != null) {
          rply = "<RESULT>\n" + rply + "</RESULT>";
        }
       
-      IvyLog.logD("BVCR","RESULT: " + rply);
+      IvyLog.logD("BVCR","RESULT (" + cmd + "): " + rply);
       
       msg.replyTo(rply);
    }

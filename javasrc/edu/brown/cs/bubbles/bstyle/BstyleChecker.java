@@ -182,8 +182,9 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
    
    BstyleFileManager bfm = bstyle_main.getFileManager();
    
+   IvyXmlWriter xw = bstyle_main.beginMessage("FILEERRORS");
    for (Map.Entry<String,Set<Violation>> ent : errs.entrySet()) {
-      IvyXmlWriter xw = bstyle_main.beginMessage("FILEERROR");
+      xw.begin("FILEERROR");
       xw.field("CATEGORY","BSTYLE");
       xw.field("PROJECT",proj);
       String fnm = ent.getKey();
@@ -194,8 +195,9 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
          outputViolation(v,bf,mods.get(v),xw);
        }
       xw.end("MESSAGES");
-      bstyle_main.finishMessage(xw);
+      xw.end("FILEERROR");
     }
+   bstyle_main.finishMessage(xw);
 }
 
 

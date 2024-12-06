@@ -311,11 +311,7 @@ public int processTexts(List<FileText> files,List<BstyleFile> empty) throws Chec
    for (FileSetCheck fsc : fileset_checks) {
       fsc.finishProcessing();
     }
-   
-// for (FileSetCheck fsc : fileset_checks) {
-//    fsc.destroy();
-//  }
-   
+
    int errorcount = error_counter.getCount();
    fireAuditFinished();
    

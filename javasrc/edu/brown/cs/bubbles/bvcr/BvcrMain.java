@@ -26,6 +26,7 @@ package edu.brown.cs.bubbles.bvcr;
 
 
 import edu.brown.cs.ivy.exec.IvySetup;
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -291,12 +292,14 @@ private void setupKeys()
 	  }
        }
       String nm = bvm.getRepositoryName();
-      if (nm == null) continue;
-      nm = getEncodedName(nm,"R");
-      id_map.put(proj,nm);
       File f = bvm.getRootDirectory();
+      f = IvyFile.getCanonical(f);              // use canonical to distinguish systems
       String uid = System.getProperty("user.name");
       uid += "@" + f.getPath();
+      IvyLog.logD("BVCR","Work with repo=" + nm + ", User=" + uid);
+      nm = getEncodedName(nm,"R");
+      if (nm == null) continue;
+      id_map.put(proj,nm);
       uid = getEncodedName(uid,"U");
       user_map.put(proj,uid);
       change_map.put(proj,new BvcrChangeSet(this,proj,nm,uid,sk));

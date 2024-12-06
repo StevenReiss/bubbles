@@ -127,6 +127,7 @@ private void update()
       if (lens == null) return;
       for (int len : lens) {
          InputStream sins = null;
+         InputStream sins1 = null;
          try {
             sins = new SubInputStream(ins,len);
             if (repo_key != null) {
@@ -134,20 +135,26 @@ private void update()
                   Cipher c = Cipher.getInstance(repo_key.getAlgorithm());
                   AlgorithmParameterSpec ps = new PBEParameterSpec(KEY_SALT,KEY_COUNT);
                   c.init(Cipher.DECRYPT_MODE,repo_key,ps);
-                  sins = new CipherInputStream(sins,c);
+                  sins1 = new CipherInputStream(sins,c);
                 }
                catch (Exception e) {
                   IvyLog.logE("BVCR","Unable to create cipher",e);
                 }
                
-               if (KEY_COMPRESS) sins = new InflaterInputStream(sins);
-               IvyLog.logD("BVCR","Work on : " + user_id + " " + repo_id + " " + len);
-               Element e = IvyXml.loadXmlFromStream(sins);
+               if (KEY_COMPRESS) {
+                  if (sins1 != null) sins1 = new InflaterInputStream(sins1);
+                  else sins = new InflaterInputStream(sins);
+                }
+               IvyLog.logD("BVCR","Work on: " + user_id + " " + repo_id + " " + len);
+               Element e = null;
+               if (sins1 != null) e = IvyXml.loadXmlFromStream(sins1);
+               else e = IvyXml.loadXmlFromStream(sins);
                addChanges(e);
              }
           }
          finally {
             if (sins != null) sins.close();
+            if (sins1 != null) sins1.close();
           }
        }
       ins.close();
@@ -260,7 +267,7 @@ private void addChanges(Element xml)
       File f1 = new File(root,IvyXml.getAttrString(fe,"NAME"));
       long dlm = IvyXml.getAttrLong(fe,"DLM",0);
       if (dlm != 0 && delta != 0 && dlm < now - delta) {
-         IvyLog.logD("BVCR","Ignore old change to " + f1); 
+         IvyLog.logD("BVCR","Ignore old change to " + f1 + " for " + user); 
          continue;
        }
       FileChanges fc = change_map.get(f1);
