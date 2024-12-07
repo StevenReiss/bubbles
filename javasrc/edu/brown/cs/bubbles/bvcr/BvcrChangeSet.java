@@ -140,7 +140,6 @@ private void update()
                catch (Exception e) {
                   IvyLog.logE("BVCR","Unable to create cipher",e);
                 }
-               
                if (KEY_COMPRESS) {
                   if (sins1 != null) sins1 = new InflaterInputStream(sins1);
                   else sins = new InflaterInputStream(sins);
@@ -265,11 +264,19 @@ private void addChanges(Element xml)
 
    for (Element fe : IvyXml.children(xml,"FILE")) {
       File f1 = new File(root,IvyXml.getAttrString(fe,"NAME"));
+      
+      String fnm = f1.getName();
+      int idx = fnm.lastIndexOf(".");
+      if (idx < 0) continue;
+      String ext = fnm.substring(idx);
+      if (!ext.equalsIgnoreCase(".java")) continue;
+      
       long dlm = IvyXml.getAttrLong(fe,"DLM",0);
       if (dlm != 0 && delta != 0 && dlm < now - delta) {
          IvyLog.logD("BVCR","Ignore old change to " + f1 + " for " + user); 
          continue;
        }
+      
       FileChanges fc = change_map.get(f1);
       if (fc == null) {
 	 fc = new FileChanges();

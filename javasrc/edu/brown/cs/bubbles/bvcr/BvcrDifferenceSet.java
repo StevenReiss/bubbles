@@ -72,7 +72,7 @@ BvcrDifferenceSet(BvcrMain bm,BvcrProject proj)
 {
    bvcr_main = bm;
    for_project = proj;
-   file_set = new HashMap<File,FileData>();
+   file_set = new HashMap<>();
    file_diffs = null;
    source_start = 0;
    del_lines = null;
@@ -293,8 +293,19 @@ private class FileData {
 
    // long getLastChecked()			{ return last_check; }
    BvcrDifferenceFile getDifferences()		{ return data_diffs; }
+   
+   boolean reportFile() {
+      String fnm = for_file.getName();
+      int idx = fnm.lastIndexOf(".");
+      if (idx < 0) return false;
+      String ext = fnm.substring(idx);
+      if (ext.equalsIgnoreCase(".java")) return true;
+      return false;
+    }
 
    void outputXml(IvyXmlWriter xw) {
+      if (!reportFile()) return;
+      
       xw.begin("FILE");
       String fd = getRelativePath(for_file);
       xw.field("NAME",fd);

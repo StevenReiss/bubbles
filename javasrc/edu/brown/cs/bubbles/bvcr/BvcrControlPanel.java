@@ -235,39 +235,39 @@ private class Updater implements Runnable {
 
    @Override public void run() {
       for ( ; ; ) {
-	 BoardSetup bs = BoardSetup.getSetup();
-	 MintControl mc = bs.getMintControl();
-	 MintDefaultReply rply = new MintDefaultReply();
-	 String cmd = "<BVCR DO='VERSIONS' PROJECT='" + for_project + "' />";
-	 mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
-	 Element ever = rply.waitForXml();
-	 Map<String,BvcrControlVersion> newvers = new HashMap<String,BvcrControlVersion>();
-	 for (Element e : IvyXml.children(ever,"VERSION")) {
-	    BvcrControlVersion vv = new BvcrControlVersion(e);
-	    String fnm = vv.getName();
-	    newvers.put(fnm,vv);
-	    for (String s : vv.getAlternativeNames()) newvers.put(s,vv);
-	    for (String s : vv.getAlternativeIds()) newvers.put(s,vv);
-	  }
-	 version_map = newvers;
-
-	 rply = new MintDefaultReply();
-	 cmd = "<BVCR DO='CHANGES' PROJECT='" + for_project + "'";
-	 if (do_ignored) cmd += " IGNORED='T'";
-	 cmd += " />";
-
-	 mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
-	 Element efil = rply.waitForXml();
-	 Map<String,BvcrControlFileStatus> newfiles = new HashMap<String,BvcrControlFileStatus>();
-	 for (Element e : IvyXml.children(efil,"FILE")) {
-	    BvcrControlFileStatus fsts = new BvcrControlFileStatus(e);
-	    newfiles.put(fsts.getFileName(),fsts);
-	  }
-	 status_map = newfiles;
-
-	 synchronized (BvcrControlPanel.this) {
-	    if (--update_count <= 0) break;
-	  }
+         BoardSetup bs = BoardSetup.getSetup();
+         MintControl mc = bs.getMintControl();
+         MintDefaultReply rply = new MintDefaultReply();
+         String cmd = "<BVCR DO='VERSIONS' PROJECT='" + for_project + "' />";
+         mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
+         Element ever = rply.waitForXml();
+         Map<String,BvcrControlVersion> newvers = new HashMap<String,BvcrControlVersion>();
+         for (Element e : IvyXml.children(ever,"VERSION")) {
+            BvcrControlVersion vv = new BvcrControlVersion(e);
+            String fnm = vv.getName();
+            newvers.put(fnm,vv);
+            for (String s : vv.getAlternativeNames()) newvers.put(s,vv);
+            for (String s : vv.getAlternativeIds()) newvers.put(s,vv);
+          }
+         version_map = newvers;
+   
+         rply = new MintDefaultReply();
+         cmd = "<BVCR DO='CHANGES' PROJECT='" + for_project + "'";
+         if (do_ignored) cmd += " IGNORED='T'";
+         cmd += " />";
+   
+         mc.send(cmd,rply,MINT_MSG_FIRST_NON_NULL);
+         Element efil = rply.waitForXml();
+         Map<String,BvcrControlFileStatus> newfiles = new HashMap<String,BvcrControlFileStatus>();
+         for (Element e : IvyXml.children(efil,"FILE")) {
+            BvcrControlFileStatus fsts = new BvcrControlFileStatus(e);
+            newfiles.put(fsts.getFileName(),fsts);
+          }
+         status_map = newfiles;
+   
+         synchronized (BvcrControlPanel.this) {
+            if (--update_count <= 0) break;
+          }
        }
       updateCompleted();
     }

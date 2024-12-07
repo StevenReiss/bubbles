@@ -400,17 +400,17 @@ protected class DiffAnalyzer implements CommandCallback {
                Matcher m1 = SOURCE_PAT.matcher(ln);
                Matcher m2 = GIT_SOURCE.matcher(ln);
                if (m1.matches()) {
-        	  String fil = m1.group(1);
-        	  String ver = m1.group(2);
-        	  // IvyLog.logD("BVCR","Start file " + fil + " " + ver);
-        	  diff_set.beginFile(fil,ver);
-        	}
+                  String fil = m1.group(1);
+                  String ver = m1.group(2);
+                  // IvyLog.logD("BVCR","Start file " + fil + " " + ver);
+                  diff_set.beginFile(fil,ver);
+                }
                else if (m2.matches()) {
-        	  String fil = m2.group(1);
-        	  File f = new File(getRootDirectory(),fil);
-        	  // IvyLog.logD("BVCR","Start git file " + fil + " " + getRootDirectory() + " " + f);
-        	  diff_set.beginFile(f.getPath(),base_version);
-        	}
+                  String fil = m2.group(1);
+                  File f = new File(getRootDirectory(),fil);
+                  // IvyLog.logD("BVCR","Start git file " + fil + " " + getRootDirectory() + " " + f);
+                  diff_set.beginFile(f.getPath(),base_version);
+                }
              }
             else {
                diff_set.noteDelete(source_line,target_line,ln.substring(1));

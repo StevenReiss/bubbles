@@ -255,7 +255,7 @@ void outputXml(IvyXmlWriter xw)
    
    String time = null;
    if (version_time != null) {
-      SimpleDateFormat fmt = new SimpleDateFormat("MM/dd");
+      SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yy");
       if (System.currentTimeMillis() - version_time.getTime() < 48*60*60*1000) {
          fmt = new SimpleDateFormat("MM/dd kk:mm");
        }
