@@ -179,6 +179,7 @@ abstract void getDifferences(BvcrDifferenceSet ds);
 abstract void findHistory(File f,IvyXmlWriter xw);
 
 abstract void findProjectHistory(IvyXmlWriter xw);
+String getCurrentVersion()                              { return null; }
 abstract void showChangedFiles(IvyXmlWriter xw,boolean ign);
 abstract void ignoreFiles(IvyXmlWriter xw,List<String> files);
 abstract void addFiles(IvyXmlWriter xw,List<String> files);
@@ -189,7 +190,6 @@ abstract void doPush(IvyXmlWriter xw);
 abstract void doUpdate(IvyXmlWriter xw,boolean keep,boolean remove);
 abstract void doSetVersion(IvyXmlWriter xw,String ver);
 abstract void doStash(IvyXmlWriter xw,String name);
-
 
 
 
@@ -354,7 +354,7 @@ protected class DiffAnalyzer implements CommandCallback {
       source_line = 0;
       target_line = 0;
       del_count = 0;
-      base_version = null;
+      base_version = getCurrentVersion();
     }
 
    @Override public void handleLine(String ln) {
@@ -369,7 +369,7 @@ protected class DiffAnalyzer implements CommandCallback {
             source_line = 0;
             Matcher m3 = GIT_INDEX.matcher(ln);
             if (m3.matches()) {
-               base_version = m3.group(1);
+//             base_version = m3.group(1);
              }
             break;
          case '\\' :
@@ -438,6 +438,11 @@ protected class DiffAnalyzer implements CommandCallback {
     }
 
 }	// end of inner class DiffAnalyzer
+
+
+
+
+
 
 
 

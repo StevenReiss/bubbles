@@ -146,7 +146,7 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
        }
     }
 
-   DiffAnalyzer da = new DiffAnalyzer(ds);
+   DiffAnalyzer da = new DiffAnalyzer(ds); 
    runCommand(cmd,da);
 }
 

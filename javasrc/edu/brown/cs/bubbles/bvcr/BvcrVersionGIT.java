@@ -59,6 +59,7 @@ class BvcrVersionGIT extends BvcrVersionManager implements BvcrConstants
 private File		git_root;
 private String		git_command;
 private String		current_version;
+private String          long_version;
 
 private static BoardProperties bvcr_properties = BoardProperties.getProperties("Bvcr");
 
@@ -66,6 +67,7 @@ private static SimpleDateFormat GIT_DATE = new SimpleDateFormat("EEE MMM dd kk:m
 
 private static String GIT_LOG_FORMAT = "%H%x09%h%x09%an%x09%ae%x09%ad%x09%P%x09%d%x09%s%n%b%n***EOF";
 private static String GIT_PRIOR_FORMAT = "%H%x09%P%x09%d%n";
+private static String GIT_VERSION_FORMAT = "%Hx09%h%n"; 
 
 
 
@@ -104,6 +106,7 @@ BvcrVersionGIT(BvcrProject bp)
 	  }
        }
     }
+   findCurrentVersion();
 }
 
 
@@ -400,6 +403,28 @@ private void findGitRoot()
     }
 }
 
+
+@Override String getCurrentVersion() 
+{
+   if (long_version == null) {
+      findCurrentVersion();
+    }
+   return long_version;
+}
+
+
+private void findCurrentVersion()
+{
+   String cmd1 = git_command + " log -1 '--pretty=format:" + GIT_VERSION_FORMAT + "'";
+   StringCommand cmd = new StringCommand(cmd1);
+   StringTokenizer tok = new StringTokenizer(cmd.getContent(),"\n\r");
+   
+   long_version = null;
+   if (tok.hasMoreTokens()) long_version = tok.nextToken();
+}
+  
+   
+   
 
 
 /********************************************************************************/
