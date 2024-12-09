@@ -144,7 +144,7 @@ String getEndVersion()				{ return end_version; }
 /*										*/
 /********************************************************************************/
 
-void beginFile(String file,String ver)
+void beginFile(String file,String ver,String idxver)
 {
    finishFile();
    source_start = 0;
@@ -152,7 +152,7 @@ void beginFile(String file,String ver)
    add_lines = new ArrayList<String>();
    del_lines = new ArrayList<String>();
    File f = new File(file);
-   FileData fd = new FileData(f,ver);
+   FileData fd = new FileData(f,ver,idxver);
    file_diffs = fd.getDifferences();
    file_set.put(f,fd);
    if (files_todo != null) files_todo.remove(f);
@@ -285,10 +285,10 @@ private class FileData {
    private long last_check;
    private BvcrDifferenceFile data_diffs;
 
-   FileData(File f,String version) {
+   FileData(File f,String version,String idxver) {
       for_file = f;
       last_check = f.lastModified();
-      data_diffs = new BvcrDifferenceFile(version);
+      data_diffs = new BvcrDifferenceFile(version,idxver);
     }
 
    // long getLastChecked()			{ return last_check; }

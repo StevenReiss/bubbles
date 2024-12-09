@@ -47,6 +47,7 @@ class BvcrDifferenceFile implements BvcrConstants
 
 private List<FileChange>	change_set;
 private String			base_version;
+private String                  index_version;
 
 
 
@@ -56,10 +57,11 @@ private String			base_version;
 /*										*/
 /********************************************************************************/
 
-BvcrDifferenceFile(String ver)
+BvcrDifferenceFile(String ver,String idxver)
 {
    change_set = new ArrayList<>();
    base_version = ver;
+   index_version = idxver;
 }
 
 
@@ -67,7 +69,8 @@ BvcrDifferenceFile(String ver)
 
 BvcrDifferenceFile(Element e)
 {
-   this(IvyXml.getAttrString(e,"VERSION"));
+   this(IvyXml.getAttrString(e,"VERSION"),
+         IvyXml.getAttrString(e,"INDEXVERSION"));
 
    for (Element ce : IvyXml.children(e,"CHANGE")) {
       FileChange fc = new FileChange(ce);
@@ -116,6 +119,7 @@ void addChange(int slin,int tlin,List<String> add,List<String> del)
 void outputXml(IvyXmlWriter xw)
 {
    xw.field("VERSION",base_version);
+   if (index_version != null) xw.field("INDEXVERSION",index_version);
 
    for (FileChange fc : change_set) {
       fc.outputXml(xw);

@@ -348,6 +348,7 @@ protected class DiffAnalyzer implements CommandCallback {
    private int target_line;
    private int del_count;
    private String base_version;
+   private String index_version;
 
    DiffAnalyzer(BvcrDifferenceSet ds) {
       diff_set = ds;
@@ -355,6 +356,7 @@ protected class DiffAnalyzer implements CommandCallback {
       target_line = 0;
       del_count = 0;
       base_version = getCurrentVersion();
+      index_version = null;
     }
 
    @Override public void handleLine(String ln) {
@@ -369,7 +371,7 @@ protected class DiffAnalyzer implements CommandCallback {
             source_line = 0;
             Matcher m3 = GIT_INDEX.matcher(ln);
             if (m3.matches()) {
-//             base_version = m3.group(1);
+               index_version = m3.group(1);
              }
             break;
          case '\\' :
@@ -403,13 +405,13 @@ protected class DiffAnalyzer implements CommandCallback {
                   String fil = m1.group(1);
                   String ver = m1.group(2);
                   // IvyLog.logD("BVCR","Start file " + fil + " " + ver);
-                  diff_set.beginFile(fil,ver);
+                  diff_set.beginFile(fil,base_version,ver);
                 }
                else if (m2.matches()) {
                   String fil = m2.group(1);
                   File f = new File(getRootDirectory(),fil);
                   // IvyLog.logD("BVCR","Start git file " + fil + " " + getRootDirectory() + " " + f);
-                  diff_set.beginFile(f.getPath(),base_version);
+                  diff_set.beginFile(f.getPath(),base_version,index_version); 
                 }
              }
             else {

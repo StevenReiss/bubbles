@@ -336,7 +336,7 @@ protected static class CvsDiffAnalyzer implements CommandCallback {
          case 'r' :                     // retrieving revision
             int idx1 = ln.lastIndexOf(" ");
             base_version = ln.substring(idx1+1);
-            diff_set.beginFile(cur_file,base_version);
+            diff_set.beginFile(cur_file,base_version,null);
             break;
          case '0' : case '1' : case '2' : case '3' : case '4' :
          case '5' : case '6' : case '7' : case '8' : case '9' :
