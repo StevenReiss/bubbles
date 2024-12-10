@@ -59,6 +59,7 @@ private List<String>		add_lines;
 private Set<File>		files_todo;
 private String			start_version;
 private String			end_version;
+private boolean                 bad_verison;
 
 
 
@@ -80,6 +81,7 @@ BvcrDifferenceSet(BvcrMain bm,BvcrProject proj)
    files_todo = null;
    start_version = null;
    end_version = null;
+   bad_verison = false;
 }
 
 
@@ -135,6 +137,7 @@ void setForFileDifference(File f,String v0,String v1)
 String getStartVersion()			{ return start_version; }
 String getEndVersion()				{ return end_version; }
 
+boolean isBadVersion()                          { return bad_verison; }
 
 
 
@@ -156,6 +159,7 @@ void beginFile(String file,String ver,String idxver)
    file_diffs = fd.getDifferences();
    file_set.put(f,fd);
    if (files_todo != null) files_todo.remove(f);
+   bad_verison = false;
 }
 
 
@@ -221,6 +225,12 @@ private void finishEntry()
    del_lines.clear();
 }
 
+
+
+void noteBadVersion()
+{
+   bad_verison = true;
+}
 
 
 /********************************************************************************/

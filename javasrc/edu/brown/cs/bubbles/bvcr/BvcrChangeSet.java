@@ -26,7 +26,7 @@ package edu.brown.cs.bubbles.bvcr;
 
 
 import edu.brown.cs.bubbles.board.BoardProperties;
-
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
@@ -103,8 +103,23 @@ void findChanges(File f,IvyXmlWriter xw)
    update();
 
    FileChanges fc = change_map.get(f);
+   
+   if (fc != null && xw != null) {
+      fc.outputXml(xw);
+    }
+}
 
-   if (fc != null && xw != null) fc.outputXml(xw);
+
+void findActualChanges(File f,BvcrVersionManager bvm,IvyXmlWriter xw)
+{
+   update();
+   
+   FileChanges fc = change_map.get(f);
+   
+   if (fc != null && xw != null) {
+      fc.outputActualChanges(bvm,f,xw);
+    }
+   
 }
 
 
@@ -259,6 +274,7 @@ private void addChanges(Element xml)
    long delta = days*24*60*60*1000;
    long now = System.currentTimeMillis();
    File root = for_main.getRootDirectory(project_name);
+   root = IvyFile.getCanonical(root);
    String oroot = IvyXml.getAttrString(xml,"ROOT");
    String user = IvyXml.getAttrString(xml,"USER");
 
@@ -312,13 +328,26 @@ private static class FileChanges {
    void outputXml(IvyXmlWriter xw) {
       xw.begin("CHANGESET");
       for (Map.Entry<String,BvcrDifferenceFile> ent : change_items.entrySet()) {
+         BvcrDifferenceFile bdf = ent.getValue();
          xw.begin("USERCHANGE");
          xw.field("USER",ent.getKey());
-         ent.getValue().outputXml(xw);
+         bdf.outputXml(xw);
          xw.end("USERCHANGE");
        }
       xw.end("CHANGESET");
     }
+   
+   void outputActualChanges(BvcrVersionManager bvm,File f,IvyXmlWriter xw) {
+      xw.begin("CHANGESET");
+      for (Map.Entry<String,BvcrDifferenceFile> ent : change_items.entrySet()) {
+         BvcrDifferenceFile bdf = ent.getValue();
+         xw.begin("USERCHANGE");
+         xw.field("USER",ent.getKey());
+         bdf.outputActualChanges(bvm,f,xw);
+         xw.end("USERCHANGE");
+       }
+      xw.end("CHANGESET");
+   }
 
 }	// end of inner class FileChanges
 

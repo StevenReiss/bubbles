@@ -60,7 +60,7 @@ abstract class BvcrVersionManager implements BvcrConstants
 /********************************************************************************/
 
 protected BvcrProject	for_project;
-private BvcrMonitor for_monitor;
+private BvcrMonitor     for_monitor;
 protected String	repository_id;
 
 
@@ -105,6 +105,20 @@ protected BvcrVersionManager(BvcrProject bp)
    repository_id = null;
 }
 
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+BvcrProject getProject()                        { return for_project; }
+BvcrMain getBvcrMain() 
+{
+   if (for_monitor == null) return null;
+   return for_monitor.getBvcrMain(); 
+}
 
 
 /********************************************************************************/
@@ -190,6 +204,8 @@ abstract void doPush(IvyXmlWriter xw);
 abstract void doUpdate(IvyXmlWriter xw,boolean keep,boolean remove);
 abstract void doSetVersion(IvyXmlWriter xw,String ver);
 abstract void doStash(IvyXmlWriter xw,String name);
+
+void doFetch()                                          { }
 
 
 
@@ -341,6 +357,7 @@ private static final Pattern GIT_SOURCE = Pattern.compile("\\-\\-\\- a[/\\\\](\\
 
 
 
+
 protected class DiffAnalyzer implements CommandCallback {
 
    private BvcrDifferenceSet diff_set;
@@ -430,6 +447,11 @@ protected class DiffAnalyzer implements CommandCallback {
             if (source_line != 0) {
                diff_set.noteInsert(source_line - del_count,target_line,ln.substring(1));
                ++target_line;
+             }
+            break;
+         case 'f' :
+            if (ln.startsWith("fatal: bad object")) {
+               diff_set.noteBadVersion(); 
              }
             break;
        }

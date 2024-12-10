@@ -462,6 +462,15 @@ void findChanges(String proj,File file,IvyXmlWriter xw)
 }
 
 
+void findActualChanges(String proj,File file,BvcrVersionManager bvm,IvyXmlWriter xw)
+{
+   BvcrChangeSet cs = change_map.get(proj);
+   if (cs != null) {
+      cs.findActualChanges(file,bvm,xw); 
+    }
+}
+
+
 
 /********************************************************************************/
 /*										*/

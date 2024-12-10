@@ -722,6 +722,14 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 
 
 
+@Override void doFetch()
+{
+   String cmd = git_command + " fetch";
+   StringCommand rslt = new StringCommand(cmd);
+   IvyLog.logD("BVCR","RESULT OF FETCH: " + rslt.getContent() + " " + rslt.getStatus());
+}
+
+
 
 /********************************************************************************/
 /*										*/

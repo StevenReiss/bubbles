@@ -76,6 +76,16 @@ BvcrMonitor(BvcrMain bm,String mint)
 
 
 /********************************************************************************/
+/*                                                                              */
+/*      Access methods                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+BvcrMain getBvcrMain()                  { return bvcr_control; }
+
+
+
+/********************************************************************************/
 /*										*/
 /*	Server implementation							*/
 /*										*/
@@ -194,10 +204,13 @@ void loadProjects()
 /*										*/
 /********************************************************************************/
 
-private void findChanges(String proj,String file,IvyXmlWriter xw)
+private void handleFindChanges(String proj,String file,IvyXmlWriter xw)
 {
    File f = new File(file);
    bvcr_control.findChanges(proj,f,xw);
+   
+   BvcrVersionManager bvm = bvcr_control.getManager(proj);
+   bvcr_control.findActualChanges(proj,f,bvm,xw);
 }
 
 
@@ -207,9 +220,6 @@ private void handleFileChanged(String proj,String file)
    File f = new File(file);
    bvcr_control.handleFileChanged(proj,f);
 }
-
-
-
 
 
 
@@ -242,7 +252,7 @@ private void findHistory(String proj,String file,IvyXmlWriter xw)
 /*										*/
 /********************************************************************************/
 
-private void findFileDiffs(String proj,String file,String vfr,String vto,IvyXmlWriter xw)
+private void handleFileDiffs(String proj,String file,String vfr,String vto,IvyXmlWriter xw)
 {
    File f = new File(file);
    bvcr_control.findFileDiffs(proj,f,vfr,vto,xw);
@@ -470,7 +480,7 @@ private final class CommandHandler implements MintHandler {
                synchronized (this) {
                   String proj = IvyXml.getAttrString(e,"PROJECT");
                   String file = IvyXml.getAttrString(e,"FILE");
-                  findChanges(proj,file,xw);
+                  handleFindChanges(proj,file,xw);
                 }
                break;
             case "HISTORY" :
@@ -486,7 +496,7 @@ private final class CommandHandler implements MintHandler {
                   String file = IvyXml.getAttrString(e,"FILE");
                   String vfrom = IvyXml.getAttrString(e,"FROM");
                   String vto = IvyXml.getAttrString(e,"TO");
-                  findFileDiffs(proj,file,vfrom,vto,xw);
+                  handleFileDiffs(proj,file,vfrom,vto,xw);
                 }
                break;
             case "PROJECTS" :

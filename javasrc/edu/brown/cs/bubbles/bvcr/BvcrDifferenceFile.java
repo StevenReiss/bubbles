@@ -30,6 +30,7 @@ import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
 import org.w3c.dom.Element;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,8 +109,6 @@ void addChange(int slin,int tlin,List<String> add,List<String> del)
 }
 
 
-
-
 /********************************************************************************/
 /*										*/
 /*	Output methods								*/
@@ -120,10 +119,27 @@ void outputXml(IvyXmlWriter xw)
 {
    xw.field("VERSION",base_version);
    if (index_version != null) xw.field("INDEXVERSION",index_version);
-
+   
    for (FileChange fc : change_set) {
       fc.outputXml(xw);
     }
+}
+
+
+
+void outputActualChanges(BvcrVersionManager bvm,File f,IvyXmlWriter xw)
+{
+   BvcrMain bm = bvm.getBvcrMain();
+   if (bm == null) return;
+   BvcrProject proj = bvm.getProject();
+   BvcrDifferenceSet ds = new BvcrDifferenceSet(bm,proj);
+   ds.setForFileDifference(f,base_version,bvm.getCurrentVersion());
+   bvm.getDifferences(ds);
+   if (ds.isBadVersion()) {
+      bvm.doFetch();
+      bvm.getDifferences(ds);
+    }
+   
 }
 
 
