@@ -71,6 +71,15 @@ BvcrMonitor(BvcrMain bm,String mint)
    mint_control = MintControl.create(mint,MintSyncMode.ONLY_REPLIES);
    is_done = false;
    delay_count = 0;
+   
+   // ensure Eclipse has started
+   for (int i = 0; i < 300; ++i) {
+      if (checkEclipse()) break;
+      try {
+         Thread.sleep(10000L);
+       }
+      catch (InterruptedException e) { }
+    }
 }
 
 
@@ -98,12 +107,12 @@ void server()
    mint_control.register("<BUBJET SOURCE='IDEA' TYPE='_VAR_0' />",hdlr);
    mint_control.register("<BUBBLES DO='EXIT' />",new ExitHandler());
    mint_control.register("<BVCR DO='_VAR_0' />",new CommandHandler());
-
+   
    synchronized (this) {
       while (!is_done || delay_count > 0) {
-	 checkEclipse();
+	 if (!checkEclipse()) is_done = true;
 	 try {
-	    wait(300000L);
+	    wait(30000L);
 	  }
 	 catch (InterruptedException e) { }
        }
@@ -122,16 +131,17 @@ private synchronized void serverDone()
 
 
 
-private void checkEclipse()
+private boolean checkEclipse()
 {
    MintDefaultReply rply = new MintDefaultReply();
    String msg = "<BUBBLES DO='PING' />";
    mint_control.send(msg,rply,MINT_MSG_FIRST_NON_NULL);
    String r = rply.waitForString(120000);
    if (r == null) {
-      is_done = true;
       IvyLog.logI("BVCR","Eclipse ping failed");
+      return false;
     }
+   return true;
 }
 
 

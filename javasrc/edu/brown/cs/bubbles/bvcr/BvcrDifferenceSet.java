@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.bvcr;
 
+import edu.brown.cs.ivy.file.IvyFile;
 import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -266,10 +267,14 @@ String getRelativePath(File f)
 
 void outputXml(IvyXmlWriter xw)
 {
+   File root = bvcr_main.getRootDirectory(for_project.getName());
+   File croot = IvyFile.getCanonical(root);
+   
    xw.begin("DIFFERENCES");
    xw.field("PROJECT",for_project.getName());
    xw.field("USER",System.getProperty("user.name"));
-   xw.field("ROOT",bvcr_main.getRootDirectory(for_project.getName()));
+   xw.field("ROOT",root);
+   xw.field("CROOT",croot);
    if (start_version != null) xw.field("STARTVERSION",start_version);
    if (end_version != null) xw.field("ENDVERSION",end_version);
 
