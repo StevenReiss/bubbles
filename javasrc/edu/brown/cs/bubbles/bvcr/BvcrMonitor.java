@@ -423,14 +423,15 @@ private final class EclipseHandler implements MintHandler {
           }
          else if (cmd.equals("RESOURCE")) {
             synchronized (this) {
-               for (Element re : IvyXml.children(e,"DELTA")) {
-        	  String rtyp = IvyXml.getAttrString(re,"TYPE");
-        	  if (rtyp != null && rtyp.equals("FILE")) {
-        	     String fp = IvyXml.getAttrString(re,"LOCATION");
-        	     String proj = IvyXml.getAttrString(re,"PROJECT");
-        	     handleFileChanged(proj,fp);
-        	   }
-        	}
+               for (Element de : IvyXml.children(e,"DELTA")) {
+                  Element re = IvyXml.getChild(de,"RESOURCE");
+                  String rtyp = IvyXml.getAttrString(re,"TYPE");
+                  if (rtyp != null && rtyp.equals("FILE")) {
+                     String fp = IvyXml.getAttrString(re,"LOCATION");
+                     String proj = IvyXml.getAttrString(re,"PROJECT");
+                     handleFileChanged(proj,fp);
+                   }
+                }
                handleEndUpdate();
              }
           }

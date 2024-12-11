@@ -148,7 +148,8 @@ private void update()
             if (repo_key != null) {
                try {
                   Cipher c = Cipher.getInstance(repo_key.getAlgorithm());
-                  AlgorithmParameterSpec ps = new PBEParameterSpec(KEY_SALT,KEY_COUNT);
+                  AlgorithmParameterSpec ps = 
+                     new PBEParameterSpec(KEY_SALT,KEY_COUNT);
                   c.init(Cipher.DECRYPT_MODE,repo_key,ps);
                   sins1 = new CipherInputStream(sins,c);
                 }
