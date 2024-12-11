@@ -67,7 +67,7 @@ private static SimpleDateFormat GIT_DATE = new SimpleDateFormat("EEE MMM dd kk:m
 
 private static String GIT_LOG_FORMAT = "%H%x09%h%x09%an%x09%ae%x09%ad%x09%P%x09%d%x09%s%n%b%n***EOF";
 private static String GIT_PRIOR_FORMAT = "%H%x09%P%x09%d%n";
-private static String GIT_VERSION_FORMAT = "%Hx09%h%n"; 
+private static String GIT_VERSION_FORMAT = "%H%n"; 
 
 
 
@@ -160,7 +160,7 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
 @Override void getDifferences(BvcrDifferenceSet ds)
 {
-   String cmd = git_command  + " diff -w -r";
+   String cmd = git_command  + " diff -w";
 
    String v0 = ds.getStartVersion();
    String v1 = ds.getEndVersion();

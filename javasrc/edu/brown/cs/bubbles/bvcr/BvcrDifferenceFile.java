@@ -139,7 +139,6 @@ void outputActualChanges(BvcrVersionManager bvm,File f,IvyXmlWriter xw)
       bvm.doFetch();
       bvm.getDifferences(ds);
     }
-   
 }
 
 

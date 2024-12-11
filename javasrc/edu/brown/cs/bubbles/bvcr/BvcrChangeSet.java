@@ -103,6 +103,10 @@ void findChanges(File f,IvyXmlWriter xw)
    update();
 
    FileChanges fc = change_map.get(f);
+   if (fc == null) {
+      File f1 = IvyFile.getCanonical(f);
+      fc = change_map.get(f1);
+    }
    
    if (fc != null && xw != null) {
       fc.outputXml(xw);
@@ -115,6 +119,10 @@ void findActualChanges(File f,BvcrVersionManager bvm,IvyXmlWriter xw)
    update();
    
    FileChanges fc = change_map.get(f);
+   if (fc == null) {
+      File f1 = IvyFile.getCanonical(f);
+      fc = change_map.get(f1);
+    }
    
    if (fc != null && xw != null) {
       fc.outputActualChanges(bvm,f,xw);
@@ -298,6 +306,8 @@ private void addChanges(Element xml)
       if (fc == null) {
 	 fc = new FileChanges();
 	 change_map.put(f1,fc);
+         File f2 = IvyFile.getCanonical(f1);
+         change_map.put(f2,fc);
        }
       BvcrDifferenceFile df = new BvcrDifferenceFile(fe);
       fc.addChange(user,oroot,df);

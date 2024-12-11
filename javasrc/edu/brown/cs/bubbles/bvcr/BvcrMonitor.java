@@ -411,7 +411,7 @@ private final class EclipseHandler implements MintHandler {
       String cmd = args.getArgument(0);
       Element e = msg.getXml();
       IvyLog.logD("BVCR","ECLIPSE COMMAND " + cmd);
-      
+   
       try {
          if (cmd == null) return;
          else if (cmd.equals("EDIT")) {
@@ -448,7 +448,7 @@ private final class EclipseHandler implements MintHandler {
       catch (Throwable t) {
          IvyLog.logE("BVCR","Problem processing Eclipse command",t);
        }
-   }
+    }
 
 }	// end of inner class EclipseHandler
 
