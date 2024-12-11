@@ -169,7 +169,7 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
             is1 = new CipherInputStream(is,c);
           }
          catch (Exception e) {
-            IvyLog.logE("BVCR","Unable to create cipher",e);
+            IvyLog.logE("BVCR","Unable to create cipher for UploadUPLO",e);
           }
        }
       

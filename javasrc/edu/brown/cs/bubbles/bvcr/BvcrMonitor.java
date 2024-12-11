@@ -401,7 +401,7 @@ private final class EclipseHandler implements MintHandler {
       String cmd = args.getArgument(0);
       Element e = msg.getXml();
       IvyLog.logD("BVCR","ECLIPSE COMMAND " + cmd);
-   
+      
       try {
          if (cmd == null) return;
          else if (cmd.equals("EDIT")) {
@@ -413,14 +413,15 @@ private final class EclipseHandler implements MintHandler {
           }
          else if (cmd.equals("RESOURCE")) {
             synchronized (this) {
-               for (Element re : IvyXml.children(e,"DELTA")) {
-        	  String rtyp = IvyXml.getAttrString(re,"TYPE");
-        	  if (rtyp != null && rtyp.equals("FILE")) {
-        	     String fp = IvyXml.getAttrString(re,"LOCATION");
-        	     String proj = IvyXml.getAttrString(re,"PROJECT");
-        	     handleFileChanged(proj,fp);
-        	   }
-        	}
+               for (Element de : IvyXml.children(e,"DELTA")) {
+                  Element re = IvyXml.getChild(de,"RESOURCE");
+                  String rtyp = IvyXml.getAttrString(re,"TYPE");
+                  if (rtyp != null && rtyp.equals("FILE")) {
+                     String fp = IvyXml.getAttrString(re,"LOCATION");
+                     String proj = IvyXml.getAttrString(re,"PROJECT");
+                     handleFileChanged(proj,fp);
+                   }
+                }
                handleEndUpdate();
              }
           }
@@ -437,7 +438,7 @@ private final class EclipseHandler implements MintHandler {
       catch (Throwable t) {
          IvyLog.logE("BVCR","Problem processing Eclipse command",t);
        }
-    }
+   }
 
 }	// end of inner class EclipseHandler
 
