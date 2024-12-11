@@ -128,7 +128,7 @@ List<File> getFilesToCompute()
 
 void setForFileDifference(File f,String v0,String v1)
 {
-   files_todo = new HashSet<File>();
+   files_todo = new HashSet<>();
    files_todo.add(f);
    start_version = v0;
    end_version = v1;
