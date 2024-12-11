@@ -199,6 +199,11 @@ private void findGitRoot()
 {
    File f = new File(for_project.getSourceDirectory());
    for ( ; ; ) {
+      File fp2 = new File(f,".git");
+      if (fp2.exists()) break;
+      f = f.getParentFile();
+    }
+   for ( ; ; ) {
       File fp = f.getParentFile();
       File fp1 = new File(fp,".git");
       if (!fp1.exists()) break;

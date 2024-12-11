@@ -427,7 +427,8 @@ protected class DiffAnalyzer implements CommandCallback {
                else if (m2.matches()) {
                   String fil = m2.group(1);
                   File f = new File(getRootDirectory(),fil);
-                  // IvyLog.logD("BVCR","Start git file " + fil + " " + getRootDirectory() + " " + f);
+                  IvyLog.logD("BVCR","Start git file " + fil + " " +
+                        getRootDirectory() + " " + f);
                   diff_set.beginFile(f.getPath(),base_version,index_version); 
                 }
              }
