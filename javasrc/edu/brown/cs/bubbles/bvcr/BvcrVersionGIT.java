@@ -67,7 +67,6 @@ private static SimpleDateFormat GIT_DATE = new SimpleDateFormat("EEE MMM dd kk:m
 
 private static String GIT_LOG_FORMAT = "%H%x09%h%x09%an%x09%ae%x09%ad%x09%P%x09%d%x09%s%n%b%n***EOF";
 private static String GIT_PRIOR_FORMAT = "%H%x09%P%x09%d%n";
-private static String GIT_VERSION_FORMAT = "%H%n"; 
 
 
 
@@ -420,12 +419,12 @@ private void findGitRoot()
 
 private void findCurrentVersion()
 {
-   String cmd1 = git_command + " log -1 '--pretty=format:" + GIT_VERSION_FORMAT + "'";
+   String cmd1 = git_command + " rev-parse origin";
    StringCommand cmd = new StringCommand(cmd1);
    StringTokenizer tok = new StringTokenizer(cmd.getContent(),"\n\r");
    
    long_version = null;
-   if (tok.hasMoreTokens()) long_version = tok.nextToken();
+   if (tok.hasMoreTokens()) long_version = tok.nextToken().trim();
 }
   
    
@@ -676,6 +675,8 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 
    if (rslt.getStatus() == 0) xw.textElement("OK",rslt.getContent());
    else xw.textElement("ERROR",rslt.getContent());
+   
+   long_version = null;
 }
 
 
