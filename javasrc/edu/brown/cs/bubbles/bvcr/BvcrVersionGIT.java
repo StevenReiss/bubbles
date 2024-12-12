@@ -167,6 +167,10 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
       cmd += " " + v0;
       if (v1 != null) cmd += " " + v1;
     }
+   else {
+      String v2 = getCurrentVersion();
+      if (v2 != null) cmd += " " + v2;
+    }
 
    List<File> diffs = ds.getFilesToCompute();
    if (diffs == null) {
@@ -421,8 +425,10 @@ private void findCurrentVersion()
 {
    String cmd1 = git_command + " rev-parse origin";
    StringCommand cmd = new StringCommand(cmd1);
-   StringTokenizer tok = new StringTokenizer(cmd.getContent(),"\n\r");
+   String rslt = cmd.getContent();
+   IvyLog.logD("BVCR","Current version found as " + rslt);
    
+   StringTokenizer tok = new StringTokenizer(rslt,"\n\r");
    long_version = null;
    if (tok.hasMoreTokens()) long_version = tok.nextToken().trim();
 }
