@@ -59,7 +59,7 @@ class BvcrVersionGIT extends BvcrVersionManager implements BvcrConstants
 private File		git_root;
 private String		git_command;
 private String		current_version;
-private String          long_version;
+private String		long_version;
 
 private static BoardProperties bvcr_properties = BoardProperties.getProperties("Bvcr");
 
@@ -176,7 +176,7 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
    else {
       cmd += " --";
       for (File f : diffs) {
-         f = IvyFile.getCanonical(f);
+	 f = IvyFile.getCanonical(f);
 	 cmd += " " + f.getAbsolutePath();
        }
     }
@@ -408,7 +408,7 @@ private void findGitRoot()
 }
 
 
-@Override String getCurrentVersion() 
+@Override String getCurrentVersion()
 {
    if (long_version == null) {
       findCurrentVersion();
@@ -421,14 +421,16 @@ private void findCurrentVersion()
 {
    String cmd1 = git_command + " rev-parse origin";
    StringCommand cmd = new StringCommand(cmd1);
-   StringTokenizer tok = new StringTokenizer(cmd.getContent(),"\n\r");
-   
+   String rslt = cmd.getContent();
+
+   StringTokenizer tok = new StringTokenizer(rslt,"\n\r");
+
    long_version = null;
    if (tok.hasMoreTokens()) long_version = tok.nextToken().trim();
 }
-  
-   
-   
+
+
+
 
 
 /********************************************************************************/
@@ -675,7 +677,7 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 
    if (rslt.getStatus() == 0) xw.textElement("OK",rslt.getContent());
    else xw.textElement("ERROR",rslt.getContent());
-   
+
    long_version = null;
 }
 
