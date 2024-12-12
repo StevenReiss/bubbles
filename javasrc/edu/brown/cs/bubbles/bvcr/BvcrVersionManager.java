@@ -250,10 +250,19 @@ protected String runCommand(String cmd,CommandCallback cb)
     }
 
    try {
-      IvyExec ex = new IvyExec(cmd,getRootDirectory(),IvyExec.READ_OUTPUT);
+      IvyExec ex = new IvyExec(cmd,getRootDirectory(),
+            IvyExec.READ_OUTPUT|IvyExec.READ_ERROR);
       IvyLog.logD("BVCR","Run " + ex.getCommand());
       InputStream ins = ex.getInputStream();
       try (BufferedReader br = new BufferedReader(new InputStreamReader(ins))) {
+         for ( ; ; ) {
+            String ln = br.readLine();
+            if (ln == null) break;
+            cb.handleLine(ln);
+          }
+       }
+      InputStream eins = ex.getErrorStream();
+      try (BufferedReader br = new BufferedReader(new InputStreamReader(eins))) {
          for ( ; ; ) {
             String ln = br.readLine();
             if (ln == null) break;
