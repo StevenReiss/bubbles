@@ -67,6 +67,7 @@ private static SimpleDateFormat GIT_DATE = new SimpleDateFormat("EEE MMM dd kk:m
 
 private static String GIT_LOG_FORMAT = "%H%x09%h%x09%an%x09%ae%x09%ad%x09%P%x09%d%x09%s%n%b%n***EOF";
 private static String GIT_PRIOR_FORMAT = "%H%x09%P%x09%d%n";
+private static String GIT_VERSION_FORMAT = "%H%n"; 
 
 
 
@@ -166,10 +167,6 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
    if (v0 != null) {
       cmd += " " + v0;
       if (v1 != null) cmd += " " + v1;
-    }
-   else {
-      String v2 = getCurrentVersion();
-      if (v2 != null) cmd += " " + v2;
     }
 
    List<File> diffs = ds.getFilesToCompute();
@@ -423,14 +420,12 @@ private void findGitRoot()
 
 private void findCurrentVersion()
 {
-   String cmd1 = git_command + " rev-parse origin";
+   String cmd1 = git_command + " log -1 '--pretty=format:" + GIT_VERSION_FORMAT + "'";
    StringCommand cmd = new StringCommand(cmd1);
-   String rslt = cmd.getContent();
-   IvyLog.logD("BVCR","Current version found as " + rslt);
+   StringTokenizer tok = new StringTokenizer(cmd.getContent(),"\n\r");
    
-   StringTokenizer tok = new StringTokenizer(rslt,"\n\r");
    long_version = null;
-   if (tok.hasMoreTokens()) long_version = tok.nextToken().trim();
+   if (tok.hasMoreTokens()) long_version = tok.nextToken();
 }
   
    
@@ -681,8 +676,6 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 
    if (rslt.getStatus() == 0) xw.textElement("OK",rslt.getContent());
    else xw.textElement("ERROR",rslt.getContent());
-   
-   long_version = null;
 }
 
 
