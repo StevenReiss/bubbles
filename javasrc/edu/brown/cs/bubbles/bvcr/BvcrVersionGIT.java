@@ -423,16 +423,21 @@ private void findCurrentVersion()
    
    StringTokenizer tok = new StringTokenizer(rslt,"\n\r");
    long_version = null;
+   String guess = null;
    while (tok.hasMoreTokens()) {
       String ln = tok.nextToken().trim();
+      StringTokenizer tok1 = new StringTokenizer(ln);
       if (ln.contains("origin/")) {
-         StringTokenizer tok1 = new StringTokenizer(ln);
          if (tok1.hasMoreTokens()) {
             long_version = tok.nextToken();
             break;
           }
        }
+      else if (tok1.countTokens() > 1) {
+         guess = tok.nextToken();
+       }
     }
+   if (long_version == null) long_version = guess;
 }
 
 
