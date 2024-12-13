@@ -140,6 +140,12 @@ void outputActualChanges(BvcrVersionManager bvm,File f,IvyXmlWriter xw)
          bvm.doFetch();
          bvm.getDifferences(ds);
        }
+      // Now we have to use ds to update the current set of differences
+      IvyXmlWriter nxw = new IvyXmlWriter();
+      outputXml(nxw);
+      ds.outputXml(nxw);
+      IvyLog.logE("BVCR","NEED TO COMPUTE DIFFERENCES:" + nxw.toString());
+      outputXml(xw);
     }
 }
 

@@ -40,6 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
 
 
 
@@ -57,6 +61,8 @@ private File		git_root;
 private String		git_command;
 private String		current_version;
 private String		long_version;
+private String          origin_name;
+private String          master_name;
 
 private static BoardProperties bvcr_properties = BoardProperties.getProperties("Bvcr");
 
@@ -65,6 +71,7 @@ private static SimpleDateFormat GIT_DATE = new SimpleDateFormat("EEE MMM dd kk:m
 private static String GIT_LOG_FORMAT = "%H%x09%h%x09%an%x09%ae%x09%ad%x09%P%x09%d%x09%s%n%b%n***EOF";
 private static String GIT_PRIOR_FORMAT = "%H%x09%P%x09%d%n";
 private static String GIT_VERSION_FORMAT = "%H%x09%D%n";
+private static Pattern MASTER_PATTERN = Pattern.compile("HEAD branch\\:\\s*(\\S+)\\s");
 
 
 
@@ -103,6 +110,7 @@ BvcrVersionGIT(BvcrProject bp)
 	  }
        }
     }
+   findMasterName();
    findCurrentVersion();
 }
 
@@ -417,6 +425,17 @@ private void findGitRoot()
 
 private void findCurrentVersion()
 {
+   String cmd0 = git_command + " rev-parse " + origin_name + "/" + master_name;
+   StringCommand scmd0 = new StringCommand(cmd0);
+   String rslt0 = scmd0.getContent();
+   if (rslt0 != null) {
+      rslt0 = rslt0.trim();
+      if (!rslt0.isEmpty()) {
+         long_version = rslt0;
+         return;
+       }
+    }
+   
    String cmd1 = git_command + " log '--pretty=format:" + GIT_VERSION_FORMAT + "'";
    StringCommand cmd = new StringCommand(cmd1);
    String rslt = cmd.getContent();
@@ -438,6 +457,24 @@ private void findCurrentVersion()
        }
     }
    if (long_version == null) long_version = guess;
+}
+
+
+
+private void findMasterName()
+{
+   String cmd1 = git_command + " remote";
+   StringCommand scmd1 = new StringCommand(cmd1);
+   origin_name = scmd1.getContent().trim();
+   if (origin_name.isEmpty()) origin_name = "origin";
+   String cmd2 = git_command + " remote show " + origin_name;
+   StringCommand scmd2 = new StringCommand(cmd2);
+   String rslt = scmd2.getContent();
+   Matcher m2 = MASTER_PATTERN.matcher(rslt);
+   if (m2.find()) {
+      master_name = m2.group(1).trim();
+    }
+   else master_name = "master";
 }
 
 
@@ -515,7 +552,8 @@ private void findCurrentVersion()
       if (push) fd.pushNeeded();
     }
 
-   cm = new StringCommand(git_command + " diff --name-only --cached origin/master");
+   cm = new StringCommand(git_command + " diff --name-only --cached " +
+         origin_name + "/" + master_name);
    tok = new StringTokenizer(cm.getContent(),"\n\r");
    while (tok.hasMoreTokens()) {
       String fnm = tok.nextToken();
@@ -682,7 +720,7 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 
 @Override void doPush(IvyXmlWriter xw)
 {
-   String cmd = git_command + " push origin master";
+   String cmd = git_command + " push " + origin_name + " " + master_name;
    StringCommand rslt = new StringCommand(cmd);
    IvyLog.logD("BVCR","RESULT OF PUSH: " + rslt.getContent() + " " + rslt.getStatus());
 
@@ -702,7 +740,7 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
    StringCommand rslt = new StringCommand(cmd);
    IvyLog.logD("BVCR","RESULT OF PULL: " + rslt.getContent() + " " + rslt.getStatus());
    if (rslt.getStatus() != 0) {
-      cmd = git_command + " pull " + args + " origin master";
+      cmd = git_command + " pull " + args + " " + origin_name + " " + master_name;
       rslt = new StringCommand(cmd);
       IvyLog.logD("BVCR","RESULT OF ORIGIN PULL: " + rslt.getContent() + " " + rslt.getStatus());
     }
