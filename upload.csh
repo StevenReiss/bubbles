@@ -5,6 +5,11 @@ git commit -a
 git push
 popd
 
+pushd seede
+git commit -a
+git push
+popd
+
 pushd seedebb
 git commit -a
 git push
