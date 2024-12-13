@@ -64,7 +64,7 @@ private static SimpleDateFormat GIT_DATE = new SimpleDateFormat("EEE MMM dd kk:m
 
 private static String GIT_LOG_FORMAT = "%H%x09%h%x09%an%x09%ae%x09%ad%x09%P%x09%d%x09%s%n%b%n***EOF";
 private static String GIT_PRIOR_FORMAT = "%H%x09%P%x09%d%n";
-private static String GIT_VERSION_FORMAT = "%H%n";
+private static String GIT_VERSION_FORMAT = "%H%x09%D%n";
 
 
 
@@ -417,15 +417,22 @@ private void findGitRoot()
 
 private void findCurrentVersion()
 {
-   String cmd1 = git_command + " log -1 '--pretty=format:" + GIT_VERSION_FORMAT + "'";
+   String cmd1 = git_command + " log '--pretty=format:" + GIT_VERSION_FORMAT + "'";
    StringCommand cmd = new StringCommand(cmd1);
    String rslt = cmd.getContent();
-
-   IvyLog.logD("BVCR","Current version found as " + rslt);
-
+   
    StringTokenizer tok = new StringTokenizer(rslt,"\n\r");
    long_version = null;
-   if (tok.hasMoreTokens()) long_version = tok.nextToken();
+   while (tok.hasMoreTokens()) {
+      String ln = tok.nextToken().trim();
+      if (ln.contains("origin/")) {
+         StringTokenizer tok1 = new StringTokenizer(ln);
+         if (tok1.hasMoreTokens()) {
+            long_version = tok.nextToken();
+            break;
+          }
+       }
+    }
 }
 
 
