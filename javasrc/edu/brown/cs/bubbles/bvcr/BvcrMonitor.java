@@ -76,7 +76,7 @@ BvcrMonitor(BvcrMain bm,String mint)
    for (int i = 0; i < 300; ++i) {
       if (checkEclipse()) break;
       try {
-         Thread.sleep(10000L);
+         Thread.sleep(1000L);
        }
       catch (InterruptedException e) { }
     }

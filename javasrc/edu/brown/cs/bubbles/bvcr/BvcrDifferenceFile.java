@@ -134,10 +134,12 @@ void outputActualChanges(BvcrVersionManager bvm,File f,IvyXmlWriter xw)
    BvcrProject proj = bvm.getProject();
    BvcrDifferenceSet ds = new BvcrDifferenceSet(bm,proj);
    ds.setForFileDifference(f,base_version,bvm.getCurrentVersion());
-   bvm.getDifferences(ds);
-   if (ds.isBadVersion()) {
-      bvm.doFetch();
+   if (base_version != null && !base_version.equals(bvm.getCurrentVersion())) {
       bvm.getDifferences(ds);
+      if (ds.isBadVersion()) {
+         bvm.doFetch();
+         bvm.getDifferences(ds);
+       }
     }
 }
 
@@ -216,14 +218,14 @@ private static class FileChange implements BvcrFileChange {
       xw.field("SOURCE",source_line);
       xw.field("TARGET",target_line);
       if (delete_lines != null) {
-	 for (String s : delete_lines) {
-	    xw.cdataElement("DELETE",s);
-	  }
+         for (String s : delete_lines) {
+            xw.cdataElement("DELETE",s);
+          }
        }
       if (add_lines != null) {
-	 for (String s : add_lines) {
-	    xw.cdataElement("INSERT",s);
-	  }
+         for (String s : add_lines) {
+            xw.cdataElement("INSERT",s);
+          }
        }
       xw.end("CHANGE");
     }
