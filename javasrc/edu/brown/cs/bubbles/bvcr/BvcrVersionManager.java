@@ -74,19 +74,28 @@ protected String	repository_id;
 static BvcrVersionManager createVersionManager(BvcrProject bp,BvcrMonitor mon)
 {
    File f = new File(bp.getSourceDirectory());
-   if (f == null || !f.exists() || !f.isDirectory()) return null;
-
-   BvcrVersionManager bvm = null;
-
-   IvyLog.logD("BVCR","Check repository for " + f);
-
-   if (bvm == null) bvm = BvcrVersionGIT.getRepository(bp,f);
-   if (bvm == null) bvm = BvcrVersionSVN.getRepository(bp,f);
-   if (bvm == null) bvm = BvcrVersionCVS.getRepository(bp,f);
-   // handle HG
+   BvcrVersionManager bvm = createVersionManager(bp,f);
 
    if (bvm != null) bvm.for_monitor = mon;
 
+   return bvm;
+}
+
+
+
+static BvcrVersionManager createVersionManager(BvcrProject bp,File root)
+{
+   if (root == null || !root.exists() || !root.isDirectory()) return null;
+   
+   BvcrVersionManager bvm = null;
+   
+   IvyLog.logD("BVCR","Check repository for " + root);
+   
+   if (bvm == null) bvm = BvcrVersionGIT.getRepository(bp,root);
+   if (bvm == null) bvm = BvcrVersionSVN.getRepository(bp,root);
+   if (bvm == null) bvm = BvcrVersionCVS.getRepository(bp,root);
+   // handle HG
+   
    return bvm;
 }
 

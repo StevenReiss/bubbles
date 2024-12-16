@@ -75,6 +75,7 @@ private String		mint_handle;
 private ProcessMode	process_mode;
 private BvcrMonitor	the_monitor;
 private List<String>	update_files;
+private Map<String,File> update_projects;
 
 private Map<String,BvcrVersionManager> manager_map;
 private Map<String,SecretKey> key_map;
@@ -83,6 +84,7 @@ private Map<String,String>    user_map;
 private Map<String,BvcrDifferenceSet> diff_map;
 private Map<String,BvcrChangeSet>     change_map;
 private Map<String,BvcrProject> project_map;
+
 
 
 enum ProcessMode {
@@ -105,6 +107,7 @@ private BvcrMain(String [] args)
    process_mode = ProcessMode.SERVER;
    the_monitor = null;
    update_files = null;
+   update_projects = null;
 
    project_map = new HashMap<>();
    manager_map = new HashMap<>();
@@ -164,12 +167,21 @@ private void scanArgs(String [] args)
                   break;
              }
           }
-         else if (args[i].startsWith("-L") && i+1 < args.length) {
+         else if (args[i].startsWith("-L") && i+1 < args.length) {      // -L <log file>
             String path = args[++i];
             IvyLog.setLogFile(path);
           }
-         else if (args[i].startsWith("-E")) {
+         else if (args[i].startsWith("-E")) {                           // -E 
             IvyLog.useStdErr(true);
+          }
+         else if (args[i].startsWith("-p") && i+2 < args.length) {      // -p <project>
+            process_mode = ProcessMode.CHANGESET;
+            if (update_projects == null) {
+               update_projects = new HashMap<>();
+             }
+            String pnm = args[++i];
+            String root = args[++i];
+            update_projects.put(pnm,new File(root));
           }
 	 else badArgs();
        }
@@ -179,7 +191,12 @@ private void scanArgs(String [] args)
       else badArgs();
     }
    
-   if (mint_handle == null) badArgs();
+   if (process_mode == ProcessMode.CHANGESET) {
+      if (mint_handle == null && update_projects == null) badArgs();
+    }
+   else {
+      if (mint_handle == null) badArgs();
+    }
 }
 
 
@@ -206,15 +223,28 @@ private void process()
       System.exit(0);
     }
 
-   the_monitor = new BvcrMonitor(this,mint_handle);
-   the_monitor.loadProjects();
-
-   for (BvcrProject bp : project_map.values()) {
-      IvyLog.logD("BVCR","Check project " + bp.getName());
-      BvcrVersionManager bvm = BvcrVersionManager.createVersionManager(bp,the_monitor);
-      if (bvm != null) {
-	 manager_map.put(bp.getName(),bvm);
+   if (update_projects == null || process_mode != ProcessMode.CHANGESET) {
+      the_monitor = new BvcrMonitor(this,mint_handle);
+      the_monitor.loadProjects();
+      for (BvcrProject bp : project_map.values()) {
+         IvyLog.logD("BVCR","Check project " + bp.getName());
+         BvcrVersionManager bvm = BvcrVersionManager.createVersionManager(bp,the_monitor);
+         if (bvm != null) {
+            manager_map.put(bp.getName(),bvm);
+          }
        }
+    }
+   else {
+      for (Map.Entry<String,File> ent : update_projects.entrySet()) {
+         String pnm = ent.getKey();
+         File root = ent.getValue();
+         BvcrProject bp = new BvcrProject(pnm); 
+         BvcrVersionManager bvm = BvcrVersionManager.createVersionManager(bp,root);
+         if (bvm != null) {
+            setProject(bp);
+            manager_map.put(pnm,bvm);
+          }
+       } 
     }
 
    if (manager_map.size() == 0) {
@@ -226,9 +256,11 @@ private void process()
 
    switch (process_mode) {
       case CHANGESET :
-	 processChanges();
+	 processChanges(true);
+         System.err.println("CHANGES UPDATED");
 	 break;
       case SERVER :
+         processChanges(true);
 	 the_monitor.server();
 	 break;
       case UPDATE :
@@ -343,7 +375,7 @@ private String getEncodedName(String nm,String pfx)
 /*										*/
 /********************************************************************************/
 
-private void processChanges()
+private void processChanges(boolean force)
 {
    IvyLog.logD("BVCR","Process changes");
    
@@ -352,7 +384,7 @@ private void processChanges()
       String id = ent.getKey();
       BvcrDifferenceSet ds = getDifferenceSet(id);
       if (ds == null) continue;
-      if (ds.computationNeeded()) {
+      if (force || ds.computationNeeded()) {
          IvyLog.logD("BVCR","Process changes for " + id);
 	 bvm.getDifferences(ds);
 	 IvyXmlWriter xw = new IvyXmlWriter();
@@ -399,7 +431,7 @@ private BvcrDifferenceSet getDifferenceSet(String proj)
 
 void handleEndUpdate()
 {
-   processChanges();
+   processChanges(false);
 }
 
 

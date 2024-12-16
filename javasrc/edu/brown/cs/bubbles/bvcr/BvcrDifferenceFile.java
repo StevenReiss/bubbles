@@ -144,7 +144,7 @@ void outputActualChanges(BvcrVersionManager bvm,File f,IvyXmlWriter xw)
       IvyXmlWriter nxw = new IvyXmlWriter();
       outputXml(nxw);
       ds.outputXml(nxw);
-      IvyLog.logE("BVCR","NEED TO COMPUTE DIFFERENCES:" + nxw.toString());
+      IvyLog.logX("BVCR","NEED TO COMPUTE DIFFERENCES:" + nxw.toString());
       outputXml(xw);
     }
 }

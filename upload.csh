@@ -3,6 +3,8 @@
 pushd ivy
 git commit -a
 git push
+set x = `pwd`
+bvcrupdate -p ivy $x
 popd
 
 pushd seede
@@ -50,4 +52,6 @@ popd
 pushd bubbles
 git commit -a
 git push
+set x = `pwd`
+bvcrupdate -p bubbles $x
 popd

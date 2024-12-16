@@ -81,14 +81,15 @@ private static Pattern MASTER_PATTERN = Pattern.compile("HEAD branch\\:\\s*(\\S+
 /*										*/
 /********************************************************************************/
 
-BvcrVersionGIT(BvcrProject bp)
+BvcrVersionGIT(BvcrProject bp,File root)
 {
    super(bp);
 
    git_command = bvcr_properties.getProperty("bvcr.git.command","git");
    current_version = bvcr_properties.getProperty("bvcr.git." + bp.getName() + ".origin");
-
-   findGitRoot();
+   
+   if (root == null) findGitRoot();
+   else git_root = root;
 
    if (current_version == null) {
       current_version = "HEAD";
@@ -132,7 +133,7 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
       File f2 = new File(fp,".git");
       if (f2.exists() && f2.isDirectory()) {
 	 IvyLog.logD("BVCR","HANDLE GIT REPOSITORY " + srcdir);
-	 return new BvcrVersionGIT(bp);
+	 return new BvcrVersionGIT(bp,f2);
        }
       fp = fp.getParentFile();
     }

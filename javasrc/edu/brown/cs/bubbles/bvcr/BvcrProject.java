@@ -73,6 +73,13 @@ BvcrProject(Element xml)
 }
 
 
+BvcrProject(String nm)
+{
+   project_name = nm;
+   source_directory = null;
+}
+
+
 
 /********************************************************************************/
 /*										*/
