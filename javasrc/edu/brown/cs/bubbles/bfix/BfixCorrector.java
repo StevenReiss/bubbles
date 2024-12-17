@@ -57,7 +57,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 
 
-   
+
 public final class BfixCorrector implements BfixConstants, BaleConstants
 {
 
@@ -151,18 +151,18 @@ void addPopupMenuItems(BaleContextConfig ctx,JPopupMenu menu)
    if (probs != null) {
       boolean add = false;
       for (BumpProblem bp : probs) {
-         String name = getFixForProblem(bp);
-         if (name != null) {
-            FixAction act = new FixAction(name,ctx.getOffset(),ctx.getOffset()+1);
-            menu.add(act);
-            add = true;
-            break;
-          }
+	 String name = getFixForProblem(bp);
+	 if (name != null) {
+	    FixAction act = new FixAction(name,ctx.getOffset(),ctx.getOffset()+1);
+	    menu.add(act);
+	    add = true;
+	    break;
+	  }
        }
       if (add) return;
     }
-   
-   
+
+
    BumpClient bc = BumpClient.getBump();
    probs = bc.getProblems(for_document.getFile());
    int haveprobs = 0;
@@ -173,11 +173,11 @@ void addPopupMenuItems(BaleContextConfig ctx,JPopupMenu menu)
       BumpProblem bp = it.next();
       fixname = getFixForProblem(bp);
       if (fixname != null) {
-         int soff = for_document.mapOffsetToJava(bp.getStart());
-         int eoff = for_document.mapOffsetToJava(bp.getEnd());
-         if (eoff >= startoff && soff <= endoff) {
-            ++haveprobs;
-          }
+	 int soff = for_document.mapOffsetToJava(bp.getStart());
+	 int eoff = for_document.mapOffsetToJava(bp.getEnd());
+	 if (eoff >= startoff && soff <= endoff) {
+	    ++haveprobs;
+	  }
        }
     }
    if (haveprobs == 1) {
@@ -201,8 +201,8 @@ private String getFixForProblem(BumpProblem bp)
    for (BfixAdapter fixadapt : fixfactory.getAdapters()) {
       String fixname = fixadapt.getMenuAction(this,bp);
       if (fixname != null) {
-         if (name == null) name = fixname;
-         else if (name.length() == 0 && fixname.length() > 0) name = fixname;
+	 if (name == null) name = fixname;
+	 else if (name.length() == 0 && fixname.length() > 0) name = fixname;
        }
     }
    return name;
@@ -300,7 +300,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
 	    it.remove();
 	    continue;
 	 }
-         if (bp.getCategory().equals("BSTYLE")) sytletry.add(bp);
+	 if (bp.getCategory().equals("BSTYLE")) sytletry.add(bp);
 	 else totry.add(bp);
       }
 
@@ -308,36 +308,36 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
 
       boolean fnd = false;
       for (BumpProblem bp : totry) {
-         BoardLog.logD("BFIX","Work on problem in region " + bp);
+	 BoardLog.logD("BFIX","Work on problem in region " + bp);
 	 RegionFixer fx = new RegionFixer(bp);
 	 checkProblemFixable(fx);
 	 BfixRunnableFix rslt = fx.waitForDone();
-         
+	
 	 if (rslt != null) {
 	    BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
 	    RunAndWait rw = new RunAndWait(rslt,1);
-            rw.runFix();
+	    rw.runFix();
 	    done.add(bp);
 	    if (rw.waitForDone()) {
-               fnd = true;
-               break;
-             }	
-          }
+	       fnd = true;
+	       break;
+	     }
+	  }
       }
       for (BumpProblem bp : sytletry) {
-         BoardLog.logD("BFIX","Work on style problem in region " + bp);
-         BfixRunnableFix rslt = checkStyleProblemFixable(bp,force); 
-         if (rslt != null) { 
-            BoardLog.logD("BFIX","Starting style fix");
+	 BoardLog.logD("BFIX","Work on style problem in region " + bp);
+	 BfixRunnableFix rslt = checkStyleProblemFixable(bp,force);
+	 if (rslt != null) {
+	    BoardLog.logD("BFIX","Starting style fix");
 	    BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
 	    RunAndWait rw = new RunAndWait(rslt,2);
-            rw.runFix();
+	    rw.runFix();
 	    done.add(bp);
 	    if (rw.waitForDone()) {
-               fnd = true;
-               break;
-             }	
-          }      
+	       fnd = true;
+	       break;
+	     }
+	  }	
        }
       if (!fnd) return;
       // need to wait for errors to change here
@@ -367,10 +367,10 @@ BfixRunnableFix checkStyleProblemFixable(BumpProblem bp,boolean explicit)
 {
    BfixFactory fixfac = BfixFactory.getFactory();
    for (BfixAdapter fixadapt : fixfac.getAdapters()) {
-      BfixRunnableFix rf = fixadapt.findStyleFixer(this,bp,explicit); 
+      BfixRunnableFix rf = fixadapt.findStyleFixer(this,bp,explicit);
       if (rf != null) return rf;
     }
-   
+
    return null;
 }
 
@@ -396,32 +396,32 @@ private class RunAndWait implements BumpProblemHandler {
      done_status = false;
      BumpClient.getBump().addProblemHandler(for_document.getFile(),this);
      try {
-        BoardLog.logD("BFIX","Run fixer " + 
-              SwingUtilities.isEventDispatchThread());
-        
-        if (SwingUtilities.isEventDispatchThread()) {
-           done_status = fixer_run.call();
-         }
-        else {
-           SwingRunner sr = new SwingRunner(fixer_run);
-           SwingUtilities.invokeAndWait(sr);
-           done_status = sr.getResult();
-         }
+	BoardLog.logD("BFIX","Run fixer " +
+	      SwingUtilities.isEventDispatchThread());
+
+	if (SwingUtilities.isEventDispatchThread()) {
+	   done_status = fixer_run.call();
+	 }
+	else {
+	   SwingRunner sr = new SwingRunner(fixer_run);
+	   SwingUtilities.invokeAndWait(sr);
+	   done_status = sr.getResult();
+	 }
       }
      catch (Throwable e) {
-        BoardLog.logE("BSTYLE","Problem with corrector",e);
-        handleProblemsDone();
+	BoardLog.logE("BSTYLE","Problem with corrector",e);
+	handleProblemsDone();
       }
-     
+
      if (!done_status) handleProblemsDone();
    }
 
    synchronized boolean waitForDone() {
       if (!is_done) {
-         try {
-            wait(20000);
-          }
-         catch (InterruptedException e) { }
+	 try {
+	    wait(20000);
+	  }
+	 catch (InterruptedException e) { }
        }
       return done_status;
    }
@@ -433,40 +433,43 @@ private class RunAndWait implements BumpProblemHandler {
    @Override public void handleProblemsDone() {
       BoardLog.logD("BFIX","Problems done " + num_waits);
       if (--num_waits > 0) {
-         return;
+	 return;
        }
       synchronized (this) {
-         is_done = true;
-         notifyAll();
+	 is_done = true;
+	 notifyAll();
       }
       BumpClient.getBump().removeProblemHandler(this);
    }
 
 }	// end of inner class RunAndWait
 
+
+
+
 private class SwingRunner implements Runnable {
 
    private BfixRunnableFix fixer_run;
    private boolean fixer_result;
-   
+
    SwingRunner(BfixRunnableFix rf) {
       fixer_run = rf;
       fixer_result = false;
     }
-   
-   boolean getResult()                  { return fixer_result; }
-   
+
+   boolean getResult()			{ return fixer_result; }
+
    @Override public void run() {
       try {
-         fixer_result = fixer_run.call();
+	 fixer_result = fixer_run.call();
        }
       catch (Exception e) {
-         BoardLog.logE("BFIX","Problem running fixer",e);
-         fixer_result = false;
+	 BoardLog.logE("BFIX","Problem running fixer",e);
+	 fixer_result = false;
        }
     }
-   
-}       // end of inner class SwingRunner
+
+}	// end of inner class SwingRunner
 
 
 
@@ -538,14 +541,14 @@ private void addProblem(BumpProblem bp)
 
    int soff = for_document.mapOffsetToJava(bp.getStart());
    if (soff < 0) {
-      BoardLog.logD("BFIX","Problem has no offset: " + bp.getStart() + " " + bp.getEnd() + 
-            " " + bp.getLine() + " " + bp.getFile());
+      BoardLog.logD("BFIX","Problem has no offset: " + bp.getStart() + " " + bp.getEnd() +
+	    " " + bp.getLine() + " " + bp.getFile());
       return;
     }
 
-   BoardLog.logD("BFIX","PROBLEM "+ bp.getMessage() + " " + start_offset + " " + 
-         end_offset + " " + soff);
-   
+   BoardLog.logD("BFIX","PROBLEM "+ bp.getMessage() + " " + start_offset + " " +
+	 end_offset + " " + soff);
+
    if (start_offset >= 0 && soff >= start_offset && soff <= end_offset) {
       BoardLog.logD("BFIX","Consider problem " + bp.getMessage());
       active_problems.add(bp);
@@ -614,7 +617,7 @@ private void checkForElementToFix()
 	 for (BfixFixer fix : fixers) {
 	    if (addPending(fix.getMemo())) {
 	       ++numfnd;
-               fixfactory.startTask(fix);
+	       fixfactory.startTask(fix);
 	     }
 	    else {
 	       BoardLog.logD("BFIX", "Discard duplicate fix " + fix);
@@ -633,12 +636,12 @@ private void checkForElementToFix()
    for (BumpProblem bp : styletry) {
       BfixRunnableFix fix = checkStyleProblemFixable(bp,false);
       if (fix != null) {
-         RunAndWait rw = new RunAndWait(fix,2);
-         rw.runFix();
-         break;
+	 RunAndWait rw = new RunAndWait(fix,2);
+	 rw.runFix();
+	 break;
        }
     }
-   
+
    if (numfnd > 0) BoardMetrics.noteCommand("BFIX","StartImplicitFix" + "_" + numfnd +
 	 "_" + start_offset + "_" + end_offset + "_" + caret_position);
 }
@@ -877,19 +880,19 @@ private static class RegionFixer implements FixAdapter {
    @Override public synchronized void noteFix(BfixRunnableFix fix) {
       if (fix_found == null && fix != null) fix_found = fix;
       else if (fix_found != null && fix != null) {
-         if (fix_found.getPriority() < fix.getPriority()) {
-            fix_found = fix;
-          }
+	 if (fix_found.getPriority() < fix.getPriority()) {
+	    fix_found = fix;
+	  }
        }
       noteStatus(fix != null);
     }
 
    synchronized BfixRunnableFix waitForDone() {
       while (!is_done && fix_found == null) {
-         try {
-            wait(5000);
-          }
-         catch (InterruptedException e) { }
+	 try {
+	    wait(5000);
+	  }
+	 catch (InterruptedException e) { }
        }
       return fix_found;
     }
