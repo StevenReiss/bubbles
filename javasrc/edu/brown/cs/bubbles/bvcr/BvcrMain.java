@@ -257,7 +257,7 @@ private void process()
    switch (process_mode) {
       case CHANGESET :
 	 processChanges(true);
-         System.err.println("CHANGES UPDATED");
+         System.err.println("BVCR: Change File Updated for " + System.getProperty("user.name"));
 	 break;
       case SERVER :
          processChanges(true);
