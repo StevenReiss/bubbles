@@ -110,6 +110,7 @@ private boolean 	is_readonly;
 private transient Element elision_data; // for readonly files
 private int		num_import;
 private BaleFragmentEditor dummy_editor;
+private boolean         is_removed;
 
 private transient Map<BaleFragment,FragmentData> fragment_map;
 
@@ -156,6 +157,7 @@ BaleDocumentIde()
    ast_nodes = null;
    problem_set = new HashSet<>();
    is_dirty = false;
+   is_removed = false;
    checkpoint_counter = -1;
    num_import = -1;
    dummy_editor = null;
@@ -202,6 +204,8 @@ BaleDocumentIde(String proj,File file,boolean local)
       dummy_editor.dispose();
       dummy_editor = null;
     }
+   
+   is_removed = true;
 
    super.dispose();
 }
@@ -412,6 +416,8 @@ private void setLanguage()
 
 @Override void save()
 {
+   if (is_removed) return;
+   
    BowiFactory.startTask();
    if (is_dirty && BALE_PROPERTIES.getBoolean("Bale.format.onsave")) {
       boolean err = false;
@@ -443,6 +449,8 @@ private void setLanguage()
 
 @Override void commit()
 {
+   if (is_removed) return;
+   
    BowiFactory.startTask();
    try {
       bump_client.commitFile(project_name,file_name);
@@ -454,6 +462,8 @@ private void setLanguage()
 
 @Override void compile()
 {
+   if (is_removed) return;
+   
    BowiFactory.startTask();
    try {
       bump_client.compileFile(project_name,file_name);
@@ -470,6 +480,7 @@ private void setLanguage()
 @Override void checkpoint()
 {
    if (!canSave()) return;			// not dirty
+   if (is_removed) return;
    int id = getEditCounter();
    if (checkpoint_counter == id) return;	// no change since last checkpoint
    checkpoint_counter = id;
@@ -506,7 +517,7 @@ private void setLanguage()
 
 
 @Override boolean canSave() {
-   if (is_dirty) return true;
+   if (is_dirty && !is_removed) return true;
    return false;
 }
 
@@ -1439,7 +1450,7 @@ private final class EclipseUpdater implements DocumentListener {
    for (BaleFragment bf : fragment_map.keySet()) {
       bf.handleFileRemoved();
     }
-   // TODO: ensure all fragments are orphaned
+   is_removed = true;
 }
 
 

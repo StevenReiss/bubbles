@@ -1461,6 +1461,8 @@ private void setupGlobalActions()
    SwingKey.registerKeyAction("ROOT",jc,new MetricsHandler(),"ctrl shift PRINTSCREEN");
    SwingKey.registerKeyAction("ROOT",jc,new HelpHandler(),"HELP","menu shift SLASH","menu shift F1");
    SwingKey.registerKeyAction("ROOT",jc,new PrintHandler(),"menu P");
+   SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(true),"menu Z");
+   SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(false),"menu Y");
    
    if (BUDA_PROPERTIES.getBoolean("Buda.enable.zoom")) {
       SwingKey.registerKeyAction("ROOT",jc, new ZoomHandler(1),
@@ -1556,9 +1558,6 @@ public void handleCheckpointAllRequest()
     }
    catch (IOException e) { }
 }
-
-
-
 
 
 
@@ -1932,6 +1931,22 @@ private class CommitHandler extends AbstractAction {
 
 }	// end of inner class HelpHandler
 
+
+
+private class UndoHandler extends AbstractAction {
+   
+   private boolean is_undo;
+   
+   private static final long serialVersionUID = 1;
+   
+   UndoHandler(boolean undo) {
+      super((undo ? "Undo" : "Redo") + " Window Action");
+    }
+   
+   @Override public void actionPerformed(ActionEvent e) { 
+      getCurrentBubbleArea().handleUndoAction(is_undo); 
+    }
+}
 
 
 

@@ -659,10 +659,15 @@ void removeLink(BudaBubbleLink lnk)
    repaint();
 }
 
+
+
 /**
  * A method to make sure that all bubble links are recalculated during the next repaint
  */
-public void invalidateLinks() { routes_valid = false; }
+public void invalidateLinks() 
+{ 
+   routes_valid = false; 
+}
 
 
 public List<BudaBubbleLink> getAllLinks()
@@ -3268,6 +3273,13 @@ void userRemoveGroup(BudaBubbleGroup bg)
    setLayer(undo,DEFAULT_LAYER);
 
    BoardMetrics.noteCommand("BUDA","removeBubbleGroup");
+}
+   
+
+
+void handleUndoAction(boolean isundo)
+{
+   
 }
 
 
