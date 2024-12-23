@@ -293,7 +293,7 @@ abstract static class GenericPatternFixer extends BstyleFixer {
       int leoff = doc.findLineOffset(l1+1);
       String text = doc.getWindowText(lsoff,leoff-lsoff);
       Pattern find = generatePattern(code_pattern,m0);
-
+   
       BoardLog.logD("BSTYLE","Use pattern " + find);
       Matcher m1 = null;
       if (find != null) {
@@ -302,6 +302,7 @@ abstract static class GenericPatternFixer extends BstyleFixer {
             BoardLog.logD("BSTYLE","Pattern doesn't match " + text);
             return null;
           }
+         if (!checkStillApplicable(text)) return null;
        }
       return buildFix(corr,bp,lsoff,m1);
     }
@@ -338,7 +339,8 @@ abstract static class GenericPatternFixer extends BstyleFixer {
    protected int getCheckStart(Matcher m1)              { return m1.start(); }
    protected int getCheckEnd(Matcher m1)                { return m1.end(); }
    protected int getStartLine(int line)                 { return line; }
-   protected int getEndLine(int line)                   { return line; }
+   protected int getEndLine(int line)                   { return line; } 
+   protected boolean checkStillApplicable(String line)  { return true; }
    
 }	// end of inner class GenericPatternFixer
 
@@ -386,6 +388,10 @@ private static class ClassFinal extends GenericPatternFixer {
 
    @Override protected int getEditEnd(Matcher m1)       { return m1.start(); }
    @Override protected String getEditReplace(Matcher m) { return "final "; }
+   @Override protected boolean checkStillApplicable(String line) {
+      if (line.contains("final")) return false;
+      return true;
+    }
 
 }	// end of inner class ClassFinal
 

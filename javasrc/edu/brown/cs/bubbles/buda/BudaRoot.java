@@ -1941,6 +1941,7 @@ private class UndoHandler extends AbstractAction {
    
    UndoHandler(boolean undo) {
       super((undo ? "Undo" : "Redo") + " Window Action");
+      is_undo = undo;
     }
    
    @Override public void actionPerformed(ActionEvent e) { 

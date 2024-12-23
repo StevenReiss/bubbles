@@ -22,8 +22,11 @@
 
 package edu.brown.cs.bubbles.buda;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.SwingUtilities;
 
 class BudaHistory implements BudaConstants
 {
@@ -39,8 +42,12 @@ private List<BudaHistoryEvent>  event_stack;
 private int                     stack_pointer;
 private BudaBubbleArea          bubble_area;
 private boolean                 doing_action;
+private int                     nest_depth;
+private int                     event_count;
 
 private static int              group_counter = 0;
+
+private static final int        MAX_SIZE = 10;
 
 
 
@@ -56,6 +63,8 @@ BudaHistory(BudaBubbleArea bba)
    stack_pointer = 0;
    bubble_area = bba;
    group_counter = 0;
+   nest_depth = 0;
+   event_count = 0;
    doing_action = false;
 }
 
@@ -63,13 +72,80 @@ BudaHistory(BudaBubbleArea bba)
 
 /********************************************************************************/
 /*                                                                              */
-/*      Operations on the history                                               */
+/*      Add Event operations                                                    */
+/*                                                                              */
+/********************************************************************************/
+
+void addBubbleAddEvent(BudaBubble bb)
+{ 
+   BudaHistoryEvent evt = new BubbleAddEvent(bb);
+   addEvent(evt);
+}
+
+
+void addBubbleRemoveEvent(BudaBubble bb)
+{
+   BudaHistoryEvent evt = new BubbleRemoveEvent(bb);
+   addEvent(evt);
+}
+
+
+void addBubbleShapeEvent(BudaBubble bb,Rectangle pos)
+{ }
+
+
+void addBubbleFloatingEvent(BudaBubble bb)
+{ }
+
+
+void addGroupRemoveEvent(BudaBubbleGroup bg)
+{ }
+
+
+void addGroupRestoreEvent(BudaBubbleGroup bg)
+{ }
+
+
+void addGroupMoveEvent(BudaBubbleGroup bg)
+{ }
+
+
+void addLinkAddEvent(BudaBubbleLink bl)
+{ }
+
+
+void addLinkRemoveEvent(BudaBubbleLink bl)
+{ }
+
+
+void addWorkingSetAddEvent(BudaWorkingSet bws)
+{ }
+
+
+void addWorkingSetRemoveEvent(BudaWorkingSet bws)
+{ }
+
+
+void addWorkingSetResizeEvent(BudaWorkingSet bws)
+{ }
+
+
+void addMoveViewportEvent(Rectangle pos)
+{ }
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Begin-End operations                                                    */
 /*                                                                              */
 /********************************************************************************/
 
 void begin()
 {
+   if (doing_action) return;
+   
    BudaHistoryEvent evt = BudaHistoryEvent.createStartEvent();
+   ++nest_depth;
    addEvent(evt);
 }
 
@@ -77,13 +153,17 @@ void begin()
 
 void end() 
 {
+   if (nest_depth == 0) return;
+   if (doing_action) return;
+   
    int depth = 0;
-   for (int i = group_counter-1; i >= 0; --i) {
+   for (int i = stack_pointer-1; i >= 0; --i) {
       BudaHistoryEvent hevt = event_stack.get(i);
       if (hevt.isGroupStart()) {
          if (depth <= 0) {
             BudaHistoryEvent evt = hevt.getEndEvent();
-            addEvent(evt);
+             --nest_depth; 
+             addEvent(evt);
             break;
           }
          else --depth;
@@ -96,22 +176,27 @@ void end()
 
 
 
-private void addEvent(BudaHistoryEvent evt)
+void clear()
 {
-   if (doing_action) return;
-   
-   while (event_stack.size() > stack_pointer) {
-      event_stack.removeLast();
-    }
-   
-   event_stack.add(evt);
-   ++stack_pointer;
+   event_stack.clear();
+   stack_pointer = 0;
+   nest_depth = 0;
+   event_count = 0;
+   doing_action = false;
 }
 
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Undo/redo operations                                                    */
+/*                                                                              */
+/********************************************************************************/
 
 void undo()
 {
    if (doing_action) return;
+   
    doing_action = true;
    try {
       BudaHistoryEvent end = null;
@@ -121,6 +206,7 @@ void undo()
       if (id > 0 && !evt.isGroupStart()) {
          end = evt.getStartEvent();
          --stack_pointer;
+         --event_count;
        }
       
       while (stack_pointer > 0) {
@@ -130,7 +216,7 @@ void undo()
        } 
     }
    finally {
-      doing_action = false;
+      SwingUtilities.invokeLater(new FinishedAction());
     }
 }
 
@@ -158,17 +244,61 @@ void redo()
        }
     }
    finally {
-      doing_action = false; 
+      SwingUtilities.invokeLater(new FinishedAction());
     }
 }
 
 
+private final class FinishedAction implements Runnable {
+   
+   @Override public void run() {
+      doing_action = false;
+    }
+   
+}       // end of inner class FinishedAction
 
-void clear()
+/********************************************************************************/
+/*                                                                              */
+/*      Utility methods                                                         */
+/*                                                                              */
+/********************************************************************************/
+
+private void addEvent(BudaHistoryEvent evt)
 {
-   event_stack.clear();
-   stack_pointer = 0;
-   doing_action = false;
+   if (doing_action) return;
+   
+   while (event_stack.size() > stack_pointer) {
+      event_stack.removeLast();
+    }
+   
+   if (nest_depth == 0) {
+      ++event_count;
+      while (event_count >= MAX_SIZE) removeFirst();
+    }
+   
+   event_stack.add(evt);
+   ++stack_pointer;
+}
+
+
+private void removeFirst()
+{ 
+   if (stack_pointer <= 0) {
+      clear();
+      return;
+    }
+   
+   BudaHistoryEvent evt = event_stack.removeFirst();
+   --stack_pointer;
+   if (evt.isGroupStart()) {
+      BudaHistoryEvent eevt = evt.getEndEvent();
+      while (stack_pointer > 0 && !event_stack.isEmpty()) {
+         BudaHistoryEvent xevt = event_stack.removeFirst();
+         --stack_pointer;
+         if (xevt == eevt) break;
+       }
+    }
+   --event_count;
 }
 
 
@@ -195,6 +325,7 @@ abstract static class BudaHistoryEvent {
    
    
 }       // end of abstract inner class BudaHistoryEvent
+
 
 
 /********************************************************************************/
@@ -239,6 +370,63 @@ private static class GroupEvent extends BudaHistoryEvent {
    @Override protected void redo(BudaBubbleArea bba) { }
    
 }
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Bubble-Related history events                                           */
+/*                                                                              */
+/********************************************************************************/
+
+private abstract static class BubbleEvent extends BudaHistoryEvent {
+   
+   private BudaBubble for_bubble;
+   
+   protected BubbleEvent(BudaBubble bb) {
+      for_bubble = bb;
+    }
+   
+   protected BudaBubble getBubble()             { return for_bubble; }
+   
+}       // end of inner class BubbleEvent
+
+
+
+private static class BubbleAddEvent extends BubbleEvent {
+   
+   BubbleAddEvent(BudaBubble bb) {
+      super(bb);
+    }
+   
+   @Override protected void undo(BudaBubbleArea bba) {
+      getBubble().setVisible(false);
+    }
+   
+   @Override protected void redo(BudaBubbleArea bba) {
+      getBubble().setVisible(true);
+    }
+   
+}       // end of inner class BubbleAddEvent
+
+
+
+private static class BubbleRemoveEvent extends BubbleEvent {
+
+   BubbleRemoveEvent(BudaBubble bb) {
+      super(bb);
+    }
+   
+   @Override protected void undo(BudaBubbleArea bba) {
+      getBubble().setVisible(true);
+    }
+   
+   @Override protected void redo(BudaBubbleArea bba) {
+      getBubble().setVisible(false);
+    }
+
+}       // end of inner class BubbleAddEvent
+
 
 
 

@@ -1415,35 +1415,6 @@ interface BudaHelpRegion {
 
 
 
-/********************************************************************************/
-/*                                                                              */
-/*      History interface                                                       */
-/*                                                                              */
-/********************************************************************************/
-
-enum BudaHistoryEventType {
-   
-   BUBBLE_ADD,
-   BUBBLE_MOVE,
-   BUBBLE_REMOVE,
-   BUBBLE_RESIZE,
-   BUBBLE_FLOAT,
-   GROUP_ADD,
-   GROUP_MOVE,
-   GROUP_REMOVE,
-   LINK_ADD,
-   LINK_REMOVE,
-   LINK_COLLAPSE,
-   WORKING_SET_ADD,
-   WORKING_SET_REMOVE,
-   WORKING_SET_RESIZE,
-   VIEWPORT_MOVE,
-   SCALE,
-   
-}
-
-
-
 }	// end of interface BudaConstants
 
 

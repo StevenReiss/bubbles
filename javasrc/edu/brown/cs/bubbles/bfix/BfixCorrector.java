@@ -418,10 +418,10 @@ private class RunAndWait implements BumpProblemHandler {
 
    synchronized boolean waitForDone() {
       if (!is_done) {
-	 try {
-	    wait(20000);
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait(20000);
+          }
+         catch (InterruptedException e) { }
        }
       return done_status;
    }

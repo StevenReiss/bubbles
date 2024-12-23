@@ -141,6 +141,8 @@ private Collection<BudaBubbleLink> bubble_links;
 private Collection<BudaWorkingSetImpl> working_sets;
 private Collection<BudaBubble> moving_bubbles;
 
+private BudaHistory     area_history;
+
 private static final long serialVersionUID = 1;
 
 
@@ -217,6 +219,8 @@ BudaBubbleArea(BudaRoot br,Element cfg,BudaChannelSet cs)
    else palm_cursor = new Cursor(Cursor.MOVE_CURSOR);
 
    BudaRoot.registerHelp(this,this);
+   
+   area_history = new BudaHistory(this);
 }
 
 
@@ -538,12 +542,18 @@ private void localAddBubble(BudaBubble bb,boolean spacer)
     }
 
    // routes_valid = false;		// if we take bubbles into account when routing
+   
+   area_history.begin();
 
    if (spacer) fixupBubble(bb);
 
    fixupGroups(bb);
 
    for_root.noteBubbleAdded(bb);
+   
+   area_history.addBubbleAddEvent(bb);
+   
+   area_history.end();
 }
 
 
@@ -563,6 +573,8 @@ private void localRemoveBubble(BudaBubble bb)
       active_bubbles.remove(bb);
     }
 
+   area_history.begin();
+   
    synchronized (bubble_links) {
       for (Iterator<BudaBubbleLink> it = bubble_links.iterator(); it.hasNext(); ) {
 	 BudaBubbleLink bl = it.next();
@@ -584,6 +596,9 @@ private void localRemoveBubble(BudaBubble bb)
    repaint();
 
    for_root.noteBubbleRemoved(bb);
+   
+   area_history.addBubbleRemoveEvent(bb);
+   area_history.end();
 }
 
 
@@ -1734,6 +1749,8 @@ void configure(Element xml,Rectangle delta)
 	 if (ctime > 0) ws.setCreateTime(ctime);
        }
     }
+   
+   if (area_history != null) area_history.clear();
 }
 
 
@@ -3279,7 +3296,8 @@ void userRemoveGroup(BudaBubbleGroup bg)
 
 void handleUndoAction(boolean isundo)
 {
-   
+   if (isundo) area_history.undo();
+   else area_history.redo();
 }
 
 
