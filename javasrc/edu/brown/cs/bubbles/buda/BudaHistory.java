@@ -24,6 +24,7 @@ package edu.brown.cs.bubbles.buda;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -38,7 +39,7 @@ class BudaHistory implements BudaConstants
 /*                                                                              */
 /********************************************************************************/
 
-private List<BudaHistoryEvent>  event_stack;
+private LinkedList<BudaHistoryEvent>  event_stack;
 private int                     stack_pointer;
 private BudaBubbleArea          bubble_area;
 private boolean                 doing_action;
@@ -59,7 +60,7 @@ private static final int        MAX_SIZE = 10;
 
 BudaHistory(BudaBubbleArea bba)
 {
-   event_stack = new ArrayList<>();
+   event_stack = new LinkedList<>();
    stack_pointer = 0;
    bubble_area = bba;
    group_counter = 0;
