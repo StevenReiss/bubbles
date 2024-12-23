@@ -23,9 +23,7 @@
 package edu.brown.cs.bubbles.buda;
 
 import java.awt.Rectangle;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.SwingUtilities;
 
