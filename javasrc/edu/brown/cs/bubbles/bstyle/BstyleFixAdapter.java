@@ -95,18 +95,19 @@ public BfixRunnableFix findStyleFixer(BfixCorrector bc,BumpProblem bp,boolean ex
    String d = bp.getData();
    if (d == null) d = "";
    if (ignore_errors.contains(d)) return null;
+   long start = bc.getStartTime();
    
    List<BstyleFixer> totry = fixer_map.get(d);
    if (totry != null) {
       for (BstyleFixer bf : totry) {
-         BfixRunnableFix rf = bf.findFix(bc,bp,explicit);  
+         BfixRunnableFix rf = bf.findFix(bc,bp,explicit,start);    
          if (rf != null) return rf;
        }
     }
    
    for (BstyleFixer bf : fixer_set) {
       if (totry != null && totry.contains(bf)) continue;
-      BfixRunnableFix rf = bf.findFix(bc,bp,explicit);  
+      BfixRunnableFix rf = bf.findFix(bc,bp,explicit,start);  
       if (rf != null) {
          if (d != null && !d.isEmpty()) {
             BoardLog.logE("BSTYLE","Missing fixer for type " + d + " " +

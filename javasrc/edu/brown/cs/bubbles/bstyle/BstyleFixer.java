@@ -188,7 +188,7 @@ static Set<String> getIgnoreErrors()
 /*										*/
 /********************************************************************************/
 
-abstract BfixRunnableFix findFix(BfixCorrector bc,BumpProblem bp,boolean explicit);
+abstract BfixRunnableFix findFix(BfixCorrector bc,BumpProblem bp,boolean explicit,long start);
 
 
 
@@ -276,7 +276,8 @@ abstract static class GenericPatternFixer extends BstyleFixer {
       explicit_only = explicit;
     }
 
-   @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {
+   @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,
+         boolean explicit,long start) {
       Matcher m0 = useFix(bp,explicit);
       if (m0 == null) {
          BoardLog.logD("BSTYLE","No match for " + this.getClass());
@@ -304,7 +305,7 @@ abstract static class GenericPatternFixer extends BstyleFixer {
           }
          if (!checkStillApplicable(text)) return null;
        }
-      return buildFix(corr,bp,lsoff,m1);
+      return buildFix(corr,start,bp,lsoff,m1);
     }
    
    protected Matcher useFix(BumpProblem bp,boolean explicit) {
@@ -321,7 +322,7 @@ abstract static class GenericPatternFixer extends BstyleFixer {
       return m0;
     }
 
-   protected BfixRunnableFix buildFix(BfixCorrector corr,BumpProblem bp,
+   protected BfixRunnableFix buildFix(BfixCorrector corr,long start,BumpProblem bp,
          int lsoff,Matcher m1) {
       String txt = getEditReplace(m1);
       if (txt == null) return null;
@@ -330,7 +331,8 @@ abstract static class GenericPatternFixer extends BstyleFixer {
       int e0 = getEditEnd(m1)+lsoff;
       int rs0 = getCheckStart(m1)+lsoff;
       int re0 = getCheckEnd(m1)+lsoff;
-      return new StyleDoer(corr,bp,rs0,re0,s0,e0,txt);
+      return new StyleDoer(corr,start,bp,rs0,re0,
+            s0,e0,txt); 
     }
    
    protected String getEditReplace(Matcher m1)          { return ""; }
@@ -415,7 +417,8 @@ private static class FileNewline extends GenericPatternFixer {
       super("NewlineAtEndOfFile",null);
     }
    
-   @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,boolean explicit) {
+   @Override BfixRunnableFix findFix(BfixCorrector corr,BumpProblem bp,
+         boolean explicit,long start) {
       Matcher m0 = useFix(bp,explicit);
       if (m0 == null) return null;
       
@@ -424,7 +427,7 @@ private static class FileNewline extends GenericPatternFixer {
       BaleWindowDocument doc = win.getWindowDocument();
       BaleFileOverview doc0 = doc.getBaseWindowDocument();
       int off = doc0.getLength();
-      return new StyleDoer(corr,bp,off,off,off,off,"\n");
+      return new StyleDoer(corr,start,bp,off,off,off,off,"\n");
     }
    
 }       // end of inner class FileNewline
@@ -782,7 +785,8 @@ private class StyleDoer implements BfixRunnableFix {
    private String insert_text;
    private long initial_time;
    
-   StyleDoer(BfixCorrector corr,BumpProblem bp,int rsoff,int reoff,
+   StyleDoer(BfixCorrector corr,long start,
+         BumpProblem bp,int rsoff,int reoff,
          int soff,int eoff,String txt) {
       for_corrector = corr;
       range_start = rsoff;
@@ -790,7 +794,7 @@ private class StyleDoer implements BfixRunnableFix {
       edit_start = soff;
       edit_end = eoff;
       insert_text = txt;
-      initial_time = corr.getStartTime();
+      initial_time = start;
     }
    
    @Override public Boolean call() {
