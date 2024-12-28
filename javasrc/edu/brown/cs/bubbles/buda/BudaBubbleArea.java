@@ -603,6 +603,36 @@ private void localRemoveBubble(BudaBubble bb)
 
 
 
+private void localMoveBubble(BudaBubble bbl)
+{
+   if (bbl.isFloating()) {
+      Point floc = new Point(bbl.getLocation());
+      floc.x -= cur_viewport.x;
+      floc.y -= cur_viewport.y;
+      floating_bubbles.put(bbl,floc);
+      bbl.noteFloatMoved();
+    }
+   else if (bbl.getFixedWorkingSet() != null) {
+      bbl.noteFloatMoved();
+    }
+   else {
+      if (moving_bubbles.contains(bbl)) fixupGroups(bbl);
+      else repaint();
+      routes_valid = false;
+    }
+}
+
+
+
+private void localResizeBubble(BudaBubble bb)
+{
+   fixupBubble(bb);
+   fixupGroups(bb);
+   routes_valid = false;
+}
+
+
+
 /********************************************************************************/
 /*										*/
 /*	Link methods								*/
@@ -3243,53 +3273,62 @@ public void userRemoveBubble(BudaBubble bb)
    if (bb == null) return;
 
    if (!bb.isRemovable()) return;
-
-   UndoRemove ur = new UndoRemove(bb);
-
-   Rectangle r0 = bb.getBounds();
-   removeBubble(bb);
-   ToolTipManager.sharedInstance().setEnabled(false);
-   ToolTipManager.sharedInstance().setEnabled(true);
-   if (bb.isTransient() || (bb instanceof BudaHintBubble)) {
-      disposeBubble(bb);
-      return;
+   
+   area_history.begin();
+   try {
+      UndoRemove ur = new UndoRemove(bb);
+      
+      Rectangle r0 = bb.getBounds();
+      removeBubble(bb);
+      ToolTipManager.sharedInstance().setEnabled(false);
+      ToolTipManager.sharedInstance().setEnabled(true);
+      if (bb.isTransient() || (bb instanceof BudaHintBubble)) {
+         disposeBubble(bb);
+         return;
+       }
+      
+      BudaHintBubble undo = new BudaHintBubble("Undo Delete Bubble",ur,UNDO_REMOVE_TIME);
+      
+      Dimension usz = undo.getSize();
+      add(undo,new BudaConstraint(BudaBubblePosition.FIXED,
+            r0.x + r0.width/2 - usz.width/2,
+            r0.y + r0.height/2 - usz.height/2));
+      setPosition(undo,-1);
+      setLayer(undo,DEFAULT_LAYER);
     }
-
-   BudaHintBubble undo = new BudaHintBubble("Undo Delete Bubble",ur,UNDO_REMOVE_TIME);
-
-   Dimension usz = undo.getSize();
-   add(undo,new BudaConstraint(BudaBubblePosition.FIXED,
-				  r0.x + r0.width/2 - usz.width/2,
-				  r0.y + r0.height/2 - usz.height/2));
-   setPosition(undo,-1);
-   setLayer(undo,DEFAULT_LAYER);
-
-   BoardMetrics.noteCommand("BUDA","removeBubble_" + bb.getHashId());
+   finally {
+      area_history.end();
+      BoardMetrics.noteCommand("BUDA","removeBubble_" + bb.getHashId());
+    }
 }
 
 
 
 void userRemoveGroup(BudaBubbleGroup bg)
 {
-   BudaHintBubble undo = new BudaHintBubble("Undo Delete Group",			       
-         new UndoRemove(bg.getBubbles()),UNDO_REMOVE_TIME);
-
-   Rectangle r0 = null;
-   for (BudaBubble bb : bg.getBubbles()) {
-      if (r0 == null) r0 = bb.getBounds();
-      else r0.add(bb.getBounds());
-      removeBubble(bb);
+   area_history.begin();
+   try {
+      Rectangle r0 = null;
+      for (BudaBubble bb : bg.getBubbles()) {
+         if (r0 == null) r0 = bb.getBounds();
+         else r0.add(bb.getBounds());
+         removeBubble(bb);
+       }
+      if (r0 == null) return;
+      
+      BudaHintBubble undo = new BudaHintBubble("Undo Delete Group",			       
+            new UndoRemove(bg.getBubbles()),UNDO_REMOVE_TIME);
+      Dimension usz = undo.getSize();
+      add(undo,new BudaConstraint(BudaBubblePosition.FIXED,
+            r0.x + r0.width/2 - usz.width/2,
+            r0.y + r0.height/2 - usz.height/2));
+      setPosition(undo,-1);
+      setLayer(undo,DEFAULT_LAYER);
     }
-   if (r0 == null) return;
-
-   Dimension usz = undo.getSize();
-   add(undo,new BudaConstraint(BudaBubblePosition.FIXED,
-				  r0.x + r0.width/2 - usz.width/2,
-				  r0.y + r0.height/2 - usz.height/2));
-   setPosition(undo,-1);
-   setLayer(undo,DEFAULT_LAYER);
-
-   BoardMetrics.noteCommand("BUDA","removeBubbleGroup");
+   finally {
+      area_history.end();
+      BoardMetrics.noteCommand("BUDA","removeBubbleGroup");
+    }
 }
    
 
@@ -3459,21 +3498,7 @@ private class BubbleManager implements ComponentListener, ContainerListener {
       if (cur_viewport == null) return;
       if (e.getSource() instanceof BudaBubble) {
 	 BudaBubble bbl = (BudaBubble) e.getSource();
-	 if (bbl.isFloating()) {
-	    Point floc = new Point(bbl.getLocation());
-	    floc.x -= cur_viewport.x;
-	    floc.y -= cur_viewport.y;
-	    floating_bubbles.put(bbl,floc);
-	    bbl.noteFloatMoved();
-	  }
-	 else if (bbl.getFixedWorkingSet() != null) {
-	    bbl.noteFloatMoved();
-	  }
-	 else {
-	    if (moving_bubbles.contains(bbl)) fixupGroups(bbl);
-	    else repaint();
-	    routes_valid = false;
-	  }
+         localMoveBubble(bbl);
 	 updateOverview();
       }
    }
@@ -3481,9 +3506,7 @@ private class BubbleManager implements ComponentListener, ContainerListener {
    @Override public void componentResized(ComponentEvent e) {
       if (e.getSource() instanceof BudaBubble) {
 	 BudaBubble bb = (BudaBubble) e.getSource();
-	 fixupBubble(bb);
-	 fixupGroups(bb);
-	 routes_valid = false;
+         localResizeBubble(bb);
 	 updateOverview();
        }
     }
