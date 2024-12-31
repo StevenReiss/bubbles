@@ -311,7 +311,7 @@ private static SwingKey [] skey_defs = new SwingKey[] {
    new SwingKey("CODEEDIT",null,fixindents_action,"menu shift I"),
    new SwingKey("CODEEDIT",null,expand_action,"xalt B"),
    new SwingKey("CODEEDIT",null,expandxy_action,"xalt shift B","menu shift B"),
-   new SwingKey("CODEECIT",null,expandxy_code_action,"menu ctrl shift B"),
+   new SwingKey("CODEEDIT",null,expandxy_code_action,"menu ctrl shift B"),
    new SwingKey("CODEEDIT",null,fix_errors_action,"menu shift P", "xalt shift P"),
    new SwingKey("CODEEDIT",null,autocomplete_action,"ctrl SPACE"),
    new SwingKey("CODEEDIT",null,finish_action,"yalt SPACE"),

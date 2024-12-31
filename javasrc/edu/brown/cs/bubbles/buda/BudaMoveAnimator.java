@@ -92,20 +92,20 @@ BudaMoveAnimator()
 /*										*/
 /********************************************************************************/
 
-synchronized void moveBubble(BudaBubble m,Point target,boolean update)
+synchronized void moveBubble(BudaBubble bbl,Point target,boolean update)
 {
-   move_bubbles.add(new Movement(m,target));
+   move_bubbles.add(new Movement(bbl,target));
 
    if (move_bubbles.size() == 1) {
       refresh_set = null;
-      if (bubble_area == null) bubble_area = BudaRoot.findBudaBubbleArea(m);
+      if (bubble_area == null) bubble_area = BudaRoot.findBudaBubbleArea(bbl);
       if (bubble_area == null) return;
       move_timer.start();
     }
 
    if (update) {
       if (refresh_set == null) refresh_set = new ArrayList<BudaBubble>();
-      refresh_set.add(m);
+      refresh_set.add(bbl);
     }
 }
 
@@ -132,7 +132,10 @@ synchronized boolean isActive()
    synchronized (this) {
       for (Iterator<Movement> it = move_bubbles.iterator(); it.hasNext(); ) {
 	 Movement mb = it.next();
-	 if (mb.nextMove()) it.remove();
+	 if (mb.nextMove()) {
+            it.remove();
+            bubble_area.noteBubbleMoved(mb.for_bubble,mb.start_point); 
+          }
        }
       if (move_bubbles.size() == 0) {
 	 stop = true;
@@ -180,17 +183,17 @@ private static class Movement
 
    boolean nextMove() {
       if (total_distance == 0) return true;
-
+   
       move_count += FRAME_MOVE;
       if (move_count > total_distance) move_count = total_distance;
-
+   
       double xd = target_point.x - start_point.x;
       double yd = target_point.y - start_point.y;
       double x1 = start_point.x + xd * move_count / total_distance;
       double y1 = start_point.y + yd * move_count / total_distance;
-
+   
       for_bubble.setLocation((int) x1,(int) y1);
-
+   
       return move_count == total_distance;
     }
 

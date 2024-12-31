@@ -75,8 +75,8 @@ static {
    where_labels.put("Debug Interaction","Read-Eval-Print Bubble");
    where_labels.put("SEARCHBOX","Search Bubbles");
    where_labels.put("TEXTEDIT","Text Editors");
-   where_labels.put("SEARCHBAR","Text Editor Search Bars");
-   where_labels.put("BVCR","Version Control Bubbles");
+   where_labels.put("SEARCHBAR","Text Search Bars");
+   where_labels.put("BVCR","Version Bubbles");
 }
 
 
@@ -131,6 +131,8 @@ private static synchronized void setupTableModel()
 
 private static TableModel loadFromSwingKey(String menu,String xalt)
 {
+   String yalt = "alt";
+   if (xalt.equals("alt")) yalt = "meta";
    Vector<String> hdrs = vector("Where","Key","Command");
    DefaultTableModel mdl = new DefaultTableModel(hdrs,0);
    Map<String,Map<String,Set<String>>> keys = SwingKey.getKeyMappings();
@@ -143,6 +145,8 @@ private static TableModel loadFromSwingKey(String menu,String xalt)
          for (String key : kkeys) {
             String k1 = key.replace("menu",menu);
             k1 = k1.replace("xalt",xalt);
+            k1 = k1.replace("ctrl","control");
+            k1 = k1.replace("yalt",yalt);
             Vector<String> data = vector(where,k1,cmd);
             mdl.addRow(data);
           }

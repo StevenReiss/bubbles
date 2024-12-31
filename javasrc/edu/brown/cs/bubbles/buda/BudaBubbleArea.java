@@ -984,6 +984,15 @@ public void moveBubble(BudaBubble bb,Point loc,boolean fg)
 }
 
 
+void noteBubbleMoved(BudaBubble bb,Point start)
+{
+   Rectangle r = bb.getBounds();
+   r.x = start.x;
+   r.y = start.y;
+   area_history.addBubbleShapeEvent(bb,r);
+}
+
+
 
 void fixupBubble(BudaBubble bb)
 {
@@ -2864,7 +2873,7 @@ private abstract class MouseContext {
 private class BubbleMoveContext extends MouseContext {
 
    private BudaBubble for_bubble;
-   private Point initial_location;
+   private Rectangle initial_location;
    private Dimension bubble_size;
    private Dimension area_size;
    private int start_layer;
@@ -2873,7 +2882,7 @@ private class BubbleMoveContext extends MouseContext {
    BubbleMoveContext(BudaBubble bb,MouseEvent e) {
       super(e);
       for_bubble = bb;
-      initial_location = bb.getLocation();
+      initial_location = bb.getBounds();
       bubble_size = bb.getSize();
       area_size = getSize();
       start_layer = getLayer(bb);
@@ -2945,6 +2954,11 @@ private class BubbleMoveContext extends MouseContext {
 
       if (move_count > 0) BoardMetrics.noteCommand("BUDA","bubbleMoved");
       removeMovingBubble(for_bubble);
+      
+      Rectangle r = for_bubble.getBounds();
+      if (r.x != initial_location.x || r.y != initial_location.y) {
+         area_history.addBubbleShapeEvent(for_bubble,initial_location);
+       }
     }
 
 
@@ -3030,7 +3044,13 @@ private class BubbleResizeContext extends MouseContext {
       super.finish();
       fixupBubble(for_bubble);
       fixupGroups(for_bubble);
-      if (resize_count > 0) for_bubble.noteResize(initial_bounds.width,initial_bounds.height);
+      if (resize_count > 0) {
+         for_bubble.noteResize(initial_bounds.width,initial_bounds.height);
+         Rectangle r = for_bubble.getBounds();
+         if (r.width != initial_bounds.width || r.height != initial_bounds.height) {
+            area_history.addBubbleShapeEvent(for_bubble,initial_bounds);
+          }
+       }
     }
 
 }	// end of BubbleResizeContext
@@ -3497,17 +3517,17 @@ private class BubbleManager implements ComponentListener, ContainerListener {
    @Override public void componentMoved(ComponentEvent e) {
       if (cur_viewport == null) return;
       if (e.getSource() instanceof BudaBubble) {
-	 BudaBubble bbl = (BudaBubble) e.getSource();
+         BudaBubble bbl = (BudaBubble) e.getSource();
          localMoveBubble(bbl);
-	 updateOverview();
+         updateOverview();
       }
    }
 
    @Override public void componentResized(ComponentEvent e) {
       if (e.getSource() instanceof BudaBubble) {
-	 BudaBubble bb = (BudaBubble) e.getSource();
+         BudaBubble bb = (BudaBubble) e.getSource();
          localResizeBubble(bb);
-	 updateOverview();
+         updateOverview();
        }
     }
 

@@ -90,7 +90,11 @@ void addBubbleRemoveEvent(BudaBubble bb)
 
 
 void addBubbleShapeEvent(BudaBubble bb,Rectangle pos)
-{ }
+{ 
+   Rectangle npos = bb.getBounds();
+   System.err.println("SHAPE BUBBLE " + bb + " " +  pos + " " + npos);
+
+}
 
 
 void addBubbleFloatingEvent(BudaBubble bb)
@@ -318,10 +322,7 @@ abstract static class BudaHistoryEvent {
    protected BudaHistoryEvent getEndEvent()     { return null; }
    protected BudaHistoryEvent getStartEvent()   { return null; }
    
-   static BudaHistoryEvent createStartEvent()   { return new GroupEvent(); }
-   
-   
-   
+   static BudaHistoryEvent createStartEvent()   { return new GroupStartEvent(); }
    
 }       // end of abstract inner class BudaHistoryEvent
 
@@ -333,28 +334,45 @@ abstract static class BudaHistoryEvent {
 /*                                                                              */
 /********************************************************************************/
 
-private static class GroupEvent extends BudaHistoryEvent {
-
+private static class GroupStartEvent extends BudaHistoryEvent {
+   
    private int group_id;
-   private GroupEvent start_event;
-   private GroupEvent end_event;
+   private BudaHistoryEvent end_event;
    
-   GroupEvent() {
+   GroupStartEvent() {
       group_id = ++group_counter;
-      start_event = null;
       end_event = null;
-    }
-   
-   private GroupEvent(GroupEvent start) {
-      group_id = start.group_id;
-      start_event = start;
     }
    
    @Override protected BudaHistoryEvent getEndEvent() {
       if (end_event == null) {
-         end_event = new GroupEvent(this);
+         end_event = new GroupEndEvent(this); 
        }
       return end_event;
+    }
+   
+   @Override protected int getGroupId()         { return group_id; }
+   @Override protected boolean isGroupStart()   { return true; }
+   
+   @Override protected void undo(BudaBubbleArea bba) { }
+   
+   @Override protected void redo(BudaBubbleArea bba) { }
+   
+   @Override public String toString() {
+      return "Group Start " + group_id;
+    }
+   
+}       // end of inner class GroupStartEvent
+
+
+private static class GroupEndEvent extends BudaHistoryEvent {
+   
+   private int group_id;
+   private GroupStartEvent start_event;
+   
+   private GroupEndEvent(GroupStartEvent start) {
+      group_id = start.group_id;
+      start_event = start;
     }
    
    @Override protected BudaHistoryEvent getStartEvent() {
@@ -362,13 +380,16 @@ private static class GroupEvent extends BudaHistoryEvent {
     }
    
    @Override protected int getGroupId()         { return group_id; }
-   @Override protected boolean isGroupStart()   { return start_event == null; }
    
    @Override protected void undo(BudaBubbleArea bba) { }
    
    @Override protected void redo(BudaBubbleArea bba) { }
    
-}
+   @Override public String toString() {
+      return "Group End " + group_id;
+    }
+   
+}       // end of inner class GroupEndEvent
 
 
 

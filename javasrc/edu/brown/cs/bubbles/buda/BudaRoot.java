@@ -1461,8 +1461,8 @@ private void setupGlobalActions()
    SwingKey.registerKeyAction("ROOT",jc,new MetricsHandler(),"ctrl shift PRINTSCREEN");
    SwingKey.registerKeyAction("ROOT",jc,new HelpHandler(),"HELP","menu shift SLASH","menu shift F1");
    SwingKey.registerKeyAction("ROOT",jc,new PrintHandler(),"menu P");
-   SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(true),"menu xalt Z");
-   SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(false),"menu xalt Y");
+   SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(true),"xalt shift Z");
+   SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(false),"xalt shift Y");
    
    if (BUDA_PROPERTIES.getBoolean("Buda.enable.zoom")) {
       SwingKey.registerKeyAction("ROOT",jc, new ZoomHandler(1),
@@ -1846,18 +1846,18 @@ private class SearchKeyHandler extends AbstractAction {
       Point pt = MouseInfo.getPointerInfo().getLocation(); //getCurrentBubbleArea().getCurrentMouse();
       SwingUtilities.convertPointFromScreen(pt, getCurrentBubbleArea());
       if (pt == null) return;
-
+   
       BudaBubble focbub = getCurrentBubbleArea().getFocusBubble();
       if (focbub != null) {
       Rectangle bubarea = focbub.getBounds();
       SwingUtilities.convertRectangle(BudaRoot.this, bubarea, getCurrentBubbleArea());
       if (from_bubble && bubarea.contains(pt) && focbub != search_bubble) {
-	  if (!non_grouping) pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_NEAR_SPACE;
-	  else pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_SPACE;
-	  pt.y = bubarea.y;
-	  }
+          if (!non_grouping) pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_NEAR_SPACE;
+          else pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_SPACE;
+          pt.y = bubarea.y;
+          }
        }
-
+   
       if (doc_search && proj_search) createMergedSearchBubble(pt,null,null);
       else if (proj_search) createSearchBubble(pt,null,null,false);
       else createDocSearchBubble(pt,null,null);
