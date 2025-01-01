@@ -43,6 +43,7 @@ private BudaBubbleArea          bubble_area;
 private boolean                 doing_action;
 private int                     nest_depth;
 private int                     event_count;
+private int                     total_count;
 
 private static int              group_counter = 0;
 
@@ -64,6 +65,7 @@ BudaHistory(BudaBubbleArea bba)
    group_counter = 0;
    nest_depth = 0;
    event_count = 0;
+   total_count = 0;
    doing_action = false;
 }
 
@@ -154,19 +156,33 @@ void begin()
 
 
 
-void end() 
+void end() {
+   SwingUtilities.invokeLater(new EndAction());
+}
+
+private void localEnd() 
 {
    if (nest_depth == 0) return;
+   
+   ++total_count;
    if (doing_action) return;
    
    int depth = 0;
+   boolean haveevt = false;
    for (int i = stack_pointer-1; i >= 0; --i) {
       BudaHistoryEvent hevt = event_stack.get(i);
       if (hevt.isGroupStart()) {
          if (depth <= 0) {
-            BudaHistoryEvent evt = hevt.getEndEvent();
-             --nest_depth; 
-             addEvent(evt);
+            --nest_depth; 
+            if (haveevt) {
+               BudaHistoryEvent evt = hevt.getEndEvent();
+               addEvent(evt);
+             }
+            else {
+               for (int j = stack_pointer-1; j >= i; --j) {
+                  event_stack.remove(j);
+                }
+             }
             break;
           }
          else --depth;
@@ -174,7 +190,10 @@ void end()
       else if (hevt.getGroupId() > 0) {
          ++depth;
        }
+      else haveevt = true;
     }
+   
+  
 }
 
 
@@ -187,6 +206,28 @@ void clear()
    event_count = 0;
    doing_action = false;
 }
+
+
+private final class EndAction implements Runnable {
+
+   private int base_count;
+
+   EndAction() {
+      base_count = total_count;
+    }
+   
+   @Override public void run() {
+      if (base_count == total_count) {
+         localEnd();
+       }
+      else {
+         base_count = total_count;
+         SwingUtilities.invokeLater(this);
+       }
+    }
+
+}       // end of inner class FinishedAction
+
 
 
 
@@ -254,11 +295,26 @@ void redo()
 
 private final class FinishedAction implements Runnable {
    
+   private int base_count;
+   
+   FinishedAction() {
+      base_count = total_count;
+    }
+   
    @Override public void run() {
-      doing_action = false;
+      if (base_count == total_count) {
+         doing_action = false;
+       }
+      else {
+         base_count = total_count;
+         SwingUtilities.invokeLater(this);
+       }
     }
    
 }       // end of inner class FinishedAction
+
+
+
 
 /********************************************************************************/
 /*                                                                              */
@@ -268,6 +324,8 @@ private final class FinishedAction implements Runnable {
 
 private void addEvent(BudaHistoryEvent evt)
 {
+   ++total_count;
+         
    if (doing_action) return;
    
    while (event_stack.size() > stack_pointer) {
@@ -365,7 +423,7 @@ private static class GroupStartEvent extends BudaHistoryEvent {
 }       // end of inner class GroupStartEvent
 
 
-private static class GroupEndEvent extends BudaHistoryEvent {
+private static final class GroupEndEvent extends BudaHistoryEvent {
    
    private int group_id;
    private GroupStartEvent start_event;

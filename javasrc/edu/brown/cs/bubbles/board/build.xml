@@ -40,7 +40,7 @@
 		target='10' source='10'
 		includeantruntime='false' >
 	 <classpath refid='bubbles.classpath' />
-	 <compilerarg value='-Xlint:all' />
+<!--	 <compilerarg value='-Xlint:all' />                     -->
       </javac>
    </target>
 

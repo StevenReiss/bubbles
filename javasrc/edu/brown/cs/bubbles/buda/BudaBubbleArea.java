@@ -544,16 +544,18 @@ private void localAddBubble(BudaBubble bb,boolean spacer)
    // routes_valid = false;		// if we take bubbles into account when routing
    
    area_history.begin();
-
-   if (spacer) fixupBubble(bb);
-
-   fixupGroups(bb);
-
-   for_root.noteBubbleAdded(bb);
-   
-   area_history.addBubbleAddEvent(bb);
-   
-   area_history.end();
+   try {
+      if (spacer) fixupBubble(bb);
+      
+      fixupGroups(bb);
+      
+      for_root.noteBubbleAdded(bb);
+      
+      area_history.addBubbleAddEvent(bb);
+    }
+   finally {
+      area_history.end();
+    }
 }
 
 
@@ -574,31 +576,34 @@ private void localRemoveBubble(BudaBubble bb)
     }
 
    area_history.begin();
-   
-   synchronized (bubble_links) {
-      for (Iterator<BudaBubbleLink> it = bubble_links.iterator(); it.hasNext(); ) {
-	 BudaBubbleLink bl = it.next();
-	 if (bl.usesBubble(bb)) {
-	    it.remove();
-	    bl.noteRemoved();
-	  }
+   try {
+      synchronized (bubble_links) {
+         for (Iterator<BudaBubbleLink> it = bubble_links.iterator(); it.hasNext(); ) {
+            BudaBubbleLink bl = it.next();
+            if (bl.usesBubble(bb)) {
+               it.remove();
+               bl.noteRemoved();
+             }
+          }
        }
-    }
-
-   // routes_valid = false;	// if we take bubbles into account when routing
-
-   if (grp != null) {
-      synchronized (bubble_groups) {
-	 checkGroup(grp);
+      
+      // routes_valid = false;	// if we take bubbles into account when routing
+      
+      if (grp != null) {
+         synchronized (bubble_groups) {
+            checkGroup(grp);
+          }
        }
+      
+      repaint();
+      
+      for_root.noteBubbleRemoved(bb);
+      
+      area_history.addBubbleRemoveEvent(bb);
     }
-
-   repaint();
-
-   for_root.noteBubbleRemoved(bb);
-   
-   area_history.addBubbleRemoveEvent(bb);
-   area_history.end();
+   finally {
+      area_history.end();
+    }
 }
 
 
@@ -2707,8 +2712,8 @@ private class Mouser extends MouseAdapter {
 
    @Override public void mouseReleased(MouseEvent e) {
       if (mouse_context != null) {
-	 mouse_context.finish();
-	 mouse_context = null;
+         mouse_context.finish();
+         mouse_context = null;
        }
       handleMouseSet(e);
     }
@@ -2888,6 +2893,7 @@ private class BubbleMoveContext extends MouseContext {
       start_layer = getLayer(bb);
       addMovingBubble(bb);
       move_count = 0;
+      area_history.begin();
     }
 
    @Override void next(MouseEvent e) {
@@ -2937,27 +2943,32 @@ private class BubbleMoveContext extends MouseContext {
 
    @Override void finish() {
       super.finish();
-      if (for_bubble == null) return;
-
-      for_bubble.unfreeze();
-      for_bubble.grabFocus();
-      setLayer(for_bubble,start_layer,0);
-
-      if (for_root.noteBubbleActionDone(for_bubble)) return;
-
-      fixupBubble(for_bubble);
-      fixupGroups(for_bubble);
-      if (for_bubble.isUserPos()) repaint();
-
-      BudaCursorManager.resetDefaults(for_bubble);
-      //for_bubble.setCursor(for_bubble.getBubbleCursor());
-
-      if (move_count > 0) BoardMetrics.noteCommand("BUDA","bubbleMoved");
-      removeMovingBubble(for_bubble);
-      
-      Rectangle r = for_bubble.getBounds();
-      if (r.x != initial_location.x || r.y != initial_location.y) {
-         area_history.addBubbleShapeEvent(for_bubble,initial_location);
+      try {
+         if (for_bubble == null) return;
+         
+         for_bubble.unfreeze();
+         for_bubble.grabFocus();
+         setLayer(for_bubble,start_layer,0);
+         
+         if (for_root.noteBubbleActionDone(for_bubble)) return;
+         
+         fixupBubble(for_bubble);
+         fixupGroups(for_bubble);
+         if (for_bubble.isUserPos()) repaint();
+         
+         BudaCursorManager.resetDefaults(for_bubble);
+         //for_bubble.setCursor(for_bubble.getBubbleCursor());
+         
+         if (move_count > 0) BoardMetrics.noteCommand("BUDA","bubbleMoved");
+         removeMovingBubble(for_bubble);
+         
+         Rectangle r = for_bubble.getBounds();
+         if (r.x != initial_location.x || r.y != initial_location.y) {
+            area_history.addBubbleShapeEvent(for_bubble,initial_location);
+          }
+       }
+      finally {
+         area_history.end();
        }
     }
 
@@ -2987,6 +2998,7 @@ private class BubbleResizeContext extends MouseContext {
       min_width = bb.getMinimumResizeWidth();
       min_height = bb.getMinimumResizeHeight();
       resize_count = 0;
+      area_history.begin();
     }
 
    @Override void next(MouseEvent e) {
@@ -3042,14 +3054,19 @@ private class BubbleResizeContext extends MouseContext {
 
    @Override void finish() {
       super.finish();
-      fixupBubble(for_bubble);
-      fixupGroups(for_bubble);
-      if (resize_count > 0) {
-         for_bubble.noteResize(initial_bounds.width,initial_bounds.height);
-         Rectangle r = for_bubble.getBounds();
-         if (r.width != initial_bounds.width || r.height != initial_bounds.height) {
-            area_history.addBubbleShapeEvent(for_bubble,initial_bounds);
+      try {
+         fixupBubble(for_bubble);
+         fixupGroups(for_bubble);
+         if (resize_count > 0) {
+            for_bubble.noteResize(initial_bounds.width,initial_bounds.height);
+            Rectangle r = for_bubble.getBounds();
+            if (r.width != initial_bounds.width || r.height != initial_bounds.height) {
+               area_history.addBubbleShapeEvent(for_bubble,initial_bounds);
+             }
           }
+       }
+      finally {
+         area_history.end();
        }
     }
 
@@ -3209,30 +3226,30 @@ private class BubbleConnectContext extends MouseContext {
       MouseRegion mr = new MouseRegion(last_event);
       if (mr.getBubble() == null || mr.getBubble() == start_bubble) return;
       if (!start_bubble.connectTo(mr.getBubble(),start_event)) {
-	 BudaBubbleLink rembbl = null;
-	 synchronized (bubble_links) {
-	    for (BudaBubbleLink bbl : bubble_links) {
-	       if ((bbl.getSource() == start_bubble && bbl.getTarget() == mr.getBubble()) ||
-		      (bbl.getSource() == mr.getBubble() && bbl.getTarget() == start_bubble)) {
-		  rembbl = bbl;
-		  break;
-		}
-	     }
-	  }
-	 if (rembbl != null) {
-	    BoardMetrics.noteCommand("BUDA","userRemoveLink");
-	    for_root.removeLink(rembbl);
-	  }
-	 else {
-	    BoardMetrics.noteCommand("BUDA","userAddLink");
-	    BudaBubbleLink bbl = new BudaBubbleLink(
-	       start_bubble,
-	       new BudaDefaultPort(BudaPortPosition.BORDER_ANY,true),
-	       mr.getBubble(),
-	       new BudaDefaultPort(BudaPortPosition.BORDER_ANY,true),
-	       true,BudaLinkStyle.STYLE_DASHED);
-	    for_root.addLink(bbl);
-	  }
+         BudaBubbleLink rembbl = null;
+         synchronized (bubble_links) {
+            for (BudaBubbleLink bbl : bubble_links) {
+               if ((bbl.getSource() == start_bubble && bbl.getTarget() == mr.getBubble()) ||
+        	      (bbl.getSource() == mr.getBubble() && bbl.getTarget() == start_bubble)) {
+        	  rembbl = bbl;
+        	  break;
+        	}
+             }
+          }
+         if (rembbl != null) {
+            BoardMetrics.noteCommand("BUDA","userRemoveLink");
+            for_root.removeLink(rembbl);
+          }
+         else {
+            BoardMetrics.noteCommand("BUDA","userAddLink");
+            BudaBubbleLink bbl = new BudaBubbleLink(
+               start_bubble,
+               new BudaDefaultPort(BudaPortPosition.BORDER_ANY,true),
+               mr.getBubble(),
+               new BudaDefaultPort(BudaPortPosition.BORDER_ANY,true),
+               true,BudaLinkStyle.STYLE_DASHED);
+            for_root.addLink(bbl);
+          }
        }
       BudaCursorManager.resetDefaults(BudaBubbleArea.this);
       for_root.repaint();
