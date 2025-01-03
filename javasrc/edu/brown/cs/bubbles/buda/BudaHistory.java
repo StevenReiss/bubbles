@@ -94,8 +94,10 @@ void addBubbleRemoveEvent(BudaBubble bb)
 void addBubbleShapeEvent(BudaBubble bb,Rectangle pos)
 { 
    Rectangle npos = bb.getBounds();
-   System.err.println("SHAPE BUBBLE " + bb + " " +  pos + " " + npos);
-
+   if (npos.equals(pos)) return;
+   
+   BudaHistoryEvent evt = new BubbleShapeEvent(bb,pos,npos);
+   addEvent(evt);
 }
 
 
@@ -135,8 +137,13 @@ void addWorkingSetResizeEvent(BudaWorkingSet bws)
 { }
 
 
-void addMoveViewportEvent(Rectangle pos)
-{ }
+void addMoveViewportEvent(Rectangle pre,Rectangle post)
+{ 
+   if (pre == null || post == null || pre.equals(post)) return;
+   
+   BudaHistoryEvent evt = new ViewportMoveEvent(pre,post);
+   addEvent(evt);
+}
 
 
 /********************************************************************************/
@@ -181,6 +188,7 @@ private void localEnd()
             else {
                for (int j = stack_pointer-1; j >= i; --j) {
                   event_stack.remove(j);
+                  --stack_pointer;
                 }
              }
             break;
@@ -505,6 +513,49 @@ private static class BubbleRemoveEvent extends BubbleEvent {
 
 }       // end of inner class BubbleAddEvent
 
+
+
+private static class BubbleShapeEvent extends BubbleEvent {
+    
+   private Rectangle pre_bounds;
+   private Rectangle post_bounds;
+   
+   BubbleShapeEvent(BudaBubble bb,Rectangle pre,Rectangle post) {
+      super(bb);
+      pre_bounds = new Rectangle(pre);
+      post_bounds = new Rectangle(post);
+    }
+   
+   @Override protected void undo(BudaBubbleArea bba) {
+      getBubble().setBounds(pre_bounds);
+    }
+   
+   @Override protected void redo(BudaBubbleArea bba) {
+      getBubble().setBounds(post_bounds);
+    }
+   
+}       // end of inner class BubbleShapeEvent
+
+
+private static class ViewportMoveEvent extends BudaHistoryEvent {
+   
+   private Rectangle pre_bounds;
+   private Rectangle post_bounds;
+   
+   ViewportMoveEvent(Rectangle pre,Rectangle post) {
+      pre_bounds = pre;
+      post_bounds = post;
+    }
+   
+   @Override protected void undo(BudaBubbleArea bba) {
+      bba.resetViewport(pre_bounds);
+    }
+   
+   @Override protected void redo(BudaBubbleArea bba) {
+      bba.resetViewport(post_bounds);
+    }
+   
+}       // end of inner class ViewportMoveEvent
 
 
 

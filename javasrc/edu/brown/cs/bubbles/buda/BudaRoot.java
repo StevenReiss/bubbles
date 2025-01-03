@@ -1338,12 +1338,12 @@ private final class ViewportHandler implements ChangeListener {
 
    @Override public void stateChanged(ChangeEvent e) {
       Rectangle vr = bubble_view.getViewRect();
-
+   
       // if (scale_factor != 1) {
-	 // vr.x /= scale_factor;
-	 // vr.y /= scale_factor;
-	 // vr.width /= scale_factor;
-	 // vr.height /= scale_factor;
+         // vr.x /= scale_factor;
+         // vr.y /= scale_factor;
+         // vr.width /= scale_factor;
+         // vr.height /= scale_factor;
        // }
       bubble_area.setViewPosition(vr);
       bubble_overview.setViewPosition(vr);

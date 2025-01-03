@@ -1893,6 +1893,8 @@ private boolean checkOutput(Shape r)
 
 void setViewPosition(Rectangle r)
 {
+   area_history.addMoveViewportEvent(cur_viewport,r); 
+   
    cur_viewport = new Rectangle(r);
    for (BudaBubble bb : floating_bubbles.keySet()) {
       setFloatingLocation(bb);
@@ -1900,6 +1902,17 @@ void setViewPosition(Rectangle r)
    for (BudaBubble bb : docked_bubbles.keySet()) {
       setDockedLocation(bb);
    }
+}
+
+
+void resetViewport(Rectangle r)
+{
+   if (cur_viewport == null || r == null) return;
+      
+   int dx = r.x - cur_viewport.x;
+   int dy = r.y - cur_viewport.y;
+   
+   scrollViewport(dx,dy);
 }
 
 /**
@@ -2077,17 +2090,17 @@ private class ScrollAnimator extends javax.swing.Timer implements ActionListener
 
    ScrollAnimator(int tx,int ty) {
       super(SCROLL_ANIM_DELAY,null);
-
+   
       target_x = tx;
       target_y = ty;
       start_time = System.currentTimeMillis();
       start_x = cur_viewport.x;
       start_y = cur_viewport.y;
-
+   
       addActionListener(this);
       setActionCommand("AUTOSCROLL");
       setRepeats(true);
-
+   
       setInitialDelay(0);
     }
 
@@ -3154,18 +3167,19 @@ private class AreaMoveContext extends MouseContext {
       super(e);
       mouse_point = e.getLocationOnScreen();
       move_count = 0;
+      area_history.begin();
     }
 
    @Override void next(MouseEvent e) {
       if (focus_bubble != null) focus_bubble.forceFreeze();
-
+   
       BudaCursorManager.setTemporaryCursor(BudaBubbleArea.this,palm_cursor);
-
+   
       ++move_count;
       Point p1 = e.getLocationOnScreen();
       int dx = p1.x - mouse_point.x;
       int dy = p1.y - mouse_point.y;
-
+   
       if (dx == 0 && dy == 0) return;
       mouse_point = p1;
       scrollViewport(-dx,-dy);
@@ -3176,6 +3190,7 @@ private class AreaMoveContext extends MouseContext {
       BudaCursorManager.resetDefaults(BudaBubbleArea.this);
       if (focus_bubble != null) focus_bubble.unfreeze();
       if (move_count > 0) BoardMetrics.noteCommand("BUDA","areaMoved");
+      area_history.end();
     }
 
 }	// end of AreaMoveContext
@@ -3493,14 +3508,14 @@ private class AutoScroller extends javax.swing.Timer implements ActionListener
       delta_x = dx;
       delta_y = dy;
       if (dx == 0 && dy == 0) {
-	 if (isRunning()) {
-	    BoardMetrics.noteCommand("BUDA","autoScrollStop");
-	    stop();
-	  }
+         if (isRunning()) {
+            BoardMetrics.noteCommand("BUDA","autoScrollStop");
+            stop();
+          }
        }
       else if (!isRunning()) {
-	 start();
-	 BoardMetrics.noteCommand("BUDA","autoScrollStart");
+         start();
+         BoardMetrics.noteCommand("BUDA","autoScrollStart");
       }
     }
 

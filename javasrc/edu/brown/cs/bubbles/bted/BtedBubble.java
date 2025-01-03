@@ -19,10 +19,6 @@
  ********************************************************************************/
 
 
-/* SVN: $Id$ */
-
-
-
 package edu.brown.cs.bubbles.bted;
 
 import edu.brown.cs.bubbles.board.BoardColors;
