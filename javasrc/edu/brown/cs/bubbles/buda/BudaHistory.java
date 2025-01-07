@@ -23,9 +23,14 @@
 package edu.brown.cs.bubbles.buda;
 
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+
+import edu.brown.cs.bubbles.board.BoardLog;
 
 class BudaHistory implements BudaConstants
 {
@@ -152,19 +157,24 @@ void addMoveViewportEvent(Rectangle pre,Rectangle post)
 /*                                                                              */
 /********************************************************************************/
 
-void begin()
+BudaHistoryEvent begin()
 {
-   if (doing_action) return;
+   if (doing_action) return null;
    
    BudaHistoryEvent evt = BudaHistoryEvent.createStartEvent();
    ++nest_depth;
    addEvent(evt);
+   
+   return evt;
 }
 
 
 
-void end() {
-   SwingUtilities.invokeLater(new EndAction());
+void end(BudaHistoryEvent begin) {
+   if (begin == null) return;
+   
+  Timer t = new Timer(BUBBLE_FRAME_DELAY*2,new EndAction(begin));
+  t.start();
 }
 
 private void localEnd() 
@@ -213,25 +223,62 @@ void clear()
    nest_depth = 0;
    event_count = 0;
    doing_action = false;
+   
+   BoardLog.logD("BUDA","HISTORY clear");
 }
 
 
-private final class EndAction implements Runnable {
+private final class EndAction implements ActionListener {
 
    private int base_count;
+   private BudaHistoryEvent begin_event;
 
-   EndAction() {
+   EndAction(BudaHistoryEvent begin) {
       base_count = total_count;
+      begin_event = begin;
     }
    
-   @Override public void run() {
-      if (base_count == total_count) {
+   @Override public void actionPerformed(ActionEvent evt) {
+      Timer t = (Timer) evt.getSource();
+      Boolean fg = isValid();
+      BoardLog.logD("BUDA","HISTORY check end action " + fg + " " + begin_event);
+      if (fg == null) {
+         // invalid stack -- don't push the end event
+         t.stop();
+       }
+      else if (fg == Boolean.TRUE) {
          localEnd();
+         t.stop();
        }
-      else {
+      // else timer will retry again
+    }
+   
+   private Boolean isValid() {
+      // first check for any new events and try again if so
+      if (base_count != total_count) {
          base_count = total_count;
-         SwingUtilities.invokeLater(this);
+         return false;
        }
+      
+      // next check for any open blocks
+      int depth = 0;
+      for (int i = stack_pointer-1; i >= 0; --i) {
+         BudaHistoryEvent hevt = event_stack.get(i);
+         if (hevt.isGroupStart()) {
+            if (depth <= 0) {
+               BoardLog.logD("BUDA","HISTORY handle end " + (hevt == begin_event));
+               return hevt == begin_event;
+             }
+            else --depth;
+          }
+         else if (hevt.getGroupId() > 0) {
+            ++depth;
+          }
+       }
+      
+      BoardLog.logD("BUDA","HISTORY No start event found for " + begin_event);
+      
+      return null;
     }
 
 }       // end of inner class FinishedAction
@@ -249,6 +296,8 @@ void undo()
 {
    if (doing_action) return;
    
+   BoardLog.logD("BUDA","HISTORY start undo");
+   
    doing_action = true;
    try {
       BudaHistoryEvent end = null;
@@ -263,6 +312,7 @@ void undo()
       
       while (stack_pointer > 0) {
          evt = event_stack.get(--stack_pointer);
+         BoardLog.logD("BUDA","HISTORY undo " + evt);
          evt.undo(bubble_area);
          if (end == null || evt == end) break;
        } 
@@ -279,6 +329,8 @@ void redo()
 {
    if (doing_action) return;
    
+   BoardLog.logD("BUDA","HISTORY start redo");
+   
    doing_action = true;
    try {
       BudaHistoryEvent end = null;
@@ -291,6 +343,7 @@ void redo()
       
       while (stack_pointer < event_stack.size()) {
          evt = event_stack.get(stack_pointer++);
+         BoardLog.logD("BUDA","HISTORY redo " + evt);
          evt.redo(bubble_area);
          if (end == null || evt == end) break;
        }
@@ -340,10 +393,20 @@ private void addEvent(BudaHistoryEvent evt)
       event_stack.removeLast();
     }
    
+   if (stack_pointer >= 1) {
+      BudaHistoryEvent prior = event_stack.get(stack_pointer - 1);
+      if (prior.merge(evt)) {
+         BoardLog.logD("BUDA","HISTORY merge event " + evt);
+         return;
+       }
+    }
+   
    if (nest_depth == 0) {
       ++event_count;
       while (event_count >= MAX_SIZE) removeFirst();
     }
+   
+   BoardLog.logD("BUDA","HISTORY add event " + evt);
    
    event_stack.add(evt);
    ++stack_pointer;
@@ -356,6 +419,8 @@ private void removeFirst()
       clear();
       return;
     }
+   
+   BoardLog.logD("BUDA","HISTORY remove first event " + event_stack.get(0));
    
    BudaHistoryEvent evt = event_stack.removeFirst();
    --stack_pointer;
@@ -389,6 +454,8 @@ abstract static class BudaHistoryEvent {
    protected BudaHistoryEvent getStartEvent()   { return null; }
    
    static BudaHistoryEvent createStartEvent()   { return new GroupStartEvent(); }
+   
+   protected boolean merge(BudaHistoryEvent evt) { return false; }
    
 }       // end of abstract inner class BudaHistoryEvent
 
@@ -490,7 +557,18 @@ private static class BubbleAddEvent extends BubbleEvent {
     }
    
    @Override protected void redo(BudaBubbleArea bba) {
-      getBubble().setVisible(true);
+      BudaBubble bb = getBubble();
+      if (bb.getContentPane() == null) return;
+      bb.setVisible(true);
+      bb.setUserPos(false);
+      BudaBubblePosition pos = BudaBubblePosition.MOVABLE;
+      if (bb.isFixed()) pos = BudaBubblePosition.FIXED;
+      else if (bb.isFloating()) pos = BudaBubblePosition.FLOAT;
+      bba.addBubble(bb,pos,bb.getX(),bb.getY());
+   }
+   
+   @Override public String toString() {
+      return "Bubble Add " + getBubble();
     }
    
 }       // end of inner class BubbleAddEvent
@@ -504,13 +582,24 @@ private static class BubbleRemoveEvent extends BubbleEvent {
     }
    
    @Override protected void undo(BudaBubbleArea bba) {
-      getBubble().setVisible(true);
+      BudaBubble bb = getBubble();
+      if (bb.getContentPane() == null) return;
+      bb.setVisible(true);
+      bb.setUserPos(false);
+      BudaBubblePosition pos = BudaBubblePosition.MOVABLE;
+      if (bb.isFixed()) pos = BudaBubblePosition.FIXED;
+      else if (bb.isFloating()) pos = BudaBubblePosition.FLOAT;
+      bba.addBubble(bb,pos,bb.getX(),bb.getY());
     }
    
    @Override protected void redo(BudaBubbleArea bba) {
       getBubble().setVisible(false);
     }
-
+   
+   @Override public String toString() {
+      return "Bubble Remove " + getBubble();
+    }
+   
 }       // end of inner class BubbleAddEvent
 
 
@@ -534,6 +623,10 @@ private static class BubbleShapeEvent extends BubbleEvent {
       getBubble().setBounds(post_bounds);
     }
    
+   @Override public String toString() {
+      return "Bubble Shape " + getBubble() + " " + post_bounds;
+    }
+   
 }       // end of inner class BubbleShapeEvent
 
 
@@ -543,8 +636,8 @@ private static class ViewportMoveEvent extends BudaHistoryEvent {
    private Rectangle post_bounds;
    
    ViewportMoveEvent(Rectangle pre,Rectangle post) {
-      pre_bounds = pre;
-      post_bounds = post;
+      pre_bounds = new Rectangle(pre);
+      post_bounds = new Rectangle(post);
     }
    
    @Override protected void undo(BudaBubbleArea bba) {
@@ -553,6 +646,21 @@ private static class ViewportMoveEvent extends BudaHistoryEvent {
    
    @Override protected void redo(BudaBubbleArea bba) {
       bba.resetViewport(post_bounds);
+    }
+   
+   @Override protected boolean merge(BudaHistoryEvent evt) {
+      if (evt instanceof ViewportMoveEvent) {
+         ViewportMoveEvent vme = (ViewportMoveEvent) evt;
+         if (vme.pre_bounds.equals(post_bounds)) {
+            post_bounds = new Rectangle(vme.post_bounds);
+            return true;
+          }
+       }
+      return false;
+    }
+   
+   @Override public String toString() {
+      return "Viewport move " + post_bounds;
     }
    
 }       // end of inner class ViewportMoveEvent

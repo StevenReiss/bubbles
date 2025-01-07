@@ -271,6 +271,18 @@ int   UNDO_REMOVE_TIME = 30000;
 
 
 /**
+ *      Frame delay for move animator
+ **/
+int    BUBBLE_FRAME_DELAY = 10;
+
+
+/**
+ *      Frame movement step for move animator
+ **/
+int     BUBBLE_FRAME_MOVE = 16;
+
+
+/**
  *	Minimum amount of a bubble that must show.  This is used to restrict bubble movement
  *	so that bubbles don't move completely off the world.
  **/

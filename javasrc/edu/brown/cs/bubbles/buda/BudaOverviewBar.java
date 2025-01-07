@@ -439,16 +439,16 @@ private class BubbleMoveContext extends MouseContext {
    @Override void finish() {
       super.finish();
       if (move_count > 0) {
-	 BudaBubble sbb = null;
-	 for (BudaBubble bb : initial_position.keySet()) {
-	    sbb = bb;
-	    break;
-	  }
-	 if (sbb != null) {
-	    if (initial_position.size() > 1) bubble_area.fixupBubbleGroup(sbb);
-	    else bubble_area.fixupBubble(sbb);
-	  }
-	 BoardMetrics.noteCommand("BUDA","overviewMove");
+         BudaBubble sbb = null;
+         for (BudaBubble bb : initial_position.keySet()) {
+            sbb = bb;
+            break;
+          }
+         if (sbb != null) {
+            if (initial_position.size() > 1) bubble_area.fixupBubbleGroup(sbb);
+            else bubble_area.fixupBubble(sbb);
+          }
+         BoardMetrics.noteCommand("BUDA","overviewMove");
        }
     }
 

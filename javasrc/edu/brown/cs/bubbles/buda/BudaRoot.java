@@ -1461,8 +1461,8 @@ private void setupGlobalActions()
    SwingKey.registerKeyAction("ROOT",jc,new MetricsHandler(),"ctrl shift PRINTSCREEN");
    SwingKey.registerKeyAction("ROOT",jc,new HelpHandler(),"HELP","menu shift SLASH","menu shift F1");
    SwingKey.registerKeyAction("ROOT",jc,new PrintHandler(),"menu P");
-   SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(true),"xalt shift Z");
-   SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(false),"xalt shift Y");
+   SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(true),"xalt Z");
+   SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(false),"xalt Y");
    
    if (BUDA_PROPERTIES.getBoolean("Buda.enable.zoom")) {
       SwingKey.registerKeyAction("ROOT",jc, new ZoomHandler(1),

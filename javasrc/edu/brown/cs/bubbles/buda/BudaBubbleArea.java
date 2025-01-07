@@ -30,7 +30,7 @@ import edu.brown.cs.bubbles.board.BoardImage;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.buda.BudaConstants.BudaHelpClient;
-
+import edu.brown.cs.bubbles.buda.BudaHistory.BudaHistoryEvent;
 import edu.brown.cs.ivy.swing.SwingEventListenerList;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -241,26 +241,54 @@ BudaBubbleArea(BudaRoot br,Element cfg,BudaChannelSet cs)
 
 public void addBubble(BudaBubble bb,int x,int y)
 {
-   add(bb,new BudaConstraint(x,y));
+   BudaHistoryEvent start = area_history.begin();
+   try {
+      add(bb,new BudaConstraint(x,y));
+      area_history.addBubbleAddEvent(bb);
+    }
+   finally {
+      area_history.end(start);
+    }
 }
 
 
 public void addBubble(BudaBubble bb,BudaBubblePosition pos,int x,int y)
 {
-   add(bb,new BudaConstraint(pos,x,y));
+   BudaHistoryEvent begin = area_history.begin();
+   try {
+      add(bb,new BudaConstraint(pos,x,y));
+      area_history.addBubbleAddEvent(bb);
+    }
+   finally {
+      area_history.end(begin);
+    }
 }
 
 
 public void addBubble(BudaBubble bb,Component rel,Point relpt,int placement)
 {
-   bubble_placer.placeBubble(bb,rel,relpt,placement,BudaBubblePosition.MOVABLE);
+   BudaHistoryEvent start = area_history.begin();
+   try {
+      bubble_placer.placeBubble(bb,rel,relpt,placement,BudaBubblePosition.MOVABLE);
+      area_history.addBubbleAddEvent(bb);
+    }
+   finally {
+      area_history.end(start);
+    }
 }
 
 
 
 public void addBubble(BudaBubble bb,Component rel,Point relpt,int placement,BudaBubblePosition pos)
 {
-   bubble_placer.placeBubble(bb,rel,relpt,placement,pos);
+   BudaHistoryEvent begin = area_history.begin();
+   try {
+      bubble_placer.placeBubble(bb,rel,relpt,placement,pos);
+      area_history.addBubbleAddEvent(bb);
+    }
+   finally {
+      area_history.end(begin);
+    }
 }
 
 
@@ -274,6 +302,13 @@ public void removeBubble(BudaBubble bb)
 {
    bb.setVisible(false);
    remove(bb);
+}
+
+
+private void removeBubbleWithHistory(BudaBubble bb)
+{
+   removeBubble(bb);
+   area_history.addBubbleRemoveEvent(bb);
 }
 
 
@@ -543,19 +578,11 @@ private void localAddBubble(BudaBubble bb,boolean spacer)
 
    // routes_valid = false;		// if we take bubbles into account when routing
    
-   area_history.begin();
-   try {
-      if (spacer) fixupBubble(bb);
-      
-      fixupGroups(bb);
-      
-      for_root.noteBubbleAdded(bb);
-      
-      area_history.addBubbleAddEvent(bb);
-    }
-   finally {
-      area_history.end();
-    }
+   if (spacer) fixupBubble(bb);
+   
+   fixupGroups(bb);
+   
+   for_root.noteBubbleAdded(bb);
 }
 
 
@@ -575,35 +602,25 @@ private void localRemoveBubble(BudaBubble bb)
       active_bubbles.remove(bb);
     }
 
-   area_history.begin();
-   try {
-      synchronized (bubble_links) {
-         for (Iterator<BudaBubbleLink> it = bubble_links.iterator(); it.hasNext(); ) {
-            BudaBubbleLink bl = it.next();
-            if (bl.usesBubble(bb)) {
-               it.remove();
-               bl.noteRemoved();
-             }
+   synchronized (bubble_links) {
+      for (Iterator<BudaBubbleLink> it = bubble_links.iterator(); it.hasNext(); ) {
+         BudaBubbleLink bl = it.next();
+         if (bl.usesBubble(bb)) {
+            it.remove();
+            bl.noteRemoved();
           }
        }
-      
-      // routes_valid = false;	// if we take bubbles into account when routing
-      
-      if (grp != null) {
-         synchronized (bubble_groups) {
-            checkGroup(grp);
-          }
+    }
+   
+   // routes_valid = false;	// if we take bubbles into account when routing
+   
+   if (grp != null) {
+      synchronized (bubble_groups) {
+         checkGroup(grp);
        }
-      
-      repaint();
-      
-      for_root.noteBubbleRemoved(bb);
-      
-      area_history.addBubbleRemoveEvent(bb);
     }
-   finally {
-      area_history.end();
-    }
+   
+   repaint();
 }
 
 
@@ -1032,7 +1049,7 @@ void fixupBubbleGroup(BudaBubble bb)
    if (bg == null) return;
 
    BudaGroupSpacer gs = new BudaGroupSpacer(this, bg);
-
+   
    gs.makeRoomFor(bg);
 }
 
@@ -2896,6 +2913,7 @@ private class BubbleMoveContext extends MouseContext {
    private Dimension area_size;
    private int start_layer;
    private int move_count;
+   private BudaHistoryEvent begin_event;
 
    BubbleMoveContext(BudaBubble bb,MouseEvent e) {
       super(e);
@@ -2906,7 +2924,7 @@ private class BubbleMoveContext extends MouseContext {
       start_layer = getLayer(bb);
       addMovingBubble(bb);
       move_count = 0;
-      area_history.begin();
+      begin_event = area_history.begin();
     }
 
    @Override void next(MouseEvent e) {
@@ -2981,7 +2999,8 @@ private class BubbleMoveContext extends MouseContext {
           }
        }
       finally {
-         area_history.end();
+         area_history.end(begin_event);
+         begin_event = null;
        }
     }
 
@@ -3001,6 +3020,7 @@ private class BubbleResizeContext extends MouseContext {
    private int min_width;
    private int min_height;
    private int resize_count;
+   private BudaHistoryEvent begin_event;
 
    BubbleResizeContext(BudaBubble bb,BudaRegion br,MouseEvent e) {
       super(e);
@@ -3011,7 +3031,7 @@ private class BubbleResizeContext extends MouseContext {
       min_width = bb.getMinimumResizeWidth();
       min_height = bb.getMinimumResizeHeight();
       resize_count = 0;
-      area_history.begin();
+      begin_event = area_history.begin();
     }
 
    @Override void next(MouseEvent e) {
@@ -3079,7 +3099,8 @@ private class BubbleResizeContext extends MouseContext {
           }
        }
       finally {
-         area_history.end();
+         area_history.end(begin_event);
+         begin_event = null;
        }
     }
 
@@ -3093,6 +3114,7 @@ private class GroupMoveContext extends MouseContext {
    private List<BudaBubble> move_bubbles;
    private Point mouse_point;
    private int move_count;
+   private BudaHistoryEvent begin_event;
 
    GroupMoveContext(BudaBubbleGroup bg,MouseEvent e) {
       super(e);
@@ -3102,6 +3124,7 @@ private class GroupMoveContext extends MouseContext {
       mouse_point = e.getPoint();
       move_bubbles = new ArrayList<>(bg.getBubbles());
       move_count = 0;
+      begin_event = area_history.begin();
     }
 
    @Override void next(MouseEvent e) {
@@ -3141,16 +3164,22 @@ private class GroupMoveContext extends MouseContext {
 
    @Override void finish() {
       super.finish();
-      for (BudaBubble b : move_bubbles) {
-         b.unfreeze();
+      try {
+         for (BudaBubble b : move_bubbles) {
+            b.unfreeze();
+          }
+         fixupBubbleGroup(move_bubbles.get(0));
+         
+         BudaCursorManager.resetDefaults(BudaBubbleArea.this);
+         
+         if (move_count > 0) BoardMetrics.noteCommand("BUDA","bubbleGroupMoved");
+         
+         removeMovingBubbles(move_bubbles);
        }
-      fixupBubbleGroup(move_bubbles.get(0));
-   
-      BudaCursorManager.resetDefaults(BudaBubbleArea.this);
-   
-      if (move_count > 0) BoardMetrics.noteCommand("BUDA","bubbleGroupMoved");
-   
-      removeMovingBubbles(move_bubbles);
+      finally {
+         area_history.end(begin_event);
+         begin_event = null; 
+       }
     }
 
 }	// end of GroupMoveContext
@@ -3162,12 +3191,13 @@ private class AreaMoveContext extends MouseContext {
 
    private Point mouse_point;
    private int move_count;
+   private BudaHistoryEvent begin_event;
 
    AreaMoveContext(MouseEvent e) {
       super(e);
       mouse_point = e.getLocationOnScreen();
       move_count = 0;
-      area_history.begin();
+      begin_event = area_history.begin();
     }
 
    @Override void next(MouseEvent e) {
@@ -3190,7 +3220,7 @@ private class AreaMoveContext extends MouseContext {
       BudaCursorManager.resetDefaults(BudaBubbleArea.this);
       if (focus_bubble != null) focus_bubble.unfreeze();
       if (move_count > 0) BoardMetrics.noteCommand("BUDA","areaMoved");
-      area_history.end();
+      area_history.end(begin_event);
     }
 
 }	// end of AreaMoveContext
@@ -3326,12 +3356,12 @@ public void userRemoveBubble(BudaBubble bb)
 
    if (!bb.isRemovable()) return;
    
-   area_history.begin();
+   BudaHistoryEvent begin = area_history.begin();
    try {
       UndoRemove ur = new UndoRemove(bb);
       
       Rectangle r0 = bb.getBounds();
-      removeBubble(bb);
+      removeBubbleWithHistory(bb);
       ToolTipManager.sharedInstance().setEnabled(false);
       ToolTipManager.sharedInstance().setEnabled(true);
       if (bb.isTransient() || (bb instanceof BudaHintBubble)) {
@@ -3349,7 +3379,7 @@ public void userRemoveBubble(BudaBubble bb)
       setLayer(undo,DEFAULT_LAYER);
     }
    finally {
-      area_history.end();
+      area_history.end(begin);
       BoardMetrics.noteCommand("BUDA","removeBubble_" + bb.getHashId());
     }
 }
@@ -3358,13 +3388,13 @@ public void userRemoveBubble(BudaBubble bb)
 
 void userRemoveGroup(BudaBubbleGroup bg)
 {
-   area_history.begin();
+   BudaHistoryEvent begin = area_history.begin();
    try {
       Rectangle r0 = null;
       for (BudaBubble bb : bg.getBubbles()) {
          if (r0 == null) r0 = bb.getBounds();
          else r0.add(bb.getBounds());
-         removeBubble(bb);
+         removeBubbleWithHistory(bb);
        }
       if (r0 == null) return;
       
@@ -3378,7 +3408,7 @@ void userRemoveGroup(BudaBubbleGroup bg)
       setLayer(undo,DEFAULT_LAYER);
     }
    finally {
-      area_history.end();
+      area_history.end(begin);
       BoardMetrics.noteCommand("BUDA","removeBubbleGroup");
     }
 }
@@ -3430,19 +3460,26 @@ private class UndoRemove implements BudaHintActions {
    @Override public void clickAction() {
       if (bubble_set == null) return;
       BoardMetrics.noteCommand("BUDA","undoRemove");
-      for (BudaBubble bb : bubble_set) {
-	  bb.setVisible(true);
-	  bb.setUserPos(false);
-	  BudaBubblePosition pos = BudaBubblePosition.MOVABLE;
-	  if (bb.isFixed()) pos = BudaBubblePosition.FIXED;
-	  else if (bb.isFloating()) pos = BudaBubblePosition.FLOAT;
-	  BudaConstraint bc = new BudaConstraint(pos,bb.getX(),bb.getY());
-	  add(bb,bc);
+      BudaHistoryEvent begin = area_history.begin();
+      try {
+         for (BudaBubble bb : bubble_set) {
+            bb.setVisible(true);
+            bb.setUserPos(false);
+            BudaBubblePosition pos = BudaBubblePosition.MOVABLE;
+            if (bb.isFixed()) pos = BudaBubblePosition.FIXED;
+            else if (bb.isFloating()) pos = BudaBubblePosition.FLOAT;
+            addBubble(bb,pos,bb.getX(),bb.getY());
+//          BudaConstraint bc = new BudaConstraint(pos,bb.getX(),bb.getY());
+//          add(bb,bc);
+          }
+         for (BudaBubbleLink bl : link_set) {
+            if (bl.getSource().isVisible() && bl.getTarget().isVisible()) {
+               addLink(bl);
+             }
+          }
        }
-      for (BudaBubbleLink bl : link_set) {
-	 if (bl.getSource().isVisible() && bl.getTarget().isVisible()) {
-	    addLink(bl);
-	  }
+      finally {
+         area_history.end(begin);
        }
       bubble_set = null;
       link_set = null;
@@ -3450,9 +3487,9 @@ private class UndoRemove implements BudaHintActions {
 
    @Override public void finalAction() {
       if (bubble_set != null) {
-	 for (BudaBubble bb : bubble_set) {
-	    disposeBubble(bb);
-	  }
+         for (BudaBubble bb : bubble_set) {
+            disposeBubble(bb);
+          }
        }
       bubble_set = null;
       link_set = null;

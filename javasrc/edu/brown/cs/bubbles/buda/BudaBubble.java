@@ -1638,6 +1638,8 @@ public void disposeBubble()
       SwingFreezePane sfp = (SwingFreezePane) content_pane;
       sfp.dispose();
     }
+   
+   content_pane = null;
 }
 
 

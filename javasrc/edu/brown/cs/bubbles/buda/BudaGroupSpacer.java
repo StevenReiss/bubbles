@@ -83,6 +83,7 @@ BudaGroupSpacer(BudaBubbleArea ba)
    start_config = new Configuration(ba);
 }
 
+
 BudaGroupSpacer(BudaBubbleArea ba,BudaBubbleGroup fix)
 {
    this(ba);

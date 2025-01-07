@@ -1165,68 +1165,68 @@ private class Hoverer extends BudaHover {
    @Override public void handleHover(MouseEvent e) {
       if (!BASS_PROPERTIES.getBoolean(BASS_HOVER_OPTION_NAME)) return;
       TreePath tp = active_options.getPathForLocation(e.getX(), e.getY());
-
+   
       if (tp != null) {
-	 BassTreeNode tn = (BassTreeNode) tp.getLastPathComponent();
-	 BassName bn = tn.getBassName();
-
-	 int xpos = e.getX() - scroll_pane.getViewport().getViewPosition().x;
-	 int ypos = e.getY() - scroll_pane.getViewport().getViewPosition().y;
-
-	 String fn = null;
-
-	 if (bn != null) {
-	    preview_bubble = createPreviewBubble(bn,xpos,ypos);
-	    if (preview_bubble == null) fn = bn.createPreviewString();
-	  }
-	 else {
-	    for (int i = 1; i < tp.getPathCount(); ++i) {
-	       Object o1 = tp.getPathComponent(i);
-	       if (o1 instanceof BassTreeNode) {
-		  BassTreeNode btn = (BassTreeNode) o1;
-		  if (fn == null) fn = btn.getLocalName();
-		  else fn = fn + "." + btn.getLocalName();
-		}
-	     }
-	    if (fn != null) {
-	       int idx = fn.indexOf("#");
-	       if (idx > 0) fn = fn.substring(idx+1);
-	     }
-	  }
-
-	 if (preview_bubble == null && fn != null) {
-	    JLabel tt = new JLabel(fn);
-	    tt.setOpaque(true);
-	    BoardColors.setColors(tt,"Bass.DefaultLabelColor");
-	    tt.setBorder(BorderFactory.createLineBorder(BoardColors.getColor("Bass.PanelBorderColor")));
-	    BudaRoot root = BudaRoot.findBudaRoot(BassSearchBox.this);
-	    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BassSearchBox.this);
-	    Rectangle loc = BudaRoot.findBudaLocation(BassSearchBox.this);
-	    if (loc == null || bba == null || root == null) return;
-	    int x0 = loc.x + xpos + 50;
-	    int y0 = loc.y + ypos + 45;
-	    Dimension bsz = tt.getPreferredSize();
-	    Rectangle r = root.getCurrentViewport();
-	    if (x0 + bsz.width > r.x + r.width) x0 = r.x + r.width - bsz.width;
-	    if (x0 < r.x) x0 = r.x;
-	    if (y0 + bsz.height > r.y + r.height) y0 = y0 - bsz.height - active_options.getRowBounds(0).height;
-	    if (y0 < r.y) y0 = r.y;
-	    bba.add(tt,new BudaConstraint(BudaBubblePosition.HOVER,x0,y0));
-	    preview_component = tt;
-	  }
+         BassTreeNode tn = (BassTreeNode) tp.getLastPathComponent();
+         BassName bn = tn.getBassName();
+   
+         int xpos = e.getX() - scroll_pane.getViewport().getViewPosition().x;
+         int ypos = e.getY() - scroll_pane.getViewport().getViewPosition().y;
+   
+         String fn = null;
+   
+         if (bn != null) {
+            preview_bubble = createPreviewBubble(bn,xpos,ypos);
+            if (preview_bubble == null) fn = bn.createPreviewString();
+          }
+         else {
+            for (int i = 1; i < tp.getPathCount(); ++i) {
+               Object o1 = tp.getPathComponent(i);
+               if (o1 instanceof BassTreeNode) {
+        	  BassTreeNode btn = (BassTreeNode) o1;
+        	  if (fn == null) fn = btn.getLocalName();
+        	  else fn = fn + "." + btn.getLocalName();
+        	}
+             }
+            if (fn != null) {
+               int idx = fn.indexOf("#");
+               if (idx > 0) fn = fn.substring(idx+1);
+             }
+          }
+   
+         if (preview_bubble == null && fn != null) {
+            JLabel tt = new JLabel(fn);
+            tt.setOpaque(true);
+            BoardColors.setColors(tt,"Bass.DefaultLabelColor");
+            tt.setBorder(BorderFactory.createLineBorder(BoardColors.getColor("Bass.PanelBorderColor")));
+            BudaRoot root = BudaRoot.findBudaRoot(BassSearchBox.this);
+            BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BassSearchBox.this);
+            Rectangle loc = BudaRoot.findBudaLocation(BassSearchBox.this);
+            if (loc == null || bba == null || root == null) return;
+            int x0 = loc.x + xpos + 50;
+            int y0 = loc.y + ypos + 45;
+            Dimension bsz = tt.getPreferredSize();
+            Rectangle r = root.getCurrentViewport();
+            if (x0 + bsz.width > r.x + r.width) x0 = r.x + r.width - bsz.width;
+            if (x0 < r.x) x0 = r.x;
+            if (y0 + bsz.height > r.y + r.height) y0 = y0 - bsz.height - active_options.getRowBounds(0).height;
+            if (y0 < r.y) y0 = r.y;
+            bba.add(tt,new BudaConstraint(BudaBubblePosition.HOVER,x0,y0));
+            preview_component = tt;
+          }
        }
     }
 
    @Override public void endHover(MouseEvent e) {
       if (preview_bubble != null){
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(our_self);
-	 if (bba != null) bba.removeBubble(preview_bubble);
-	 preview_bubble.disposeBubble();
-	 preview_bubble = null;
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(our_self);
+         if (bba != null) bba.removeBubble(preview_bubble);
+         preview_bubble.disposeBubble();
+         preview_bubble = null;
        }
       if (preview_component != null) {
-	 preview_component.setVisible(false);
-	 preview_component = null;
+         preview_component.setVisible(false);
+         preview_component = null;
        }
     }
 

@@ -57,11 +57,7 @@ private Collection<Movement>	move_bubbles;
 private Timer			move_timer;
 private List<BudaBubble>  refresh_set;
 
-private static final int	FRAME_DELAY = 10;
-private static final int	FRAME_MOVE = 16;
-
-
-
+ 
 
 /********************************************************************************/
 /*										*/
@@ -71,7 +67,7 @@ private static final int	FRAME_MOVE = 16;
 
 BudaMoveAnimator()
 {
-   move_timer = new Timer(FRAME_DELAY,null);
+   move_timer = new Timer(BUBBLE_FRAME_DELAY,null);
    bubble_area = null;
 
    move_bubbles = new ArrayList<Movement>();
@@ -184,7 +180,7 @@ private static class Movement
    boolean nextMove() {
       if (total_distance == 0) return true;
    
-      move_count += FRAME_MOVE;
+      move_count += BUBBLE_FRAME_MOVE;
       if (move_count > total_distance) move_count = total_distance;
    
       double xd = target_point.x - start_point.x;
