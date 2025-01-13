@@ -621,6 +621,8 @@ private void localRemoveBubble(BudaBubble bb)
     }
    
    repaint();
+   
+   for_root.noteBubbleRemoved(bb);
 }
 
 
@@ -3355,6 +3357,7 @@ public void userRemoveBubble(BudaBubble bb)
    if (bb == null) return;
 
    if (!bb.isRemovable()) return;
+   if (!bb.isVisible()) return;
    
    BudaHistoryEvent begin = area_history.begin();
    try {

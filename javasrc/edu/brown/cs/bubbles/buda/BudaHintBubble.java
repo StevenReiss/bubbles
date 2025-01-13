@@ -216,12 +216,12 @@ private final class FadeAction implements ActionListener {
       double delta = System.currentTimeMillis() - start_time;
       delta /= display_time;
       if (delta > 1) {
-	 Timer t = (Timer) e.getSource();
-	 t.stop();
+         Timer t = (Timer) e.getSource();
+         t.stop();
        }
       else {
-	 setFade(START_TRANSPARENCY + delta * (END_TRANSPARENCY - START_TRANSPARENCY));
-	 // repaint();
+         setFade(START_TRANSPARENCY + delta * (END_TRANSPARENCY - START_TRANSPARENCY));
+         // repaint();
        }
     }
 

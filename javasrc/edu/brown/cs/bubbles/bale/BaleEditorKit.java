@@ -3314,6 +3314,7 @@ private static class GotoNextErrorAction extends TextAction {
        }
       if (best == null || blno < 0) return;
       int pos = bd.findLineOffset(blno);
+      if (pos < 0) return;
       
       bd.baleWriteLock();
       try {

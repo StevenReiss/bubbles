@@ -987,10 +987,10 @@ private final class BubbleUpdater implements BubbleViewCallback {
       if (BudaRoot.findBudaBubbleArea(bb) != bubble_area) return;
       BudaWorkingSet ws = BddtFactory.getFactory().getActiveWorkingSet();
       if (ws != null) {
-	 if (!ws.getRegion().intersects(bb.getBounds())) return;
+         if (!ws.getRegion().intersects(bb.getBounds())) return;
        }
       if (bubble_map.get(bb) == null) {
-	 bubble_map.put(bb,new BubbleData(bb));
+         bubble_map.put(bb,new BubbleData(bb));
        }
     }
 
