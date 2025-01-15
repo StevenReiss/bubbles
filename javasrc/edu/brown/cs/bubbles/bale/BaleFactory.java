@@ -836,7 +836,9 @@ public BudaConstants.LinkPort findPortForLine(BudaBubble bb,int line)
    if (!(bb instanceof BaleEditorBubble)) return null;
 
    BaleFragmentEditor bfe = (BaleFragmentEditor) bb.getContentPane();
+   if (bfe == null) return null;
    BaleDocument bd = bfe.getDocument();
+   if (bd == null) return null;
    int loff = bd.findLineOffset(line);
 
    try {

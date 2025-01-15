@@ -62,6 +62,9 @@ private List<BmvnTool>          available_tools;
 
 private static BmvnFactory      the_factory = null;
 
+private static final String [] ROOT_FILES = {
+   ".git", ".svn", ".uid", "CVS",".github",
+};
 
 
 
@@ -160,6 +163,7 @@ private final class ModelSetup implements Runnable {
                            fnd |= addFiles(tool,f,true,files);
                          }
                         if (fnd) break;
+                        if (isTopLevel(f)) break;
                         f = f.getParentFile();
                       }
                    }
@@ -184,6 +188,17 @@ private final class ModelSetup implements Runnable {
          BmvnProject bp = new BmvnProject(pnm,files,libs);
          known_projects.put(pnm,bp);
        }
+    }
+   
+   
+   
+   
+   private boolean isTopLevel(File f) {
+      for (String rnm : ROOT_FILES) {
+         File f0 = new File(f,rnm);
+         if (f0.exists()) return true;
+       }
+      return false;
     }
    
    private boolean addFiles(BmvnTool tool,File dir,boolean top,Set<File> files) {

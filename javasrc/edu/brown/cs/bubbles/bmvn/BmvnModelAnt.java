@@ -34,6 +34,7 @@ import javax.swing.AbstractAction;
 import org.w3c.dom.Element;
 
 import edu.brown.cs.bubbles.buda.BudaBubble;
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 
@@ -81,6 +82,8 @@ BmvnModelAnt(BmvnProject proj,File file)
    
    ant_xml = IvyXml.loadXmlFromFile(file);
    
+   IvyLog.logD("BMVN","Load ant model from " + file);
+   
    // analyze ant file to find the classpath specification and save it 
    //   or at least its property name
 }
@@ -100,6 +103,7 @@ BmvnModelAnt(BmvnProject proj,File file)
    for (Element target : IvyXml.children(ant_xml,"target")) {
       String nm = IvyXml.getAttrString(target,"name");
       if (nm == null) continue;
+      IvyLog.logD("BMVN","Get commands " + name + " " + nm);
       String cond = IvyXml.getAttrString(target,"if");
       if (cond != null) continue;
       for (Element task : IvyXml.children(target)) {
