@@ -160,76 +160,76 @@ private static class MessageImpl implements BoardMailMessage
       // Sender's email ID needs to be mentioned
       String from = "728238@gmail.com"; //change accordingly
       final String username = "728238"; //change accordingly
-      final String password = "Read3Care"; //change accordingly
-   
+      final String password = "Read#33dead44";
+
       // Assuming you are sending email through relay.jangosmtp.net
       String host = "smtp.gmail.com";
-   
+
       Properties props = new Properties();
       props.put("mail.smtp.auth", "true");
       props.put("mail.smtp.starttls.enable", "true");
       props.put("mail.smtp.host", host);
       props.put("mail.smtp.port", "587");
-   
+
       // Get the Session object.
       Session session = Session.getInstance(props,
-            new javax.mail.Authenticator() {
-         protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(username, password);
-          }
+	    new javax.mail.Authenticator() {
+	 protected PasswordAuthentication getPasswordAuthentication() {
+	    return new PasswordAuthentication(username, password);
+	  }
        });
-   
+
       try {
-         // Create a default MimeMessage object.
-         Message message = new MimeMessage(session);
-   
-         // Set From: header field of the header.
-         message.setFrom(new InternetAddress(from));
-   
-         // Set To: header field of the header.
-         message.setRecipients(Message.RecipientType.TO,
-               InternetAddress.parse(mail_to));
-   
-         // Set Subject: header field
-         message.setSubject(subject_text);
-   
-         if (reply_to != null) {
-            Address [] rply = new Address[] { new InternetAddress(reply_to) };
-            message.setReplyTo(rply);
-          }
-   
-         // Now set the actual message
-         if (attachment_files == null || attachment_files.size() == 0) {
-            message.setText(body_text);
-          }
-         else {
-            message.setText(body_text);
-            MimeMultipart mutlipart = new MimeMultipart();
-            MimeBodyPart bp = new MimeBodyPart();
-            bp.setText(body_text);
-            mutlipart.addBodyPart(bp);
-            for (File f : attachment_files) {
-               try {
-                  MimeBodyPart fpt = new MimeBodyPart();
-                  fpt.attachFile(f);
-                  mutlipart.addBodyPart(fpt);
-                }
-               catch (IOException e) {
-                  BoardLog.logE("BOARD","Problem attaching file " + f + " to mail message");
-        	}
-               // bp = new MimeBodyPart();
-               // DataSource fds = new FileDataSource(f);
-               // bp.setDataHandler(new DataHandler(fds));
-               // mutlipart.addBodyPart(bp);
-             }
-            message.setContent(mutlipart);
-          }
-   
-         // Send message
-         Transport.send(message);
+	 // Create a default MimeMessage object.
+	 Message message = new MimeMessage(session);
+
+	 // Set From: header field of the header.
+	 message.setFrom(new InternetAddress(from));
+
+	 // Set To: header field of the header.
+	 message.setRecipients(Message.RecipientType.TO,
+	       InternetAddress.parse(mail_to));
+
+	 // Set Subject: header field
+	 message.setSubject(subject_text);
+
+	 if (reply_to != null) {
+	    Address [] rply = new Address[] { new InternetAddress(reply_to) };
+	    message.setReplyTo(rply);
+	  }
+
+	 // Now set the actual message
+	 if (attachment_files == null || attachment_files.size() == 0) {
+	    message.setText(body_text);
+	  }
+	 else {
+	    message.setText(body_text);
+	    MimeMultipart mutlipart = new MimeMultipart();
+	    MimeBodyPart bp = new MimeBodyPart();
+	    bp.setText(body_text);
+	    mutlipart.addBodyPart(bp);
+	    for (File f : attachment_files) {
+	       try {
+		  MimeBodyPart fpt = new MimeBodyPart();
+		  fpt.attachFile(f);
+		  mutlipart.addBodyPart(fpt);
+		}
+	       catch (IOException e) {
+		  BoardLog.logE("BOARD","Problem attaching file " + f + " to mail message");
+		}
+	       // bp = new MimeBodyPart();
+	       // DataSource fds = new FileDataSource(f);
+	       // bp.setDataHandler(new DataHandler(fds));
+	       // mutlipart.addBodyPart(bp);
+	     }
+	    message.setContent(mutlipart);
+	  }
+
+	 // Send message
+	 Transport.send(message);
        }
       catch (MessagingException e) {
-         BoardLog.logE("BOARD","Problem sending mail",e);
+	 BoardLog.logE("BOARD","Problem sending mail",e);
        }
    }
 

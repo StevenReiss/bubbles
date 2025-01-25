@@ -1325,6 +1325,13 @@ private synchronized void setupMint()
        }
       if (wsname == null) wsname = "";
       else wsname = wsname.replace(" ","_");
+      switch (getLanguage()) {
+         case JAVA :
+            break;
+         default :
+            wsname = getLanguage().toString() + "_" + wsname;
+            break;
+       }
       mint_name = mint_name.replace("@@@",wsname);
     }
 
