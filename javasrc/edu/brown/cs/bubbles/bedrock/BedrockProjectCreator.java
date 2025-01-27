@@ -432,8 +432,7 @@ private boolean setupCloneProject()
    File f2 = new File(sdir,".project");
    File f3 = new File(sdir,".settings");
    File f4 = new File(f3,"org.eclipse.jdt.core.prefs");
-   File f5 = new File(f3,"org.eclipse.core.resources.prefs");
-   if (!f1.exists() || !f2.exists() || !f4.exists() || !f5.exists()) return false;
+   if (!f1.exists() || !f2.exists() || !f4.exists()) return false;
    
    return true;
 }
@@ -784,7 +783,9 @@ private boolean generateSettingsFile()
       File f4 = new File(f2,"org.eclipse.core.resources.prefs");
       try {
          IvyFile.copyFile(f3,opts);
-         IvyFile.copyFile(f4,popts);
+         if (f4.exists()) {
+            IvyFile.copyFile(f4,popts);
+          }
        }
       catch (IOException e) {
          BedrockPlugin.logE("Problem copying settings file",e);
