@@ -205,16 +205,16 @@ public static void initialize(BudaRoot br)
 
    // BeamTracBugReport btr = new BeamTracBugReport(br);
    // btr.addPanel();
-   
+
    BeamGithubIssues bissues = new BeamGithubIssues(br);
    bissues.addPanel();
-   
+
    BeamEmailBugReport ber = new BeamEmailBugReport(br);
    ber.addPanel();
-   
+
 // BeamFeedbackReport bfr = new BeamFeedbackReport(br);
 // bfr.addPanel();
-   
+
    help_panel = new BeamHelpPanel(br);
    help_panel.addPanel();
 
@@ -238,7 +238,7 @@ public static void initialize(BudaRoot br)
 	 new BeamProgressBubble(br);
 	 break;
     }
-   
+
    // force key definitions
    new BeamNoteBubble();
 }
@@ -310,7 +310,7 @@ static void sendMail(String addr,String subj,String body)
        }
       catch (UnsupportedEncodingException e) { }
       body = body.replace("+","%20");
-      full += "&body=" + body;
+      full += "&body=" + body;                                        
     }
 
 
@@ -463,18 +463,18 @@ private static class NoteHandler implements BaleContextListener {
    NoteHandler() {
     }
 
-   
 
-   
+
+
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       if (cfg.getOffset() >= 0) {
-         menu.add(new NoteAction(cfg));
+	 menu.add(new NoteAction(cfg));
        }
     }
 
-   
-   
+
+
 
 }	// end of inner class NoteHandler
 
@@ -582,7 +582,7 @@ private static class SearchProblemFlags implements BassFlagger, BumpProblemHandl
    @Override public synchronized BassFlag getFlagForName(BassName bnm,String nm) {
       if (flag_map == null) computeFlagMap();
       ProblemFlag pf = flag_map.get(nm);
-   
+
       return pf;
     }
 
@@ -590,9 +590,9 @@ private static class SearchProblemFlags implements BassFlagger, BumpProblemHandl
    @Override public synchronized void handleProblemRemoved(BumpProblem bp)   { flag_map = null; }
    @Override public synchronized void handleProblemsDone() {
       if (flag_map == null) {
-         // System.err.println("FLAGS UPDATED");
-         // BassFactory.getFactory().flagsUpdated();
-         SwingUtilities.invokeLater(new FlagUpdater());
+	 // System.err.println("FLAGS UPDATED");
+	 // BassFactory.getFactory().flagsUpdated();
+	 SwingUtilities.invokeLater(new FlagUpdater());
        }
     }
    @Override public synchronized void handleClearProblems()		     { flag_map = null; }
@@ -602,7 +602,7 @@ private static class SearchProblemFlags implements BassFlagger, BumpProblemHandl
       Map<String,ProblemFlag> mpf = new HashMap<>();
       flag_map = mpf;
       for (BumpProblem bp : BumpClient.getBump().getAllProblems()) {
-         addFlags(bp,mpf);
+	 addFlags(bp,mpf);
        }
     }
 
@@ -610,17 +610,17 @@ private static class SearchProblemFlags implements BassFlagger, BumpProblemHandl
       ProblemFlag pf = null;
       ProblemFlag pf1 = null;
       switch (bp.getErrorType()) {
-         case ERROR :
-         case FATAL :
-            pf = error_flag;
-            pf1 = error1_flag;
-            break;
-         case WARNING :
-            pf = warning_flag;
-            pf1 = warning1_flag;
-            break;
-         default :
-            return;
+	 case ERROR :
+	 case FATAL :
+	    pf = error_flag;
+	    pf1 = error1_flag;
+	    break;
+	 case WARNING :
+	    pf = warning_flag;
+	    pf1 = warning1_flag;
+	    break;
+	 default :
+	    return;
        }
       BassName bn = BassFactory.getFactory().findBubbleName(bp.getFile(),bp.getStart());
       if (bn == null) return;
@@ -631,10 +631,10 @@ private static class SearchProblemFlags implements BassFlagger, BumpProblemHandl
       if (pr == null || pnm == null) return;
       pnm = pr + ":." + pnm;
       while (pnm != null) {
-        addFlag(mpf,pnm,pf);
-        int idx1 = pnm.lastIndexOf(".");
-        if (idx1 < 0) break;
-        pnm = pnm.substring(0,idx1);
+	addFlag(mpf,pnm,pf);
+	int idx1 = pnm.lastIndexOf(".");
+	if (idx1 < 0) break;
+	pnm = pnm.substring(0,idx1);
       }
    }
 
@@ -694,12 +694,12 @@ private static final class SaveButton implements ActionListener, Runnable
       BoardMetrics.noteCommand("BDDT","SaveAll");
       BowiFactory.startTask();
       try {
-         BumpClient bc = BumpClient.getBump();
-         bc.saveAll();
-         buda_root.handleSaveAllRequest();
+	 BumpClient bc = BumpClient.getBump();
+	 bc.saveAll();
+	 buda_root.handleSaveAllRequest();
        }
       finally {
-         BowiFactory.stopTask();
+	 BowiFactory.stopTask();
        }
     }
 
@@ -718,11 +718,11 @@ private static final class BuildButton implements ActionListener, Runnable
       BoardMetrics.noteCommand("BDDT","Build");
       BowiFactory.startTask();
       try {
-         BumpClient bc = BumpClient.getBump();
-         bc.compile(false, true, false);
+	 BumpClient bc = BumpClient.getBump();
+	 bc.compile(false, true, false);
        }
       finally {
-         BowiFactory.stopTask();
+	 BowiFactory.stopTask();
        }
     }
 
@@ -742,11 +742,11 @@ private static final class RefreshButton implements ActionListener, Runnable
       BoardMetrics.noteCommand("BEAM","Refresh");
       BowiFactory.startTask();
       try {
-         BumpClient bc = BumpClient.getBump();
-         bc.compile(false, false, true);
+	 BumpClient bc = BumpClient.getBump();
+	 bc.compile(false, false, true);
        }
       finally {
-         BowiFactory.stopTask();
+	 BowiFactory.stopTask();
        }
     }
 
