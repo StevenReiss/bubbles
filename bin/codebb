@@ -30,7 +30,8 @@ foreach i ($ECLLIB/org.eclipse.*.jar $ECLLIB/com.google.*.jar)
 end
 
 set CP8 = $LIB/mail.jar:$LIB/js-scriptengine.jar
-set CP9 = $LIB/bubblesasm.jar:$IVYLIB/asm.jar:$IVYLIB/junit.jar:$IVYLIB/jsoup.jar:$IVYLIB/json.jar:$IVYLIB/slf4j-api.jar
+set CP9 = $LIB/bubblesasm.jar:$IVYLIB/asm.jar:$IVYLIB/junit.jar:$IVYLIB/jsoup.jar
+set CP10 = $IVYLIB/json.jar:$IVYLIB/slf4j-api.jar:$IVYLIB/jakarta.mail.jar:$IVYLIB/jakarta.activation.jar
 
 
 set CPB = ""
@@ -40,7 +41,7 @@ end
 
 set CPC = $INS/resources
 
-set CP = ${CP1}:${CP2}:${CP3}:${CP4}:${CP5}:${CP6}:${CP7}:${CP8}:${CP9}:${CPB}:${CPC}
+set CP = ${CP1}:${CP2}:${CP3}:${CP4}:${CP5}:${CP6}:${CP7}:${CP8}:${CP9}:${CP10}:${CPB}:${CPC}
 
 set JBIN = $BROWN_JAVA_HOME/bin
 
