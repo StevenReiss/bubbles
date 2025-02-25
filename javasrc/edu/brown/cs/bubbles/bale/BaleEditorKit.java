@@ -277,8 +277,8 @@ private static SwingKey [] skey_defs = new SwingKey[] {
    new SwingKey("CODEEDIT",null,find_action,"menu F"),
    new SwingKey("CODEEDIT",null,replace_action,"menu R"),
    new SwingKey("CODEEDIT",null,find_next_action,"menu K"),
-   new SwingKey("CODEEDIT",null,find_prev_action,"menu shift K"),
-   new SwingKey("CODEEDIT",null,delete_line_action,"menu D"),
+   new SwingKey("CODEEDIT",null,find_prev_action,"xalt K"),
+   new SwingKey("CODEEDIT",null,delete_line_action,"menu D","menu shift K"),
    new SwingKey("CODEEDIT",null,delete_to_eol_action,"menu shift D"),
    new SwingKey("CODEEDIT",null,duplicate_action,"menu alt D"),
    new SwingKey("CODEEDIT",null,insert_line_above_action,"menu shift ENTER"),
@@ -655,94 +655,94 @@ private static class DefaultKeyAction extends TextAction {
       BaleDocument bd = target.getBaleDocument();
       bd.baleWriteLock();
       try {
-         Dimension d0 = target.getSize();
-         if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
-         else d0 = target.getPreferredSize();
-         
-         String content = e.getActionCommand();
-         String postcontent = null;
-         int mod = e.getModifiers();
-         if ((content != null) && (content.length() > 0) &&
-               ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
-            char c = content.charAt(0);
-            int soff = target.getSelectionStart();
-            int eoff = target.getSelectionEnd();
-            
-            if ((c >= 0x20) && (c != 0x7F)) {
-               boolean overwrite = target.getOverwriteMode();
-               if (soff == eoff && !overwrite) {
-                  if (language_kit.checkContent(content) &&
-                        bd.checkTypeover(content,soff)) {
-                     overwrite = true;
-                   }
-                  else {
-                     postcontent = language_kit.getPostContent(content);
-                     if (postcontent != null && 
-                           BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_SPACES_ONLY)) { 
-                        String follow = null;
-                        try {
-                           follow = target.getText(eoff,1);
-                         }
-                        catch (BadLocationException ex) { }
-                        if (follow != null && !Character.isWhitespace(follow.charAt(0))) {
-                           postcontent = null;
-                         }
-                      }
-                   }
-                }
-               if (overwrite) {
-                  if (soff == target.getSelectionEnd()) {
-                     String prev = null;
-                     try {
-                        prev = target.getText(soff,1);
-                      }
-                     catch (BadLocationException ex) { }
-                     eoff = soff+1;
-                     if (prev == null || prev.equals("\n"));
-                     else if (prev.equals("\t")) {
-                        int cpos = bd.getColumnPosition(soff);
-                        int npos = bd.getNextTabPosition(cpos);
-                        StringBuilder buf = new StringBuilder();
-                        for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
-                        target.setSelectionEnd(eoff);
-                        target.replaceSelection(buf.toString());
-                        target.setSelectionStart(soff);
-                        target.setSelectionEnd(eoff);
-                      }
-                     else target.setSelectionEnd(eoff);
-                   }
-                }
-               if (soff != eoff) bd.handleReplaceTypeover(soff,eoff);
-               
-               target.replaceSelection(content);
-               if (postcontent != null) {
-                  int off = target.getSelectionEnd();
-                  try {
-                     bd.insertString(off,postcontent,null);
-                   }
-                  catch (BadLocationException ex) { }
-                  bd.setCreatedTypeover(postcontent,off);
-                  target.setSelectionStart(off);
-                  target.setSelectionEnd(off);
-                }
-               
-               if (content != null && shouldAutoIndent(target,content,soff)) {
-                  // TODO: check that this is the only thing on the line
-                  indent_lines_action.actionPerformed(e);
-                }
-               BaleCompletionContext ctx = target.getCompletionContext();
-               if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
-                  new BaleCompletionContext(target,soff,c);
-                }
-               
-               if (d0 != null) {
-                  Dimension d1 = target.getPreferredSize();
-                  if (d1.height > d0.height) {
-                     target.increaseSize(1);
-                   }
-                }
-             }
-          }
+	 Dimension d0 = target.getSize();
+	 if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
+	 else d0 = target.getPreferredSize();
+
+	 String content = e.getActionCommand();
+	 String postcontent = null;
+	 int mod = e.getModifiers();
+	 if ((content != null) && (content.length() > 0) &&
+	       ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
+	    char c = content.charAt(0);
+	    int soff = target.getSelectionStart();
+	    int eoff = target.getSelectionEnd();
+
+	    if ((c >= 0x20) && (c != 0x7F)) {
+	       boolean overwrite = target.getOverwriteMode();
+	       if (soff == eoff && !overwrite) {
+		  if (language_kit.checkContent(content) &&
+			bd.checkTypeover(content,soff)) {
+		     overwrite = true;
+		   }
+		  else {
+		     postcontent = language_kit.getPostContent(content);
+		     if (postcontent != null &&
+			   BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_SPACES_ONLY)) {
+			String follow = null;
+			try {
+			   follow = target.getText(eoff,1);
+			 }
+			catch (BadLocationException ex) { }
+			if (follow != null && !Character.isWhitespace(follow.charAt(0))) {
+			   postcontent = null;
+			 }
+		      }
+		   }
+		}
+	       if (overwrite) {
+		  if (soff == target.getSelectionEnd()) {
+		     String prev = null;
+		     try {
+			prev = target.getText(soff,1);
+		      }
+		     catch (BadLocationException ex) { }
+		     eoff = soff+1;
+		     if (prev == null || prev.equals("\n"));
+		     else if (prev.equals("\t")) {
+			int cpos = bd.getColumnPosition(soff);
+			int npos = bd.getNextTabPosition(cpos);
+			StringBuilder buf = new StringBuilder();
+			for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
+			target.setSelectionEnd(eoff);
+			target.replaceSelection(buf.toString());
+			target.setSelectionStart(soff);
+			target.setSelectionEnd(eoff);
+		      }
+		     else target.setSelectionEnd(eoff);
+		   }
+		}
+	       if (soff != eoff) bd.handleReplaceTypeover(soff,eoff);
+
+	       target.replaceSelection(content);
+	       if (postcontent != null) {
+		  int off = target.getSelectionEnd();
+		  try {
+		     bd.insertString(off,postcontent,null);
+		   }
+		  catch (BadLocationException ex) { }
+		  bd.setCreatedTypeover(postcontent,off);
+		  target.setSelectionStart(off);
+		  target.setSelectionEnd(off);
+		}
+
+	       if (content != null && shouldAutoIndent(target,content,soff)) {
+		  // TODO: check that this is the only thing on the line
+		  indent_lines_action.actionPerformed(e);
+		}
+	       BaleCompletionContext ctx = target.getCompletionContext();
+	       if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
+		  new BaleCompletionContext(target,soff,c);
+		}
+
+	       if (d0 != null) {
+		  Dimension d1 = target.getPreferredSize();
+		  if (d1.height > d0.height) {
+		     target.increaseSize(1);
+		   }
+		}
+	     }
+	  }
        }
       finally { bd.baleWriteUnlock(); }
    }
@@ -778,7 +778,7 @@ private static boolean isFirstCharacter(BaleEditorPane target,int pos)
       txt = target.getText(pos-delta,delta);
     }
    catch (BadLocationException e) {
-      return false; 
+      return false;
    }
 
    for (int i = txt.length()-1; i >= 0; --i) {
@@ -801,7 +801,7 @@ private static boolean matchesText(BaleEditorPane target,int pos,String match)
       txt = target.getText(pos-delta,delta+1);
     }
    catch (BadLocationException e) {
-      return false; 
+      return false;
    }
 
    if (txt == null) return false;
@@ -850,23 +850,23 @@ private static class BackspaceAction extends TextAction {
       if (target == null) ;
       else if (target.getOverwriteMode()) backward_action.actionPerformed(e);
       else {
-         BaleDocument bd = target.getBaleDocument();
-         int soff = target.getSelectionStart(); 
-         int eoff = target.getSelectionEnd();
-         if (soff == eoff && BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_CLOSE)) {
-            try {
-               String del = target.getText(soff-1,1);
-               String d1 = language_kit.getPostContent(del);
-               if (d1 != null) {
-        	  if (bd.checkTypeover(d1,soff)) {
-        	     bd.remove(soff,1);
-        	   }
-        	}
-             }
-            catch (BadLocationException ex) { }
-   
-          }
-         delete_prev_action.actionPerformed(e);
+	 BaleDocument bd = target.getBaleDocument();
+	 int soff = target.getSelectionStart();
+	 int eoff = target.getSelectionEnd();
+	 if (soff == eoff && BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_CLOSE)) {
+	    try {
+	       String del = target.getText(soff-1,1);
+	       String d1 = language_kit.getPostContent(del);
+	       if (d1 != null) {
+		  if (bd.checkTypeover(d1,soff)) {
+		     bd.remove(soff,1);
+		   }
+		}
+	     }
+	    catch (BadLocationException ex) { }
+
+	  }
+	 delete_prev_action.actionPerformed(e);
        }
     }
 
@@ -966,118 +966,118 @@ private static class NewlineAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane target = getBaleEditor(e);
       if (!checkEditor(target)) return;
-   
+
       BaleDocument bd = target.getBaleDocument();
       bd.baleWriteLock();
       try {
-         String text = "\n";
-         String posttext = null;
-         int postdelta = 0;
-         int size = 1;
-         int postsize = 0;
-         int soff = target.getSelectionStart();
-         int eoff = target.getSelectionEnd();
-         BaleElement elt = bd.getCharacterElement(eoff);
-         if (elt != null && elt.isComment()) {
-            switch (elt.getEndTokenState()) {
-               case IN_COMMENT :
-               case IN_FORMAL_COMMENT :
-        	  String indtxt = " ";
-        	  BaleElement be1 = elt.getPreviousCharacterElement();
-        	  if (be1 != null) {
-        	     BaleElement.Indent bin = be1.getIndent();
-        	     if (bin != null) {
-        		int col = bin.getFirstColumn();
-        		StringBuffer buf = new StringBuffer();
-        		for (int i = 0; i < col; ++i) buf.append(" ");
-        		indtxt = buf.toString();
-        	      }
-        	     else if (be1.isComment()) {
-        		try {
-        		   String ctxt = target.getText(elt.getStartOffset(),
-        			 elt.getEndOffset()-elt.getStartOffset()+1);
-        		   int ct = 0;
-        		   while (ctxt.charAt(ct) == ' ') ++ct;
-        		   indtxt = ctxt.substring(0,ct);
-        		 }
-        		catch (BadLocationException ex) { }
-        	      }
-        	   }
-        	  text += indtxt + "*";
-        	  break;
-               default:
-        	  break;
-             }
-          }
-   
-         String tok = doAutoClose(bd,elt,soff,eoff);
-         if (tok != null) {
-            posttext= "\n" + tok;
-            postsize = 1;
-            try {
-               String txt = target.getText(eoff,100);
-               boolean havetxt = false;
-               for (int i = 0; i < txt.length(); ++i) {
-        	  if (txt.charAt(i) == '\n') {
-        	     if (havetxt) postdelta = i;
-        	     break;
-        	   }
-        	  else if (!Character.isWhitespace(txt.charAt(i))) havetxt = true;
-        	}
-             }
-            catch (BadLocationException ex) { }
-          }
-         if (tok == null) {
-            posttext = doAutoLine(bd,elt,soff,eoff);
-            postdelta = 0;
-            if (posttext != null && posttext.contains("\n")) postsize = 1;
-          }
-   
-         boolean grow = true;
-         boolean rep = true;
-         boolean ind = true;
-   
-         if (soff != eoff) {
-            int slno = bd.findLineNumber(soff);
-            int elno = bd.findLineNumber(eoff);
-            if (elno != slno) grow = false;
-          }
-         else {
-            if (target.getOverwriteMode()) {
-               rep = false;
-               grow = false;
-               int nlno = bd.findLineNumber(soff) + 1;
-               int pos = bd.getFirstNonspace(nlno);
-               if (pos >= 0) ind = false;
-               else pos = -pos;
-               if (pos < bd.getEndPosition().getOffset()) target.setCaretPosition(pos);
-               soff = pos-1;
-             }
-          }
-   
-         if (rep) target.replaceSelection(text);
-         int noff = target.getSelectionStart();
-         if (posttext != null) {
-            try {
-               bd.insertString(noff+postdelta, posttext, null);
-               int nlno = bd.findLineNumber(noff+1+postdelta);
-               for (int i = 0; i < postsize; ++i) {
-        	  bd.fixLineIndent(nlno+i);
-        	}
-               size += postsize;
-             }
-            catch (BadLocationException ex) { }
-            target.setSelectionStart(noff);
-            target.setSelectionEnd(noff);
-          }
-         if (ind) {
-            int lno = bd.findLineNumber(soff+1);
-            bd.fixLineIndent(lno);
-          }
-   
-         if (grow) {
-            target.increaseSize(size);
-          }
+	 String text = "\n";
+	 String posttext = null;
+	 int postdelta = 0;
+	 int size = 1;
+	 int postsize = 0;
+	 int soff = target.getSelectionStart();
+	 int eoff = target.getSelectionEnd();
+	 BaleElement elt = bd.getCharacterElement(eoff);
+	 if (elt != null && elt.isComment()) {
+	    switch (elt.getEndTokenState()) {
+	       case IN_COMMENT :
+	       case IN_FORMAL_COMMENT :
+		  String indtxt = " ";
+		  BaleElement be1 = elt.getPreviousCharacterElement();
+		  if (be1 != null) {
+		     BaleElement.Indent bin = be1.getIndent();
+		     if (bin != null) {
+			int col = bin.getFirstColumn();
+			StringBuffer buf = new StringBuffer();
+			for (int i = 0; i < col; ++i) buf.append(" ");
+			indtxt = buf.toString();
+		      }
+		     else if (be1.isComment()) {
+			try {
+			   String ctxt = target.getText(elt.getStartOffset(),
+				 elt.getEndOffset()-elt.getStartOffset()+1);
+			   int ct = 0;
+			   while (ctxt.charAt(ct) == ' ') ++ct;
+			   indtxt = ctxt.substring(0,ct);
+			 }
+			catch (BadLocationException ex) { }
+		      }
+		   }
+		  text += indtxt + "*";
+		  break;
+	       default:
+		  break;
+	     }
+	  }
+
+	 String tok = doAutoClose(bd,elt,soff,eoff);
+	 if (tok != null) {
+	    posttext= "\n" + tok;
+	    postsize = 1;
+	    try {
+	       String txt = target.getText(eoff,100);
+	       boolean havetxt = false;
+	       for (int i = 0; i < txt.length(); ++i) {
+		  if (txt.charAt(i) == '\n') {
+		     if (havetxt) postdelta = i;
+		     break;
+		   }
+		  else if (!Character.isWhitespace(txt.charAt(i))) havetxt = true;
+		}
+	     }
+	    catch (BadLocationException ex) { }
+	  }
+	 if (tok == null) {
+	    posttext = doAutoLine(bd,elt,soff,eoff);
+	    postdelta = 0;
+	    if (posttext != null && posttext.contains("\n")) postsize = 1;
+	  }
+
+	 boolean grow = true;
+	 boolean rep = true;
+	 boolean ind = true;
+
+	 if (soff != eoff) {
+	    int slno = bd.findLineNumber(soff);
+	    int elno = bd.findLineNumber(eoff);
+	    if (elno != slno) grow = false;
+	  }
+	 else {
+	    if (target.getOverwriteMode()) {
+	       rep = false;
+	       grow = false;
+	       int nlno = bd.findLineNumber(soff) + 1;
+	       int pos = bd.getFirstNonspace(nlno);
+	       if (pos >= 0) ind = false;
+	       else pos = -pos;
+	       if (pos < bd.getEndPosition().getOffset()) target.setCaretPosition(pos);
+	       soff = pos-1;
+	     }
+	  }
+
+	 if (rep) target.replaceSelection(text);
+	 int noff = target.getSelectionStart();
+	 if (posttext != null) {
+	    try {
+	       bd.insertString(noff+postdelta, posttext, null);
+	       int nlno = bd.findLineNumber(noff+1+postdelta);
+	       for (int i = 0; i < postsize; ++i) {
+		  bd.fixLineIndent(nlno+i);
+		}
+	       size += postsize;
+	     }
+	    catch (BadLocationException ex) { }
+	    target.setSelectionStart(noff);
+	    target.setSelectionEnd(noff);
+	  }
+	 if (ind) {
+	    int lno = bd.findLineNumber(soff+1);
+	    bd.fixLineIndent(lno);
+	  }
+
+	 if (grow) {
+	    target.increaseSize(size);
+	  }
        }
       finally { bd.baleWriteUnlock(); }
    }
@@ -1359,27 +1359,27 @@ private static class IndentLinesAction extends TextAction {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
       BaleDocument bd = be.getBaleDocument();
-   
+
       bd.baleWriteLock();
       try {
-         int soff = be.getSelectionStart();
-         int eoff = be.getSelectionEnd();
-   
-         int slno = bd.findLineNumber(soff);
-         int elno = slno;
-         if (eoff != soff) elno = bd.findLineNumber(eoff);
-         if (elno < slno) {
-            int x = elno;
-            elno = slno;
-            slno = x;
-          }
-         
-         // might want to do a few lines at a time by puttins
-         // separate tasks into Swing event queue?
-   
-         for (int i = slno; i <= elno; ++i) {
-            bd.fixLineIndent(i);
-          }
+	 int soff = be.getSelectionStart();
+	 int eoff = be.getSelectionEnd();
+
+	 int slno = bd.findLineNumber(soff);
+	 int elno = slno;
+	 if (eoff != soff) elno = bd.findLineNumber(eoff);
+	 if (elno < slno) {
+	    int x = elno;
+	    elno = slno;
+	    slno = x;
+	  }
+
+	 // might want to do a few lines at a time by puttins
+	 // separate tasks into Swing event queue?
+
+	 for (int i = slno; i <= elno; ++i) {
+	    bd.fixLineIndent(i);
+	  }
        }
       finally { bd.baleWriteUnlock(); }
     }
@@ -1390,7 +1390,7 @@ private static class IndentLinesAction extends TextAction {
 private static class FixIndentsAction extends TextAction {
 
    private static final long serialVersionUID = 1;
-   
+
    FixIndentsAction() {
       super("FixIndentsAction");
     }
@@ -1399,25 +1399,25 @@ private static class FixIndentsAction extends TextAction {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
       BaleDocument bd = be.getBaleDocument();
-   
+
       bd.baleWriteLock();
       try {
-         int soff = be.getSelectionStart();
-         int eoff = be.getSelectionEnd();
-         int dsoff = bd.mapOffsetToEclipse(soff);
-         int deoff = bd.mapOffsetToEclipse(eoff);
-   
-         BumpClient bc = BumpClient.getBump();
-         org.w3c.dom.Element edits = bc.fixIndents(bd.getProjectName(),bd.getFile(),
-               bd.getEditCounter(),dsoff,deoff);
-   
-         if (edits != null) {
-            BaleApplyEdits bae = new BaleApplyEdits(bd);
-            bae.applyEdits(edits);
-          }
-         else {
-            bd.nextEditCounter();
-          }
+	 int soff = be.getSelectionStart();
+	 int eoff = be.getSelectionEnd();
+	 int dsoff = bd.mapOffsetToEclipse(soff);
+	 int deoff = bd.mapOffsetToEclipse(eoff);
+
+	 BumpClient bc = BumpClient.getBump();
+	 org.w3c.dom.Element edits = bc.fixIndents(bd.getProjectName(),bd.getFile(),
+	       bd.getEditCounter(),dsoff,deoff);
+
+	 if (edits != null) {
+	    BaleApplyEdits bae = new BaleApplyEdits(bd);
+	    bae.applyEdits(edits);
+	  }
+	 else {
+	    bd.nextEditCounter();
+	  }
        }
       finally { bd.baleWriteUnlock(); }
     }
@@ -2125,17 +2125,17 @@ private static class SaveAllRun implements Runnable {
    @Override public void run() {
       BowiFactory.startTask();
       try {
-         // BumpClient.getBump().saveAll();
-         for_root.handleSaveAllRequest();
-         BumpClient bc = BumpClient.getBump();
-         boolean comp = bc.getOptionBool("lspbase.lsp.compileOnSave",true);
-         if (comp) {
-            BumpClient.getBump().compile(false,false,false);
-          }
-         try {
-            for_root.saveConfiguration(null);
-          }
-         catch (IOException ex) { }
+	 // BumpClient.getBump().saveAll();
+	 for_root.handleSaveAllRequest();
+	 BumpClient bc = BumpClient.getBump();
+	 boolean comp = bc.getOptionBool("lspbase.lsp.compileOnSave",true);
+	 if (comp) {
+	    BumpClient.getBump().compile(false,false,false);
+	  }
+	 try {
+	    for_root.saveConfiguration(null);
+	  }
+	 catch (IOException ex) { }
        }
       finally { BowiFactory.stopTask(); }
     }
@@ -2165,14 +2165,14 @@ private static class RedoElisionAction extends AbstractAction {
       BaleDocument bd = target.getBaleDocument();
       BowiFactory.startTask();
       try {
-         bd.baleWriteLock();
-         try {
-            bd.redoElision();
-            bd.handleElisionChange();
-            target.getPreferredSize();
-            bd.fixElisions();
-          }
-         finally { bd.baleWriteUnlock(); }
+	 bd.baleWriteLock();
+	 try {
+	    bd.redoElision();
+	    bd.handleElisionChange();
+	    target.getPreferredSize();
+	    bd.fixElisions();
+	  }
+	 finally { bd.baleWriteUnlock(); }
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","RedoElision");
@@ -2234,26 +2234,26 @@ private static class ExplicitElisionAction extends AbstractAction {
       BaleDocument bd = target.getBaleDocument();
       BowiFactory.startTask();
       try {
-         bd.baleWriteLock();
-         try {
-            int off = target.getCaretPosition();
-            BaleElement.Branch br = bd.getParagraphElement(off);
-            BaleElement ebr = null;
-            if (br.isElided()) {
-               br.setElided(false);
-               ebr = br;
-             }
-            else {
-               while (br != null && !br.canElide()) {
-        	  br = br.getBaleParent();
-        	}
-               if (br == null) return;
-               br.setElided(true);
-             }
-            bd.handleElisionChange();
-            if (ebr != null) target.increaseSizeForElidedElement(ebr);
-          }
-         finally { bd.baleWriteUnlock(); }
+	 bd.baleWriteLock();
+	 try {
+	    int off = target.getCaretPosition();
+	    BaleElement.Branch br = bd.getParagraphElement(off);
+	    BaleElement ebr = null;
+	    if (br.isElided()) {
+	       br.setElided(false);
+	       ebr = br;
+	     }
+	    else {
+	       while (br != null && !br.canElide()) {
+		  br = br.getBaleParent();
+		}
+	       if (br == null) return;
+	       br.setElided(true);
+	     }
+	    bd.handleElisionChange();
+	    if (ebr != null) target.increaseSizeForElidedElement(ebr);
+	  }
+	 finally { bd.baleWriteUnlock(); }
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","ExplicitElision");
@@ -2590,7 +2590,7 @@ private static class FormatAction extends TextAction {
       if (!checkEditor(target)) return;
       BaleDocument bd = target.getBaleDocument();
       BoardMetrics.noteCommand("BALE",String.valueOf(getValue(Action.NAME)));
-   
+
       bd.format(target.getSelectionStart(),target.getSelectionEnd());
     }
 
@@ -2686,52 +2686,52 @@ private static class GotoDefinitionAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BowiFactory.startTask();
       try {
-         BaleEditorPane target = getBaleEditor(e);
-         if (!checkReadEditor(target)) return;
-   
-         BaleDocument bd = target.getBaleDocument();
-         int soff = target.getSelectionStart();
-         int eoff = target.getSelectionEnd();
-         if (eoff != soff) eoff = soff;
-   
-         BumpClient bc = BumpClient.getBump();
-         List<BumpLocation> locs;
-         BalePosition sp;
-         try {
-            sp = (BalePosition) bd.createPosition(soff);
-            locs = bc.findDefinition(null,			   // bd.getProjectName(),
-        				bd.getFile(),
-        				bd.mapOffsetToEclipse(soff),
-        				bd.mapOffsetToEclipse(soff));
-          }
-         catch (BadLocationException ex) {
-            return;
-          }
-   
-         if (doClassSearchAction(locs)) {
-            goto_search_action.actionPerformed(e);
-            return;
-          }
-   
-         if (locs == null || locs.size() == 0) {
-            if (e.getActionCommand() == null) {
-               e = new ActionEvent(target,e.getID(),
-        	     "GotoDefinitionAction",e.getWhen(),e.getModifiers());
-             }
-            goto_doc_action.actionPerformed(e);
-            return;
-          }
-   
-         if (locs.size() == 1) {
-            BumpLocation loc0 = locs.get(0);
-            int foff = bd.mapOffsetToEclipse(soff);
-            if (foff >= loc0.getOffset() && foff <= loc0.getEndOffset()) {
-               goto_reference_action.actionPerformed(e);
-               return;
-             }
-          }
-   
-         BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
+	 BaleEditorPane target = getBaleEditor(e);
+	 if (!checkReadEditor(target)) return;
+
+	 BaleDocument bd = target.getBaleDocument();
+	 int soff = target.getSelectionStart();
+	 int eoff = target.getSelectionEnd();
+	 if (eoff != soff) eoff = soff;
+
+	 BumpClient bc = BumpClient.getBump();
+	 List<BumpLocation> locs;
+	 BalePosition sp;
+	 try {
+	    sp = (BalePosition) bd.createPosition(soff);
+	    locs = bc.findDefinition(null,			   // bd.getProjectName(),
+					bd.getFile(),
+					bd.mapOffsetToEclipse(soff),
+					bd.mapOffsetToEclipse(soff));
+	  }
+	 catch (BadLocationException ex) {
+	    return;
+	  }
+
+	 if (doClassSearchAction(locs)) {
+	    goto_search_action.actionPerformed(e);
+	    return;
+	  }
+
+	 if (locs == null || locs.size() == 0) {
+	    if (e.getActionCommand() == null) {
+	       e = new ActionEvent(target,e.getID(),
+		     "GotoDefinitionAction",e.getWhen(),e.getModifiers());
+	     }
+	    goto_doc_action.actionPerformed(e);
+	    return;
+	  }
+
+	 if (locs.size() == 1) {
+	    BumpLocation loc0 = locs.get(0);
+	    int foff = bd.mapOffsetToEclipse(soff);
+	    if (foff >= loc0.getOffset() && foff <= loc0.getEndOffset()) {
+	       goto_reference_action.actionPerformed(e);
+	       return;
+	     }
+	  }
+
+	 BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","GoToDefinition");
@@ -2753,50 +2753,50 @@ private static class GotoImplementationAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BowiFactory.startTask();
       try {
-         BaleEditorPane target = getBaleEditor(e);
-         if (!checkReadEditor(target)) return;
-         BaleDocument bd = target.getBaleDocument();
-         int soff = target.getSelectionStart();
-         int eoff = target.getSelectionEnd();
-         if (eoff != soff) eoff = soff;
-   
-         BumpClient bc = BumpClient.getBump();
-         List<BumpLocation> locs;
-         BalePosition sp;
-         try {
-            sp = (BalePosition) bd.createPosition(soff);
-            locs = bc.findImplementations(null,
-        				     bd.getFile(),
-        				     bd.mapOffsetToEclipse(soff),
-        				     bd.mapOffsetToEclipse(eoff));
-          }
-         catch (BadLocationException ex) {
-            return;
-          }
-   
-         if (doClassSearchAction(locs)) {
-            goto_search_action.actionPerformed(e);
-            return;
-          }
-   
-         if (locs == null || locs.size() == 0) {
-            if (e.getActionCommand() == null) {
-               e = new ActionEvent(target,e.getID(),"GotoImplementationAction",e.getWhen(),e.getModifiers());
-             }
-            goto_doc_action.actionPerformed(e);
-            return;
-          }
-   
-         if (locs.size() == 1) {
-            BumpLocation loc0 = locs.get(0);
-            int foff = bd.mapOffsetToEclipse(soff);
-            if (foff >= loc0.getOffset() && foff <= loc0.getEndOffset()) {
-               goto_reference_action.actionPerformed(e);
-               return;
-             }
-          }
-   
-         BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
+	 BaleEditorPane target = getBaleEditor(e);
+	 if (!checkReadEditor(target)) return;
+	 BaleDocument bd = target.getBaleDocument();
+	 int soff = target.getSelectionStart();
+	 int eoff = target.getSelectionEnd();
+	 if (eoff != soff) eoff = soff;
+
+	 BumpClient bc = BumpClient.getBump();
+	 List<BumpLocation> locs;
+	 BalePosition sp;
+	 try {
+	    sp = (BalePosition) bd.createPosition(soff);
+	    locs = bc.findImplementations(null,
+					     bd.getFile(),
+					     bd.mapOffsetToEclipse(soff),
+					     bd.mapOffsetToEclipse(eoff));
+	  }
+	 catch (BadLocationException ex) {
+	    return;
+	  }
+
+	 if (doClassSearchAction(locs)) {
+	    goto_search_action.actionPerformed(e);
+	    return;
+	  }
+
+	 if (locs == null || locs.size() == 0) {
+	    if (e.getActionCommand() == null) {
+	       e = new ActionEvent(target,e.getID(),"GotoImplementationAction",e.getWhen(),e.getModifiers());
+	     }
+	    goto_doc_action.actionPerformed(e);
+	    return;
+	  }
+
+	 if (locs.size() == 1) {
+	    BumpLocation loc0 = locs.get(0);
+	    int foff = bd.mapOffsetToEclipse(soff);
+	    if (foff >= loc0.getOffset() && foff <= loc0.getEndOffset()) {
+	       goto_reference_action.actionPerformed(e);
+	       return;
+	     }
+	  }
+
+	 BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","GoToImplementation");
@@ -2817,63 +2817,63 @@ private static class GotoReferenceAction extends TextAction {
 
    @Override public void actionPerformed(ActionEvent e) {
       BowiFactory.startTask();
-      try {	
-         BaleEditorPane target = getBaleEditor(e);
-         if (!checkReadEditor(target)) return;
-         BaleDocument bd = target.getBaleDocument();
-         int soff = target.getSelectionStart();
-         int eoff = target.getSelectionEnd();
-         if (eoff != soff) eoff = soff;
-         BaleElement be = bd.getCharacterElement(soff);
-   
-         BumpClient bc = BumpClient.getBump();
-         Collection<BumpLocation> locs;
-         BalePosition sp;
-   
-         String fullnm = null;
-   
-         fullnm  = bc.getFullyQualifiedName(null,		   // bd.getProjectName(),
-               bd.getFile(),
-               bd.mapOffsetToEclipse(soff),
-               bd.mapOffsetToEclipse(eoff),60000);
-   
-         try {
-            sp = (BalePosition) bd.createPosition(soff);
-            locs = bc.findReferences(null,
-        				bd.getFile(),
-        				bd.mapOffsetToEclipse(soff),
-        				bd.mapOffsetToEclipse(eoff));
-          }
-         catch (BadLocationException ex) {
-            return;
-          }
-   
-         if (fullnm == null) {
-            if (be.isIdentifier())
-               BaleInfoBubble.createInfoBubble(target, be.getName(), BaleInfoBubbleType.UNDEFINED, sp);
-            else {
-               BaleInfoBubble.createInfoBubble(target, be.getName(),
-                     BaleInfoBubbleType.NOIDENTIFIER, sp);
-             }
-            Action act = findAction(beepAction);
-            if (act != null) act.actionPerformed(e);
-            return;
-          }
-   
-         if (doClassSearchAction(locs)) {
-            goto_search_action.actionPerformed(e);
-            return;
-          }
-   
-         if (locs == null || locs.size() == 0) {
-            BaleInfoBubble.createInfoBubble(target, be.getName(), BaleInfoBubbleType.REF, sp);
-            Action act = findAction(beepAction);
-            if (act != null) act.actionPerformed(e);
-            return;
-          }
-   
-         BaleBubbleStack.createBubbles(target,sp,null,false,BaleStackType.DROP_SOURCE,
-               locs,BudaLinkStyle.STYLE_FLIP_REFERENCE);
+      try {
+	 BaleEditorPane target = getBaleEditor(e);
+	 if (!checkReadEditor(target)) return;
+	 BaleDocument bd = target.getBaleDocument();
+	 int soff = target.getSelectionStart();
+	 int eoff = target.getSelectionEnd();
+	 if (eoff != soff) eoff = soff;
+	 BaleElement be = bd.getCharacterElement(soff);
+
+	 BumpClient bc = BumpClient.getBump();
+	 Collection<BumpLocation> locs;
+	 BalePosition sp;
+
+	 String fullnm = null;
+
+	 fullnm  = bc.getFullyQualifiedName(null,		   // bd.getProjectName(),
+	       bd.getFile(),
+	       bd.mapOffsetToEclipse(soff),
+	       bd.mapOffsetToEclipse(eoff),60000);
+
+	 try {
+	    sp = (BalePosition) bd.createPosition(soff);
+	    locs = bc.findReferences(null,
+					bd.getFile(),
+					bd.mapOffsetToEclipse(soff),
+					bd.mapOffsetToEclipse(eoff));
+	  }
+	 catch (BadLocationException ex) {
+	    return;
+	  }
+
+	 if (fullnm == null) {
+	    if (be.isIdentifier())
+	       BaleInfoBubble.createInfoBubble(target, be.getName(), BaleInfoBubbleType.UNDEFINED, sp);
+	    else {
+	       BaleInfoBubble.createInfoBubble(target, be.getName(),
+		     BaleInfoBubbleType.NOIDENTIFIER, sp);
+	     }
+	    Action act = findAction(beepAction);
+	    if (act != null) act.actionPerformed(e);
+	    return;
+	  }
+
+	 if (doClassSearchAction(locs)) {
+	    goto_search_action.actionPerformed(e);
+	    return;
+	  }
+
+	 if (locs == null || locs.size() == 0) {
+	    BaleInfoBubble.createInfoBubble(target, be.getName(), BaleInfoBubbleType.REF, sp);
+	    Action act = findAction(beepAction);
+	    if (act != null) act.actionPerformed(e);
+	    return;
+	  }
+
+	 BaleBubbleStack.createBubbles(target,sp,null,false,BaleStackType.DROP_SOURCE,
+	       locs,BudaLinkStyle.STYLE_FLIP_REFERENCE);
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","GoToReference");
@@ -2993,16 +2993,16 @@ private static class GotoSearchAction extends TextAction {
       BaleDocument bd = target.getBaleDocument();
       int soff = target.getSelectionStart();
       int eoff = target.getSelectionEnd();
-   
+
       BumpClient bc = BumpClient.getBump();
       Collection<BumpLocation> locs = bc.findDefinition(null,
-        						   bd.getFile(),
-        						   bd.mapOffsetToEclipse(soff),
-        						   bd.mapOffsetToEclipse(eoff));
+							   bd.getFile(),
+							   bd.mapOffsetToEclipse(soff),
+							   bd.mapOffsetToEclipse(eoff));
       if (locs == null || locs.size() == 0) return;
-   
+
       handleSearchAction(e,locs);
-   
+
       BoardMetrics.noteCommand("BALE","GoToSearch");
     }
 
@@ -3242,29 +3242,29 @@ private static class QuickFixAction extends TextAction {
       int soff = target.getSelectionStart();
       List<BumpProblem> probs = bd.getProblemsAtLocation(soff);
       if (probs == null) return;
-   
+
       List<BaleFixer> fixes = new ArrayList<BaleFixer>();
       for (BumpProblem bp : probs) {
-         if (bp.getFixes() != null) {
-            for (BumpFix bf : bp.getFixes()) {
-               BaleFixer fixer = new BaleFixer(bp,bf);
-               if (fixer.isValid()) fixes.add(fixer);
-             }
-          }
+	 if (bp.getFixes() != null) {
+	    for (BumpFix bf : bp.getFixes()) {
+	       BaleFixer fixer = new BaleFixer(bp,bf);
+	       if (fixer.isValid()) fixes.add(fixer);
+	     }
+	  }
        }
       if (fixes.isEmpty()) return;
-   
+
       BaleFixer fix = null;
       if (fixes.size() == 1) fix = fixes.get(0);
       else {
-         Collections.sort(fixes);
-         Object [] fixalts = fixes.toArray();
-         fix = (BaleFixer) JOptionPane.showInputDialog(target,"Select Quick Fix","Quick Fix Selector",
-        						  JOptionPane.QUESTION_MESSAGE,
-        						  null,fixalts,fixes.get(0));
+	 Collections.sort(fixes);
+	 Object [] fixalts = fixes.toArray();
+	 fix = (BaleFixer) JOptionPane.showInputDialog(target,"Select Quick Fix","Quick Fix Selector",
+							  JOptionPane.QUESTION_MESSAGE,
+							  null,fixalts,fixes.get(0));
        }
       if (fix == null) return;
-   
+
       fix.actionPerformed(e);
       BoardMetrics.noteCommand("BALE","QuickFix");
    }
@@ -3274,13 +3274,13 @@ private static class QuickFixAction extends TextAction {
 
 
 private static class GotoNextErrorAction extends TextAction {
-   
+
    private static final long serialVersionUID = 1;
-   
+
    GotoNextErrorAction() {
       super("GotoNextError");
     }
-   
+
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane target = getBaleEditor(e);
       if (!checkReadEditor(target)) return;
@@ -3295,49 +3295,49 @@ private static class GotoNextErrorAction extends TextAction {
       BumpProblem best = null;
       int blno = -1;
       for (BumpProblem bp : probs) {
-         if (bp.getLine() > lno && bp.getLine() <= elno) {
-            if (blno < 0 || blno > bp.getLine()) {
-               blno = bp.getLine();
-               best = bp;
-             }
-          }
+	 if (bp.getLine() > lno && bp.getLine() <= elno) {
+	    if (blno < 0 || blno > bp.getLine()) {
+	       blno = bp.getLine();
+	       best = bp;
+	     }
+	  }
        }
       if (best == null) {
-         for (BumpProblem bp : probs) {
-            if (bp.getLine() >= slno) {
-               if (blno < 0 || blno > bp.getLine()) {
-                  blno = bp.getLine();
-                  best = bp;
-                }
-             }
-          }
+	 for (BumpProblem bp : probs) {
+	    if (bp.getLine() >= slno) {
+	       if (blno < 0 || blno > bp.getLine()) {
+		  blno = bp.getLine();
+		  best = bp;
+		}
+	     }
+	  }
        }
       if (best == null || blno < 0) return;
       int pos = bd.findLineOffset(blno);
       if (pos < 0) return;
-      
+
       bd.baleWriteLock();
       try {
-         target.setCaretPosition(pos);
-         target.scrollRectToVisible(SwingText.modelToView2D(target,pos));
-         BaleElement cur = bd.getCharacterElement(pos);
-         // might want to set cur to first non-space
-         if (cur == null) return;
-         if (cur.isElided()) {
-            cur.setElided(false);
-            bd.handleElisionChange();
-            target.increaseSizeForElidedElement(cur);
-            BoardMetrics.noteCommand("BALE","GotoErrorUnElision");
-            BaleEditorBubble.noteElision(target);
-          }
+	 target.setCaretPosition(pos);
+	 target.scrollRectToVisible(SwingText.modelToView2D(target,pos));
+	 BaleElement cur = bd.getCharacterElement(pos);
+	 // might want to set cur to first non-space
+	 if (cur == null) return;
+	 if (cur.isElided()) {
+	    cur.setElided(false);
+	    bd.handleElisionChange();
+	    target.increaseSizeForElidedElement(cur);
+	    BoardMetrics.noteCommand("BALE","GotoErrorUnElision");
+	    BaleEditorBubble.noteElision(target);
+	  }
        }
       catch (BadLocationException ex) { }
       finally {
-         bd.baleWriteUnlock();
-       }    
+	 bd.baleWriteUnlock();
+       }
     }
-   
-}       // end of inner class GotoNextErrorAction
+
+}	// end of inner class GotoNextErrorAction
 
 
 /********************************************************************************/
@@ -3360,7 +3360,7 @@ private static class CommentAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
-   
+
       BuenoFactory bf = BuenoFactory.getFactory();
       BuenoLocation bl = new CommentLocation(be,be.getSelectionStart());
       bf.createNew(new_type,bl,null);
@@ -3411,11 +3411,11 @@ private static class FixErrorsAction extends TextAction {
    FixErrorsAction() {
       super("FixErrorsInRegion");
       try {
-         Class<?> c = Class.forName("edu.brown.cs.bubbles.bfix.BfixFactory");
-         fix_method = c.getMethod("fixErrorsInRegion",BaleWindowDocument.class,int.class,int.class);
+	 Class<?> c = Class.forName("edu.brown.cs.bubbles.bfix.BfixFactory");
+	 fix_method = c.getMethod("fixErrorsInRegion",BaleWindowDocument.class,int.class,int.class);
       }
       catch (Exception e) { }
-   
+
     }
 
    @Override public void actionPerformed(ActionEvent e) {
@@ -3497,17 +3497,17 @@ private static class InferDeclarationAction extends TextAction {
 private static class PythonBackspaceAction extends TextAction {
 
    private static final long serialVersionUID = 1;
-   
+
    private transient Action use_backspace_action;
-   
+
    PythonBackspaceAction() {
       super("PythonBackspaceAction");
       use_backspace_action = null;
     }
-   
+
    @Override public void actionPerformed(ActionEvent e) {
       if (use_backspace_action == null) {
-         use_backspace_action = BaleEditorKit.findAction("BackspaceAction");
+	 use_backspace_action = BaleEditorKit.findAction("BackspaceAction");
        }
       BaleEditorPane target = BaleEditorKit.getBaleEditor(e);
       if (!BaleEditorKit.checkReadEditor(target)) return;
@@ -3515,35 +3515,35 @@ private static class PythonBackspaceAction extends TextAction {
       int soff = target.getSelectionStart();
       int lno = bd.findLineNumber(soff);
       int lsoff = bd.findLineOffset(lno);
-      
+
       boolean start = false;
       try {
-         if (lsoff == soff) start = true;
-         else {
-            String txt = bd.getText(lsoff,soff-lsoff);
-            txt = txt.trim();
-            if (txt.equals("")) start = true;
-          }
+	 if (lsoff == soff) start = true;
+	 else {
+	    String txt = bd.getText(lsoff,soff-lsoff);
+	    txt = txt.trim();
+	    if (txt.equals("")) start = true;
+	  }
        }
       catch (BadLocationException ex) { }
-      
+
       if (!start) {
-         use_backspace_action.actionPerformed(e);
-         return;
+	 use_backspace_action.actionPerformed(e);
+	 return;
        }
-      
+
       BaleIndenter bind = bd.getIndenter();
       int oind = bind.getCurrentIndentationAtOffset(soff);
       int tind = bind.getDesiredIndentation(soff);
-      
+
       if (tind != oind || oind == 0) {
-         use_backspace_action.actionPerformed(e);
-         return;
+	 use_backspace_action.actionPerformed(e);
+	 return;
        }
       int delta = bind.getUnindentSize();
       if (delta > oind) delta = oind;
       for (int i = 0; i < delta; ++i) {
-         use_backspace_action.actionPerformed(e);
+	 use_backspace_action.actionPerformed(e);
        }
     }
 
@@ -3602,31 +3602,31 @@ private static class PythonUnindentAction extends TextAction {
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Toggle editable <-> readonly                                            */
-/*                                                                              */
+/*										*/
+/*	Toggle editable <-> readonly						*/
+/*										*/
 /********************************************************************************/
 
 private static class ToggleEditableAction extends TextAction {
-   
+
    private static final long serialVersionUID = 1;
-   
+
    ToggleEditableAction() {
       super("ToggleEditableAction");
     }
-   
+
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane target = BaleEditorKit.getBaleEditor(e);
       if (!BaleEditorKit.checkReadEditor(target)) return;
       BaleDocument bd = target.getBaleDocument();
       if (bd instanceof BaleDocumentFragment) {
-         BaleDocumentFragment bdf = (BaleDocumentFragment) bd;
-         if (bdf.isEditable()) bdf.setEditable(false);
-         else bdf.setEditable(true);
+	 BaleDocumentFragment bdf = (BaleDocumentFragment) bd;
+	 if (bdf.isEditable()) bdf.setEditable(false);
+	 else bdf.setEditable(true);
        }
     }
-   
-}       // end of inner class ToggleEditableAction
+
+}	// end of inner class ToggleEditableAction
 
 
 

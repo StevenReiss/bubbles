@@ -2426,17 +2426,18 @@ private class FileData implements IBufferChangedListener {
 
    private void handleUpdate() {
       try {
-	 String cnts = comp_unit.getBuffer().getContents();
-	 String ocnts = working_unit.getBuffer().getContents();
-	 if (cnts.equals(ocnts)) return;
+         String cnts = comp_unit.getBuffer().getContents();
+         String ocnts = working_unit.getBuffer().getContents();
+         if (cnts.equals(ocnts)) return;
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem getting update information",e);
+         BedrockPlugin.logE("Problem getting update information",e);
+         return;
        }
-
+   
       if (default_buffer != null) default_buffer.removeBufferChangedListener(this);
       default_buffer = null;
-
+   
       setupDefaultBuffer();
       updateOnOpen();
     }

@@ -262,7 +262,7 @@ private class PathPanel extends EditPanel implements ActionListener, ListSelecti
        }
       else if (cmd.equals("Edit")) {
 	 BuenoPathEntry pe = path_display.getSelectedValue();
-	 if (pe == null) return;
+	 if (pe == null || pe.getBinaryPath() == null) return;
 	 BudaBubble bb = new EditLibraryPathEntryBubble(pe);
 	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
 	 BudaBubble rbb = BudaRoot.findBudaBubble(this);
@@ -408,7 +408,7 @@ private static final class BinaryFileFilter extends FileFilter {
 
    @Override public boolean accept(File f) {
       if (!f.isDirectory()) return false;
-
+   
       return true;
     }
 
@@ -418,6 +418,8 @@ private static final class BinaryFileFilter extends FileFilter {
 private class EditLibraryPathEntryBubble extends BudaBubble implements ActionListener {
 
    private BuenoPathEntry	for_path;
+   private JTextField file_field;
+   
    private static final long serialVersionUID = 1;
    
    EditLibraryPathEntryBubble(BuenoPathEntry pp) {
@@ -425,8 +427,18 @@ private class EditLibraryPathEntryBubble extends BudaBubble implements ActionLis
       SwingGridPanel pnl = new SwingGridPanel();
       pnl.beginLayout();
       pnl.addBannerLabel("Edit Project Path Entry");
-      pnl.addFileField("Directory",for_path.getSourcePath(),JFileChooser.DIRECTORIES_ONLY,null,null);
-      pnl.addBottomButton("Close","Close",this);
+      String path = for_path.getBinaryPath();
+      boolean isjar = path.endsWith(".jar");
+      if (isjar) {
+         FileFilter ff = new FileNameExtensionFilter("Jar Files","jar");
+         file_field = pnl.addFileField("Jar File",path,JFileChooser.FILES_AND_DIRECTORIES,
+               ff,null,null);
+       }
+      else {
+         file_field = pnl.addFileField("Directory",path,JFileChooser.DIRECTORIES_ONLY,null,null);
+       }
+      pnl.addBottomButton("Accept","Accept",this);
+      pnl.addBottomButton("Cancel","Cancel",this);
       pnl.addBottomButtons();
       setContentPane(pnl);
     }
@@ -434,12 +446,25 @@ private class EditLibraryPathEntryBubble extends BudaBubble implements ActionLis
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
       if (cmd.equals("Directory")) {
-	 JTextField tf = (JTextField) evt.getSource();
-	 for_path.setSourcePath(tf.getText());
-	 force_update = true;
+         JTextField tf = (JTextField) evt.getSource();
+         for_path.setBinaryPath(tf.getText());
+         force_update = true;
        }
-      else if (cmd.equals("Close")) {
-	 setVisible(false);
+      else if (cmd.equals("Jar File")) {
+         JTextField tf = (JTextField) evt.getSource();
+         for_path.setBinaryPath(tf.getText());
+         force_update = true;
+       }
+      else if (cmd.equals("Accept")) {
+         String path = file_field.getText();
+         if (path != null && !path.isEmpty()) {
+            for_path.setBinaryPath(path.trim());
+            force_update = true;
+          }
+         setVisible(false);
+       }
+      else if (cmd.equals("Cancel")) {
+         setVisible(false);
        }
     }
 
@@ -500,22 +525,22 @@ private class SourcePanel extends EditPanel implements ActionListener, ListSelec
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
       if (cmd.equals("New Source Directory")) {
-	 askForNew(new BinaryFileFilter(),JFileChooser.DIRECTORIES_ONLY);
+         askForNew(new BinaryFileFilter(),JFileChooser.DIRECTORIES_ONLY);
        }
       else if (cmd.equals("Edit")) {
-	 BuenoPathEntry pe = path_display.getSelectedValue();
-	 if (pe == null) return;
-	 BudaBubble bb = new EditSourcePathEntryBubble(pe);
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
-	 BudaBubble rbb = BudaRoot.findBudaBubble(this);
-	 if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement);
+         BuenoPathEntry pe = path_display.getSelectedValue();
+         if (pe == null) return;
+         BudaBubble bb = new EditSourcePathEntryBubble(pe);
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
+         BudaBubble rbb = BudaRoot.findBudaBubble(this);
+         if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement);
        }
       else if (cmd.equals("Delete")) {
-	 for (BuenoPathEntry pe : path_display.getSelectedValuesList()) {
-	    panel_paths.removeElement(pe);
-	    project_editor.getLibraryPaths().remove(pe);
-	  }
-	 force_update = true;
+         for (BuenoPathEntry pe : path_display.getSelectedValuesList()) {
+            panel_paths.removeElement(pe);
+            project_editor.getLibraryPaths().remove(pe);
+          }
+         force_update = true;
        }
       else BoardLog.logE("BUENO","Unknown path panel command " + cmd);
     }

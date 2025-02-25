@@ -1849,12 +1849,12 @@ private class SearchKeyHandler extends AbstractAction {
    
       BudaBubble focbub = getCurrentBubbleArea().getFocusBubble();
       if (focbub != null) {
-      Rectangle bubarea = focbub.getBounds();
-      SwingUtilities.convertRectangle(BudaRoot.this, bubarea, getCurrentBubbleArea());
-      if (from_bubble && bubarea.contains(pt) && focbub != search_bubble) {
-          if (!non_grouping) pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_NEAR_SPACE;
-          else pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_SPACE;
-          pt.y = bubarea.y;
+         Rectangle bubarea = focbub.getBounds();
+         SwingUtilities.convertRectangle(BudaRoot.this, bubarea, getCurrentBubbleArea());
+         if (from_bubble && bubarea.contains(pt) && focbub != search_bubble) {
+            if (!non_grouping) pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_NEAR_SPACE;
+            else pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_SPACE;
+            pt.y = bubarea.y;
           }
        }
    
