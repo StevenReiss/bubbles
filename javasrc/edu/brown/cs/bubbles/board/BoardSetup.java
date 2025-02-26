@@ -28,6 +28,7 @@ package edu.brown.cs.bubbles.board;
 import edu.brown.cs.ivy.exec.IvyExecQuery;
 import edu.brown.cs.ivy.exec.IvySetup;
 import edu.brown.cs.ivy.file.IvyFile;
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
@@ -2432,7 +2433,12 @@ public void checkResourceFile(String resfile) throws IOException
     }
    InputStream ins = new FileInputStream(f2);
    if (f1.exists()) {
-      ensurePropsDefined(resfile,ins);
+      try {
+         ensurePropsDefined(resfile,ins);
+       }
+      catch (Exception e) {
+         IvyLog.logE("BOARD","Problem loading resource file " + f2);
+       }
     }
    else {
       OutputStream ots = new FileOutputStream(f1);

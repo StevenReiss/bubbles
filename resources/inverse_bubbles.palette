@@ -35,7 +35,7 @@ Bdoc.ContextColor	:	0xfffef5ff
 Bcon.code.color	:	0x80f6f6ff
 Buda.BubbleNewColor	:	0x80c3ac00
 Buda.LinkColor	:	0xffffffff
-Bddt.attr.stdin.foreground	:	0xff008e8e
+Bddt.attr.stdin.foreground	:	0xff006464
 Bddt.InteractionColor	:	0xffa48700
 Bvcr.DiffFileInsert	:	0x8000a900
 Buda.BubbleBaseColor	:	0xff000000

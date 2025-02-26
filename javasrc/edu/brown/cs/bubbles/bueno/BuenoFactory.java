@@ -51,6 +51,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.zip.ZipEntry;
@@ -560,49 +561,51 @@ private static class TemplatePanel extends SwingGridPanel implements ActionListe
    TemplatePanel() {
       beginLayout();
       addBannerLabel("Choose Templates to Import");
-
+   
       String ws = BoardSetup.getSetup().getDefaultWorkspace();
       int idx = ws.lastIndexOf(File.separator);
       if (idx > 0) ws = ws.substring(idx+1);
-
+   
       forproject_field = null;
       target_project = null;
       BumpClient bc = BumpClient.getBump();
       Element projects = bc.getAllProjects();
       if (projects != null) {
-	 SortedSet<String> pset = new TreeSet<String>();
-	 pset.add(WORKSPACE_NAME);
-	 for (Element pe : IvyXml.children(projects,"PROJECT")) {
-	    String pnm = IvyXml.getAttrString(pe,"NAME");
-	    if (pnm.equals(ws)) continue;
-	    pset.add(pnm);
-	  }
-	 if (pset.size() > 1) {
-	    forproject_field = addChoice("Templates for Project",pset,pset.first(),null);
-	  }
-	 else if (pset.size() == 1) target_project = pset.first();
+         SortedSet<String> pset = new TreeSet<String>();
+         pset.add(WORKSPACE_NAME);
+         for (Element pe : IvyXml.children(projects,"PROJECT")) {
+            String pnm = IvyXml.getAttrString(pe,"NAME");
+            if (pnm.equals(ws)) continue;
+            pset.add(pnm);
+          }
+         if (pset.size() > 1) {
+            forproject_field = addChoice("Templates for Project",pset,pset.first(),null);
+          }
+         else if (pset.size() == 1) target_project = pset.first();
        }
-
+      
       file_field = addFileField("From File/Directory",(File) null,JFileChooser.FILES_AND_DIRECTORIES,null,null);
       File f1 = BoardSetup.getPropertyBase();
       File f2 = new File(f1,"templates");
       List<String> alts = new ArrayList<>();
       alts.add("Use File Specified Above");
-      if (f2 .exists() && f2.listFiles() != null) {
-	 for (File f3 : f2.listFiles()) {
-	    if (f3.isDirectory() && f3.listFiles() != null) {
-	       boolean fnd = false;
-	       for (File f4 : f3.listFiles()) {
-		  if (f4.isFile() && f4.getName().endsWith(".template")) {
-		     fnd = true;
-		   }
-		}
-	       if (fnd) alts.add(f3.getName());
-	     }
-	  }
+      if (f2.exists() && f2.listFiles() != null) {
+         Set<String> altset = new TreeSet<>();
+         for (File f3 : f2.listFiles()) {
+            if (f3.isDirectory() && f3.listFiles() != null) {
+               boolean fnd = false;
+               for (File f4 : f3.listFiles()) {
+                  if (f4.isFile() && f4.getName().endsWith(".template")) {
+                     fnd = true;
+                   }
+                }
+               if (fnd) altset.add(f3.getName());
+             }
+          }
+         alts.addAll(altset);
        }
       if (alts.size() > 1) {
-	 source_field = addChoice("Copy from Workspace ",alts,"None",null);
+         source_field = addChoice("Copy from Workspace ",alts,"None",null);
        }
       else source_field = null;
       addBottomButton("Import","IMPORT",this);

@@ -387,7 +387,16 @@ private Position createBasePosition(int foff) throws BadLocationException
 	 ourseg.offset = 0;
 	 ourseg.count = 0;
        }
-      System.arraycopy(text.array,text.offset,ourseg.array,ourseg.count,text.count);
+      if (text.array == null) {
+         BoardLog.logX("BALE","Attempt to copy from null source");
+       }
+      else if (ourseg.array == null) {
+         BoardLog.logX("BALE","Attempt to copy to null target");
+       }
+      else {
+         System.arraycopy(text.array,text.offset,
+               ourseg.array,ourseg.count,text.count);
+       }
       ourseg.count += text.count;
       if (xfg && ourseg.array[ourseg.count-1] != '\n') {
 	 ourseg.array[ourseg.count-1] = '\n';

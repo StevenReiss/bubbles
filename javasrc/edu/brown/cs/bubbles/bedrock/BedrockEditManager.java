@@ -2215,25 +2215,25 @@ private class FileData implements IBufferChangedListener {
 
    CompilationUnit getDefaultRoot(String bid) {
       if (last_ast != null) return last_ast;
-
+   
       try {
-	 CompilationUnit cu = null;
-	 int fgs = ICompilationUnit.FORCE_PROBLEM_DETECTION | ICompilationUnit.ENABLE_STATEMENTS_RECOVERY |
-	       ICompilationUnit.ENABLE_BINDINGS_RECOVERY;
-	 cu = working_unit.reconcile(java_version,fgs,copy_owner,null);
-	 if (cu != null && bid != null) {
-	    last_ast = cu;
-	  }
-	 return cu;
+         CompilationUnit cu = null;
+         int fgs = ICompilationUnit.FORCE_PROBLEM_DETECTION | ICompilationUnit.ENABLE_STATEMENTS_RECOVERY |
+               ICompilationUnit.ENABLE_BINDINGS_RECOVERY;
+         cu = working_unit.reconcile(java_version,fgs,copy_owner,null);
+         if (cu != null && bid != null) {
+            last_ast = cu;
+          }
+         return cu;
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem reconsiling working unit: " + e,e);
+         BedrockPlugin.logE("Problem reconsiling working unit: " + e,e);
        }
       catch (Throwable t) {
-	 BedrockPlugin.logE("Problem reconsiling working unit: " + t,t);
-	 BedrockPlugin.logD("Source: " + default_buffer.getText(0,default_buffer.getLength()));
+         BedrockPlugin.logE("Problem reconsiling working unit: " + t,t);
+         BedrockPlugin.logD("Source: " + default_buffer.getText(0,default_buffer.getLength()));
        }
-
+   
       return null;
     }
 
