@@ -361,7 +361,7 @@ private void setupDerbyServer()
    String dlib3 = bs.getLibraryPath("derbyclient.jar");
    String cp = dlib1 + File.pathSeparator + dlib2 + File.pathSeparator + dlib3;
 
-   File pbase = BoardSetup.getPropertyBase();								0l
+   File pbase = BoardSetup.getPropertyBase();	
 
    File flock = new File(pbase,"derby.lock");
    try {
