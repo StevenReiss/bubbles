@@ -655,94 +655,94 @@ private static class DefaultKeyAction extends TextAction {
       BaleDocument bd = target.getBaleDocument();
       bd.baleWriteLock();
       try {
-	 Dimension d0 = target.getSize();
-	 if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
-	 else d0 = target.getPreferredSize();
-
-	 String content = e.getActionCommand();
-	 String postcontent = null;
-	 int mod = e.getModifiers();
-	 if ((content != null) && (content.length() > 0) &&
-	       ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
-	    char c = content.charAt(0);
-	    int soff = target.getSelectionStart();
-	    int eoff = target.getSelectionEnd();
-
-	    if ((c >= 0x20) && (c != 0x7F)) {
-	       boolean overwrite = target.getOverwriteMode();
-	       if (soff == eoff && !overwrite) {
-		  if (language_kit.checkContent(content) &&
-			bd.checkTypeover(content,soff)) {
-		     overwrite = true;
-		   }
-		  else {
-		     postcontent = language_kit.getPostContent(content);
-		     if (postcontent != null &&
-			   BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_SPACES_ONLY)) {
-			String follow = null;
-			try {
-			   follow = target.getText(eoff,1);
-			 }
-			catch (BadLocationException ex) { }
-			if (follow != null && !Character.isWhitespace(follow.charAt(0))) {
-			   postcontent = null;
-			 }
-		      }
-		   }
-		}
-	       if (overwrite) {
-		  if (soff == target.getSelectionEnd()) {
-		     String prev = null;
-		     try {
-			prev = target.getText(soff,1);
-		      }
-		     catch (BadLocationException ex) { }
-		     eoff = soff+1;
-		     if (prev == null || prev.equals("\n"));
-		     else if (prev.equals("\t")) {
-			int cpos = bd.getColumnPosition(soff);
-			int npos = bd.getNextTabPosition(cpos);
-			StringBuilder buf = new StringBuilder();
-			for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
-			target.setSelectionEnd(eoff);
-			target.replaceSelection(buf.toString());
-			target.setSelectionStart(soff);
-			target.setSelectionEnd(eoff);
-		      }
-		     else target.setSelectionEnd(eoff);
-		   }
-		}
-	       if (soff != eoff) bd.handleReplaceTypeover(soff,eoff);
-
-	       target.replaceSelection(content);
-	       if (postcontent != null) {
-		  int off = target.getSelectionEnd();
-		  try {
-		     bd.insertString(off,postcontent,null);
-		   }
-		  catch (BadLocationException ex) { }
-		  bd.setCreatedTypeover(postcontent,off);
-		  target.setSelectionStart(off);
-		  target.setSelectionEnd(off);
-		}
-
-	       if (content != null && shouldAutoIndent(target,content,soff)) {
-		  // TODO: check that this is the only thing on the line
-		  indent_lines_action.actionPerformed(e);
-		}
-	       BaleCompletionContext ctx = target.getCompletionContext();
-	       if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
-		  new BaleCompletionContext(target,soff,c);
-		}
-
-	       if (d0 != null) {
-		  Dimension d1 = target.getPreferredSize();
-		  if (d1.height > d0.height) {
-		     target.increaseSize(1);
-		   }
-		}
-	     }
-	  }
+         Dimension d0 = target.getSize();
+         if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
+         else d0 = target.getPreferredSize();
+   
+         String content = e.getActionCommand();
+         String postcontent = null;
+         int mod = e.getModifiers();
+         if ((content != null) && (content.length() > 0) &&
+               ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
+            char c = content.charAt(0);
+            int soff = target.getSelectionStart();
+            int eoff = target.getSelectionEnd();
+   
+            if ((c >= 0x20) && (c != 0x7F)) {
+               boolean overwrite = target.getOverwriteMode();
+               if (soff == eoff && !overwrite) {
+        	  if (language_kit.checkContent(content) &&
+        		bd.checkTypeover(content,soff)) {
+        	     overwrite = true;
+        	   }
+        	  else {
+        	     postcontent = language_kit.getPostContent(content);
+        	     if (postcontent != null &&
+        		   BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_SPACES_ONLY)) {
+        		String follow = null;
+        		try {
+        		   follow = target.getText(eoff,1);
+        		 }
+        		catch (BadLocationException ex) { }
+        		if (follow != null && !Character.isWhitespace(follow.charAt(0))) {
+        		   postcontent = null;
+        		 }
+        	      }
+        	   }
+        	}
+               if (overwrite) {
+        	  if (soff == target.getSelectionEnd()) {
+        	     String prev = null;
+        	     try {
+        		prev = target.getText(soff,1);
+        	      }
+        	     catch (BadLocationException ex) { }
+        	     eoff = soff+1;
+        	     if (prev == null || prev.equals("\n"));
+        	     else if (prev.equals("\t")) {
+        		int cpos = bd.getColumnPosition(soff);
+        		int npos = bd.getNextTabPosition(cpos);
+        		StringBuilder buf = new StringBuilder();
+        		for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
+        		target.setSelectionEnd(eoff);
+        		target.replaceSelection(buf.toString());
+        		target.setSelectionStart(soff);
+        		target.setSelectionEnd(eoff);
+        	      }
+        	     else target.setSelectionEnd(eoff);
+        	   }
+        	}
+               if (soff != eoff) bd.handleReplaceTypeover(soff,eoff);
+   
+               target.replaceSelection(content);
+               if (postcontent != null) {
+        	  int off = target.getSelectionEnd();
+        	  try {
+        	     bd.insertString(off,postcontent,null);
+        	   }
+        	  catch (BadLocationException ex) { }
+        	  bd.setCreatedTypeover(postcontent,off);
+        	  target.setSelectionStart(off);
+        	  target.setSelectionEnd(off);
+        	}
+   
+               if (content != null && shouldAutoIndent(target,content,soff)) {
+                  // TODO: check that this is the only thing on the line
+                  indent_lines_action.actionPerformed(e);
+                }
+               BaleCompletionContext ctx = target.getCompletionContext();
+               if (ctx == null && isCompletionTrigger(c) && !target.getOverwriteMode()) {
+                  new BaleCompletionContext(target,soff,c);
+                }
+               
+               if (d0 != null) {
+                  Dimension d1 = target.getPreferredSize();
+                  if (d1.height > d0.height) {
+                     target.increaseSize(1);
+                   }
+                }
+             }
+          }
        }
       finally { bd.baleWriteUnlock(); }
    }
@@ -760,8 +760,10 @@ private static boolean shouldAutoIndent(BaleEditorPane target, String content, i
    if (content.equals("{")) return isFirstCharacter(target,pos);
    if (content.equals("}")) return isFirstCharacter(target,pos);
    if (content.equals("e")) return matchesText(target,pos,"case");
-   if (content.equals(":")) return matchesText(target,pos,"default:");
-   if (content.equals(":")) return matchesText(target,pos,"default :");
+   if (content.equals(":")) {
+      if (matchesText(target,pos,"default:")) return true;
+      return matchesText(target,pos,"default :");
+    }
    if (content.equals("s")) return matchesText(target,pos,"throws");
 
    return false;
@@ -1360,27 +1362,27 @@ private static class IndentLinesAction extends TextAction {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
       BaleDocument bd = be.getBaleDocument();
-
+   
       bd.baleWriteLock();
       try {
-	 int soff = be.getSelectionStart();
-	 int eoff = be.getSelectionEnd();
-
-	 int slno = bd.findLineNumber(soff);
-	 int elno = slno;
-	 if (eoff != soff) elno = bd.findLineNumber(eoff);
-	 if (elno < slno) {
-	    int x = elno;
-	    elno = slno;
-	    slno = x;
-	  }
-
-	 // might want to do a few lines at a time by puttins
-	 // separate tasks into Swing event queue?
-
-	 for (int i = slno; i <= elno; ++i) {
-	    bd.fixLineIndent(i);
-	  }
+         int soff = be.getSelectionStart();
+         int eoff = be.getSelectionEnd();
+   
+         int slno = bd.findLineNumber(soff);
+         int elno = slno;
+         if (eoff != soff) elno = bd.findLineNumber(eoff);
+         if (elno < slno) {
+            int x = elno;
+            elno = slno;
+            slno = x;
+          }
+   
+         // might want to do a few lines at a time by puttins
+         // separate tasks into Swing event queue?
+   
+         for (int i = slno; i <= elno; ++i) {
+            bd.fixLineIndent(i);
+          }
        }
       finally { bd.baleWriteUnlock(); }
     }

@@ -187,7 +187,7 @@ private boolean setupAccess()
       Class.forName(jdbc);
       BoardLog.logD("BNOTE",database_type + " database driver loaded");
       System.err.println("PROP: " + System.getProperty("derby.stream.error.field"));
-      System.err.println("PROP: " + System.getProperty("derby.stream.error.file")); 
+      System.err.println("PROP: " + System.getProperty("derby.stream.error.file"));
       File f1 = new File(System.getProperty("user.dir"));
       File f2 = new File(f1,"derby.log");
       f2.deleteOnExit();
@@ -263,15 +263,15 @@ Connection getLogDatabase()
 	 bnote_conn = DriverManager.getConnection(url,props);
        }
       catch (SQLException e) {
-         switch (database_type) {
-            case "derby" :
-            case "embed" :
-               BoardLog.logW("BNOTE","Problem creating database: " + e);
-               break;
-            default :
-               BoardLog.logE("BNOTE","Problem creating database: " + e,e);
-               break;
-          }
+	 switch (database_type) {
+	    case "derby" :
+	    case "embed" :
+	       BoardLog.logW("BNOTE","Problem creating database: " + e);
+	       break;
+	    default :
+	       BoardLog.logE("BNOTE","Problem creating database: " + e,e);
+	       break;
+	  }
       }
     }
    else {
@@ -295,8 +295,8 @@ Connection getLogDatabase()
 	 bnote_conn = DriverManager.getConnection(url,props);
        }
       catch (SQLException e) {
-	 BoardLog.logE("BNOTE","Problem creating log database for " + database_type + 
-               " " + durl + " " + url,e);
+	 BoardLog.logE("BNOTE","Problem creating log database for " + database_type +
+	       " " + durl + " " + url,e);
       }
     }
 
@@ -361,7 +361,7 @@ private void setupDerbyServer()
    String dlib3 = bs.getLibraryPath("derbyclient.jar");
    String cp = dlib1 + File.pathSeparator + dlib2 + File.pathSeparator + dlib3;
 
-   File pbase = BoardSetup.getPropertyBase();
+   File pbase = BoardSetup.getPropertyBase();								0l
 
    File flock = new File(pbase,"derby.lock");
    try {
