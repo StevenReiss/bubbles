@@ -90,7 +90,6 @@ private static final String NAME_PAT = "\\p{Alpha}\\w*";
 /*                                                                              */
 /********************************************************************************/
 
-
 BuenoGenericProject(Element xml)
 {
    project_data = xml;

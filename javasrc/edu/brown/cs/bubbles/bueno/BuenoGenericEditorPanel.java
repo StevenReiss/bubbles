@@ -507,7 +507,7 @@ private class SourcePanel extends EditPanel implements ActionListener, ListSelec
       edit_button = new JButton("Edit");
       edit_button.addActionListener(this);
       addGBComponent(edit_button,1,y++,1,1,0,0);
-      if (IvyXml.getAttrBool(tab_xml,"MULTIPLE")) {
+      if (IvyXml.getAttrBool(tab_xml,"MULTIPLE") || panel_paths.getSize() > 1) {
          delete_button = new JButton("Delete");
          delete_button.addActionListener(this);
          addGBComponent(delete_button,1,y++,1,1,0,0);
@@ -582,22 +582,23 @@ private class EditSourcePathEntryBubble extends BudaBubble implements ActionList
       for_path = pp;
       source_patterns = new SwingListSet<>();
       for (String s : pp.getExcludes()) {
-	 source_patterns.addElement(new SourcePattern(s,true));
+         source_patterns.addElement(new SourcePattern(s,true));
        }
       for (String s : pp.getIncludes()) {
-	 source_patterns.addElement(new SourcePattern(s,false));
+         source_patterns.addElement(new SourcePattern(s,false));
        }
-
+   
       SwingGridPanel pnl = new SwingGridPanel();
       pnl.beginLayout();
       pnl.addBannerLabel("Edit Project Source Entry");
       pnl.addFileField("Directory",for_path.getSourcePath(),JFileChooser.DIRECTORIES_ONLY,null,null);
       if (IvyXml.getAttrBool(tab_xml,"SUBDIRS")) {
-	 pnl.addBoolean("Include Subdirectories",for_path.isRecursive(),this);
+         pnl.addBoolean("Include Subdirectories",for_path.isRecursive(),this);
        }
+      pnl.addSectionLabel("Inclusion/Exclusion Patterns:");
       pattern_panel = new PatternPanel(for_path,source_patterns);
       pnl.addLabellessRawComponent("PATTERNS",pattern_panel,true,true);
-
+   
       pnl.addBottomButton("Close","Close",this);
       pnl.addBottomButtons();
       setContentPane(pnl);
@@ -606,15 +607,15 @@ private class EditSourcePathEntryBubble extends BudaBubble implements ActionList
    @Override public void actionPerformed(ActionEvent evt) {
       String cmd = evt.getActionCommand();
       if (cmd.equals("Directory")) {
-	 JTextField tf = (JTextField) evt.getSource();
-	 for_path.setSourcePath(tf.getText());
+         JTextField tf = (JTextField) evt.getSource();
+         for_path.setSourcePath(tf.getText());
        }
       else if (cmd.equals("Include Subdirectories")) {
-	 JCheckBox cbx = (JCheckBox) evt.getSource();
-	 for_path.setUseSubdirs(cbx.isSelected());
+         JCheckBox cbx = (JCheckBox) evt.getSource();
+         for_path.setUseSubdirs(cbx.isSelected());
        }
       else if (cmd.equals("Close")) {
-	 setVisible(false);
+         setVisible(false);
        }
     }
 

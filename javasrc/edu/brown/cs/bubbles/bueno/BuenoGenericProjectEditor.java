@@ -79,6 +79,7 @@ BuenoGenericProjectEditor(Element edata,Element projdata)
    initial_paths = new HashSet<>();
    
    Element cxml = IvyXml.getChild(project_data,"RAWPATH");
+   if (cxml == null) cxml = IvyXml.getChild(project_data,"CLASSPATH");
    if (cxml == null) cxml = project_data;
    for (Element e : IvyXml.children(cxml,"PATH")) {
       BuenoPathEntry pe = new BuenoPathEntry(e);

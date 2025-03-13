@@ -307,7 +307,7 @@ private void addGenericButtons(BudaBubble bb,Point where,JPopupMenu menu,String 
        }
       if (loc.getPackage() != null && clsloc == null) clsloc = loc;
     }
-   else if (forname.getNameType() != BassNameType.PROJECT) {
+   else if (forname != null && forname.getNameType() != BassNameType.PROJECT) {
       BuenoLocation loc = new BassNewLocation(forname,false,false);
       memblocs.add(new BassNewLocation(forname,false,true));
       memblocs.add(new BassNewLocation(forname,true,false));
