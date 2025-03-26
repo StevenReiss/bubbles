@@ -433,11 +433,11 @@ private class RunAndWait implements BumpProblemHandler {
    @Override public void handleProblemsDone() {
       BoardLog.logD("BFIX","Problems done " + num_waits);
       if (--num_waits > 0) {
-	 return;
+         return;
        }
       synchronized (this) {
-	 is_done = true;
-	 notifyAll();
+         is_done = true;
+         notifyAll();
       }
       BumpClient.getBump().removeProblemHandler(this);
    }

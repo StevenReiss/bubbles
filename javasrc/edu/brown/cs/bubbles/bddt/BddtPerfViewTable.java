@@ -48,6 +48,7 @@ import org.w3c.dom.Element;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -56,6 +57,7 @@ import javax.swing.RowSorter;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -74,6 +76,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -112,6 +115,8 @@ private static final Class<?> [] COLUMN_CLASS = new Class<?>[] {
    String.class, String.class, String.class, Integer.class, Double.class, Double.class,
    Double.class, Double.class
 };
+
+private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.000");
 
 
 
@@ -383,6 +388,7 @@ private class PerfTable extends JTable implements BudaConstants.BudaBubbleOutput
          TableColumn tc = e.nextElement();
          tc.setHeaderRenderer(new HeaderDrawer(getTableHeader().getDefaultRenderer()));
        }
+      setDefaultRenderer(Double.class,new PerfDoubleRenderer());
       cell_drawer = new CellDrawer[getColumnModel().getColumnCount()];
       setToolTipText("");
       setAutoCreateRowSorter(true);
@@ -439,7 +445,21 @@ private class PerfTable extends JTable implements BudaConstants.BudaBubbleOutput
 }	// end of inner class PerfTable
 
 
-
+private class PerfDoubleRenderer extends DefaultTableCellRenderer.UIResource {
+   
+   PerfDoubleRenderer() {
+      super();
+      setHorizontalAlignment(JLabel.RIGHT);
+    }
+   
+   public void setValue(Object value) {
+      if (value == null) setText("");
+      else {
+         setText(NUMBER_FORMAT.format(value));
+       }
+    }
+   
+}
 
 /********************************************************************************/
 /*										*/
@@ -483,12 +503,12 @@ private static class CellDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-							       boolean foc,int r,int c) {
+        						       boolean foc,int r,int c) {
       Class<?> cc = COLUMN_CLASS[c];
       if (v != null && !cc.isAssignableFrom(v.getClass())) {
-	 System.err.println("Handle bad object");
+         System.err.println("Handle bad object");
        }
-
+   
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       cmp.setOpaque(false);
       return cmp;
@@ -557,7 +577,6 @@ private class PerfModel extends AbstractTableModel {
          case 3 :			// line
             return pn.getLineNumber();
          case 4 :
-   //       if (row == 1) System.err.println("BASE: " + pn.getBaseCount());
             return pn.getBaseCount()* getBaseTime()/getBaseSamples();
          case 5 :
             return 100 * pn.getBaseCount() / getBaseSamples();

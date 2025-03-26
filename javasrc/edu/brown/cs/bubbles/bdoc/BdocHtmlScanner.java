@@ -22,7 +22,9 @@
 
 package edu.brown.cs.bubbles.bdoc;
 
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import edu.brown.cs.bubbles.board.BoardLog;
+import edu.brown.cs.ivy.file.IvyFile;
 
 class BdocHtmlScanner implements BdocConstants
 {
@@ -45,12 +48,26 @@ class BdocHtmlScanner implements BdocConstants
 static List<BdocReference> scanIndex(URI u,BdocRepository repo,String project,boolean opt)
 {
    List<BdocReference> rslt = new ArrayList<>();
+   String text = null;
    Document doc = null;
    try {
-      doc = Jsoup.parse(u.toURL(),10000);
+      // this is more reliable than using Jsoup.parse on a URL for some reason
+      URL url = u.toURL();
+      InputStream ins = url.openStream();
+      text = IvyFile.loadFile(ins);
+      doc = Jsoup.parse(text);
     }
-   catch (Throwable e) { 
-      if (!opt) BoardLog.logE("BDOC","Problem scanning index " + u,e);
+   catch (Throwable t) {
+      if (!opt) BoardLog.logE("BDOC","Problem scanning index " + u,t);
+    }
+   
+   if (doc == null) {
+      try {
+         doc = Jsoup.parse(u.toURL(),100000);
+       }
+      catch (Throwable e) { 
+         if (!opt) BoardLog.logE("BDOC","Problem scanning index " + u,e);
+       }
     }
    if (doc == null) return rslt;
    
@@ -67,6 +84,7 @@ static List<BdocReference> scanIndex(URI u,BdocRepository repo,String project,bo
        }
       if (refurl == null) continue;
       reftitle = el.text();
+
       for (Element eld = el.nextElementSibling(); eld !=  null; eld = eld.nextElementSibling()) {
          if (eld.tagName().equals("dd")) {
             refdesc = eld.text();
