@@ -84,7 +84,6 @@ static List<BdocReference> scanIndex(URI u,BdocRepository repo,String project,bo
        }
       if (refurl == null) continue;
       reftitle = el.text();
-
       for (Element eld = el.nextElementSibling(); eld !=  null; eld = eld.nextElementSibling()) {
          if (eld.tagName().equals("dd")) {
             refdesc = eld.text();

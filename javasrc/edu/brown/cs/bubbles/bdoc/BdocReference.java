@@ -147,14 +147,15 @@ private static DescriptionData [] prefix_set = new DescriptionData [] {
 /*										*/
 /********************************************************************************/
 
-BdocReference(BdocRepository br,String proj,URI base,String ref,String desc) throws BdocException
+BdocReference(BdocRepository br,String proj,URI base,String ref,String desc0) throws BdocException
 {
    for_repository = br;
    for_project = proj;
    ref = ref.replace(" ","+");
 
    ref_url = base.resolve(ref);
-
+   String desc = desc0;
+   
    int idx = desc.indexOf("-");
    if (idx < 0) throw new BdocException("No break found in reference name");
    String local = desc.substring(0,idx).trim();
@@ -354,7 +355,13 @@ private void setName(String lcl,String inside,String ref) throws BdocException
 /********************************************************************************/
 
 @Override public String getProject()		{ return null; }
-@Override protected String getSymbolName()	{ return BDOC_DOC_PREFIX + bdoc_name; }
+
+@Override protected String getSymbolName()	
+{ 
+   if (name_parameters != null) return BDOC_DOC_PREFIX + bdoc_name + name_parameters;
+   return BDOC_DOC_PREFIX + bdoc_name; 
+}
+
 @Override protected String getParameters()	{ return name_parameters; }
 
 @Override protected String getKey()
