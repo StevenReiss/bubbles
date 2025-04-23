@@ -753,6 +753,7 @@ private static class OptionFont extends BoppOptionBase implements ActionListener
    @Override public void reset() {
       if (font_chooser != null) font_chooser.setFont(getFontValue(),getColorValue());
     }
+   
 }	// end of inner class OptionFont
 
 

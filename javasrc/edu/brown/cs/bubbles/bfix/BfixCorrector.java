@@ -304,44 +304,65 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
 	 else totry.add(bp);
       }
 
-      if (totry.isEmpty() && sytletry.isEmpty()) return;
-
-      boolean fnd = false;
-      for (BumpProblem bp : totry) {
-	 BoardLog.logD("BFIX","Work on problem in region " + bp);
-	 RegionFixer fx = new RegionFixer(bp);
-	 checkProblemFixable(fx);
-	 BfixRunnableFix rslt = fx.waitForDone();
-	
-	 if (rslt != null) {
-	    BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
-	    RunAndWait rw = new RunAndWait(rslt,1);
-	    rw.runFix();
-	    done.add(bp);
-	    if (rw.waitForDone()) {
-	       fnd = true;
-	       break;
-	     }
-	  }
-      }
-      for (BumpProblem bp : sytletry) {
-	 BoardLog.logD("BFIX","Work on style problem in region " + bp);
-	 BfixRunnableFix rslt = checkStyleProblemFixable(bp,force);
-	 if (rslt != null) {
-	    BoardLog.logD("BFIX","Starting style fix");
-	    BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
-	    RunAndWait rw = new RunAndWait(rslt,2);
-	    rw.runFix();
-	    done.add(bp);
-	    if (rw.waitForDone()) {
-	       fnd = true;
-	       break;
-	     }
-	  }	
+      if (totry.isEmpty() && sytletry.isEmpty()) {
+         BoardLog.logD("BFIX","No problems found to fix " + done.size() + " " + probs.size());
+         return;
        }
+
+      boolean fnd = fixRegionProblems(totry,done);
+      if (fnd) continue;
+      fnd = fixRegionStyleProblems(sytletry,force,done);
       if (!fnd) return;
+      BoardLog.logD("BFIX","No fixes succeeded " + done.size() + " " + totry.size() + " " +
+            sytletry.size());
       // need to wait for errors to change here
+      // might need to clear done here of problems that weren't actually fixed but might be affected by others
     }
+}
+
+
+
+private boolean fixRegionProblems(List<BumpProblem> probs,Set<BumpProblem> done)
+{
+   for (BumpProblem bp : probs) {
+      BoardLog.logD("BFIX","Work on problem in region " + bp);
+      RegionFixer fx = new RegionFixer(bp);
+      checkProblemFixable(fx);
+      BfixRunnableFix rslt = fx.waitForDone();
+      
+      if (rslt != null) {
+         BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
+         RunAndWait rw = new RunAndWait(rslt,1);
+         rw.runFix();
+         done.add(bp);
+         if (rw.waitForDone()) {
+            return true;
+          }
+       }
+    }
+   return false;
+}
+
+
+private boolean fixRegionStyleProblems(List<BumpProblem> probs,boolean force,
+      Set<BumpProblem> done) 
+{
+   for (BumpProblem bp : probs) {
+      BoardLog.logD("BFIX","Work on style problem in region " + bp);
+      BfixRunnableFix rslt = checkStyleProblemFixable(bp,force);
+      if (rslt != null) {
+         BoardLog.logD("BFIX","Starting style fix");
+         BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
+         RunAndWait rw = new RunAndWait(rslt,2);
+         rw.runFix();
+         done.add(bp);
+         if (rw.waitForDone()) {
+            return true;
+          }
+       }	
+    }
+   
+   return false;
 }
 
 

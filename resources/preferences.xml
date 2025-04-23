@@ -396,7 +396,7 @@
 	<OPT NAME='Buda.search.multiple' DESCRIPTION='Allow multiple search dialogs' TYPE='BOOLEAN' >
 	    <TAB NAME='Overall Drawing Options' />
 	    <KEYWORD TEXT='search' />
-	</OPT>
+	  </OPT>
 	<OPT NAME='Buda.tooltip.background' DESCRIPTION='Tool tip background color' TYPE='COLOR'>
 	    <TAB NAME='Overall Drawing Options' />
 	    <KEYWORD TEXT='tool' />
@@ -453,6 +453,11 @@
 	    <KEYWORD TEXT='help' />
 	</OPT>
 	<OPT NAME="Buda.help.font" DESCRIPTION="Default font in help bubbles" TYPE="FONT">
+	    <TAB NAME="Font Options"/>
+	    <TAB NAME="Bubble Config"/>
+	    <KEYWORD TEXT="Font" />
+	</OPT>
+	<OPT NAME="Buda.menu.font" DESCRIPTION="Default font in main menu" TYPE="FONT">
 	    <TAB NAME="Font Options"/>
 	    <TAB NAME="Bubble Config"/>
 	    <KEYWORD TEXT="Font" />

@@ -511,6 +511,7 @@ Font	BUBBLE_TOOLTIP_FONT = BoardFont.getFont(Font.MONOSPACED,Font.PLAIN,9);
 /**
  *	Font to be used in the popup-menu
  **/
+String  BUBBLE_MENU_FONT_NAME = "Buda.menu.font";
 Font	BUBBLE_MENU_FONT = BoardFont.getFont(Font.SANS_SERIF,Font.BOLD,9);
 
 

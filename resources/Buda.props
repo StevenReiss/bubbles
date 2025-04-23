@@ -15,6 +15,7 @@
 <entry key="Buda.close.ask">true</entry>
 <entry key="Buda.close.save">true</entry>
 <entry key="Buda.tooltip.font">Monospaced/0/11</entry>
+<entry key="Buda.menu.font">SansSerif/1/9</entry>
 <entry key="Buda.placement.user.initial">2000</entry>
 <entry key="Buda.placement.user.moved">500</entry>
 <entry key="Buda.placement.user">true</entry>

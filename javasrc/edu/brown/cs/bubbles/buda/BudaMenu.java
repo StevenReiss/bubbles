@@ -50,6 +50,7 @@ import javax.swing.ToolTipManager;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -461,8 +462,9 @@ private class MenuBtn extends JMenuItem implements MenuComponent, ActionListener
       for_item = mi;
       start_point = pt;
       BoardColors.setColors(this,BUDA_MENU_BACKGROUND_COLOR_PROP);
-      setFont(BUBBLE_MENU_FONT);
-      ToolTipManager.sharedInstance().registerComponent(this);
+      Font ft = BUDA_PROPERTIES.getFont(BUBBLE_MENU_FONT_NAME,BUBBLE_MENU_FONT);
+      setFont(ft);
+      ToolTipManager.sharedInstance().registerComponent(this); 
       // setContentAreaFilled(false);
       // enabling this cause the buttons to be green on the mac
       // setBorderPainted(false);
