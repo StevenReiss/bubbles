@@ -1561,6 +1561,7 @@ void handleDelete(String proj,String what,String path)
    FileData fd = null;
    IProject ip = our_plugin.getProjectManager().findProject(proj);
    IJavaProject ijp = JavaCore.create(ip);
+   
 
    if (what.equals("PROJECT")) {
       if (ip == null) throw new BedrockException("Can't find project to delete");
@@ -1607,6 +1608,13 @@ void handleDelete(String proj,String what,String path)
       if (ifr == null) throw new BedrockException("Can't find package to delete");
       rs = ifr.getResource();
     }
+   
+   if (fd != null) {
+      // do this before we do the remove or we get model errors on the update
+      BedrockPlugin.logD("Remove file from file_map " + fd.getFileName());
+      fd.noteDeleted();
+      file_map.remove(fd.getFileName());
+    }
 
    if (rs != null) {
       BedrockPlugin.logD("Delete resource " + rs);
@@ -1622,8 +1630,8 @@ void handleDelete(String proj,String what,String path)
 
    if (fd != null) {
       String file = fd.getFileName();
-      fd.noteDeleted();
-      file_map.remove(file);
+//    fd.noteDeleted();
+//    file_map.remove(file);
       IvyXmlWriter xw = our_plugin.beginMessage("RESOURCE");
       xw.begin("DELTA");
       xw.field("KIND","REMOVED");

@@ -234,12 +234,15 @@ void getAllBreakpoints(IvyXmlWriter xw)
 /*										*/
 /********************************************************************************/
 
-void setLineBreakpoint(String proj,String bid,String filename,String cls,int lineno,
+boolean setLineBreakpoint(String proj,String bid,String filename,String cls,int lineno,
 			  boolean suspvm,boolean trace)
 	throws BedrockException
 {
-   if (filename == null || lineno < 0)
-      throw new BedrockException("Bad line breakpoint parameters");
+   if (filename == null || lineno < 0) {
+      BedrockPlugin.logD("Bad line breakpoint parameters");
+      return false;
+    }
+      
 
    our_plugin.getEditManager().updateSingleFile(filename);
 
@@ -250,7 +253,10 @@ void setLineBreakpoint(String proj,String bid,String filename,String cls,int lin
       proj = null;
       file = our_plugin.getProjectManager().getProjectFile(null,filename);
     }
-   if (file == null) throw new BedrockException("Invalid file handle " + filename);
+   if (file == null) {
+      BedrockPlugin.logD("Invalid file handle for breakpoint " + filename);
+      return false;
+    }
 
    ICompilationUnit icu = our_plugin.getCompilationUnit(proj,filename);
 
@@ -269,7 +275,10 @@ void setLineBreakpoint(String proj,String bid,String filename,String cls,int lin
     }
 
    lineno = validateLine(bid,proj,filename,lineno);
-   if (lineno < 0) throw new BedrockException("Breakpoint does not correspond to valid code");
+   if (lineno < 0) {
+      BedrockPlugin.logD("Breakpoint does not correspond to valid code");
+      return false;
+    }
    Map<String,Object> attrs = null;
    if (trace) {
       attrs = new HashMap<String,Object>();
@@ -289,6 +298,8 @@ void setLineBreakpoint(String proj,String bid,String filename,String cls,int lin
     }
    
    saveBreakpoints();
+   
+   return true;
 }
 
 
