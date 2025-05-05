@@ -398,7 +398,7 @@ private Position createBasePosition(int foff) throws BadLocationException
                ourseg.array,ourseg.count,text.count);
        }
       ourseg.count += text.count;
-      if (xfg && ourseg.array[ourseg.count-1] != '\n') {
+      if (xfg && ourseg.array[ourseg.count-1] != '\n' && ourseg.count > 0) {
 	 ourseg.array[ourseg.count-1] = '\n';
        }
       if (ourseg.count == len) break;

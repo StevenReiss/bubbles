@@ -949,6 +949,10 @@ public void handlePopupMenu(MouseEvent e)		{ }
 
 @Override public Dimension getPreferredSize()
 {
+   if (content_pane == null) {
+      return new Dimension(100,100);
+    }
+   
    Dimension d = content_pane.getPreferredSize();
 
    d.width += 2 * border_width;

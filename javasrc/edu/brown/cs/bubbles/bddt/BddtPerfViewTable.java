@@ -31,6 +31,7 @@ import edu.brown.cs.bubbles.bass.BassFactory;
 import edu.brown.cs.bubbles.bass.BassName;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardFileSystemView;
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMouser;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
@@ -506,7 +507,9 @@ private static class CellDrawer implements TableCellRenderer {
         						       boolean foc,int r,int c) {
       Class<?> cc = COLUMN_CLASS[c];
       if (v != null && !cc.isAssignableFrom(v.getClass())) {
-         System.err.println("Handle bad object");
+         BoardLog.logX("BDDT","Wrong data type for column " + c + " " + cc + " " +
+               v + " " + v.getClass());
+         v = null;
        }
    
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
