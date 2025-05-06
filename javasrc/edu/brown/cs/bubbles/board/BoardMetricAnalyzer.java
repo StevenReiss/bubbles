@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 
 public final class BoardMetricAnalyzer implements BoardConstants {
@@ -149,6 +150,14 @@ private void scanArgs(String [] args)
                use_commands = true;
                analyzer_set.add(new SeedeAnalysis());
                break;
+            case "STATS" :
+               use_commands = true;
+               use_config = false;
+               analyzer_set.add(new EditRegionAnalysis());
+	       analyzer_set.add(new UserCorrectionAnalysis());
+	       analyzer_set.add(new AutoCorrectionAnalysis());
+               analyzer_set.add(new CommandUsageAnalysis());
+               break;
 	    default :
 	       badArgs();
 	       break;
@@ -175,7 +184,7 @@ private void scanArgs(String [] args)
 
 private void badArgs()
 {
-   System.err.println("BoardMetrixAnalyzer --analysis {AUTOFIX} <find options>");
+   System.err.println("BoardMetrixAnalyzer --analysis {AUTOFIX|SEEDE|STATS} <find options>");
    System.exit(1);
 }
 
@@ -206,53 +215,65 @@ private void process()
    try {
       BufferedReader ins = getReader();
       for ( ; ; ) {
-	 String ln = ins.readLine();
-	 if (ln == null) break;
-	 if (ln.length() == 0) continue;
-	 if (ln.startsWith(pfx)) {
-	    String id = ln.substring(pfx.length());
-	    int idx = id.indexOf("/");
-	    int idx1 = id.indexOf("/",idx+1);
-	    String sess = id.substring(0,idx1);
-	    if (session != null && sess.equals(session)) continue;
-	    for (Analyzer anal : analyzer_set) {
-	       anal.startSession(sess,id);
-	     }
-	    output_writer.println("ENDSESSION");
-	    lastactive = 0;
-	    session = sess;
-	  }
-	 else if (Character.isDigit(ln.charAt(0))) continue;
-	 else {
-	    String [] data = ln.split(",");
-	    long time = Long.parseLong(data[data.length-1]);
-	    String [] args;
-	    if (data.length == 2) {
-	       args = new String [0];
-	     }
-	    else {
-	       String s = data[1];
-	       for (int i = 2; i < data.length-1; ++i) {
-		  s = s + "_" + data[i];
-		}
-	       args = s.split("_");
-	     }
-	    if (data[0].equals("ACTIVE")) {
-	       if (args[0].equals("inactive.start")) lastactive = time;
-	       else if (args[0].equals("inactive.end") && lastactive > 0) {
-		  long delta = time - lastactive;
-		  lastactive = 0;
-		  for (Analyzer anal : analyzer_set) {
-		     anal.inactive(delta,time);
-		   }
-		}
-	     }
-	    else {
-	       for (Analyzer anal : analyzer_set) {
-		  anal.processLine(data[0],args,time);
-		}
-	     }
-	  }
+         try {
+            String ln = ins.readLine();
+            if (ln == null) break;
+            if (ln.length() == 0) continue;
+            char ch0 = ln.charAt(0);
+            if (Character.isDigit(ch0)) continue;
+            if (ln.startsWith(pfx)) {
+               String id = ln.substring(pfx.length());
+               int idx = id.indexOf("/");
+               int idx1 = id.indexOf("/",idx+1);
+               String sess = id.substring(0,idx1);
+               if (session != null && sess.equals(session)) continue;
+               for (Analyzer anal : analyzer_set) {
+                  anal.startSession(sess,id);
+                }
+               output_writer.println("ENDSESSION");
+               lastactive = 0;
+               session = sess;
+             }
+            else if (Character.isDigit(ln.charAt(0))) continue;
+            else {
+               String [] data = ln.split(",");
+               String timestr = data[data.length-1];
+               if (timestr == null || timestr.isEmpty()) continue;
+               if (!Character.isDigit(timestr.charAt(0))) continue;
+               long time = Long.parseLong(data[data.length-1]);
+               String [] args;
+               if (data.length == 2) {
+                  args = new String [0];
+                }
+               else {
+                  String s = data[1];
+                  for (int i = 2; i < data.length-1; ++i) {
+                     s = s + "_" + data[i];
+                   }
+                  args = s.split("_");
+                }
+               if (data[0].equals("ACTIVE")) {
+                  if (args[0].equals("inactive.start")) lastactive = time;
+                  else if (args[0].equals("inactive.end") && lastactive > 0) {
+                     long delta = time - lastactive;
+                     lastactive = 0;
+                     for (Analyzer anal : analyzer_set) {
+                        anal.inactive(delta,time);
+                      }
+                   }
+                }
+               else {
+                  for (Analyzer anal : analyzer_set) {
+                     anal.processLine(data[0],args,time);
+                   }
+                }
+             }
+          }
+         catch (Throwable t) {
+            System.err.println("Problem processing file " + t);
+            t.printStackTrace();
+            continue;
+          }
        }
       for (Analyzer anal : analyzer_set) {
 	 anal.finish();
@@ -288,6 +309,9 @@ private BufferedReader getReader() throws IOException
    for ( ; ; ) {
       String fn = br.readLine();
       if (fn == null) break;
+      if (fn.length() == 0) continue;
+      char ch0 = fn.charAt(0);
+      if (Character.isDigit(ch0)) continue;
       allfiles.add(fn);
     }
    br.close();
@@ -336,16 +360,22 @@ private static final class FileSorter implements Comparator<String> {
       String [] f1arg = f1.substring(idx1+1).split("_");
       String [] f2arg = f2.substring(idx2+1).split("_");
       for (int i = 0; i < f1arg.length; ++i) {
-	 if (i != 1) {
-	    cmp = f1arg[i].compareTo(f2arg[i]);
-	    if (cmp != 0) return cmp;
-	  }
-	 else {
-	    int v1 = Integer.parseInt(f1arg[i]);
-	    int v2 = Integer.parseInt(f2arg[i]);
-	    if (v1 < v2) return -1;
-	    else if (v1 > v2) return 1;
-	  }
+         if (i != 1) {
+            cmp = f1arg[i].compareTo(f2arg[i]);
+            if (cmp != 0) return cmp;
+          }
+         else {
+            try {
+               int v1 = Integer.parseInt(f1arg[i]);
+               int v2 = Integer.parseInt(f2arg[i]);
+               if (v1 < v2) return -1;
+               else if (v1 > v2) return 1;
+             }
+            catch (NumberFormatException e) {
+               cmp = f1arg[i].compareTo(f2arg[i]);
+               if (cmp != 0) return cmp;
+             }
+          }
        }
       return 0;
     }
@@ -460,6 +490,36 @@ private class EditRegionAnalysis extends Analyzer {
    @Override public void processLine(String src,String [] cmd,long time) {
       if (src.equals("BURP") && cmd.length == 5 && cmd[0].equals("edit")) {
          String what = cmd[1];
+         int dir = 0;
+         switch (what) {
+            case "addition" :
+               dir = 1;
+               break;
+            case "deletion" :
+               dir = -1;
+               break;
+            case "style change" :
+            case "stylechange" :
+               return;
+            default :
+               // System.err.println("UNKNOWN EDIT COMMAND " + what);
+               return;
+          }
+         String id = cmd[2];
+         int len = Integer.parseInt(cmd[3]);
+         int pos = Integer.parseInt(cmd[4]);
+         EditRegion rgn = active_regions.get(id);
+         if (rgn == null) {
+            rgn = new EditRegion(id,time);
+            active_regions.put(id,rgn);
+          }
+         if (current_region == rgn) {
+            setActive(rgn,time);
+            rgn.operation(pos,len,dir,time);
+          }
+       }
+      else if (src.equals("BURP") && cmd.length == 4 && cmd[0].startsWith("edit")) {
+         String what = cmd[0].substring(4).toLowerCase();
          int dir = 0;
          switch (what) {
             case "addition" :
@@ -888,8 +948,8 @@ private class AutoCorrectionAnalysis extends Analyzer {
 
    private Map<String,int []>		item_counts;
    private Map<String,int []>		explicit_counts;
-   private StatData			spell_stats;
-   private StatData			import_stats;
+   private AutoCorrectStatData			spell_stats;
+   private AutoCorrectStatData			import_stats;
    private boolean			in_explicit;
    private boolean			have_data;
 
@@ -914,13 +974,15 @@ private class AutoCorrectionAnalysis extends Analyzer {
 	 explicit_counts.put(s,new int [] { 0 });
        }
       have_data = false;
-      spell_stats = new StatData();
-      import_stats = new StatData();
+      spell_stats = new AutoCorrectStatData();
+      import_stats = new AutoCorrectStatData();
     }
 
    @Override public void startSession(String sess,String id)	{ finish(false); }
    @Override public void inactive(long delta,long time) { }
    @Override public void processLine(String src,String [] cmd,long time) {
+      if (cmd.length == 0) return;
+      
       if (!in_explicit) {
          int [] ctr = item_counts.get(cmd[0]);
          if (ctr != null) ctr[0]++;
@@ -975,11 +1037,11 @@ private class AutoCorrectionAnalysis extends Analyzer {
 
 
 
-private static class StatData {
+private static class AutoCorrectStatData {
 
    private Map<Integer,int []>	data_set;
 
-   StatData() {
+   AutoCorrectStatData() {
       data_set = new HashMap<Integer,int []>();
     }
 
@@ -1078,6 +1140,94 @@ private class SeedeAnalysis extends Analyzer {
 }       // end of inner class SeedeAnalysis
 
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      Command usage analyzer                                                  */
+/*                                                                              */
+/********************************************************************************/
+
+private final class CommandUsageAnalysis extends Analyzer { 
+   
+   private Map<String,CommandUsageStats> usage_map;
+   private long last_time;
+   
+   CommandUsageAnalysis() {
+      usage_map = new TreeMap<>();
+      last_time = 0;
+    }
+   
+   @Override public void startSession(String sess,String id) {
+      last_time = 0;
+    }
+   
+   @Override public void processLine(String src,String [] cmd,long time) {
+      if (cmd.length == 0) return;
+      String carg = cmd[0];
+      switch (carg) {
+         case "edit" :
+            String x = cmd[1];
+            x = x.substring(0,1).toUpperCase() + x.substring(1);
+            carg += x;
+            break;
+         case "VIS" :
+         case "CNT" :
+            return;
+       }
+      double delta = time - last_time;
+      last_time = time;
+      if (last_time == delta) return;           // last_time was 0
+      CommandUsageStats stats = usage_map.get(carg);
+      if (stats == null) {
+         stats = new CommandUsageStats(carg);
+         usage_map.put(carg,stats);
+       }
+      stats.addTime(delta);
+    }
+   
+   @Override public void inactive(long delta,long time) {
+      last_time = time;
+    }
+   
+   @Override public void finish() {
+      for (CommandUsageStats stats : usage_map.values()) {
+         stats.output();
+       }
+    }
+   
+}       // end of inner class CommandUsageAnalyzer
+
+
+
+private final class CommandUsageStats {
+   
+   private String command_name;
+   private double total_time;
+   private double total_time2;
+   private int num_times;
+   
+   CommandUsageStats(String name) {
+      command_name = name;
+      total_time = 0;
+      total_time2 = 0;
+      num_times = 0;
+    }
+   
+   void addTime(double t) {
+      num_times++;
+      total_time += t;
+      total_time2 += t*t;
+    }
+  
+   void output() {
+      double avg = total_time / num_times;
+      double var = total_time2 - avg * avg * num_times;
+      double stdev = Math.sqrt(var);
+      output_writer.println("COMMAND," + command_name + "," +
+            num_times + "," + stdev);
+    }
+   
+}       // end of inner class CommandUsageStats
 
 
 }	// end of class BoardMetrixAnalyzer

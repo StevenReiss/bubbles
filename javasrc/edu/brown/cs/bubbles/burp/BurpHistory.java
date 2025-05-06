@@ -636,14 +636,16 @@ private void removeAll(BurpEditorData ed)
 
 private String getEditCommandName(BurpEditorData be,UndoableEdit ed)
 {
-   String rslt = "edit_" + ed.getPresentationName();
+   String uc = String.valueOf(ed.getPresentationName());
+   uc = uc.substring(0,1).toUpperCase() + uc.substring(1).toLowerCase();
+   String rslt = "edit" + uc;
    if (ed instanceof DefaultDocumentEvent) {
       // do it explicitly if possible to handle other locales
       DefaultDocumentEvent aed = (DefaultDocumentEvent) ed;
       DocumentEvent.EventType type = aed.getType();
-      if (type == DocumentEvent.EventType.INSERT) rslt = "edit_addition";
-      else if (type == DocumentEvent.EventType.REMOVE) rslt = "edit_deletion";
-      else rslt = "edit_stylechange"; 
+      if (type == DocumentEvent.EventType.INSERT) rslt = "editAddition";
+      else if (type == DocumentEvent.EventType.REMOVE) rslt = "editDeletion";
+      else rslt = "editStylechange"; 
    }
    if (be != null) {
       String id = be.getBubbleId();
