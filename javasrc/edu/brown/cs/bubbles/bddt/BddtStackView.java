@@ -85,7 +85,10 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -351,7 +354,6 @@ void expandFrame(BumpStackFrame frm)
 
 
 
-
 /********************************************************************************/
 /*										*/
 /*	Popup menu and mouse handler methods					*/
@@ -367,7 +369,11 @@ void expandFrame(BumpStackFrame frm)
    Object v0 = value_component.getValueAt(row,-1);
    ValueTreeNode tn = null;
    if (v0 instanceof ValueTreeNode) tn = (ValueTreeNode) v0;
+ 
    if (tn != null) {
+      if (tn.getValue() != null) {
+         popup.add(new CopyAction(tn));
+       }
       popup.add(new ExtractAction(tn));
       if (tn.getFrame() != null) popup.add(new SourceAction(tn));
    }
@@ -383,26 +389,26 @@ private final class ClickHandler extends BoardMouser {
 
    @Override public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2 || e.getClickCount() == 3) {
-	 Point pt = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),value_component);
-	 pt = new Point(pt.x,pt.y-5);
-	 int row = value_component.rowAtPoint(pt);
-	 Object v0 = value_component.getValueAt(row,-1);
-	 ValueTreeNode tn = null;
-	 if (v0 instanceof ValueTreeNode) tn = (ValueTreeNode) v0;
-	 if (tn != null) {
-	    AbstractAction aa = null;
-	    boolean isfrm = tn.getFrame() != null && tn.getValue() == null;
-	    if (isfrm && e.getClickCount() == 2) {
-	       aa = new SourceAction(tn);
-	     }
-	    else if (isfrm && e.getClickCount() == 3) {
-	       aa = new ExtractAction(tn);
-	     }
-	    else if (!isfrm && e.getClickCount() == 2) {
-	       aa = new ExtractAction(tn);
-	     }
-	    if (aa != null) aa.actionPerformed(null);
-	  }
+         Point pt = SwingUtilities.convertPoint((Component) e.getSource(),e.getPoint(),value_component);
+         pt = new Point(pt.x,pt.y-5);
+         int row = value_component.rowAtPoint(pt);
+         Object v0 = value_component.getValueAt(row,-1);
+         ValueTreeNode tn = null;
+         if (v0 instanceof ValueTreeNode) tn = (ValueTreeNode) v0;
+         if (tn != null) {
+            AbstractAction aa = null;
+            boolean isfrm = tn.getFrame() != null && tn.getValue() == null;
+            if (isfrm && e.getClickCount() == 2) {
+               aa = new SourceAction(tn);
+             }
+            else if (isfrm && e.getClickCount() == 3) {
+               aa = new ExtractAction(tn);
+             }
+            else if (!isfrm && e.getClickCount() == 2) {
+               aa = new ExtractAction(tn);
+             }
+            if (aa != null) aa.actionPerformed(null);
+          }
        }
     }
 
@@ -493,7 +499,32 @@ private class ExtractAction extends AbstractAction {
       bba.addBubble(sv,BddtStackView.this,null,
 	    PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
    }
-}
+   
+}       // end of inner class ExtractAction
+
+
+private class CopyAction extends AbstractAction {
+
+    private ValueTreeNode for_node;
+    
+    private static final long serialVersionUID = 1;
+    
+    CopyAction(ValueTreeNode node) {
+       super("Copy Value");
+       for_node = node;
+     }
+    
+    @Override public void actionPerformed(ActionEvent e) {
+       BoardMetrics.noteCommand("BDDT","StackCopy");
+       Object v = for_node.getValue();
+       if (v == null) return;
+       String s = String.valueOf(v);
+       StringSelection ss = new StringSelection(s);
+       Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+       clipboard.setContents(ss,null);
+     }
+    
+}       // end of inner class CopyAction
 
 
 private class SourceAction extends AbstractAction {
@@ -576,16 +607,16 @@ private class ValueTable extends SwingTreeTable implements BudaConstants.BudaBub
       setTransferHandler(new Transferer());
       BudaCursorManager.setCursor(this,Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
       for (Enumeration<TableColumn> e = getColumnModel().getColumns(); e.hasMoreElements(); ) {
-	 TableColumn tc = e.nextElement();
-	 tc.setHeaderRenderer(new HeaderDrawer(getTableHeader().getDefaultRenderer()));
+         TableColumn tc = e.nextElement();
+         tc.setHeaderRenderer(new HeaderDrawer(getTableHeader().getDefaultRenderer()));
        }
       cell_drawer = new CellDrawer[2];
       JTree tr = getTree();
       tr.setCellRenderer(new TreeCellRenderer(this));
-
+   
       setRowSelectionAllowed(true);
       setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
+   
       setToolTipText("");
     }
 
@@ -941,17 +972,17 @@ private final class Transferer extends TransferHandler {
    @Override protected Transferable createTransferable(JComponent c) {
       ValueTable tbl = null;
       for (Component jc = c; jc != null; jc = jc.getParent()) {
-	 if (jc instanceof ValueTable) {
-	    tbl = (ValueTable) jc;
-	    break;
-	  }
+         if (jc instanceof ValueTable) {
+            tbl = (ValueTable) jc;
+            break;
+          }
        }
       if (tbl == null) return null;
-
+   
       JTree tree = tbl.getTree();
       TreePath [] sels = tree.getSelectionPaths();
       if (sels == null || sels.length == 0) return null;
-
+   
       TransferBubble tb = new TransferBubble(sels);
       if (!tb.isValid()) return null;
       return tb;

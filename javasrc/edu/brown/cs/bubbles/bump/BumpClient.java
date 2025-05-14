@@ -3295,7 +3295,9 @@ boolean evaluateExpression(BumpStackFrame frm,String expr,boolean impl,boolean b
 
    String data = "<EXPR>" + IvyXml.xmlSanitize(expr) + "</EXPR>";
 
-   eval_handlers.put(rid,new EvalData(frm,hdlr));
+   if (hdlr != null) {
+      eval_handlers.put(rid,new EvalData(frm,hdlr));
+    }
    boolean sts = getStatusReply("EVALUATE",proj,q,data,2500);
 
    if (!sts) eval_handlers.remove(rid);
@@ -4095,6 +4097,11 @@ private final class CloseIDE extends Thread {
     }
 
 }	// end of inner class CloseIDE
+
+
+
+
+
 
 
 

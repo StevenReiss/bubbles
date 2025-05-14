@@ -35,7 +35,6 @@ import edu.brown.cs.bubbles.bump.BumpConstants;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.event.DocumentEvent;
-import javax.swing.text.AbstractDocument.DefaultDocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
@@ -637,16 +636,19 @@ private void removeAll(BurpEditorData ed)
 private String getEditCommandName(BurpEditorData be,UndoableEdit ed)
 {
    String uc = String.valueOf(ed.getPresentationName());
-   uc = uc.substring(0,1).toUpperCase() + uc.substring(1).toLowerCase();
-   String rslt = "edit" + uc;
-   if (ed instanceof DefaultDocumentEvent) {
+   if (uc != null) {
+      uc = uc.substring(0,1).toUpperCase() + uc.substring(1).toLowerCase();
+    }
+   String rslt = "editOther";
+   if (ed instanceof DocumentEvent) {
       // do it explicitly if possible to handle other locales
-      DefaultDocumentEvent aed = (DefaultDocumentEvent) ed;
+      DocumentEvent aed = (DocumentEvent) ed;
       DocumentEvent.EventType type = aed.getType();
       if (type == DocumentEvent.EventType.INSERT) rslt = "editAddition";
       else if (type == DocumentEvent.EventType.REMOVE) rslt = "editDeletion";
       else rslt = "editStylechange"; 
    }
+  
    if (be != null) {
       String id = be.getBubbleId();
       if (id != null) rslt += "_" + id;

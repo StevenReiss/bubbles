@@ -180,17 +180,17 @@ private static class ImportFixer extends BfixFixer {
       int soffset = for_document.mapOffsetToJava(for_problem.getStart());
       BaleWindowElement elt = for_document.getCharacterElement(soffset);
       if (!elt.isTypeIdentifier()) {
-	 if (for_identifier.length() == 0) return null;
-	 if (!Character.isUpperCase(for_identifier.charAt(0))) return null;
-	 // return false;
+         if (for_identifier.length() == 0) return null;
+         if (!Character.isUpperCase(for_identifier.charAt(0))) return null;
+         // return false;
        }
-
+   
       ImportChecker ic = getImportCheckerForProject(for_problem.getProject());
       if (ic == null) return null;
       Collection<String> types = ic.findImport(for_identifier,for_problem.getProject(),
             for_problem.getFile(),for_problem.getStart());
       if (types == null || types.size() == 0) return null;
-
+   
       String accept = null;
       BumpClient bc = BumpClient.getBump();
       String proj = for_document.getProjectName();
@@ -198,59 +198,59 @@ private static class ImportFixer extends BfixFixer {
       String filename = file.getAbsolutePath();
       BoardMetrics.noteCommand("BFIX","ImportCheck_" + types.size());
       String badaccept = null;
-
+   
       for (String type : types) {
-	 String pid = createPrivateBuffer(proj,filename);
-	 if (pid == null) return null;
-	 try {
-	    boolean isokay = true;
-	    BoardLog.logD("BFIX","IMPORT: using private buffer " + pid);
-	    Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
-	    if (probs == null) {
-	       BoardLog.logE("BFIX","SPELL: Problem getting errors for " + pid);
-	       return null;
-	     }
-	    int probct = getErrorCount(probs);
-	    if (!checkProblemPresent(for_problem,probs)) {
-	       BoardLog.logD("BFIX","SPELL: import Problem went away");
-	       return null;
-	     }
-	    int inspos = findImportLocation();
-	    if (inspos < 0) continue;
-	    String impstr = "import " + type + ";\n";
-	    bc.beginPrivateEdit(filename,pid);
-	    BoardLog.logD("BFIX","IMPORT fix:  " + type);
-	    bc.editPrivateFile(proj,file,pid,inspos,inspos,impstr);
-	    int delta = impstr.length();
-	    probs = bc.getPrivateProblems(filename,pid);
-	    if (probs == null) {
-	       isokay = false;
-	     }
-	    else if (getErrorCount(probs) >= probct) {
-	       if (getErrorCount(probs) == probct && !checkAnyProblemPresent(for_problem,probs,delta,delta)) {
-		  if (badaccept == null) badaccept = type;
-		  else badaccept = "*";
-		}
-	       isokay = false;
-	     }
-	    if (isokay && checkAnyProblemPresent(for_problem,probs,delta,delta)) isokay = false;
-	    if (isokay) {
-	       if (accept == null) accept = type;
-	       else return null;
-	     }
-	  }
-	 finally {
-	    bc.removePrivateBuffer(proj,filename,pid);
-	  }
+         String pid = createPrivateBuffer(proj,filename);
+         if (pid == null) return null;
+         try {
+            boolean isokay = true;
+            BoardLog.logD("BFIX","IMPORT: using private buffer " + pid);
+            Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
+            if (probs == null) {
+               BoardLog.logE("BFIX","SPELL: Problem getting errors for " + pid);
+               return null;
+             }
+            int probct = getErrorCount(probs);
+            if (!checkProblemPresent(for_problem,probs)) {
+               BoardLog.logD("BFIX","SPELL: import Problem went away");
+               return null;
+             }
+            int inspos = findImportLocation();
+            if (inspos < 0) continue;
+            String impstr = "import " + type + ";\n";
+            bc.beginPrivateEdit(filename,pid);
+            BoardLog.logD("BFIX","IMPORT fix:  " + type);
+            bc.editPrivateFile(proj,file,pid,inspos,inspos,impstr);
+            int delta = impstr.length();
+            probs = bc.getPrivateProblems(filename,pid);
+            if (probs == null) {
+               isokay = false;
+             }
+            else if (getErrorCount(probs) >= probct) {
+               if (getErrorCount(probs) == probct && !checkAnyProblemPresent(for_problem,probs,delta,delta)) {
+        	  if (badaccept == null) badaccept = type;
+        	  else badaccept = "*";
+        	}
+               isokay = false;
+             }
+            if (isokay && checkAnyProblemPresent(for_problem,probs,delta,delta)) isokay = false;
+            if (isokay) {
+               if (accept == null) accept = type;
+               else return null;
+             }
+          }
+         finally {
+            bc.removePrivateBuffer(proj,filename,pid);
+          }
        }
       if (accept == null && badaccept != null && !badaccept.equals("*")) accept = badaccept;
       if (accept == null) return null;
-
+   
       if (for_corrector.getStartTime() != initial_time) return null;
       BoardLog.logD("BFIX","IMPORT: DO " + accept);
       BoardMetrics.noteCommand("BFIX","IMPORTFIX");
       ImportDoer id = new ImportDoer(for_corrector,for_document,for_problem,accept,initial_time);
-
+   
       return id;
     }
 

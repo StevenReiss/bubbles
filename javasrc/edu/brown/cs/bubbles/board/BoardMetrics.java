@@ -749,7 +749,12 @@ private void saveCommand(String src,String cmd,long now)
    setActive(now);
 
    synchronized (command_data) {
-      command_data.add(src + "," + cmd + "," + now);
+      if (cmd == null) {
+         command_data.add(src + "," + now);
+       }
+      else {
+         command_data.add(src + "," + cmd + "," + now);
+       }
     }
 }
 

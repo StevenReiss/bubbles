@@ -1175,23 +1175,23 @@ private static class DeleteLineAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane be = getBaleEditor(e);
       if (!checkEditor(be)) return;
-
+   
       BaleDocument bd = be.getBaleDocument();
-
+   
       bd.baleWriteLock();
       try {
-	 int soff = be.getSelectionStart();
-	 int slno = bd.findLineNumber(soff);
-	 int sdel = bd.findLineOffset(slno);
-	 int eoff = be.getSelectionEnd();
-	 int elno = (eoff == soff ? slno : bd.findLineNumber(eoff));
-	 int edel = bd.findLineOffset(elno+1);
-
-	 if (edel != sdel) {
-	    be.setSelectionStart(sdel);
-	    be.setSelectionEnd(edel);
-	    be.cut();
-	  }
+         int soff = be.getSelectionStart();
+         int slno = bd.findLineNumber(soff);
+         int sdel = bd.findLineOffset(slno);
+         int eoff = be.getSelectionEnd();
+         int elno = (eoff == soff ? slno : bd.findLineNumber(eoff));
+         int edel = bd.findLineOffset(elno+1);
+   
+         if (edel != sdel) {
+            be.setSelectionStart(sdel);
+            be.setSelectionEnd(edel);
+            be.cut();
+          }
        }
       finally { bd.baleWriteUnlock(); }
     }

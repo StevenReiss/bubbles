@@ -134,39 +134,39 @@ private abstract static class BaleGenericUndo extends AbstractUndoableEdit
    protected int updatePositionDelta(Object edit,int offset,int delta,int opos,boolean start) {
       if (offset > opos || delta == 0) return opos;
       if (offset == opos) {
-	 if (delta > 0 && edit != null && special_delta != null && special_delta.containsKey(edit)) {
-	    int ndelta = special_delta.get(edit);
-	    //if (ndelta != 0) BoardLog.logD("BALE","Update position special " + 
+         if (delta > 0 && edit != null && special_delta != null && special_delta.containsKey(edit)) {
+            int ndelta = special_delta.get(edit);
+            //if (ndelta != 0) BoardLog.logD("BALE","Update position special " + 
             //        opos + "->" + (opos+ndelta) + " " + edit);
-	    return opos + ndelta;
-	 }
-	 else return opos;
+            return opos + ndelta;
+         }
+         else return opos;
       }
       if (delta > 0) {			// insertion
-	 if (edit != null && special_delta != null && special_delta.containsKey(edit)) {
-	    int ndelta = special_delta.get(edit);
-	    // if (ndelta != 0) BoardLog.logD("BALE","Update position special1 " + 
+         if (edit != null && special_delta != null && special_delta.containsKey(edit)) {
+            int ndelta = special_delta.get(edit);
+            // if (ndelta != 0) BoardLog.logD("BALE","Update position special1 " + 
             //       opos + "->" + (opos+ndelta) + " " + edit);
-	    return opos + ndelta;
-	  }
-	 if (opos == offset && start) return opos;
+            return opos + ndelta;
+          }
+         if (opos == offset && start) return opos;
        }
       else {				// deletion
-	 if (offset - delta >= opos) {
-	    if (edit != null) {
-	       int ndelta = opos - offset;
-	       if (special_delta == null) special_delta = new HashMap<Object,Integer>(2);
-	       // BoardLog.logD("BALE","Special update " + opos + " " + ndelta + " " + edit);
-	       Integer ov = special_delta.put(edit,ndelta);
-	       if (ov != null && ov != ndelta) {
-		  System.err.println("VALUE CHANGED " + this + " " + edit + " " + ndelta + " " + ov);
-		}
-	     }
-	    delta = offset - opos;
-	  }
+         if (offset - delta >= opos) {
+            if (edit != null) {
+               int ndelta = opos - offset;
+               if (special_delta == null) special_delta = new HashMap<Object,Integer>(2);
+               // BoardLog.logD("BALE","Special update " + opos + " " + ndelta + " " + edit);
+               Integer ov = special_delta.put(edit,ndelta);
+               if (ov != null && ov != ndelta) {
+        	  System.err.println("VALUE CHANGED " + this + " " + edit + " " + ndelta + " " + ov);
+        	}
+             }
+            delta = offset - opos;
+          }
        }
       // if (delta != 0)  BoardLog.logD("BALE","Update position " + opos + "->" + (opos+delta));
-
+   
       return opos+delta;
     }
 

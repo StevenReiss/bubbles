@@ -594,12 +594,12 @@ private class EditorPane extends BaleEditorPane implements BaleEditor {
       Component finder = find_bar.getComponent();
       BudaBubble bb = BudaRoot.findBudaBubble(finder);
       if (finder.isVisible()) {
-	 if (bb != null && bb.isVisible()) {
-	    finder.setVisible(false);
-	    return;
-	 }
+         if (bb != null && bb.isVisible()) {
+            finder.setVisible(false);
+            return;
+         }
        }
-
+   
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
       BudaBubble bbx = BudaRoot.findBudaBubble(this);
       if (bba == null || bbx == null) return;

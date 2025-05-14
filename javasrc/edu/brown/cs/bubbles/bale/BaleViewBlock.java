@@ -1009,14 +1009,14 @@ private final class ExtractTrigger implements RegionAction {
    @Override public BudaBubble handleHoverBubble(MouseEvent e) {
       BaleEditorPane bep = getBaleEditorPane();
       if (bep == null) return null;
-      Point pt = new Point(e.getX(),e.getY());
+      Point pt = new Point(e.getX(),e.getY()-10);
       int pos = SwingText.viewToModel2D(bep,pt);
       if (pos < 0) return null;
       BaleFragmentEditor bfe = BaleBudder.findFragmentBubble(bep,pos);
       if (bfe == null) return null;
       return new BaleEditorBubble(bfe);
     }
-
+   
 }	// end of inner class ExtractTrigger
 
 

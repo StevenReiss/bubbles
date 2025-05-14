@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 
@@ -134,7 +135,7 @@ private BoardMetricAnalyzer(String [] args)
 
 private void scanArgs(String [] args)
 {
-   analyzer_set = new ArrayList<Analyzer>();
+   analyzer_set = new ArrayList<>();
 
    for (int i = 0; i < args.length; ++i) {
       if (args[i].startsWith("--anal") && i+1 < args.length) {
@@ -145,17 +146,16 @@ private void scanArgs(String [] args)
 	       analyzer_set.add(new EditRegionAnalysis());
 	       analyzer_set.add(new UserCorrectionAnalysis());
 	       analyzer_set.add(new AutoCorrectionAnalysis());
+               analyzer_set.add(new TotalTimeAnalysis());
 	       break;
             case "SEEDE" :
                use_commands = true;
                analyzer_set.add(new SeedeAnalysis());
+               analyzer_set.add(new TotalTimeAnalysis());
                break;
             case "STATS" :
                use_commands = true;
                use_config = false;
-               analyzer_set.add(new EditRegionAnalysis());
-	       analyzer_set.add(new UserCorrectionAnalysis());
-	       analyzer_set.add(new AutoCorrectionAnalysis());
                analyzer_set.add(new CommandUsageAnalysis());
                break;
 	    default :
@@ -176,8 +176,6 @@ private void scanArgs(String [] args)
 	 find_args.add(args[i]);
        }
     }
-
-   analyzer_set.add(new TotalTimeAnalysis());
 }
 
 
@@ -220,7 +218,11 @@ private void process()
             if (ln == null) break;
             if (ln.length() == 0) continue;
             char ch0 = ln.charAt(0);
-            if (Character.isDigit(ch0)) continue;
+            if (Character.isDigit(ch0) ||
+                  Character.isWhitespace(ch0) ||
+                  ch0 == ',') {
+               continue;
+             }
             if (ln.startsWith(pfx)) {
                String id = ln.substring(pfx.length());
                int idx = id.indexOf("/");
@@ -230,11 +232,10 @@ private void process()
                for (Analyzer anal : analyzer_set) {
                   anal.startSession(sess,id);
                 }
-               output_writer.println("ENDSESSION");
+//             output_writer.println("ENDSESSION");
                lastactive = 0;
                session = sess;
              }
-            else if (Character.isDigit(ln.charAt(0))) continue;
             else {
                String [] data = ln.split(",");
                String timestr = data[data.length-1];
@@ -352,15 +353,20 @@ private static final class FileSorter implements Comparator<String> {
       int idx1 = f1.lastIndexOf("/");
       int idx2 = f2.lastIndexOf("/");
       String f1h = f1;
-      if (idx1 > 0) f1h = f1.substring(0,idx1);
+      if (idx1 > 0) {
+         f1h = f1.substring(0,idx1);
+       }
       String f2h = f2;
-      if (idx2 > 0) f2h = f2.substring(0,idx2);
+      if (idx2 > 0) {
+         f2h = f2.substring(0,idx2);
+       }
       int cmp = f1h.compareTo(f2h);
       if (cmp != 0) return cmp;
       String [] f1arg = f1.substring(idx1+1).split("_");
       String [] f2arg = f2.substring(idx2+1).split("_");
+      boolean fndcnt = false;
       for (int i = 0; i < f1arg.length; ++i) {
-         if (i != 1) {
+         if (fndcnt || f1arg[i].isEmpty() || !Character.isDigit(f1arg[i].charAt(0))) {
             cmp = f1arg[i].compareTo(f2arg[i]);
             if (cmp != 0) return cmp;
           }
@@ -370,6 +376,7 @@ private static final class FileSorter implements Comparator<String> {
                int v2 = Integer.parseInt(f2arg[i]);
                if (v1 < v2) return -1;
                else if (v1 > v2) return 1;
+               fndcnt = true;
              }
             catch (NumberFormatException e) {
                cmp = f1arg[i].compareTo(f2arg[i]);
@@ -968,10 +975,10 @@ private class AutoCorrectionAnalysis extends Analyzer {
       item_counts.put("UserCorrect",new int [] { 0 });
       item_counts.put("AutoCompleteIt",new int [] { 0 });
       item_counts.put("StartExplicitFix",new int [] { 0 });
-
+   
       explicit_counts = new LinkedHashMap<String,int []>();
       for (String s : item_counts.keySet()) {
-	 explicit_counts.put(s,new int [] { 0 });
+         explicit_counts.put(s,new int [] { 0 });
        }
       have_data = false;
       spell_stats = new AutoCorrectStatData();
@@ -1147,26 +1154,69 @@ private class SeedeAnalysis extends Analyzer {
 /*                                                                              */
 /********************************************************************************/
 
+
+private static Set<String> edit_commands = Set.of("addition",
+      "deletion",
+      "stylechange",
+      "style change");
+
 private final class CommandUsageAnalysis extends Analyzer { 
    
    private Map<String,CommandUsageStats> usage_map;
    private long last_time;
+   private long session_start;
+   private long session_inactive;
+   private long total_active;
    
    CommandUsageAnalysis() {
       usage_map = new TreeMap<>();
       last_time = 0;
+      session_start = 0;
+      session_inactive = 0;
+      total_active = 0;
     }
    
    @Override public void startSession(String sess,String id) {
+      finishSession();
       last_time = 0;
+      session_start = 0;
+      session_inactive = 0;
     }
    
    @Override public void processLine(String src,String [] cmd,long time) {
       if (cmd.length == 0) return;
+      if (session_start == 0) session_start = time;
       String carg = cmd[0];
+      String xarg = null;
+      if (carg.startsWith("edit") && carg.length() > 4) {
+         xarg = carg.substring(4);
+         carg = "edit";
+       }
       switch (carg) {
          case "edit" :
-            String x = cmd[1];
+            String x = (xarg == null ? cmd[1] : xarg);
+            x = x.toLowerCase();
+            if (x.equals("aggiunta")) x = "addition";
+            if (x.equals("eliminazione")) x = "deletion";
+            if (x.equals("borttagning")) x = "deletion";
+            if (x.startsWith("till") && x.endsWith("gg")) x = "addition";      
+            if (x.equals("\u6dfb\u52a0")) x = "addition";
+            if (x.equals("\u5220\u9664")) x = "deletion";
+            if (x.equals("ajout")) x = "addition";
+            if (x.startsWith("supresi") && x.endsWith("n")) x = "deletion";
+            if (x.startsWith("adici") && x.endsWith("n")) x = "addition";
+            if (x.startsWith("l") && x.endsWith("schen")) x = "deletion";
+            if (x.startsWith("hinzuf") && x.endsWith("gen")) x = "addition";
+            if (x.startsWith("formatvorlagen")) x = "stylechange";
+            if (x.startsWith("adi") && x.endsWith("o")) x = "addition";
+            if (x.startsWith("exclus") && x.endsWith("o")) x = "deletion";
+            if (x.startsWith("agregaci") && x.endsWith("n")) x = "addition";
+            if (x.startsWith("cambiamento")) x = "stylechange";
+            if (x.equals("suppression")) x = "deletion";
+            if (!edit_commands.contains(x)) { 
+               x = "unknown"; 
+             }
+            x = x.replace(" ","");
             x = x.substring(0,1).toUpperCase() + x.substring(1);
             carg += x;
             break;
@@ -1174,25 +1224,62 @@ private final class CommandUsageAnalysis extends Analyzer {
          case "CNT" :
             return;
        }
+      if (carg.startsWith("NewBubbleLOC")) {
+          carg = carg.substring(0,9);
+       }
+      else if (carg.equals("OTHERVALUE")) return;
+      
       double delta = time - last_time;
       last_time = time;
       if (last_time == delta) return;           // last_time was 0
-      CommandUsageStats stats = usage_map.get(carg);
-      if (stats == null) {
-         stats = new CommandUsageStats(carg);
-         usage_map.put(carg,stats);
+      if (delta < 0) {
+         delta = 0;                             // items out of order (threeds...)
+         last_time -= delta;
        }
+      if (src.equals("PROPERTY") || src.equals("BRACT")) return;
+      carg = src + ":" + carg;
+      CommandUsageStats stats = getStats(carg);
       stats.addTime(delta);
     }
    
    @Override public void inactive(long delta,long time) {
+      session_inactive += delta;
       last_time = time;
     }
    
    @Override public void finish() {
+      finishSession();
+      output_writer.println("COMMAND,Name,Count,Average (ms),StdDev,Min,Max,Total,Percent"); 
       for (CommandUsageStats stats : usage_map.values()) {
-         stats.output();
+         stats.output(total_active);
        }
+      last_time = 0;
+    }
+   
+   private CommandUsageStats getStats(String id) {
+      CommandUsageStats stats = usage_map.get(id);
+      if (stats == null) {
+         stats = new CommandUsageStats(id);
+         usage_map.put(id,stats);
+       }
+      return stats;
+    }
+   
+   private void finishSession() {
+      if (session_start == 0) return;
+      long active = last_time - session_start - session_inactive;
+      if (active < 0) {
+         return;
+       }
+      total_active += active;
+      CommandUsageStats stats = getStats("SessionTotal");
+      stats.addTime(last_time - session_start);
+      stats = getStats("SessionActive");
+      stats.addTime(active);
+      stats = getStats("SessionInactive");
+      stats.addTime(session_inactive);
+      session_start = 0;
+      session_inactive = 0;
     }
    
 }       // end of inner class CommandUsageAnalyzer
@@ -1205,26 +1292,42 @@ private final class CommandUsageStats {
    private double total_time;
    private double total_time2;
    private int num_times;
+   private double min_time;
+   private double max_time;
    
    CommandUsageStats(String name) {
       command_name = name;
       total_time = 0;
       total_time2 = 0;
       num_times = 0;
+      min_time = -1;
+      max_time = -1;
     }
    
    void addTime(double t) {
       num_times++;
       total_time += t;
       total_time2 += t*t;
+      if (num_times == 1) {
+         min_time = t;
+         max_time = t;
+       }
+      else {
+         min_time = Math.min(min_time,t);
+         max_time = Math.max(max_time,t);
+       }
     }
   
-   void output() {
+   void output(double total) {
       double avg = total_time / num_times;
-      double var = total_time2 - avg * avg * num_times;
+      double var = (total_time2/num_times - avg * avg)/num_times;
       double stdev = Math.sqrt(var);
+      double pct = total_time / total * 100;
+      
       output_writer.println("COMMAND," + command_name + "," +
-            num_times + "," + stdev);
+            num_times + "," + avg + "," +  stdev + "," +
+            min_time + "," + max_time + "," + total_time + 
+            "," + pct);
     }
    
 }       // end of inner class CommandUsageStats

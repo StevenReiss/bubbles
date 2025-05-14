@@ -1143,7 +1143,7 @@ void handleEvaluationResult(BumpStackFrame frm,Element xml,BumpEvaluationHandler
    String sts = IvyXml.getAttrString(ex,"STATUS");
    if (sts.equals("EXCEPTION")) {
       String exc = IvyXml.getTextElement(ex,"EXCEPTION");
-      hdlr.evaluationError(eid,expr,exc);
+      if (hdlr != null) hdlr.evaluationError(eid,expr,exc);
     }
    else if (sts.equals("ERROR")) {
       StringBuffer buf = new StringBuffer();
@@ -1151,13 +1151,13 @@ void handleEvaluationResult(BumpStackFrame frm,Element xml,BumpEvaluationHandler
 	 buf.append(IvyXml.getText(er));
 	 buf.append("\n");
        }
-      hdlr.evaluationError(eid,expr,buf.toString());
+      if (hdlr != null) hdlr.evaluationError(eid,expr,buf.toString());
     }
    else {
       Element val = IvyXml.getChild(ex,"VALUE");
       ValueData vd = null;
       if (val != null) vd = new ValueData((StackFrame) frm,val,saveid);
-      hdlr.evaluationResult(eid,expr,vd);
+      if (hdlr != null) hdlr.evaluationResult(eid,expr,vd);
     }
 }
 

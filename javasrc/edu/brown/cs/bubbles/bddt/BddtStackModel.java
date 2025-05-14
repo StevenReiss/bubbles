@@ -491,12 +491,27 @@ private final class ValueUpdater implements Runnable {
 
 @Override public boolean isCellEditable(Object node,int col)
 {
-   return getColumnClass(col) == SwingTreeTable.TreeTableModel.class;
+   if (getColumnClass(col) == SwingTreeTable.TreeTableModel.class) {
+      return true;
+    }
+   
+   if (node instanceof ValueNode) {
+      ValueNode vtn = (ValueNode) node;
+      return vtn.isEditable();
+    }
+   
+   return false;
 }
 
 
 @Override public void setValueAt(Object val,Object node,int col)
-{ }
+{ 
+   if (node instanceof ValueNode) {
+      ValueNode vtn = (ValueNode) node;
+      if (!vtn.isEditable()) return;
+      vtn.setValue(val);
+    }
+}
 
 
 
@@ -1087,6 +1102,19 @@ private abstract class ValueNode extends AbstractNode {
    @Override public BumpStackFrame getFrame()	{ return for_value.getFrame(); }
    @Override public BumpRunValue getRunValue()	{ return for_value; }
    @Override public boolean showValueArea()	{ return true; }
+   
+   boolean isEditable()                         { return false; }
+   void setValue(Object value)                  { }
+   protected String getVariableLhs() {
+      String s = getName();
+      s = s.replace("?[","[");
+      s = s.replace("?",".");
+      return s;
+    }
+   protected void changeValue(String value) {
+      String expr = getVariableLhs() + " = " + value;
+      getFrame().evaluate(expr,null);
+    }
 
    @Override String getLabel() {
       return getThread().getName() + " :: " + getFrame().getMethod() +
@@ -1119,6 +1147,15 @@ private class PrimitiveValueNode extends ValueNode {
 
    @Override public boolean isLeaf()		{ return true; }
    @Override public boolean getAllowsChildren() { return false; }
+   
+   @Override boolean isEditable()               { return true; }
+   void setValue(Object v) {
+      if (v == null) return;
+      if (v.equals(getValue())) return;
+      changeValue(v.toString());
+    }
+   
+   
 
 }	// end of inner class PrimitiveValueNode
 
@@ -1142,9 +1179,22 @@ private class StringValueNode extends ValueNode {
    @Override public Object getValue() {
       String v = super.getValue().toString();
       if (v != null && v.startsWith("<html>")) {
-	 v = "HTML:" + v;
+         v = "HTML:" + v;
        }
       return v;
+    }
+   
+   @Override boolean isEditable()               { return true; }
+   void setValue(Object v) {
+      String sv = null;
+      if (v != null) {
+         sv = v.toString();
+         if (sv.startsWith("HTML:<html>")) sv = sv.substring(5);
+         if (sv.equals(getValue()) || v.equals(getValue())) return;
+         sv = "\"" + sv + "\"";
+       }
+      else if (getValue() == null) return;
+      changeValue(sv);
     }
 
 }	// end of inner class StringValueNode
