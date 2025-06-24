@@ -534,12 +534,18 @@ private class RestartAction extends AbstractAction {
        }
       // if back end supports restart do that here
       new StopAction().actionPerformed(evt);
-      while (launch_state != LaunchState.READY && launch_state != LaunchState.TERMINATED) {
+      int ctr = 0;
+      while (launch_state != LaunchState.READY && 
+            launch_state != LaunchState.TERMINATED &&
+            launch_state != LaunchState.STARTING) {
          try {
             Thread.sleep(1000);
+            ++ctr;
           }
          catch (InterruptedException e) { }
+         if (ctr > 60) return;
        }
+      
       new PlayAction().actionPerformed(evt);
     }
    
