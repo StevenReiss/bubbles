@@ -316,32 +316,32 @@ private class FragmentAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BaleEditorPane target = getBaleEditor(e);
       if (!checkEditor(target)) return;
-
+   
       BaleDocument bd = target.getBaleDocument();
       // Position spos = null;
       BaleFragmentEditor bfe = null;
       BaleEditorBubble bb = null;
-
+   
       bd.baleWriteLock();
       try {
-	 int soff = target.getSelectionStart();
-	 bfe = findFragmentBubble(target,soff);
+         int soff = target.getSelectionStart();
+         bfe = findFragmentBubble(target,soff);
        }
       finally { bd.baleWriteUnlock(); }
-
+   
       if (bfe != null && bb == null) {
-	 bb = new BaleEditorBubble(bfe);
+         bb = new BaleEditorBubble(bfe);
        }
-
+   
       if (bb != null) {
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(target);
-	 if (bba != null) {
-	    bba.addBubble(bb,target,null,
-			     PLACEMENT_NEW |
-			     PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
-	  }
-	 bb.grabFocus();
-	 BoardMetrics.noteCommand("BALE","Fragment");
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(target);
+         if (bba != null) {
+            bba.addBubble(bb,target,null,
+        		     PLACEMENT_NEW |
+        		     PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+          }
+         bb.grabFocus();
+         BoardMetrics.noteCommand("BALE","Fragment");
        }
     }
 

@@ -994,7 +994,9 @@ private final class ExtractTrigger implements RegionAction {
    @Override public void handleClick(MouseEvent e) {
       BaleEditorPane bep = getBaleEditorPane();
       if (bep == null) return;
-      Point pt = new Point(e.getX(),e.getY());
+      int y = e.getY() - 5;
+      if (y <= 0) y = 1;
+      Point pt = new Point(e.getX(),y);
       int pos = SwingText.viewToModel2D(bep,pt);
       if (pos < 0) return;
    
