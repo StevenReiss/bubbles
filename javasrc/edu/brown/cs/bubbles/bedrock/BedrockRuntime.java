@@ -268,22 +268,30 @@ private static class MainHandler extends SearchRequestor {
       BedrockPlugin.logD("FOUND MAIN METHOD " + mat);
       Object elt = mat.getElement();
       if (elt instanceof IMethod) {
-	 IMethod im = (IMethod) elt;
-	 try {
-	    if (im.isMainMethod()) {
-	       IResource irc = mat.getResource();
-	       if (!use_library) {
-		  if (irc.getType() != IResource.FILE)return;
-		}
-	       IType typ = (IType) im.getParent();
-	       xml_writer.begin("OPTION");
-	       xml_writer.field("VALUE",typ.getFullyQualifiedName());
-	       xml_writer.end("OPTION");
-	     }
-	  }
-	 catch (JavaModelException e) { }
+         IMethod im = (IMethod) elt;
+         try {
+            if (im.isMainMethod()) {
+               IResource irc = mat.getResource();
+               if (!use_library) {
+                  if (irc.getType() != IResource.FILE) {
+                     return;
+                   }
+                }
+               IType typ = (IType) im.getParent();
+               xml_writer.begin("OPTION");
+               xml_writer.field("VALUE",typ.getFullyQualifiedName());
+               xml_writer.end("OPTION");
+             }
+            else {
+               BedrockPlugin.logD("Note a main method");
+             }
+          }
+         catch (JavaModelException e) { }
        }
-    }
+      else {
+         BedrockPlugin.logD("Note a method " + elt.getClass());
+       }
+   }
 
 }	// end of inner class MainHandler
 
