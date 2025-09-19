@@ -516,7 +516,8 @@ private static class MenuSubBtn extends JMenu implements MenuComponent {
    MenuSubBtn(String nm) {
       super(nm);
       putClientProperty("JButton.buttonType","toolbar");
-      setFont(BUBBLE_MENU_FONT);
+      Font ft = BUDA_PROPERTIES.getFont(BUBBLE_MENU_FONT_NAME,BUBBLE_MENU_FONT);
+      setFont(ft);
       setOpaque(false);
     }
 

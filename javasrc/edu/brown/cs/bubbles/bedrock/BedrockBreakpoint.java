@@ -197,6 +197,8 @@ BedrockBreakpoint(BedrockPlugin bp)
 
 void start()
 {
+   BedrockPlugin.logD("BREAKPOINT LISTENER INSTALLED");
+   
    IBreakpointManager bm = debug_plugin.getBreakpointManager();
    bm.addBreakpointListener(this);
 
@@ -543,6 +545,8 @@ private void setBreakProperty(IBreakpoint bp,String p,String v) throws BedrockEx
 
 @Override public void breakpointsAdded(IBreakpoint [] bpts)
 {
+   BedrockPlugin.logD("BREAKPOINTS ADDED " + bpts);
+   
    IvyXmlWriter xw = our_plugin.beginMessage("BREAKEVENT");
 
    xw.begin("BREAKPOINTS");
@@ -556,6 +560,8 @@ private void setBreakProperty(IBreakpoint bp,String p,String v) throws BedrockEx
 
 @Override public void breakpointsChanged(IBreakpoint [] bpts,IMarkerDelta [] deltas)
 {
+   BedrockPlugin.logD("BREAKPOINTS CHANGED " + bpts);
+   
    IvyXmlWriter xw = our_plugin.beginMessage("BREAKEVENT");
 
    xw.begin("BREAKPOINTS");
@@ -569,6 +575,8 @@ private void setBreakProperty(IBreakpoint bp,String p,String v) throws BedrockEx
 
 @Override public void breakpointsRemoved(IBreakpoint [] bpts,IMarkerDelta [] deltas)
 {
+   BedrockPlugin.logD("BREAKPOINTS REMOVED " + bpts);
+   
    IvyXmlWriter xw = our_plugin.beginMessage("BREAKEVENT");
 
    xw.begin("BREAKPOINTS");

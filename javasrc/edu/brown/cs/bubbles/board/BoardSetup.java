@@ -624,7 +624,7 @@ public void setJavaArgs(String [] args)
    java_args = new ArrayList<>();
    if (args != null) {
       for (String s : args) {
-         java_args.add(s);
+	 java_args.add(s);
        }
     }
 }
@@ -800,7 +800,7 @@ public static File getBubblesWorkingDirectory(File wsd)
  *	Get a string describing this version of bubbles.
  **/
 
-public static String getVersionData()						
+public static String getVersionData()					
 {
    return BoardUpdate.getVersionData();
 }
@@ -1327,11 +1327,11 @@ private synchronized void setupMint()
       if (wsname == null) wsname = "";
       else wsname = wsname.replace(" ","_");
       switch (getLanguage()) {
-         case JAVA :
-            break;
-         default :
-            wsname = getLanguage().toString() + "_" + wsname;
-            break;
+	 case JAVA :
+	    break;
+	 default :
+	    wsname = getLanguage().toString() + "_" + wsname;
+	    break;
        }
       mint_name = mint_name.replace("@@@",wsname);
     }
@@ -2434,10 +2434,10 @@ public void checkResourceFile(String resfile) throws IOException
    InputStream ins = new FileInputStream(f2);
    if (f1.exists()) {
       try {
-         ensurePropsDefined(resfile,ins);
+	 ensurePropsDefined(resfile,ins);
        }
       catch (Exception e) {
-         IvyLog.logE("BOARD","Problem loading resource file " + f2);
+	 IvyLog.logE("BOARD","Problem loading resource file " + f2);
        }
     }
    else {
@@ -3496,40 +3496,40 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
    WorkspaceDialog() {
       BoardLog.logD("BOARD","Asking for workspace");
       SwingGridPanel pnl = new SwingGridPanel();
-   
+
       // library might not be set up here -- can't use BoardColors
       // pnl.setBackground(BoardColors.getColor("Buda.Bubbles.Color"));
       pnl.setBackground(WORKSPACE_DIALOG_COLOR);
       pnl.setOpaque(true);
-   
+
       pnl.beginLayout();
       pnl.addBannerLabel("Bubbles Workspace Setup");
-   
+
       pnl.addSeparator();
-   
+
       workspace_field = null;
       workspace_warning = new JLabel("Warning");
-   
+
       String lbl = board_language.getWorkspaceLabel();
       workspace_field = pnl.addFileField(lbl,default_workspace,
-            JFileChooser.DIRECTORIES_ONLY,
-            new WorkspaceDirectoryFilter(),this,null);
+	    JFileChooser.DIRECTORIES_ONLY,
+	    new WorkspaceDirectoryFilter(),this,null);
       workspace_field.setActionCommand("WORKSPACE");
       workspace_field.addKeyListener(this);
       workspace_warning.setToolTipText("Not a valid " + lbl);
       workspace_warning.setForeground(WARNING_COLOR);
       pnl.add(workspace_warning);
       pnl.addSeparator();
-   
+
       if (recent_workspaces.size() > 0) {
-         List<String> recents = new ArrayList<String>(recent_workspaces);
-         recents.add(0,RECENT_HEADER);
-         pnl.addChoice("Recent Workspaces",recents,0,true,this);
+	 List<String> recents = new ArrayList<String>(recent_workspaces);
+	 recents.add(0,RECENT_HEADER);
+	 pnl.addChoice("Recent Workspaces",recents,0,true,this);
        }
-   
+
       pnl.addBoolean("Create New Workspace",create_workspace,this);
       pnl.addBoolean("Always Ask for Workspace",ask_workspace,this);
-   
+
       pnl.addSeparator();
       accept_button = pnl.addBottomButton("OK","OK",this);
       pnl.addBottomButton("CANCEL","CANCEL",this);
@@ -3537,7 +3537,7 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
       Dimension d = pnl.getPreferredSize();
       d.width = Math.max(d.width,500);
       pnl.setPreferredSize(d);
-   
+
       working_dialog = new JDialog((JFrame) null,"Bubbles Workspace Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();
@@ -3568,42 +3568,42 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if (cmd.equals("WORKSPACE") || cmd.equals(board_language.getWorkspaceLabel())) {
-         JTextField tf = (JTextField) e.getSource();
-         File ef = new File(tf.getText());
-         String np = ef.getPath();
-         if (!np.equals(default_workspace)) ws_changed = true;
-         default_workspace = np;
+	 JTextField tf = (JTextField) e.getSource();
+	 File ef = new File(tf.getText());
+	 String np = ef.getPath();
+	 if (!np.equals(default_workspace)) ws_changed = true;
+	 default_workspace = np;
        }
       else if (cmd.equals("Always Ask for Workspace")) {
-         JCheckBox cbx = (JCheckBox) e.getSource();
-         if (ask_workspace != cbx.isSelected()) ws_changed = true;
-         ask_workspace = cbx.isSelected();
+	 JCheckBox cbx = (JCheckBox) e.getSource();
+	 if (ask_workspace != cbx.isSelected()) ws_changed = true;
+	 ask_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Create New Workspace")) {
-         JCheckBox cbx = (JCheckBox) e.getSource();
-         create_workspace = cbx.isSelected();
+	 JCheckBox cbx = (JCheckBox) e.getSource();
+	 create_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Recent Workspaces")) {
-         JComboBox<?> cbx = (JComboBox<?>) e.getSource();
-         String rslt = (String) cbx.getSelectedItem();
-         if (rslt != null && !rslt.trim().equals("") && !rslt.trim().equals(RECENT_HEADER)) {
-            if (!rslt.equals(default_workspace)) {
-               ws_changed = true;
-               default_workspace = rslt;
-               workspace_field.setText(rslt);
-             }
-          }
+	 JComboBox<?> cbx = (JComboBox<?>) e.getSource();
+	 String rslt = (String) cbx.getSelectedItem();
+	 if (rslt != null && !rslt.trim().equals("") && !rslt.trim().equals(RECENT_HEADER)) {
+	    if (!rslt.equals(default_workspace)) {
+	       ws_changed = true;
+	       default_workspace = rslt;
+	       workspace_field.setText(rslt);
+	     }
+	  }
        }
       else if (cmd.equals("OK")) {
-         result_status = true;
-         working_dialog.setVisible(false);
+	 result_status = true;
+	 working_dialog.setVisible(false);
        }
       else if (cmd.equals("CANCEL")) {
-         result_status = false;
-         working_dialog.setVisible(false);
+	 result_status = false;
+	 working_dialog.setVisible(false);
        }
       else {
-         BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
+	 BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
        }
       checkStatus();
     }

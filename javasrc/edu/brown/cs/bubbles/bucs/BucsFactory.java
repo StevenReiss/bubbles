@@ -98,7 +98,7 @@ private void setupCallbacks()
    BumpClient bc = BumpClient.getBump();
    boolean useS6 = bc.getOptionBool("bubbles.useS6",false);
    if (!useS6) return;
-   
+
    BaleFactory.getFactory().addContextListener(new BucsContexter());
 }
 
@@ -140,22 +140,15 @@ private boolean createTestCaseBubble(BaleContextConfig cfg,BattConstants.NewTest
 
 private final class BucsContexter implements BaleConstants.BaleContextListener {
 
-   
-
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
       switch (cfg.getTokenType()) {
-         case METHOD_DECL_ID :
-            menu.add(new BucsAction(cfg));
-            break;
-         default :
-            break;
+	 case METHOD_DECL_ID :
+	    menu.add(new BucsAction(cfg));
+	    break;
+	 default :
+	    break;
        }
     }
-
-   
-
-   
-   
 
 }	// end of inner class BucsContexter
 

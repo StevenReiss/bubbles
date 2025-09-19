@@ -137,7 +137,7 @@ private static boolean		initial_refresh = false;
 
 private static Set<String> ignore_projects;
 
-private static boolean		show_events = false;
+private static boolean		show_events = true;
 private static boolean		show_preferences = false;
 
 static {
@@ -2044,8 +2044,9 @@ private class BuildMonitor extends BedrockProgressMonitor {
 @Override public void resourceChanged(IResourceChangeEvent evt)
 {
    if (show_events) {
-      BedrockPlugin.logD("Resource Change: " + evt.getBuildKind() + " " + evt.getType() + " " +
-			    evt.getSource() + " " + evt.getResource());
+      BedrockPlugin.logD("Resource Events Change: " + evt.getBuildKind() + " " +
+            evt.getType() + " " +
+            evt.getSource() + " " + evt.getResource());
       IvyXmlWriter dxw = new IvyXmlWriter();
       dxw.begin("RESOURCECHANGE");
       IResourceDelta drd = evt.getDelta();
@@ -2055,8 +2056,9 @@ private class BuildMonitor extends BedrockProgressMonitor {
       BedrockPlugin.logD("Resource: " + dxw.toString());
     }
    else {
-      BedrockPlugin.logD("Resource Change: " + evt.getBuildKind() + " " + evt.getType() + " " +
-			    evt.getSource() + " " + evt.getResource());
+      BedrockPlugin.logD("Resource Change: " + evt.getBuildKind() + " " + 
+            evt.getType() + " " +
+            evt.getSource() + " " + evt.getResource());
     }
 
    if (evt.getType() == IResourceChangeEvent.POST_CHANGE) {
