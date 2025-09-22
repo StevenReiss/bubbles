@@ -105,6 +105,7 @@ private BedrockQuickFix quick_fixer;
 private boolean shutdown_mint;
 private boolean doing_exit;
 private int	num_clients;
+private Element lang_data;
 
 private static PrintStream log_file = null;
 private static BedrockLogLevel log_level = BedrockLogLevel.INFO;
@@ -129,6 +130,7 @@ public BedrockPlugin()
    shutdown_mint = false;
    num_clients = 0;
    doing_exit = false;
+   lang_data = null;
 
    String hm = System.getProperty("user.home");
    File f1 = new File(hm);
@@ -700,12 +702,12 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrEnum(xml,"ACTION",BedrockDebugAction.NONE),xw);
 	 break;
       case "CONSOLEINPUT" :
-         String cinp = IvyXml.getTextElement(xml,"INPUT");
-         if (cinp == null) {
-            Element inpelt = IvyXml.getChild(xml,"INPUT");
-            String c1 = inpelt.getTextContent();
-            cinp = c1;
-          }
+	 String cinp = IvyXml.getTextElement(xml,"INPUT");
+	 if (cinp == null) {
+	    Element inpelt = IvyXml.getChild(xml,"INPUT");
+	    String c1 = inpelt.getTextContent();
+	    cinp = c1;
+	  }
 	 bedrock_runtime.consoleInput(IvyXml.getAttrString(xml,"LAUNCH"),
 	       IvyXml.getTextElement(xml,"INPUT"));
 	 break;
@@ -777,7 +779,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 break;
       case "CREATEPRIVATE" :
 	 bedrock_editor.createPrivateBuffer(proj,
-               IvyXml.getAttrString(xml,"BID","*"),
+	       IvyXml.getAttrString(xml,"BID","*"),
 	       IvyXml.getAttrString(xml,"PID"),
 	       IvyXml.getAttrString(xml,"FILE"),
 	       IvyXml.getAttrString(xml,"FROMPID"),xw);
@@ -945,7 +947,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       xml,xw);
 	 break;
       case "HOVERDATA" :
-         break;
+	 break;
       case "ENTER" :
 	 BedrockApplication.enterApplication();
 	 ++num_clients;
@@ -1109,14 +1111,19 @@ Element getLanguageData()
       xml = IvyXml.loadXmlFromStream(ins);
     }
    if (xml == null) {
+      // report error
       ins = BedrockPlugin.class.getClassLoader().getResourceAsStream(nm);
       try {
 	 String txt = IvyFile.loadFile(ins);
 	 BedrockPlugin.logE("BAD language resource file:\n" + txt);
-      }
+       }
       catch (IOException e) {
 	 BedrockPlugin.logE("Bad language resource read " + e);
-      }
+       }
+      xml = lang_data;
+    }
+   else {
+      lang_data = xml;
     }
 
    return xml;
