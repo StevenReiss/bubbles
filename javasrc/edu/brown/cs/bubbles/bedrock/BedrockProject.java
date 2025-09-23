@@ -1346,21 +1346,21 @@ private static final class SourceFileFilter implements FileFilter {
    @Override public boolean accept(File f) {
       if (!f.getPath().endsWith(".java")) return false;
       if (!include_patterns.isEmpty()) {
-	 boolean fnd = false;
-	 for (IvyPathPattern fpat : include_patterns) {
-	    if (fpat.doesMatch(f)) {
-	       fnd = true;
-	       break;
-	     }
-	  }
-	 if (!fnd) {
-	    return false;
-	  }
+         boolean fnd = false;
+         for (IvyPathPattern fpat : include_patterns) {
+            if (fpat.doesMatch(f)) {
+               fnd = true;
+               break;
+             }
+          }
+         if (!fnd) {
+            return false;
+          }
        }
       for (IvyPathPattern fpat : exclude_patterns) {
-	 if (fpat.doesMatch(f)) {
-	    return false;
-	  }
+         if (fpat.doesMatch(f)) {
+            return false;
+          }
        }
       return true;
     }

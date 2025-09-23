@@ -7,6 +7,7 @@
    <OPTION NAME='bubbles.useRose' VALUE='TRUE' />
    <OPTION NAME='bubbles.useSeede' VALUE='TRUE' />
    <OPTION NAME='bubbles.useMaven' VALUE='TRUE' />
+   <OPTION NAME='bubbles.useLimba' VALUE='TRUE' />
 </OPTIONS>
 <FIXES>
    <SYNTAX TYPE='REPLACE' USE='1' ALT='0'>Syntax error on token "{0}", {1} expected</SYNTAX>
@@ -36,7 +37,7 @@
       <ATTRIBUTE NAME='INCLUDE_LIBRARIES' DESCRIPTION='Include Library Main Methods' TYPE='BOOLEAN' />
       <ATTRIBUTE NAME='PROGRAM_ARGUMENTS' DESCRIPTION='Arguments' TYPE='STRING' ROWS='2' />
       <ATTRIBUTE NAME='VM_ARGUMENTS' DESCRIPTION='VM Arguments' TYPE='STRING' />
-   </LAUNCH>
+   </LAUNCH>														     9
    <LAUNCH NAME='JAVA_TEST' DESCRIPTION='JUnit' DEBUGARGS='T' TESTCASE='T'>
       <ATTRIBUTE NAME='MAIN_TYPE' DESCRIPTION='Test' TYPE='STRING' />
       <ATTRIBUTE NAME='TESTNAME' DESCRIPTION='Test Name' TYPE='STRING' />

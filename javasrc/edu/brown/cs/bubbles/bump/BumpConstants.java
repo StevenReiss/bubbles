@@ -747,6 +747,7 @@ interface BumpLaunchConfig {
    String getContractArgs();
    String getLogFile();
    String getWorkingDirectory();
+   File findSourceFileForClass(String clazz);
 
    String getAttribute(String name);
    boolean getBoolAttribute(String name);

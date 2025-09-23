@@ -545,17 +545,17 @@ private class SourceAction extends AbstractAction {
       // Ideally, would like a method bubble here -- can we fake that
       // need to search for method location in system code, not just project
       // so add a new Bale method createSystemMethodBubble(proj,mid,file)
-
+   
       if (launch_control.frameFileExists(frm)) {
-	 String proj = frm.getThread().getLaunch().getConfiguration().getProject();
-	 String mid = frm.getMethod() + frm.getSignature();
-	 bb = BaleFactory.getFactory().createMethodBubble(proj,mid);
+         String proj = frm.getThread().getLaunch().getConfiguration().getProject();
+         String mid = frm.getMethod() + frm.getSignature();
+         bb = BaleFactory.getFactory().createMethodBubble(proj,mid);
       }
       if (bb != null) {
-	 BoardMetrics.noteCommand("BDDT","StackSource");
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtStackView.this);
-	 bba.addBubble(bb,BddtStackView.this,null,
-	       PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
+         BoardMetrics.noteCommand("BDDT","StackSource");
+         BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BddtStackView.this);
+         bba.addBubble(bb,BddtStackView.this,null,
+               PLACEMENT_PREFER|PLACEMENT_GROUPED|PLACEMENT_MOVETO);
       }
    }
 }

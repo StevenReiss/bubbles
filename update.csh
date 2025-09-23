@@ -61,6 +61,19 @@ ant
 if ($status > 0) exit;
 popd
 
+pushd limbabb
+git pull
+if ($status > 0) exit;
+ant
+if ($status > 0) exit;
+popd
+
+pushd limbabb
+git pull
+if ($status > 0) exit;
+bubbles.csh
+popd
+
 pushd bubbles
 git pull
 if ($status > 0) exit;

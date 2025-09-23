@@ -1359,7 +1359,6 @@ private class LaunchConfig implements BumpLaunchConfig {
       return getBoolean(launch_xml,nm,false);
    }
 
-
    @Override public String getContractArgs() {
       String args = null;
 
@@ -1430,8 +1429,6 @@ private class LaunchConfig implements BumpLaunchConfig {
       return getLaunchResult(x);
     }
 
-
-
    @Override public BumpLaunchConfig setRemoteHostPort(String host,int port) {
       String val = "{port=" + port + ", hostname=" + host + "}";
       Element x = bump_client.editRunConfiguration(getId(),"CONNECT_MAP",val);
@@ -1464,6 +1461,35 @@ private class LaunchConfig implements BumpLaunchConfig {
       String val = Boolean.toString(fg);
       Element x = bump_client.editRunConfiguration(getId(),"STOP_IN_MAIN",val);
       return getLaunchResult(x);
+    }
+   
+   @Override public File findSourceFileForClass(String cls) {
+      if (cls == null) return null;
+      String s = getAttribute("org.eclipse.debug.core.source_locator_memento");
+      if (s == null) return null;
+      Element srch = IvyXml.convertStringToXml(s);
+      if (srch == null) return null;
+      String fnm = cls;
+      int idx = fnm.indexOf("$");
+      if (idx >= 0) fnm = fnm.substring(0,idx);
+      fnm = fnm.replace(".",File.separator);
+      fnm += ".java";
+      BoardLog.logD("BUMP","Find source file for class " + fnm + " " + 
+            IvyXml.convertXmlToString(srch));
+      for (Element celt : IvyXml.elementsByTag(srch,"container")) {
+         String mem = IvyXml.getAttrString(celt,"memento");
+         if (mem == null) continue;
+         Element melt = IvyXml.convertStringToXml(mem);
+         String p = IvyXml.getAttrString(melt,"path");
+         BoardLog.logD("BUMP","Source file check " + p + " " +
+               IvyXml.convertXmlToString(melt));
+         if (p == null) continue;
+         p = p.replace("/",File.separator);
+         File f1 = new File(p);
+         File f2 = new File(f1,fnm);
+         if (f2.exists()) return f2;
+       }
+      return null; 
     }
 
    @Override public BumpLaunchConfig setAttribute(String attr,String arg) {
@@ -2059,8 +2085,19 @@ private class StackFrame implements BumpStackFrame {
       method_name = IvyXml.getAttrString(xml,"METHOD");
       String fnm = IvyXml.getAttrString(xml,"FILE");
       if (fnm == null) {
-         for_file = null;
-         is_classfile = true;
+         BumpLaunchConfig cfg = thrd.getProcess().getLaunch().getConfiguration();
+         File f1 = null;
+         if (cfg != null) {
+            f1 = cfg.findSourceFileForClass(class_name);
+          }
+         if (f1 == null) {
+            for_file = null;
+            is_classfile = true;
+          }
+         else {
+            for_file = f1;
+            is_classfile = false;
+          }
        }
       else if (IvyXml.getAttrString(xml,"FILETYPE").equals("CLASSFILE")) {
          is_classfile = true;
