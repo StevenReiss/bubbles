@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Bait.limba.debug">false</entry>
+<entry key="Bait.limba.class.path">limba.jar</entry>
+</properties>
+
