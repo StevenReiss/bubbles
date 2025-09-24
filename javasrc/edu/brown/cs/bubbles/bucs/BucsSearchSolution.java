@@ -66,8 +66,6 @@ import java.util.Collections;
 import java.util.List;
 
 
-
-
 class BucsSearchSolution implements BucsConstants, BussEntry
 {
 

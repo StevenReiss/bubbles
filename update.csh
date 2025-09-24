@@ -65,13 +65,13 @@ pushd limbabb
 git pull
 if ($status > 0) exit;
 ant
-if ($status > 0) exit;
 popd
 
-pushd limbabb
+pushd limba
 git pull
 if ($status > 0) exit;
 bubbles.csh
+if ($status > 0) exit;
 popd
 
 pushd bubbles
