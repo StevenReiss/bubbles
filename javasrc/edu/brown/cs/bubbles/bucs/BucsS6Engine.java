@@ -277,7 +277,7 @@ private String createSearchRequest()
 	 xw.field("TYPE","CALLS");
 	 xw.begin("CALL");
 	 xw.field("METHOD",methodname);
-	 xw.field("OP",bct.getTestOp());
+	 xw.field("OP",bct.getTestOpName());
 	 xw.begin("INPUT");
 	 xw.cdataElement("VALUE",bct.getTestInput());
 	 xw.end("INPUT");

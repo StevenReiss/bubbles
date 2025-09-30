@@ -88,7 +88,7 @@ private List<String>	java_args;
 private ServerSocket	server_socket;
 private Map<String,BattTestCase> test_cases;
 private Set<BattTestCase> run_tests;
-private boolean		run_all;
+private boolean 	run_all;
 private boolean 	test_request;
 private boolean 	test_busy;
 private boolean 	find_new;
@@ -96,7 +96,7 @@ private BattThread	server_thread;
 private Set<String>	error_classes;
 private IvyExec 	current_test;
 private long		last_report;
-private Object          message_lock;
+private Object		message_lock;
 
 
 
@@ -570,23 +570,23 @@ private void processRun(boolean listonly,Set<String> testclss,Set<BattTestCase> 
 
 private void processRun(boolean listonly,Set<String> testclss)
 {
-   if (testclss !=  null) 
+   if (testclss !=  null)
       System.err.println("BATTM: Run all tests in " + testclss.size() + " classes");
    else
       System.err.println("BATTM: Run all tests in all classes");
-   
+
    if (!listonly) {
       synchronized (run_tests) {
 	 for (BattTestCase btc : test_cases.values()) {
 	    btc.setStatus(TestStatus.UNKNOWN);
 	    btc.setState(TestState.RUNNING);
-	    btc.handleTestCounts(null); 
+	    btc.handleTestCounts(null);
 	 }
 	 run_tests.clear();
-	 run_all = false; 
+	 run_all = false;
       }
    }
-   
+
    for (BattProject bp : batt_monitor.getProjects()) {
       boolean err = false;
       boolean use = false;
@@ -783,7 +783,7 @@ private boolean runOneTest(BattTestCase testcase)
 
       args.add("-cp");
       args.add(buf.toString());
-//      args.add("-verbose");
+//	args.add("-verbose");
       args.add("edu.brown.cs.bubbles.batt.BattJUnit");
       if (server_socket != null) args.add("-socket");
       else args.add("-output");
@@ -1047,13 +1047,13 @@ private class SocketListener extends Thread {
 
    @Override public void run() {
       try {
-         for ( ; ; ) {
-            Socket s = server_socket.accept();
-            if (s != null) createClient(s);
-          }
+	 for ( ; ; ) {
+	    Socket s = server_socket.accept();
+	    if (s != null) createClient(s);
+	  }
        }
       catch (IOException e) {
-         System.err.println("BATTM: Problem with server socket accept: " + e);
+	 System.err.println("BATTM: Problem with server socket accept: " + e);
        }
     }
 
@@ -1073,23 +1073,23 @@ private class Client extends IvyXmlReaderThread {
 
    @Override protected void processXmlMessage(String msg) {
       Element e = IvyXml.convertStringToXml(msg);
-   
+
       synchronized (message_lock) {
-         System.err.println("BATTM: CLIENT MSG: " + client_socket.getLocalPort() + " " + msg);
-         
-         if (IvyXml.isElement(e,"TESTCASE")) {
-            String nm = IvyXml.getAttrString(e,"NAME");
-            BattTestCase btc = findTestCase(nm);
-            btc.handleTestState(e);
-            reportTestStatus(false);
-          }
-         else if (IvyXml.isElement(e,"TESTCOUNTS")) {
-            String nm = IvyXml.getAttrString(e,"NAME");
-            BattTestCase btc = findTestCase(nm);
-            btc.handleTestCounts(e);
-          }
-         
-         System.err.println("BATTM: FINISH CLIENT MSG");
+	 System.err.println("BATTM: CLIENT MSG: " + client_socket.getLocalPort() + " " + msg);
+	
+	 if (IvyXml.isElement(e,"TESTCASE")) {
+	    String nm = IvyXml.getAttrString(e,"NAME");
+	    BattTestCase btc = findTestCase(nm);
+	    btc.handleTestState(e);
+	    reportTestStatus(false);
+	  }
+	 else if (IvyXml.isElement(e,"TESTCOUNTS")) {
+	    String nm = IvyXml.getAttrString(e,"NAME");
+	    BattTestCase btc = findTestCase(nm);
+	    btc.handleTestCounts(e);
+	  }
+	
+	 System.err.println("BATTM: FINISH CLIENT MSG");
        }
    }
 
@@ -1124,9 +1124,9 @@ private class BattThread extends Thread {
 
    @Override public void run() {
       try {
-         for ( ; ; ) {
-            processTests();
-          }
+	 for ( ; ; ) {
+	    processTests();
+	  }
        }
       catch (InterruptedException e) { }
       doneProcessing();

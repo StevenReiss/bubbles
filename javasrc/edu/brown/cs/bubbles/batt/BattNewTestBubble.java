@@ -385,18 +385,18 @@ private class NewTestArea implements BattNewTestPanel {
    void addTestCase() {
       NewTestCase ntc = null;
       switch (test_mode) {
-	 case INPUT_OUTPUT :
-	    ntc = new CallTestCase(this);
-	    break;
-	 case CALL_SEQUENCE :
-	    ntc = null;
-	    break;
-	 case USER_CODE:
-	    break;
+         case INPUT_OUTPUT :
+            ntc = new CallTestCase(this);
+            break;
+         case CALL_SEQUENCE :
+            ntc = null;
+            break;
+         case USER_CODE:
+            break;
        }
       if (ntc != null) {
-	 test_cases.add(ntc);
-	 ntc.setup();
+         test_cases.add(ntc);
+         ntc.setup();
        }
     }
 
@@ -460,6 +460,11 @@ private abstract class NewTestCase implements BattCallTest, CaretListener, Actio
    @Override public String getTestOp() {
       return test_op.getSelectedItem().toString();
     }
+   
+   @Override public String getTestOpName() { 
+      NewTestOp op = (NewTestOp) (test_op.getSelectedItem());
+      return op.name();
+   }
 
    boolean isEmpty() {
       String ta = getTestInput();

@@ -236,6 +236,7 @@ interface BattCallTest {
    String getTestInput();
    String getTestOutput();
    String getTestOp();
+   String getTestOpName();
 
 }	// end of interface BattCallTest
 
