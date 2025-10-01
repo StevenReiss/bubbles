@@ -379,26 +379,26 @@ private class SearchRunner implements Runnable {
 
    @Override public void run() {
       if (search_request == null) {
-	 search_callback.handleSearchFailed();
-	 return;
+         search_callback.handleSearchFailed();
+         return;
        }
       Element rslt = sendMessageToS6(search_request);
-
+   
       List<BucsSearchResult> rslts = new ArrayList<BucsSearchResult>();
       Element sols = IvyXml.getChild(rslt,"SOLUTIONS");
       for (Element sol : IvyXml.children(sols,"SOLUTION")) {
-	 S6SearchResult sr = new S6SearchResult(sol);
-	 rslts.add(sr);
+         S6SearchResult sr = new S6SearchResult(sol);
+         rslts.add(sr);
        }
-
+   
       List<BucsSearchInput> irslt = new ArrayList<BucsSearchInput>();
       Element inps = IvyXml.getChild(rslt,"USERINPUT");
       Element test = IvyXml.getChild(inps,"TESTCASE");
       for (Element uc : IvyXml.children(test,"USERCASE")) {
-	 S6UIResult sr = new S6UIResult(uc);
-	 irslt.add(sr);
+         S6UIResult sr = new S6UIResult(uc);
+         irslt.add(sr);
        }
-
+   
       if (rslts.size() > 0) search_callback.handleSearchSucceeded(rslts);
       else if (irslt.size() > 0) search_callback.handleSearchInputs(irslt);
       else search_callback.handleSearchFailed();

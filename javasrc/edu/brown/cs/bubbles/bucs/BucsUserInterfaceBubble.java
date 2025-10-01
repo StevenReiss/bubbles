@@ -164,17 +164,17 @@ private class SearchRequest implements BucsSearchRequest {
    @Override public void handleSearchInputs(List<BucsSearchInput> result) {
       List<UIImage> rslt = new ArrayList<UIImage>();
       for (BucsSearchInput sr : result) {
-	 UIImage img = new UIImage(sr);
-	 rslt.add(img);
+         UIImage img = new UIImage(sr);
+         rslt.add(img);
        }
-
+   
       status_label.setText("Returned " + rslt.size() + " result(s)");
-
+   
       image_index = 0;
       image_list = rslt;
       if (image_list.size() > 1) {
-	 left_button.setEnabled(true);
-	 right_button.setEnabled(true);
+         left_button.setEnabled(true);
+         right_button.setEnabled(true);
        }
       image_viewer.repaint();
     }

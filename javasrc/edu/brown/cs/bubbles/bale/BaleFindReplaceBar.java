@@ -254,7 +254,7 @@ private JButton createButton(String txt,Icon icn,String cmd)
 private JTextField createTextField(int ln)
 {
    JTextField tfld = new SwingTextField(ln);
-   tfld.setFont(BALE_PROPERTIES.getFont(BALE_CRUMB_FONT));
+   tfld.setFont(BALE_PROPERTIES.getFont(BALE_SEARCH_FONT)); 
    tfld.addCaretListener(this);
    tfld.addKeyListener(new CloseListener());
    // Dimension sz = tfld.getPreferredSize();

@@ -557,6 +557,7 @@ Stroke BALE_BUD_LINE_STROKE = new BasicStroke(1f,BasicStroke.CAP_BUTT,BasicStrok
  *	The font to be used in the crumb bar
  **/
 String BALE_CRUMB_FONT = "Bale.crumb.font";
+String BALE_SEARCH_FONT = "Bass.font";
 
 
 
