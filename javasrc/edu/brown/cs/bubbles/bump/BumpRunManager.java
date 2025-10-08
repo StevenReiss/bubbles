@@ -792,7 +792,7 @@ private ProcessEvent terminateProcess(String id,long when)
        }
     }
    else {
-      BoardLog.logE("BUMP","Terminate process not found " + id + " " +
+      BoardLog.logD("BUMP","Terminate process not found " + id + " " +
 	    active_processes);
     }
    return evt;
