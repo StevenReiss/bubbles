@@ -458,8 +458,9 @@ private class AnnotationContext implements BaleContextConfig {
    @Override public String getToken()				{ return null; }
    @Override public BaleContextType getTokenType()		{ return BaleContextType.NONE; }
    @Override public String getMethodName()			{ return null; }
+   @Override public String getFullName()                        { return null; }
    @Override public int getLineNumber() 			{ return line_number; }
-   @Override public boolean inAnnotationArea()			{ return true; }
+   @Override public boolean inAnnotationArea()		{ return true; }
    
    @Override public int getSelectionStart() {
       if (for_editor instanceof BaleEditorPane) {

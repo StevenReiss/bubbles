@@ -1327,6 +1327,7 @@ interface BaleContextConfig {
    String getToken();
    BaleContextType getTokenType();
    String getMethodName();
+   String getFullName();
    boolean inAnnotationArea();
    int getLineNumber();
    int getSelectionStart();
