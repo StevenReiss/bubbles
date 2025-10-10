@@ -52,10 +52,7 @@ class BattNewTestChecker implements BattConstants
 /*										*/
 /********************************************************************************/
 
-BattNewTestChecker()
-{
-}
-
+BattNewTestChecker() { }
 
 
 
@@ -124,7 +121,6 @@ private StreamTokenizer getTokenizer(String s)
 }
 
 
-
 private int nextToken(StreamTokenizer stok)
 {
    try {
@@ -136,13 +132,6 @@ private int nextToken(StreamTokenizer stok)
 }
 
 
-
-
-
-
-
-
-
 private boolean checkNextToken(StreamTokenizer stok,String tok)
 {
    if (nextToken(stok) == StreamTokenizer.TT_WORD && stok.sval.equals(tok)) return true;
@@ -152,17 +141,13 @@ private boolean checkNextToken(StreamTokenizer stok,String tok)
 }
 
 
-
-
-private boolean checkNextToken(StreamTokenizer stok,char tok)
+private boolean checkNextToken(StreamTokenizer stok,int tok)
 {
    if (nextToken(stok) == tok) return true;
 
    stok.pushBack();
    return false;
 }
-
-
 
 
 private boolean checkEnd(StreamTokenizer stok)
@@ -172,10 +157,6 @@ private boolean checkEnd(StreamTokenizer stok)
    stok.pushBack();
    return false;
 }
-
-
-
-
 
 
 
@@ -200,29 +181,7 @@ private Value parseTypedValue(StreamTokenizer stok,Type jt)
    nextToken(stok);
    
    if (isNumericType(jt)) {
-      if (stok.ttype == StreamTokenizer.TT_NUMBER) {
-	 if (jt == Type.FLOAT_TYPE) rslt = new ValueLiteral(Double.toString(stok.nval) + "f");
-	 else if (jt == Type.DOUBLE_TYPE) rslt = new ValueLiteral(Double.toString(stok.nval));
-	 else if (jt == Type.BYTE_TYPE) {
-	    byte cv = (byte) stok.nval;
-	    rslt = new ValueLiteral("((byte) " + cv + ")");
-	  }
-	 else if (jt == Type.SHORT_TYPE) {
-	    short cv = (short) stok.nval;
-	    rslt = new ValueLiteral("((short) " + cv + ")");
-	  }
-	 else if (jt == Type.CHAR_TYPE) {
-	    char cv = (char) stok.nval;
-	    rslt = new ValueLiteral("((char) " + cv + ")");
-	  }
-	 else rslt = new ValueLiteral(Long.toString((long) stok.nval));
-       }
-      else if (stok.ttype == '\'') {
-	 rslt = new ValueLiteral("'" + stok.sval + "'");
-       }
-      else {
-	 return null;
-       }
+      rslt = parseNumericValue(stok,jt);
     }
    else if (jt == Type.BOOLEAN_TYPE) {
       boolean val = false;
@@ -351,6 +310,99 @@ private boolean isNumericType(Type t)
 }
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Parse numbers and numeric expressions                                   */
+/*                                                                              */
+/********************************************************************************/
+
+private Value parseNumericValue(StreamTokenizer stok,Type jt)
+{
+   Value rslt = null;
+   Value lhs = null;
+   String op = null;
+   for ( ; ; ) {
+      if (stok.ttype == '(') {
+         nextToken(stok);
+         Value v1 = parseNumericValue(stok,jt);
+         if (checkNextToken(stok,')')) {
+            rslt = new ValueLiteral("(" + v1.getValue() + ")");
+          }
+       }
+      else if (stok.ttype == StreamTokenizer.TT_NUMBER || stok.ttype == '\'') {
+         rslt = parseConstantValue(stok,jt);
+       }
+      else if (stok.ttype == StreamTokenizer.TT_WORD) {
+         String s1 = stok.sval;
+         String cls = "[A-Z][A-Za-z]*";
+         String cnst = "[A-Z_]+";
+         String allow = cls + "\\." + cnst;
+         if (s1.matches(allow)) {
+            rslt = new ValueLiteral(s1);
+          }
+       }
+      if (rslt == null) return null;
+      if (op != null) {
+         rslt = new ValueLiteral(lhs.getValue() + op + rslt.getValue());
+         lhs = null;
+         op =  null;
+       }
+      if (checkNextOperator(stok)) {
+         lhs = rslt;
+         rslt = null;
+         op =  Character.toString((char) stok.ttype);
+         nextToken(stok);
+       }
+      else break;
+    }
+   
+   return rslt;
+}
+
+
+
+private Value parseConstantValue(StreamTokenizer stok,Type jt)
+{
+   Value rslt = null;
+   
+   if (stok.ttype == StreamTokenizer.TT_NUMBER) {
+      if (jt == Type.FLOAT_TYPE) rslt = new ValueLiteral(Double.toString(stok.nval) + "f");
+      else if (jt == Type.DOUBLE_TYPE) rslt = new ValueLiteral(Double.toString(stok.nval));
+      else if (jt == Type.BYTE_TYPE) {
+         byte cv = (byte) stok.nval;
+         rslt = new ValueLiteral("((byte) " + cv + ")");
+       }
+      else if (jt == Type.SHORT_TYPE) {
+         short cv = (short) stok.nval;
+         rslt = new ValueLiteral("((short) " + cv + ")");
+       }
+      else if (jt == Type.CHAR_TYPE) {
+         char cv = (char) stok.nval;
+         rslt = new ValueLiteral("((char) " + cv + ")");
+       }
+      else rslt = new ValueLiteral(Long.toString((long) stok.nval));
+    }
+   else if (stok.ttype == '\'') {
+      rslt = new ValueLiteral("'" + stok.sval + "'");
+    }
+   else {
+      rslt = null;
+    }
+   
+   return rslt;
+}
+
+
+private boolean checkNextOperator(StreamTokenizer stok)
+{
+   if (checkNextToken(stok,'+')) return true;
+   if (checkNextToken(stok,'-')) return true;
+   if (checkNextToken(stok,'/')) return true;
+   if (checkNextToken(stok,'*')) return true;
+   if (checkNextToken(stok,'&')) return true;
+   if (checkNextToken(stok,'|')) return true; 
+   return false;
+}
 
 
 /********************************************************************************/

@@ -405,9 +405,9 @@ private class NewTestArea implements BattNewTestPanel {
       int ntest = 0;
       boolean valid = true;
       for (NewTestCase tc : test_cases) {
-	 if (tc.isEmpty()) continue;
-	 if (!tc.validate(bc)) valid = false;
-	 else ++ntest;
+         if (tc.isEmpty()) continue;
+         if (!tc.validate(bc)) valid = false;
+         else ++ntest;
        }
       if (ntest == 0) valid = false;
       return valid;
@@ -417,7 +417,7 @@ private class NewTestArea implements BattNewTestPanel {
       List<BattCallTest> ltc = new ArrayList<BattCallTest>();
       BattNewTestChecker bc = new BattNewTestChecker();
       for (NewTestCase tc : test_cases) {
-	 if (!tc.isEmpty() && tc.validate(bc)) ltc.add(tc);
+         if (!tc.isEmpty() && tc.validate(bc)) ltc.add(tc);
        }
       return ltc;
     }
@@ -479,8 +479,8 @@ private abstract class NewTestCase implements BattCallTest, CaretListener, Actio
    void invalidate()				{ is_checked = false; }
    boolean validate(BattNewTestChecker tc) {
       if (!is_checked) {
-	 last_error = check(tc);
-	 is_checked = true;
+         last_error = check(tc);
+         is_checked = true;
        }
       return last_error == null;
     }
