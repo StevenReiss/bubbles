@@ -101,7 +101,7 @@ BassBubble(BassRepository br,String proj,String pfx,boolean trans)
 
 @Override public void handlePopupMenu(MouseEvent e)
 {
-   // pass e along to search box
+   // pass along to search box
    if (my_search_box.handlePopupMenu(e)) return;
 
    JPopupMenu menu = new JPopupMenu();
