@@ -3,5 +3,15 @@
 <properties>
 <entry key="Bait.limba.debug">false</entry>
 <entry key="Bait.limba.class.path">limba.jar:eclipsejar:ivy.jar:junit.jar:asm.jar</entry>
+<entry key="Bait.ollama.model">llama4:scout</entry>
+<entry key="Bait.ollama.host">localhost</entry>
+<entry key="Bait.ollama.port">11434</entry>
+<entry key="Bait.ollama.althost">localhost</entry>
+<entry key="Bait.ollama.altport">11434</entry>
+<entry key="Bait.ollama.usecontext">true</entry>
 </properties>
+
+
+
+
 

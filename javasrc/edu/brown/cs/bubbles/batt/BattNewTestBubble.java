@@ -154,10 +154,6 @@ BattNewTestPanel createNewTestPanel()
 }
 
 
-
-
-
-
 private String getTestMethodName()
 {
    String mnm = method_name;
@@ -177,8 +173,6 @@ private String getTestMethodName()
 
    return null;
 }
-
-
 
 
 /********************************************************************************/
@@ -226,7 +220,7 @@ private void createNewTestMethod(String fnm,String nm,String ipnm,String icnm,bo
 
       props = new BuenoProperties();
       props.put(BuenoKey.KEY_ADD_COMMENT,Boolean.TRUE);
-      props.put(BuenoKey.KEY_COMMENT,"Default Constrcutor for test class " + cnm);
+      props.put(BuenoKey.KEY_COMMENT,"Default Constructor for test class " + cnm);
       String cxnm = cnm;
       int cidx = cxnm.lastIndexOf(".");
       if (cidx > 0) cxnm = cxnm.substring(cidx+1);
@@ -535,6 +529,8 @@ private class CallTestCase extends NewTestCase {
 
    private boolean no_return;
    private boolean no_args;
+   private String parsed_args;
+   private String parsed_result;
 
    CallTestCase(NewTestArea ta) {
       super(ta);
@@ -542,6 +538,20 @@ private class CallTestCase extends NewTestCase {
       no_args = (pls == null || pls.equals("()"));
       pls = method_data.getReturnType();
       no_return = (pls == null || pls.equals("void"));
+      parsed_args = null;
+      parsed_result = null;
+    }
+   
+   @Override public String getTestInput() {
+      if (test_args == null) return null;
+      if (parsed_args != null) return parsed_args;
+      return test_args.getText().trim();
+    }
+   
+   @Override public String getTestOutput() {
+      if (test_result == null) return null;
+      if (parsed_result != null) return parsed_result;
+      return test_result.getText().trim();
     }
 
    @Override void setup() {
@@ -576,7 +586,19 @@ private class CallTestCase extends NewTestCase {
     }
 
    @Override String check(BattNewTestChecker btc) {
-      return btc.checkCallTest(method_data,getTestInput(),getTestOutput());
+      if (test_args == null || test_result == null) return null;
+      String tin = test_args.getText().trim();
+      String tout = test_result.getText().trim();
+      StringBuffer ibuf = new StringBuffer();
+      StringBuffer obuf = new StringBuffer();
+      parsed_args = null;
+      parsed_result = null;
+      String err =  btc.checkCallTest(method_data,tin,tout,ibuf,obuf);
+      if (err == null) {
+         parsed_args = ibuf.toString();
+         parsed_result = obuf.toString();
+       }
+      return err;
     }
 
 }

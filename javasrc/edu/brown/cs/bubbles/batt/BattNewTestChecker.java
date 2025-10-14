@@ -62,7 +62,8 @@ BattNewTestChecker() { }
 /*										*/
 /********************************************************************************/
 
-String checkCallTest(BumpLocation mthd,String args,String rslt)
+String checkCallTest(BumpLocation mthd,String args,String rslt,
+      StringBuffer abuf,StringBuffer rbuf)
 {
    StreamTokenizer stok = getTokenizer(args);
    
@@ -78,6 +79,8 @@ String checkCallTest(BumpLocation mthd,String args,String rslt)
       if (i > 0) checkNextToken(stok,',');
       Value v = parseTypedValue(stok,atyps[i]);
       if (v == null) return "Bad parameter " + i + " value";
+      if (i > 0) abuf.append(",");
+      abuf.append(v.getValue());
     }
    if (atyps.length == 0) checkNextToken(stok,"void");
    checkNextToken(stok,')');
@@ -87,6 +90,9 @@ String checkCallTest(BumpLocation mthd,String args,String rslt)
    Value r = parseTypedValue(stok,rtyp);
    if (rtyp != null && rtyp != Type.VOID_TYPE && r == null)
       return "Bad return value";
+   if (r != null) { 
+      rbuf.append(r.getValue());
+    }
    if (!checkEnd(stok)) return "Return mismatch";
    
    return null;
@@ -191,12 +197,9 @@ private Value parseTypedValue(StreamTokenizer stok,Type jt)
       else return null;
       rslt = new ValueLiteral(Boolean.toString(val));
     }
-   else if (typ.equals("java/lang/String") ||
-         (typ.equals("java/lang/Object") && stok.ttype == '"')) {
-      if (stok.ttype == '"' || stok.ttype == '\'' || stok.ttype == StreamTokenizer.TT_WORD) {
-	 rslt = new ValueString(stok.sval);
-       }
-      else return null;
+   else if (stok.ttype == '"' && 
+         (typ.equals("java.lang.String") || typ.equals("java.lang.Object"))) {
+      rslt = new ValueString(stok.sval);
     }
    else if (stok.ttype == '[' && jt.getSort() == Type.ARRAY) {
       Type bjt = jt.getElementType();
@@ -228,6 +231,8 @@ private Value parseTypedValue(StreamTokenizer stok,Type jt)
        }
     }
    else {
+      // spaces here are relevant
+      stok.ordinaryChar(' ');
       StringBuffer buf = new StringBuffer();
       String var = null;
       if (stok.ttype == StreamTokenizer.TT_WORD) {
@@ -256,6 +261,9 @@ private Value parseTypedValue(StreamTokenizer stok,Type jt)
 	    buf.append(stok.sval);
 	    buf.append((char) ttyp);
 	  }
+         else if (ttyp == ' ' || ttyp == '\t') {
+            buf.append((char) ttyp);
+          }
 	 else if (ttyp == ',' && lvl == 0) {
             stok.pushBack();
             break;
@@ -265,9 +273,7 @@ private Value parseTypedValue(StreamTokenizer stok,Type jt)
 	    break;
 	  }
 	 else if (ttyp == StreamTokenizer.TT_WORD) {
-	    buf.append(" ");
 	    buf.append(stok.sval);
-	    buf.append(" ");
 	  }
 	 else if (ttyp == StreamTokenizer.TT_NUMBER) {
 	    Double db = Double.valueOf(stok.nval);
@@ -281,15 +287,49 @@ private Value parseTypedValue(StreamTokenizer stok,Type jt)
 	  }
 	 nextToken(stok);
        }
-      String s = buf.toString().trim();
+      stok.whitespaceChars(' ',' ');
+      String s = buf.toString();
       if (s.startsWith("{")) s = s.substring(1,s.length()-1);
       if (var == null) {
-	 rslt = new ValueLiteral(s);
+         // handle implicit Strings and others
+	 rslt = getResultValue(s,typ);
        }
       else return null;
     }
    
    return rslt;
+}
+
+
+private Value getResultValue(String s0,String typ)
+{
+   String s = s0;
+   if (s.equals("null")) {
+      return new ValueLiteral(s);
+    }
+   else if (typ.equals("java.lang.String")) {
+      return new ValueString(s);
+    }
+   else if (typ.equals("java.util.StringTokenizer")) {
+      if (!s.startsWith("new ")) {
+         s = "new StringTokenizer(" + fixString(s) + ")";
+       }
+    }
+   else if (typ.equals("java.io.StreamTokenizer")) {
+      if (!s.startsWith("new ")) {
+         s = "new StreamTokenizer(new StringReader(" +
+            fixString(s) + "))";
+       }
+    }
+   
+   return new ValueLiteral(s);
+}
+
+
+private String fixString(String s)
+{
+   if (s.startsWith("\"")) return s;
+   return "\"" + s + "\"";
 }
 
 
