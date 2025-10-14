@@ -312,12 +312,12 @@ private Value getResultValue(String s0,String typ)
     }
    else if (typ.equals("java.util.StringTokenizer")) {
       if (!s.startsWith("new ")) {
-         s = "new StringTokenizer(" + fixString(s) + ")";
+         s = "new java.util.StringTokenizer(" + fixString(s) + ")";
        }
     }
    else if (typ.equals("java.io.StreamTokenizer")) {
       if (!s.startsWith("new ")) {
-         s = "new StreamTokenizer(new StringReader(" +
+         s = "new java.ioStreamTokenizer(new java.io.StringReader(" +
             fixString(s) + "))";
        }
     }
