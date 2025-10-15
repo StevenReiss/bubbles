@@ -1181,26 +1181,26 @@ private class ListMover extends TransferHandler {
    @Override public boolean importData(TransferHandler.TransferSupport sup) {
       Transferable trn = sup.getTransferable();
       try {
-	 ListTransfer lt = (ListTransfer) trn.getTransferData(REGION_FLAVOR);
-	 JList.DropLocation loc = (JList.DropLocation) sup.getDropLocation();
-	 String txt = lt.getText(getComponent());
-	 int idx = loc.getIndex();
-	 BconRegion br = list_model.getElementAt(idx);
-	 if (lt.sameRegion(br)) return false;
-	 if (br == null && idx > 0) {
-	    br = list_model.getElementAt(idx-1);
-	    br.insertAfter(txt);
-	 }
-	 else if (br != null)
-	    br.insertBefore(txt);
+         ListTransfer lt = (ListTransfer) trn.getTransferData(REGION_FLAVOR);
+         JList.DropLocation loc = (JList.DropLocation) sup.getDropLocation();
+         String txt = lt.getText(getComponent());
+         int idx = loc.getIndex();
+         BconRegion br = list_model.getElementAt(idx);
+         if (lt.sameRegion(br)) return false;
+         if (br == null && idx > 0) {
+            br = list_model.getElementAt(idx-1);
+            br.insertAfter(txt);
+         }
+         else if (br != null)
+            br.insertBefore(txt);
        }
       catch (IOException e) {
-	 return false;
+         return false;
       }
       catch (UnsupportedFlavorException e) {
-	 return false;
+         return false;
       }
-
+   
       return true;
     }
 

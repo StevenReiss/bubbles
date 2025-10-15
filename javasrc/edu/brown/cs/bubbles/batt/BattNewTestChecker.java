@@ -317,7 +317,7 @@ private Value getResultValue(String s0,String typ)
     }
    else if (typ.equals("java.io.StreamTokenizer")) {
       if (!s.startsWith("new ")) {
-         s = "new java.ioStreamTokenizer(new java.io.StringReader(" +
+         s = "new java.io.StreamTokenizer(new java.io.StringReader(" +
             fixString(s) + "))";
        }
     }

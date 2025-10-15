@@ -613,6 +613,7 @@ String [] BOARD_BINARY_FILES = new String [] {
       "cloudbb",
       "extcodebb",
       "say",
+      "limballama.csh",
 };
 
 
