@@ -200,7 +200,6 @@ void noteMenuUsed(Component c)
 
 
 
-
 /********************************************************************************/
 /*										*/
 /*	Methods to build the actual menu					*/
@@ -562,7 +561,7 @@ private static class MenuSubBar extends JMenuBar implements MenuComponent {
       menu_btn = btn;
 
       if (BUBBLE_MENU_FONT.canDisplay(ARROW)) {
-	 menu_btn.setText(menu_btn.getText()+'\u25B6');
+	 menu_btn.setText(menu_btn.getText() + " " + ARROW);
        }
       else {
 	 menu_btn.setText(menu_btn.getText() + " >");
