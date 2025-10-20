@@ -86,7 +86,7 @@ BattTestCase(String name)
 /*										*/
 /********************************************************************************/
 
-@Override public synchronized String getName()			{ return test_name; }
+@Override public synchronized String getName()		{ return test_name; }
 @Override public synchronized String getClassName()		{ return class_name; }
 @Override public synchronized String getMethodName()		{ return method_name; }
 
@@ -96,7 +96,7 @@ BattTestCase(String name)
 @Override public BattCountData getCountData()			{ return count_data; }
 
 @Override public String getFailMessage()			{ return fail_message; }
-@Override public String getFailTrace()				{ return fail_trace; }
+@Override public String getFailTrace()			{ return fail_trace; }
 
 synchronized void setStatus(TestStatus sts)
 {

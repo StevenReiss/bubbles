@@ -219,6 +219,9 @@ private synchronized void removeContext()
       cur_menu.dispose();
       cur_menu = null;
     }
+   else {
+      BoardLog.logD("BALE","Attempt to remove context that isn't there");
+    }
    if (getter_thread != null) BoardThreadPool.finish(getter_thread);
 }
 
@@ -275,6 +278,7 @@ private final class EditKeyer extends KeyAdapter {
 	 e.consume();
        }
 
+      BoardLog.logD("BALE","Completion saw character " + ch);
       if (ch == '(' || ch == ')' || ch == ' ' || ch == ';' || ch == '*' || ch == ',') {
 	 removeContext();
       }
@@ -421,6 +425,10 @@ private synchronized void handleShow()
    catch (BadLocationException e) {
       removeContext();
     }
+   if (for_editor == null) {
+      BoardLog.logD("BALE","Context no longer relevant -- remove after show");
+      removeContext();
+    }
 }
 
 
@@ -564,6 +572,7 @@ private class CompletionGetter implements Runnable {
       Collection<BumpCompletion> completions = null;
 
       int ctr = for_document.getEditCounter();
+      BoardLog.logD("BALE","Start completions with " + ctr);
       BumpClient bcc = BumpClient.getBump();
       completions = bcc.getCompletions(for_document.getProjectName(),
 	    for_document.getFile(),

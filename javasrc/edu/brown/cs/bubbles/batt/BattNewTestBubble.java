@@ -467,6 +467,35 @@ private abstract class NewTestCase implements BattCallTest, CaretListener, Actio
       if (tb != null && !tb.equals("") && !tb.equals("void")) return false;
       return true;
     }
+   
+   @Override public String getTestDescription() {
+      StringBuffer buf = new StringBuffer();
+      buf.append("Calling " + method_name);
+      if (test_args != null) {
+          buf.append(" with (" + test_args + ") ");
+       }
+      if (test_result != null) {
+         NewTestOp op = (NewTestOp) (test_op.getSelectedItem());
+         switch (op) {
+            case EQL :
+            case SAME :
+               buf.append(" should yield ");
+               break;
+            case NEQ :
+            case DIFF :
+               buf.append(" should not yield ");
+               break;
+            case THROW :
+               buf.append(" should throw ");
+               break;
+          }
+         buf.append(test_result);
+       }
+      else {
+         buf.append(" should return normally");
+       }
+      return buf.toString();
+    }
 
    abstract void setup();
 
