@@ -20,7 +20,7 @@
 <entry key="Bema.plugin.31">edu.brown.cs.bubbles.bbook.BbookFactory</entry>
 <entry key="Bema.plugin.32">edu.brown.cs.bubbles.bhelp.BhelpFactory</entry>
 <!-- <entry key="Bema.plugin.33">edu.brown.cs.bubbles.barr.BarrFactory</entry>  -->
-<entry key="Bema.plugin.34">edu.brown.cs.bubbles.bucs.BucsFactory</entry>
+<!-- <entry key="Bema.plugin.34">edu.brown.cs.bubbles.bucs.BucsFactory</entry> -->
 <!-- <entry key="Bema.plugin.35">edu.brown.cs.bubbles.bdyn.BdynFactory</entry>  -->
 <entry key="Bema.plugin.36">edu.brown.cs.bubbles.bfix.BfixFactory</entry>
 <!-- <entry key="Bema.plugin.37">edu.brown.cs.bubbles.bicex.BicexFactory</entry> -->

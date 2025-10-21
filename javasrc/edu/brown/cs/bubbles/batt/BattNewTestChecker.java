@@ -303,7 +303,7 @@ private Value parseTypedValue(StreamTokenizer stok,Type jt)
 
 private Value getResultValue(String s0,String typ)
 {
-   String s = s0;
+   String s = s0.trim();
    if (s.equals("null")) {
       return new ValueLiteral(s);
     }

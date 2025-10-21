@@ -472,7 +472,7 @@ private abstract class NewTestCase implements BattCallTest, CaretListener, Actio
       StringBuffer buf = new StringBuffer();
       buf.append("Calling " + method_name);
       if (test_args != null) {
-          buf.append(" with (" + test_args + ") ");
+          buf.append(" with (" + test_args.getText() + ") ");
        }
       if (test_result != null) {
          NewTestOp op = (NewTestOp) (test_op.getSelectedItem());
@@ -489,7 +489,7 @@ private abstract class NewTestCase implements BattCallTest, CaretListener, Actio
                buf.append(" should throw ");
                break;
           }
-         buf.append(test_result);
+         buf.append(test_result.getText());
        }
       else {
          buf.append(" should return normally");
