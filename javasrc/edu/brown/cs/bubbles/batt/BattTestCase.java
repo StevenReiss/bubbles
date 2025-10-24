@@ -236,6 +236,13 @@ synchronized FileState usesClasses(Map<String,FileState> clsmap)
    return count_data.getMethodUsage(mthd);
 }
 
+public synchronized UseMode usesClass(String clss)
+{
+   if (count_data == null) return UseMode.UNKNOWN;
+   
+   return count_data.getClassUsage(clss); 
+}
+
 
 long getUpdateTime()			{ return update_time; }
 

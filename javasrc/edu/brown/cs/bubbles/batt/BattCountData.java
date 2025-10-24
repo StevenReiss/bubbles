@@ -117,6 +117,22 @@ UseMode getMethodUsage(String mthd)
 }
 
 
+UseMode getClassUsage(String cls)
+{
+   UseMode um = UseMode.NONE;
+   
+   for (MethodCountData mcd : method_data.values()) {
+      String cnm = mcd.computeClassName();
+      if (cls.startsWith(cnm)) {
+         if (mcd.getTopCount() > 0) return UseMode.DIRECT;
+         else if (mcd.getCalledCount() > 0) um = UseMode.INDIRECT;
+       }
+    } 
+   
+   return um;
+}
+
+
 
 /********************************************************************************/
 /*                                                                              */
@@ -234,14 +250,17 @@ private static class MethodCountData {
       return nm;
     }
    
-   FileState usesClasses(Map<String,FileState> clsset,FileState fs) {
-      if (class_name == null) {
-	 if (method_name == null) return fs;
-	 int i1 = method_name.indexOf("(");
-	 int i2 = method_name.lastIndexOf(".",i1);
-	 if (i2 > 0) class_name = method_name.substring(0,i2);
-	 else return fs;
+    String computeClassName() {
+      if (class_name == null && method_name != null) {
+         int i1 = method_name.indexOf("(");
+         int i2 = method_name.lastIndexOf(".",i1);
+         if (i2 > 0) class_name = method_name.substring(0,i2);
        }
+      return class_name;
+    }
+   
+   FileState usesClasses(Map<String,FileState> clsset,FileState fs) {
+      if (computeClassName() == null) return fs;
       FileState fs1 = clsset.get(class_name);
       if (fs1 == null) return fs;
       return fs1.merge(fs);

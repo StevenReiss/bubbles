@@ -246,6 +246,91 @@ public void removedBattModelListener(BattModelListener bml)
 
 
 /********************************************************************************/
+/*                                                                              */
+/*      Helper methods                                                          */
+/*                                                                              */
+/********************************************************************************/
+
+public String findTestClasses(String project,String classname,String methodname,Set<String> classes)
+{
+   // get proper class and method names
+   if (classname == null && methodname != null) {
+      String cnm = methodname;
+      int idx1= cnm.indexOf("(");
+      if (idx1 > 0) cnm = cnm.substring(0,idx1);
+      int idx2 = cnm.lastIndexOf(".");
+      if (idx2 > 0) cnm = cnm.substring(0,idx2);
+      classname = cnm;
+    }
+   boolean isinner = false;
+   int idx3 = classname.lastIndexOf(".");
+   for ( ; ; ) {
+      int idx4 = classname.lastIndexOf("$");
+      if (idx4 > 0 && idx4 > idx3) classname = classname.substring(0,idx4);
+      else break;
+      isinner = true;
+    }
+   
+   // if there are existing tests for this method/class then add them to result
+   if (methodname != null) {
+      for (BattTestCase btc : batt_model.getAllTests()) {
+         UseMode um = btc.usesMethod(methodname);
+         if (um == UseMode.DIRECT) {
+            String cnm = btc.getClassName();
+            classes.add(cnm);
+          }
+       }
+    }
+   if (classname != null && classes.isEmpty()) {
+      for (BattTestCase btc : batt_model.getAllTests()) {
+         UseMode um = btc.usesMethod(classname);
+         if (um == UseMode.DIRECT) {
+            String cnm = btc.getClassName();
+            classes.add(cnm);
+          }
+       }
+    }
+   
+   // next check <class>Test as a potential class for testing
+   String tcnm = classname + "Test";
+   List<BumpLocation> locs = BumpClient.getBump().findTypes(project,classname);
+   if (locs != null) {
+      for (BumpLocation loc : locs) {
+         String nm = loc.getSymbolName();
+         // check for testing in the class itself
+         if (nm.equals(classname) && Modifier.isPublic(loc.getModifiers())) {
+            // check if the class has a public default constructor so it can be used
+            List<BumpLocation> cntrs = BumpClient.getBump().findMethods(project,classname,
+                  false,true,true,false);
+            boolean cok = false;
+            if (cntrs.size() == 0) cok = true;
+            for (BumpLocation cloc : cntrs) {
+               String prms = cloc.getParameters();
+               if (Modifier.isPublic(loc.getModifiers()) &&  prms != null && prms.equals("()")) cok = true;
+             }
+            if (cok) classes.add(classname);
+          }
+         // check for a <class>Test class and see if it is usable
+         else if (nm.equals(tcnm) && Modifier.isPublic(loc.getModifiers()) && !isinner) {
+            // ensure method is not private if we want to call it from another class
+            List<BumpLocation> mthds = BumpClient.getBump().findMethod(project,methodname,false);
+            boolean fok = false;
+            for (BumpLocation bl : mthds) {
+               if (Modifier.isPrivate(bl.getModifiers())) fok = false;
+               else fok = true;
+             }
+            
+            if (fok) classes.add(classname);
+          }
+       }
+    }
+   
+   return tcnm;
+}
+
+
+
+/********************************************************************************/
 /*										*/
 /*	Menu button handling							*/
 /*										*/
@@ -536,56 +621,10 @@ private static class BattContexter implements BaleContextListener {
              menu.add(tda);
            }
         }
-   
-       Set<String> classes = new TreeSet<String>();
-       if (direct.size() > 0) {
-          for (BattTestCase bct : direct) {
-             String cnm = bct.getClassName();
-             classes.add(cnm);
-           }
-        }
-   
-       String cnm = mthd;
-       int idx1= cnm.indexOf("(");
-       if (idx1 > 0) cnm = cnm.substring(0,idx1);
-       int idx2 = cnm.lastIndexOf(".");
-       if (idx2 > 0) cnm = cnm.substring(0,idx2);
-       int idx3 = cnm.lastIndexOf(".");
-       boolean isinner = false;
-       for ( ; ; ) {
-          int idx4 = cnm.lastIndexOf("$");
-          if (idx4 > 0 && idx4 > idx3) cnm = cnm.substring(0,idx4);
-          else break;
-          isinner = true;
-        }
-       String tcnm = cnm + "Test";
+       
+       Set<String> classes = new TreeSet<>();
        String pnm = cfg.getEditor().getContentProject();
-       List<BumpLocation> locs = BumpClient.getBump().findTypes(pnm,cnm);
-       if (locs != null) {
-          for (BumpLocation loc : locs) {
-             String nm = loc.getSymbolName();
-             if (nm.equals(cnm) && Modifier.isPublic(loc.getModifiers())) {
-                List<BumpLocation> cntrs = BumpClient.getBump().findMethods(pnm,cnm,false,true,true,false);
-                boolean cok = false;
-                if (cntrs.size() == 0) cok = true;
-                for (BumpLocation cloc : cntrs) {
-                   String prms = cloc.getParameters();
-                   if (Modifier.isPublic(loc.getModifiers()) &&  prms != null && prms.equals("()")) cok = true;
-                 }
-                if (cok) classes.add(cnm);
-              }
-             else if (nm.equals(tcnm) && Modifier.isPublic(loc.getModifiers()) && !isinner) {
-                List<BumpLocation> mthds = BumpClient.getBump().findMethod(pnm,mthd,false);
-                boolean fok = false;
-                for (BumpLocation bl : mthds) {
-                   if (Modifier.isPrivate(bl.getModifiers())) fok = false;
-                   else fok = true;
-                 }
-                
-                if (fok) classes.add(cnm);
-              }
-           }
-        }
+       String tcnm = getFactory().findTestClasses(pnm,null,mthd,classes); 
    
        String mnm = mthd;
        int idx = mnm.indexOf("(");
