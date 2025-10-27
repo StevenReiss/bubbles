@@ -253,7 +253,9 @@ public void removedBattModelListener(BattModelListener bml)
 
 public String findTestClasses(String project,String classname,String methodname,Set<String> classes)
 {
-   // get proper class and method names
+   BumpClient bc = BumpClient.getBump();
+   
+   // get proper class and method and package names
    if (classname == null && methodname != null) {
       String cnm = methodname;
       int idx1= cnm.indexOf("(");
@@ -269,6 +271,17 @@ public String findTestClasses(String project,String classname,String methodname,
       if (idx4 > 0 && idx4 > idx3) classname = classname.substring(0,idx4);
       else break;
       isinner = true;
+    }
+   String packagename = classname;
+   for ( ; ; ) {
+      int idx6 = packagename.lastIndexOf(".");
+      if (idx6 < 0) {
+         packagename = null;
+         break;
+       }
+      packagename = packagename.substring(0,idx6);
+      List<BumpLocation> plocs = bc.findPackage(project,packagename);
+      if (plocs != null && plocs.size() > 0) break;
     }
    
    // if there are existing tests for this method/class then add them to result
@@ -293,7 +306,8 @@ public String findTestClasses(String project,String classname,String methodname,
    
    // next check <class>Test as a potential class for testing
    String tcnm = classname + "Test";
-   List<BumpLocation> locs = BumpClient.getBump().findTypes(project,classname);
+   List<BumpLocation> locs = bc.findTypes(project,classname);
+   boolean usegen = true;
    if (locs != null) {
       for (BumpLocation loc : locs) {
          String nm = loc.getSymbolName();
@@ -306,21 +320,34 @@ public String findTestClasses(String project,String classname,String methodname,
             if (cntrs.size() == 0) cok = true;
             for (BumpLocation cloc : cntrs) {
                String prms = cloc.getParameters();
-               if (Modifier.isPublic(loc.getModifiers()) &&  prms != null && prms.equals("()")) cok = true;
+               if (Modifier.isPublic(loc.getModifiers()) &&  prms != null &&
+                     prms.equals("()")) cok = true;
              }
             if (cok) classes.add(classname);
           }
          // check for a <class>Test class and see if it is usable
          else if (nm.equals(tcnm) && Modifier.isPublic(loc.getModifiers()) && !isinner) {
             // ensure method is not private if we want to call it from another class
-            List<BumpLocation> mthds = BumpClient.getBump().findMethod(project,methodname,false);
+            List<BumpLocation> mthds = BumpClient.getBump().findMethod(project,
+                  methodname,false);
             boolean fok = false;
             for (BumpLocation bl : mthds) {
                if (Modifier.isPrivate(bl.getModifiers())) fok = false;
                else fok = true;
              }
             
-            if (fok) classes.add(classname);
+            if (fok) {
+               usegen = false;
+               classes.add(classname);
+             }
+          }
+       }
+    }
+   if (usegen && packagename != null) {
+      locs = bc.findTypes(project,packagename + "*Test");
+      if (locs != null) {
+         for (BumpLocation loc : locs) {
+            classes.add(loc.getSymbolName());
           }
        }
     }
