@@ -702,7 +702,13 @@ protected void classText(StringBuffer buf,BuenoProperties props)
    else if (props.getBooleanProperty(BuenoKey.KEY_ADD_COMMENT)) {
       setupBlockComment(buf,props,cmmt);
     }
-
+   
+   String attrs = props.getStringProperty(BuenoKey.KEY_ATTRIBUTES);
+   if (attrs != null && !attrs.isEmpty()) {
+      buf.append(attrs);
+      buf.append(" ");
+    }
+   
    int mods = props.getModifiers();
    int ct = 0;
    ct = addModifier(buf,"private",Modifier.isPrivate(mods),ct);
@@ -725,7 +731,8 @@ protected void classText(StringBuffer buf,BuenoProperties props)
    buf.append("\n");
 
    String cnts = props.getStringProperty(BuenoKey.KEY_CONTENTS);
-   if (cnts != null) buf.append(cnts); // insert contents here
+   if (cnts != null) buf.append(cnts);
+   
    buf.append("\n");
    buf.append("}\t// end of " + typ + " " + nam + "\n");
 }
@@ -780,6 +787,12 @@ protected void innerClassText(StringBuffer buf,BuenoProperties props)
     }
 
    buf.append(iind);
+   String attrs = props.getStringProperty(BuenoKey.KEY_ATTRIBUTES);
+   if (attrs != null && !attrs.isEmpty()) {
+      buf.append(attrs);
+      buf.append(" ");
+    }
+   
    int mods = props.getModifiers();
    int ct = 0;
    ct = addModifier(buf,"private",Modifier.isPrivate(mods),ct);
@@ -802,6 +815,10 @@ protected void innerClassText(StringBuffer buf,BuenoProperties props)
 
    buf.append(" {\n");
    buf.append("\n");
+   
+   String cnts = props.getStringProperty(BuenoKey.KEY_CONTENTS);
+   if (cnts != null) buf.append(cnts);
+   
    buf.append("\n");
    buf.append("}\t// end of inner " + typ + " " + nam + "\n");
    buf.append("}\n");
@@ -835,6 +852,12 @@ protected void fieldText(StringBuffer buf,BuenoProperties props)
     }
 
    buf.append(iind);
+   String attrs = props.getStringProperty(BuenoKey.KEY_ATTRIBUTES);
+   if (attrs != null && !attrs.isEmpty()) {
+      buf.append(attrs);
+      buf.append(" ");
+    }
+   
    int mods = props.getModifiers();
    int ct = 0;
    ct = addModifier(buf,"private",Modifier.isPrivate(mods),ct);
