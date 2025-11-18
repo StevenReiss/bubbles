@@ -168,7 +168,7 @@ private class ImportFinder extends ASTVisitor {
 
    private void noteType(IBinding n) {
       if (n instanceof ITypeBinding) {
-	 noteType((ITypeBinding) n);
+         noteType((ITypeBinding) n);
        }
     }
 

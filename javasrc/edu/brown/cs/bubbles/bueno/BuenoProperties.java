@@ -287,6 +287,15 @@ String getIndentProperty(String k,int dflt)
 }
 
 
+String getFullText()
+{
+   String ft = getStringProperty(BuenoKey.KEY_FULLTEXT); 
+   if (ft == null || ft.isEmpty()) return null;
+   
+   return ft;
+}
+
+
 /********************************************************************************/
 /*										*/
 /*	Key access methods							*/

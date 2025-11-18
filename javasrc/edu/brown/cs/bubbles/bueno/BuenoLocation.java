@@ -68,15 +68,15 @@ public String getClassName()			{ return null; }
 
 
 
-public int getOffset()				{ return -1; }
+public int getOffset()			{ return -1; }
 
-public File getFile()				{ return null; }
+public File getFile()			        { return null; }
 
-public String getInsertAfter()			{ return null; }
+public String getInsertAfter()		{ return null; }
 
 public String getInsertBefore() 		{ return null; }
 
-public String getInsertAtEnd()			{ return null; }
+public String getInsertAtEnd()		{ return null; }
 
 public String getFileWhere()                   
 {
@@ -90,7 +90,6 @@ public String getFileWhere()
     }
    return rslt;
 }
-
 
 
 
@@ -112,7 +111,7 @@ public void setLocation(int offset,int len)
 }
 
 
-public File getInsertionFile()			{ return insert_file; }
+public File getInsertionFile()		{ return insert_file; }
 public int getInsertionOffset() 		{ return insert_offset; }
 public int getInsertionLength() 		{ return insert_length; }
 

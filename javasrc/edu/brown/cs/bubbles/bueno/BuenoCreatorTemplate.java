@@ -62,6 +62,12 @@ BuenoCreatorTemplate()
 
 @Override protected void classText(StringBuffer buf,BuenoProperties props)
 {
+   String full = props.getFullText();
+   if (full != null) {
+      buf.append(full);
+      return;
+    }
+   
    String typ = props.getStringProperty(BuenoKey.KEY_TYPE);
    Reader r = findTemplate(typ,props);
    if (r == null) r = findTemplate("type",props);

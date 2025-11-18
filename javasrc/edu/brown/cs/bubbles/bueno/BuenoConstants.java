@@ -117,6 +117,7 @@ enum BuenoKey {
    KEY_ATTRIBUTES,		// String
    KEY_CREATE_INIT,		// Boolean (create __init__ module)
    KEY_REFORMAT,		// Boolean (reformat after insertion)
+   KEY_FULLTEXT,                // String -- complete text
 }
 
 

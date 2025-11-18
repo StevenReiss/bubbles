@@ -1158,7 +1158,19 @@ public void handleFixImports(String proj,String bid,String file,int demand,int s
 	 String [] ord = order.split("[;,]");
 	 imp.setImportOrder(ord);
        }
-      if (add != null) imp.addImport(add);
+      if (add != null) {
+         if (add.startsWith("static ")) {
+            int idx = add.indexOf(" ");
+            add = add.substring(idx+1).trim();
+            idx = add.lastIndexOf(".");
+            String cls = add.substring(0,idx);
+            String itm = add.substring(idx+1);
+            imp.addStaticImport(cls,itm,false);
+          }
+         else {
+            imp.addImport(add);
+          }
+       }
       else {
 	 for (ITypeBinding tb : imports) {
 	    BedrockPlugin.logD("Add type to importrewrite: " + tb.getQualifiedName());

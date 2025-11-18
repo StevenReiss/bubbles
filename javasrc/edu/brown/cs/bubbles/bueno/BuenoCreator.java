@@ -216,11 +216,17 @@ protected void createFile(BuenoLocation where,BuenoProperties props)
 {
    StringBuffer buf = new StringBuffer();
    
-   setupModule(buf,props);
+   String full = props.getFullText();
+   if (full != null) {
+      buf.append(full);
+    }
+   else {
+      setupModule(buf,props);
+    }
    
    String nm = props.getStringProperty(BuenoKey.KEY_NAME);
    File f = where.getFile();
-   if (f != null) {
+   if (f != null) { 
       File f1 = new File(f,nm);
       nm = f1.getPath();
     }
@@ -266,10 +272,6 @@ protected void setupModule(StringBuffer buf,BuenoProperties props)
 {
    moduleText(buf,props);
 }
-
-
-
-
 
 
 
@@ -405,7 +407,8 @@ protected void setupMethod(StringBuffer buf,BuenoProperties props)
       props.put(BuenoKey.KEY_CONTENTS,"// method body goes here");
     }
 
-   if (returns != null && !returns.equals("void") && props.getStringProperty(BuenoKey.KEY_RETURN_STMT) == null) {
+   if (returns != null && !returns.equals("void") && 
+         props.getStringProperty(BuenoKey.KEY_RETURN_STMT) == null) {
       String rstmt = null;
       if (returns.equals("boolean")) rstmt = "return false;";
       else if (returns.equals("int") || returns.equals("float") ||
@@ -613,6 +616,12 @@ private void setupJavadocComment(StringBuffer buf,BuenoProperties props,String t
 
 protected void methodText(StringBuffer buf,BuenoProperties props)
 {
+   String full = props.getFullText();
+   if (full != null) {
+      buf.append(full);
+      return;
+    }
+   
    StringBuffer pbuf = new StringBuffer();
    pbuf.append("\n\n");
    if (props.getBooleanProperty(BuenoKey.KEY_ADD_COMMENT)) {
@@ -664,6 +673,12 @@ protected void methodText(StringBuffer buf,BuenoProperties props)
 
 protected void classText(StringBuffer buf,BuenoProperties props)
 {
+   String full = props.getFullText();
+   if (full != null) {
+      buf.append(full);
+      return;
+    }
+
    String pkg = props.getStringProperty(BuenoKey.KEY_PACKAGE);
 
    if (pkg != null) {
@@ -803,6 +818,12 @@ protected void innerClassText(StringBuffer buf,BuenoProperties props)
 
 protected void fieldText(StringBuffer buf,BuenoProperties props)
 {
+   String full = props.getFullText();
+   if (full != null) {
+      buf.append(full);
+      return;
+    }
+   
    String iind = props.getInitialIndentString();
 
    String cmmt = props.getStringProperty(BuenoKey.KEY_COMMENT);
