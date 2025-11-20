@@ -882,7 +882,7 @@ private boolean loadFileProps(File f)
       return true;
     }
    catch (IOException e) {
-      BoardLog.logE("BOARD", "Problem reading property file: " + e);
+      BoardLog.logE("BOARD", "Problem reading property file " + f,e);
     }
 
    return false;

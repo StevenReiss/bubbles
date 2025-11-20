@@ -1447,6 +1447,16 @@ private final class EclipseUpdater implements DocumentListener {
 
 @Override public void handleFileRemoved(String proj,String file)
 {
+   File f1 = getFile();
+   f1 = IvyFile.getCanonical(f1);
+   File f2 = new File(file);
+   f2 = IvyFile.getCanonical(f2);
+   if (!f1.equals(f2)) {
+      BoardLog.logD("BALE",
+            "Attempt to remove editor for wrong file " + f1 + " " + f2);
+      return;
+    }
+   
    for (BaleFragment bf : fragment_map.keySet()) {
       bf.handleFileRemoved();
     }

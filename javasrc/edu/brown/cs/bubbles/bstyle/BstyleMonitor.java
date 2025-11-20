@@ -87,9 +87,10 @@ BstyleMonitor(BstyleMain bm,String mintid)
 
 void start()
 {
-   mint_control.register("<BSTYLE CMD='$1' />",new BstyleHandler());
+   IvyLog.logD("BSTYLE","Register for messages");
    mint_control.register("<BEDROCK SOURCE='ECLIPSE' TYPE='_VAR_0' />",new EclipseHandler());
    mint_control.register("<BUBBLES DO='_VAR_0' />",new BubblesHandler());
+   mint_control.register("<BSTYLE CMD='_VAR_0' />",new BstyleHandler());
    
    new WaitForExit().start();
 }
@@ -266,7 +267,7 @@ private void handleErrors(String proj,String filename,Element messages)
       String fnm = IvyXml.getAttrString(pelt,"FILE");
       if (fnm != null) {
          BstyleFile bf1 = bstyle_main.getFileManager().findFile(fnm);
-         if (errmap.get(bf1) != Boolean.TRUE) {
+         if (bf1 != null && errmap.get(bf1) != Boolean.TRUE) {
             if (IvyXml.getAttrBool(pelt,"ERROR")) {
                errmap.put(bf1,true);
              }
@@ -428,7 +429,7 @@ private void handleResourceChange(Element res)
 /*                                                                              */
 /********************************************************************************/
 
-private String processCommand(String cmd,String sid,Element e)
+private String processCommand(String cmd,Element e)
 {
    IvyXmlWriter xw = new IvyXmlWriter();
    xw.begin("RESULT");
@@ -458,14 +459,13 @@ private String processCommand(String cmd,String sid,Element e)
 private final class BstyleHandler implements MintHandler {
    
    @Override public void receive(MintMessage msg,MintArguments args) {
-      IvyLog.logI("BSTYLE","Process command: " + msg.getText());
+      IvyLog.logI("BSTYLE","Process BSTYLE command: " + msg.getText());
       String cmd = args.getArgument(0);
-      String sid = args.getArgument(1);
       Element e = msg.getXml();
       String rslt = null;
       
       try {
-         rslt = processCommand(cmd,sid,e);
+         rslt = processCommand(cmd,e);
          IvyLog.logI("BSTYLE","COMMAND RESULT: " + rslt);
        }
       
@@ -520,9 +520,14 @@ private final class EclipseHandler implements MintHandler {
             break;
          case "EDITERROR" :
          case "FILEERROR" :
-            handleErrors(IvyXml.getAttrString(e,"PROJECT"),
-                  IvyXml.getAttrString(e,"FILE"),
-                  IvyXml.getChild(e,"MESSAGES"));
+            try {
+               handleErrors(IvyXml.getAttrString(e,"PROJECT"),
+                     IvyXml.getAttrString(e,"FILE"),
+                     IvyXml.getChild(e,"MESSAGES"));
+             }
+            catch (Throwable t) {
+               IvyLog.logE("BSTYLE","Problem handling errors",t);
+             }
             break;
          case "EDIT" :
             String bid = IvyXml.getAttrString(e,"BID");
@@ -538,11 +543,16 @@ private final class EclipseHandler implements MintHandler {
                if (data != null) txt = new String(data);
                else remove = true;
              }
-            handleEdit(msg,bid,
-                  new File(IvyXml.getAttrString(e,"FILE")),
-                  IvyXml.getAttrInt(e,"LENGTH"),
-                  IvyXml.getAttrInt(e,"OFFSET"),
-                  complete,remove,txt);
+            try {
+               handleEdit(msg,bid,
+                     new File(IvyXml.getAttrString(e,"FILE")),
+                     IvyXml.getAttrInt(e,"LENGTH"),
+                     IvyXml.getAttrInt(e,"OFFSET"),
+                     complete,remove,txt);
+             }
+            catch (Throwable t) {
+               IvyLog.logE("BSTYLE","Problem handling edits",t);
+             }
             msg.replyTo("<OK/>");
             break;
          case "RESOURCE" :

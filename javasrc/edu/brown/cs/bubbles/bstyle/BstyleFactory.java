@@ -222,7 +222,7 @@ void startBstyleServer()
 
       for (int i = 0; i < 100; ++i) {
 	 MintDefaultReply rply = new MintDefaultReply();
-	 mc.send("<BVCR DO='PING' />",rply,MINT_MSG_FIRST_NON_NULL);
+	 mc.send("<BSTYLE CMD='PING' />",rply,MINT_MSG_FIRST_NON_NULL);
 	 String rslt = rply.waitForString(1000);
 	 if (rslt != null) {
 	    server_running = true;

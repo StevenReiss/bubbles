@@ -858,7 +858,7 @@ private void handleEvent(DocumentEvent e,BaleElementEvent ee)
 
 @Override public void handleFileRemoved()
 {
-   BoardLog.logD("BALE","Making orphan due to file removal");
+   BoardLog.logD("BALE","Making orphan due to file removal: " + fragment_name);
    is_orphan = true;
    startReload();
 }
@@ -870,7 +870,7 @@ private void handleEvent(DocumentEvent e,BaleElementEvent ee)
 
    int ln = getLength();
    if (ln <= 0) {
-      BoardLog.logD("BALE","Making orphan");
+      BoardLog.logD("BALE","Making orphan because of length: " + fragment_name);
       is_orphan = true;
     }
 }
