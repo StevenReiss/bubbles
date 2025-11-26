@@ -147,10 +147,13 @@ private static final String VERSION_RESOURCE = "version.xml";
  *	Arguments to File.createTempFile for updater file
  **/
 
-private static final String	UPDATER_PREFIX = "bubblesupdater";
-private static final String	UPDATER_SUFFIX = ".jar";
+private static final String UPDATER_PREFIX = "bubblesupdater";
+private static final String UPDATER_SUFFIX = ".jar";
 
 private static final String BUBBLES_DIR = "https://www.cs.brown.edu/people/spr/bubbles/";
+
+private static final String BOARD_PLUGIN_DESCRIPTION_URL = "/plugins.xml";
+
 
 
 /********************************************************************************/
@@ -678,8 +681,8 @@ private Map<String,URL> getPluginData()
    Map<String,URL> rslt = new HashMap<>();
    
    try {
-      URL u = new URI(BUBBLES_DIR + "/plugins.xml").toURL();
-      InputStream uins = u.openConnection().getInputStream();
+      URL u = new URI(BUBBLES_DIR + BOARD_PLUGIN_DESCRIPTION_URL).toURL();
+      HttpURLConnection.setFollowRedirects(true);      InputStream uins = u.openConnection().getInputStream();
       Element xml = loadXmlFromStream(uins);
       NodeList nl = xml.getElementsByTagName("PLUGIN");
       for (int i = 0; i < nl.getLength(); ++i) {

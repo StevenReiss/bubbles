@@ -191,7 +191,7 @@
       <antcall target='updater' />
       <copy file='bubbles.jar' tofile='${BUBBLES}/bubbles.jar' />
       <copy file='bubbles.jar' tofile='/pro/web/web/people/spr/bubbles/bubbles.jar' />
-      <copy file='plugins.xml' tofile='/pro/web/web/people/spr/bubbles/plugins.xml' />
+      <copy file='${BUBBLES}/resources/plugins.xml' tofile='/pro/web/web/people/spr/bubbles/plugins.xml' />
       <copy file='${BUBBLES}/lib/version.xml' tofile='/pro/web/web/people/spr/bubbles/version.xml' />
       <copy file='updater.jar' tofile='/pro/web/web/people/spr/bubbles/updater.jar' />
       <antcall target='installplugins' />

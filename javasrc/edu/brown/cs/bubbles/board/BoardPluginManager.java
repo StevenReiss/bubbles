@@ -112,8 +112,6 @@ private static Set<PluginData> all_plugins = null;
 private static boolean                  use_http = false;
 
 
-private static final String PLUGIN_DESCRIPTION_URL = "/plugins.xml";
-
 
 /********************************************************************************/
 /*										*/
@@ -416,7 +414,7 @@ private static synchronized void getPluginData()
 
    all_plugins = new TreeSet<>();
    
-   String utxt = BUBBLES_DIR + PLUGIN_DESCRIPTION_URL;
+   String utxt = BUBBLES_DIR + BOARD_PLUGIN_DESCRIPTION_URL;
    for (int i = 0; i < 2; ++i) {
       try {
          if (use_http) utxt = utxt.replace("https","http");
@@ -636,7 +634,7 @@ private static class PluginData implements Comparable<PluginData> {
 
 
 
-   @Override public int compareTo(PluginData pd) {
+   @Override public int compareTo(PluginData pd) { 
       return plugin_name.compareTo(pd.plugin_name);
     }
 

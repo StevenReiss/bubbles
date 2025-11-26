@@ -445,6 +445,12 @@ String BOARD_DOCUMENTATION_FILE = "Documentation.bubbles";
 String BOARD_RESTART_CLASS = "edu.brown.cs.bubbles.bema.BemaMain";
 
 
+/**
+ *      HTTP location of the plugin description file
+ **/
+
+String BOARD_PLUGIN_DESCRIPTION_URL = "/plugins.xml";
+
 
 
 /********************************************************************************/

@@ -31,22 +31,13 @@
      <MAIN>edu.brown.cs.rose.bush.BushFactory</MAIN>
      <REQUIRES>SEEDE</REQUIRES>
      <REQUIRES>FAIT</REQUIRES>
-     <WARNING><![CDATA[
-<html>
-<p> <strong style="color: red">WARNING!</strong>:</p>
-<br>
-<p>ROSE is experimental research software. </p>
-<br>
-<p>User actions involving ROSE are recorded and sent to the researchers
-to help improve the system and to understand its usage.  All data is sent
-anonymously and no user code or code fragments are included. You will only be identified by a random string
-(you can find it in ~/.bubbles/Rose.props as Rose.user.id).</p>
-<br>
-<p>For more information contact Steven Reiss at spr@cs.brown.edu.</p>
-<br>
-<p>By installing this plug-in you argee to have these terms.</p>
-</html>
-]]></WARNING>
+  </PLUGIN>
+
+  <PLUGIN NAME="LIMBA"
+	  DESCRIPTION="Smart Assistant (LLM) interface for Java"
+	  URL="https://www.cs.brown.edu/people/spr/bubbles/dropins/limba.jar" >
+     <RESOURCE>Bait.props</RESOURCE>
+     <MAIN>edu.brown.cs.seedebb.bicex.BaitFactory</MAIN>
   </PLUGIN>
 
 </PLUGINS>
