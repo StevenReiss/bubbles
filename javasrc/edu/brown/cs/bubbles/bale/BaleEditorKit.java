@@ -2756,50 +2756,50 @@ private static class GotoImplementationAction extends TextAction {
    @Override public void actionPerformed(ActionEvent e) {
       BowiFactory.startTask();
       try {
-	 BaleEditorPane target = getBaleEditor(e);
-	 if (!checkReadEditor(target)) return;
-	 BaleDocument bd = target.getBaleDocument();
-	 int soff = target.getSelectionStart();
-	 int eoff = target.getSelectionEnd();
-	 if (eoff != soff) eoff = soff;
-
-	 BumpClient bc = BumpClient.getBump();
-	 List<BumpLocation> locs;
-	 BalePosition sp;
-	 try {
-	    sp = (BalePosition) bd.createPosition(soff);
-	    locs = bc.findImplementations(null,
-					     bd.getFile(),
-					     bd.mapOffsetToEclipse(soff),
-					     bd.mapOffsetToEclipse(eoff));
-	  }
-	 catch (BadLocationException ex) {
-	    return;
-	  }
-
-	 if (doClassSearchAction(locs)) {
-	    goto_search_action.actionPerformed(e);
-	    return;
-	  }
-
-	 if (locs == null || locs.size() == 0) {
-	    if (e.getActionCommand() == null) {
-	       e = new ActionEvent(target,e.getID(),"GotoImplementationAction",e.getWhen(),e.getModifiers());
-	     }
-	    goto_doc_action.actionPerformed(e);
-	    return;
-	  }
-
-	 if (locs.size() == 1) {
-	    BumpLocation loc0 = locs.get(0);
-	    int foff = bd.mapOffsetToEclipse(soff);
-	    if (foff >= loc0.getOffset() && foff <= loc0.getEndOffset()) {
-	       goto_reference_action.actionPerformed(e);
-	       return;
-	     }
-	  }
-
-	 BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
+         BaleEditorPane target = getBaleEditor(e);
+         if (!checkReadEditor(target)) return;
+         BaleDocument bd = target.getBaleDocument();
+         int soff = target.getSelectionStart();
+         int eoff = target.getSelectionEnd();
+         if (eoff != soff) eoff = soff;
+   
+         BumpClient bc = BumpClient.getBump();
+         List<BumpLocation> locs;
+         BalePosition sp;
+         try {
+            sp = (BalePosition) bd.createPosition(soff);
+            locs = bc.findImplementations(null,
+        				     bd.getFile(),
+        				     bd.mapOffsetToEclipse(soff),
+        				     bd.mapOffsetToEclipse(eoff));
+          }
+         catch (BadLocationException ex) {
+            return;
+          }
+   
+         if (doClassSearchAction(locs)) {
+            goto_search_action.actionPerformed(e);
+            return;
+          }
+   
+         if (locs == null || locs.size() == 0) {
+            if (e.getActionCommand() == null) {
+               e = new ActionEvent(target,e.getID(),"GotoImplementationAction",e.getWhen(),e.getModifiers());
+             }
+            goto_doc_action.actionPerformed(e);
+            return;
+          }
+   
+         if (locs.size() == 1) {
+            BumpLocation loc0 = locs.get(0);
+            int foff = bd.mapOffsetToEclipse(soff);
+            if (foff >= loc0.getOffset() && foff <= loc0.getEndOffset()) {
+               goto_reference_action.actionPerformed(e);
+               return;
+             }
+          }
+   
+         BaleBubbleStack.createBubbles(target,sp,null,true,locs,BudaLinkStyle.STYLE_SOLID);
        }
       finally { BowiFactory.stopTask(); }
       BoardMetrics.noteCommand("BALE","GoToImplementation");
