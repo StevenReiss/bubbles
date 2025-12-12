@@ -1664,7 +1664,7 @@ private class ProcessData implements BumpProcess {
     }
 
    @Override public Iterable<BumpThread> getThreads() {
-      List<BumpThread> rslt = new ArrayList<BumpThread>();
+      List<BumpThread> rslt = new ArrayList<>();
       for (ThreadData td : active_threads.values()) {
          if (td.getProcess() == this && !td.isInternal()) rslt.add(td);
        }
@@ -1932,11 +1932,11 @@ private class ThreadData implements BumpThread {
    @Override public BumpProcess getProcess()			{ return for_process; }
    @Override public String getId()				{ return thread_id; }
    @Override public long getCpuTime()				{ return cpu_time; }
-   @Override public long getUserTime()				{ return user_time; }
+   @Override public long getUserTime()			{ return user_time; }
    @Override public long getBlockTime() 			{ return block_time; }
-   @Override public long getWaitTime()				{ return wait_time; }
+   @Override public long getWaitTime()			{ return wait_time; }
    @Override public int getBlockCount() 			{ return block_count; }
-   @Override public int getWaitCount()				{ return wait_count; }
+   @Override public int getWaitCount()			{ return wait_count; }
    @Override public String getExceptionType()			{ return exception_type; }
    @Override public BumpBreakpoint getBreakpoint()		{ return current_breakpoint; }
 
