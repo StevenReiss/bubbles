@@ -74,6 +74,27 @@ bubbles.csh
 if ($status > 0) exit;
 popd
 
+if ( -e ../diad ) then
+   # do nothing
+else
+   pushd $PRO
+   git clone https://github.com/StevenReiss/diad
+   git clone https://github.com/StevenReiss/diadbb
+endif
+
+pushd diadbb
+git pull
+if ($status > 0) exit;
+ant
+popd
+
+pushd diad
+git pull
+if ($status > 0) exit;
+# bubbles.csh
+if ($status > 0) exit;
+popd
+
 pushd bubbles
 git pull
 if ($status > 0) exit;

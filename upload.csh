@@ -59,6 +59,16 @@ git commit -a
 git push
 popd
 
+pushd diad
+git commit -a
+git push
+popd
+
+pushd diadbb
+git commit -a
+git push
+popd
+
 pushd bubbles
 git commit -a
 git push
