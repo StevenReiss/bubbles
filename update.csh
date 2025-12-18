@@ -91,7 +91,7 @@ popd
 pushd diad
 git pull
 if ($status > 0) exit;
-# bubbles.csh
+bubbles.csh
 if ($status > 0) exit;
 popd
 

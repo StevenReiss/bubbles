@@ -193,9 +193,6 @@ void start()
 
 
 
-
-
-
 /********************************************************************************/
 /*										*/
 /*	Launch Query command						       */
@@ -294,6 +291,8 @@ private static class MainHandler extends SearchRequestor {
    }
 
 }	// end of inner class MainHandler
+
+
 
 /********************************************************************************/
 /*										*/
@@ -433,8 +432,6 @@ void editRunConfiguration(String lnch,String prop,String val,IvyXmlWriter xw)
 
    BedrockUtil.outputLaunch(wc,xw);
 }
-
-
 
 
 
@@ -589,6 +586,7 @@ void runProject(String cfg,String mode,boolean build,boolean reg,String vmarg,St
 	     }
 	  }
 	 xw.end("LAUNCH");
+         BedrockPlugin.logD("Launch successful");
        }
     }
    catch (Throwable e) {
@@ -1551,6 +1549,8 @@ static {
 @Override public void handleDebugEvents(DebugEvent[] events)
 {
    if (events.length <= 0) return;
+   
+   BedrockPlugin.logD("Handle debug events: " + events);
 
    IvyXmlWriter xw = our_plugin.beginMessage("RUNEVENT");
    xw.field("TIME",System.currentTimeMillis());

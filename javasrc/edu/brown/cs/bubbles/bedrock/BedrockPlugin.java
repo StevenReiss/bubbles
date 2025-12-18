@@ -436,7 +436,11 @@ private String sendMessageWait(String msg,long delay)
    if (s.length() > 50) s = s.substring(0,50);
    BedrockPlugin.logD("Send message: " + s);
 
-   return rply.waitForString(delay);
+   String rslt = rply.waitForString(delay);
+
+   BedrockPlugin.logD("Got reply: " + rslt);
+
+   return rslt;
 }
 
 
@@ -1183,42 +1187,42 @@ private final class CommandHandler implements MintHandler {
       String cmd = args.getArgument(1);
       Element xml = msg.getXml();
       String proj = IvyXml.getAttrString(xml,"PROJECT");
-   
+
       String rslt = null;
-   
+
       try {
-         rslt = handleCommand(cmd,proj,xml);
+	 rslt = handleCommand(cmd,proj,xml);
        }
       catch (BedrockException e) {
-         String xmsg = "BEDROCK: error in command " + cmd + ": " + e;
-         BedrockPlugin.logE(xmsg,e);
-         rslt = "<ERROR><![CDATA[" + xmsg + "]]></ERROR>";
+	 String xmsg = "BEDROCK: error in command " + cmd + ": " + e;
+	 BedrockPlugin.logE(xmsg,e);
+	 rslt = "<ERROR><![CDATA[" + xmsg + "]]></ERROR>";
        }
       catch (Throwable t) {
-         String xmsg = "BEDROCK: Problem processing command " + cmd + ": " + t + " " +
-            doing_exit + " " + shutdown_mint + " " +  num_clients;
-         BedrockPlugin.logE(xmsg);
-         System.err.println(xmsg);
-         t.printStackTrace();
-         StringWriter sw = new StringWriter();
-         PrintWriter pw = new PrintWriter(sw);
-         t.printStackTrace(pw);
-         Throwable xt = t;
-         for (	; xt.getCause() != null; xt = xt.getCause());
-         if (xt != null && xt != t) {
-            rslt += "\n";
-            xt.printStackTrace(pw);
-          }
-         BedrockPlugin.logE("TRACE: " + sw.toString());
-         rslt = "<ERROR>";
-         rslt += "<MESSAGE>" + xmsg + "</MESSAGE>";
-         rslt += "<EXCEPTION><![CDATA[" + t.toString() + "]]></EXCEPTION>";
-         rslt += "<STACK><![CDATA[" + sw.toString() + "]]></STACK>";
-         rslt += "</ERROR>";
+	 String xmsg = "BEDROCK: Problem processing command " + cmd + ": " + t + " " +
+	    doing_exit + " " + shutdown_mint + " " +  num_clients;
+	 BedrockPlugin.logE(xmsg);
+	 System.err.println(xmsg);
+	 t.printStackTrace();
+	 StringWriter sw = new StringWriter();
+	 PrintWriter pw = new PrintWriter(sw);
+	 t.printStackTrace(pw);
+	 Throwable xt = t;
+	 for (	; xt.getCause() != null; xt = xt.getCause());
+	 if (xt != null && xt != t) {
+	    rslt += "\n";
+	    xt.printStackTrace(pw);
+	  }
+	 BedrockPlugin.logE("TRACE: " + sw.toString());
+	 rslt = "<ERROR>";
+	 rslt += "<MESSAGE>" + xmsg + "</MESSAGE>";
+	 rslt += "<EXCEPTION><![CDATA[" + t.toString() + "]]></EXCEPTION>";
+	 rslt += "<STACK><![CDATA[" + sw.toString() + "]]></STACK>";
+	 rslt += "</ERROR>";
        }
-   
+
       msg.replyTo(rslt);
-   
+
       if (shutdown_mint) mint_control.shutDown();
     }
 
