@@ -128,13 +128,13 @@ BedrockApplication(boolean ecl)
 
 static void enterApplication()
 {
-   BedrockPlugin.logD("BEDROCK: ENTER ");
+   BedrockPlugin.logD("BEDROCK ENTER ");
 }
 
 
 static void stopApplication()
 {
-   BedrockPlugin.logD("BEDROCK: STOP APP REQUEST " + the_app);
+   BedrockPlugin.logD("BEDROCK STOP APP REQUEST " + the_app);
 
    if (the_app == null || the_app.from_eclipse) {
       System.exit(0);
@@ -243,7 +243,7 @@ static Display getDisplay()
 private synchronized void waitForSetup()
 {
    if (is_setup) return;
-   
+
    while (!is_setup) {
       BedrockPlugin.logD("BEDROCK: wait for setup");
       try {
@@ -260,7 +260,7 @@ private synchronized void noteSetup()
 {
    if (is_setup) return;
 
-   BedrockPlugin.logD("BEDROCK: note setup");
+   BedrockPlugin.logD("BEDROCK note setup");
    is_setup = true;
    notifyAll();
 }
@@ -313,13 +313,13 @@ private synchronized void noteSetup()
       int sts = PlatformUI.RETURN_UNSTARTABLE;
       BedrockPlugin.logI("DISPLAY START " + use_display + " " + hide_display + " " + tiny_display);
       try {
-         if (base_display == null) base_display = Display.getDefault();
+	 if (base_display == null) base_display = Display.getDefault();
 	 if (base_display == null) base_display = PlatformUI.createDisplay();
 	 BedrockPlugin.logI("DISPLAY = " + base_display + " " + Display.getDefault());
 	 EndChecker ec = new EndChecker();
 	 ec.start();
 	 is_setup = false;
-         // perhaps run this is SWT thread?
+	 // perhaps run this is SWT thread?
 	 sts = PlatformUI.createAndRunWorkbench(base_display,new WbAdvisor());
        }
       catch (Throwable t) {
@@ -392,7 +392,7 @@ private synchronized void noteSetup()
 
    for ( ; ; ) {
       int ctr = exit_ctr;
-      BedrockPlugin.logD("WAIT ON " + this);
+      BedrockPlugin.logD("WAIT ON " + ctr + " " + this);
       synchronized (this) {		   // wait until exit request
 	 while (!exit_ok) {
 	    try {
@@ -529,28 +529,28 @@ private final class WbAdvisor extends WorkbenchAdvisor {
 
    @Override public void postStartup() {
       BedrockPlugin.logD("BEDROCK POST STARTUP " + use_display + " " + hide_display);
-   
+
       // super.postStartup();
-   
+
       forceLoads();
       noteSetup();
-   
+
       if (hide_display) {
-         for (Shell sh1 : the_app.base_display.getShells()) {
-            BedrockPlugin.logD("BEDROCK: SHELL4 " + sh1.isVisible() + " " + sh1.getText());
-            sh1.setVisible(false);
-          }
-         Shell sh = base_display.getActiveShell();
-         if (sh != null) {
-            BedrockPlugin.logD("BEDROCK: SHELL5 " + sh.isVisible() + " " + sh.getText());
-            sh.setVisible(false);
-            // sh.close();
-          }
+	 for (Shell sh1 : the_app.base_display.getShells()) {
+	    BedrockPlugin.logD("BEDROCK: SHELL4 " + sh1.isVisible() + " " + sh1.getText());
+	    sh1.setVisible(false);
+	  }
+	 Shell sh = base_display.getActiveShell();
+	 if (sh != null) {
+	    BedrockPlugin.logD("BEDROCK: SHELL5 " + sh.isVisible() + " " + sh.getText());
+	    sh.setVisible(false);
+	    // sh.close();
+	  }
        }
       if (tiny_display) {
-         Shell sh = base_display.getActiveShell();
-         sh.setMinimumSize(1,1);
-         sh.setSize(1,1);
+	 Shell sh = base_display.getActiveShell();
+	 sh.setMinimumSize(1,1);
+	 sh.setSize(1,1);
        }
     }
 
@@ -567,9 +567,9 @@ private class WbWindowAdvisor extends WorkbenchWindowAdvisor {
    @Override public void preWindowOpen() {
       // remove the window
       super.preWindowOpen();
-   
+
       BedrockPlugin.logD("PRE WINDOW OPEN " + use_display + " " + hide_display);
-   
+
       hideWindows();
     }
 
@@ -591,16 +591,16 @@ private class WbWindowAdvisor extends WorkbenchWindowAdvisor {
 
    private void hideWindows() {
       if (use_display || hide_display) {
-         Set<Shell> done = new HashSet<Shell>();
-         for (Shell sh1 : base_display.getShells()) {
-            hideShell(sh1,done);
-          }
-         Shell sh = the_app.base_display.getActiveShell();
-         hideShell(sh,done);
-         IWorkbenchWindowConfigurer cfg = getWindowConfigurer();
-         IWorkbenchWindow win = cfg.getWindow();
-         sh = win.getShell();
-         hideShell(sh,done);
+	 Set<Shell> done = new HashSet<Shell>();
+	 for (Shell sh1 : base_display.getShells()) {
+	    hideShell(sh1,done);
+	  }
+	 Shell sh = the_app.base_display.getActiveShell();
+	 hideShell(sh,done);
+	 IWorkbenchWindowConfigurer cfg = getWindowConfigurer();
+	 IWorkbenchWindow win = cfg.getWindow();
+	 sh = win.getShell();
+	 hideShell(sh,done);
        }
     }
 
@@ -609,13 +609,13 @@ private class WbWindowAdvisor extends WorkbenchWindowAdvisor {
       if (done.contains(sh)) return;
       BedrockPlugin.logD("SHELLX " + sh.isVisible() + " " + sh + " " + sh.getText());
       if (hide_display) {
-         sh.setVisible(false);
-         sh.setEnabled(false);
-         sh.setMinimized(true);
-         sh.addShellListener(new WbShellRemover());
-         for (Composite c = sh.getParent(); c != null; c = c.getParent()) {
-            c.setVisible(false);
-          }
+	 sh.setVisible(false);
+	 sh.setEnabled(false);
+	 sh.setMinimized(true);
+	 sh.addShellListener(new WbShellRemover());
+	 for (Composite c = sh.getParent(); c != null; c = c.getParent()) {
+	    c.setVisible(false);
+	  }
        }
       done.add(sh);
     }
@@ -635,13 +635,13 @@ private final class WbShellRemover extends ShellAdapter {
       Shell sh = (Shell) e.getSource();
       String what = sh.toString();
       BedrockPlugin.logD("ACTIVE SHELL " + what + " " + sh.getClass().getName() + " " +
-        sh.getMinimumSize() + " " + sh.isVisible());
+	sh.getMinimumSize() + " " + sh.isVisible());
       if (hide_display) {
-         if (!is_setup) sh.setVisible(false);
-         else if (what.contains("{Eclipse}")) sh.setVisible(false);
-         else {
-            sh.setVisible(false);
-          }
+	 if (!is_setup) sh.setVisible(false);
+	 else if (what.contains("{Eclipse}")) sh.setVisible(false);
+	 else {
+	    sh.setVisible(false);
+	  }
        }
       BedrockPlugin.logD("BEDROCK: ACTIVE SHELL RESULT " + sh.isVisible());
     }

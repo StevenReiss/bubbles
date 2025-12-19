@@ -434,7 +434,7 @@ private String sendMessageWait(String msg,long delay)
 
    String s = msg;
    if (s.length() > 50) s = s.substring(0,50);
-   BedrockPlugin.logD("Send message: " + s);
+   BedrockPlugin.logD("Send message: " + s.trim());
 
    String rslt = rply.waitForString(delay);
 
