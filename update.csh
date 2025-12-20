@@ -91,7 +91,7 @@ popd
 pushd diad
 git pull
 if ($status > 0) exit;
-bubbles.csh
+# bubbles.csh			# this installs the plugin: leave out for now
 if ($status > 0) exit;
 popd
 
