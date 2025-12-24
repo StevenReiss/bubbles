@@ -40,7 +40,7 @@ git push
 popd
 
 pushd rose
-git commit 0a
+git commit -a
 git push
 popd
 
