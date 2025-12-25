@@ -404,8 +404,8 @@ private class TracePatcher extends MethodVisitor {
    @Override public void visitMethodInsn(int opc,String own,String nm,String ds,boolean itf) {
       super.visitMethodInsn(opc,own,nm,ds,itf);
       if (super_name != null && nm.equals("<init>") && own.equals(super_name) &&
-	    trace_data.traceConstructor() && opc == Opcodes.INVOKESPECIAL) {
-	 generateTrace(false);
+            trace_data.traceConstructor() && opc == Opcodes.INVOKESPECIAL) {
+         generateTrace(false);
        }
     }
 

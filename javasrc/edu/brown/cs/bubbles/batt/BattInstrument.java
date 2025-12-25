@@ -469,6 +469,14 @@ private class CoverageSetup extends MethodVisitor {
 
    @Override public void visitMethodInsn(int opc,String own,String nm,String ds,boolean itf) {
       checkBlock();
+      if (nm.equals("exit") && (own.equals("java/lang/System") || own.equals("java/lang/Runtime"))) {
+         super.visitTypeInsn(Opcodes.NEW,"java/lang/RuntimeException");
+         super.visitInsn(Opcodes.DUP);
+         super.visitLdcInsn("Attempt to exit");
+         super.visitMethodInsn(Opcodes.INVOKESPECIAL,"java/lang/RuntimeEsception","<init>",
+               "(Ljava/lang/String;)V",false);
+         super.visitInsn(Opcodes.ATHROW);
+       }
       super.visitMethodInsn(opc,own,nm,ds,itf);
       if (super_class != null && nm.equals("<init>")) {
 	 if (own.equals(super_class) || own.equals(class_name)) {

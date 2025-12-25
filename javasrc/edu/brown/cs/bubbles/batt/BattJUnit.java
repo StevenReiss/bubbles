@@ -47,7 +47,6 @@ import java.lang.reflect.Modifier;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -802,9 +801,8 @@ private class TestListener extends RunListener {
       outputSingleTest(jt);
     }
 
-   @SuppressWarnings("removal")
    @Override public void testRunStarted(Description d) {
-      System.setSecurityManager(new NoExitManager());
+   // System.setSecurityManager(new NoExitManager());
     }
 
    @SuppressWarnings("removal")
@@ -844,40 +842,6 @@ private class TestListener extends RunListener {
     }
 
 }	// end of inner class TestListener
-
-
-
-/********************************************************************************/
-/*										*/
-/*	Handle System.exit() calls in tests					*/
-/*										*/
-/********************************************************************************/
-
-private static class ExitException extends SecurityException {
-
-   private static final long serialVersionUID = 1;
-
-   ExitException(int sts) {
-      super("Attempt to call System.exit");
-    }
-
-}	// end of inner class ExitException
-
-
-
-@SuppressWarnings("all")
-private static final class NoExitManager extends SecurityManager {
-
-   @Override public void checkPermission(Permission p)			{ }
-   @Override public void checkPermission(Permission p,Object ctx)	{ }
-
-   @Override public void checkExit(int sts) {
-      super.checkExit(sts);
-      throw new ExitException(sts);
-    }
-
-}	// end of inner class NoExitManager
-
 
 
 

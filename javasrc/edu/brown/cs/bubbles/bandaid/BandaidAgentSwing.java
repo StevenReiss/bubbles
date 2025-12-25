@@ -309,10 +309,10 @@ private class ComponentPatcher extends MethodVisitor {
    @Override public void visitMethodInsn(int opc,String own,String nm,String ds,boolean itf) {
       super.visitMethodInsn(opc,own,nm,ds,itf);
       if (super_class != null && nm.equals("<init>") && own.equals(super_class)) {
-	 super_class = null;
-	 super.visitVarInsn(Opcodes.ALOAD,0);
-	 super.visitMethodInsn(Opcodes.INVOKESTATIC,"edu/brown/cs/bubbles/bandaid/BandaidAgentSwing",
-				  "handleComponent","(Ljava/lang/Object;)V",false);
+         super_class = null;
+         super.visitVarInsn(Opcodes.ALOAD,0);
+         super.visitMethodInsn(Opcodes.INVOKESTATIC,"edu/brown/cs/bubbles/bandaid/BandaidAgentSwing",
+        			  "handleComponent","(Ljava/lang/Object;)V",false);
        }
     }
 
