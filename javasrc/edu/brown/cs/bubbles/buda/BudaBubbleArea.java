@@ -443,6 +443,7 @@ public void removeCurrentBubble(MouseEvent e)
       else if (bc.getPositionType() == BudaBubblePosition.USERPOS) {
 	 fixed = true;
 	 setLayer(bb,MODAL_LAYER+4);
+         bb.setUserPos(true);
        }
       else if (bc.getPositionType() == BudaBubblePosition.DIALOG) {
 	 fixed = false;
@@ -2551,8 +2552,14 @@ private boolean checkGroup(BudaBubbleGroup g)
  *	from the middle/right buttons to this area rather than to components
  **/
 
-@Override public void processMouseMotionEvent(MouseEvent e)	{ super.processMouseMotionEvent(e); }
-@Override public void processMouseEvent(MouseEvent e)		{ super.processMouseEvent(e); }
+@Override public void processMouseMotionEvent(MouseEvent e)	
+{ 
+   super.processMouseMotionEvent(e); 
+}
+@Override public void processMouseEvent(MouseEvent e)		
+{ 
+   super.processMouseEvent(e);
+}
 
 
 
@@ -2616,7 +2623,9 @@ private void handleMouseEvent(MouseEvent e)
       if (mr.getBubble() != null){
 	 BudaBubble bubble = mr.getBubble();
 	 bubble = bubble.getActualBubble(e.getX(),e.getY(), true);
-	 if (!bubble.isFixed() || bubble.isUserPos()) mouse_context = new BubbleMoveContext(bubble,e);
+	 if (!bubble.isFixed() || bubble.isUserPos()) {
+            mouse_context = new BubbleMoveContext(bubble,e);
+          }
        }
       else if (mr.getGroup() != null) mouse_context = new GroupMoveContext(mr.getGroup(),e);
       else mouse_context = new AreaMoveContext(e);

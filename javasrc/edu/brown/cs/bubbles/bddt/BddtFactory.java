@@ -155,9 +155,6 @@ public static void initialize(BudaRoot br)
 }
 
 
-
-
-
 /********************************************************************************/
 /*										*/
 /*	Constructors								*/
@@ -189,8 +186,6 @@ BudaWorkingSet getActiveWorkingSet()
    if (!useworkingset) return null;
    return active_working_set;
 }
-
-
 
 
 
@@ -297,6 +292,26 @@ void setProcess(BddtLaunchControl ctrl,BumpProcess p)
     }
 }
 
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Add a new debugger bubble                                               */
+/*                                                                              */
+/********************************************************************************/
+
+public void addFixedBubble(BddtAuxBubbleAction aux)
+{
+   BddtLaunchControl ctrl = (BddtLaunchControl) aux.getLaunchId();
+   ctrl.addFixedBubble(aux); 
+}
+
+
+public boolean isThreadRelevant(Object lid,String tid)
+{
+   BddtLaunchControl ctrl = (BddtLaunchControl) lid; 
+   return ctrl.isThreadRelevant(tid);
+}
 
 
 

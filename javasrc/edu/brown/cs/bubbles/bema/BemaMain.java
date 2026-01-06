@@ -152,6 +152,7 @@ private BoardLanguage	for_language;
 private String		palette_name;
 private boolean 	install_only;
 private boolean 	no_bedrock;
+private List<File>      add_plugins;
 
 private static Map<String,ClassLoader> class_loaders = new HashMap<>();
 
@@ -185,6 +186,7 @@ private BemaMain(String [] args)
    no_bedrock = false;
    auto_update = null;
    palette_name = null;
+   add_plugins = new ArrayList<>();
    
    System.setProperty("derby.stream.error.file","/dev/null");
    System.setProperty("derby.stream.error.field","edu.brown.cs.ivy.file.IvyDatabase.NULL_STREAM");
@@ -255,6 +257,9 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-prop") && i+1 < ln) {    // -prop <propdir>
 	    BoardProperties.setPropertyDirectory(args[++i]);
 	  }
+         else if (args[i].startsWith("-plug") && i+1 < ln) {    // -plugin <jarfile>
+            add_plugins.add(new File(args[++i]));
+          }
 	 else if (args[i].startsWith("-Debug")) {               // -Debug
 	    allow_debug = true;
 	  }
@@ -594,6 +599,9 @@ private void loadPlugins(BudaRoot buda)
 	    loadPlugins(dir,buda,names);
 	  }
        }
+      for (File f : add_plugins) {
+         loadPlugin(f,buda,names);
+       }
       for (String s : names) {
 	 finishPackage(s);
        }
@@ -607,68 +615,74 @@ private void loadPlugins(File dir,BudaRoot root,List<String> names)
    File [] cands = dir.listFiles();
    if (cands != null) {
       for (File jfn : cands) {
-	 if (jfn.isDirectory()) {
-	    // assume all plugins are at top level, rather than inside directories
-	    // loadPlugins(jfn,root);
-	  }
-	 else if (jfn.getPath().endsWith(".jar")) {
-	    BoardLog.logD("BEMA","Load plugin " + jfn);
-	    try (JarFile jf = new JarFile(jfn)) {
-	       Manifest mf = jf.getManifest();
-	       if (mf != null) {
-		  Attributes at = mf.getMainAttributes();
-		  String starts = at.getValue("Bubbles-start");
-		  String dep = at.getValue("Bubbles-depends");
-		  String palette = at.getValue("Bubbles-palette");
-		  String res = at.getValue("Bubbles-resource");
-		  String lib = at.getValue("Bubbles-lib");
-		  String load = jfn.getAbsolutePath();
-		  String basename = null;
-		  if (dep != null) {
-		     dep = dep.trim();
-		     if (dep.length() > 0) load += ":" + dep;
-		   }
-		  if (res != null) {
-		     StringTokenizer tok = new StringTokenizer(res);
-		     while (tok.hasMoreTokens()) {
-			String nm = tok.nextToken();
-			setupPluginResource(jf,nm);
-		      }
-		   }
-		  if (lib != null) {
-		     StringTokenizer tok = new StringTokenizer(lib);
-		     while (tok.hasMoreTokens()) {
-			String nm = tok.nextToken();
-			setupPluginLibrary(jf,nm);
-		      }
-		   }
-		  if (starts != null) {
-		     StringTokenizer tok = new StringTokenizer(starts);
-		     while (tok.hasMoreTokens()) {
-			String nm = tok.nextToken();
-			if (basename == null) basename = nm;
-			setupPackage(nm,load);
-			initializePackage(nm,root);
-			names.add(nm);
-		      }
-		   }
-		  if (basename != null && palette != null) {
-		     ClassLoader cldr = class_loaders.get(basename);
-		     URL u = cldr.getResource(palette);
-		     if (u != null) {
-			BoardLog.logD("BEMA","Add plugin palette " + u);
-			BoardColors.addPalette(u);
-		      }
-		   }
-		}
-	     }
-	    catch (IOException e) {
-	       BoardLog.logE("BEMA","Can't access plugin jar file " + jfn,e);
-	       JOptionPane.showMessageDialog(null,
-		     "Problem loading plugin " + jfn,
-		     "Bubbles Plugin Problem",JOptionPane.WARNING_MESSAGE);
-	     }
-	  }
+         loadPlugin(jfn,root,names);
+       }
+    }
+}
+
+
+private void loadPlugin(File jfn,BudaRoot root,List<String> names) 
+{
+   if (jfn.isDirectory()) {
+      // assume all plugins are at top level, rather than inside directories
+      // loadPlugins(jfn,root);
+    }
+   else if (jfn.getPath().endsWith(".jar")) {
+      BoardLog.logD("BEMA","Load plugin " + jfn);
+      try (JarFile jf = new JarFile(jfn)) {
+         Manifest mf = jf.getManifest();
+         if (mf != null) {
+            Attributes at = mf.getMainAttributes();
+            String starts = at.getValue("Bubbles-start");
+            String dep = at.getValue("Bubbles-depends");
+            String palette = at.getValue("Bubbles-palette");
+            String res = at.getValue("Bubbles-resource");
+            String lib = at.getValue("Bubbles-lib");
+            String load = jfn.getAbsolutePath();
+            String basename = null;
+            if (dep != null) {
+               dep = dep.trim();
+               if (dep.length() > 0) load += ":" + dep;
+             }
+            if (res != null) {
+               StringTokenizer tok = new StringTokenizer(res);
+               while (tok.hasMoreTokens()) {
+                  String nm = tok.nextToken();
+                  setupPluginResource(jf,nm);
+                }
+             }
+            if (lib != null) {
+               StringTokenizer tok = new StringTokenizer(lib);
+               while (tok.hasMoreTokens()) {
+                  String nm = tok.nextToken();
+                  setupPluginLibrary(jf,nm);
+                }
+             }
+            if (starts != null) {
+               StringTokenizer tok = new StringTokenizer(starts);
+               while (tok.hasMoreTokens()) {
+                  String nm = tok.nextToken();
+                  if (basename == null) basename = nm;
+                  setupPackage(nm,load);
+                  initializePackage(nm,root);
+                  names.add(nm);
+                }
+             }
+            if (basename != null && palette != null) {
+               ClassLoader cldr = class_loaders.get(basename);
+               URL u = cldr.getResource(palette);
+               if (u != null) {
+                  BoardLog.logD("BEMA","Add plugin palette " + u);
+                  BoardColors.addPalette(u);
+                }
+             }
+          }
+       }
+      catch (IOException e) {
+         BoardLog.logE("BEMA","Can't access plugin jar file " + jfn,e);
+         JOptionPane.showMessageDialog(null,
+               "Problem loading plugin " + jfn,
+               "Bubbles Plugin Problem",JOptionPane.WARNING_MESSAGE);
        }
     }
 }

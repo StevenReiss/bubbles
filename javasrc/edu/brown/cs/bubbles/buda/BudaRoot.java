@@ -3132,16 +3132,16 @@ private static final class MouseEventQueue extends EventQueue {
 
    private void setDragArea(MouseEvent me) {
       if (drag_area != null) return;
-
+   
       base_component = SwingUtilities.getDeepestComponentAt(me.getComponent(),me.getX(),me.getY());
       for (Component comp = base_component; comp != null; comp = comp.getParent()) {
-	 if (!base_component.isEnabled()) base_component = comp;
-	 if (comp instanceof BudaBubbleArea) {
-	    drag_area = (BudaBubbleArea) comp;
-	    break;
-	  }
+         if (!base_component.isEnabled()) base_component = comp;
+         if (comp instanceof BudaBubbleArea) {
+            drag_area = (BudaBubbleArea) comp;
+            break;
+          }
        }
-
+   
       if (drag_area == null) base_component = null;
     }
 

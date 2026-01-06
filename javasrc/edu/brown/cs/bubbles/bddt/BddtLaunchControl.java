@@ -186,7 +186,6 @@ BudaBubble createPerfBubble()
    return perf_data.createBubble();
 }
 
-
 @Override public boolean isRemovable()		{ return false; }
 
 boolean matchProcess(BumpProcess p)
@@ -243,6 +242,15 @@ BumpThread getLastStoppedThread()
 }
 
 
+boolean isThreadRelevant(String tid)
+{
+   for (BumpThread thrd : cur_process.getThreads()) {
+      if (thrd.getId().equals(tid)) return true;
+    }
+   
+   return false;
+}
+
 
 /********************************************************************************/
 /*										*/
@@ -286,7 +294,10 @@ private void setupPanel()
    else {
       btnbar.add(new ClearAction());
     }
-
+   for (int i = 0; i < 10; ++i) {
+      if (!addAuxButton(i,btnbar)) break;
+    }
+   
    btnbar.setFloatable(false);
    btnbar.setMargin(new Insets(2,2,2,2));
    pnl.addGBComponent(btnbar,0,y++,0,1,1,0);
@@ -320,6 +331,55 @@ private void setupPanel()
    pnl.addGBComponent(bblbar,0,y++,0,1,1,0);
 
    launch_panel = pnl;
+}
+
+
+
+private boolean addAuxButton(int idx,JToolBar btnbar)
+{
+   String prop = "Bddt.buttons.aux" + idx;
+   BoardProperties bp = BoardProperties.getProperties("Bddt");
+   String c1nm = bp.getString(prop);
+   if (c1nm == null) return false;
+ 
+   try {
+      Class<?> c1 = Class.forName(c1nm);
+      Object o1 = c1.getConstructor(Object.class).newInstance(this);
+      Action act = (Action) o1;
+      btnbar.add(act);   
+    }
+   catch (ClassNotFoundException e) {
+      BoardLog.logI("BDDT","Class " + c1nm + " not found for debugging");
+    }
+   catch (Throwable t) {
+      BoardLog.logE("BDDT","Problem setting up debugger button " + c1nm,t);
+    }
+   
+   return true;
+}
+
+
+private boolean showAuxBubble(int idx)
+{
+   String prop = "Bddt.buttons.aux" + idx;
+   BoardProperties bp = BoardProperties.getProperties("Bddt");
+   String c1nm = bp.getString(prop);
+   if (c1nm == null) return false;
+   
+   try {
+      Class<?> c1 = Class.forName(c1nm);
+      Object o1 = c1.getConstructor(Object.class).newInstance(this);
+      Action act = (Action) o1;
+      act.actionPerformed(null); 
+    }
+   catch (ClassNotFoundException e) {
+      BoardLog.logI("BDDT","Class " + c1nm + " not found for debugging");
+    }
+   catch (Throwable t) {
+      BoardLog.logE("BDDT","Problem setting up debugger button " + c1nm,t);
+    }
+   
+   return true;
 }
 
 
@@ -379,6 +439,9 @@ void setupInitialBubbles()
     }
    if (bp.getBoolean("Bddt.show.interact")) {
       bubble_manager.createInteractionBubble();
+    }
+   for (int i = 1; i < 10; ++i) {
+      if (!showAuxBubble(i)) break;
     }
 }
 
@@ -952,8 +1015,6 @@ private class PerformanceAction extends AbstractAction {
 }	// end of inner class PerformanceAction
 
 
-
-
 private class ValueViewerBubbleAction extends AbstractAction {
 
    private static final long serialVersionUID = 1;
@@ -969,8 +1030,6 @@ private class ValueViewerBubbleAction extends AbstractAction {
    }
 
 }	// end of inner class ValueViewerBubbleAction
-
-
 
 
 
@@ -1023,9 +1082,16 @@ private class NewChannelAction extends AbstractAction {
       BoardMetrics.noteCommand("BDDT","NewDebugChannel");
       BddtFactory bf = BddtFactory.getFactory();
       bf.newDebugger(launch_config);
-    }
+    } 
 
 }	// end of inner class ThreadsAction
+
+
+void addFixedBubble(BddtAuxBubbleAction aux)
+{
+   BoardMetrics.noteCommand("BDDT","CreateAuxBubble_" + aux.getAuxType());
+   bubble_manager.createAuxBubble(aux); 
+}
 
 
 

@@ -27,16 +27,19 @@ package edu.brown.cs.bubbles.bddt;
 
 import edu.brown.cs.bubbles.board.BoardFont;
 import edu.brown.cs.bubbles.board.BoardProperties;
+import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpRunValue;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpStackFrame;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpThread;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpThreadStack;
 
+import javax.swing.Action;
 import javax.swing.tree.TreeNode;
 
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.util.EventListener;
 
 
@@ -488,8 +491,26 @@ enum BubbleType {
    VALUES,		// stack frame values bubble
    STOP_TRACE,		// trace of stacks just before debugger stop
    USER,		// bubble created by the user
-   INTERACT		// interaction bubble
+   INTERACT,		// interaction bubble
+   AUX,                 // auxilliary bubbles from separate package
 }
+
+
+interface BddtAuxBubbleAction extends Action {
+   
+   String getAuxType();
+   BudaBubble createBubble();
+   Object getLaunchId();                // BddtLaunchControl passed on constructor
+   
+   default void actionPerformed(ActionEvent evt) {
+      BddtFactory.getFactory().addFixedBubble(this); 
+    }
+}
+
+interface BddtAuxBubble {
+   String getAuxType();
+}
+
 
 
 

@@ -8,6 +8,7 @@
    <OPTION NAME='bubbles.useSeede' VALUE='TRUE' />
    <OPTION NAME='bubbles.useMaven' VALUE='TRUE' />
    <OPTION NAME='bubbles.useLimba' VALUE='TRUE' />
+   <OPTION NAME='bubbles.useDiad' VALUE='TRUE' />
 </OPTIONS>
 <FIXES>
    <SYNTAX TYPE='REPLACE' USE='1' ALT='0'>Syntax error on token "{0}", {1} expected</SYNTAX>

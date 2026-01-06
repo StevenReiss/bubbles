@@ -280,6 +280,7 @@ private BudaBubble createSourceBubble(BumpThreadStack stk,int frm,BubbleType typ
 	    case THREADS :
 	    case EVAL :
 	    case INTERACT :
+            case AUX :
 	       Rectangle rx = BudaRoot.findBudaLocation(bdx.getBubble());
 	       if (rx != null) {
 		  xpos = Math.max(xpos,rx.x + rx.width + 40);
@@ -386,6 +387,7 @@ void restart()
 	 case PERF :
 	 case EVAL :
 	 case INTERACT :
+         case AUX :
 	    break;
 	 case EXEC :
 	 case FRAME :
@@ -542,6 +544,53 @@ BudaBubble createSwingBubble()
 
    positionBubble(bb,x,y,bddt_properties.getBoolean(BDDT_PROPERTY_FLOAT_SWING));
 
+   return bb;
+}
+
+
+BudaBubble createAuxBubble(BddtAuxBubbleAction aux)
+{
+   setupBubbleArea();
+   Collection<BubbleData> bbls = new ArrayList<BubbleData>(bubble_map.values());
+   
+   Rectangle r = launch_control.getBounds();
+   int x = r.x;
+   int y = r.y + r.height + 20;
+   for (BubbleData bd : bbls) {
+      BudaBubble tbd = bd.getBubble();
+      switch (bd.getBubbleType()) {
+	 case AUX :
+            BddtAuxBubble auxbb = (BddtAuxBubble) tbd;
+            String typ = auxbb.getAuxType();  
+            if (!typ.equals(aux.getAuxType())) break;
+	    if (tbd.isFloating() && tbd.isShowing()) return tbd;
+	    if (tbd.isFloating()) {
+	       tbd.setVisible(true);
+	       return tbd;
+	     }
+	    break;
+         case USER :
+         case EXEC :
+         case FRAME :
+         case VALUES :
+         case INTERACT :
+            continue;
+	 default :
+	    break;
+       }
+      if (tbd.isFixed()) {
+        Rectangle r1 = tbd.getBounds();
+        if (Math.abs(r1.getX()-x) < 300) {
+           y = Math.max(y,r1.y + r1.height + 20);
+         }
+       }
+    }
+   
+   if (bubble_area == null) return null;
+   BudaBubble bb = aux.createBubble();
+   
+   positionBubble(bb,x,y,bddt_properties.getBoolean(BDDT_PROPERTY_FLOAT_SWING));
+   
    return bb;
 }
 
@@ -876,6 +925,7 @@ private BubbleData findClosestBubble(BumpThread bt,BumpThreadStack stk,BumpStack
 	    case STOP_TRACE :
 	    case EVAL :
 	    case INTERACT :
+            case AUX :
 	       continue;
 	    default:
 	       break;
@@ -1060,6 +1110,7 @@ private static class BubbleData {
       else if (bb instanceof BddtStopTraceBubble) bubble_type = BubbleType.STOP_TRACE;
       else if (bb instanceof BddtEvaluationBubble) bubble_type = BubbleType.EVAL;
       else if (bb instanceof BddtInteractionBubble) bubble_type = BubbleType.INTERACT;
+      else if (bb instanceof BddtAuxBubble) bubble_type = BubbleType.AUX;
       else bubble_type = BubbleType.USER;
       last_used = System.currentTimeMillis();
       can_remove = false;
