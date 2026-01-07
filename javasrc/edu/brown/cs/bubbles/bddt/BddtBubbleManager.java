@@ -578,7 +578,7 @@ BudaBubble createAuxBubble(BddtAuxBubbleAction aux)
 	 default :
 	    break;
        }
-      if (tbd.isFixed()) {
+      if (tbd.isFixed() || tbd.isFloating()) {
         Rectangle r1 = tbd.getBounds();
         if (Math.abs(r1.getX()-x) < 300) {
            y = Math.max(y,r1.y + r1.height + 20);
@@ -589,7 +589,7 @@ BudaBubble createAuxBubble(BddtAuxBubbleAction aux)
    if (bubble_area == null) return null;
    BudaBubble bb = aux.createBubble();
    
-   positionBubble(bb,x,y,bddt_properties.getBoolean(BDDT_PROPERTY_FLOAT_SWING));
+   positionBubble(bb,x,y,aux.isFixed());
    
    return bb;
 }

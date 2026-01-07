@@ -600,7 +600,9 @@ private void loadPlugins(BudaRoot buda)
 	  }
        }
       for (File f : add_plugins) {
-         loadPlugin(f,buda,names);
+         if (f.exists() && f.canRead()) {
+            loadPlugin(f,buda,names);
+          }
        }
       for (String s : names) {
 	 finishPackage(s);

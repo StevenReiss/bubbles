@@ -294,8 +294,10 @@ private void setupPanel()
    else {
       btnbar.add(new ClearAction());
     }
-   for (int i = 0; i < 10; ++i) {
-      if (!addAuxButton(i,btnbar)) break;
+   
+   BddtFactory bfac = BddtFactory.getFactory();
+   for (BddtAuxBubbleAction act : bfac.getAuxButtons().keySet()) {
+      if (!act.forBubbleBar()) btnbar.add(act.clone(this));
     }
    
    btnbar.setFloatable(false);
@@ -321,6 +323,9 @@ private void setupPanel()
 
    bblbar.add(new ValueViewerBubbleAction());
    bblbar.add(new EvaluationBubbleAction());
+   for (BddtAuxBubbleAction act : bfac.getAuxButtons().keySet()) {
+      if (act.forBubbleBar()) bblbar.add(act.clone(this));
+    }
    bblbar.addSeparator();
    if (bp.getBoolean("Bddt.buttons.Restart",true)) {
       bblbar.add(new ClearAction());
@@ -332,56 +337,6 @@ private void setupPanel()
 
    launch_panel = pnl;
 }
-
-
-
-private boolean addAuxButton(int idx,JToolBar btnbar)
-{
-   String prop = "Bddt.buttons.aux" + idx;
-   BoardProperties bp = BoardProperties.getProperties("Bddt");
-   String c1nm = bp.getString(prop);
-   if (c1nm == null) return false;
- 
-   try {
-      Class<?> c1 = Class.forName(c1nm);
-      Object o1 = c1.getConstructor(Object.class).newInstance(this);
-      Action act = (Action) o1;
-      btnbar.add(act);   
-    }
-   catch (ClassNotFoundException e) {
-      BoardLog.logI("BDDT","Class " + c1nm + " not found for debugging");
-    }
-   catch (Throwable t) {
-      BoardLog.logE("BDDT","Problem setting up debugger button " + c1nm,t);
-    }
-   
-   return true;
-}
-
-
-private boolean showAuxBubble(int idx)
-{
-   String prop = "Bddt.buttons.aux" + idx;
-   BoardProperties bp = BoardProperties.getProperties("Bddt");
-   String c1nm = bp.getString(prop);
-   if (c1nm == null) return false;
-   
-   try {
-      Class<?> c1 = Class.forName(c1nm);
-      Object o1 = c1.getConstructor(Object.class).newInstance(this);
-      Action act = (Action) o1;
-      act.actionPerformed(null); 
-    }
-   catch (ClassNotFoundException e) {
-      BoardLog.logI("BDDT","Class " + c1nm + " not found for debugging");
-    }
-   catch (Throwable t) {
-      BoardLog.logE("BDDT","Problem setting up debugger button " + c1nm,t);
-    }
-   
-   return true;
-}
-
 
 
 
@@ -403,9 +358,6 @@ void setupKeys()
    SwingKey.registerKeyAction("DEBUG",bba,new PlayAction(),"F8");
    SwingKey.registerKeyAction("DEBUG",bba,new PauseAction(),"shift F8");
 }
-
-
-
 
 
 
@@ -440,11 +392,16 @@ void setupInitialBubbles()
    if (bp.getBoolean("Bddt.show.interact")) {
       bubble_manager.createInteractionBubble();
     }
-   for (int i = 1; i < 10; ++i) {
-      if (!showAuxBubble(i)) break;
+   
+   BddtFactory bfac = BddtFactory.getFactory();
+   for (Map.Entry<BddtAuxBubbleAction,Boolean> ent : bfac.getAuxButtons().entrySet()) {
+      if (ent.getValue()) {
+         BddtAuxBubbleAction act = ent.getKey();
+         BddtAuxBubbleAction bact = act.clone(this);
+         bact.actionPerformed(null);
+       }
     }
 }
-
 
 
 
@@ -464,7 +421,6 @@ void setupInitialBubbles()
 }
 
 
-
 /********************************************************************************/
 /*										*/
 /*	State maintenance							*/
@@ -475,8 +431,6 @@ void setLaunchState(LaunchState ls)
 {
    setLaunchState(ls,0,0);
 }
-
-
 
 
 synchronized void setLaunchState(LaunchState ls,int rct,int tct)
@@ -518,7 +472,6 @@ synchronized void setLaunchState(LaunchState ls,int rct,int tct)
        }
     }
 }
-
 
 
 

@@ -500,7 +500,10 @@ interface BddtAuxBubbleAction extends Action {
    
    String getAuxType();
    BudaBubble createBubble();
-   Object getLaunchId();                // BddtLaunchControl passed on constructor
+   Object getLaunchId();              
+   BddtAuxBubbleAction clone(Object lid);
+   default boolean forBubbleBar()                       { return true; }
+   default boolean isFixed()                            { return true; }
    
    default void actionPerformed(ActionEvent evt) {
       BddtFactory.getFactory().addFixedBubble(this); 

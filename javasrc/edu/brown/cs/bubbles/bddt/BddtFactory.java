@@ -67,7 +67,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 
@@ -94,6 +96,7 @@ private BudaRoot		buda_root;
 private List<BudaWorkingSet>	working_sets;
 private BudaWorkingSet		active_working_set;
 private Boolean 		debugging_use_workingset;
+private Map<BddtAuxBubbleAction,Boolean> aux_buttons;
 
 private static BddtConsoleController console_controller;
 private static BddtHistoryController history_controller;
@@ -167,6 +170,7 @@ private BddtFactory()
    working_sets = null;
    active_working_set = null;
    debugging_use_workingset = null;
+   aux_buttons = new LinkedHashMap<>();
 }
 
 
@@ -187,6 +191,17 @@ BudaWorkingSet getActiveWorkingSet()
    return active_working_set;
 }
 
+
+public void addAuxButton(BddtAuxBubbleAction cls,boolean show)
+{
+   aux_buttons.put(cls,show);
+}
+
+
+Map<BddtAuxBubbleAction,Boolean> getAuxButtons()
+{
+   return aux_buttons;
+}
 
 
 /********************************************************************************/
