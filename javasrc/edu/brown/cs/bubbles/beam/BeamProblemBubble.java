@@ -91,7 +91,7 @@ private transient List<BumpProblem> display_problems;
 private ProblemTable		problem_table;
 private transient Set<BumpErrorType> allow_types;
 private boolean 		for_tasks;
-private Color			top_color;
+private Color		 	top_color;
 private Color			bottom_color;
 private Color			overview_color;
 private Font			base_font;
@@ -525,25 +525,25 @@ private class ProblemTable extends JTable implements MouseListener,
    // @Override public Point getToolTipLocation(MouseEvent e) {
       // return BudaRoot.computeToolTipLocation(e);
     // }
-
+   
    // @Override public Point getLocationOnScreen() {
       // return BudaRoot.computeLocationOnScreen(this);
     // }
-
+   
    @Override protected void paintComponent(Graphics g) {
       synchronized (display_problems) {
-	 if (top_color.getRGB() != bottom_color.getRGB()) {
-	    Graphics2D g2 = (Graphics2D) g.create();
-	    Dimension sz = getSize();
-	    Paint p = new GradientPaint(0f,0f,top_color,0f,sz.height,bottom_color);
-	    Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
-	    g2.setPaint(p);
-	    g2.fill(r);
-	 }
-	 try {
-	    super.paintComponent(g);
-	  }
-	 catch (Throwable t) { }
+         if (top_color.getRGB() != bottom_color.getRGB()) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            Dimension sz = getSize();
+            Paint p = new GradientPaint(0f,0f,top_color,0f,sz.height,bottom_color);
+            Shape r = new Rectangle2D.Float(0,0,sz.width,sz.height);
+            g2.setPaint(p);
+            g2.fill(r);
+         }
+         try {
+            super.paintComponent(g);
+          }
+         catch (Throwable t) { }
        }
     }
 

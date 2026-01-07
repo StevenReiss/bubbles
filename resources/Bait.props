@@ -9,40 +9,6 @@
 <entry key="Bait.ollama.althost">localhost</entry>
 <entry key="Bait.ollama.altport">11434</entry>
 <entry key="Bait.ollama.usecontext">true</entry>
-<entry key="Bait.ollama.style></entry>
-<entry key="Bait.ollama.context></entry>
+<entry key="Bait.ollama.style"></entry>
+<entry key="Bait.ollama.context"></entry>
 </properties>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

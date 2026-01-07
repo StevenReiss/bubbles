@@ -416,7 +416,6 @@ private class DrawingPanel extends JPanel implements BudaConstants.BudaBubbleOut
       Graphics2D g2 = (Graphics2D) g.create();
       Dimension d = getSize();
       g2.setBackground(getBackground());
-      System.err.println("BACKGROUND " + getBackground());
       g2.clearRect(0,0,d.width,d.height);
    
       int ct = class_views.size();

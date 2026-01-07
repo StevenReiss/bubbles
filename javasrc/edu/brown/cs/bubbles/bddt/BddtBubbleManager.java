@@ -591,6 +591,8 @@ BudaBubble createAuxBubble(BddtAuxBubbleAction aux)
    
    positionBubble(bb,x,y,aux.isFixed());
    
+   bb.repaint();
+   
    return bb;
 }
 

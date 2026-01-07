@@ -312,7 +312,8 @@ void loadFileIntoEditor(File file,JEditorPane editor,UndoableEditListener listen
 	 ins.close();
        }
       catch (Throwable e) {
-	 BoardLog.logE("BTED","Problem loading file for " + contenttype + " " + path,e);
+	 BoardLog.logE("BTED",
+               "Problem loading file for " + contenttype + " " + path,e);
       }
    }
 

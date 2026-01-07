@@ -401,6 +401,8 @@ void setupInitialBubbles()
          bact.actionPerformed(null);
        }
     }
+   
+   repaint();
 }
 
 

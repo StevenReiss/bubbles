@@ -566,6 +566,7 @@ private boolean getIndicesOfFirstMethod(BassTreeBase p,List<Integer> list)
 
 @Override public TreePath getTreePath(String nm)
 {
+   if (nm == null) return null;
    StringTokenizer tok = new StringTokenizer(nm,"@");
    Object [] elts = new Object[tok.countTokens()+1];
    BassTreeBase tn = base_model.getRoot();
