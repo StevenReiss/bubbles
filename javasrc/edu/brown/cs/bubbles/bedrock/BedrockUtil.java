@@ -1877,7 +1877,8 @@ static void outputValue(IValue val,IJavaVariable var,String name,int lvls,int ar
 	       // TODO: Need to handle large arrays
 	       for (int i = 0; i < sz; ++i) {
 		  try {
-		     outputValue(arr.getValue(i),null,"[" + i + "]",lvls-1,arraysz,donestatics,xw);
+		     outputValue(arr.getValue(i),null,"[" + i + "]",lvls-1,
+                           arraysz,donestatics,xw);
 		   }
 		  catch (DebugException e) { 
                      break; 
