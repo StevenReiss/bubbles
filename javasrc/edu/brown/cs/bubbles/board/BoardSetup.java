@@ -3568,42 +3568,42 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if (cmd.equals("WORKSPACE") || cmd.equals(board_language.getWorkspaceLabel())) {
-	 JTextField tf = (JTextField) e.getSource();
-	 File ef = new File(tf.getText());
-	 String np = ef.getPath();
-	 if (!np.equals(default_workspace)) ws_changed = true;
-	 default_workspace = np;
+         JTextField tf = (JTextField) e.getSource();
+         File ef = new File(tf.getText());
+         String np = ef.getPath();
+         if (!np.equals(default_workspace)) ws_changed = true;
+         default_workspace = np;
        }
       else if (cmd.equals("Always Ask for Workspace")) {
-	 JCheckBox cbx = (JCheckBox) e.getSource();
-	 if (ask_workspace != cbx.isSelected()) ws_changed = true;
-	 ask_workspace = cbx.isSelected();
+         JCheckBox cbx = (JCheckBox) e.getSource();
+         if (ask_workspace != cbx.isSelected()) ws_changed = true;
+         ask_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Create New Workspace")) {
-	 JCheckBox cbx = (JCheckBox) e.getSource();
-	 create_workspace = cbx.isSelected();
+         JCheckBox cbx = (JCheckBox) e.getSource();
+         create_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Recent Workspaces")) {
-	 JComboBox<?> cbx = (JComboBox<?>) e.getSource();
-	 String rslt = (String) cbx.getSelectedItem();
-	 if (rslt != null && !rslt.trim().equals("") && !rslt.trim().equals(RECENT_HEADER)) {
-	    if (!rslt.equals(default_workspace)) {
-	       ws_changed = true;
-	       default_workspace = rslt;
-	       workspace_field.setText(rslt);
-	     }
-	  }
+         JComboBox<?> cbx = (JComboBox<?>) e.getSource();
+         String rslt = (String) cbx.getSelectedItem();
+         if (rslt != null && !rslt.trim().equals("") && !rslt.trim().equals(RECENT_HEADER)) {
+            if (!rslt.equals(default_workspace)) {
+               ws_changed = true;
+               default_workspace = rslt;
+               workspace_field.setText(rslt);
+             }
+          }
        }
       else if (cmd.equals("OK")) {
-	 result_status = true;
-	 working_dialog.setVisible(false);
+         result_status = true;
+         working_dialog.setVisible(false);
        }
       else if (cmd.equals("CANCEL")) {
-	 result_status = false;
-	 working_dialog.setVisible(false);
+         result_status = false;
+         working_dialog.setVisible(false);
        }
       else {
-	 BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
+         BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
        }
       checkStatus();
     }
