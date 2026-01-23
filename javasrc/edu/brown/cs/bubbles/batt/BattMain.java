@@ -1073,23 +1073,23 @@ private class Client extends IvyXmlReaderThread {
 
    @Override protected void processXmlMessage(String msg) {
       Element e = IvyXml.convertStringToXml(msg);
-
+   
       synchronized (message_lock) {
-	 System.err.println("BATTM: CLIENT MSG: " + client_socket.getLocalPort() + " " + msg);
-	
-	 if (IvyXml.isElement(e,"TESTCASE")) {
-	    String nm = IvyXml.getAttrString(e,"NAME");
-	    BattTestCase btc = findTestCase(nm);
-	    btc.handleTestState(e);
-	    reportTestStatus(false);
-	  }
-	 else if (IvyXml.isElement(e,"TESTCOUNTS")) {
-	    String nm = IvyXml.getAttrString(e,"NAME");
-	    BattTestCase btc = findTestCase(nm);
-	    btc.handleTestCounts(e);
-	  }
-	
-	 System.err.println("BATTM: FINISH CLIENT MSG");
+         System.err.println("BATTM: CLIENT MSG: " + client_socket.getLocalPort() + " " + msg);
+        
+         if (IvyXml.isElement(e,"TESTCASE")) {
+            String nm = IvyXml.getAttrString(e,"NAME");
+            BattTestCase btc = findTestCase(nm);
+            btc.handleTestState(e);
+            reportTestStatus(false);
+          }
+         else if (IvyXml.isElement(e,"TESTCOUNTS")) {
+            String nm = IvyXml.getAttrString(e,"NAME");
+            BattTestCase btc = findTestCase(nm);
+            btc.handleTestCounts(e);
+          }
+        
+         System.err.println("BATTM: FINISH CLIENT MSG");
        }
    }
 
