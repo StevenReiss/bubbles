@@ -117,6 +117,7 @@ BuenoGenericEditorPanel(BuenoGenericProjectEditor ed,Element tabxml)
    edit_panel = null;
    base_paths = null;
    panel_paths = null;
+   force_update = false;
 }
 
 
@@ -780,6 +781,7 @@ private class ReferencesPanel extends EditPanel implements ActionListener {
       Set<String> refs = project_editor.getReferencedProjects();
       if (cbx.isSelected()) refs.add(proj);
       else refs.remove(proj);
+      force_update = true;
     }
 
 }	// end of inner class ReferencesPanel

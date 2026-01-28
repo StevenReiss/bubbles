@@ -736,7 +736,15 @@ private void setupPackage(String nm,String load)
 {
    // BoardLog.logD("BEMA","Setup " + nm);
    ClassLoader cldr = BemaMain.class.getClassLoader();
-
+   
+   if (load != null) {
+      try {
+         Class.forName(nm,true,cldr);
+         load = null;
+       }
+      catch (ClassNotFoundException e) { }
+    }
+      
    if (load != null) {
       try {
 	 List<URL> urls = new ArrayList<>();
