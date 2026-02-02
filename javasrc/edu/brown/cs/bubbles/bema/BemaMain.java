@@ -642,7 +642,7 @@ private void loadPlugin(File jfn,BudaRoot root,List<String> names)
             String lib = at.getValue("Bubbles-lib");
             String load = jfn.getAbsolutePath();
             String basename = null;
-            if (dep != null) {
+            if (dep != null && !dep.isBlank()) {
                dep = dep.trim();
                if (dep.length() > 0) load += ":" + dep;
              }
@@ -672,10 +672,19 @@ private void loadPlugin(File jfn,BudaRoot root,List<String> names)
              }
             if (basename != null && palette != null) {
                ClassLoader cldr = class_loaders.get(basename);
+               if (cldr == null) cldr = BemaMain.class.getClassLoader();
                URL u = cldr.getResource(palette);
                if (u != null) {
                   BoardLog.logD("BEMA","Add plugin palette " + u);
                   BoardColors.addPalette(u);
+                }
+               else {
+                  String s1 = "jar:file:" + jfn + "!/" + palette;
+                  try {
+                     URL u1 = new URI(s1).toURL();
+                     BoardColors.addPalette(u1);
+                   }
+                  catch (URISyntaxException e) { }
                 }
              }
           }
