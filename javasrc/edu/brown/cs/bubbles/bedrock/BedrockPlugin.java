@@ -1069,7 +1069,7 @@ private static class EditDataImpl implements EditData {
    EditDataImpl(Element e) {
       start_offset = IvyXml.getAttrInt(e,"START");
       end_offset = IvyXml.getAttrInt(e,"END",start_offset);
-      edit_text = IvyXml.getText(e);
+      edit_text = IvyXml.getText(e,false);
       if (edit_text != null && edit_text.length() == 0) edit_text = null;
       if (edit_text != null && IvyXml.getAttrBool(e,"ENCODE")) {
 	 byte [] bytes = IvyXml.stringToByteArray(edit_text);
