@@ -673,14 +673,14 @@ private static class Token implements BaleToken {
 
 
 private static class TokenData {
-   Map<String,BaleTokenType> keyword_map;
-   Set<String> op_set;
-   int      multiline_count;
-   char	 multiline_string;
-   String	string_chars;
-   boolean  slashslash_comments;
-   boolean  slashstar_comments;
-   boolean  hash_comments; 
+   private Map<String,BaleTokenType> keyword_map;
+   private Set<String> op_set;
+   private int multiline_count;
+   private char multiline_string;
+   private String string_chars;
+   private boolean slashslash_comments;
+   private boolean slashstar_comments;
+   private boolean hash_comments; 
    
    TokenData(BoardLanguage bl) {
       keyword_map = new HashMap<>();
