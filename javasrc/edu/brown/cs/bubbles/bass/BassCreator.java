@@ -917,19 +917,19 @@ private static class ImportFixer implements Runnable  {
 
    @Override public void run() {
       if (edit_result == null) {
-	 String order = BASS_PROPERTIES.getString("Bass.import.order");
-	 int demand = BASS_PROPERTIES.getInt("Bass.import.ondemand.threshold");
-	 int sdemand = BASS_PROPERTIES.getInt("Bass.import.static.ondemand.threshold");
-	 BumpClient bc = BumpClient.getBump();
-	 Element edits = bc.fixImports(project_name,file_name,order,demand,sdemand,null);
-	 if (edits != null) {
-	    edit_result = edits;
-	    SwingUtilities.invokeLater(this);
-	  }
+         String order = BASS_PROPERTIES.getString("Bass.import.order");
+         int demand = BASS_PROPERTIES.getInt("Bass.import.ondemand.threshold");
+         int sdemand = BASS_PROPERTIES.getInt("Bass.import.static.ondemand.threshold");
+         BumpClient bc = BumpClient.getBump();
+         Element edits = bc.fixImports(project_name,file_name,order,demand,sdemand,null);
+         if (edits != null) {
+            edit_result = edits;
+            SwingUtilities.invokeLater(this);
+          }
        }
       else {
-	 BaleFactory.getFactory().applyEdits(file_name,edit_result);
-	 edit_result = null;
+         BaleFactory.getFactory().applyEdits(file_name,edit_result);
+         edit_result = null;
        }
     }
 

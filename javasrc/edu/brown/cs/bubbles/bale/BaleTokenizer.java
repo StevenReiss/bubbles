@@ -33,7 +33,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.w3c.dom.Element;
-
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -58,20 +57,10 @@ private boolean 	ignore_white;
 private char		cur_delim;
 private int		delim_count;
 protected int		cur_flags;
-
-// these should be looked up by language ?
-
-private static Map<String,BaleTokenType> keyword_map = null;
-private static Set<String> op_set;
-private static int      multiline_count;
-private static char	 multiline_string;
-private static String	string_chars;
-private static boolean  slashslash_comments;
-private static boolean  slashstar_comments;
-private static boolean  hash_comments;
+private TokenData       token_data;
 
 
-
+private static Map<BoardLanguage,TokenData> language_data = new HashMap<>();
 private static Map<BoardLanguage,BaleTokenizer> default_tokenizers = new HashMap<>();
 
 private static final String OP_CHARS = "=<!~?:>|&+-*/^%\\";
@@ -92,15 +81,15 @@ static BaleTokenizer create(String text,BaleTokenState start,BoardLanguage bl)
       case JAVA :
       case JAVA_IDEA :
       case DART :
-	 return new DefaultTokenizer(text,start);
+	 return new DefaultTokenizer(text,start,bl);
       case JS :
-	 return new JSTokenizer(text,start);
+	 return new JSTokenizer(text,start,bl);
     }
 }
 
 
 
-private BaleTokenizer(String text,BaleTokenState start)
+private BaleTokenizer(String text,BaleTokenState start,BoardLanguage bl)
 {
    input_text = (text == null ? "" : text);
    cur_offset = 0;
@@ -110,45 +99,11 @@ private BaleTokenizer(String text,BaleTokenState start)
    cur_delim = 0;
    delim_count = 0;
    cur_flags = 0;
-
-   if (keyword_map == null) {
-      keyword_map = new HashMap<>();
-      Element xml = BumpClient.getBump().getLanguageData();
-      Element exml = IvyXml.getChild(xml,"EDITING");
-      Element kxml = IvyXml.getChild(exml,"KEYWORDS");
-      for (Element kwd : IvyXml.children(kxml,"KEYWORD")) {
-         String nm = IvyXml.getAttrString(kwd,"NAME");
-         String typ = IvyXml.getAttrString(kwd,"TYPE");
-         BaleTokenType bt = BaleTokenType.valueOf(typ);
-         keyword_map.put(nm,bt);
-       }
-      op_set = new HashSet<>();
-      Element oxml = IvyXml.getChild(exml,"OPERATORS");
-      String opset = IvyXml.getText(oxml);
-      if (opset != null) {
-         StringTokenizer tok = new StringTokenizer(opset);
-         while (tok.hasMoreTokens()) {
-            op_set.add(tok.nextToken());
-          }
-       }
-      Element txml = IvyXml.getChild(exml,"TOKENS");
-      String mls = IvyXml.getTextElement(txml,"MUTLILINE");
-      if (mls != null) {
-         mls = mls.trim();
-         if (mls.isEmpty()) mls = null;
-       }
-      multiline_count = 0;
-      multiline_string = (char) 0;
-      if (mls != null && mls.length() > 1) multiline_count = mls.length();
-      else if (mls != null) multiline_string = mls.charAt(0);
-      String sc = IvyXml.getTextElement(txml,"STRING");
-      if (sc == null || sc.trim().isEmpty()) string_chars = "\"";
-      else string_chars = sc.trim();
-      String cmmts = IvyXml.getTextElement(txml,"COMMENTS");
-      if (cmmts == null) cmmts = "// /*";
-      slashslash_comments = cmmts.contains("//");
-      slashstar_comments = cmmts.contains("/*");
-      hash_comments = cmmts.contains("#");
+   
+   token_data = language_data.get(bl);
+   if (token_data == null) {
+      token_data = new TokenData(bl);
+      language_data.put(bl,token_data);
     }
 }
 
@@ -163,10 +118,10 @@ private BaleTokenizer(String text,BaleTokenState start)
 
 void setIgnoreWhitespace(boolean fg)			{ ignore_white = fg; }
 
-protected boolean useSlashStarComments()		{ return slashstar_comments; }
-protected boolean useSlashSlashComments()		{ return slashslash_comments; }
-protected boolean useHashComments()			{ return hash_comments; }
-protected boolean isStringStart(char c) 		{ return string_chars.indexOf(c) >= 0; }
+protected boolean useSlashStarComments()		 { return token_data.slashstar_comments; }
+protected boolean useSlashSlashComments()	 	 { return token_data.slashslash_comments; }
+protected boolean useHashComments()			{ return token_data.hash_comments; }
+protected boolean isStringStart(char c) 		{ return token_data.string_chars.indexOf(c) >= 0; }
 
 static Collection<String> getKeywords(BoardLanguage bl)
 {
@@ -175,14 +130,14 @@ static Collection<String> getKeywords(BoardLanguage bl)
       bt = create(null,BaleTokenState.NORMAL,bl);
       default_tokenizers.put(bl,bt);
     }
-   return keyword_map.keySet();
+   return bt.token_data.keyword_map.keySet();
 }
 
 
-protected BaleTokenType getKeyword(String s)		{ return keyword_map.get(s); }
-protected boolean isOperator(String s)		{ return op_set.contains(s); }
-protected int useMultilineCount()			{ return multiline_count; }
-protected boolean isMultilineStringStart(char c)	{ return c != 0 && c == multiline_string; }
+protected BaleTokenType getKeyword(String s)		{ return token_data.keyword_map.get(s); }
+protected boolean isOperator(String s)		{ return token_data.op_set.contains(s); }
+protected int useMultilineCount()			{ return token_data.multiline_count; }
+protected boolean isMultilineStringStart(char c)	{ return c != 0 && c == token_data.multiline_string; }
 
 
 
@@ -710,6 +665,66 @@ private static class Token implements BaleToken {
 
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Language-specific token information                                     */
+/*                                                                              */
+/********************************************************************************/
+
+
+private static class TokenData {
+   Map<String,BaleTokenType> keyword_map;
+   Set<String> op_set;
+   int      multiline_count;
+   char	 multiline_string;
+   String	string_chars;
+   boolean  slashslash_comments;
+   boolean  slashstar_comments;
+   boolean  hash_comments; 
+   
+   TokenData(BoardLanguage bl) {
+      keyword_map = new HashMap<>();
+      Element xml = BumpClient.getBump().getLanguageData(bl);
+      Element exml = IvyXml.getChild(xml,"EDITING");
+      Element kxml = IvyXml.getChild(exml,"KEYWORDS");
+      for (Element kwd : IvyXml.children(kxml,"KEYWORD")) {
+         String nm = IvyXml.getAttrString(kwd,"NAME");
+         String typ = IvyXml.getAttrString(kwd,"TYPE");
+         BaleTokenType bt = BaleTokenType.valueOf(typ);
+         keyword_map.put(nm,bt);
+       }
+      op_set = new HashSet<>();
+      Element oxml = IvyXml.getChild(exml,"OPERATORS");
+      String opset = IvyXml.getText(oxml);
+      if (opset != null) {
+         StringTokenizer tok = new StringTokenizer(opset);
+         while (tok.hasMoreTokens()) {
+            op_set.add(tok.nextToken());
+          }
+       }
+      Element txml = IvyXml.getChild(exml,"TOKENS");
+      String mls = IvyXml.getTextElement(txml,"MUTLILINE");
+      if (mls != null) {
+         mls = mls.trim();
+         if (mls.isEmpty()) mls = null;
+       }
+      multiline_count = 0;
+      multiline_string = (char) 0;
+      if (mls != null && mls.length() > 1) multiline_count = mls.length();
+      else if (mls != null) multiline_string = mls.charAt(0);
+      String sc = IvyXml.getTextElement(txml,"STRING");
+      if (sc == null || sc.trim().isEmpty()) string_chars = "\"";
+      else string_chars = sc.trim();
+      String cmmts = IvyXml.getTextElement(txml,"COMMENTS");
+      if (cmmts == null) cmmts = "// /*";
+      slashslash_comments = cmmts.contains("//");
+      slashstar_comments = cmmts.contains("/*");
+      hash_comments = cmmts.contains("#"); 
+    }
+   
+}       // end of inner class TokenData
+
+
 
 /********************************************************************************/
 /*										*/
@@ -719,8 +734,8 @@ private static class Token implements BaleToken {
 
 private static class DefaultTokenizer extends BaleTokenizer {
 
-   DefaultTokenizer(String text,BaleTokenState start) {
-      super(text,start);
+   DefaultTokenizer(String text,BaleTokenState start,BoardLanguage bl) {
+      super(text,start,bl);
     }
 
 }	// end of inner class JavaTokenizer
@@ -739,8 +754,8 @@ private static final int INSIDE_IMPORT = 2;
 
 private static class JSTokenizer extends BaleTokenizer {
 
-   JSTokenizer(String text,BaleTokenState start) {
-      super(text,start);
+   JSTokenizer(String text,BaleTokenState start,BoardLanguage bl) {
+      super(text,start,bl);
     }
 
    @Override protected BaleTokenType getKeyword(String s) {
