@@ -473,18 +473,18 @@ private class CoverageSetup extends MethodVisitor {
          super.visitTypeInsn(Opcodes.NEW,"java/lang/RuntimeException");
          super.visitInsn(Opcodes.DUP);
          super.visitLdcInsn("Attempt to exit");
-         super.visitMethodInsn(Opcodes.INVOKESPECIAL,"java/lang/RuntimeEsception","<init>",
+         super.visitMethodInsn(Opcodes.INVOKESPECIAL,"java/lang/RuntimeException","<init>",
                "(Ljava/lang/String;)V",false);
          super.visitInsn(Opcodes.ATHROW);
        }
       super.visitMethodInsn(opc,own,nm,ds,itf);
       if (super_class != null && nm.equals("<init>")) {
-	 if (own.equals(super_class) || own.equals(class_name)) {
-	    super_class = null;
-	    addCall(method_id,"handleEntry");
-	    block_next = true;
-	    checkBlock();
-	  }
+         if (own.equals(super_class) || own.equals(class_name)) {
+            super_class = null;
+            addCall(method_id,"handleEntry");
+            block_next = true;
+            checkBlock();
+          }
        }
     }
 

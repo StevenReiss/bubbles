@@ -244,6 +244,8 @@ BumpThread getLastStoppedThread()
 
 boolean isThreadRelevant(String tid)
 {
+   if (cur_process == null) return false;
+   
    for (BumpThread thrd : cur_process.getThreads()) {
       if (thrd.getId().equals(tid)) return true;
     }

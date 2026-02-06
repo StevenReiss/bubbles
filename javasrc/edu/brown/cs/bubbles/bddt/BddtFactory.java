@@ -322,9 +322,26 @@ public void addFixedBubble(BddtAuxBubbleAction aux)
 }
 
 
-public boolean isThreadRelevant(Object lid,String tid)
+public boolean isThreadRelevant(BudaBubble lid,String tid)
 {
-   BddtLaunchControl ctrl = (BddtLaunchControl) lid; 
+   BddtLaunchControl ctrl = null;
+
+   if (lid instanceof BddtLaunchControl) {
+      ctrl = (BddtLaunchControl) lid; 
+    }
+   else {
+      BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(lid);
+      // need to handle working sets here
+      for (BudaBubble bbl : bba.getBubbles()) {
+         if (bbl instanceof BddtLaunchControl) {
+            ctrl = (BddtLaunchControl) bbl;
+            break;
+          }
+       }
+    }
+   
+   if (ctrl == null) return false;
+   
    return ctrl.isThreadRelevant(tid);
 }
 
@@ -505,65 +522,65 @@ private class PanelHandler extends AbstractAction implements ActionListener {
    @Override public void actionPerformed(ActionEvent e) {
       BudaRoot br = null;
       if (e.getSource() instanceof JButton) {
-	 JButton btn = (JButton) e.getSource();
-	 br = BudaRoot.findBudaRoot(btn);
+         JButton btn = (JButton) e.getSource();
+         br = BudaRoot.findBudaRoot(btn);
       }
       else if (e.getSource() instanceof Component) {
-	 Component c = (Component) e.getSource();
-	 br = BudaRoot.findBudaRoot(c);
+         Component c = (Component) e.getSource();
+         br = BudaRoot.findBudaRoot(c);
       }
       if (br == null) return;
       String cmd = e.getActionCommand();
-
+   
       // fix up command
       if (cmd == null) cmd = "DEBUG";
       boolean useworkingset = debugging_use_workingset;
       if (cmd.equals("DEBUG")) {
-	 if (useworkingset) {
-	    if (working_sets.isEmpty()) cmd = "NEW";
-	  }
-	 else {
-	    if (debug_channels.isChannelEmpty() ||
-	      (debug_channels.getNumChannels() == 0 && br.getChannelSet() != debug_channels)) {
-	       cmd = "NEW";
-	     }
-	  }
+         if (useworkingset) {
+            if (working_sets.isEmpty()) cmd = "NEW";
+          }
+         else {
+            if (debug_channels.isChannelEmpty() ||
+              (debug_channels.getNumChannels() == 0 && br.getChannelSet() != debug_channels)) {
+               cmd = "NEW";
+             }
+          }
        }
       BoardLog.logD("BDDT","Panel command " + cmd);
       if (cmd.equals("DEBUG")) {
-	 if (current_configuration == null) {
-	    createConfiguration();
-	  }
-	 else {
-	    BoardMetrics.noteCommand("BDDT","GotoDebug");
-	    if (debug_channels != null && br.getChannelSet() == debug_channels)
-	       useworkingset = false;
-	    if (useworkingset) {
-	       if (active_working_set == null) {
-		  setPriorViewport(br);
-		  active_working_set = working_sets.get(0);
-		}
-	       else if (prior_viewport != null) {
-		  br.setViewport(prior_viewport.x,prior_viewport.y);
-		}
-	     }
-	    else {
-	       if (br.getChannelSet() == debug_channels) br.setChannelSet(null);
-	       else br.setChannelSet(debug_channels);
-	     }
-	  }
+         if (current_configuration == null) {
+            createConfiguration();
+          }
+         else {
+            BoardMetrics.noteCommand("BDDT","GotoDebug");
+            if (debug_channels != null && br.getChannelSet() == debug_channels)
+               useworkingset = false;
+            if (useworkingset) {
+               if (active_working_set == null) {
+        	  setPriorViewport(br);
+        	  active_working_set = working_sets.get(0);
+        	}
+               else if (prior_viewport != null) {
+        	  br.setViewport(prior_viewport.x,prior_viewport.y);
+        	}
+             }
+            else {
+               if (br.getChannelSet() == debug_channels) br.setChannelSet(null);
+               else br.setChannelSet(debug_channels);
+             }
+          }
        }
       else if (cmd.equals("NEW")) {
-	 setPriorViewport(br);
-	 if (current_configuration == null) setCurrentLaunchConfig(null);
-	
-	 if (current_configuration != null) {
-	    BoardMetrics.noteCommand("BDDT","NewDebug");
-	    newDebugger(current_configuration);
-	  }
-	 else {
-	    createConfiguration();
-	  }
+         setPriorViewport(br);
+         if (current_configuration == null) setCurrentLaunchConfig(null);
+        
+         if (current_configuration != null) {
+            BoardMetrics.noteCommand("BDDT","NewDebug");
+            newDebugger(current_configuration);
+          }
+         else {
+            createConfiguration();
+          }
        }
     }
 

@@ -328,6 +328,7 @@ private Class<?> setupClass(String cnm,ExecutorService service)
        }
       catch (AssertionError e) {
 	 System.err.println("Assertion error: " + e);
+         e.printStackTrace();
        }
       catch (IllegalArgumentException e) {
 	 // System.err.println("Argument exception: " + e);
@@ -345,6 +346,7 @@ private Class<?> setupClass(String cnm,ExecutorService service)
        }
       catch (ClassNotFoundException e) {
 	 System.err.println("BATTJ: Class " + cnm + " not found");
+         e.printStackTrace();
        }
       catch (LinkageError e) {
 	 retry = true;
