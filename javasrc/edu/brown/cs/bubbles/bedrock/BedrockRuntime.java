@@ -562,6 +562,8 @@ void runProject(String cfg,String mode,boolean build,boolean reg,String vmarg,St
 	 ccnf.setAttribute(vmatt,ja);
 	 cnf = ccnf;
        }
+      
+      
 
       ILaunch lnch = cnf.launch(mode,null,build,reg);
       if (lnch != null) {

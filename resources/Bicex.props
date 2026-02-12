@@ -24,4 +24,7 @@
 </entry>
 <entry key="Bicex.seede.open.l1">java.base/sun.util.calendar
 </entry>
+<entry key="Bicex.seede.open.22">java.base/sun.security.provider
+java.base/jdk.internal.util java.base/java.time
+</entry>
 </properties>
