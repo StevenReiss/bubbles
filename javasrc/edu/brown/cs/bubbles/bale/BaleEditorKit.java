@@ -2288,13 +2288,13 @@ private static class AutoCompleteAction extends TextAction  {
       if (!checkEditor(target)) return;
       BaleCompletionContext ctx = target.getCompletionContext();
       if (ctx == null) {
-	 int sel = target.getSelectionStart();
-	 new BaleCompletionContext(target,sel-1,'1');
-	 BoardMetrics.noteCommand("BALE","AutoCompleteIt");
+         int sel = target.getSelectionStart();
+         new BaleCompletionContext(target,sel-1,'1');
+         BoardMetrics.noteCommand("BALE","AutoCompleteIt");
        }
       else {
-	 ctx.handleSelected();
-	 BoardMetrics.noteCommand("BALE","AutoComplete");
+         ctx.handleSelected();
+         BoardMetrics.noteCommand("BALE","AutoComplete");
        }
    }
 }

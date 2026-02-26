@@ -257,30 +257,30 @@ private final class EditKeyer extends KeyAdapter {
       int ch = e.getKeyChar();
       BoardLog.logD("BALE","CONTEXT KEY CODE " + code);
       if (code == KeyEvent.VK_KP_UP || code == KeyEvent.VK_UP) {
-	 the_panel.decCurrentIndex();
-	 e.consume();
+         the_panel.decCurrentIndex();
+         e.consume();
        }
       if (code == KeyEvent.VK_KP_DOWN || code == KeyEvent.VK_DOWN) {
-	 the_panel.incCurrentIndex();
-	 e.consume();
+         the_panel.incCurrentIndex();
+         e.consume();
        }
-
+   
       if (code == KeyEvent.VK_ENTER) {
-	 the_panel.handleCurrentIndex();
-	 e.consume();
+         the_panel.handleCurrentIndex();
+         e.consume();
        }
       if (code == KeyEvent.VK_TAB) {
-	 the_panel.handleCurrentIndex();
-	 e.consume();
+         the_panel.handleCurrentIndex();
+         e.consume();
        }
       if (code == KeyEvent.VK_SPACE && (e.isControlDown() || e.isMetaDown())) {
-	 the_panel.handleCurrentIndex();
-	 e.consume();
+         the_panel.handleCurrentIndex();
+         e.consume();
        }
-
+   
       BoardLog.logD("BALE","Completion saw character " + ch);
       if (ch == '(' || ch == ')' || ch == ' ' || ch == ';' || ch == '*' || ch == ',') {
-	 removeContext();
+         removeContext();
       }
     }
 
