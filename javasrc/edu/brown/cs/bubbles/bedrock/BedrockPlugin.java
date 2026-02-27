@@ -595,6 +595,7 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       xw);
 	 break;
       case "PATTERNSEARCH" :
+         logD("SEARCH: " + IvyXml.convertXmlToString(xml));
 	 bedrock_java.handlePatternSearch(proj,IvyXml.getAttrString(xml,"BID","*"),
 	       IvyXml.getAttrString(xml,"PATTERN"),
 	       IvyXml.getAttrString(xml,"FOR"),
