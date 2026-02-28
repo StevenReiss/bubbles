@@ -2784,7 +2784,8 @@ private static class GotoImplementationAction extends TextAction {
    
          if (locs == null || locs.size() == 0) {
             if (e.getActionCommand() == null) {
-               e = new ActionEvent(target,e.getID(),"GotoImplementationAction",e.getWhen(),e.getModifiers());
+               e = new ActionEvent(target,e.getID(),"GotoImplementationAction",
+                     e.getWhen(),e.getModifiers());
              }
             goto_doc_action.actionPerformed(e);
             return;
