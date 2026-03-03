@@ -523,7 +523,7 @@ private class NewFieldAction extends NewAction implements BuenoConstants.BuenoBu
       BoardMetrics.noteCommand("BASS","NewField");
       BudaRoot.hideSearchBubble(e);
       BuenoFieldDialog bfd = new BuenoFieldDialog(search_bubble,access_point,
-						       property_set,for_location,this);
+        					       property_set,for_location,this);
       bfd.showDialog();
     }
 
