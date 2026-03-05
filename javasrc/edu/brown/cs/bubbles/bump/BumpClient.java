@@ -391,7 +391,7 @@ public void waitForIDE(BoardSetup bs)
 /**
  *	Open a file.  This causes the IDE to track changes to the given file.  If
  *	getcnts is specified or if the file is open in the IDE and is different
- *	tha it is on disk, the the contents of the file is returned.  Otherwise
+ *	than it is on disk, the contents of the file is returned.  Otherwise
  *	null is returned.
  *	@param pname The project name
  *	@param file The file to open

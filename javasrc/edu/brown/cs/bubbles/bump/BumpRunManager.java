@@ -884,7 +884,10 @@ private void handleThreadEvent(Element xml,long when)
 	 td.setThreadState(ost.getRunState(),dtl);
 	 break;
       case SUSPEND :
-	 if (dtl == BumpThreadStateDetail.EVALUATION_IMPLICIT && iseval) return;
+	 if (dtl == BumpThreadStateDetail.EVALUATION_IMPLICIT && iseval) {
+            checkException(td,thrd);
+            return;
+          }
 	 else if (checkException(td,thrd)) {
 	    td.setThreadState(ost.getExceptionState(),dtl);
 	  }
@@ -2016,7 +2019,7 @@ private class ThreadData implements BumpThread {
       mc.send("<BANDAID CMD='" + cmd + "' ID='" + for_process.getName() + "' />");
     }
 
-   void setException(String typ)			{ exception_type = typ; }
+   void setException(String typ)		        { exception_type = typ; }
    void setBreakpoint(BumpBreakpoint bp)		{ current_breakpoint = bp; }
 
 }	// end of inner class ThreadData
