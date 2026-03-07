@@ -1393,14 +1393,14 @@ private final class EclipseUpdater implements DocumentListener {
 
    @Override public void insertUpdate(DocumentEvent e) {
       if (!doing_load && !doing_remote && !doing_eload) {
-	 int off = e.getOffset();
-	 int len = e.getLength();
-	 try {
-	    String txt = getText(off,len);
-	    int eoff = mapOffsetToEclipse(off);
-	    bump_client.editFile(project_name,file_name,nextEditCounter(),eoff,eoff,txt);
-	  }
-	 catch (BadLocationException ex) { }
+         int off = e.getOffset();
+         int len = e.getLength();
+         try {
+            String txt = getText(off,len);
+            int eoff = mapOffsetToEclipse(off);
+            bump_client.editFile(project_name,file_name,nextEditCounter(),eoff,eoff,txt);
+          }
+         catch (BadLocationException ex) { }
        }
     }
 
