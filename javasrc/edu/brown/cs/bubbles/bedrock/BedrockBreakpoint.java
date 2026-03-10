@@ -545,13 +545,17 @@ private void setBreakProperty(IBreakpoint bp,String p,String v) throws BedrockEx
 
 @Override public void breakpointsAdded(IBreakpoint [] bpts)
 {
-   BedrockPlugin.logD("BREAKPOINTS ADDED " + bpts);
+   BedrockPlugin.logD("BREAKPOINTS ADDED " + bpts.length + " " + bpts);
    
    IvyXmlWriter xw = our_plugin.beginMessage("BREAKEVENT");
 
    xw.begin("BREAKPOINTS");
    xw.field("REASON","ADD");
-   for (IBreakpoint bp : bpts) BedrockUtil.outputBreakpoint(bp,xw);
+   for (IBreakpoint bp : bpts) {
+      BedrockPlugin.logD("WORK ON BREAKPOINT " + bp.getClass() + " " + bp.hashCode() + " " +
+            bp.getMarker());
+      BedrockUtil.outputBreakpoint(bp,xw);
+    }
    xw.end();
 
    our_plugin.finishMessage(xw);

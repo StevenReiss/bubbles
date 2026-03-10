@@ -964,7 +964,7 @@ private class TransferBubble implements Transferable, BudaConstants.BudaDragBubb
       BudaBubble [] rslt = new BudaBubble[thread_entries.size()];
       int i = 0;
       for (BumpThread bt : thread_entries) {
-	 rslt[i++] = new BddtStackView(launch_control,bt);
+         rslt[i++] = new BddtStackView(launch_control,bt);
        }
       return rslt;
     }

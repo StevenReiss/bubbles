@@ -1028,7 +1028,7 @@ private class TransferBubble implements Transferable, BudaConstants.BudaDragBubb
       BudaBubble [] rslt = new BudaBubble[value_entries.size()];
       int i = 0;
       for (ValueTreeNode tn : value_entries) {
-	 rslt[i++] = new BddtStackView(BddtStackView.this,tn);
+         rslt[i++] = new BddtStackView(BddtStackView.this,tn);
        }
       return rslt;
     }
