@@ -406,7 +406,7 @@ public boolean replace(int off,int len,String text,boolean fmt,boolean ind)
 	 int isoff = sp.getOffset();
 	 int ieoff = ep.getOffset();
 	 int slno = findLineNumber(isoff);
-	 int elno = findLineNumber(ieoff);
+	 int elno = findLineNumber(ieoff-1);
 	 for (int i = slno; i <= elno; ++i) {
 	    fixLineIndent(i);
 	 }
