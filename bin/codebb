@@ -39,7 +39,7 @@ foreach i ($LIB/marytts/*.jar)
   set CPB = ${CPB}:$i
 end
 
-set CPC = $INS/resources
+set CPC = $INS/resources:$PRO/bubbles/lib/poppy.jar
 
 set CP = ${CP1}:${CP2}:${CP3}:${CP4}:${CP5}:${CP6}:${CP7}:${CP8}:${CP9}:${CP10}:${CPB}:${CPC}
 

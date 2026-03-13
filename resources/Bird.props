@@ -4,6 +4,13 @@
 <entry key="Bird.diad.debug">false</entry>
 <entry key="Bird.diad.class.path">diad.jar:eclipsejar:ivy.jar:json.jar:asm.jar:junit.jar</entry>
 <entry key="Bird.show.panel">true</entry>
+<entry key="Differences.family">Monospaced</entry>
+<entry key="Differences.size">11</entry>
+<entry key="Differences.tabsize">8</entry>
+<entry key="Original.parent">Differences</entry>
+<entry key="Original.foreground">#00cc00</entry>
+<entry key="Edited.parent">Differences</entry>
+<entry key="Edited.foreground">#cc0000</entry>
 </properties>
 
 
