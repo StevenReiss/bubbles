@@ -405,7 +405,8 @@ private class BubbleShower implements Runnable {
          if (bb == null) return;
          BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(BeamProblemBubble.this);
          if (bba != null) {
-            bba.addBubble(bb,BeamProblemBubble.this,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
+            bba.addBubble(bb,BeamProblemBubble.this,null,
+                  PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
           }
        }
     }
