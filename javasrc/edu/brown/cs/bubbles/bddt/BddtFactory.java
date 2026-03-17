@@ -332,10 +332,12 @@ public boolean isThreadRelevant(BudaBubble lid,String tid)
    else {
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(lid);
       // need to handle working sets here
-      for (BudaBubble bbl : bba.getBubbles()) {
-         if (bbl instanceof BddtLaunchControl) {
-            ctrl = (BddtLaunchControl) bbl;
-            break;
+      if (bba != null) {
+         for (BudaBubble bbl : bba.getBubbles()) {
+            if (bbl instanceof BddtLaunchControl) {
+               ctrl = (BddtLaunchControl) bbl;
+               break;
+             }
           }
        }
     }

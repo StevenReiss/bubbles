@@ -1214,7 +1214,7 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 	  }
 	 if (sfrm == null) {
 	    BedrockPlugin.logD("Stack frame " + frid + " doesn't exist");
-	    return;
+            throw new BedrockException("No stack frame");
 	  }
 	 if (!(sfrm instanceof IJavaStackFrame)) {
 	    throw new BedrockException("Stack frame " + frid + " not java frame");

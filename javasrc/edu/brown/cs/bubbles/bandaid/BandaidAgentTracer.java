@@ -416,7 +416,6 @@ private class TracePatcher extends MethodVisitor {
       if (exit) v = -v;
       super.visitLdcInsn(Integer.valueOf(v));
       int args = trace_data.getTraceArgs();
-      // System.err.println("PATCH " + v + " " + args);
       String atyp = "(I";
       for (int i = 0; args != 0; ++i) {
          if ((args & 1) != 0) {

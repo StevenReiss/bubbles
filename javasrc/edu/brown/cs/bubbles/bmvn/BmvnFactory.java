@@ -64,6 +64,8 @@ private static BmvnFactory      the_factory = null;
 
 private static final String [] ROOT_FILES = {
    ".git", ".svn", ".uid", "CVS",".github",
+   ".bubblesignore",
+
 };
 
 
@@ -158,6 +160,8 @@ private final class ModelSetup implements Runnable {
                   if (src != null) {
                      File f = new File(src);
                      while (f.exists() && f.isDirectory() && f.canWrite()) {
+                        File f1 = new File(f,".bubblesignore");
+                        if (f1.exists()) break;
                         boolean fnd = false;
                         for (BmvnTool tool : available_tools) {
                            fnd |= addFiles(tool,f,true,files);
