@@ -88,8 +88,7 @@ BvcrVersionGIT(BvcrProject bp,File root)
    git_command = bvcr_properties.getProperty("bvcr.git.command","git");
    current_version = bvcr_properties.getProperty("bvcr.git." + bp.getName() + ".origin");
    
-   if (root == null) findGitRoot();
-   else git_root = root;
+   findGitRoot(root);
 
    if (current_version == null) {
       current_version = "HEAD";
@@ -201,16 +200,21 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 /*										*/
 /********************************************************************************/
 
-private void findGitRoot()
+private void findGitRoot(File f0)
 {
-   File f = new File(for_project.getSourceDirectory());
+   File f = f0;
+   if (f == null) {
+      f = new File(for_project.getSourceDirectory());
+    }
    for ( ; ; ) {
       File fp2 = new File(f,".git");
+      IvyLog.logD("BVCR","Check git root 1 " + f);
       if (fp2.exists()) break;
       f = f.getParentFile();
     }
    for ( ; ; ) {
       File fp = f.getParentFile();
+      IvyLog.logD("BVCR","Check git root 2 " + fp);
       File fp1 = new File(fp,".git");
       if (!fp1.exists()) break;
       f = fp;
@@ -278,6 +282,7 @@ private void findGitRoot()
       String ent = tok.nextToken();
       try {
 	 String [] ldata = ent.split("\t",8);
+         if (ldata.length < 8) continue;
 	 String rev = ldata[0];
 	 String srev = ldata[1];
 	 String auth = ldata[2];
@@ -316,7 +321,7 @@ private void findGitRoot()
 	 if (bdy.length() > 2) fv.addVersionBody(bdy);
        }
       catch (Throwable e) {
-	 IvyLog.logE("BVCR","Problem parsing log entry",e);
+	 IvyLog.logE("BVCR","Problem parsing log entry " + ent,e);
        }
     }
 
@@ -479,9 +484,6 @@ private void findMasterName()
 }
 
 
-
-
-
 /********************************************************************************/
 /*										*/
 /*	Get Status of all files in the project					*/
@@ -594,8 +596,8 @@ private class FileData {
 
    void outputXml(IvyXmlWriter xw) {
       if (new_name != null) {
-	 File nf1 = new File(git_root,new_name);
-	 xw.field("NEWNAME",nf1.getPath());
+         File nf1 = new File(git_root,new_name);
+         xw.field("NEWNAME",nf1.getPath());
        }
       xw.field("STATE",file_state);
       if (needs_push) xw.field("UNPUSHED",true);
@@ -677,7 +679,7 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
 
 
 
-//********************************************************************************/
+/********************************************************************************/
 /*										*/
 /*	Action methods								*/
 /*										*/
@@ -784,6 +786,33 @@ private void ignoreFile(IvyXmlWriter xw,PrintWriter pw,String fnm)
    String cmd = git_command + " fetch";
    StringCommand rslt = new StringCommand(cmd);
    IvyLog.logD("BVCR","RESULT OF FETCH: " + rslt.getContent() + " " + rslt.getStatus());
+}
+
+
+@Override String isUpdateNeeded() 
+{
+   IvyLog.logD("Check update " + getRootDirectory());
+   doFetch();
+   String cmd = git_command + " status -b -s";
+   StringCommand cm = new StringCommand(cmd);
+   String rslt = cm.getContent();
+   
+   IvyLog.logD("BVCR","Result of status: " + rslt);
+   
+   StringTokenizer tok = new StringTokenizer(rslt,"\n\r");
+   while (tok.hasMoreTokens()) {
+      String ent = tok.nextToken();
+      if (ent.startsWith("##")) {
+         if (ent.contains("[behind")) {
+            return "PULL";
+          }
+         else if (ent.contains("[ahead")) {
+            return "PUSH";
+          }
+       }
+    }
+
+   return null;
 }
 
 

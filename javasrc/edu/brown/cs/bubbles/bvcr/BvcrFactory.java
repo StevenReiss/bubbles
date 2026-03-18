@@ -50,6 +50,7 @@ import edu.brown.cs.ivy.xml.IvyXml;
 import org.w3c.dom.Element;
 
 import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import java.awt.Point;
@@ -77,6 +78,7 @@ private boolean 		server_running;
 private boolean 		server_started;
 private Boolean 		factory_setup;
 private Map<String,BvcrControlPanel> control_panels;
+private BudaRoot                buda_root;
 
 private static BvcrFactory	the_factory = null;
 
@@ -100,6 +102,7 @@ private BvcrFactory()
    server_running = false;
    server_started = false;
    factory_setup = null;
+   buda_root = null;
 
    control_panels = new HashMap<String,BvcrControlPanel>();
    new BvcrFileManager();
@@ -122,6 +125,7 @@ public static void setup()
 
 public static void initialize(BudaRoot br)
 {
+   getFactory().buda_root = br;
    BoardThreadPool.start(new BvcrStarter());
    getFactory().setupCallbacks();
    
@@ -168,7 +172,6 @@ Element getChangesForFile(String proj,String file)
 }
 
 
-
 Element getHistoryForFile(String proj,String file)
 {
    if (!server_running) return null;
@@ -184,7 +187,6 @@ Element getHistoryForFile(String proj,String file)
 
    return e;
 }
-
 
 
 Element getFileDifferences(String proj,String file,String v0,String v1)
@@ -208,7 +210,6 @@ Element getFileDifferences(String proj,String file,String v0,String v1)
 
 
 
-
 /********************************************************************************/
 /*										*/
 /*	Access methods								*/
@@ -222,8 +223,6 @@ BvcrControlPanel getControlPanel(String proj)
    waitForSetup();
    return control_panels.get(proj);
 }
-
-
 
 
 
@@ -372,9 +371,10 @@ private static final class BvcrStarter implements Runnable {
 private final class BvcrContexter implements BaleContextListener, BassConstants.BassPopupHandler {
 
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu menu) {
-      // only if bvcr is running (i.e. under version management)
-      menu.add(new HistoryAction(cfg));
-      menu.add(new DiffAction(cfg));
+      if (server_running) {
+         menu.add(new HistoryAction(cfg));
+         menu.add(new DiffAction(cfg));
+       }
     }
 
    @Override public void addButtons(BudaBubble bb,Point where,JPopupMenu menu,String name,
@@ -526,6 +526,16 @@ private final class ServerSetup implements Runnable {
                String type = IvyXml.getAttrString(pe,"TYPE");
                BvcrControlPanel pnl = new BvcrControlPanel(nm,type,root);
                control_panels.put(nm,pnl);
+               String upd = IvyXml.getAttrString(pe,"UDPATE");
+               if (upd != null && upd.equals("PULL")) {
+                  BoardProperties bp = BoardProperties.getProperties("Bvcr");
+                  if (bp.getBoolean("Bvcr.warn.pull")) {
+                     JOptionPane.showMessageDialog(buda_root,"Project " + nm +
+                           " is out of date and needs to be pulled",
+                           "BVCR Out Of Date Warning",
+                           JOptionPane.WARNING_MESSAGE);
+                   }
+                }
              }
           }
        }

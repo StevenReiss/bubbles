@@ -239,8 +239,6 @@ Point getPosition(BumpThread t)
 }
 
 
-
-
 /********************************************************************************/
 /*										*/
 /*	Mouse handling methods							*/
@@ -353,7 +351,6 @@ private class ValuesAction extends AbstractAction {
     }
 
 }	// end of inner class ValuesAction
-
 
 
 
@@ -859,7 +856,6 @@ private static class HeaderDrawer implements TableCellRenderer {
 
 
 
-
 private class CellDrawer implements TableCellRenderer {
 
    private TableCellRenderer default_renderer;
@@ -869,28 +865,32 @@ private class CellDrawer implements TableCellRenderer {
     }
 
    @Override public Component getTableCellRendererComponent(JTable t,Object v,boolean sel,
-        						       boolean foc,int r,int c) {
+         boolean foc,int r,int c) {
       JComponent cmp = (JComponent) default_renderer.getTableCellRendererComponent(t,v,sel,foc,r,c);
       if (v == BumpThreadState.EXCEPTION) {
          cmp.setBackground(BoardColors.getColor("Bddt.ThreadExceptionColor")); 
          cmp.setOpaque(true);
        }
       else if (c == 0) {
-        int rn = t.convertRowIndexToModel(r);
-        BumpThread bt = (BumpThread) t.getModel().getValueAt(rn,-1);
-        if (bt.getThreadState().isStopped() && launch_control.getLastStoppedThread() == bt) {
-           cmp.setBackground(BoardColors.getColor("Bddt.ActiveThreadColor"));
-           cmp.setOpaque(true);
-        }
-        else {
-           cmp.setOpaque(false);
-        }
-      }
+         int rn = t.convertRowIndexToModel(r);
+         BumpThread bt = (BumpThread) t.getModel().getValueAt(rn,-1);
+         if (bt.getThreadState().isStopped() && bt.isActive()) {
+            cmp.setBackground(BoardColors.getColor("Bddt.UserThreadColor"));
+            cmp.setOpaque(true);
+          }
+         else if (bt.getThreadState().isStopped() && launch_control.getLastStoppedThread() == bt) {
+            cmp.setBackground(BoardColors.getColor("Bddt.ActiveThreadColor"));
+            cmp.setOpaque(true);
+          }
+         else {
+            cmp.setOpaque(false);
+          }
+       }
       else {
          cmp.setOpaque(false);
        }
       return cmp;
-    }
+   }
 
 }	// end of innerclass ErrorRenderer
 

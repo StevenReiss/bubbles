@@ -363,6 +363,13 @@
 	    <KEYWORD TEXT="Font" />
 	    <KEYWORD TEXT="Stack" />
 	</OPT>
+	<OPT NAME="Bale.rename.font" DESCRIPTION="Font for rename panel" TYPE="FONT">
+	    <TAB NAME="Font Options"/>
+	    <TAB NAME="Bubble Stack Options"/>
+	    <TAB NAME="Code Editor Options"/>
+	    <KEYWORD TEXT="Font" />
+	    <KEYWORD TEXT="Rename" />
+	</OPT>
     </PACKAGE>
 
     <PACKAGE NAME="Buda">

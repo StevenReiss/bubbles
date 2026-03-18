@@ -1128,6 +1128,22 @@ private void handleTargetThreadState(ThreadData td,BumpThreadState st,BumpThread
 }
 
 
+private void handleTargetThreadActive(ThreadData td)
+{
+   long when = System.currentTimeMillis();
+   ThreadEvent evt = new ThreadEvent(BumpRunEventType.THREAD_CHANGE,td,when);
+   
+   for (BumpRunEventHandler reh : event_handlers) {
+      try {
+	 reh.handleThreadEvent(evt);
+       }
+      catch (Throwable t) {
+	 BoardLog.logE("BUMP","Problem handling Thread target event",t);
+       }
+    }
+}
+
+
 
 /********************************************************************************/
 /*										*/
@@ -1866,6 +1882,7 @@ private class ThreadData implements BumpThread {
    private int wait_count;
    private String exception_type;
    private BumpBreakpoint current_breakpoint;
+   private boolean is_active;
 
    ThreadData(Element xml) {
       thread_id = IvyXml.getAttrString(xml,"ID");
@@ -1942,9 +1959,10 @@ private class ThreadData implements BumpThread {
    @Override public int getWaitCount()			{ return wait_count; }
    @Override public String getExceptionType()			{ return exception_type; }
    @Override public BumpBreakpoint getBreakpoint()		{ return current_breakpoint; }
+   @Override public boolean isActive()                          { return is_active; }
 
    void resetStack() {
-      Element xml = bump_client.getThreadStack(this);
+      Element xml = bump_client.getThreadStack(this); 
       if (xml == null) {
 	 stack_data = null;
 	 num_frames = -1;
@@ -2020,7 +2038,12 @@ private class ThreadData implements BumpThread {
     }
 
    void setException(String typ)		        { exception_type = typ; }
-   void setBreakpoint(BumpBreakpoint bp)		{ current_breakpoint = bp; }
+   void setBreakpoint(BumpBreakpoint bp)                { current_breakpoint = bp; }
+   @Override public void setActive(boolean fg) {
+      if (is_active == fg) return;
+      is_active = fg; 
+      handleTargetThreadActive(this);
+    }
 
 }	// end of inner class ThreadData
 

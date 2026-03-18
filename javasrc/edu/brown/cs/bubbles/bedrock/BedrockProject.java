@@ -549,7 +549,10 @@ void localEditProject(Element pxml,IvyXmlWriter xw) throws BedrockException
 	       if (!fnd) {
 		  // IPath ppath = rp.getLocation();
 		  IPath ppath = rp.getFullPath();
-		  IClasspathEntry pent = JavaCore.newProjectEntry(ppath);
+		  IClasspathEntry pent = JavaCore.newProjectEntry(ppath,
+                        new IAccessRule[0],
+                        false,
+                        new IClasspathAttribute[0],false);
 		  ents.add(pent);
 	       }
 	    }
@@ -568,6 +571,7 @@ void localEditProject(Element pxml,IvyXmlWriter xw) throws BedrockException
       ijp.save(null,false);
     }
    catch (CoreException e) {
+      BedrockPlugin.logE("Problem editing project",e);
       throw new BedrockException("Problem editing project",e);
     }
 }
@@ -767,6 +771,7 @@ void importExistingProject(String name) throws Exception
 
    p.create(null);
    p.open(null);
+   open_projects.add(p);
    JavaCore.create(p);
    p.refreshLocal(IResource.DEPTH_INFINITE, null);
 }

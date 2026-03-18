@@ -886,8 +886,8 @@ private final class DebugBubbleChecker implements BubbleViewCallback {
 
    @Override public void workingSetRemoved(BudaWorkingSet ws) {
       if (working_sets.contains(ws)) {
-	 working_sets.remove(ws);
-	 if (active_working_set == ws) active_working_set = ws;
+         working_sets.remove(ws);
+         if (active_working_set == ws) active_working_set = ws;
        }
     }
 

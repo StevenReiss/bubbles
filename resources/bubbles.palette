@@ -301,7 +301,8 @@ Bddt.ThreadSelectionForeground :	black
 Bddt.ThreadTopColor	:	153,255,133
 Bddt.ThreadBottomColor	:	white
 Bddt.ThreadExceptionColor :	red
-Bddt.ActiveThreadColor	:	200,255,200
+Bddt.ActiveThreadColor	:	255,255,200
+Bddt.UserThreadColor	:	255,255,20
 
 Bddt.ExecutionAnnotation.color : #4000ff00
 Bddt.ExecutionAnnotation.exception.color : #40ff0000

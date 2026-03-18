@@ -125,7 +125,7 @@ Bddt.PanelTopColor	:	0xff2a2a00
 Buda.help.back.color	:	0xffffdede
 Bale.RenameBorderColor	:	0xaeaeae
 Buda.overview.bottom.color	:	0xff00b4fb
-Bddt.ActiveThreadColor	:	0xff007200
+Bddt.ActiveThreadColor	:	0xff333300
 Buda.help.color	:	0xffa48700
 Bale.CrumbDirtyColor	:	0xffffffff
 Bcon.PackageEnumNode	:	0xffe3bb00
@@ -258,6 +258,7 @@ Buda.area.top.color	:	0xff84dbff
 Bcon.class.class.color	:	0xff00e0e0
 Bwiz.TextFieldError	:	0xffffdede
 Bale.BudImageBackground	:	0xffffff
+Bddt.UserThreadColor	:	0xff4e4e00
 Buda.OverviewFakeBottomColor	:	0xff000000
 Bdoc.TopColor	:	0xff7070ff
 Bale.readonly.background.top	:	0xff007777

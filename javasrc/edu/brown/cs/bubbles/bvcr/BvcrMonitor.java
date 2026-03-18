@@ -286,6 +286,8 @@ private void handleListProjects(IvyXmlWriter xw)
       xw.field("REPONAME",bvm.getRepositoryName());
       xw.field("ROOT",bvm.getRootDirectory());
       xw.field("TYPE",bvm.getRepoType());
+      String upd = bvm.isUpdateNeeded();
+      if (upd != null) xw.field("UPDATE",upd);
       xw.end("PROJECT");
     }
 }

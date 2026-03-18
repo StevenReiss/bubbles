@@ -109,11 +109,11 @@
 <entry key="Bale.elide.body">false</entry>
 <entry key="Bale.elide.members">false</entry>
 <entry key="Bale.caret.movement">false</entry>
-<entry key="Bale.initial.width">500</entry>
-<entry key="Bale.initial.width.file">900</entry>
-<entry key="Bale.initial.width.class">900</entry>
-<entry key="Bale.initial.width.method">800</entry>
-<entry key="Bale.initial.height">400</entry>
+<entry key="Bale.initial.width">550</entry>
+<entry key="Bale.initial.width.file">950</entry>
+<entry key="Bale.initial.width.class">950</entry>
+<entry key="Bale.initial.width.method">850</entry>
+<entry key="Bale.initial.height">450</entry>
 <entry key="Bale.editor.no.eliison">false</entry>
 <entry key="Bale.editor.no.reflow">false</entry>
 <entry key="Bale.indent.rbrace">0</entry>
@@ -132,6 +132,7 @@
 <entry key="Bale.show.hints">true</entry>
 <entry key="Bale.format.onsave">false</entry>
 <entry key="Bale.compact.font">Monospaced/0/9</entry>
+<entry key="Bale.rename.font">Monospaced/0/14</entry>
 </properties>
 
 

@@ -61,8 +61,6 @@ private static SimpleDateFormat SVN_DATE = new SimpleDateFormat("yyyy-MM-dd'T'kk
 
 
 
-
-
 /********************************************************************************/
 /*										*/
 /*	Constructors								*/
@@ -77,8 +75,6 @@ BvcrVersionSVN(BvcrProject bp)
 
    findSvnRoot();
 }
-
-
 
 
 /********************************************************************************/
@@ -99,8 +95,6 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
    return null;
 }
-
-
 
 
 /********************************************************************************/
@@ -149,7 +143,6 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
    DiffAnalyzer da = new DiffAnalyzer(ds); 
    runCommand(cmd,da);
 }
-
 
 
 
@@ -264,7 +257,6 @@ private void findSvnRoot()
 
 @Override void doStash(IvyXmlWriter xw,String name) 
 { }
-
 
 
 

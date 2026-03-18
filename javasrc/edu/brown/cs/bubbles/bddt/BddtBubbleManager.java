@@ -413,6 +413,12 @@ void restart()
 
 BudaBubble createThreadBubble()
 {
+   return findThreadBubble(true);
+}
+
+
+BudaBubble findThreadBubble(boolean create)
+{
    setupBubbleArea();
 
    Collection<BubbleData> bbls = new ArrayList<BubbleData>(bubble_map.values());
@@ -431,7 +437,7 @@ BudaBubble createThreadBubble()
        }
     }
 
-   if (bubble_area == null) return null;
+   if (bubble_area == null || !create) return null;
 
    BudaBubble bb = new BddtThreadView(launch_control);
    Rectangle r = launch_control.getBounds();

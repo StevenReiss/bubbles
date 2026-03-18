@@ -830,6 +830,9 @@ interface BumpThread {
    BumpBreakpoint getBreakpoint();
 
    void requestHistory();
+   
+   boolean isActive();
+   void setActive(boolean fg);
 
 }	// end of inner interface BumpThread
 

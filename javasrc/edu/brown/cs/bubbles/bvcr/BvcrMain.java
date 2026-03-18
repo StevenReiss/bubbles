@@ -452,9 +452,6 @@ BvcrVersionManager getManager(String proj)
 }
 
 
-
-
-
 /********************************************************************************/
 /*										*/
 /*	Methods to get the change set for a file				*/
@@ -483,8 +480,6 @@ private void processUpdates()
 
    IvyLog.logD("BVCR","CHANGES: " + xw.toString());
 }
-
-
 
 
 void findChanges(String proj,File file,IvyXmlWriter xw)

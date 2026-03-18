@@ -106,6 +106,7 @@ private Action			stepuser_action;
 private FileSystemView		file_system;
 private BddtPerfViewTable	perf_data;
 private BumpProcess		hotswap_fail;
+private BumpThread              active_thread;
 
 private JPanel			launch_panel;
 
@@ -138,6 +139,7 @@ BddtLaunchControl(BumpLaunchConfig blc)
    active_frame = null;
    frame_annot = null;
    freeze_count = 0;
+   active_thread = null;
    frame_listeners = new SwingEventListenerList<>(BddtFrameListener.class);
 
    file_system = BoardFileSystemView.getFileSystemView();
@@ -1741,56 +1743,54 @@ private static String formatRunValue(BumpRunValue rv,int lvl)
 
 private final class EditorContextListener implements BaleFactory.BaleContextListener {
 
-
-
    @Override public void addPopupMenuItems(BaleContextConfig cfg,JPopupMenu m) {
       if (isRelevant(cfg)) m.add(new ValueAction(cfg));
     }
 
    @Override public String getToolTipHtml(BaleContextConfig cfg) {
       if (isRelevant(cfg)) {
-	 String id = cfg.getToken();
-	 BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
-	 if (frm != null) {
-	    BumpRunValue rv = null;
-	    switch (cfg.getTokenType()) {
-	       case FIELD_ID :
-	       case FIELD_DECL_ID :
-		  BumpRunValue rv1 = frm.getValue("this");
-		  if (rv1 != null) {
-		     rv = rv1.getValue("this?" + id);
-		   }
-		  break;
-	       case STATIC_FIELD_ID :
-		  BumpRunValue rv2 = frm.getValue("this");
-		  if (rv2 != null) {
-		     String typ = rv2.getType();
-		     typ = typ.replace("$",".");
-		     // TODO: need to get static value here
-		   }
-		  break;
-	       default :
-		  break;
-	     }
-	    if (rv == null) rv = frm.getValue(id);
-	    String st = getEvaluationString(frm,rv,id);
-	    return st;
-	  }
+         String id = cfg.getToken();
+         BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
+         setCurrentThread(frm);
+         if (frm != null) {
+            BumpRunValue rv = null;
+            switch (cfg.getTokenType()) {
+               case FIELD_ID :
+               case FIELD_DECL_ID :
+        	  BumpRunValue rv1 = frm.getValue("this");
+        	  if (rv1 != null) {
+        	     rv = rv1.getValue("this?" + id);
+        	   }
+        	  break;
+               case STATIC_FIELD_ID :
+        	  BumpRunValue rv2 = frm.getValue("this");
+        	  if (rv2 != null) {
+        	     String typ = rv2.getType();
+        	     typ = typ.replace("$",".");
+        	     // TODO: need to get static value here
+        	   }
+        	  break;
+               default :
+        	  break;
+             }
+            if (rv == null) rv = frm.getValue(id);
+            String st = getEvaluationString(frm,rv,id);
+            return st;
+          }
        }
       else if (isRelevantFrame(cfg)) {
-	 BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
-	 if (frm != null) {
-	    StringBuffer buf = new StringBuffer();
-	    buf.append("Thread: " + frm.getThread().getName());
-	    buf.append("<br>Line: " + frm.getLineNumber());
-	    return buf.toString();
-	  }
+         BumpStackFrame frm = bubble_manager.getFrameForBubble(cfg.getEditor());
+         setCurrentThread(frm);
+         if (frm != null) {
+            StringBuffer buf = new StringBuffer();
+            buf.append("Thread: " + frm.getThread().getName());
+            buf.append("<br>Line: " + frm.getLineNumber());
+            return buf.toString();
+          }
        }
+     
       return null;
     }
-
-
-
 
    private boolean isRelevant(BaleContextConfig cfg) {
       BudaBubble bb = cfg.getEditor();
@@ -1801,15 +1801,15 @@ private final class EditorContextListener implements BaleFactory.BaleContextList
       if (cur_process == null || !cur_process.isRunning()) return false;
       if (cfg.getToken() == null) return false;
       switch (cfg.getTokenType()) {
-	 case FIELD_ID :
-	 case LOCAL_ID :
-	 case STATIC_FIELD_ID :
-	 case LOCAL_DECL_ID :
-	 case FIELD_DECL_ID :
-	 case CONST_ID :
-	    break;
-	 default :
-	    return false;
+         case FIELD_ID :
+         case LOCAL_ID :
+         case STATIC_FIELD_ID :
+         case LOCAL_DECL_ID :
+         case FIELD_DECL_ID :
+         case CONST_ID :
+            break;
+         default :
+            return false;
        }
       return true;
     }
@@ -1822,6 +1822,15 @@ private final class EditorContextListener implements BaleFactory.BaleContextList
       if (bba == null || bba != bba1) return false;
       if (cur_process == null || !cur_process.isRunning()) return false;
       return true;
+    }
+   
+   private void setCurrentThread(BumpStackFrame frm) {
+      BumpThread thrd = null;
+      if (frm != null) thrd = frm.getThread();
+      if (thrd == active_thread) return;
+      if (active_thread != null) active_thread.setActive(false); 
+      if (thrd != null) thrd.setActive(true);
+      active_thread = thrd;
     }
 
 }	// end of inner class EditorContextListener

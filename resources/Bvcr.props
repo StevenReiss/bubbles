@@ -3,6 +3,7 @@
 <properties>
 <entry key="Bvcr.repo.url">http://conifer2.cs.brown.edu/bubbles/</entry>
 <entry key="Bvcr.tabsize">8</entry>
+<entry key="Bvcr.warn.pull">true</entry>
 </properties>
 
 

@@ -57,8 +57,6 @@ private static SimpleDateFormat CVS_DATE = new SimpleDateFormat("yyyy-MM-dd kk:m
 
 
 
-
-
 /********************************************************************************/
 /*										*/
 /*	Constructors								*/
@@ -73,8 +71,6 @@ BvcrVersionCVS(BvcrProject bp)
 
    findCvsRoot();
 }
-
-
 
 
 /********************************************************************************/
@@ -95,7 +91,6 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
 
    return null;
 }
-
 
 
 
@@ -144,7 +139,6 @@ static BvcrVersionManager getRepository(BvcrProject bp,File srcdir)
    CvsDiffAnalyzer da = new CvsDiffAnalyzer(ds);
    runCommand(cmd,da);
 }
-
 
 
 
@@ -289,6 +283,7 @@ private void findCvsRoot()
 
 @Override void doStash(IvyXmlWriter xw,String name) 
 { }
+
 
 
 

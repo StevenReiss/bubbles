@@ -214,6 +214,8 @@ abstract void doUpdate(IvyXmlWriter xw,boolean keep,boolean remove);
 abstract void doSetVersion(IvyXmlWriter xw,String ver);
 abstract void doStash(IvyXmlWriter xw,String name);
 
+String isUpdateNeeded()                                 { return null; }
+
 void doFetch()                                          { }
 
 
@@ -261,7 +263,7 @@ protected String runCommand(String cmd,CommandCallback cb)
    try {
       IvyExec ex = new IvyExec(cmd,getRootDirectory(),
             IvyExec.READ_OUTPUT|IvyExec.READ_ERROR);
-      IvyLog.logD("BVCR","Run " + ex.getCommand());
+      IvyLog.logD("BVCR","Run " + ex.getCommand() + " @ " + getRootDirectory());
       InputStream ins = ex.getInputStream();
       try (BufferedReader br = new BufferedReader(new InputStreamReader(ins))) {
          for ( ; ; ) {

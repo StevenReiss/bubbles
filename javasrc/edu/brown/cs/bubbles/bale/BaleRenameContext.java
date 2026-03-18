@@ -58,6 +58,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.IllegalComponentStateException;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -283,8 +284,11 @@ private class RenamePanel extends JPanel {
 
    RenamePanel() {
       setFocusable(false);
-      int len = start_name.length() + 4;
+      int len = start_name.length() + 10;
       rename_field = new SwingTextField(start_name,len);
+      Font ft = rename_field.getFont();
+      ft = BALE_PROPERTIES.getFont("Bale.rename.font",ft);
+      rename_field.setFont(ft);
       RenameListener rl = new RenameListener();
       rename_field.addActionListener(rl);
       rename_field.addCaretListener(rl);
