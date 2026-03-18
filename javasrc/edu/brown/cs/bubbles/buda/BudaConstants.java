@@ -1091,8 +1091,8 @@ interface BubbleConfigurator {
 
    BudaBubble createBubble(BudaBubbleArea bba,Element xml);
    boolean matchBubble(BudaBubble bb,Element xml);
-   void outputXml(BudaXmlWriter xw,boolean history);
-   void loadXml(BudaBubbleArea bba,Element root);
+   default void outputXml(BudaXmlWriter xw,boolean history)             { }
+   default void loadXml(BudaBubbleArea bba,Element root)                { }
 
 }	// end of inner interface BubbleConfigurator
 

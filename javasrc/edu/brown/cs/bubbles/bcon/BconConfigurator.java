@@ -28,7 +28,6 @@ package edu.brown.cs.bubbles.bcon;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
-import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 
@@ -108,19 +107,6 @@ class BconConfigurator implements BconConstants, BudaConstants.BubbleConfigurato
    return false;
 }
       
-
-
-
-/********************************************************************************/
-/*										*/
-/*	I/O methods								*/
-/*										*/
-/********************************************************************************/
-
-@Override public void outputXml(BudaXmlWriter xw,boolean history)	{ }
-@Override public void loadXml(BudaBubbleArea bba,Element root)		{ }
-
-
 
 
 }	// end of class BconConfigurator
