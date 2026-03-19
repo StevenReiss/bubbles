@@ -119,7 +119,10 @@
      CBARGS='2'
      CALLBACK='flush handleComment handleEndOfLineString handleEndTag handleError handleSimpleTag handleStartTag handleText' /> >
 
-   <PACKAGE NAME='javax.swing' />
-   <CLASS NAME='edu.brown.cs.bubbles.board.BoardUserReport' />
+  <PACKAGE NAME='javax.swing' />
+  <CLASS NAME='edu.brown.cs.bubbles.board.BoardUserReport' />
+
+  <PACKAGE NAME='org.jsoup' />
+  <METHOD NAME='edu.brown.cs.bubbles.bump.BumpClient.stopIDE' EXIT='1' />
 
 </FAIT>

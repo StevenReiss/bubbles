@@ -27,7 +27,6 @@ package edu.brown.cs.bubbles.bvcr;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
-import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -71,16 +70,6 @@ class BvcrConfigurator implements BvcrConstants, BudaConstants.BubbleConfigurato
 }
 
 
-@Override public void outputXml(BudaXmlWriter xw,boolean history) 
-{
-   
-}
-
-
-@Override public void loadXml(BudaBubbleArea bba,Element root) 
-{
-   
-}
 
 
 }       // end of class BvcrConfigurator

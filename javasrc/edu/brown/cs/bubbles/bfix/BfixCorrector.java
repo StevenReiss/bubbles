@@ -281,12 +281,12 @@ BfixSmartInsert getInserter()
 void fixErrorsInRegion(int startoff,int endoff,boolean force)
 {
    Set<BumpProblem> done = new HashSet<>();
-
+   boolean retry = true;
    // need to maintain region bounds correctly after fixes
-
+   
    for ( ; ; ) {
       List<BumpProblem> totry = new ArrayList<>();
-      List<BumpProblem> sytletry = new ArrayList<>();
+      List<BumpProblem> styletry = new ArrayList<>();
       BumpClient bc = BumpClient.getBump();
       List<BumpProblem> probs = bc.getProblems(for_document.getFile());
       BoardLog.logD("BFIX","Found " + probs.size() + " problems");
@@ -300,23 +300,41 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
 	    it.remove();
 	    continue;
 	 }
-	 if (bp.getCategory().equals("BSTYLE")) sytletry.add(bp);
+	 if (bp.getCategory().equals("BSTYLE")) styletry.add(bp);
 	 else totry.add(bp);
       }
 
-      if (totry.isEmpty() && sytletry.isEmpty()) {
-         BoardLog.logD("BFIX","No problems found to fix " + done.size() + " " + probs.size());
-         return;
+//    if (totry.isEmpty() && styletry.isEmpty()) {
+//       BoardLog.logD("BFIX","No problems found to fix " + done.size() + " " + probs.size());
+//       return;
+//     }
+      if (!totry.isEmpty()) {
+         boolean fnd = fixRegionProblems(totry,done);
+         if (fnd) {
+            retry = true;
+            continue;
+          }
        }
-
-      boolean fnd = fixRegionProblems(totry,done);
-      if (fnd) continue;
-      fnd = fixRegionStyleProblems(sytletry,force,done);
-      if (!fnd) return;
+      if (!styletry.isEmpty()) {
+         boolean fnd = fixRegionStyleProblems(styletry,force,done);
+         if (fnd) {
+            retry = true;
+            continue;
+          }
+       }
       BoardLog.logD("BFIX","No fixes succeeded " + done.size() + " " + totry.size() + " " +
-            sytletry.size());
-      // need to wait for errors to change here
-      // might need to clear done here of problems that weren't actually fixed but might be affected by others
+            styletry.size());
+      if (retry) {
+         if (done.isEmpty()) return;
+         // wait for edits to cause recompilation
+         try {
+            Thread.sleep(500);
+          }
+         catch (InterruptedException t) { }
+         done.clear();
+         retry = false;
+       }
+      else return;
     }
 }
 

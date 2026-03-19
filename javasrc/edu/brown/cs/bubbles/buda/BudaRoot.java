@@ -448,7 +448,7 @@ BudaBubbleArea getDefaultBubbleArea()
 }
 
 
-BudaBubbleArea getBubbleArea()			{ return bubble_area; }
+public BudaBubbleArea getBubbleArea()	                { return bubble_area; }
 
 BudaShareManager getShareManager()		{ return share_manager; }
 

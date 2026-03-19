@@ -26,7 +26,6 @@ package edu.brown.cs.bubbles.bgta;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants.BubbleConfigurator;
-import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -76,14 +75,6 @@ class BgtaConfigurator implements BubbleConfigurator {
    return false;
 }
    
-
-
-@Override public void loadXml(BudaBubbleArea bba,Element root)          { }
-
-@Override public void outputXml(BudaXmlWriter xw,boolean history)       { }
-
-
-
 
 }       // end of class BgtaConfigurator
 

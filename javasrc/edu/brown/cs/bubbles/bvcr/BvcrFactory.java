@@ -52,9 +52,13 @@ import org.w3c.dom.Element;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,6 +83,7 @@ private boolean 		server_started;
 private Boolean 		factory_setup;
 private Map<String,BvcrControlPanel> control_panels;
 private BudaRoot                buda_root;
+private Map<String,String>      project_warnings;
 
 private static BvcrFactory	the_factory = null;
 
@@ -103,6 +108,7 @@ private BvcrFactory()
    server_started = false;
    factory_setup = null;
    buda_root = null;
+   project_warnings = new HashMap<>();
 
    control_panels = new HashMap<String,BvcrControlPanel>();
    new BvcrFileManager();
@@ -526,26 +532,62 @@ private final class ServerSetup implements Runnable {
                String type = IvyXml.getAttrString(pe,"TYPE");
                BvcrControlPanel pnl = new BvcrControlPanel(nm,type,root);
                control_panels.put(nm,pnl);
-               String upd = IvyXml.getAttrString(pe,"UDPATE");
-               if (upd != null && upd.equals("PULL")) {
-                  BoardProperties bp = BoardProperties.getProperties("Bvcr");
-                  if (bp.getBoolean("Bvcr.warn.pull")) {
-                     JOptionPane.showMessageDialog(buda_root,"Project " + nm +
-                           " is out of date and needs to be pulled",
-                           "BVCR Out Of Date Warning",
-                           JOptionPane.WARNING_MESSAGE);
-                   }
+               String upd = IvyXml.getAttrString(pe,"UPDATE");
+               if (upd != null) {
+                  project_warnings.put(nm,upd);
                 }
              }
           }
        }
       noteSetup(true);
+      SwingUtilities.invokeLater(new IssueWarnings());
     }
 
 }	// end of inner class ServerSetup
 
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Handle warnings                                                         */
+/*                                                                              */
+/********************************************************************************/
+
+private void issueWarning(Component c,String proj,String warn)
+{
+   if (warn != null && warn.equals("PULL")) {
+      BoardProperties bp = BoardProperties.getProperties("Bvcr");
+      if (bp.getBoolean("Bvcr.warn.pull")) {
+         JOptionPane.showMessageDialog(c,"Project " + proj +
+               " is out of date and needs to be pulled",
+               "BVCR Out Of Date Warning",
+               JOptionPane.WARNING_MESSAGE);
+       }
+    }
+}
+
+
+private final class IssueWarnings implements Runnable, ActionListener {
+
+   @Override public void run() {
+      BudaBubbleArea bba = buda_root.getBubbleArea();
+      while (bba == null || !bba.isShowing()) {
+         SwingUtilities.invokeLater(this);
+         return;
+       }
+      Timer t = new Timer(1000,this);
+      t.setRepeats(false);
+      t.start();
+    }
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+      BudaBubbleArea bba = buda_root.getBubbleArea();
+      for (Map.Entry<String,String> ent : project_warnings.entrySet()) {
+         issueWarning(bba,ent.getKey(),ent.getValue());
+       }
+    }
+   
+}       // end of inner class IssueWarning
 
 
 }	// end of class BvcrFactory

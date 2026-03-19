@@ -33,7 +33,6 @@ package edu.brown.cs.bubbles.buss;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
-import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -68,18 +67,6 @@ class BussConfigurator implements BussConstants, BudaConstants.BubbleConfigurato
 
 
 @Override public boolean matchBubble(BudaBubble bb,Element xml)         { return false; }
-
-
-/********************************************************************************/
-/*										*/
-/*	I/O methods								*/
-/*										*/
-/********************************************************************************/
-
-@Override public void outputXml(BudaXmlWriter xw,boolean history)	{ }
-@Override public void loadXml(BudaBubbleArea bba,Element root)		{ }
-
-
 
 
 }	// end of class BussConfigurator

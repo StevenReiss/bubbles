@@ -28,7 +28,6 @@ import edu.brown.cs.bubbles.bted.BtedConstants.StartMode;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
-import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -72,21 +71,6 @@ class BtedConfigurator implements BudaConstants.BubbleConfigurator {
     }
    return false;
 }
-
-
-
-
-/********************************************************************************/
-/*										*/
-/*	I/O methods								*/
-/*										*/
-/********************************************************************************/
-
-@Override public void loadXml(BudaBubbleArea bba,Element root)
-{}
-
-@Override public void outputXml(BudaXmlWriter xw,boolean history)
-{}
 
 
 

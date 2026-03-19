@@ -695,10 +695,6 @@ private final class MenuConfigurator implements BubbleConfigurator {
       return false;
     }
 
-   @Override public void outputXml(BudaXmlWriter xw,boolean history)	{ }
-   @Override public void loadXml(BudaBubbleArea bba,Element root)	{ }
-
-
 }	// end of inner class MenuConfigurator
 
 
