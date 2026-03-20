@@ -92,12 +92,12 @@ public BfixRunnableFix findStyleFixer(BfixCorrector bc,BumpProblem bp,boolean ex
    
    BoardLog.logD("BSTYLE","Work on problem " + bp.getData() + " " + bp.getMessage());
    
-   String d = bp.getData();
-   if (d == null) d = "";
-   if (ignore_errors.contains(d)) return null;
+   String data = bp.getData();
+   if (data == null) data = "";
+   if (ignore_errors.contains(data)) return null;
    long start = bc.getStartTime();
    
-   List<BstyleFixer> totry = fixer_map.get(d);
+   List<BstyleFixer> totry = fixer_map.get(data);
    if (totry != null) {
       for (BstyleFixer bf : totry) {
          BfixRunnableFix rf = bf.findFix(bc,bp,explicit,start);    
@@ -109,12 +109,12 @@ public BfixRunnableFix findStyleFixer(BfixCorrector bc,BumpProblem bp,boolean ex
       if (totry != null && totry.contains(bf)) continue;
       BfixRunnableFix rf = bf.findFix(bc,bp,explicit,start);  
       if (rf != null) {
-         if (d != null && !d.isEmpty()) {
-            BoardLog.logE("BSTYLE","Missing fixer for type " + d + " " +
+         if (data != null && !data.isEmpty()) {
+            BoardLog.logE("BSTYLE","Missing fixer for type " + data + " " +
                   bf.getClass());
             if (totry == null) {
                totry = new ArrayList<>();
-               fixer_map.put(d,totry);
+               fixer_map.put(data,totry);
              }
             totry.add(bf);
           }

@@ -30,6 +30,7 @@
    <NEWFIELD USE='0'>The value of the field {0} is not used</NEWFIELD>
    <RETURN USE='0'>This method must return a result of type {0}</RETURN>
    <SPELLLOOKUP TYPES='T' KEYWORDS='T' />
+   <NAMING USE='0' ALTWITH='_'>The value of the lambda parameter {0} is not used</NAMING>
 </FIXES>
 <LAUNCHES>
    <LAUNCH NAME='JAVA' DESCRIPTION='Java Application' DEBUGARGS='T'>

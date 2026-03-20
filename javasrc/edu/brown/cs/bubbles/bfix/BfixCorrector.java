@@ -18,9 +18,6 @@
  *										 *
  ********************************************************************************/
 
-/* SVN: $Id$ */
-
-
 
 package edu.brown.cs.bubbles.bfix;
 
@@ -40,6 +37,8 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Position;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -282,7 +281,13 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
 {
    Set<BumpProblem> done = new HashSet<>();
    boolean retry = true;
-   // need to maintain region bounds correctly after fixes
+   Position p1 = null;
+   Position p2 = null;
+   try {
+      p1 = for_document.createPosition(startoff);
+      p2 = for_document.createPosition(endoff);
+    }
+   catch (BadLocationException e) { }
    
    for ( ; ; ) {
       List<BumpProblem> totry = new ArrayList<>();
@@ -304,24 +309,24 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
 	 else totry.add(bp);
       }
 
-//    if (totry.isEmpty() && styletry.isEmpty()) {
-//       BoardLog.logD("BFIX","No problems found to fix " + done.size() + " " + probs.size());
-//       return;
-//     }
+      boolean fnd = false;
       if (!totry.isEmpty()) {
-         boolean fnd = fixRegionProblems(totry,done);
-         if (fnd) {
-            retry = true;
-            continue;
-          }
+         fnd = fixRegionProblems(totry,done);
        }
-      if (!styletry.isEmpty()) {
-         boolean fnd = fixRegionStyleProblems(styletry,force,done);
-         if (fnd) {
-            retry = true;
-            continue;
-          }
+      if (!fnd && !styletry.isEmpty()) {
+         fnd = fixRegionStyleProblems(styletry,force,done);
        }
+      if (fnd) {
+         retry = true;
+         if (p1 != null && p2 != null) {
+            int soff2 = p1.getOffset();
+            int eoff2 = p2.getOffset();
+            startoff = soff2;
+            endoff = eoff2;
+          }
+         continue;
+       }
+      
       BoardLog.logD("BFIX","No fixes succeeded " + done.size() + " " + totry.size() + " " +
             styletry.size());
       if (retry) {
@@ -382,8 +387,6 @@ private boolean fixRegionStyleProblems(List<BumpProblem> probs,boolean force,
    
    return false;
 }
-
-
 
 
 

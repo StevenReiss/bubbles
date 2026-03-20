@@ -55,7 +55,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 
-abstract class BaleDocument extends AbstractDocument
+abstract class BaleDocument extends AbstractDocument 
    implements BaleConstants, BurpEditorDocument, BaleConstants.BaleWindowDocument
 {
 

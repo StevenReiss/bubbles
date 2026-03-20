@@ -34,6 +34,7 @@ import javax.swing.Icon;
 import javax.swing.JPopupMenu;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
@@ -1426,6 +1427,7 @@ interface BaleWindowDocument {
    BaleWindowElement getCharacterElement(int offset);
    List<BumpProblem> getProblemsAtLocation(int offset);
    boolean replace(int off,int len,String text,boolean fmt,boolean ind);
+   Position createPosition(int offs) throws BadLocationException;
 }	// end of inner interface BaleWindowDocument
 
 interface BaleWindowElement {
