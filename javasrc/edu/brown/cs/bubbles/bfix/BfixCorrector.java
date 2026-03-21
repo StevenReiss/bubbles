@@ -296,6 +296,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
       List<BumpProblem> probs = bc.getProblems(for_document.getFile());
       BoardLog.logD("BFIX","Found " + probs.size() + " problems");
       if (probs.isEmpty()) return;
+      // might want to check if there are errors that might prevent fixing
       for (Iterator<BumpProblem> it = probs.iterator(); it.hasNext(); ) {
 	 BumpProblem bp = it.next();
 	 if (done.contains(bp)) continue;
@@ -321,6 +322,8 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
          if (p1 != null && p2 != null) {
             int soff2 = p1.getOffset();
             int eoff2 = p2.getOffset();
+            BoardLog.logD("BFIX","Update position " + startoff + " " + endoff + " -> " +
+                  soff2 + " " + eoff2);
             startoff = soff2;
             endoff = eoff2;
           }
@@ -931,10 +934,10 @@ private static class RegionFixer implements FixAdapter {
 
    synchronized BfixRunnableFix waitForDone() {
       while (!is_done && fix_found == null) {
-	 try {
-	    wait(5000);
-	  }
-	 catch (InterruptedException e) { }
+         try {
+            wait(5000);
+          }
+         catch (InterruptedException e) { }
        }
       return fix_found;
     }
