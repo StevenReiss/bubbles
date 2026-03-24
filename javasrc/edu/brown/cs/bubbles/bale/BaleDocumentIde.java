@@ -1045,10 +1045,11 @@ private class RemoteEdit implements Runnable {
 
 @Override public void handleProblemRemoved(BumpProblem bp)
 {
-   // BoardLog.logD("BALE","REMOVE PROBLEM " + bp.getProblemId());
+   BoardLog.logD("BALE","REMOVE PROBLEM " + bp.getProblemId() + 
+         " " + problem_set.contains(bp));
 
    synchronized (problem_set) {
-      problem_set.remove(bp);
+       problem_set.remove(bp);
     }
 
    int soff = mapOffsetToJava(bp.getStart());
@@ -1079,13 +1080,15 @@ private class RemoteEdit implements Runnable {
 @Override public void handleProblemsDone()
 {
    handleProblemsUpdated();
+   
 
    for (Map.Entry<BaleFragment,FragmentData> ent : fragment_map.entrySet()) {
       BaleFragment bf = ent.getKey();
       FragmentData fd = ent.getValue();
       if (fd.getProblemsChanged()) {
 	 fd.setProblemsChanged(false);
-	 ErrorUpdater eud = new ErrorUpdater(bf);
+         BoardLog.logD("BALE","Problems done " + bf);
+         ErrorUpdater eud = new ErrorUpdater(bf);
 	 SwingUtilities.invokeLater(eud);
        }
     }
@@ -1143,7 +1146,7 @@ private static class ErrorUpdater implements Runnable {
     }
 
    @Override public void run() {
-      // BoardLog.logD("BALE","Update errors for fragment");
+      BoardLog.logD("BALE","Update errors for fragment");
       for_fragment.handleProblemsUpdated();
     }
 

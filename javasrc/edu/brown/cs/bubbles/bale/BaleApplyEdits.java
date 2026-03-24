@@ -53,7 +53,7 @@ import java.util.TreeSet;
 
 
 
-class BaleApplyEdits implements BaleConstants
+public class BaleApplyEdits implements BaleConstants
 {
 
 
@@ -76,7 +76,7 @@ private Map<String,String> source_strings;
 /*										*/
 /********************************************************************************/
 
-BaleApplyEdits()
+public BaleApplyEdits()
 {
    for_document = null;
    move_targets = null;
@@ -98,7 +98,7 @@ BaleApplyEdits(BaleDocument bd)
 /*										*/
 /********************************************************************************/
 
-void applyEdits(Element xml)
+public void applyEdits(Element xml)
 {
    applyLocalEdits(xml);
    applyResourceEdits(xml);

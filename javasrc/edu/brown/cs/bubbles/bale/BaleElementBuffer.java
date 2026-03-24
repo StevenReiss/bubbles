@@ -281,6 +281,7 @@ void updateProblems()
    int numrem = 0;
    int numerr = 0;
 
+   
    synchronized (problem_map) {
       for (BumpProblem bp : doc.getProblems()) {
 	 found.add(bp);
@@ -292,6 +293,10 @@ void updateProblems()
 	    problem_map.put(bp,pd);
 	  }
        }
+      
+      BoardLog.logD("BALE","Update element problems " + numerr + " " +
+            found.size() + " " + problem_map.size());
+      
       for (Iterator<Map.Entry<BumpProblem,ProblemData>> it = problem_map.entrySet().iterator(); it.hasNext(); ) {
 	 Map.Entry<BumpProblem,ProblemData> ent = it.next();
 	 BumpProblem bp = ent.getKey();
@@ -299,6 +304,7 @@ void updateProblems()
 	    if (isError(bp)) ++numrem;
 	    ent.getValue().clear(false);
 	    it.remove();
+            BoardLog.logD("BALE","Update element remove problem " + bp);
 	  }
        }
 
@@ -306,6 +312,8 @@ void updateProblems()
 	 pd.setup(root_element,base_document,false);
        }
     }
+   
+   BoardLog.logD("BALE","Check problem refresh " + numerr + " " + numadd + " " + numrem);
 
    if ((numerr != 0 && numadd == numerr) || (numerr == 0 && numrem > 0)) {
       int off = root_element.getStartOffset();

@@ -343,7 +343,8 @@ private class RenameDoer implements Runnable {
             int soff = doc.mapOffsetToEclipse(id.getStartOffset());
             int eoff = doc.mapOffsetToEclipse(id.getEndOffset());
             
-            rename_edits = bc.rename(doc.getProjectName(),doc.getFile(),soff,eoff,rename_text);
+            rename_edits = bc.rename(doc.getProjectName(),doc.getFile(),
+                  soff,eoff,rename_text);
             rename_phase = 1;
             SwingUtilities.invokeLater(this);
             break;
@@ -395,7 +396,6 @@ private final class RenameListener implements ActionListener, CaretListener {
    @Override public void actionPerformed(ActionEvent e) {
       if (!isRenameValid()) return;
       BoardThreadPool.start(new RenameDoer());
-      // rename();
     }
 
    @Override public void caretUpdate(CaretEvent e) {

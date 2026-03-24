@@ -219,7 +219,23 @@ void startBstyleServer()
 	    args.add(tok.nextToken());
 	  }
        }
-
+      
+      String lvl = BoardLog.getLogLevel().toString();
+      lvl = bp.getProperty("Bstyle.log.level",lvl);
+      boolean stderr = BoardLog.getUseStdErr();
+      stderr = bp.getBoolean("Bstyle.use.stderr",stderr);
+      File log = BoardLog.getBubblesLogFile();
+      String nm = log.getName();
+      String nm1 = nm.replace("bubbles","bsytle");
+      if (nm1.equals(nm)) nm1 = "bvcr_" + nm;
+      nm1 = bp.getProperty("Bstyle.log.name",nm1);
+      File nlog = new File(log.getParent(),nm1);
+      args.add("-V");
+      args.add(lvl);
+      if (stderr) args.add("-E");
+      args.add("-L");
+      args.add(nlog.getPath());
+      
       for (int i = 0; i < 100; ++i) {
 	 MintDefaultReply rply = new MintDefaultReply();
 	 mc.send("<BSTYLE CMD='PING' />",rply,MINT_MSG_FIRST_NON_NULL);

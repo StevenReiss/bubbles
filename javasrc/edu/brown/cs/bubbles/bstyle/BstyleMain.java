@@ -116,8 +116,29 @@ private void scanArgs(String [] args)
          else if (args[i].startsWith("-O")) {                           // -Output
             IvyLog.useStdErr(true);
           }
+         else if (args[i].startsWith("-V") && i+1 < args.length) {      // -V <loglevel>
+            String lvl = args[++i];
+            switch (lvl.charAt(0)) {
+               case 'E' :
+                  IvyLog.setLogLevel(IvyLog.LogLevel.ERROR);
+                  break;
+               case 'W' :
+                  IvyLog.setLogLevel(IvyLog.LogLevel.WARNING);
+                  break;
+               case 'I' :
+                  IvyLog.setLogLevel(IvyLog.LogLevel.INFO);
+                  break;
+               default :
+               case 'D' :
+                  IvyLog.setLogLevel(IvyLog.LogLevel.DEBUG);
+                  break;
+             }
+          }
          else if (args[i].startsWith("-L") && i+1 < args.length) {      // -L logfile
             IvyLog.setLogFile(new File(args[++i]));
+          }
+         else if (args[i].startsWith("-E")) {                           // -E 
+            IvyLog.useStdErr(true);
           }
          else badArgs();
        }

@@ -78,16 +78,18 @@ static {
    fixers_map = new HashMap<>();
    ignore_errors = new HashSet<>();
    
-   ignore_errors.add("MemberName");
-   ignore_errors.add("HiddenField");
-   ignore_errors.add("StaticVariableName");
+// ignore_errors.add("MemberName");
+// ignore_errors.add("StaticVariableName");
+// ignore_errors.add("ConstantName");
    ignore_errors.add("AvoidStarImport");
    ignore_errors.add("LineLength");
-
+   ignore_errors.add("HiddenField");
+   
    BstyleFixer precededbywhite = new PrecededByWhitespace();
    BstyleFixer notfollowedbywhite = new NotFollowedByWhite();
    BstyleFixer previousline = new PreviousLine();
    BstyleFixer followedbywhite = new FollowedByWhitespace();
+   BstyleFixer namefixer = new BstyleFixerNaming();
 
    addFixer("NoWhitespaceBefore",precededbywhite);
    addFixer("NoWhitespaceAfter",followedbywhite);
@@ -115,6 +117,10 @@ static {
    addFixer("SimplifyBooleanReturn",new ConditionalLogic());
    addFixer("MultipleVariableDeclarations",new VarDeclarations());
    addFixer("GenericWhitespace",followedbywhite,precededbywhite);
+  
+   addFixer("ConstantName",namefixer);
+   addFixer("MemberName",namefixer);
+   addFixer("StaticVariableName",namefixer);
 }
 
 
@@ -150,13 +156,6 @@ private static void addFixer(String when,BstyleFixer... fixers)
 
 BstyleFixer() { }
 
-
-
-/********************************************************************************/
-/*                                                                              */
-/*      Access methods                                                          */
-/*                                                                              */
-/********************************************************************************/
 
 
 /********************************************************************************/

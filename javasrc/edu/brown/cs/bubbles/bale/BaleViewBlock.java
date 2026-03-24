@@ -554,10 +554,12 @@ private void drawElisionTrigger(Graphics g,Rectangle alloc,boolean fg)
       BaleDocument bd = (BaleDocument) getDocument();
       boolean haveerr = false;
       for (BumpProblem bp : bd.getProblems()) {
-	 if (bp.getErrorType() == BumpErrorType.FATAL || bp.getErrorType() == BumpErrorType.ERROR) {
+	 if (bp.getErrorType() == BumpErrorType.FATAL ||
+               bp.getErrorType() == BumpErrorType.ERROR) {
 	    haveerr = true;
 	  }
        }
+      BoardLog.logD("BALE","Note document has errors " + bd.getFragmentName());
       if (haveerr != have_errors) {
 	 have_errors = haveerr;
 	 Component c = getContainer();

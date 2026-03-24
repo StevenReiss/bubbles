@@ -492,7 +492,6 @@ private final class HelpMouser extends MouseAdapter {
    ProblemAnnot pa = problem_annotations.remove(bp);
    if (pa != null) annot_area.removeAnnotation(pa);
    else {
-      BoardLog.logD("BALE","Unable to find problem to remove " + bp);
       List<BumpProblem> rem = new ArrayList<>();
       for (BumpProblem bp1 : problem_annotations.keySet()) {
          if (bp1.getFile().equals(bp.getFile()) &&
@@ -504,6 +503,9 @@ private final class HelpMouser extends MouseAdapter {
              }
           }
        }
+      BoardLog.logD("BALE","Unable to find problem to remove " +
+            problem_annotations.size() + " " + rem.size() + bp);
+      
       for (BumpProblem bp2 : rem) {
          ProblemAnnot pa2 = problem_annotations.remove(bp2);
          if (pa2 != null) annot_area.removeAnnotation(pa2);
@@ -513,6 +515,9 @@ private final class HelpMouser extends MouseAdapter {
 
 @Override public void handleClearProblems()
 {
+   BoardLog.logD("BALE","Clear problem annotations for " + 
+         fragment_name);
+   
    for (ProblemAnnot pa : problem_annotations.values()) {
       annot_area.removeAnnotation(pa);
     }

@@ -283,7 +283,6 @@ void startBvcrServer()
       if (nm1.equals(nm)) nm1 = "bvcr_" + nm;
       nm1 = bp.getProperty("Bvcr.log.name",nm1);
       File nlog = new File(log.getParent(),nm1);
-      
       args.add("-V");
       args.add(lvl);
       if (stderr) args.add("-E");
@@ -581,9 +580,8 @@ private final class IssueWarnings implements Runnable, ActionListener {
     }
    
    @Override public void actionPerformed(ActionEvent evt) {
-      BudaBubbleArea bba = buda_root.getBubbleArea();
       for (Map.Entry<String,String> ent : project_warnings.entrySet()) {
-         issueWarning(bba,ent.getKey(),ent.getValue());
+         issueWarning(buda_root,ent.getKey(),ent.getValue());
        }
     }
    

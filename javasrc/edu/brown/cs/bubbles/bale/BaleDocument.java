@@ -586,6 +586,7 @@ void waitForAst()
 
 public void handleProblemsUpdated()
 {
+   BoardLog.logD("BALE","Handle document problems updated " + getFragmentName());
    if (element_buffer != null) {
       baleWriteLock();
       try {

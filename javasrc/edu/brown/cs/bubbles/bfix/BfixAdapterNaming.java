@@ -80,7 +80,7 @@ public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,
       List<BfixFixer> rslt)
 {
    NamingFixer fixer = findFixer(corr,bp);
-   if (fixer != null) rslt.add(fixer);
+   if (fixer != null && explicit) rslt.add(fixer);
 }
 
 
