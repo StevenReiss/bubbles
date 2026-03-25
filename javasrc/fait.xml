@@ -125,6 +125,11 @@
   <METHOD NAME='edu.brown.cs.bubbles.bump.BumpClient.stopIDE' EXIT='1' />
 
   <CLASS NAME='java.util.stream.Collectors' />
+  <PACKAGE NAME='sun.security' />
+  <PACKAGE NAME='org.apache.commons.beanutils.PropertyUtilsBean' />
+  <CLASS NAME='edu.brown.cs.ivy.file.IvyLog' />
+  <PACKAGE NAME='org.objectweb.asm' />
+  <PACKAGE NAME='jakarta.mail' />
 
   <PACKAGE NAME='javax.swing' />
    <METHOD NAME="javax.swing.JFileChooser.addActionListener" CBID="awt" CALLBACK="actionPerformed" CBARGS="1" SCAN='FALSE' />

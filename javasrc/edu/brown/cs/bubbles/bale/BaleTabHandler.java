@@ -168,7 +168,11 @@ private void setFont()
 {
    StyleContext ctx = BaleFactory.getFactory().getStyleContext();
    if (ctx == null) {
-      BoardLog.logD("BALE","Not sylte context for tab handler");
+      BoardLog.logD("BALE","Not style context for tab handler");
+      return;
+    }
+   if (cur_element == null) {
+      BoardLog.logD("BALE","Not element for tab handler");
       return;
     }
    Font fn = ctx.getFont(cur_element.getAttributes());
