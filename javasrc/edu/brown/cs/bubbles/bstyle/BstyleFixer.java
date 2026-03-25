@@ -331,7 +331,7 @@ abstract static class GenericPatternFixer extends BstyleFixer {
       int rs0 = getCheckStart(m1)+lsoff;
       int re0 = getCheckEnd(m1)+lsoff;
       return new StyleDoer(corr,start,bp,rs0,re0,
-            s0,e0,txt); 
+            s0,e0,txt,doIndent(),doFormat()); 
     }
    
    protected String getEditReplace(Matcher m1)          { return ""; }
@@ -342,6 +342,8 @@ abstract static class GenericPatternFixer extends BstyleFixer {
    protected int getStartLine(int line)                 { return line; }
    protected int getEndLine(int line)                   { return line; } 
    protected boolean checkStillApplicable(String line)  { return true; }
+   protected boolean doIndent()                         { return false; }
+   protected boolean doFormat()                         { return false; }
    
 }	// end of inner class GenericPatternFixer
 
@@ -426,7 +428,8 @@ private static class FileNewline extends GenericPatternFixer {
       BaleWindowDocument doc = win.getWindowDocument();
       BaleFileOverview doc0 = doc.getBaseWindowDocument();
       int off = doc0.getLength();
-      return new StyleDoer(corr,start,bp,off,off,off,off,"\n");
+      return new StyleDoer(corr,start,bp,off,off,off,off,
+            "\n",false,false);
     }
    
 }       // end of inner class FileNewline
@@ -605,7 +608,7 @@ private static class LineByItself extends GenericPatternFixer {
    
    @Override protected int getEditStart(Matcher m)      { return m.start(2); }
    @Override protected int getEditEnd(Matcher m)        { return m.start(3); }
-   @Override protected String getEditReplace(Matcher m) { return "\n"; }
+   @Override protected String getEditReplace(Matcher m) { return "\n" + m.group(1); }
  
 }       // end of inner class LineByItself
 
@@ -783,10 +786,13 @@ private class StyleDoer implements BfixRunnableFix {
    private int edit_end;
    private String insert_text;
    private long initial_time;
+   private boolean do_indent;
+   private boolean do_format;
    
    StyleDoer(BfixCorrector corr,long start,
          BumpProblem bp,int rsoff,int reoff,
-         int soff,int eoff,String txt) {
+         int soff,int eoff,String txt,
+         boolean indent,boolean format) {
       for_corrector = corr;
       range_start = rsoff;
       range_end = reoff+1;
@@ -794,6 +800,8 @@ private class StyleDoer implements BfixRunnableFix {
       edit_end = eoff;
       insert_text = txt;
       initial_time = start;
+      do_indent = indent;
+      do_format = format;
     }
    
    @Override public Boolean call() {
@@ -808,7 +816,7 @@ private class StyleDoer implements BfixRunnableFix {
       BoardLog.logD("BSTYLE","Making style fix " + soff + " " + eoff + " " + insert_text);
       
       BoardMetrics.noteCommand("BSTYLE","StyleCorrection_" + for_corrector.getBubbleId());
-      doc.replace(soff,eoff-soff,insert_text,false,false);
+      doc.replace(soff,eoff-soff,insert_text,do_format,do_indent);
       BoardMetrics.noteCommand("BSTYLE","DoneStyleCorrection_" + for_corrector.getBubbleId());
       
       return true;

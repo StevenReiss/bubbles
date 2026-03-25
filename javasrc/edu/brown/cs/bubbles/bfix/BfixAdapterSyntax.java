@@ -51,7 +51,7 @@ class BfixAdapterSyntax extends BfixAdapter implements BfixConstants
 /********************************************************************************/
 
 private static Map<BfixErrorPattern,String> syntax_patterns;
-private static Pattern CONTAINS_TOKEN;
+private static final Pattern CONTAINS_TOKEN;
 
 static {
    CONTAINS_TOKEN = Pattern.compile("[A-Z]");

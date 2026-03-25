@@ -66,12 +66,12 @@ private String          master_name;
 
 private static BoardProperties bvcr_properties = BoardProperties.getProperties("Bvcr");
 
-private static SimpleDateFormat GIT_DATE = new SimpleDateFormat("EEE MMM dd kk:mm:ss yyyy ZZZZZ");
+private static final SimpleDateFormat GIT_DATE = new SimpleDateFormat("EEE MMM dd kk:mm:ss yyyy ZZZZZ");
 
-private static String GIT_LOG_FORMAT = "%H%x09%h%x09%an%x09%ae%x09%ad%x09%P%x09%d%x09%s%n%b%n***EOF";
-private static String GIT_PRIOR_FORMAT = "%H%x09%P%x09%d%n";
-private static String GIT_VERSION_FORMAT = "%H%x09%D%n";
-private static Pattern MASTER_PATTERN = Pattern.compile("HEAD branch\\:\\s*(\\S+)\\s");
+private static final String GIT_LOG_FORMAT = "%H%x09%h%x09%an%x09%ae%x09%ad%x09%P%x09%d%x09%s%n%b%n***EOF";
+private static final String GIT_PRIOR_FORMAT = "%H%x09%P%x09%d%n";
+private static final String GIT_VERSION_FORMAT = "%H%x09%D%n";
+private static final Pattern MASTER_PATTERN = Pattern.compile("HEAD branch\\:\\s*(\\S+)\\s");
 
 
 

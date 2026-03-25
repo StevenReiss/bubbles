@@ -57,7 +57,7 @@ private String		svn_name;
 
 private static BoardProperties bvcr_properties = BoardProperties.getProperties("Bvcr");
 
-private static SimpleDateFormat SVN_DATE = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSS");
+private static final SimpleDateFormat SVN_DATE = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSS");
 
 
 

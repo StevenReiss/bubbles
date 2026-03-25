@@ -390,14 +390,14 @@ void pressedButton(String msg)
 
 private final class XMLListener implements ActionListener {
 
-    private Element _xml;
+    private Element xml_value;
 
     private XMLListener(Element xml) {
-        _xml = xml;
+        xml_value = xml;
     }
 
     @Override public void actionPerformed(ActionEvent e) {
-        BgtaFactory.addTaskToRoot(_xml);
+        BgtaFactory.addTaskToRoot(xml_value);
         pressedButton(BGTA_TASK_DESCRIPTION);
     }
 

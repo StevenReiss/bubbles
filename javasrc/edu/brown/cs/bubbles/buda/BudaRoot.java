@@ -160,7 +160,7 @@ private static MouseEvent	last_mouse;
 private static SwingEventListenerList<BubbleViewCallback> view_callbacks;
 private static SwingEventListenerList<BudaFileHandler> file_handlers;
 
-private static Font DEMO_TEXT_FONT = new Font(Font.SANS_SERIF,Font.BOLD,96);
+private static final Font DEMO_TEXT_FONT = new Font(Font.SANS_SERIF,Font.BOLD,96);
 
 private static SearchBoxCreator search_creator = null;
 private static BudaMenu 	bubble_menu = null;

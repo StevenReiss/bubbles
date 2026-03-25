@@ -34,8 +34,8 @@ import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardConstants;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMail;
-import edu.brown.cs.bubbles.board.BoardMailMessage;
 import edu.brown.cs.bubbles.board.BoardUpload;
+import edu.brown.cs.ivy.bower.BowerMailer;
 
 import javax.swing.JOptionPane;
 
@@ -76,8 +76,8 @@ private WorkingSetGrowth grow_type;
 private GrowCallback grow_callback;
 private Map<String,Object> property_map;
 
-private static int MIN_GROW_SPACE = 500;
-private static int GROW_EXTRA = 20;
+private static final int MIN_GROW_SPACE = 500;
+private static final int GROW_EXTRA = 20;
 
 
 
@@ -285,7 +285,7 @@ void sendMail(String to)
       BoardUpload bup = new BoardUpload(f);
 
       String msg = "Here is a working set to share:\n\n" + bup.getFileURL() + "\n";
-      BoardMailMessage bmm = BoardMail.createMessage(to);
+      BowerMailer bmm = BoardMail.createMessage(to);
       if (bmm != null) {
 	 bmm.setSubject("Bubbles working set to share");
 	 bmm.addBodyText(msg);
@@ -313,7 +313,7 @@ void sendPDF(String to)
       BoardUpload bup = new BoardUpload(f);
 
       String msg = "Here is the working set image:\n\n" + bup.getFileURL() + "\n";
-      BoardMailMessage bmm = BoardMail.createMessage(to);
+      BowerMailer bmm = BoardMail.createMessage(to);
       if (bmm != null) {
 	 bmm.setSubject("Bubbles working set image");
 	 bmm.addBodyText(msg);

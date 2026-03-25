@@ -42,7 +42,6 @@ import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardImage;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMail;
-import edu.brown.cs.bubbles.board.BoardMailMessage;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
@@ -60,7 +59,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblemHandler;
-
+import edu.brown.cs.ivy.bower.BowerMailer;
 import edu.brown.cs.ivy.mint.MintArguments;
 import edu.brown.cs.ivy.mint.MintControl;
 import edu.brown.cs.ivy.mint.MintHandler;
@@ -330,7 +329,7 @@ static void sendMail(String addr,String subj,String body)
 
 static void sendMailDirect(String to,String subj,String body,List<File> add,String replyto)
 {
-   BoardMailMessage msg = BoardMail.createMessage(to);
+   BowerMailer msg = BoardMail.createMessage(to);
    msg.setSubject(subj);
    msg.addBodyText(body);
    msg.addAttachments(add);

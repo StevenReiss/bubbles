@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.board;
 
+import edu.brown.cs.ivy.bower.BowerMailer;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -312,7 +313,7 @@ private static class ReportData implements ActionListener {
        }
       if (!use) return;
       
-      BoardMailMessage msg = BoardMail.createMessage(send_to);
+      BowerMailer msg = BoardMail.createMessage(send_to);
       msg.setSubject("BUBBLES USER REPORT FOR " + getName());
       msg.addBodyText(buf.toString());
       msg.send();   

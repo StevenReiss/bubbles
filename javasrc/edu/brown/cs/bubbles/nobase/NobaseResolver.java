@@ -46,7 +46,7 @@ class NobaseResolver implements NobaseConstants
 private NobaseScope		global_scope;
 private NobaseProject		for_project;
 
-private static Pattern	INTERNAL_NAME = Pattern.compile("_L\\d+");
+private static final Pattern	INTERNAL_NAME = Pattern.compile("_L\\d+");
 
 
 

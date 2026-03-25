@@ -55,7 +55,7 @@ abstract class BuenoCreator implements BuenoConstants
 
 private static int     tab_size;
 
-private static int	HIDDEN_ABSTRACT = 16384;
+private static final int	HIDDEN_ABSTRACT = 16384;
 
 static {
    BoardProperties bp = BoardProperties.getProperties("Bueno");

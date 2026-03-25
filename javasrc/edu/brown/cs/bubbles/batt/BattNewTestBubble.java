@@ -548,10 +548,12 @@ private abstract class NewTestCase implements BattCallTest, CaretListener, Actio
 /*										*/
 /********************************************************************************/
 
-private static NewTestOp [] CALL_OPS = { NewTestOp.EQL, NewTestOp.NEQ,
-					    NewTestOp.THROW, NewTestOp.SAME,
-					    NewTestOp.DIFF, NewTestOp.SHOW };
-private static NewTestOp [] VOID_CALL_OPS = { NewTestOp.THROW, NewTestOp.IGNORE };
+private static final NewTestOp [] CALL_OPS = { 
+   NewTestOp.EQL, NewTestOp.NEQ,
+   NewTestOp.THROW, NewTestOp.SAME,
+   NewTestOp.DIFF, NewTestOp.SHOW };
+private static final NewTestOp [] VOID_CALL_OPS = { 
+   NewTestOp.THROW, NewTestOp.IGNORE };
 
 
 private class CallTestCase extends NewTestCase {

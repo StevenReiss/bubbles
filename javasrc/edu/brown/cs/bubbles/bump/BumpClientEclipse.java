@@ -45,7 +45,7 @@ class BumpClientEclipse extends BumpClientJava
 
 private boolean 	eclipse_starting;
 
-private String [] MAC_BINARY = new String [] {
+private static final String [] MAC_BINARY = new String [] {
       "Contents/MacOS/eclipse", "Contents/Eclipse/eclipse"
 };
 

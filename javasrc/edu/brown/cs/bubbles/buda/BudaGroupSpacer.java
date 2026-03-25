@@ -62,11 +62,11 @@ private static final int	BUBBLE_SPACE = (int) Math.ceil(GROUP_AURA_BUFFER);
 
 private static final long	MAX_SPACING_TIME = 1500;
 
-private static boolean		KEEP_BUBBLES_ON_SCREEN = false;
-private static boolean		DONT_GO_OFF_TOP = false;
-private static boolean		DONT_GO_OFF_BOTTOM = false;
-private static boolean		DONT_GO_OFF_LEFT = false;
-private static boolean		DONT_GO_OFF_RIGHT = false;
+private static final boolean		KEEP_BUBBLES_ON_SCREEN = false;
+private static final boolean		DONT_GO_OFF_TOP = false;
+private static final boolean		DONT_GO_OFF_BOTTOM = false;
+private static final boolean		DONT_GO_OFF_LEFT = false;
+private static final boolean		DONT_GO_OFF_RIGHT = false;
 
 
 
@@ -580,6 +580,7 @@ private int getMaxOffestY(Area area){
    return maxOffset;
 }
 
+@SuppressWarnings("unused")
 private boolean bubbleOnScreen(GroupProxy gp)
 {
    Rectangle r = gp.getPlacement();

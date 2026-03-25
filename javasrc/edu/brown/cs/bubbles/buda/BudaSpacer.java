@@ -61,11 +61,11 @@ private static final int	BUBBLE_SPACE = 6;
 
 private static final long	MAX_SPACING_TIME = 1000;
 
-private static boolean		KEEP_BUBBLES_ON_SCREEN = false;
-private static boolean		DONT_GO_OFF_TOP = false;
-private static boolean		DONT_GO_OFF_BOTTOM = false;
-private static boolean		DONT_GO_OFF_LEFT = false;
-private static boolean		DONT_GO_OFF_RIGHT = false;
+private static final boolean		KEEP_BUBBLES_ON_SCREEN = false;
+private static final boolean		DONT_GO_OFF_TOP = false;
+private static final boolean		DONT_GO_OFF_BOTTOM = false;
+private static final boolean		DONT_GO_OFF_LEFT = false;
+private static final boolean		DONT_GO_OFF_RIGHT = false;
 
 
 
@@ -362,6 +362,7 @@ private List<BubbleProxy> generateBubbleMoves(Configuration cur,BubbleProxy bubb
 
 
 
+@SuppressWarnings("unused")
 private boolean bubbleOnScreen(BubbleProxy bp)
 {
    Rectangle r = bp.getPlacement();

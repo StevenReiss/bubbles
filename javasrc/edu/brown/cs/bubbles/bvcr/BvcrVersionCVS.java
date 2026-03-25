@@ -53,7 +53,7 @@ private String		cvs_command;
 
 private static BoardProperties bvcr_properties = BoardProperties.getProperties("Bvcr");
 
-private static SimpleDateFormat CVS_DATE = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss ZZZZZ");
+private static final SimpleDateFormat CVS_DATE = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss ZZZZZ");
 
 
 

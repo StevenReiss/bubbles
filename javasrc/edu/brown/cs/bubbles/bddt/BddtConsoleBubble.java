@@ -86,7 +86,7 @@ private JTextField input_pane;
 private boolean   auto_scroll;
 private BddtConsoleController console_control;
 
-private static Pattern LOCATION_PATTERN =
+private static final Pattern LOCATION_PATTERN =
    Pattern.compile("at ([a-zA-Z0-9<>$_.]+)\\(([a-zA-Z0-9_]+\\.java)\\:([0-9]+)\\)");
 private static final long serialVersionUID = 1;
 

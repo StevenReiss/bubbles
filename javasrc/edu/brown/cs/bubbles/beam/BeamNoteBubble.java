@@ -151,7 +151,7 @@ private static final String COLOR_OUTPUT = "<!-- COLORS: TOP=%1 BOTTOM=%2 -->";
 private static final String COLOR_PATTERN_S = "^<!-- COLORS: TOP=(\\p{XDigit}+) BOTTOM=(\\p{XDigit}+) -->$";
 private static final Pattern COLOR_PATTERN = Pattern.compile(COLOR_PATTERN_S,Pattern.MULTILINE);
 
-private static Pattern LOCATION_PATTERN =
+private static final Pattern LOCATION_PATTERN =
    Pattern.compile("at ([a-zA-Z0-9<>$_.]+)\\(([a-zA-Z0-9_]+\\.java)\\:([0-9]+)\\)");
 
 

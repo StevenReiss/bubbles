@@ -49,11 +49,11 @@ class BumpClientIdea extends BumpClientJava
 
 private boolean         idea_starting;
 
-private String [] MAC_BINARY = new String [] {
+private static final String [] MAC_BINARY = new String [] {
       "Contents/MacOS/idea"
 };
         
-private String [] OPTIONS_FILE = new String [] {
+private static final String [] OPTIONS_FILE = new String [] {
    "idea.vmoptions", "bin/idea.vmoptions", "Contents/bin/idea.vmoptions"   
 };
 

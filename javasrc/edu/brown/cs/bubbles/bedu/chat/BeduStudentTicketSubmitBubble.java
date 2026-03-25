@@ -54,7 +54,7 @@ import java.util.Map;
 
 
 class BeduStudentTicketSubmitBubble extends BudaBubble implements BeduConstants {
-private static Dimension  DEFAULT_DIMENSION     = new Dimension(275,200);
+private static final Dimension  DEFAULT_DIMENSION     = new Dimension(275,200);
 private static final long serialVersionUID      = 1L;
 
 private TicketPanel       content_panel;

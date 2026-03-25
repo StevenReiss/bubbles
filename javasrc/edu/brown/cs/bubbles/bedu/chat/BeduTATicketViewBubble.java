@@ -47,7 +47,7 @@ import java.awt.geom.Rectangle2D;
 
 class BeduTATicketViewBubble extends BudaBubble implements BeduConstants{
 private static final long serialVersionUID	= 1L;
-private static Dimension  DEFAULT_DIMENSION	= new Dimension(250,200);
+private static final Dimension  DEFAULT_DIMENSION	= new Dimension(250,200);
 
 private BeduStudentTicket student_ticket;
 

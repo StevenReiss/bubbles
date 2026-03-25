@@ -62,7 +62,7 @@ private static final String [] MAVEN_COMMANDS = {
    "install",
 };
 
-private static Pattern DEP_PATTERN = 
+private static final Pattern DEP_PATTERN = 
    Pattern.compile("^([-A-Za-z0-9_.]+)\\:([-A-Za-z0-9_.]*)\\:([-A-Za-z0-9_.]*)\\:([-A-Za-z0-9_.]*)\\:" + 
          "([-A-Za-z0-9_.]*)\\:(.*) -- module (.*) ");
 

@@ -87,7 +87,7 @@ private static BreakElement [] break_table = new BreakElement[] {
 
 };
 
-private static int MAX_LINE_ELEMENTS = 50;
+private static final int MAX_LINE_ELEMENTS = 50;
 
 
 

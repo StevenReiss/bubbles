@@ -77,7 +77,7 @@ private BudaBubble			last_placement;
 private Map<BudaBubble,List<BudaBubble>> related_bubbles;
 private BudaBubble			last_focus;
 
-private static int	MIN_EMPTY_SIZE = 30;
+private static final int	MIN_EMPTY_SIZE = 30;
 
 
 

@@ -105,9 +105,9 @@ private TestMode	current_mode;
 private RunType 	current_runtype;
 private JButton         run_selected;
 
-private Set<DisplayMode> ALL_MODE = EnumSet.of(DisplayMode.ALL);
-private Set<DisplayMode> FAIL_MODE = EnumSet.of(DisplayMode.FAIL);
-private Set<DisplayMode> PENDING_MODE = EnumSet.of(DisplayMode.PENDING,DisplayMode.NEEDED);
+private static final Set<DisplayMode> ALL_MODE = EnumSet.of(DisplayMode.ALL);
+private static final Set<DisplayMode> FAIL_MODE = EnumSet.of(DisplayMode.FAIL);
+private static final Set<DisplayMode> PENDING_MODE = EnumSet.of(DisplayMode.PENDING,DisplayMode.NEEDED);
 private static final long serialVersionUID = 1;
 
 
@@ -380,7 +380,7 @@ private static final int BAR_INSET = 3;
 
 private static final Paint [] BAR_COLORS;
 
-private static Pattern LOCATION_PATTERN =
+private static final Pattern LOCATION_PATTERN =
    Pattern.compile("at ([a-zA-Z0-9<>$_.]+)\\(([a-zA-Z0-9_]+\\.java)\\:([0-9]+)\\)");
 
 static {

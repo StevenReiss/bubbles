@@ -119,10 +119,98 @@
      CBARGS='2'
      CALLBACK='flush handleComment handleEndOfLineString handleEndTag handleError handleSimpleTag handleStartTag handleText' /> >
 
-  <PACKAGE NAME='javax.swing' />
   <CLASS NAME='edu.brown.cs.bubbles.board.BoardUserReport' />
 
   <PACKAGE NAME='org.jsoup' />
   <METHOD NAME='edu.brown.cs.bubbles.bump.BumpClient.stopIDE' EXIT='1' />
 
+  <CLASS NAME='java.util.stream.Collectors' />
+
+  <PACKAGE NAME='javax.swing' />
+   <METHOD NAME="javax.swing.JFileChooser.addActionListener" CBID="awt" CALLBACK="actionPerformed" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JComboBox.addActionListener" CBID="awt" CALLBACK="actionPerformed" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JTextField.addActionListener" CBID="awt" CALLBACK="actionPerformed" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.AbstractButton.addActionListener" CBID="awt" CALLBACK="actionPerformed" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.Timer.addActionListener" CBID="awt" CALLBACK="actionPerformed" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.plaf.basic.BasicComboBoxEditor.addActionListener" CBID="awt" CALLBACK="actionPerformed" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JScrollBar.addAdjustmentListener" CBID="awt" CALLBACK="adjustmentValueChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JComponent.addAncestorListener" CBID="awt" CALLBACK="ancestorAdded ancestorMoved ancestorRemoved" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.text.JTextComponent.addCaretListener" CBID="awt" CALLBACK="caretUpdate" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.AbstractCellEditor.addCellEditorListener" CBID="awt" CALLBACK="editingCanceled editingStopped" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.tree.DefaultTreeCellEditor.addCellEditorListener" CBID="awt" CALLBACK="editingCanceled editingStopped" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JSlider.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JProgressBar.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JSpinner.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.AbstractSpinnerModel.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JTabbedPane.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.DefaultBoundedRangeModel.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.DefaultSingleSelectionModel.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JViewport.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.DefaultButtonModel.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.MenuSelectionManager.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.AbstractButton.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.colorchooser.DefaultColorSelectionModel.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.text.StyleContext.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.text.StyleContext$NamedStyle.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.text.DefaultCaret.addChangeListener" CBID="awt" CALLBACK="stateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JFileChooser.addChoosableFileFilter" CBID="awt" CALLBACK="accept" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.table.DefaultTableColumnModel.addColumnModelListener" CBID="awt" CALLBACK="columnAdded columnMarginChanged columnMoved columnRemoved columnSelectionChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.text.DefaultStyledDocument.addDocumentListener" CBID="awt" CALLBACK="changedUpdate insertUpdate removeUpdate" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.text.AbstractDocument.addDocumentListener" CBID="awt" CALLBACK="changedUpdate insertUpdate removeUpdate" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JList$AccessibleJList$AccessibleJListChild.addFocusListener" CBID="awt" CALLBACK="focusGained focusLost" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JTree$AccessibleJTree$AccessibleJTreeNode.addFocusListener" CBID="awt" CALLBACK="focusGained focusLost" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JTable$AccessibleJTable$AccessibleJTableCell.addFocusListener" CALLBACS="focusGained focusLost" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.table.JTableHeader$AccessibleJTableHeader$AccessibleJTableHeaderEntry.addFocusListener" CALLACKS="focusGained focusLost" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JEditorPane.addHyperlinkListener" CBID="awt" CALLBACK="hyperlinkUpdate" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.text.JTextComponent.addInputMethodListener" CBID="awt" CALLBACK="caretPositionChanged inputMethodTextChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JInternalFrame.addInternalFrameListener" CBID="awt" CALLBACK="internalFrameActivated internalFrameClosed internalFrameClosing internalFrameDeactivated internalFrameDeiconified internalFrameIconified internalFrameOpened" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JComboBox.addItemListener" CBID="awt" CALLBACK="itemStateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.DefaultButtonModel.addItemListener" CBID="awt" CALLBACK="itemStateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.AbstractButton.addItemListener" CBID="awt" CALLBACK="itemStateChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.AbstractListModel.addListDataListener" CBID="awt" CALLBACK="contentsChanged intervalAdded intervalRemoved" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.DefaultListSelectionModel.addListSelectionListener" CBID="awt" CALLBACK="valueChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JList.addListSelectionListener" CBID="awt" CALLBACK="valueChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JMenuItem.addMenuDragMouseListener" CBID="awt" CALLBACK="menuDragMouseDragged menuDragMouseEntered menuDragMouseExited menuDragMouseReleased" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JMenuItem.addMenuKeyListener" CBID="awt" CALLBACK="menuKeyPressed menuKeyReleased menyKeyTyped" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JMenu.addMenuListener" CBID="awt" CALLBACK="menuCanceled menuDeselected menuSelected" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JComboBox.addPopupMenuListener" CBID="awt" CALLBACK="popupMenuCanceled popupMenuWillBecomeInvisible popupMenuWillBecomeVisible" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JPopupMenu.addPopupMenuListener" CBID="awt" CALLBACK="popupMenuCanceled popupMenuWillBecomeInvisible popupMenuWillBecomeVisible" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JList$AccessibleJList$AccessibleJListChild.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JTree$AccessibleJTree$AccessibleJTreeNode.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JTable$AccessibleJTable$AccessibleJTableCell.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.UIDefaults.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.UIManager.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="0" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.AbstractAction.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JComponent.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JComponent$AccessibleJComponent.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.event.SwingPropertyChangeSupport.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.table.TableColumn.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.table.JTableHeader$AccessibleJTableHeader$AccessibleJTableHeaderEntry.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.tree.DefaultTreeSelectionModel.addPropertyChangeListener" NARG="1" CBID="awt" CALLBACK="propertyChange" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JComponent.addPropertyChangeListener" NARG="2" CBID="awt" CALLBACK="propertyChange" CBARGS="2" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.event.SwingPropertyChangeSupport.addPropertyChangeListener" NARG="2" CBID="awt" CALLBACK="propertyChange" CBARGS="2" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.table.AbstractTableModel.addTableModelListener" CBID="awt" CALLBACK="tableChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.tree.DefaultTreeModel.addTreeModelListener" CBID="awt" CALLBACK="treeNodesChanged treeNodesInserted treeNodesRemoved treeStructureChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JTree.addTreeSelectionListener" CBID="awt" CALLBACK="valueChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.tree.DefaultTreeSelectionModel.addTreeSelectionListener" CBID="awt" CALLBACK="valueChanged" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JTree.addTreeWillExpandListener" CBID="awt" CALLBACK="treeWillCollapse treeWillExpand" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.text.AbstractDocument.addUndoableEditListener" CBID="awt" CALLBACK="undoableEditHappened" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.undo.UndoableEditSupport.addUndoableEditListener" CBID="awt" CALLBACK="undoableEditHappened" CBARGS="1" SCAN='FALSE' />
+   <METHOD NAME="javax.swing.JComponent.addVetoableChangeListener" CBID="awt" CALLBACK="vetoableChange" CBARGS="1" NARG="1" SCAN='FALSE' />
+   <METHOD NAME='javax.swing.JEditorPane.getEditorKit' SCAN='FALSE' />
+   <METHOD NAME='javax.swing.text.StyleContext$NamedStyle.getName' />
+   <METHOD NAME='javax.swing.Jcomponent.setTransferHandler' CBID='awt' CBARGS='1' NARG='1' SCAN='FALSE'
+	CALLBACK='canImport createTransferable exportAsDrag exportDone exportToClipboard getDragImage getDragImageOffset getSourceActions getVisualRepresentation importData' />
+
+
 </FAIT>
+
+
+
+
+
+
+
+
+
+

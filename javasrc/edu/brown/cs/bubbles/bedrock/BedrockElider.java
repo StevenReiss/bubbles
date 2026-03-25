@@ -534,7 +534,8 @@ private void outputHintData(ASTNode n,IvyXmlWriter xw)
       else xw.field("RETURNS",rettyp);
       int nparam = mthd.getNumberOfParameters();
       if (nparam != pnames.length) {
-	 BedrockPlugin.logE("Method mismatch: " + mthd + " " + n + " " + nparam + " " + pnames.length);
+	 BedrockPlugin.logE("Method mismatch: " + mthd + " " + n + " " + 
+               nparam + " " + pnames.length);
        }
       xw.field("NUMPARAM",nparam);
       for (int i = 0; i < mthd.getNumberOfParameters(); ++i) {

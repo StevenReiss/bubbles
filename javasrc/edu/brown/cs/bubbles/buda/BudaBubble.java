@@ -147,7 +147,7 @@ protected static final Cursor DEFAULT_CURSOR = Cursor.getDefaultCursor();
 private static final Map<Object,Object> HINT_MAP;
 
 
-private static float [] DASH_BORDER = new float [] { 8,8 };
+private static final float [] DASH_BORDER = new float [] { 8,8 };
 
 private static boolean no_freeze = BUDA_PROPERTIES.getBoolean("Buda.nofreeze");
 

@@ -32,7 +32,7 @@ import javax.swing.text.JTextComponent;
 
 import org.w3c.dom.Element;
 
-import edu.brown.cs.bubbles.bale.BaleApplyEdits;
+import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindow;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindowDocument;
 import edu.brown.cs.bubbles.bfix.BfixCorrector;
@@ -114,9 +114,15 @@ private String findNewName(String name,String pat)
    names.add(camelCase(n0,true));
    names.add(n0.replace("_",""));
    names.add(n0.replace("_","").toLowerCase());
+   names.add("_" + name);
+   names.add(name + "_");
+   names.add("_" + n0.toLowerCase());
+   names.add(n0.toLowerCase() + "_");
    names.add("_" + n0);
    names.add(n0 + "_");
    if (!n0.contains("_")) {
+      names.add("the_" + name);
+      names.add("the_" + n0.toLowerCase());
       names.add("the_" + n0);
     }
    
@@ -230,6 +236,8 @@ private class RenameDoer implements BfixRunnableFix {
       name_end = p1;
       new_name = repl;
       for_corrector = corr;
+      initial_time = start;
+      rename_edits = null;
     }
    
    @Override public double getPriority()                { return 0.0; }
@@ -256,8 +264,9 @@ private class RenameDoer implements BfixRunnableFix {
       
       BurpHistory.getHistory().beginEditAction(c);
       try {
-         BaleApplyEdits bae = new BaleApplyEdits();
-         bae.applyEdits(rename_edits);
+         BaleFactory.getFactory().applyEdits(f,rename_edits);
+//       BaleApplyEdits bae = new BaleApplyEdits();
+//       bae.applyEdits(rename_edits);
          if (br != null) {
             br.handleSaveAllRequest();
             bc.compile(false,true,true);

@@ -79,7 +79,7 @@ private static final String HIGHLIGHT_END = "</span>";
 private static final Font COMPACT_FONT = BoardFont.getFont(Font.MONOSPACED,Font.PLAIN,9);
 private static final String COMPACT_FONT_PROP = "Bale.compact.font";
 
-private static int INIT_HEIGHT = 22;
+private static final int INIT_HEIGHT = 22;
 
 private static final int ELLIPSIS_LENGTH = getStringWidth("...");
 

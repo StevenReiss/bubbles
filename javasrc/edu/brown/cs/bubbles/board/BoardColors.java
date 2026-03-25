@@ -70,7 +70,7 @@ private Map<Object,Color>	default_colors;
 private static BoardColors	the_colors;
 public static final Color TRANSPARENT = new Color(0,0,0,0);
 
-private static int MAX_COUNT =	16;		// check every so often
+private static final int MAX_COUNT =	16;		// check every so often
 
 private static boolean  use_w3 = true;
 

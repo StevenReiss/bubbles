@@ -7,5 +7,9 @@
 <entry key="Board.prefix.csci0150">CS15</entry>
 <entry key="Board.prefix.csci0320">CS32</entry>
 <entry key="Board.library.url">http://www.cs.brown.edu/people/spr/bubbles/lib/</entry>
+<entry key="Board.mail.from">Code Bubbles</entry>
+<entry key="Board.mail.user">username</entry>
+<entry key="Board.mail.password">password</entry>
+<entry key="Board.mail.host">smtp.gmail.com</entry>
 </properties>
 

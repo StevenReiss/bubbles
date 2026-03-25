@@ -82,7 +82,7 @@ private String			bubble_id;
 
 private Set<BfixMemo>		pending_fixes;
 
-private static int	MAX_REGION_SIZE = 150;
+private static final int	MAX_REGION_SIZE = 150;
 
 
 

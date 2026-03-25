@@ -249,7 +249,7 @@ private abstract static class Analyzer {
 /*                                                                              */
 /********************************************************************************/
 
-private static List<String> ITEM_NAMES;
+private static final List<String> ITEM_NAMES;
 
 static {
    ITEM_NAMES = new ArrayList<String>();

@@ -73,7 +73,7 @@ private static final String BUBBLES_DIR = ".bubbles";
 // private static final String BUBBLES_DIR = ".bubbles.test";
 
 
-private final String [] ECLIPSE_START = new String [] {
+private static final String [] ECLIPSE_START = new String [] {
       "eclipse", "eclipse.exe", "Eclipse.app",
       "STS.exe", "STS", "STS.app",
       "sts.exe", "stS", "sts.app",

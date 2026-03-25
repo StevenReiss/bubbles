@@ -75,7 +75,7 @@ private ReadWriteLock	tree_lock;
 private SwingEventListenerList<BassTreeUpdateListener> listener_set;
 private Rebuilder	cur_rebuilder;
 
-private static long REBUILD_DELAY = BASS_PROPERTIES.getLong("Bass.rebuild.delay",500);
+private static final long REBUILD_DELAY = BASS_PROPERTIES.getLong("Bass.rebuild.delay",500);
 
 
 

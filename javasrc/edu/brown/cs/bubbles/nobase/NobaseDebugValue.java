@@ -56,7 +56,7 @@ private static NobaseDebugValue unknown_value = new JSUnknown();
 
 private static final int MAX_VALUE_SIZE = 40960;
 
-private static Pattern FCT_NAME_PAT = Pattern.compile("^function ([A-Za-z0-9_$]+)\\(");
+private static final Pattern FCT_NAME_PAT = Pattern.compile("^function ([A-Za-z0-9_$]+)\\(");
 
 
 
