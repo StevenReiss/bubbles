@@ -777,7 +777,7 @@ private static class VarDeclarations extends GenericPatternFixer {
 /*										*/
 /********************************************************************************/
 
-private class StyleDoer implements BfixRunnableFix {
+protected class StyleDoer implements BfixRunnableFix {
 
    private BfixCorrector for_corrector;
    private int range_start;

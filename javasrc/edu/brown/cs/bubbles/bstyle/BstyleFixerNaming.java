@@ -23,8 +23,10 @@
 package edu.brown.cs.bubbles.bstyle;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,6 +55,13 @@ class BstyleFixerNaming extends BstyleFixer.GenericPatternFixer implements Bstyl
 /*      Private Storage                                                         */
 /*                                                                              */
 /********************************************************************************/
+
+private static final String [] MOD_ORDER = {
+   "public", "protected", "private", "abstract",
+   "default", "static", "sealed", "non-sealed",
+   "final", "transient", "volatile", "synchronized",
+   "native", "strictfp" 
+};
 
 
 
@@ -91,6 +100,13 @@ BstyleFixerNaming()
    
    String name = m0.group(1);
    String pat = m0.group(2);
+   
+   String caps = "^[A-Z][A-Z0-9_]*$";
+   if (Pattern.matches(caps,name)) {
+      BfixRunnableFix fix = checkMakeStaticFinal(bcorr,bp,explicit,starttime);
+      if (fix != null) return fix;
+    }
+   
    String newname = findNewName(name,pat);
    
    if (newname == null) return null;
@@ -214,6 +230,52 @@ private String camelCase(String name,boolean firstupper)
 
 
 
+private BfixRunnableFix checkMakeStaticFinal(BfixCorrector corr,BumpProblem bp,
+      boolean explicit,long starttime)
+{
+   BaleWindow win = corr.getEditor();
+   BaleWindowDocument doc = win.getWindowDocument();
+   int l0 = getStartLine(bp.getLine());
+   int l1 = getEndLine(bp.getLine());
+   int lsoff = doc.findLineOffset(l0);
+   int leoff = doc.findLineOffset(l1+1);
+   String text = doc.getWindowText(lsoff,leoff-lsoff);
+   
+   String modpat = "^((($M$)\\s+)+)\\S";
+   Pattern find = generatePattern(modpat,null);
+   Matcher m1 = find.matcher(text);
+   if (!m1.find()) {
+      return null;
+    }
+   
+   Set<String> mods = new HashSet<>();
+   StringTokenizer tok = new StringTokenizer(m1.group(1));
+   while (tok.hasMoreTokens()) {
+      mods.add(tok.nextToken());
+    }
+  
+   int ct = 0;
+   if (mods.add("static")) ++ct;
+   if (mods.add("final")) ++ct;
+   if (ct == 2 || ct == 0) return null;                 // assume either static or final is present
+   
+   StringBuffer buf = new StringBuffer();
+   for (String s : MOD_ORDER) {
+      if (mods.contains(s)) {
+         buf.append(s);
+         buf.append(" ");
+       }
+    }
+   
+   String txt = buf.toString();
+   
+   int s0 = m1.start() + lsoff;
+   int e0 = m1.end() + lsoff - 1;
+   int rs0 = s0;
+   int re0 = e0;
+   
+   return new StyleDoer(corr,starttime,bp, rs0,re0,s0,e0,txt,false,false);
+}
 
 
 /********************************************************************************/
