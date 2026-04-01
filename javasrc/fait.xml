@@ -207,6 +207,8 @@
    <METHOD NAME='javax.swing.Jcomponent.setTransferHandler' CBID='awt' CBARGS='1' NARG='1' SCAN='FALSE'
 	CALLBACK='canImport createTransferable exportAsDrag exportDone exportToClipboard getDragImage getDragImageOffset getSourceActions getVisualRepresentation importData' />
 
+   <METHOD NAME='java.lang.runtime.ObjectMethods.bootstrap' />
+
 
 </FAIT>
 

@@ -1972,18 +1972,23 @@ private class ThreadData implements BumpThread {
 	 num_frames = stack_data.getNumFrames();
        }
       current_breakpoint = null;
+      BoardLog.logD("BUMP","Reset thread stack " + num_frames);
     }
 
    @Override public BumpThreadStack getStack() {
+      if (stack_data == null) resetStack();
       if (num_frames <= 0) return null;
       if (stack_data == null) {
-	 Element xml = bump_client.getThreadStack(this);
-	 if (xml != null) {
-	    stack_data = new StackData(xml,thread_id);
-	    num_frames = stack_data.getNumFrames();
-	  }
+         Element xml = bump_client.getThreadStack(this);
+         if (xml != null) {
+            stack_data = new StackData(xml,thread_id);
+            num_frames = stack_data.getNumFrames();
+          }
+         else {
+            BoardLog.logD("BUMP","Can't get thread stack");
+          }
        }
-
+   
       return stack_data;
     }
 
