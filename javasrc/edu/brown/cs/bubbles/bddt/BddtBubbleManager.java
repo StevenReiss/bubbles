@@ -109,6 +109,8 @@ BudaBubble createExecBubble(BumpThread bt)
 
    BumpStackFrame usefrm = stk.getFrame(0);
    if (usefrm == null) {
+      stk = bt.getStack();
+      usefrm = stk.getFrame(0);
       BoardLog.logE("BDDT","No stack frame found");
     }
    BudaBubble bb = createSourceBubble(stk,0,BubbleType.EXEC,false,godown);

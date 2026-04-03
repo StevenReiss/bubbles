@@ -21,7 +21,7 @@
 <entry key="Expression.parent">Bale</entry>
 <entry key="SplitExpression.parent">Bale</entry>
 <entry key="Block.parent">Bale</entry>
-<entry key="BlockComment.parent">Bale</entry>
+<entry key="BlockComment.parent">Comment</entry>
 <entry key="InternalBlock.parent">Bale</entry>
 <entry key="Unknown.parent">Bale</entry>
 <entry key="Token.parent">Bale</entry>
@@ -70,9 +70,9 @@
 <entry key="EOL.parent">Bale</entry>
 <entry key="Comment.parent">Bale</entry>
 <entry key="Comment.foreground">^</entry>
-<entry key="JavaDocComment.parent">Bale</entry>
+<entry key="JavaDocComment.parent">Comment</entry>
 <entry key="JavaDocComment.foreground">^</entry>
-<entry key="LineComment.parent">Bale</entry>
+<entry key="LineComment.parent">Comment</entry>
 <entry key="LineComment.foreground">^</entry>
 <entry key="Hint.parent">Bale</entry>
 <entry key="Hint.foreground">^</entry>
