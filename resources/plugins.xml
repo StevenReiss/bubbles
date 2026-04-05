@@ -37,7 +37,18 @@
 	  DESCRIPTION="Smart Assistant (LLM) interface for Java"
 	  URL="https://www.cs.brown.edu/people/spr/bubbles/dropins/limba.jar" >
      <RESOURCE>Bait.props</RESOURCE>
-     <MAIN>edu.brown.cs.seedebb.bicex.BaitFactory</MAIN>
+     <MAIN>edu.brown.cs.limbabb.bait.BaitFactory</MAIN>
+  </PLUGIN>
+
+  <PLUGIN NAME="DIAD"
+	  DESCRIPTION="Smart Assistant (LLM) interface for debugging Java"
+	  URL="https://www.cs.brown.edu/people/spr/bubbles/dropins/diad.jar" >
+     <RESOURCE>Bird.props</RESOURCE>
+     <RESOURCE>Bird.props</RESOURCE>
+     <MAIN>edu.brown.cs.diadbb.bird.BirdFactory</MAIN>
+     <REQUIRES>SEEDE</REQUIRES>
+     <REQUIRES>FAIT</REQUIRES>
+     <REQUIRES>LIMBA</REQUIRES>
   </PLUGIN>
 
 </PLUGINS>
