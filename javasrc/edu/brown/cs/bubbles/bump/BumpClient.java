@@ -3301,7 +3301,12 @@ boolean evaluateExpression(BumpStackFrame frm,String expr,boolean impl,boolean b
     }
    boolean sts = getStatusReply("EVALUATE",proj,q,data,2500);
 
-   if (!sts) eval_handlers.remove(rid);
+   if (!sts) {
+      if (hdlr != null) {
+         hdlr.evaluationError(rid,expr,"Evaluation error");
+       }
+      eval_handlers.remove(rid);
+    }
 
    return sts;
 }
