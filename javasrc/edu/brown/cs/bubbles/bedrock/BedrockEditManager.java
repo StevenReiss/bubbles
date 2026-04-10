@@ -278,7 +278,11 @@ void handleEdit(String proj,String sid,String file,String id,List<EditData> edit
 {
    FileData fd = findFile(proj,file,sid);
 
-   if (fd == null) throw new BedrockException("Compilation unit for file " + file + " not available");
+   if (fd == null) {
+      throw new BedrockException("Compilation unit for file " + file + " not available");
+    }
+   
+   BedrockPlugin.logD("EDIT COMMAND " + sid + " " + file + " " + id);
 
    TextEdit xe = null;
    boolean havemult = false;
@@ -2465,70 +2469,70 @@ private class FileData implements IBufferChangedListener {
 
    @Override public void bufferChanged(BufferChangedEvent evt) {
       BedrockPlugin.logD("Buffer check change " + doing_change + " " + last_edit + " " +
-			    System.identityHashCode(evt.getBuffer()));
+        		    System.identityHashCode(evt.getBuffer()));
       if (doing_change) return;
       doing_change = true;
       try {
-	 IBuffer buf = evt.getBuffer();
-	 int len = evt.getLength();
-	 int off = evt.getOffset();
-	 String txt = evt.getText();
-	 BedrockPlugin.logD("Buffer change " + file_name + " " + len + " " + off + " " +
-			       (txt == null) + " " + (buf == default_buffer) + " " +
-			       System.identityHashCode(default_buffer) + " " +
-			       System.identityHashCode(buf) + " " +
-			       Thread.currentThread().getName());
-	 if (len == 0 && off == 0 && txt == null) {
-	    // buffer closed event
-	    if (buf != default_buffer && default_buffer != null) {
-	       BedrockPlugin.logEX("Unknown buffer for buffer switch " + buf.hashCode() + " " +
-				      System.identityHashCode(default_buffer));
-	       return;
-	     }
-	    if (default_buffer == null) return;
-	    BedrockPlugin.logEX("Buffer switch occurred for " + file_name + " " +
-				  safe_update + " " + System.identityHashCode(default_buffer));
-	    if (buf != default_buffer) {
-	       default_buffer = null;
-	       if (!safe_update) update_on_open = true;
-	     }
-	    return;
-	  }
-
-	 int ctr = 0;
-	 List<String> del = null;
-	 for (Map.Entry<String,UserData> ent : buffer_users.entrySet()) {
-	    String user = ent.getKey();
-	    if (last_edit == null || last_edit.equals(user)) continue;
-	    IvyXmlWriter xw = our_plugin.beginMessage("EDIT",user);
-	    BedrockPlugin.logD("START EDIT " + user + " " + len + " " + off + " " + (ctr++));
-	    xw.field("FILE",file_name);
-	    xw.field("LENGTH",len);
-	    xw.field("OFFSET",off);
-	    if (len == buf.getLength() && off == 0 && txt != null) {
-	       xw.field("COMPLETE",true);
-	       byte [] data = txt.getBytes();
-	       xw.bytesElement("CONTENTS",data);
-	     }
-	    else {
-	       xw.cdata(txt);
-	     }
-	    String rslt = our_plugin.finishMessageWait(xw,5000);
-	    BedrockPlugin.logD("SENDING EDIT " + xw.toString());
-	    UserData userdata = ent.getValue();
-	    if (userdata.noteAlive(rslt != null)) {
-	       if (del == null) del = new ArrayList<>();
-	       del.add(user);
-	     }
-	  }
-	 if (del != null) {
-	    for (String s : del) removeUser(s);
-	  }
-
-	 setupDefaultBuffer();
+         IBuffer buf = evt.getBuffer();
+         int len = evt.getLength();
+         int off = evt.getOffset();
+         String txt = evt.getText();
+         BedrockPlugin.logD("Buffer change " + file_name + " " + len + " " + off + " " +
+        		       (txt == null) + " " + (buf == default_buffer) + " " +
+        		       System.identityHashCode(default_buffer) + " " +
+        		       System.identityHashCode(buf) + " " +
+        		       Thread.currentThread().getName());
+         if (len == 0 && off == 0 && txt == null) {
+            // buffer closed event
+            if (buf != default_buffer && default_buffer != null) {
+               BedrockPlugin.logEX("Unknown buffer for buffer switch " + buf.hashCode() + " " +
+        			      System.identityHashCode(default_buffer));
+               return;
+             }
+            if (default_buffer == null) return;
+            BedrockPlugin.logEX("Buffer switch occurred for " + file_name + " " +
+        			  safe_update + " " + System.identityHashCode(default_buffer));
+            if (buf != default_buffer) {
+               default_buffer = null;
+               if (!safe_update) update_on_open = true;
+             }
+            return;
+          }
+   
+         int ctr = 0;
+         List<String> del = null;
+         for (Map.Entry<String,UserData> ent : buffer_users.entrySet()) {
+            String user = ent.getKey();
+            if (last_edit == null || last_edit.equals(user)) continue;
+            IvyXmlWriter xw = our_plugin.beginMessage("EDIT",user);
+            BedrockPlugin.logD("START EDIT " + user + " " + len + " " + off + " " + (ctr++));
+            xw.field("FILE",file_name);
+            xw.field("LENGTH",len);
+            xw.field("OFFSET",off);
+            if (len == buf.getLength() && off == 0 && txt != null) {
+               xw.field("COMPLETE",true);
+               byte [] data = txt.getBytes();
+               xw.bytesElement("CONTENTS",data);
+             }
+            else {
+               xw.cdata(txt);
+             }
+            String rslt = our_plugin.finishMessageWait(xw,5000);
+            BedrockPlugin.logD("SENDING EDIT " + xw.toString());
+            UserData userdata = ent.getValue();
+            if (userdata.noteAlive(rslt != null)) {
+               if (del == null) del = new ArrayList<>();
+               del.add(user);
+             }
+          }
+         if (del != null) {
+            for (String s : del) removeUser(s);
+          }
+   
+         setupDefaultBuffer();
        }
       finally {
-	 doing_change = false;
+         doing_change = false;
        }
     }
 

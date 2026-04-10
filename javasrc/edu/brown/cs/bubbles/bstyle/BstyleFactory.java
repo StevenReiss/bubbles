@@ -226,7 +226,7 @@ void startBstyleServer()
       stderr = bp.getBoolean("Bstyle.use.stderr",stderr);
       File log = BoardLog.getBubblesLogFile();
       String nm = log.getName();
-      String nm1 = nm.replace("bubbles","bsytle");
+      String nm1 = nm.replace("bubbles","bstyle");
       if (nm1.equals(nm)) nm1 = "bvcr_" + nm;
       nm1 = bp.getProperty("Bstyle.log.name",nm1);
       File nlog = new File(log.getParent(),nm1);

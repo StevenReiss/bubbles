@@ -436,21 +436,21 @@ private class EditHandler implements IDocumentListener {
       List<FileEditData> lfed = monitor_map.get(for_file);
       String owner = owner_map.get(for_file);
       for (FileEditData fed : lfed) {
-	 if (fed.getBaseId().equals(owner)) continue;
-	 IvyXmlWriter xw = nobase_main.beginMessage("EDIT",owner);
-	 xw.field("FILE",for_file.getFile().getPath());
-	 xw.field("LENGTH",len);
-	 xw.field("OFFSET",off);
-	 if (len == doc.getLength() && txt != null && len > 0) {
-	    xw.field("COMPLETE",true);
-	    byte [] data = txt.getBytes();
-	    xw.bytesElement("CONTENTS",data);
-	  }
-	 else if (txt != null) {
-	    xw.cdata(txt);
-	  }
-	 nobase_main.finishMessage(xw);
-	 NobaseMain.logD("SENDING EDIT " + xw.toString());
+         if (fed.getBaseId().equals(owner)) continue;
+         IvyXmlWriter xw = nobase_main.beginMessage("EDIT",owner);
+         xw.field("FILE",for_file.getFile().getPath());
+         xw.field("LENGTH",len);
+         xw.field("OFFSET",off);
+         if (len == doc.getLength() && txt != null && len > 0) {
+            xw.field("COMPLETE",true);
+            byte [] data = txt.getBytes();
+            xw.bytesElement("CONTENTS",data);
+          }
+         else if (txt != null) {
+            xw.cdata(txt);
+          }
+         nobase_main.finishMessage(xw);
+         NobaseMain.logD("SENDING DOC EDIT " + xw.toString());
        }
     }
 
