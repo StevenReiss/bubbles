@@ -1964,12 +1964,12 @@ private class ThreadData implements BumpThread {
    void resetStack() {
       Element xml = bump_client.getThreadStack(this); 
       if (xml == null) {
-	 stack_data = null;
-	 num_frames = -1;
+         stack_data = null;
+         num_frames = -1;
        }
       else {
-	 stack_data = new StackData(xml,thread_id);
-	 num_frames = stack_data.getNumFrames();
+         stack_data = new StackData(xml,thread_id);
+         num_frames = stack_data.getNumFrames();
        }
       current_breakpoint = null;
       BoardLog.logD("BUMP","Reset thread stack " + num_frames);
@@ -2066,17 +2066,20 @@ private class StackData implements BumpThreadStack {
    private List<StackFrame> stack_frames;
 
    StackData(Element xml,String tid) {
-      if (!IvyXml.isElement(xml,"STACKFRAMES")) xml = IvyXml.getChild(xml,"STACKFRAMES");
+      if (!IvyXml.isElement(xml,"STACKFRAMES")) {
+         xml = IvyXml.getChild(xml,"STACKFRAMES");
+       }
+      
       stack_frames = new ArrayList<>();
       for (Element telt : IvyXml.children(xml,"THREAD")) {
-	 String teid = IvyXml.getAttrString(telt,"ID");
-	 if (tid.equals(teid)) {
-	    for_thread = findThread(tid);
-	    for (Element e : IvyXml.children(telt,"STACKFRAME")) {
-	       stack_frames.add(new StackFrame(for_thread,e,stack_frames.size()));
-	     }
-	    break;
-	  }
+         String teid = IvyXml.getAttrString(telt,"ID");
+         if (tid.equals(teid)) {
+            for_thread = findThread(tid);
+            for (Element e : IvyXml.children(telt,"STACKFRAME")) {
+               stack_frames.add(new StackFrame(for_thread,e,stack_frames.size()));
+             }
+            break;
+          }
        }
     }
 
