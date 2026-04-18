@@ -327,7 +327,7 @@ private Class<?> setupClass(String cnm,ExecutorService service)
           }
        }
       catch (AssertionError e) {
-	 System.err.println("Assertion error: " + e);
+	 System.err.println("Assertion error setting up class: " + e);
          e.printStackTrace();
        }
       catch (IllegalArgumentException e) {
