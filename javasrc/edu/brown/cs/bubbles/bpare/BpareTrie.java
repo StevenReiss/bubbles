@@ -334,7 +334,7 @@ private static class MatchResult {
    void printResult() {
       System.err.println("BPARE: RESULT MAP: ");
       for (Map.Entry<ASTNode,double []> ent : value_map.entrySet()) {
-	 System.err.println("   " + ent.getValue()[0] + ": " + ent.getKey());
+         System.err.println("   " + ent.getValue()[0] + ": " + ent.getKey());
        }
     }
 

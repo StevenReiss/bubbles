@@ -351,12 +351,12 @@ private static class ReplyHandler extends MintDefaultReply {
    void print() {
       String rslt = waitForString();
       if (rslt == null) {
-	 System.err.println("BEDROCKTEST: NO REPLY FOR " + cmd_name);
+         System.err.println("BEDROCKTEST: NO REPLY FOR " + cmd_name);
        }
       else {
-	 System.err.println("BEDROCKTEST: REPLY FOR " + cmd_name + ":");
-	 System.err.println(rslt);
-	 System.err.println("BEDROCKTEST: End of REPLY");
+         System.err.println("BEDROCKTEST: REPLY FOR " + cmd_name + ":");
+         System.err.println(rslt);
+         System.err.println("BEDROCKTEST: End of REPLY");
        }
     }
 

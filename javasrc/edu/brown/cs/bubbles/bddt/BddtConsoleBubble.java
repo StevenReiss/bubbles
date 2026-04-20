@@ -265,7 +265,7 @@ private class EndScroll implements DocumentListener, Runnable {
                r.x = 0;
                r.y += 20;
                if (r.y + r.height > sz.height) r.y = sz.height;
-               if (auto_scroll) text_pane.scrollRectToVisible(r);
+               text_pane.scrollRectToVisible(r);
              }
          }
          catch (BadLocationException ex) {
