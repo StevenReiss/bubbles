@@ -476,6 +476,8 @@ private void replace()
    try {
       bh.beginEditAction(editor_pane);
       for_document.replace(p.getOffset(),ln,s,null);
+      findAllOccurences(search_for, 1);
+      number_label.setText("Matches: " + occurrences_set.size());
     }
    catch (BadLocationException e) {
       BoardLog.logE("BALE","Problem with replace",e);
@@ -521,6 +523,8 @@ private void replaceAll()
 	 catch (BadLocationException e) {
 	    BoardLog.logE("BALE","Problem with replaceall",e);
 	  }
+         findAllOccurences(search_for, 1);
+         number_label.setText("Matches: " + occurrences_set.size());
        }
     }
    finally {
