@@ -466,8 +466,12 @@ IvyXmlWriter beginMessage(String typ,String bid)
 void finishMessage(IvyXmlWriter xw)
 {
    xw.end("BEDROCK");
+   
+   String msg = xw.toString();
+   
+   BedrockPlugin.logD("SEND MESSAGE " + msg);
 
-   sendMessage(xw.toString());
+   sendMessage(msg);
 }
 
 

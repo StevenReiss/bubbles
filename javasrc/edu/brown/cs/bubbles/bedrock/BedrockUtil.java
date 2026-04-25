@@ -605,7 +605,7 @@ static String findFileForClass(String cls)
       IJavaProject ijp = JavaCore.create(ip);
       if (ijp == null) continue;
       try {
-	 IType ity = ijp.findType(cls);
+	 IType ity = ijp.findType(cls,(BedrockProgressMonitor) null);
 
 	 if (ity == null && cls.indexOf("$") > 0) {
 	    ity = ijp.findType(cls.replace('$','.'));
@@ -625,8 +625,13 @@ static String findFileForClass(String cls)
 		}
 	     }
 	  }
+         else {
+            BedrockPlugin.logD("Can't find type " + cls + " in " + ip.getName());
+          }
        }
-      catch (JavaModelException e) { }
+      catch (JavaModelException e) { 
+         BedrockPlugin.logE("Problem finding type " + cls + " in " + ip.getName(),e);
+       }
     }
 
    if (result != null) return result.getAbsolutePath();
