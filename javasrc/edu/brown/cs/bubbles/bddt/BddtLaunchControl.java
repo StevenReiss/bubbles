@@ -1298,12 +1298,22 @@ private boolean autoCreateBubble(BumpThread bt)
 private class CreateBubble implements Runnable {
 
    private BumpThread for_thread;
+   private int try_count;
 
    CreateBubble(BumpThread bt) {
       for_thread = bt;
+      try_count = 0;
     }
 
    @Override public void run() {
+      BumpThreadStack stk = for_thread.getStack();
+      BumpStackFrame usefrm = stk.getFrame(0);
+      if (usefrm == null && try_count < 2) {
+         ++try_count;
+         BoardLog.logD("BDDT","Waiting for stack frame " + try_count);
+         SwingUtilities.invokeLater(this);
+         return;
+       }
       bubble_manager.createExecBubble(for_thread);
     }
 
