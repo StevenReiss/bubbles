@@ -532,15 +532,15 @@ private static class ImplementFilter implements FindFilter {
       // BedrockPlugin.logD("CHECK FILTER " + ty + " " + nm);
       if (base_types.contains(nm)) return true;
       try {
-	 ITypeHierarchy th = ty.newTypeHierarchy(null);
-	 for (IType st : th.getAllSupertypes(ty)) {
-	    String snm = st.getFullyQualifiedName().replace('$','.');
-	    // BedrockPlugin.logD("CHECK SUPERTYPE " + snm);
-	    if (base_types.contains(snm)) return true;
-	  }
+         ITypeHierarchy th = ty.newTypeHierarchy(null);
+         for (IType st : th.getAllSupertypes(ty)) {
+            String snm = st.getFullyQualifiedName().replace('$','.');
+            // BedrockPlugin.logD("CHECK SUPERTYPE " + snm);
+            if (base_types.contains(snm)) return true;
+          }
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem building type hierarchy: " + e);
+         BedrockPlugin.logE("Problem building type hierarchy: " + e);
        }
       return false;
     }
@@ -785,14 +785,19 @@ private static class FindHandler extends SearchRequestor {
    @Override public void acceptSearchMatch(SearchMatch mat) {
       BedrockPlugin.logD("FOUND MATCH " + mat + (System.currentTimeMillis()-begin_time));
       if (reportMatch(mat)) {
-	 BedrockUtil.outputSearchMatch(mat,xml_writer);
+         BedrockUtil.outputSearchMatch(mat,xml_writer);
        }
     }
 
    private boolean reportMatch(SearchMatch mat) {
       IResource irc = mat.getResource();
-      if (!allow_system && irc.getType() != IResource.FILE) return false;
-      if (find_filter != null) return find_filter.checkMatch(mat);
+      if (!allow_system && irc.getType() != IResource.FILE) {
+         BedrockPlugin.logD("System file " + irc);
+         return false;
+       }
+      if (find_filter != null) {
+         return find_filter.checkMatch(mat);
+       }
       return true;
     }
 
