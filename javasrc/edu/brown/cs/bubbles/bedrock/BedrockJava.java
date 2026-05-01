@@ -651,7 +651,9 @@ void handlePatternSearch(String proj,String bid,String patstr,String foritems,
    else if (foritems.equalsIgnoreCase("ENUM")) forflags = IJavaSearchConstants.ENUM;
    else if (foritems.equalsIgnoreCase("ANNOTATION")) forflags = IJavaSearchConstants.ANNOTATION_TYPE;
    else if (foritems.equalsIgnoreCase("CLASS&ENUM")) forflags = IJavaSearchConstants.CLASS_AND_ENUM;
-   else if (foritems.equalsIgnoreCase("CLASS&INTERFACE")) forflags = IJavaSearchConstants.CLASS_AND_INTERFACE;
+   else if (foritems.equalsIgnoreCase("CLASS&INTERFACE")) {
+      forflags = IJavaSearchConstants.CLASS_AND_INTERFACE;
+    }
    else if (foritems.equalsIgnoreCase("TYPE")) forflags = IJavaSearchConstants.TYPE;
    else if (foritems.equalsIgnoreCase("FIELD")) forflags = IJavaSearchConstants.FIELD;
    else if (foritems.equalsIgnoreCase("METHOD")) forflags = IJavaSearchConstants.METHOD;

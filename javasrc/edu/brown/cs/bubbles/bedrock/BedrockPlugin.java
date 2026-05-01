@@ -1127,7 +1127,7 @@ Element getLanguageData()
 	 BedrockPlugin.logE("BAD language resource file:\n" + txt);
        }
       catch (IOException e) {
-	 BedrockPlugin.logE("Bad language resource read " + e);
+	 BedrockPlugin.logE("Bad language resource read",e);
        }
       xml = lang_data;
     }
