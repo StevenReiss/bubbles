@@ -2451,6 +2451,7 @@ private class FileData implements IBufferChangedListener {
    private void handleUpdate() {
       try {
          String cnts = comp_unit.getBuffer().getContents();
+         if (working_unit == null || working_unit.getBuffer() == null) return;
          String ocnts = working_unit.getBuffer().getContents();
          if (cnts.equals(ocnts)) return;
        }

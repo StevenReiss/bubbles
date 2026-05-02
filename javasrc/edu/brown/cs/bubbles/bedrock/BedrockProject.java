@@ -542,10 +542,11 @@ void localEditProject(Element pxml,IvyXmlWriter xw) throws BedrockException
 	    IProject rp = findProject(rpnm);
 	    if (rp != null) {
 	       projs.add(rp);
+               BedrockPlugin.logD("Handle reference project " + rp.getName());
 	       boolean fnd = false;
 	       for (IProject orp : orefs) {
 		  if (orp == rp) fnd = true;
-	       }
+                }
 	       if (!fnd) {
 		  // IPath ppath = rp.getLocation();
 		  IPath ppath = rp.getFullPath();
@@ -554,8 +555,11 @@ void localEditProject(Element pxml,IvyXmlWriter xw) throws BedrockException
                         false,
                         new IClasspathAttribute[0],false);
 		  ents.add(pent);
-	       }
-	    }
+                }
+             }
+            else {
+               BedrockPlugin.logE("Reference project " + rpnm + " not found");
+             }
 	  }
 	 IProject [] parr = projs.toArray(new IProject[projs.size()]);
 	 IProjectDescription ipd = ip.getDescription();

@@ -2293,6 +2293,7 @@ private static class AutoCompleteAction extends TextAction  {
          BoardMetrics.noteCommand("BALE","AutoCompleteIt");
        }
       else {
+         BoardLog.logD("BALE","Handle action autocomplete selected");
          ctx.handleSelected();
          BoardMetrics.noteCommand("BALE","AutoComplete");
        }

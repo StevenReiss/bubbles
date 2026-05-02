@@ -189,8 +189,6 @@ void resetPanel(JPanel jpnl,BuenoProperties props)
 
 
 
-
-
 /********************************************************************************/
 /*                                                                              */
 /*      Panel methods                                                           */

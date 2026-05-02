@@ -220,7 +220,7 @@ private synchronized void removeContext()
       cur_menu = null;
     }
    else {
-      BoardLog.logD("BALE","Attempt to remove context that isn't there");
+      BoardLog.logD("BALE","Attempt to remove autocomplete context that isn't there");
     }
    if (getter_thread != null) BoardThreadPool.finish(getter_thread);
 }
@@ -255,7 +255,7 @@ private final class EditKeyer extends KeyAdapter {
       if (the_panel == null) return;
       int code = e.getKeyCode();
       int ch = e.getKeyChar();
-      BoardLog.logD("BALE","CONTEXT KEY CODE " + code);
+      BoardLog.logD("BALE","KEY CODE autocomplete  " + code + " " + e.isControlDown());
       if (code == KeyEvent.VK_KP_UP || code == KeyEvent.VK_UP) {
          the_panel.decCurrentIndex();
          e.consume();
@@ -278,7 +278,7 @@ private final class EditKeyer extends KeyAdapter {
          e.consume();
        }
    
-      BoardLog.logD("BALE","Completion saw character " + ch);
+      BoardLog.logD("BALE","CHAR autocomplete = " + ch);
       if (ch == '(' || ch == ')' || ch == ' ' || ch == ';' || ch == '*' || ch == ',') {
          removeContext();
       }
@@ -317,6 +317,8 @@ private void handleCompletion(CompletionItem ci)
 
    String s = ci.getCompletionText();
    Document d = be.getDocument();
+   
+   BoardLog.logD("BALE","HANDLE autocomplete " + s);
 
    removeContext();	// this clears for_editor, so do it once we have addition point
 
@@ -327,7 +329,8 @@ private void handleCompletion(CompletionItem ci)
 	 int j0 = be.getBaleDocument().mapOffsetToJava(ci.getEndIndex());
 	 if (j0 >= j) j = j0;
        }
-      BoardLog.logD("BALE","CHECK COMPLETE " + i + " " + j + " " + be.getCaretPosition() + " " + s);
+      BoardLog.logD("BALE","CHECK autocomplete " + i + " " + j + " " + 
+            be.getCaretPosition() + " " + s);
       try {
 	 d.remove(i,j-i);
 	 d.insertString(i,s,null);
@@ -359,10 +362,13 @@ private synchronized void handleFound(Collection<BumpCompletion> fnd,boolean cal
 
    found_completions = new TreeSet<>(new CompletionComparator());
    found_completions.addAll(fnd);
+   
+   BoardLog.logD("BALE","FOUND autocomplete " + fnd.size());
 
    long now = System.currentTimeMillis();
    long delay = start_time + completion_delay - now;
    if (delay < 0) delay = 0;
+   // uses swing timer
    Timer t = new Timer((int) delay,new CompletionShower());
    t.setRepeats(false);
    t.start();
@@ -420,13 +426,13 @@ private synchronized void handleShow()
       cur_menu.setVisible(true);
       the_panel.setCurrentIndex(0);
       be.grabFocus();
-      BoardLog.logD("BALE","Show autocomplete");
+      BoardLog.logD("BALE","SHOW autocomplete");
     }
    catch (BadLocationException e) {
       removeContext();
     }
    if (for_editor == null) {
-      BoardLog.logD("BALE","Context no longer relevant -- remove after show");
+      BoardLog.logD("BALE","Context autocomplete no longer relevant -- remove after show");
       removeContext();
     }
 }
@@ -435,10 +441,12 @@ private synchronized void handleShow()
 
 private synchronized void restrictOptions()
 {
+   BoardLog.logD("BALE","RESTRICT autocomplete start " + (found_items == null));
+   
    BaleEditorPane be = for_editor;
    if (be == null) return;
    if (found_items == null) return;
-
+   
    int off0 = start_position.getOffset() + 1;
    int off1 = be.getCaretPosition();
    if (found_items.isEmpty()) {
@@ -475,10 +483,10 @@ private synchronized void restrictOptions()
 	 CompletionItem ci = getNewItem(text1);
 	 if (ci != null) rslt.add(ci);
        }
-
       if (rslt.size() == 0) removeContext();
       else the_panel.setItems(rslt);
       the_panel.setCurrentIndex(0);
+      BoardLog.logD("BALE","Update autocomplete " + rslt.size());
     }
    catch (BadLocationException e) {
       removeContext();
@@ -572,7 +580,7 @@ private class CompletionGetter implements Runnable {
       Collection<BumpCompletion> completions = null;
 
       int ctr = for_document.getEditCounter();
-      BoardLog.logD("BALE","Start completions with " + ctr);
+      BoardLog.logD("BALE","Start autocomplete with " + ctr);
       BumpClient bcc = BumpClient.getBump();
       completions = bcc.getCompletions(for_document.getProjectName(),
 	    for_document.getFile(),
@@ -837,7 +845,6 @@ private abstract static class CompletionItem {
 
    protected String param_types;
    protected String return_type;
-
 
    abstract String getCompletionText();
    abstract int getStartIndex();

@@ -503,8 +503,10 @@ private final class HelpMouser extends MouseAdapter {
              }
           }
        }
-      BoardLog.logD("BALE","Unable to find problem to remove " +
-            problem_annotations.size() + " " + rem.size() + bp);
+      if (rem.size() == 0 && problem_annotations.size() > 0) {
+         BoardLog.logD("BALE","Unable to find problem to remove " +
+               problem_annotations.size() + " " + rem.size() + " " + bp);
+       }
       
       for (BumpProblem bp2 : rem) {
          ProblemAnnot pa2 = problem_annotations.remove(bp2);
