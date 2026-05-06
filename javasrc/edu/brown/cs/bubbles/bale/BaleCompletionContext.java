@@ -445,7 +445,11 @@ private synchronized void restrictOptions()
    
    BaleEditorPane be = for_editor;
    if (be == null) return;
-   if (found_items == null) return;
+   if (found_items == null) {
+      // this might be the problem SPR
+      removeContext();
+      return;
+    }
    
    int off0 = start_position.getOffset() + 1;
    int off1 = be.getCaretPosition();
