@@ -52,6 +52,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -839,7 +840,10 @@ private boolean attachProject(IProject p,boolean setup)
    if (p == null) return false;
 
    try {
-      p.open(null);
+      ProjectOpener opener = new ProjectOpener(p);
+      opener.schedule();
+      opener.join();
+//    p.open(null);
       IJavaProject ijp = JavaCore.create(p);
       ijp.open(null);
       if (setup) {
@@ -853,10 +857,10 @@ private boolean attachProject(IProject p,boolean setup)
       BedrockPlugin.logI("Error resolving project: " + e);
       return false;
     }
-   catch (CoreException e) {
-      BedrockPlugin.logE("Error opening project: " + e,e);
-      return false;
-    }
+// catch (CoreException e) {
+//    BedrockPlugin.logE("Error opening project: " + e,e);
+//    return false;
+//  }
    catch (Throwable e) {
       BedrockPlugin.logE("Error with project attach: " + e,e);
       return false;
@@ -867,6 +871,29 @@ private boolean attachProject(IProject p,boolean setup)
     }
 
    return true;
+}
+
+
+private static class ProjectOpener extends WorkspaceJob {
+   
+   private IProject for_project;
+   
+   ProjectOpener(IProject p) {
+      super("Open_" + p.getName());
+      for_project = p;
+    }
+   
+   @Override public IStatus runInWorkspace(IProgressMonitor mon) {
+      try {
+         for_project.open(mon);
+         return Status.OK_STATUS;
+       }
+      catch (CoreException e) {
+         BedrockPlugin.logE("Error opening project",e);
+         return e.getStatus();
+       }
+    }
+   
 }
 
 
