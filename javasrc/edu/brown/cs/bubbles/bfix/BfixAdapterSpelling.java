@@ -201,9 +201,9 @@ List<String> getSpellingCandidates(BfixCorrector corr,BumpProblem bp)
    List<String> rslt = new ArrayList<String>();
    rslt.add(txt);
 
+   // handle xxx<char>xxx for mistyped char
    String txt1 = null;
    BaleWindowElement nelt = elt.getNextCharacterElement();
-// if (nelt != null && nelt.getTokenType() != BaleTokenType.LANGLE) {
    if (nelt != null) {
       BaleWindowElement nnelt = nelt.getNextCharacterElement();
       if (nnelt != null && nnelt.isIdentifier() && (nnelt.getStartOffset() - elt.getEndOffset()) == 1) {
@@ -387,6 +387,7 @@ private static class SpellFixer extends BfixFixer {
          int eoff = soff + for_identifier.length();
          
          for (SpellFix sf : totry) {
+            if (usefix != null && sf.getEditCount() > usefix.getEditCount()) break;
             bc.beginPrivateEdit(filename,pid);
             BoardLog.logD("BFIX","SPELL: Try replacing " + for_identifier + " WITH " + sf.getText());
             bc.editPrivateFile(proj,file,pid,soff,eoff,sf.getText());
@@ -414,8 +415,11 @@ private static class SpellFixer extends BfixFixer {
              }
             
             if (usefix != null) {
-               if (sf.getEditCount() > usefix.getEditCount()) break;
-               // multiple edits of same length seem to work out -- ignore.
+               if (sf.getEditCount() == usefix.getEditCount()) {
+                  BoardLog.logD("BFIX","Skip spelling correction due to mutliple edits with same delta");       
+                  break;
+                }
+               // multiple edits of same length seem to work -- ignore.
                return null;
              }
             else usefix = sf;
@@ -528,7 +532,7 @@ private static class SpellDoer implements BfixRunnableFix {
       return true;
     }
 
-   @Override public double getPriority()		{ return 0; }
+   @Override public double getRegionOrder()		{ return 0; } 
 
 }	// end of inner class SpellDoer
 

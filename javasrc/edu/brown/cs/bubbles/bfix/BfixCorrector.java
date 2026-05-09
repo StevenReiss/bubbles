@@ -925,9 +925,9 @@ private static class RegionFixer implements FixAdapter {
    @Override public synchronized void noteFix(BfixRunnableFix fix) {
       if (fix_found == null && fix != null) fix_found = fix;
       else if (fix_found != null && fix != null) {
-	 if (fix_found.getPriority() < fix.getPriority()) {
-	    fix_found = fix;
-	  }
+         if (fix_found.getRegionOrder() < fix.getRegionOrder()) {
+            fix_found = fix;
+          }
        }
       noteStatus(fix != null);
     }

@@ -224,7 +224,8 @@ private Collection<Adjustment> generateMoveSetsFromBubbleMoves(
 		      move.overlaps(changes.getMoved(),false)) continue;
 	       Adjustment adj = new Adjustment(changes);
 	       adj.add(move);
-	       rslt.addAll(generateMoveSetsFromBubbleMoves(idx+1,cur,adj,possibles));
+	       rslt.addAll(generateMoveSetsFromBubbleMoves(idx+1,cur,
+                     adj,possibles));
 	     }
 	  }
        }

@@ -822,7 +822,7 @@ protected class StyleDoer implements BfixRunnableFix {
       return true;
     }
    
-   @Override public double getPriority()			{ return 0; }
+   @Override public double getRegionOrder()			{ return 0; }
    
 }	// end of inner class StyleDoer
 

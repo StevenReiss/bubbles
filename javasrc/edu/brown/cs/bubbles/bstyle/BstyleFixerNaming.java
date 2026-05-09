@@ -302,7 +302,7 @@ private class RenameDoer implements BfixRunnableFix {
       rename_edits = null;
     }
    
-   @Override public double getPriority()                { return 0.0; }
+   @Override public double getRegionOrder()                { return 0.0; }
    
    @Override public Boolean call() {
       BumpClient bc = BumpClient.getBump();

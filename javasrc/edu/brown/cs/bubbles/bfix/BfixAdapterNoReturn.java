@@ -283,9 +283,7 @@ private static class ReturnDoer implements BfixRunnableFix {
     }
    
    @Override
-   public double getPriority() {
-      return 0;
-    }
+   public double getRegionOrder()                  { return 0; }  
 
 } // end of inner class ReturnDoer
 

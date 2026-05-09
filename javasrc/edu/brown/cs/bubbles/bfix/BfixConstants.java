@@ -140,7 +140,7 @@ interface FixAdapter {
 
 interface BfixRunnableFix extends Callable<Boolean>, Runnable {
 
-   double getPriority();
+   double getRegionOrder();
 
    default void run() {
       // only called when result isn't needed
