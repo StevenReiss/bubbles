@@ -472,7 +472,7 @@ private abstract class NewAction extends AbstractAction implements Runnable {
 
    @Override public void run() {
       if (result_bubble != null) {
-	 result_area.add(result_bubble,new BudaConstraint(result_point));
+         result_area.add(result_bubble,new BudaConstraint(result_point));
        }
     }
 
@@ -771,10 +771,10 @@ private static class DeletePackageAction extends AbstractAction implements Runna
 
    @Override public void actionPerformed(ActionEvent e) {
       if (BASS_PROPERTIES.getBoolean("Bass.delete.confirm",true)) {
-	 int sts = JOptionPane.showConfirmDialog(null,"Do you really want to delete all of package " + package_name,
-						    "Confirm Delete Package",
-						    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
-	 if (sts != JOptionPane.YES_OPTION) return;
+         int sts = JOptionPane.showConfirmDialog(null,"Do you really want to delete all of package " + package_name,
+        					    "Confirm Delete Package",
+        					    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+         if (sts != JOptionPane.YES_OPTION) return;
        }
       BoardThreadPool.start(this);
    }
