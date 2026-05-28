@@ -319,10 +319,12 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
        }
       if (fnd) {
          retry = true;
+         BoardLog.logD("BFIX","Continue after fix");
          if (p1 != null && p2 != null) {
             int soff2 = p1.getOffset();
             int eoff2 = p2.getOffset();
-            BoardLog.logD("BFIX","Update position " + startoff + " " + endoff + " -> " +
+            BoardLog.logD("BFIX","After fix update position " + startoff + " " + 
+                  endoff + " -> " +
                   soff2 + " " + eoff2);
             startoff = soff2;
             endoff = eoff2;
@@ -330,8 +332,8 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
          continue;
        }
       
-      BoardLog.logD("BFIX","No fixes succeeded " + done.size() + " " + totry.size() + " " +
-            styletry.size());
+      BoardLog.logD("BFIX","No fixes succeeded " + done.size() + " " + 
+            totry.size() + " " + styletry.size());
       if (retry) {
          if (done.isEmpty()) return;
          // wait for edits to cause recompilation
@@ -355,7 +357,7 @@ private boolean fixRegionProblems(List<BumpProblem> probs,Set<BumpProblem> done)
       RegionFixer fx = new RegionFixer(bp);
       checkProblemFixable(fx);
       BfixRunnableFix rslt = fx.waitForDone();
-      
+      BoardLog.logD("BFIX","Found fixer " + rslt); 
       if (rslt != null) {
          BoardMetrics.noteCommand("BFIX","UserCorrect_" + getBubbleId());
          RunAndWait rw = new RunAndWait(rslt,1);

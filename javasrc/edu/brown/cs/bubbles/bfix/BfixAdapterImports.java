@@ -128,9 +128,10 @@ String getImportCandidate(BfixCorrector corr,BumpProblem bp)
 {
    if (bp.getErrorType() != BumpErrorType.ERROR) return null;
    BaleWindowDocument document = corr.getEditor().getWindowDocument();
-   BoardLog.logD("BFIX","IMPORT problem " + bp.getMessage());
    int soff = document.mapOffsetToJava(bp.getStart());
    int eoff = document.mapOffsetToJava(bp.getEnd());
+   BoardLog.logD("BFIX","IMPORT problem " + bp.getMessage() + " " +
+         soff + " " + eoff);
    if (eoff == soff) {
       for (BfixErrorPattern pat : ignore_patterns) {
 	 if (pat.testMatch(bp.getMessage())) return null;
@@ -139,15 +140,25 @@ String getImportCandidate(BfixCorrector corr,BumpProblem bp)
 
    BaleWindowElement elt = document.getCharacterElement(soff);
    // need to have an identifier to correct
-   if (!elt.isIdentifier()) return null;
+   if (!elt.isIdentifier()) {
+      BoardLog.logD("BFIX","No identifier found for import " + elt);
+      return null;
+    }
    // can't be working on the identifier at this point
    int elstart = elt.getStartOffset();
    int eloff = elt.getEndOffset();
    if (eoff + 1 != eloff && eoff != eloff) return null;
-   if (corr.getEndOffset() > 0 && eloff + 1 >= corr.getEndOffset()) return null;
+   if (corr.getEndOffset() > 0 && eloff + 1 >= corr.getEndOffset()) {
+      BoardLog.logD("BFIX","Identifier for import being worked on " + 
+            corr.getEndOffset() + " " + elstart + " " + eloff);
+      return null;
+    }
 
    String txt = document.getWindowText(elstart,eloff-elstart);
-   if (txt.length() <= 2) return null;
+   if (txt.length() <= 2) {
+      BoardLog.logD("BFIX","Identifier too short for import: " + txt);
+      return null;
+    }
 
    return txt;
 }
