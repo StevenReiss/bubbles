@@ -818,14 +818,14 @@ private static class Branch extends BassTreeImpl {
    Branch findNode(String txt,int priority) {
       int idx = 0;
       for (BassTreeImpl bt : child_nodes) {
-	 int d = priority - bt.getSortPriority();
-	 if (d < 0) break;
-	 if (d == 0) {
-	    int comp = txt.compareTo(bt.getLocalName());
-	    if (comp == 0) return (Branch) bt;
-	    if (comp < 0) break;
-	  }
-	 ++idx;
+         int d = priority - bt.getSortPriority();
+         if (d < 0) break;
+         if (d == 0) {
+            int comp = txt.compareTo(bt.getLocalName());
+            if (comp == 0) return (Branch) bt;
+            if (comp < 0) break;
+          }
+         ++idx;
        }
       Branch b = new Branch(txt,this);
       child_nodes.insertElementAt(b,idx);

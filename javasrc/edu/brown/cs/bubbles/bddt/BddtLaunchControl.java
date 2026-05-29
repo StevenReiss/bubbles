@@ -1110,60 +1110,60 @@ private class RunEventHandler implements BumpRunEventHandler {
    @Override public synchronized void handleProcessEvent(BumpRunEvent evt) {
       BumpLaunchConfig elc = evt.getLaunchConfiguration();
       switch (evt.getEventType()) {
-	 case PROCESS_TRIE :
-	 case PROCESS_TRACE :
-	 case PROCESS_PERFORMANCE :
-	    return;
-	 default :
-	    break;
+         case PROCESS_TRIE :
+         case PROCESS_TRACE :
+         case PROCESS_PERFORMANCE :
+            return;
+         default :
+            break;
        }
       BoardLog.logD("BDDT","PROCESS EVENT " + evt.getEventType() + " " + elc + " " +
-	    launch_config + " " + launch_state);
+            launch_config + " " + launch_state);
       switch (evt.getEventType()) {
-	 case PROCESS_ADD :
-	    if (cur_process == null && launch_state == LaunchState.STARTING &&
-		   (elc == null || elc == launch_config)) {
-	       setProcess(evt.getProcess());
-	       last_stopped = null;
-	       BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
-	       BddtFactory.getFactory().getHistoryControl().clearHistory(cur_process);
-	       if (perf_data != null) perf_data.clear();
-	     }
-	    break;
-	 case PROCESS_REMOVE :
-	    if (cur_process == evt.getProcess()) {
-	       BoardLog.logD("BDDT","TERMINATE PROCESS " + cur_process);
-	       setLaunchState(LaunchState.TERMINATED);
-	       thread_states.clear();
-	       setProcess(null);
-	       last_stopped = null;
-	     }
-	    else if (cur_process == null && launch_state == LaunchState.STARTING &&
-			(elc == null || elc == launch_config)) {
-	       setLaunchState(LaunchState.TERMINATED);
-	       thread_states.clear();
-	       last_stopped = null;
-	     }
-	    else {
-	       BoardLog.logE("BDDT","Spurrious process remove event " + evt.getProcess().getName() +
-		     " " + cur_process + " " + evt.getProcess() + " " + launch_state + " " +
-		     evt.getProcess().getId());
-	       if (cur_process != null) {
-		  BoardLog.logD("BDDT","Current process " + cur_process.getId() + " " +
-			cur_process.getName());
-		}
-	     }
-	    break;
-	 case HOTCODE_FAILURE :
-	    if (hotswap_fail != cur_process) {
-	       JOptionPane.showMessageDialog(BddtLaunchControl.this,
-		     "Hot Code Swapping Failed",
-		     "Hot Code Failure",JOptionPane.WARNING_MESSAGE);
-	       hotswap_fail = cur_process;
-	     }
-	    break;
-	 default:
-	    break;
+         case PROCESS_ADD :
+            if (cur_process == null && launch_state == LaunchState.STARTING &&
+        	   (elc == null || elc == launch_config)) {
+               setProcess(evt.getProcess());
+               last_stopped = null;
+               BddtFactory.getFactory().getConsoleControl().clearConsole(cur_process);
+               BddtFactory.getFactory().getHistoryControl().clearHistory(cur_process);
+               if (perf_data != null) perf_data.clear();
+             }
+            break;
+         case PROCESS_REMOVE :
+            if (cur_process == evt.getProcess()) {
+               BoardLog.logD("BDDT","TERMINATE PROCESS " + cur_process);
+               setLaunchState(LaunchState.TERMINATED);
+               thread_states.clear();
+               setProcess(null);
+               last_stopped = null;
+             }
+            else if (cur_process == null && launch_state == LaunchState.STARTING &&
+        		(elc == null || elc == launch_config)) {
+               setLaunchState(LaunchState.TERMINATED);
+               thread_states.clear();
+               last_stopped = null;
+             }
+            else if (cur_process != null) {
+               BoardLog.logE("BDDT","Spurrious process remove event " + 
+                     evt.getProcess().getName() +
+                     " " + cur_process + " " + evt.getProcess() + " " + launch_state + " " +
+                     evt.getProcess().getId());
+               BoardLog.logD("BDDT","Current process " + 
+                     cur_process.getId() + " " +
+                     cur_process.getName());
+             }
+            break;
+         case HOTCODE_FAILURE :
+            if (hotswap_fail != cur_process) {
+               JOptionPane.showMessageDialog(BddtLaunchControl.this,
+        	     "Hot Code Swapping Failed",
+        	     "Hot Code Failure",JOptionPane.WARNING_MESSAGE);
+               hotswap_fail = cur_process;
+             }
+            break;
+         default:
+            break;
        }
     }
 
