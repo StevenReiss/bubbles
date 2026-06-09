@@ -465,15 +465,24 @@ private static class ImportDoer implements BfixRunnableFix {
    @Override public Boolean call() {
       BumpClient bc = BumpClient.getBump();
       List<BumpProblem> probs = bc.getProblems(for_document.getFile());
-      if (!checkProblemPresent(for_problem,probs)) return false;
-      if (for_corrector.getStartTime() != initial_time) return false;
+      if (!checkProblemPresent(for_problem,probs)) {
+         BoardLog.logD("BFIX","Import problem went away");
+         return false;
+       }
+      if (for_corrector.getStartTime() != initial_time) {
+         BoardLog.logD("BFIX","Change since start time");
+         return false;
+       }
       synchronized (imports_added) {
          Set<String> impset = imports_added.get(for_corrector);
          if (impset == null) {
             impset = new HashSet<String>();
             imports_added.put(for_corrector,impset);
           }
-         if (!impset.add(import_type)) return false;
+         if (!impset.add(import_type)) {
+            BoardLog.logD("BFIX","Import already in import set: " + import_type);
+            return false;
+          }
        }
    
       BoardMetrics.noteCommand("BFIX","AddImport");
@@ -481,6 +490,9 @@ private static class ImportDoer implements BfixRunnableFix {
             for_document.getFile(),null,0,0,import_type);
       if (edits != null) {
          BaleFactory.getFactory().applyEdits(for_document.getFile(),edits);
+       }
+      else {
+         BoardLog.logD("BFIX","No edits to add import");
        }
       BoardMetrics.noteCommand("BFIX","DoneAddImport");
       return true;

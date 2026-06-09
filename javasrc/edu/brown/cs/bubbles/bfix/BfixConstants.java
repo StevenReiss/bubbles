@@ -145,10 +145,10 @@ interface BfixRunnableFix extends Callable<Boolean>, Runnable {
    default void run() {
       // only called when result isn't needed
       try {
-	 call();
+         call();
        }
       catch (Exception e) {
-	 BoardLog.logE("BFIX","Problem with fixer",e);
+         BoardLog.logE("BFIX","Problem with fixer",e);
        }
     }
 
