@@ -86,7 +86,8 @@ static boolean upload(String data,String user,String rid,SecretKey key)
       bu.processUpload(data,user,rid,key);
     }
    catch (IOException e) {
-      IvyLog.logE("BVCR: Upload failed",e);
+      String url = getRepoUrl() + "savebvcr.php";
+      IvyLog.logE("BVCR: Upload failed for " + url,e);
       return false;
     }
 
@@ -162,17 +163,17 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
       is = new ByteArrayInputStream(bdata);
       is1 = is;
       if (key != null) {
-         try {
-            Cipher c = Cipher.getInstance(key.getAlgorithm());
-            AlgorithmParameterSpec ps = new PBEParameterSpec(KEY_SALT,KEY_COUNT);
-            c.init(Cipher.ENCRYPT_MODE,key,ps);
-            is1 = new CipherInputStream(is,c);
-          }
-         catch (Exception e) {
-            IvyLog.logE("BVCR","Unable to create cipher for UploadUPLO",e);
-          }
+	 try {
+	    Cipher c = Cipher.getInstance(key.getAlgorithm());
+	    AlgorithmParameterSpec ps = new PBEParameterSpec(KEY_SALT,KEY_COUNT);
+	    c.init(Cipher.ENCRYPT_MODE,key,ps);
+	    is1 = new CipherInputStream(is,c);
+	  }
+	 catch (Exception e) {
+	    IvyLog.logE("BVCR","Unable to create cipher for UploadUPLO",e);
+	  }
        }
-      
+
       setParameter("U",uid);
       setParameter("R",rid);
       setParameter("file","/tmp/" + uid + "_" + rid + ".bvcr",is1);
@@ -181,14 +182,14 @@ private void processUpload(String data,String uid,String rid,SecretKey key) thro
       if (is != null) is.close();
       if (is1 != null) is1.close();
     }
-   
+
    InputStream ins = post();
 
    try (BufferedReader in = new BufferedReader(new InputStreamReader(ins))) {
       for ( ; ; ) {
-         String ln = in.readLine();
-         if (ln == null) break;
-         IvyLog.logD("BVCR","UPLOAD RESULT: " + ln);
+	 String ln = in.readLine();
+	 if (ln == null) break;
+	 IvyLog.logD("BVCR","UPLOAD RESULT: " + ln);
        }
       IvyLog.logD("BVCR","UPLOAD COMPLETE");
     }
@@ -214,8 +215,8 @@ private InputStream processDownload(String uid,String rid,long dlm) throws IOExc
    setParameter("R",rid);
    setParameter("D",Long.toString(dlm));
 
-   IvyLog.logD("BVCR","Download URL = " + url + "?U=" + uid + 
-         "&R=" + rid + "&D=" + Long.toString(dlm));
+   IvyLog.logD("BVCR","Download URL = " + url + "?U=" + uid +
+	 "&R=" + rid + "&D=" + Long.toString(dlm));
 
    InputStream ins = post();
 
@@ -270,7 +271,7 @@ private void setupConnection(String url) throws IOException
    url_connection.setReadTimeout(time_out);
    url_connection.setDoOutput(true);
    url_connection.setRequestProperty("Content-Type",
-         "multipart/form-data; boundary=" + boundary_string);
+	 "multipart/form-data; boundary=" + boundary_string);
 }
 
 
@@ -412,3 +413,68 @@ private InputStream post() throws IOException
 
 
 /* end of BvcrUpload.java */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
