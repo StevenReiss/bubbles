@@ -105,7 +105,10 @@ BudaBubble createExecBubble(BumpThread bt)
    BoardLog.logD("BDDT","Start to create execution bubble for " + bt.getId());
 
    BumpThreadStack stk = bt.getStack();
-   if (stk == null) return null;
+   if (stk == null) {
+      BoardLog.logE("BDDT","Stack missing for thread " + bt.getId());
+      return null;
+    }
 
    BumpStackFrame usefrm = stk.getFrame(0);
    if (usefrm == null) {

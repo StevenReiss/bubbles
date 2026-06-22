@@ -314,8 +314,8 @@ public String findTestClasses(String project,String classname,String methodname,
          // check for testing in the class itself
          if (nm.equals(classname) && Modifier.isPublic(loc.getModifiers())) {
             // check if the class has a public default constructor so it can be used
-            List<BumpLocation> cntrs = BumpClient.getBump().findMethods(project,classname,
-                  false,true,true,false);
+            List<BumpLocation> cntrs = BumpClient.getBump().findMethods(project,
+                  classname,false,true,true,false);
             boolean cok = false;
             if (cntrs.size() == 0) cok = true;
             for (BumpLocation cloc : cntrs) {
@@ -347,7 +347,8 @@ public String findTestClasses(String project,String classname,String methodname,
       locs = bc.findTypes(project,packagename + "*Test");
       if (locs != null) {
          for (BumpLocation loc : locs) {
-            classes.add(loc.getSymbolName());
+            tcnm = loc.getSymbolName();
+            classes.add(tcnm);
           }
        }
     }
