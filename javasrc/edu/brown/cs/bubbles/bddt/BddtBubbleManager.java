@@ -635,8 +635,8 @@ BudaBubble createPerformanceBubble()
    BudaBubble bb = launch_control.createPerfBubble();
 
    Rectangle r = launch_control.getBounds();
-   int x = r.x + BDDT_HISTORY_WIDTH + 20;
-   int y = r.y + r.height + console_height + 20 + BDDT_STACK_HEIGHT + 20 + 20;
+   int x = r.x + BDDT_THREADS_WIDTH + 20;
+   int y = r.y + r.height + console_height + 20 + BDDT_THREADS_HEIGHT + 20 + 20;
 
    positionBubble(bb,x,y,bddt_properties.getBoolean(BDDT_PROPERTY_FLOAT_PERFORMANCE));
 
@@ -705,7 +705,7 @@ BudaBubble createInteractionBubble()
    BudaBubble bb = new BddtInteractionBubble(launch_control);
 
    Rectangle r = launch_control.getBounds();
-   int x = r.x + BDDT_STACK_WIDTH + 20;
+   int x = r.x + BDDT_THREADS_WIDTH + 20;
    int y = r.y + r.height + console_height + 20 + 20;
 
    positionBubble(bb,x,y,bddt_properties.getBoolean(BDDT_PROPERTY_FLOAT_EVALUATION));
