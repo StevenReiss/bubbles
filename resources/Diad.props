@@ -12,6 +12,8 @@
 <entry key="Diad.seede.trace">false</entry>
 <entry key="Diad.fait.debug">false</entry>
 <entry key="Diad.fait.debug">false</entry>
+<entry key="Diad.max.seede.steps">1000000</entry>
+<entry key="Diad.max.seede.depth">100</entry>
 </properties>
 
 
