@@ -26,6 +26,7 @@ package edu.brown.cs.bubbles.batt;
 
 
 import edu.brown.cs.ivy.file.IvyFile;
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.mint.MintArguments;
 import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
@@ -111,7 +112,7 @@ void server()
        }
     }
 
-   System.err.println("BATT: Exiting due to no response or exit request");
+   IvyLog.logD("BATTM","Exiting due to no response or exit request");
 
    for_batt.stopAllTests();
 }
@@ -148,7 +149,7 @@ private synchronized void setFileState(String file,FileState state)
    if (fs == null) fs = FileState.STABLE;
    if (fs == state) return;
 
-   System.err.println("BATT: Set file state " + file + " " + state);
+   IvyLog.logD("BATTM","Set file state " + file + " " + state);
 
    Set<String> rslt = null;
    for (BattProject bp : project_set.values()) {
@@ -165,7 +166,7 @@ private synchronized void setFileState(String file,FileState state)
       else if (state == FileState.STABLE) {
 	 if (fs == FileState.CHANGED || fs == FileState.EDITED) {
 	    for (String s : rslt) {
-	       System.err.println("BATT: Changed class: " + s);
+	       IvyLog.logD("BATTM","Changed class: " + s);
 	       changed_classes.put(s,state);
 	     }
 	  }
@@ -230,7 +231,7 @@ void loadProjects()
    Element r = rply.waitForXml();
 
    if (!IvyXml.isElement(r,"RESULT")) {
-      System.err.println("BATT: Problem getting project information: " +
+      IvyLog.logD("BATTM","Problem getting project information: " +
 			    IvyXml.convertXmlToString(r));
       System.exit(2);
     }
@@ -243,7 +244,7 @@ void loadProjects()
       mint_control.send(pmsg,prply,MINT_MSG_FIRST_NON_NULL);
       Element pr = prply.waitForXml();
       if (!IvyXml.isElement(pr,"RESULT")) {
-	 System.err.println("BATT: Problem opening project " + pnm + ": " +
+	 IvyLog.logD("BATTM","Problem opening project " + pnm + ": " +
 			       IvyXml.convertXmlToString(pr));
 	 continue;
        }
@@ -265,7 +266,7 @@ void reloadProjects()
       mint_control.send(pmsg,prply,MINT_MSG_FIRST_NON_NULL);
       Element pr = prply.waitForXml();
       if (!IvyXml.isElement(pr,"RESULT")) {
-	 System.err.println("BATT: Problem opening project " + pnm + ": " +
+	 IvyLog.logD("BATTM","Problem opening project " + pnm + ": " +
 			       IvyXml.convertXmlToString(pr));
 	 continue;							
        }
@@ -292,7 +293,7 @@ void loadConfigurations()
 
    Element r = rply.waitForXml();
    if (!IvyXml.isElement(r,"RESULT")) {
-      System.err.println("BATT: Problem getting launch information: " +
+      IvyLog.logD("BATTM","Problem getting launch information: " +
 	    IvyXml.convertXmlToString(r));
       System.exit(2);
     }
@@ -334,7 +335,7 @@ void sendMessage(String typ,String cnts)
    if (cnts != null) buf.append(cnts);
    buf.append("</BATT>");
 
-   System.err.println("BATT: Sending message: " + buf);
+   IvyLog.logD("BATTM","Sending message: " + buf);
 
    mint_control.send(buf.toString());
 }
@@ -348,7 +349,7 @@ void sendMessageAndWait(String typ,String cnts)
    if (cnts != null) buf.append(cnts);
    buf.append("</BATT>");
 
-   System.err.println("BATT: Sending message: " + buf);
+   IvyLog.logD("BATTM","Sending message: " + buf);
 
    MintDefaultReply rply = new MintDefaultReply();
 
@@ -407,7 +408,7 @@ private final class EclipseHandler implements MintHandler {
 	    String proj = IvyXml.getAttrString(e,"PROJECT");
 	    BattProject bp = project_set.get(proj);
 	    if (bp == null) {
-	      System.err.println("BATT: Can't find project " + proj);
+	      IvyLog.logD("BATTM","Can't find project " + proj);
 	     }
 	    if (bp != null) {
 	       Map<File,FileState> fsmap = new HashMap<>();
@@ -439,7 +440,7 @@ private final class EclipseHandler implements MintHandler {
 	       String rtyp = IvyXml.getAttrString(re,"TYPE");
 	       if (rtyp != null && rtyp.equals("FILE")) {
 		  String fp = IvyXml.getAttrString(re,"LOCATION");
-		  System.err.println("BATT: Note " + fp + " CHANGED");
+		  IvyLog.logD("BATTM","Note " + fp + " CHANGED");
 		  setFileState(fp,FileState.CHANGED);
 		}
 	     }
@@ -456,7 +457,7 @@ private final class EclipseHandler implements MintHandler {
 	  }
        }
       catch (Throwable t) {
-	 System.err.println("BATT: Problem processing Eclipse command: " + t);
+	 IvyLog.logD("BATTM","Problem processing Eclipse command: " + t);
 	 t.printStackTrace();
        }
     }
@@ -488,7 +489,7 @@ private final class CommandHandler implements MintHandler {
       Element e = msg.getXml();
       String rply = null;
 
-      System.err.println("BATT: RECEIVED COMMAND " + cmd + ": " + msg.getText());
+      IvyLog.logD("BATTM","RECEIVED COMMAND " + cmd + ": " + msg.getText());
 
       try {
 	 if (cmd == null) return;
@@ -574,7 +575,7 @@ private final class CommandHandler implements MintHandler {
 	  }
        }
       catch (Throwable t) {
-	 System.err.println("BATT: Problem processing BATT command: " + t);
+	 IvyLog.logD("BATTM","Problem processing BATT command: " + t);
 	 t.printStackTrace();
        }
 

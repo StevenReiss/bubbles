@@ -95,7 +95,7 @@ void loadProject(Element xml)
 	    clsl = new ArrayList<ProjClass>();
 	    file_classes.put(fnm,clsl);
 	  }
-	 // System.err.println("BATT: Add class " + pc.getName() + " TO " + fnm);
+	 // IvyLog.logD("Add class " + pc.getName() + " TO " + fnm);
 	 clsl.add(pc);
        }
     }

@@ -32,6 +32,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
@@ -68,7 +69,9 @@ public static void premain(String args,Instrumentation inst)
 
 public static void agentmain(String args,Instrumentation inst)
 {
-   if (the_agent == null) the_agent = new BattAgent(args,inst);
+   if (the_agent == null) {
+      the_agent = new BattAgent(args,inst);
+    }
 }
 
 
@@ -87,6 +90,7 @@ private IndexTable		index_table;
 private Map<Thread,ThreadData>	thread_stack;
 private OutputStream		result_stream;
 private boolean                 simple_stats;
+private PrintStream             error_str;
 
 private static BattAgent	the_agent;
 
@@ -107,22 +111,23 @@ private BattAgent(String args,Instrumentation inst)
    result_stream = null;
    thread_stack = new HashMap<>();
    simple_stats = true;
-
-// System.err.println("BATTAGENT: START " + args + " " + inst);
+   error_str = System.err;
 
    scanArgs(args);
-
+   
+   // error_str.println("BATTAGENT: START " + args + " " + inst);
+   
    if (class_inst != null) {
       try {
 	 our_instrumenter = new BattInstrument(this);
 	 class_inst.addTransformer(our_instrumenter,true);
        }
       catch (Throwable t) {
-	 System.err.println("BATTAGENT: Problem adding instrumenter: " + t);
+	 error_str.println("BATTAGENT: Problem adding instrumenter: " + t);
        }
     }
    else {
-      System.err.println("BATTAGENT: No Instrumenter");
+      error_str.println("BATTAGENT: No Instrumenter");
    }
 }
 
@@ -158,8 +163,17 @@ private void scanArgs(String args)
       else if (arg.equals("SIMPLE")) {
          simple_stats = true;
        }
+      else if (arg.equals("LOG")) {
+         try {
+            FileOutputStream fos = new FileOutputStream(val,true);
+            error_str = new PrintStream(fos,true);
+          }
+         catch (IOException e) { 
+            error_str.println("Problem opening log file: " + e);
+          }
+       }
       else {
-	 System.err.println("BATTAGENT: Illegal argument: " + arg);
+	 error_str.println("BATTAGENT: Illegal argument: " + arg);
        }
     }
 
@@ -179,11 +193,10 @@ private void scanArgs(String args)
 	  }
        }
       catch (IOException e) {
-	 System.err.println("BATT: Unable to open output file " + cntf + ": " + e);
+	 error_str.println("BATT: Unable to open output file " + cntf + ": " + e);
        }
     }
 }
-
 
 
 
@@ -206,9 +219,6 @@ private static String fixHost(String h)
 }
 
 
-
-
-
 public static void doneLoad()
 {
    if (the_agent == null) return;
@@ -227,13 +237,13 @@ private void handleProblemLoads()
          Class<?> c1 = Class.forName(nm);
          ClassDefinition cd = new ClassDefinition(c1,data);
          class_inst.redefineClasses(cd);
-         System.err.println("BATTAGENT: RELOAD " + nm);
+         error_str.println("BATTAGENT: RELOAD " + nm);
        }
       catch (ClassNotFoundException e) {
-         System.err.println("BATTAGENT: Class to reload not found: " + nm);
+         error_str.println("BATTAGENT: Class to reload not found: " + nm);
        }
       catch (UnmodifiableClassException e) {
-         System.err.println("BATTAGENT: Problem reloading class: " + nm + ": " + e);
+         error_str.println("BATTAGENT: Problem reloading class: " + nm + ": " + e);
        }
     }
       
@@ -311,7 +321,7 @@ private void finishTest(String test)
 {
    if (active_test == null || result_stream == null) return;
    
-   System.err.println("BATTAGENT: Finish test " + test);
+   error_str.println("BATTAGENT: Finish test " + test);
 
    XMLOutputFactory xof = XMLOutputFactory.newInstance();
    XMLStreamWriter xw = null;
@@ -329,13 +339,12 @@ private void finishTest(String test)
 	 result_stream.flush();
        }
       catch (Exception e) {
-	 System.err.println("BATT: Problem with output file for test: " + e);
+	 error_str.println("BATT: Problem with output file for test: " + e);
        }
     }
 
    active_test = null;
 }
-
 
 
 private void finishRun()
@@ -349,12 +358,10 @@ private void finishRun()
 }
 
 
-
-
 private void enterMethod(int id)
 {
    if (active_test != null) {
-//      System.err.println("BATTAGENT: ENTER METHOD " + id);
+//      error_str.println("BATTAGENT: ENTER METHOD " + id);
       RtMethod rm = index_table.getMethod(id);
       rm.markEntry();
       if (!simple_stats) {
@@ -367,11 +374,10 @@ private void enterMethod(int id)
 }
 
 
-
 private void exitMethod(int id)
 {
    if (active_test != null) {
-//      System.err.println("BATTAGENT: ENTER METHOD " + id);
+//      error_str.println("BATTAGENT: ENTER METHOD " + id);
       if (!simple_stats) {
          ThreadData td = getThreadData();
          td.exitMethod();
@@ -383,7 +389,7 @@ private void exitMethod(int id)
 private void enterBlock(int id)
 {
    if (active_test != null) {
-//      System.err.println("BATTAGENT: ENTER BLOCK " + id);
+//      error_str.println("BATTAGENT: ENTER BLOCK " + id);
       RtBlock rb = index_table.getBlock(id);
       rb.markEntry();
       if (!simple_stats) {
@@ -395,12 +401,17 @@ private void enterBlock(int id)
 }
 
 
-
 private void userClasses(String [] clsset)
 {
    if (our_instrumenter != null) our_instrumenter.setClasses(clsset);
 }
 
+
+
+void logD(String msg)
+{
+   error_str.println(msg);
+}
 
 
 /********************************************************************************/

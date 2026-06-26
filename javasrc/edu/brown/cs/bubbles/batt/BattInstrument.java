@@ -115,8 +115,8 @@ BattInstrument(BattAgent agt)
 void setClasses(String [] clsset)
 {
    if (do_debug) {
-      System.err.println("BATTAGENT: Set user classes ");
-      for (String s : clsset) System.err.println("\tADD: " + s);
+      for_agent.logD("BATTAGENT: Set user classes "); 
+      for (String s : clsset) for_agent.logD("\tADD: " + s);
     }
    if (user_classes == null) user_classes = new TreeSet<String>();
    // this is sorted to ensure a class is loaded before its inner classes
@@ -125,7 +125,7 @@ void setClasses(String [] clsset)
       s = s.replace('.','/');
       if (isBattClass(s) || isSystemClass(s)) continue;
       user_classes.add(s);
-//    System.err.println("BATTAGENT: ADD CLASS " + s);
+//    for_agent.logD("BATTAGENT: ADD CLASS " + s);
     }
 
    if (!pre_load) return;
@@ -134,21 +134,21 @@ void setClasses(String [] clsset)
       String s2 = s1.replace("$",".");
       Class<?> cc = null;
       try {
-//	 System.err.println("BATTAGENT: TRY " + s1);
+//	 for_agent.logD("BATTAGENT: TRY " + s1);
 	 cc = Class.forName(s1);
        }
       catch (Throwable t) {
-	 System.err.println("BATTAGENT: NOT FOUND: " + s1 + " " + t);
+	 for_agent.logD("BATTAGENT: NOT FOUND: " + s1 + " " + t);
 	 try {
 	    cc = Class.forName(s2);
-	    System.err.println("BATTAGENT: FOUND: " + s2);
+	    for_agent.logD("BATTAGENT: FOUND: " + s2);
 	  }
 	 catch (Throwable xt) { 
-	    System.err.println("BATTAGENT: Problem loading " + s + " " + xt);
+	    for_agent.logD("BATTAGENT: Problem loading " + s + " " + xt);
 	 }
        }
       if (cc == null) {
-	 System.err.println("BATTAGENT: Class " + s + " not found");
+	 for_agent.logD("BATTAGENT: Class " + s + " not found");
       }
     }
 }
@@ -177,7 +177,7 @@ Map<String,byte []> getProblemTransforms()
 			    ProtectionDomain dom,byte [] buf)
 {
    if (do_debug) {
-      System.err.println("BATTAGENT: CHECK " + name + " " + Thread.currentThread().getName() + " " + cls);
+      for_agent.logD("BATTAGENT: CHECK " + name + " " + Thread.currentThread().getName() + " " + cls);
       if (name.contains("SesameExecRunner$MasterThread")) {
 	 Thread.dumpStack();
 	 // TODO: Determine why this trys to load the class from within the class
@@ -186,14 +186,14 @@ Map<String,byte []> getProblemTransforms()
     }
 
    if (cls != null && Modifier.isAbstract(cls.getModifiers())) {
-      System.err.println("BATTAGENT: SKIP ABSTRACT CLASS " + name);
+      for_agent.logD("BATTAGENT: SKIP ABSTRACT CLASS " + name);
       return null;
    }
 
    if (user_classes == null) {
       if (isBattClass(name) || isSystemClass(name)) {
 	 if (do_debug) {
-	    System.err.println("BATTAGENT: SKIP " + isBattClass(name) + " " + isSystemClass(name));
+	    for_agent.logD("BATTAGENT: SKIP " + isBattClass(name) + " " + isSystemClass(name));
 	  }
 	 return null;
        }
@@ -204,7 +204,7 @@ Map<String,byte []> getProblemTransforms()
       if (idx > 0) name1 = name.substring(0,idx);
       if (!user_classes.contains(name) && !user_classes.contains(name1)) {
 	 if (isBattClass(name) || isSystemClass(name)) return null;
-	 System.err.println("BATTAGENT: Skip user class " + name);
+	 for_agent.logD("BATTAGENT: Skip user class " + name);
 	 return null;
       }
    }
@@ -214,7 +214,7 @@ Map<String,byte []> getProblemTransforms()
       return rslt;
     }
    catch (Throwable t) {
-      System.err.println("BATTAGENT: Instrumentation issue: " + t);
+      for_agent.logD("BATTAGENT: Instrumentation issue: " + t);
     }
 
    return null;
@@ -224,7 +224,7 @@ Map<String,byte []> getProblemTransforms()
 
 private byte [] instrument(String name,byte [] buf)
 {
-   System.err.println("BATTAGENT: INSTRUMENT " + name + " " + buf.length);
+   for_agent.logD("BATTAGENT: INSTRUMENT " + name + " " + buf.length);
 
    byte [] rsltcode;
    try {
@@ -240,12 +240,12 @@ private byte [] instrument(String name,byte [] buf)
        }
     }
    catch (Throwable t) {
-      System.err.println("BATT: Problem doing instrumentation: " + t);
+      for_agent.logD("BATT: Problem doing instrumentation: " + t);
       t.printStackTrace();
       return null;
     }
 
-   System.err.println("BATTAGENT: INSTRUMENT RETURN " + name + " " + rsltcode.length);
+   for_agent.logD("BATTAGENT: INSTRUMENT RETURN " + name + " " + rsltcode.length);
    
    if (write_output) {
       File f = new File("/Users/spr/test");
@@ -259,7 +259,7 @@ private byte [] instrument(String name,byte [] buf)
 	 ots.write(rsltcode); 
       }
       catch (IOException e) {
-	 System.err.println("BATTAGENT: Problem writing class file: " + e);
+	 for_agent.logD("BATTAGENT: Problem writing class file: " + e);
       }
    }
    
@@ -327,7 +327,7 @@ private class BattTransformer extends ClassVisitor {
       if ((acc & Opcodes.ACC_STATIC) != 0) {
          if (match_name.equals(desc)) {
             problem_field = true;
-            System.err.println("BATTAGENT: Problem field found for " + class_name);
+            for_agent.logD("BATTAGENT: Problem field found for " + class_name);
           }
        }
       
@@ -540,7 +540,7 @@ private class CoverageSetup extends MethodVisitor {
 /*										*/
 /********************************************************************************/
 
-private static class Tracer extends MethodVisitor {
+private class Tracer extends MethodVisitor {
 
    private String method_name;
    private Textifier output_printer;
@@ -552,8 +552,8 @@ private static class Tracer extends MethodVisitor {
     }
 
    @Override public void visitEnd() {
-      System.err.println("CODE FOR " + method_name);
-      System.err.println(output_printer.getText());
+      for_agent.logD("CODE FOR " + method_name);
+      for_agent.logD(String.valueOf(output_printer.getText()));
     }
 
 }	// end of inner class Tracer

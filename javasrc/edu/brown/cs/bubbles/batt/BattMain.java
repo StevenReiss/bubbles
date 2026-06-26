@@ -27,6 +27,7 @@ package edu.brown.cs.bubbles.batt;
 import edu.brown.cs.ivy.exec.IvyExec;
 import edu.brown.cs.ivy.exec.IvyExecQuery;
 import edu.brown.cs.ivy.exec.IvySetup;
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlReaderThread;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
@@ -97,10 +98,11 @@ private Set<String>	error_classes;
 private IvyExec 	current_test;
 private long		last_report;
 private Object		message_lock;
+private File            log_file;
 
 
 
-enum	ProcessMode {
+enum ProcessMode {
    SERVER,		// act as a server
    LIST,		// just list tests
    RUN			// just run tests
@@ -116,6 +118,8 @@ enum	ProcessMode {
 
 private BattMain(String [] args)
 {
+   IvyLog.setupLogging("BATTM",false);
+   
    mint_handle = null;
    process_mode = ProcessMode.SERVER;
    start_mode = TestMode.ON_DEMAND;
@@ -191,7 +195,7 @@ private void scanArgs(String [] args)
 	    process_mode = ProcessMode.SERVER;
 	    start_mode = TestMode.CONTINUOUS;
 	  }
-	 else if (args[i].startsWith("-L")) {                           // -List
+	 else if (args[i].startsWith("-E")) {                           // -Enumerate
 	    process_mode = ProcessMode.LIST;
 	  }
 	 else if (args[i].startsWith("-R")) {                           // -Run
@@ -200,6 +204,16 @@ private void scanArgs(String [] args)
 	 else if (args[i].startsWith("-S")) {                           // -Server
 	    process_mode = ProcessMode.SERVER;
 	  }
+         else if (args[i].startsWith("-D")) {                           // -Debug
+            IvyLog.setLogLevel(IvyLog.LogLevel.DEBUG);
+          }
+         else if (args[i].startsWith("-O")) {                           // -Output
+            IvyLog.useStdErr(true);
+          }
+         else if (args[i].startsWith("-L") && i+1 < args.length) {      // -L logfile
+            log_file = new File(args[++i]);
+            IvyLog.setLogFile(log_file);
+          }
 	 else badArgs();
        }
       else badArgs();
@@ -212,7 +226,8 @@ private void scanArgs(String [] args)
 
 private void badArgs()
 {
-   System.err.println("BATTM: battmain -m <mint> [-List] [-Run]");
+   IvyLog.logE("BATTM","battmain -m <mint> [-Enumerate] [-Run]");
+   IvyLog.logD("BATTM","battmain -m <mint> [-Enumerate] [-Run]");
    System.exit(1);
 }
 
@@ -329,14 +344,18 @@ void doTests()
 
 synchronized void addErrors(Set<String> clss)
 {
-   for (String s : clss) System.err.println("BATTM: Note error in " + s);
+   for (String s : clss) {
+      IvyLog.logD("BATTM","Note error in " + s);
+    }
    error_classes.addAll(clss);
 }
 
 
 synchronized void removeErrors(Set<String> clss)
 {
-   for (String s : clss) System.err.println("BATTM: Remove error in " + s);
+   for (String s : clss) {
+      IvyLog.logD("BATTM","Remove error in " + s);
+    }
 
    error_classes.removeAll(clss);
    synchronized (run_tests) {
@@ -460,7 +479,8 @@ void processTests() throws InterruptedException
       rpt = false;
       boolean listonly = false;
       synchronized (run_tests) {
-	 System.err.println("BATTM: Process tests " + run_tests.size() + " " + run_all + " " + find_new);
+	 IvyLog.logD("BATTM","Process tests " + run_tests.size() + " " +
+               run_all + " " + find_new);
 	 if (run_tests.size() == 0 && server_thread == null && !find_new) return;
 	 int ct = 0;
 	 while (!canRunAny(run_tests)) {
@@ -524,11 +544,11 @@ private boolean canRunAny(Collection<BattTestCase> tests)
       for (String cnm : bp.getClassNames()) {
 	 if (error_classes.contains(cnm)) {
 	    err = true;
-	    System.err.println("BATTM: HOLD for errors in " + cnm);
+	    IvyLog.logD("BATTM","HOLD for errors in " + cnm);
 	  }
 	 if (testclass.contains(cnm)) {
 	    use = true;
-	    System.err.println("BATTM: USE tests for " + cnm);
+	    IvyLog.logD("BATTM","USE tests for " + cnm);
 	  }
        }
       if (use && !err) return true;
@@ -570,43 +590,19 @@ private void processRun(boolean listonly,Set<String> testclss,Set<BattTestCase> 
 
 private void processRun(boolean listonly,Set<String> testclss)
 {
-   if (testclss !=  null)
-      System.err.println("BATTM: Run all tests in " + testclss.size() + " classes");
-   else
-      System.err.println("BATTM: Run all tests in all classes");
+   if (testclss !=  null) {
+      IvyLog.logD("BATTM","Run all tests in " + testclss.size() + " classes");
+    }
+   else {
+      IvyLog.logD("BATTM","Run all tests in all classes");
+    }
 
    if (!listonly) {
-      synchronized (run_tests) {
-	 for (BattTestCase btc : test_cases.values()) {
-	    btc.setStatus(TestStatus.UNKNOWN);
-	    btc.setState(TestState.RUNNING);
-	    btc.handleTestCounts(null);
-	 }
-	 run_tests.clear();
-	 run_all = false;
-      }
+      initializeTests();
    }
 
    for (BattProject bp : batt_monitor.getProjects()) {
-      boolean err = false;
-      boolean use = false;
-      Set<String> run = new HashSet<>();
-      for (String s : bp.getClassNames()) {
-	 if (error_classes.contains(s)) err = true;
-	 if (testclss == null || testclss.contains(s)) use = true;
-	 run.add(s);
-       }
-      if (err) {
-	 synchronized (this) {
-	    for (BattTestCase btc : test_cases.values()) {
-	       if (run.contains(btc.getClassName())) {
-		  btc.setStatus(TestStatus.UNKNOWN);
-		  btc.setState(TestState.CANT_RUN);
-		}
-	     }
-	  }
-	 continue;
-       }
+      boolean use = initializeTests(bp,testclss);
       if (!use) continue;
 
       String fnm = "BATT_" + bp.getName() + ".xml";
@@ -623,20 +619,16 @@ private void processRun(boolean listonly,Set<String> testclss)
 	 cntfnm = nm;
        }
 
-      StringBuffer buf = new StringBuffer();
-      buf.append(junit_jar);
-      for (String p : bp.getClassPath()) {
-	 buf.append(File.pathSeparator);
-	 buf.append(p);
-       }
-      buf.append(File.pathSeparator);
-      buf.append(bubbles_junitjar);
+      String clspath = setupClassPath(bp);
 
-      List<String> args = new ArrayList<String>();
+      List<String> args = new ArrayList<>();
       args.add(IvyExecQuery.getJavaPath());
       if (!listonly && bubbles_agentjar != null) {
 	 String agent = "-javaagent:" + bubbles_agentjar;
 	 agent += "=COUNTS=" + cntfnm;
+         if (log_file != null) {
+            agent += ";LOG=" + log_file;
+          }
 	 // agent += ";FULL"; or agent += ";SIMPLE";
 	 args.add(agent);
        }
@@ -645,16 +637,29 @@ private void processRun(boolean listonly,Set<String> testclss)
        }
 
       args.add("-cp");
-      args.add(buf.toString());
+      args.add(clspath);
 //    args.add("-verbose");
+      
       args.add("edu.brown.cs.bubbles.batt.BattJUnit");
+      
       if (testclss == null) args.add("-all");
       if (listonly) args.add("-list");
       if (server_socket != null) args.add("-socket");
       else args.add("-output");
       args.add(fnm);
+      
+      if (log_file != null) {
+         args.add("-L");
+         args.add(log_file.getPath());
+       }
+      if (IvyLog.useStdErr()) {
+         args.add("-O");
+       }
+      if (IvyLog.getLogLevel() == IvyLog.LogLevel.DEBUG) {
+         args.add("-D");
+       }
 
-      run = new HashSet<String>();
+      Set<String> run = new HashSet<>();
       for (String s : bp.getClassNames()) {
 	 if (testclss != null && testclss.contains(s)) {
 	    run.add(s);
@@ -693,12 +698,13 @@ private void processRun(boolean listonly,Set<String> testclss)
        }
 
       reportTestStatus(false);
-
-      System.err.print("BATTM: RUN");
+      
+      StringBuffer argbuf = new StringBuffer();
       for (String s : args) {
-	 System.err.print(" " + s);
+         argbuf.append(" ");
+         argbuf.append(s);
        }
-      System.err.println();
+      IvyLog.logD("BATTM","RUN " + argbuf.toString());
 
       try {
 	 String [] argv = new String[args.size()];
@@ -707,15 +713,72 @@ private void processRun(boolean listonly,Set<String> testclss)
 	 current_test = ex;
 	 // should handle input and output here
 	 int sts = ex.waitFor();
-	 System.err.println("BATTM: Test status " + sts);
+	 IvyLog.logD("BATTM","Test status " + sts);
 	 current_test = null;
        }
       catch (IOException e) {
-	 System.err.println("BATTM: Problem running junit java: " + e);
+	 IvyLog.logD("BATTM","Problem running junit java: " + e);
        }
     }
 
    reportTestStatus(false);
+}
+
+
+
+private boolean initializeTests(BattProject bp,Set<String> testclss)
+{
+   boolean err = false;
+   boolean use = false;
+   
+   Set<String> run = new HashSet<>();
+   for (String s : bp.getClassNames()) {
+      if (error_classes.contains(s)) err = true;
+      if (testclss == null || testclss.contains(s)) use = true;
+      run.add(s);
+    }
+   if (err) {
+      synchronized (this) {
+         for (BattTestCase btc : test_cases.values()) {
+            if (run.contains(btc.getClassName())) {
+               btc.setStatus(TestStatus.UNKNOWN);
+               btc.setState(TestState.CANT_RUN);
+             }
+          }
+       }
+      return false;
+    }
+   
+   return use;
+}
+
+
+private void initializeTests()
+{
+   synchronized (run_tests) {
+      for (BattTestCase btc : test_cases.values()) {
+         btc.setStatus(TestStatus.UNKNOWN);
+         btc.setState(TestState.RUNNING);
+         btc.handleTestCounts(null);
+       }
+      run_tests.clear();
+      run_all = false;
+    }
+}
+
+
+private String setupClassPath(BattProject bp)
+{
+   StringBuffer buf = new StringBuffer();
+   buf.append(junit_jar);
+   for (String p : bp.getClassPath()) {
+      buf.append(File.pathSeparator);
+      buf.append(p);
+    }
+   buf.append(File.pathSeparator);
+   buf.append(bubbles_junitjar);
+   
+   return buf.toString();
 }
 
 
@@ -725,7 +788,7 @@ private boolean runOneTest(BattTestCase testcase)
    String testclss = testcase.getClassName();
    if (testclss == null) return false;
 
-   System.err.println("BATTM: Start running test " + testcase.getName() +
+   IvyLog.logD("BATTM","Start running test " + testcase.getName() +
 	 " in " + testclss);
 
    for (BattProject bp : batt_monitor.getProjects()) {
@@ -774,6 +837,9 @@ private boolean runOneTest(BattTestCase testcase)
       if (bubbles_agentjar != null) {
 	 String agent = "-javaagent:" + bubbles_agentjar;
 	 agent += "=COUNTS=" + cntfnm;
+         if (log_file != null) {
+            agent += ";LOG=" + log_file;
+          }
 	 // agent += ";FULL"; or agent += ";SIMPLE";
 	 args.add(agent);
        }
@@ -784,7 +850,20 @@ private boolean runOneTest(BattTestCase testcase)
       args.add("-cp");
       args.add(buf.toString());
 //	args.add("-verbose");
+      
       args.add("edu.brown.cs.bubbles.batt.BattJUnit");
+      
+      if (log_file != null) {
+         args.add("-L");
+         args.add(log_file.getPath());
+       }
+      if (IvyLog.useStdErr()) {
+         args.add("-O");
+       }
+      if (IvyLog.getLogLevel() == IvyLog.LogLevel.DEBUG) {
+         args.add("-D");
+       }
+      
       if (server_socket != null) args.add("-socket");
       else args.add("-output");
       args.add(fnm);
@@ -812,11 +891,12 @@ private boolean runOneTest(BattTestCase testcase)
 
       reportTestStatus(false);
 
-      System.err.print("BATTM: RUN");
+      StringBuffer argbuf = new StringBuffer();
       for (String s : args) {
-	 System.err.print(" " + s);
+         argbuf.append(" ");
+         argbuf.append(s);
        }
-      System.err.println();
+      IvyLog.logD("BATTM","RUN " + argbuf.toString());
 
       try {
 	 String [] argv = new String[args.size()];
@@ -825,11 +905,11 @@ private boolean runOneTest(BattTestCase testcase)
 	 current_test = ex;
 	 // should handle input and output here
 	 int sts = ex.waitFor();
-	 System.err.println("BATTM: Test status " + sts);
+	 IvyLog.logD("BATTM","Test status " + sts);
 	 current_test = null;
        }
       catch (IOException e) {
-	 System.err.println("BATTM: Problem running junit java: " + e);
+	 IvyLog.logD("BATTM","Problem running junit java: " + e);
        }
     }
 
@@ -852,7 +932,7 @@ synchronized BattTestCase findTestCase(String nm)
    if (btc == null) {
       btc = new BattTestCase(nm);
       test_cases.put(nm,btc);
-      System.err.println("BATTM: TEST CASES " + test_cases.size() + " " + nm);
+      IvyLog.logD("BATTM","TEST CASES " + test_cases.size() + " " + nm);
     }
 
    return btc;
@@ -920,7 +1000,7 @@ void updateTestsForClasses(Map<String,FileState> chng)
    synchronized (this) {
       for (BattTestCase btc : test_cases.values()) {
 	 FileState fs = btc.usesClasses(chng);
-	 System.err.println("BATTM: TEST UPDATE: " + btc.getName() + " " + fs + " " + btc.getState());
+	 IvyLog.logD("BATTM","TEST UPDATE: " + btc.getName() + " " + fs + " " + btc.getState());
 	 if (fs != null) {
 	    switch (fs) {
 	       case STABLE :
@@ -984,7 +1064,7 @@ void reportTestStatus(boolean force)
    for (BattTestCase btc : rpt) {
       if (force || btc.getUpdateTime() >= last_report) {
 	 // btc.shortReport(xw);
-	 // System.err.println("BATTM: WORK ON TEST CASE " + btc.getName());
+	 // IvyLog.logD("BATTM","WORK ON TEST CASE " + btc.getName());
 	 btc.longReport(xw);
 	 ++ctr;
        }
@@ -1013,10 +1093,10 @@ private void setupSocket()
       server_socket = new ServerSocket(0);
     }
    catch (IOException e) {
-      System.err.println("BATTM: Problem creating test socket: " + e);
+      IvyLog.logD("BATTM","Problem creating test socket: " + e);
     }
 
-   System.err.println("BATTM: Listening on " + server_socket.getInetAddress());
+   IvyLog.logD("BATTM","Listening on " + server_socket.getInetAddress());
 
    SocketListener sl = new SocketListener();
    sl.start();
@@ -1031,7 +1111,7 @@ private void createClient(Socket s)
       c.start();
     }
    catch (IOException e) {
-      System.err.println("BATTM: Problem starting server client: " + e);
+      IvyLog.logD("BATTM","Problem starting server client: " + e);
     }
 }
 
@@ -1053,7 +1133,7 @@ private class SocketListener extends Thread {
 	  }
        }
       catch (IOException e) {
-	 System.err.println("BATTM: Problem with server socket accept: " + e);
+	 IvyLog.logD("BATTM","Problem with server socket accept: " + e);
        }
     }
 
@@ -1075,7 +1155,7 @@ private class Client extends IvyXmlReaderThread {
       Element e = IvyXml.convertStringToXml(msg);
    
       synchronized (message_lock) {
-         System.err.println("BATTM: CLIENT MSG: " + client_socket.getLocalPort() + " " + msg);
+         IvyLog.logD("BATTM","CLIENT MSG: " + client_socket.getLocalPort() + " " + msg);
         
          if (IvyXml.isElement(e,"TESTCASE")) {
             String nm = IvyXml.getAttrString(e,"NAME");
@@ -1089,7 +1169,7 @@ private class Client extends IvyXmlReaderThread {
             btc.handleTestCounts(e);
           }
         
-         System.err.println("BATTM: FINISH CLIENT MSG");
+         IvyLog.logD("BATTM","FINISH CLIENT MSG");
        }
    }
 

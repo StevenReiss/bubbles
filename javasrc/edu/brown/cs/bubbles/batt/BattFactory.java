@@ -530,6 +530,10 @@ void startBattServer()
 {
    BoardSetup bs = BoardSetup.getSetup();
    MintControl mc = bs.getMintControl();
+   
+   File wd = new File(bs.getDefaultWorkspace());
+   File logf = new File(wd,"batt.log");
+   logf.delete();
 
    synchronized (this) {
       if (server_running) return;
@@ -566,6 +570,11 @@ void startBattServer()
       args.add(s2);
       args.add("-l");
       args.add(s0);
+      args.add("-L");
+      args.add(logf.getPath());
+      if (batt_props.getBoolean("Batt.server.debug")) {
+         args.add("-D");
+       }
 
       for (int i = 0; i < 100; ++i) {
 	 MintDefaultReply rply = new MintDefaultReply();
