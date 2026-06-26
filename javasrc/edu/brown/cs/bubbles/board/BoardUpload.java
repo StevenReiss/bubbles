@@ -72,11 +72,15 @@ private static boolean has_failed = false;
 static {
    BoardProperties bp = BoardProperties.getProperties("Board");
    String dir = bp.getProperty(BOARD_SAVE_LOCAL_DIR);
-   if (dir == null || dir.length() == 0) local_uploads = null;
+   if (dir == null || dir.length() == 0) {
+      local_uploads = null;
+    }
    else {
       local_uploads = new File(dir);
       local_uploads.mkdir();
-      if (!local_uploads.exists() || !local_uploads.canWrite()) local_uploads = null;
+      if (!local_uploads.exists() || !local_uploads.canWrite()) {
+         local_uploads = null;
+       }
     }
 }
 

@@ -85,6 +85,7 @@ private JTextPane text_pane;
 private JTextField input_pane;
 private boolean   auto_scroll;
 private BddtConsoleController console_control;
+private StyledDocument console_doc;
 
 private static final Pattern LOCATION_PATTERN =
    Pattern.compile("at ([a-zA-Z0-9<>$_.]+)\\(([a-zA-Z0-9_]+\\.java)\\:([0-9]+)\\)");
@@ -101,6 +102,7 @@ private static final long serialVersionUID = 1;
 BddtConsoleBubble(BddtConsoleController ctrl,StyledDocument doc)
 {
    console_control = ctrl;
+   console_doc = doc;
 
    Color bg = BoardColors.getColor("Bddt.console.background");
    Color ibg = BoardColors.getColor("Bddt.console.input.background");
@@ -124,6 +126,7 @@ BddtConsoleBubble(BddtConsoleController ctrl,StyledDocument doc)
    int h = BDDT_PROPERTIES.getInt(BDDT_CONSOLE_HEIGHT_PROP);
    Dimension d = new Dimension(w,h - 24);
    auto_scroll = true;
+   console_control.setAutoScroll(doc,true);  
 
    text_pane.setPreferredSize(d);
 
@@ -143,7 +146,6 @@ BddtConsoleBubble(BddtConsoleController ctrl,StyledDocument doc)
    text_pane.addMouseListener(new FocusOnEntry());
    text_pane.addMouseListener(new GotoMouser());
 }
-
 
 
 
@@ -292,8 +294,12 @@ private final class AutoScrollAction implements ActionListener {
 
    @Override public void actionPerformed(ActionEvent evt) {
       JCheckBoxMenuItem itm = (JCheckBoxMenuItem) evt.getSource();
-      auto_scroll = itm.getState();
-      BoardLog.logD("BDDT","Auto scroll set to " + auto_scroll);
+      boolean fg = itm.getState();
+      if (fg != auto_scroll) {
+         auto_scroll = itm.getState();
+         console_control.setAutoScroll(console_doc,auto_scroll);
+         BoardLog.logD("BDDT","Auto scroll set to " + auto_scroll);
+       }
     }
 
 }	// end of inner class AutoScrollAction

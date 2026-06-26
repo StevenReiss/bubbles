@@ -9,6 +9,7 @@
 <entry key="Bddt.console.input.background">#404040</entry>
 <entry key="Bddt.console.input.foreground">#00ffff</entry>
 <entry key="Bddt.console.input.caret">#00ffff</entry>
+<entry key="Bddt.console.max.lines">10000</entry>
 <entry key="StdOut.parent">Console</entry>
 <entry key="StdOut.foreground">^</entry>
 <entry key="StdErr.parent">Console</entry>

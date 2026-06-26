@@ -178,7 +178,7 @@ String BDDT_CONSOLE_WIDTH_PROP = "Bddt.console.width";
 String BDDT_CONSOLE_HEIGHT_PROP = "Bddt.console.height";
 
 
-int BDDT_CONSOLE_MAX_LINES = 1000;
+int BDDT_CONSOLE_MAX_LINES = BDDT_PROPERTIES.getInt("Bddt.console.max.lines",10000);
 
 
 

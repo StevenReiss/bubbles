@@ -560,7 +560,8 @@ void startBattServer()
       if (s0 == null || s1 == null || s2 == null) {
 	 BoardProperties sp = BoardProperties.getProperties("System");
 	 String s3 = sp.getProperty("edu.brown.cs.bubbles.jar");
-	 BoardLog.logX("BATT","Missing batt file " + s0 + " " + s1 + " " + s2 + " " + s3);
+	 BoardLog.logX("BATT",
+               "Missing batt file " + s0 + " " + s1 + " " + s2 + " " + s3);
 	 server_running = true;
 	 return;
        }

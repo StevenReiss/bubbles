@@ -152,6 +152,8 @@ private BattMain(String [] args)
     }
 
    scanArgs(args);
+   
+   IvyLog.logD("BATTM","BATT server starting");
 
    IvySetup.setup();
 }
@@ -243,6 +245,8 @@ private void process()
 {
    batt_monitor = new BattMonitor(this,mint_handle);
    batt_monitor.loadProjects();
+   
+   IvyLog.logD("BATTM","Process usinig " + process_mode + " " + start_mode);
 
    switch (process_mode) {
       case LIST :
@@ -285,6 +289,8 @@ void setMode(TestMode tm)
    if (test_mode == tm) return;
 
    test_mode = tm;
+   
+   IvyLog.logD("BATTM","Set test mode " + tm);
 
    synchronized (run_tests) {
       if (test_mode == TestMode.ON_DEMAND) {
@@ -591,10 +597,15 @@ private void processRun(boolean listonly,Set<String> testclss,Set<BattTestCase> 
 private void processRun(boolean listonly,Set<String> testclss)
 {
    if (testclss !=  null) {
-      IvyLog.logD("BATTM","Run all tests in " + testclss.size() + " classes");
+      if (listonly) {
+         IvyLog.logD("BATTM","List all tests in " + testclss.size() + " classes");
+       }
+      else {
+         IvyLog.logD("BATTM","Run all tests in " + testclss.size() + " classes");
+       }
     }
    else {
-      IvyLog.logD("BATTM","Run all tests in all classes");
+      IvyLog.logD("BATTM","Run all tests in all classes " + listonly);
     }
 
    if (!listonly) {
@@ -652,7 +663,7 @@ private void processRun(boolean listonly,Set<String> testclss)
          args.add("-L");
          args.add(log_file.getPath());
        }
-      if (IvyLog.useStdErr()) {
+      if (IvyLog.useStdErr()) { 
          args.add("-O");
        }
       if (IvyLog.getLogLevel() == IvyLog.LogLevel.DEBUG) {
@@ -1204,9 +1215,10 @@ private class BattThread extends Thread {
 
    @Override public void run() {
       try {
-	 for ( ; ; ) {
-	    processTests();
-	  }
+         for ( ; ; ) {
+            IvyLog.logD("BATTM","BattTestRunner processing tests");
+            processTests();
+          }
        }
       catch (InterruptedException e) { }
       doneProcessing();

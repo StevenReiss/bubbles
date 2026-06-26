@@ -68,6 +68,7 @@ private AttributeSet stderr_attrs;
 private AttributeSet stdin_attrs;
 private AttributeSet sysout_attrs;
 private LinkedList<ConsoleMessage> message_queue;
+private Map<String,Integer> auto_scroll;
 
 
 enum TextMode { STDOUT, STDERR, STDIN, SYSTEM, EOF };
@@ -100,6 +101,8 @@ BddtConsoleController()
    stderr_attrs = atts.getAttributes("StdErr");
    stdin_attrs = atts.getAttributes("StdIn");
    sysout_attrs = atts.getAttributes("SysOut");
+   
+   auto_scroll = new HashMap<>();
 }
 
 
@@ -137,6 +140,37 @@ void setLogFile(BumpProcess bp,String fnm)
 }
 
 
+void setAutoScroll(Document d,boolean autos)
+{
+   String key = null;
+   for (Map.Entry<String,ConsoleDocument> ent : process_consoles.entrySet()) {
+      if (ent.getValue() == d) {
+         key = ent.getKey();
+         break;
+       }
+    }
+   Integer ct = auto_scroll.get(key);
+   if (autos) {
+      if (ct == null) auto_scroll.put(key,1);
+      else auto_scroll.put(key,ct+1);
+    }
+   else if (ct != null) {
+      if (ct <= 1) auto_scroll.put(key,0);  
+      else auto_scroll.put(key,ct-1);
+    }
+}
+
+
+void removeConsole(BddtLaunchControl blc)
+{
+   Document d = launch_consoles.remove(blc);
+   if (d != null) {
+      BumpProcess bp = blc.getProcess();
+      String pid = bp.getId();
+      auto_scroll.remove(pid);
+    }
+}
+
 
 /********************************************************************************/
 /*										*/
@@ -154,16 +188,20 @@ private void queueConsoleMessage(BumpProcess bp,TextMode mode,boolean eof,String
 	 last.merge(msg);
 	 return;
        }
-      int qct = 0;
-      for (ConsoleMessage cm : message_queue) qct += cm.getNumLines();
-      while (qct > BDDT_CONSOLE_MAX_LINES) {
-         ConsoleMessage cm = message_queue.removeFirst();
-         qct -= cm.getNumLines();
-         if (qct == BDDT_CONSOLE_MAX_LINES) break;
-         else if (qct < BDDT_CONSOLE_MAX_LINES) {
-            cm.trimMessage(BDDT_CONSOLE_MAX_LINES - qct);
-            message_queue.addFirst(cm);
-            break;
+      String pid = bp.getId();
+      Integer fg = auto_scroll.get(pid);
+      if (fg == 0) {
+         int qct = 0;
+         for (ConsoleMessage cm : message_queue) qct += cm.getNumLines();
+         while (qct > BDDT_CONSOLE_MAX_LINES) {
+            ConsoleMessage cm = message_queue.removeFirst();
+            qct -= cm.getNumLines();
+            if (qct == BDDT_CONSOLE_MAX_LINES) break;
+            else if (qct < BDDT_CONSOLE_MAX_LINES) {
+               cm.trimMessage(BDDT_CONSOLE_MAX_LINES - qct);
+               message_queue.addFirst(cm);
+               break;
+             }
           }
        }
       message_queue.add(new ConsoleMessage(bp,msg,mode,eof));

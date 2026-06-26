@@ -689,26 +689,26 @@ private class BugReportDialog extends JDialog implements ActionListener
 
    @Override public void actionPerformed(ActionEvent e) {
       if (e.getActionCommand().equals("CANCEL")) {
-	 collect_dumps = false;
+         collect_dumps = false;
        }
       else if (e.getActionCommand().equals("OK")) {
-	 collect_dumps = dumps_checkbox.isSelected();
+         collect_dumps = dumps_checkbox.isSelected();
        }
-
+   
       error_reports = collect_dumps;
-
+   
       // if (userid_textfield != null) user_id = userid_textfield.getText();
       if (user_id == null || user_id.equals("")) user_id = getUserId();
       else user_id = user_id.replace(" ","_");
-
+   
       board_properties.setProperty(BOARD_METRIC_PROP_DUMPS,collect_dumps);
       board_properties.setProperty(BOARD_METRIC_PROP_ERRORS,error_reports);
-
+   
       try {
-	 board_properties.save();
+         board_properties.save();
        }
       catch (IOException ioe) { }
-
+   
       this.setVisible(false);
     }
 
