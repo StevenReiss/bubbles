@@ -190,7 +190,7 @@ private void queueConsoleMessage(BumpProcess bp,TextMode mode,boolean eof,String
        }
       String pid = bp.getId();
       Integer fg = auto_scroll.get(pid);
-      if (fg == 0) {
+      if (fg == null || fg == 0) {
          int qct = 0;
          for (ConsoleMessage cm : message_queue) qct += cm.getNumLines();
          while (qct > BDDT_CONSOLE_MAX_LINES) {

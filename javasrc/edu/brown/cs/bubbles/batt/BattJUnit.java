@@ -34,8 +34,6 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runners.model.TestClass;
 
-import edu.brown.cs.ivy.file.IvyLog;
-
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -44,6 +42,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -100,6 +99,8 @@ private OutputStream	result_stream;
 private Class<?> []	class_set;
 private String		single_test;
 private Map<Description,JunitTest> test_cases;
+private PrintStream     log_stream;
+private boolean         log_debug;
 
 private static final JunitTestStatus STATUS_RUNNING;
 private static final JunitTestStatus STATUS_UNKNOWN;
@@ -149,12 +150,8 @@ static {
 
 private BattJUnit(String [] args)
 {
-   IvyLog.setupLogging("BATTJ",false);
-
-   IvyLog.logI("BATTJ","Arguments: ");
-   for (String s : args) {
-      IvyLog.logI("BATTJ","Arg: " + s);
-    }
+   log_stream = System.err;
+   log_debug = false;
 
    list_only = false;
    class_set = null;
@@ -165,7 +162,7 @@ private BattJUnit(String [] args)
 
    scanArgs(args);
 
-   IvyLog.logD("BATTJ","Starting BATT Junit");
+   logD("Starting BATT Junit");
 }
 
 
@@ -206,14 +203,17 @@ private void scanArgs(String [] args)
 	    single_test = args[++i];
 	  }
          else if (args[i].startsWith("-D")) {                           // -Debug
-            IvyLog.setLogLevel(IvyLog.LogLevel.DEBUG);
+            log_debug = true;
           }
          else if (args[i].startsWith("-O")) {                           // -Output
-            IvyLog.useStdErr(true);
+//          useStdErr(true);
           }
          else if (args[i].startsWith("-L") && i+1 < args.length) {      // -L logfile
             File logf = new File(args[++i]);
-            IvyLog.setLogFile(logf,true);
+            try (FileOutputStream fos = new FileOutputStream(logf,true)) {
+               log_stream = new PrintStream(fos,true);
+             }
+            catch (IOException e) { }
           }
 	 else badArgs();
        }
@@ -244,11 +244,11 @@ private void scanArgs(String [] args)
     }
    catch (ClassNotFoundException e) {
       if (!list_only) {
-	 IvyLog.logE("BATTJ","No agent found");
+	 logE("No agent found");
        }
    }
    catch (Throwable t) {
-      IvyLog.logE("BATTJ","Problem with agent",t);
+      logE("Problem with agent",t);
     }
 
    long time1 = System.currentTimeMillis();
@@ -276,7 +276,7 @@ private void scanArgs(String [] args)
 	 result_stream = new FileOutputStream(result_file);
        }
       catch (IOException e) {
-	 IvyLog.logE("BATTJ","Couldn't open output file",e);
+	 logE("Couldn't open output file",e);
 	 System.exit(1);
        }
     }
@@ -289,11 +289,11 @@ private void scanArgs(String [] args)
 	 mac.invoke(null);
        }
       catch (Throwable e1) {
-	 IvyLog.logE("BATTJ","Problem with doneLoad",e1);
+	 logE("Problem with doneLoad",e1);
        }
     }
 
-   IvyLog.logD("BATTJ","Timings " + (time1-time0) + " " + (time2 - time1) + " " + tststr.size() + " " +
+   logD("Timings " + (time1-time0) + " " + (time2 - time1) + " " + tststr.size() + " " +
 	clss.size() + " " + clsstr.size());
 }
 
@@ -319,8 +319,7 @@ private void addClass(Class<?> c,List<Class<?>> clss)
 
 private Class<?> setupClass(String cnm,ExecutorService service)
 {
-   IvyLog.logD("BATTJ","SET UP CLASS " + cnm);
-   IvyLog.flush();
+   logD("SET UP CLASS " + cnm);
 
    Class<?> rslt = null;
 
@@ -337,15 +336,15 @@ private Class<?> setupClass(String cnm,ExecutorService service)
 	    c = future.get(2000,TimeUnit.MILLISECONDS);
 	  }
 	 catch (ExecutionException e) {
-	    IvyLog.logI("BATTJ","Find class " + cnm + " threw " + e);
+	    logI("Find class " + cnm + " threw " + e);
 	    throw e.getCause();
 	  }
 	 catch (TimeoutException | InterruptedException e) {
-	    // IvyLog.logE("BATTJ","Initialization problem with " + cnm,e);
+	    // logE("Initialization problem with " + cnm,e);
 	    future.cancel(true);
 	  }
 	 if (c == null) return null;
-	 IvyLog.logD("BATTJ","Preload test class " + cnm);
+	 logD("Preload test class " + cnm);
 	
 	 TestClass tcls = new TestClass(c);
    	 boolean valid = tcls.isPublic();
@@ -361,32 +360,32 @@ private Class<?> setupClass(String cnm,ExecutorService service)
 	  }
        }
       catch (AssertionError e) {
-	 IvyLog.logE("BATTJ","Assertion error setting up class",e);
+	 logE("Assertion error setting up class",e);
        }
       catch (IllegalArgumentException e) {
-	 // IvyLog.logE("BATTJ","Argument exception,e);
+	 // logE("Argument exception,e);
        }
       catch (ExceptionInInitializerError e) {
-	 // IvyLog.logE("BATTJ","Initialization exception",e);
+	 // logE("Initialization exception",e);
        }
       // catch (NoSuchMethodException e) {
-      //    IvyLog.logE("BATTJ","No constructor",e);
+      //    logE("No constructor",e);
       // }
       catch (NoClassDefFoundError e) {
-	 IvyLog.logI("BATTJ","Class " + cnm + " not found");
+	 logI("Class " + cnm + " not found");
        }
       catch (ClassNotFoundException e) {
-	 IvyLog.logE("BATTJ","Class " + cnm + " not found",e);
+	 logE("Class " + cnm + " not found",e);
        }
       catch (LinkageError e) {
 	 retry = true;
        }
       catch (Throwable t) {
-	 IvyLog.logE("BATTJ","Class " + cnm + " can't be loaded",t);
+	 logE("Class " + cnm + " can't be loaded",t);
        }
     }
 
-   IvyLog.logD("BATTJ","DONE: " + cnm);
+   logD("DONE: " + cnm);
 
    return rslt;
 }
@@ -435,7 +434,7 @@ private void setupSocket(String ph)
       result_stream = s.getOutputStream();
     }
    catch (IOException e) {
-      IvyLog.logE("BATTJ","Problem connecting to socket " + port + " @" + host,e);
+      logE("Problem connecting to socket " + port + " @" + host,e);
       System.exit(1);
     }
 }
@@ -465,7 +464,7 @@ private static String fixHost(String h)
 
 private void badArgs()
 {
-   IvyLog.logI("BATTJ","battjunit [-list] [-o output] class...");
+   logI("battjunit [-list] [-o output] class...");
 }
 
 
@@ -486,13 +485,13 @@ private void process()
       int idx2 = single_test.indexOf(")");
       String mnm = single_test.substring(0,idx1);
       String cnm = single_test.substring(idx1+1,idx2);
-      IvyLog.logD("BATTJ","WORK ON SINGLE TEST " + single_test + " " + cnm + " " + mnm);
+      logD("WORK ON SINGLE TEST " + single_test + " " + cnm + " " + mnm);
       try {
 	 Class<?> clz = Class.forName(cnm);
 	 rq = Request.method(clz,mnm);
        }
       catch (Exception e) {
-	 IvyLog.logE("BATTJ","Class for test not found",e);
+	 logE("Class for test not found",e);
        }
      }
 
@@ -510,12 +509,12 @@ private void process()
    juc.addListener(ll);
 
    long time0 = System.currentTimeMillis();
-   IvyLog.logD("BATTJ","START RUN: " + list_only + " " + rq);
+   logD("START RUN: " + list_only + " " + rq);
 
    juc.run(rq);
 
    long time1 = System.currentTimeMillis();
-   IvyLog.logD("BATTJ","FINISH RUN: " + list_only + " " + (time1-time0));
+   logD("FINISH RUN: " + list_only + " " + (time1-time0));
 
    if (result_stream != null) {
       try {
@@ -543,7 +542,7 @@ synchronized JunitTest addTestCase(Description d,JunitTestStatus sts)
    JunitTest btc = test_cases.get(d);
    if (btc == null) {
       btc = new JunitTest(d);
-      IvyLog.logD("BATTJ","Create new test case for " + d + " " +
+      logD("Create new test case for " + d + " " +
 	    test_cases.size() + " " + sts);
       test_cases.put(d,btc);
     }
@@ -560,7 +559,7 @@ synchronized JunitTest addTestCase(Description d,JunitTestStatus sts)
 
 synchronized void removeTestCase(Description d)
 {
-   IvyLog.logD("BATTJ","Remove test case " + d);
+   logD("Remove test case " + d);
 
    test_cases.remove(d);
 }
@@ -592,7 +591,7 @@ void noteStart(Description d)
     }
    catch (ClassNotFoundException e) { }
    catch (Throwable t) {
-      IvyLog.logE("BATTJ","Problem with agent",t);
+      logE("Problem with agent",t);
       t.printStackTrace();
     }
 }
@@ -608,7 +607,7 @@ void noteFinish(Description d)
     }
    catch (ClassNotFoundException e) { }
    catch (Throwable t) {
-      IvyLog.logE("BATTJ","Problem with agent",t);
+      logE("Problem with agent",t);
       t.printStackTrace();
     }
 }
@@ -624,7 +623,7 @@ void noteDone()
     }
    catch (ClassNotFoundException e) { }
    catch (Throwable t) {
-      IvyLog.logE("BATTJ","Problem with agent",t);
+      logE("Problem with agent",t);
       t.printStackTrace();
     }
 }
@@ -649,10 +648,10 @@ private void outputSingleTest(JunitTest jt)
 	 xw = xof.createXMLStreamWriter(result_stream);
 	 outputTestCase(jt,xw);
 	 xw.flush();
-	 IvyLog.logD("BATTJ","Finish writing test case " + jt.getDescription() + " " + jt.getStatus());
+	 logD("Finish writing test case " + jt.getDescription() + " " + jt.getStatus());
       }
       catch (XMLStreamException e) {
-	 IvyLog.logE("BATTJ","Problem writing output file " + result_file,e);
+	 logE("Problem writing output file " + result_file,e);
 	 System.exit(1);
       }
    }
@@ -730,6 +729,39 @@ private String shortenTrace(String t)
 }
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Logging methods                                                         */
+/*                                                                              */
+/********************************************************************************/
+
+private void logD(String msg)
+{
+   if (log_debug) {
+      log_stream.println("BATTJ:D: " + msg);
+    }
+}
+
+private void logI(String msg)
+{
+   log_stream.println("BATTJ:I: " + msg);
+}
+
+
+
+private void logE(String msg)
+{
+   log_stream.println("BATTJ:E: " + msg);
+}
+
+
+private void logE(String msg,Throwable t)
+{
+   logE(msg);
+   if (t != null) {
+      t.printStackTrace(log_stream);
+    }
+}
 
 
 /********************************************************************************/
@@ -743,7 +775,7 @@ private final class ListFilter extends Filter {
    @Override public String describe()			{ return "List test cases"; }
 
    @Override public boolean shouldRun(Description d) {
-      IvyLog.logD("BATTJ","Consider test: " + d.isTest() + " " + d.isEmpty() + " " + d.isSuite() + " " +
+      logD("Consider test: " + d.isTest() + " " + d.isEmpty() + " " + d.isSuite() + " " +
 			    d.getClassName() + " " + d.getMethodName() + " " +
 			    d.getChildren().size() + " " + d.getDisplayName() + " " + d);
       // if (d.isSuite() && d.getClassName().contains("$")) return false;
@@ -760,7 +792,7 @@ private final class ListFilter extends Filter {
 	 return false;
        }
 
-      IvyLog.logI("BATTJ","Unknown test: " + d.isTest() + " " + d.isEmpty() + " " +
+      logI("Unknown test: " + d.isTest() + " " + d.isEmpty() + " " +
 			    d.getClassName() + " " + d.isSuite() + " " + d.getChildren().size() + " " + d);
       setTestStatus(d,STATUS_UNKNOWN);
       // might want to check classes to see if they are relevant here as well
@@ -783,11 +815,11 @@ private class TestListener extends RunListener {
    TestListener() { }
 
    @Override public void testStarted(Description d) {
-      IvyLog.logD("BATTJ","START " + d);
+      logD("START " + d);
       JunitTestStatus bts = getTestStatus(d);
       JunitTest jt = addTestCase(d,STATUS_RUNNING);
       noteStart(d);
-      IvyLog.logD("BATTJ","TEST " + bts + " " + jt.getDescription() + " " + bts.getType());
+      logD("TEST " + bts + " " + jt.getDescription() + " " + bts.getType());
       switch (bts.getType()) {
 	 case FAILURE :
 	 case SUCCESS :
@@ -800,22 +832,22 @@ private class TestListener extends RunListener {
     }
 
    @Override public void testIgnored(Description d) {
-      IvyLog.logD("BATTJ","IGNORED " + d);
+      logD("IGNORED " + d);
       addTestCase(d,STATUS_IGNORED);
     }
 
    @Override public void testFinished(Description d) {
-      IvyLog.logD("BATTJ","FINISH " + d + " " + test_cases.containsKey(d));
+      logD("FINISH " + d + " " + test_cases.containsKey(d));
 
       JunitTest jt = test_cases.get(d);
       if (jt == null) {
-	 IvyLog.logD("BATTJ","No test case found");
+	 logD("No test case found");
 	 return;
        }
       noteFinish(d);
 
       JunitTestStatus bts = getTestStatus(d);
-      IvyLog.logD("BATTJ","STATUS " + bts.getType() + " " + result_stream
+      logD("STATUS " + bts.getType() + " " + result_stream
 	       );
 
       switch (bts.getType()) {
@@ -844,7 +876,7 @@ private class TestListener extends RunListener {
     }
 
    @Override public void testFailure(Failure f) {
-      IvyLog.logD("BATTJ","Test failure: " + f);
+      logD("Test failure: " + f);
       // Throwable t = f.getException();
       // if (t != null) t.printStackTrace();
       setTestStatus(f.getDescription(),STATUS_FAILURE);
@@ -860,7 +892,7 @@ private class TestListener extends RunListener {
 	 return;
        }
       else {
-	 IvyLog.logD("BATTJ","FAIL " + f.getTestHeader() + " " +
+	 logD("FAIL " + f.getTestHeader() + " " +
 	       f.getDescription() + " " + f.getException() + " " +
 	       f.getMessage() + "\nTRACE: " + f.getTrace());
 	 addTestCase(f.getDescription(),new JunitTestStatus(f));
@@ -869,7 +901,7 @@ private class TestListener extends RunListener {
       JunitTest jt = test_cases.get(f.getDescription());
       if (jt != null) outputSingleTest(jt);
       else {
-	IvyLog.logE("BATTJ","Can't find failing test case " + f.getDescription());
+	logE("Can't find failing test case " + f.getDescription());
       }
     }
 
