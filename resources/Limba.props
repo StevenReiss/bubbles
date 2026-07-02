@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="Limba.anthropic.api.key">*</entry>
+<entry key="Limba.gemini.api.key">*</entry>
+<entry key="Limba.openai.api.key">*</entry>
+<entry key="Limba.ollama.host">localhost</entry>
+<entry key="Limba.ollama.port">11434</entry>
+<entry key="Limba.ollama.althost">localhost</entry>
+<entry key="Limba.ollama.altport">11434</entry>
+<entry key="Limba.ollama.model">qwen3-coder:latest</entry>
+</properties>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
