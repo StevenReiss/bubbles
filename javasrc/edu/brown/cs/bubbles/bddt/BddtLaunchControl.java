@@ -1308,9 +1308,14 @@ private class CreateBubble implements Runnable {
    @Override public void run() {
       BumpThreadStack stk = for_thread.getStack();
       BumpStackFrame usefrm = stk.getFrame(0);
-      if (usefrm == null && try_count < 2) {
+      if (usefrm == null && try_count < 5) {
+         try {
+            Thread.sleep(100);
+          }
+         catch (InterruptedException e) { }
          ++try_count;
-         BoardLog.logD("BDDT","Waiting for stack frame " + try_count);
+         BoardLog.logD("BDDT","Waiting for stack frame " + try_count + 
+               " " + for_thread.getId());
          SwingUtilities.invokeLater(this);
          return;
        }
