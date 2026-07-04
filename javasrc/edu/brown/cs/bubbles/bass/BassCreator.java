@@ -1068,15 +1068,15 @@ private static class MoveClassAction extends AbstractAction implements Runnable 
 
    @Override public void actionPerformed(ActionEvent e) {
       combo_box = new SwingComboBox<String>("Package",
-	    new String [] { "Generating list of available and relevant packages" });
+        new String [] { "Generating list of available and relevant packages" });
       SwingUtilities.invokeLater(this);
       String cnm = class_name;
       int idx = cnm.lastIndexOf(".");
       if (idx >= 0) cnm = cnm.substring(idx+1);
       int sts = JOptionPane.showOptionDialog(base_bubble,combo_box,
-	       "Select Target Package for " + cnm,
-	       JOptionPane.OK_CANCEL_OPTION,
-	       JOptionPane.QUESTION_MESSAGE,null,null,null);
+           "Select Target Package for " + cnm,
+           JOptionPane.OK_CANCEL_OPTION,
+           JOptionPane.QUESTION_MESSAGE,null,null,null);
       if (sts != 0) return;
       String rslt = (String) combo_box.getSelectedItem();
       if (rslt.startsWith("Generating ")) return;

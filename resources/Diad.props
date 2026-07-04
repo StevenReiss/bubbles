@@ -14,7 +14,9 @@
 <entry key="Diad.fait.debug">false</entry>
 <entry key="Diad.max.seede.steps">1000000</entry>
 <entry key="Diad.max.seede.depth">100</entry>
-</properties>
+<entry key="Diad.eclipse.binary">/pro/eclipse/java-2023-12/eclipse/eclipse</entry>
+<entry key="Diad.eclipse.wsdir">/home/spr/Eclipse</entry>
+</properties>					
 
 
 

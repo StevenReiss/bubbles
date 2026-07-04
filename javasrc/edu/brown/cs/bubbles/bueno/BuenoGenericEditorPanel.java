@@ -674,32 +674,32 @@ private class PatternPanel extends SwingListPanel<SourcePattern> {
    protected SourcePattern createNewItem() {
       SourcePatternPanel spnl = new SourcePatternPanel(null);
       int sts = JOptionPane.showOptionDialog(this,spnl,"New Source Pattern",
-	    JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,
-	    null,null,null);
+        JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,
+        null,null,null);
       if (sts == JOptionPane.OK_OPTION) {
-	 SourcePattern npat = spnl.getResult();
-	 source_patterns.addElement(npat);
-	 for_path.addPattern(npat.getPattern(),npat.isExclude());
-	 return npat;
+     SourcePattern npat = spnl.getResult();
+     source_patterns.addElement(npat);
+     for_path.addPattern(npat.getPattern(),npat.isExclude());
+     return npat;
        }
       return null;
     }
 
    protected SourcePattern editItem(Object opat) {
       if (opat instanceof SourcePattern) {
-	 SourcePattern pat = (SourcePattern) opat;
-	 SourcePatternPanel spnl = new SourcePatternPanel(pat);
-	 int sts = JOptionPane.showOptionDialog(this,spnl,"Edit Source Pattern",
-	       JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,
-	       null,null,null);
-	 if (sts == JOptionPane.OK_OPTION) {
-	    SourcePattern npat = spnl.getResult();
-	    source_patterns.removeElement(pat);
-	    for_path.removePattern(pat.getPattern(),pat.isExclude());
-	    source_patterns.addElement(npat);
-	    for_path.addPattern(npat.getPattern(),npat.isExclude());
-	    return npat;
-	  }
+     SourcePattern pat = (SourcePattern) opat;
+     SourcePatternPanel spnl = new SourcePatternPanel(pat);
+     int sts = JOptionPane.showOptionDialog(this,spnl,"Edit Source Pattern",
+           JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,
+           null,null,null);
+     if (sts == JOptionPane.OK_OPTION) {
+        SourcePattern npat = spnl.getResult();
+        source_patterns.removeElement(pat);
+        for_path.removePattern(pat.getPattern(),pat.isExclude());
+        source_patterns.addElement(npat);
+        for_path.addPattern(npat.getPattern(),npat.isExclude());
+        return npat;
+      }
        }
       return null;
     }
