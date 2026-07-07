@@ -162,4 +162,5 @@ lib/seede.jar
 nobbles.jar
 lib/karma.jar
 dartbubbles.jar
-
+resources/Limba.props
+resources/Diad.props

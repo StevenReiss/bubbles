@@ -91,48 +91,48 @@ BassImportProjectAction()
 
 @Override public void actionPerformed(ActionEvent e)
 {
-   FileSystemView fsv = BoardFileSystemView.getFileSystemView();
-   BoardMetrics.noteCommand("BASS", "ImportProject");
-   BudaRoot.hideSearchBubble(e);
-   JFileChooser chooser = new JFileChooser(fsv);
-
-   chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-   chooser.setDialogTitle("Choose a project directory to import");
-   the_source = (Component) e.getSource();
-
-   int returnVal = chooser.showOpenDialog(null);
-   if (returnVal == JFileChooser.APPROVE_OPTION) {
-      File f = chooser.getSelectedFile();
-      File f1 = fsv.createFileObject(BoardSetup.getSetup().getDefaultWorkspace());
-      proj_dir = fsv.createFileObject(f1,f.getName());
-
-      try {
-	 if (!Arrays.asList(f.list()).contains(".project"))
-	    throw new Exception("Directory is not an eclipse project");
-	 copyR(f, proj_dir);
-       }
-      catch (Throwable t) {
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(the_source);
-	 BudaErrorBubble bub = new BudaErrorBubble("Error importing project: " + t.getMessage());
-	 if (bba != null) {
-	    bba.addBubble(bub, the_source, null, BudaConstants.PLACEMENT_LEFT);
-	  }
-	 return;
-       }
-      BumpClient bc = BumpClient.getBump();
-
-      bc.importProject(f.getName());
-
-      // import working sets
-      File wsdir = fsv.createFileObject(proj_dir,"workingsets");
-      String[] wlist = wsdir.list();
-      if (wlist != null && wlist.length > 0) {
-	 BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(the_source);
-	 if (bba != null) {
-	    bba.addBubble(new WorkingSetConfirmDialog(),the_source, null, BudaConstants.PLACEMENT_LEFT);
-	  }
-       }
-    }
+    FileSystemView fsv = BoardFileSystemView.getFileSystemView();
+    BoardMetrics.noteCommand("BASS", "ImportProject");
+    BudaRoot.hideSearchBubble(e);
+    JFileChooser chooser = new JFileChooser(fsv);
+    
+    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    chooser.setDialogTitle("Choose a project directory to import");
+    the_source = (Component) e.getSource();
+    
+    int returnVal = chooser.showOpenDialog(null);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+        File f = chooser.getSelectedFile();
+        File f1 = fsv.createFileObject(BoardSetup.getSetup().getDefaultWorkspace());
+        proj_dir = fsv.createFileObject(f1,f.getName());
+        
+        try {
+            if (!Arrays.asList(f.list()).contains(".project"))
+                throw new Exception("Directory is not an eclipse project");
+            copyR(f, proj_dir);
+         }
+        catch (Throwable t) {
+            BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(the_source);
+            BudaErrorBubble bub = new BudaErrorBubble("Error importing project: " + t.getMessage());
+            if (bba != null) {
+                bba.addBubble(bub, the_source, null, BudaConstants.PLACEMENT_LEFT);
+             }
+            return;
+         }
+        BumpClient bc = BumpClient.getBump();
+        
+        bc.importProject(f.getName());
+        
+        // import working sets
+        File wsdir = fsv.createFileObject(proj_dir,"workingsets");
+        String[] wlist = wsdir.list();
+        if (wlist != null && wlist.length > 0) {
+            BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(the_source);
+            if (bba != null) {
+                bba.addBubble(new WorkingSetConfirmDialog(),the_source, null, BudaConstants.PLACEMENT_LEFT);
+             }
+         }
+     }
 }
 
 private class WorkingSetConfirmDialog extends BudaBubble implements ActionListener {
