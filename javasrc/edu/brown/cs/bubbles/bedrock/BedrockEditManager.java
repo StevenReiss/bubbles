@@ -1090,7 +1090,7 @@ void formatCode(String proj,String bid,String file,int spos,int epos,IvyXmlWrite
    // TextEdit te = code_formatter.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS,cnts,irgns,0,null);
    TextEdit te = code_formatter.format(CodeFormatter.K_UNKNOWN,cnts,irgns,0,null);
 
-   if (te == null) throw new BedrockException("Unable to format method");
+   if (te == null) throw new BedrockException("Unable to format method: no edits returned");
 
    BedrockUtil.outputTextEdit(te,xw);
 }
