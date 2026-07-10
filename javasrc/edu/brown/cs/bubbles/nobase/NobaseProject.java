@@ -733,7 +733,7 @@ protected void findFiles(String pfx,File f,boolean reload)
 	 xw.begin("MESSAGES");
 	 for (NobaseMessage m : sd.getMessages()) {
 	    try {
-	       NobaseMain.logI("PARSE ERROR: " + m);
+	       NobaseMain.logW("PARSE ERROR: " + m);
 	       NobaseUtil.outputProblem(m,sd,xw);
 	     }
 	    catch (Throwable t) {

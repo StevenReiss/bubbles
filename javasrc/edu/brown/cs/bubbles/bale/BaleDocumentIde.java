@@ -313,7 +313,7 @@ private void setFile(String proj,File file)
       setupLineOffsets(in,linesep);
     }
    catch (FileNotFoundException e) {
-      BoardLog.logI("BALE","File disappeared " + file);
+      BoardLog.logW("BALE","File disappeared " + file);
     }
    catch (Exception e) {
       BoardLog.logE("BALE","Problem loading file " + file,e);

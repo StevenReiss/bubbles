@@ -271,7 +271,7 @@ void startBstyleServer()
 	 catch (InterruptedException e) { }
        }
       if (!server_running) {
-	 BoardLog.logI("BSTYLE","Unable to start bstyle server: " + args);
+	 BoardLog.logW("BSTYLE","Unable to start bstyle server: " + args);
        }
     }
 

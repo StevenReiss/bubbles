@@ -579,15 +579,16 @@ private class CompletionGetter implements Runnable {
    CompletionGetter() { }
 
    @Override public void run() {
-      if (start_position == null || for_document == null) return;
-      int spos = for_document.mapOffsetToEclipse(start_position.getOffset())+1;
+      BaleDocument doc = for_document;
+      if (start_position == null || doc == null) return;
+      int spos = doc.mapOffsetToEclipse(start_position.getOffset())+1;
       Collection<BumpCompletion> completions = null;
 
-      int ctr = for_document.getEditCounter();
+      int ctr = doc.getEditCounter();
       BoardLog.logD("BALE","Start autocomplete with " + ctr);
       BumpClient bcc = BumpClient.getBump();
-      completions = bcc.getCompletions(for_document.getProjectName(),
-	    for_document.getFile(),
+      completions = bcc.getCompletions(doc.getProjectName(),
+	    doc.getFile(),
 	    ctr,spos);
       if (completions == null) {
 	 removeContext();
@@ -618,7 +619,8 @@ private class CompletionGetter implements Runnable {
 	  }
        }
 
-   // if (completions.size() == 0 && callcomps != null) {
+      if (for_document == null) return;
+      
       if (callcomps != null) {
 	 handleFound(callcomps,true);
        }

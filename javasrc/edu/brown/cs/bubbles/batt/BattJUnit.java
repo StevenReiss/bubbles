@@ -372,7 +372,7 @@ private Class<?> setupClass(String cnm,ExecutorService service)
       //    logE("No constructor",e);
       // }
       catch (NoClassDefFoundError e) {
-	 logI("Class " + cnm + " not found");
+	 logW("Class " + cnm + " not found");
        }
       catch (ClassNotFoundException e) {
 	 logE("Class " + cnm + " not found",e);
@@ -752,6 +752,12 @@ private void logI(String msg)
 private void logE(String msg)
 {
    log_stream.println("BATTJ:E: " + msg);
+}
+
+
+private void logW(String msg)
+{
+   log_stream.println("BATTJ:W: " + msg);
 }
 
 

@@ -558,7 +558,7 @@ void waitForAst()
    synchronized (this) {
       int ctr = 0;
       while (be.getAstNode() == null && ctr < 4) {
-	 BoardLog.logI("BALE","AST timeout " + ctr);
+	 BoardLog.logW("BALE","AST timeout " + ctr);
 	 try {
 	    ++ctr;
 	    wait(1000*ctr);

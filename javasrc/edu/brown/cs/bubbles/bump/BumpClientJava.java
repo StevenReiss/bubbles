@@ -146,7 +146,7 @@ protected boolean checkIfRunning()
     }
 
    if (name == null) {
-      BoardLog.logI("BUMP","Empty name provided to java search");
+      BoardLog.logW("BUMP","Empty name provided to java search");
       return null;
     }
 

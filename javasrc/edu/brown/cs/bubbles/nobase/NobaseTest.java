@@ -463,12 +463,12 @@ private static class ReplyHandler extends MintDefaultReply {
    void print() {
       String rslt = waitForString();
       if (rslt == null) {
-	 NobaseMain.logI("NOBASETEST: No reply for " + cmd_name);
+         NobaseMain.logI("NOBASETEST: No reply for " + cmd_name);
        }
       else {
-	 NobaseMain.logI("NOBASETEST: Reply for " + cmd_name + ":");
-	 NobaseMain.logI(rslt);
-	 NobaseMain.logI("NOBASETEST: End of reply");
+         NobaseMain.logI("NOBASETEST: Reply for " + cmd_name + ":");
+         NobaseMain.logI(rslt);
+         NobaseMain.logI("NOBASETEST: End of reply");
        }
     }
 

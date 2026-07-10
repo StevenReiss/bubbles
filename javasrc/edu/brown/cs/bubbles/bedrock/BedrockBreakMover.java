@@ -155,19 +155,19 @@ private static class BreakPos {
       else is_trace = false;
       line_number = 0;
       limbo_line = null;
-
+   
       try {
-	 int susp = bp.getSuspendPolicy();
-	 suspend_vm = (susp == IJavaLineBreakpoint.SUSPEND_VM);
-	 line_number = bp.getLineNumber();
-	 limbo_line = LimboFactory.createLine(file,line_number);
-	 BedrockPlugin.logD("SAVE BREAKPOINT " + bp + " " + line_number + " " +
-			       bp.getCharStart() + " " + bp.getCharEnd());
+         int susp = bp.getSuspendPolicy();
+         suspend_vm = (susp == IJavaLineBreakpoint.SUSPEND_VM);
+         line_number = bp.getLineNumber();
+         limbo_line = LimboFactory.createLine(file,line_number);
+         BedrockPlugin.logD("SAVE BREAKPOINT " + bp + " " + line_number + " " +
+        		       bp.getCharStart() + " " + bp.getCharEnd());
        }
       catch (CoreException e) {
-	 BedrockPlugin.logI("Problem getting break pos: " + e);
+         BedrockPlugin.logI("Problem getting break pos: " + e);
        }
-
+   
     }
 
    void update() {
