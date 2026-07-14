@@ -846,16 +846,16 @@ private static class FixImportsAction extends AbstractAction {
    @Override public void actionPerformed(ActionEvent e) {
       // dialog with options???
       if (file_name != null) {
-	 ImportFixer fixer = new ImportFixer(project_name,file_name);
-	 BoardThreadPool.start(fixer);
+         ImportFixer fixer = new ImportFixer(project_name,file_name);
+         BoardThreadPool.start(fixer);
        }
       else if (name_prefix != null) {
-	 BassFactory bf = BassFactory.getFactory();
-	 Collection<File> files = bf.findAssociatedFiles(project_name,name_prefix);
-	 for (File f : files) {
-	    ImportFixer fixer = new ImportFixer(project_name,f);
-	    BoardThreadPool.start(fixer);
-	  }
+         BassFactory bf = BassFactory.getFactory();
+         Collection<File> files = bf.findAssociatedFiles(project_name,name_prefix);
+         for (File f : files) {
+            ImportFixer fixer = new ImportFixer(project_name,f);
+            BoardThreadPool.start(fixer);
+          }
        }
    }
 
@@ -921,7 +921,8 @@ private static class ImportFixer implements Runnable  {
          int demand = BASS_PROPERTIES.getInt("Bass.import.ondemand.threshold");
          int sdemand = BASS_PROPERTIES.getInt("Bass.import.static.ondemand.threshold");
          BumpClient bc = BumpClient.getBump();
-         Element edits = bc.fixImports(project_name,file_name,order,demand,sdemand,null);
+         Element edits = bc.fixImports(project_name,file_name,
+               order,demand,sdemand,null);
          if (edits != null) {
             edit_result = edits;
             SwingUtilities.invokeLater(this);

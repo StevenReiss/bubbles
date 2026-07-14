@@ -337,6 +337,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
       if (retry) {
          if (done.isEmpty()) return;
          // wait for edits to cause recompilation
+         // should also wait for style to be rerun
          try {
             Thread.sleep(500);
           }

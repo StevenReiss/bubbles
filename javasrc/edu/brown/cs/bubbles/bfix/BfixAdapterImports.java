@@ -49,6 +49,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+
 class BfixAdapterImports extends BfixAdapter implements BfixConstants
 {
 
@@ -62,6 +63,8 @@ class BfixAdapterImports extends BfixAdapter implements BfixConstants
 private static List<BfixErrorPattern> ignore_patterns;
 private static Map<String,ImportChecker> import_checkers;
 private static Map<BfixCorrector,Set<String>> imports_added;
+private static List<BfixErrorPattern> unused_patterns;
+
 
 static {
    import_checkers = new HashMap<String,ImportChecker>();
@@ -81,12 +84,16 @@ BfixAdapterImports()
    super("Import adder");
    if (ignore_patterns == null) {
       ignore_patterns = new ArrayList<>();
+      unused_patterns = new ArrayList<>();
       Element xml = BumpClient.getBump().getLanguageData();
       Element fxml = IvyXml.getChild(xml,"FIXES");
       for (Element cxml : IvyXml.children(fxml,"IMPORT")) {
 	 if (IvyXml.getAttrBool(cxml,"IGNORE")) {
 	    ignore_patterns.add(new BfixErrorPattern(cxml));
 	  }
+         else if (IvyXml.getAttrBool(cxml,"UNUSED")) {
+            unused_patterns.add(new BfixErrorPattern(cxml));
+          }
        }
     }
 }
@@ -102,7 +109,10 @@ BfixAdapterImports()
 @Override public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explict,List<BfixFixer> rslt)
 {
    String fix = getImportCandidate(corr,bp);
-   if (fix == null) return;
+   if (fix == null) {
+      handleImportNotUsed(corr,bp,explict,rslt);
+      return;
+    }
 
    ImportFixer fixer = new ImportFixer(corr,bp,fix);
    rslt.add(fixer);
@@ -164,6 +174,24 @@ String getImportCandidate(BfixCorrector corr,BumpProblem bp)
 }
 
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      Fix import not used                                                     */
+/*                                                                              */
+/********************************************************************************/
+
+private void handleImportNotUsed(BfixCorrector corr,BumpProblem bp,
+      boolean explicit,List<BfixFixer> rslt)
+{
+   for (BfixErrorPattern pat : unused_patterns) {
+      if (pat.testMatch(bp.getMessage())) {
+         rslt.add(new UnusedImportFixer(corr,bp));
+         break;
+       }
+    }
+}
+         
 
 /********************************************************************************/
 /*										*/
@@ -501,6 +529,118 @@ private static class ImportDoer implements BfixRunnableFix {
    @Override public double getRegionOrder()		{ return 0; } 
 
 }	// end of inner class ImportDoer
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Fixers for removing an unused import                                    */
+/*                                                                              */
+/********************************************************************************/
+
+private static class UnusedImportFixer extends BfixFixer {
+
+   private long initial_time;
+   
+   UnusedImportFixer(BfixCorrector corr,BumpProblem bp) {
+      super(corr,bp);
+      initial_time = corr.getStartTime();
+    }
+   
+   @Override protected BfixRunnableFix findFix() {
+      BaleWindow win = for_corrector.getEditor();
+      BaleWindowDocument doc = win.getWindowDocument();
+      String proj = doc.getProjectName();
+      File file = doc.getFile();
+      String filename = file.getAbsolutePath();
+      
+      int soffset = doc.mapOffsetToJava(for_problem.getStart());
+      BaleWindowElement elt = doc.getCharacterElement(soffset);
+      BaleWindowElement pelt = elt.getPreviousCharacterElement();
+      BaleWindowElement nelt = elt.getNextCharacterElement();
+      if (pelt == null || pelt.getTokenType() != BaleTokenType.IMPORT) return null;
+      if (nelt == null || nelt.getTokenType() != BaleTokenType.SEMICOLON) return null;
+      BaleWindowElement nnelt = nelt.getNextCharacterElement();
+      if (nnelt == null) return null;
+      
+      int off = pelt.getStartOffset();
+      int eoff = nnelt.getStartOffset();
+      off = doc.mapOffsetToEclipse(off);
+      eoff = doc.mapOffsetToEclipse(eoff);
+      
+      String pid = createPrivateBuffer(proj,filename);
+      if (pid == null) return null;
+      BumpClient bc = BumpClient.getBump();
+      
+      try {
+         Collection<BumpProblem> oprobs = bc.getPrivateProblems(filename,pid);
+         if (oprobs == null) {
+            BoardLog.logE("BFIX","UNUSEDIMPORT: Problem getting errors for " + pid);
+            return null;
+          }
+         int probct = getErrorCount(oprobs,for_problem);
+         if (!checkProblemPresent(for_problem,oprobs)) {
+            BoardLog.logD("BFIX","UNUSEDIMPORT: Problem went away");
+            return null;
+          }
+         Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
+         bc.beginPrivateEdit(filename,pid);
+         bc.editPrivateFile(proj,file,pid,off,eoff,null);
+         bc.getPrivateProblems(filename,pid);
+         if (checkAnyProblemPresent(for_problem,probs,0,1)) return null;
+         if (checkAnyProblemPresent(probs,for_problem.getFile(),off,eoff+1)) return null; 
+         if (probs == null || getErrorCount(probs) >= probct) return null;
+       }
+      finally {
+         bc.removePrivateBuffer(proj,filename,pid);
+       }
+      
+      return new UnusedImportDoer(for_corrector,for_problem,off,eoff,initial_time);
+    }
+   
+}	// end of class BfixUnusedImportFixer
+
+
+
+private static class UnusedImportDoer implements BfixRunnableFix {
+
+   private BfixCorrector for_corrector;
+   private BumpProblem for_problem;
+   private int start_offset;
+   private int end_offset;
+   private long initial_time;
+   
+   UnusedImportDoer(BfixCorrector corr,BumpProblem bp,int soff,int eoff,long time) {
+      for_corrector = corr;
+      for_problem = bp;
+      start_offset = soff;
+      end_offset = eoff;
+      initial_time = time;
+    }
+   
+   @Override public Boolean call() {
+      BumpClient bc = BumpClient.getBump();
+      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
+      File f = doc.getFile();
+      List<BumpProblem> probs = bc.getProblems(f);
+      if (!checkProblemPresent(for_problem,probs)) return false;
+      if (for_corrector.getStartTime() != initial_time) return false;
+      if (!checkSafePosition(for_corrector,start_offset,end_offset+1)) return false;
+      
+      int inspos = doc.mapOffsetToEclipse(start_offset);
+      int epos = doc.mapOffsetToEclipse(end_offset);
+      inspos = start_offset;
+      epos = end_offset;
+      
+      BoardMetrics.noteCommand("BFIX","ChangeVisibility_" + for_corrector.getBubbleId());
+      doc.replace(inspos,epos-inspos,null,true,true);
+      BoardMetrics.noteCommand("BFIX","DoneChangeVisibility_" + for_corrector.getBubbleId());
+      
+      return true;
+    }
+   
+   @Override public double getRegionOrder()                { return 0; } 
+}
 
 
 }	// end of class BfixAdapterImports

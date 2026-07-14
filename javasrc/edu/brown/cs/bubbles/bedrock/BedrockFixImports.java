@@ -31,8 +31,10 @@ import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.IBinding;
+import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.IPackageBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MemberRef;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
@@ -82,13 +84,23 @@ Set<ITypeBinding> findImports(CompilationUnit cu)
    ImportFinder fndr = new ImportFinder();
    cu.accept(fndr);
    return fndr.getImports();
+} 
+
+
+Set<IBinding> findStaticImports(CompilationUnit cu)
+{
+   StaticFinder fnd = new StaticFinder();
+   cu.accept(fnd);
+   fnd.doneTypes();
+   cu.accept(fnd);
+   return fnd.getImports();
 }
 
 
 
 /********************************************************************************/
 /*										*/
-/*	Visitor to find imports 						*/
+/*	Visitor to find type imports 						*/
 /*										*/
 /********************************************************************************/
 
@@ -99,8 +111,8 @@ private class ImportFinder extends ASTVisitor {
    private IPackageBinding package_name;
 
    ImportFinder() {
-      import_types = new HashSet<ITypeBinding>();
-      defined_types = new HashSet<ITypeBinding>();
+      import_types = new HashSet<>();
+      defined_types = new HashSet<>();
     }
 
    Set<ITypeBinding> getImports() {
@@ -211,6 +223,151 @@ private class ImportFinder extends ASTVisitor {
 
 }	// end of inner class ImportFinder
 
+
+
+/********************************************************************************/
+/*										*/
+/*	Visitor to find static imports 					*/
+/*										*/
+/********************************************************************************/
+
+private class StaticFinder extends ASTVisitor {
+   
+   private Set<IBinding> static_imports;
+   private Set<ITypeBinding> defined_types;
+   private boolean defining_types;
+   
+   StaticFinder() {
+      static_imports = new HashSet<>();
+      defined_types = new HashSet<>();
+      defining_types = true;
+    }
+   
+   void doneTypes() {
+      defining_types = false;
+    }
+   
+   Set<IBinding> getImports() {
+      return static_imports;
+    }
+   
+   @Override public void endVisit(AnnotationTypeDeclaration n) {
+      addDefinedType(n.resolveBinding());
+    }
+   
+   @Override public void endVisit(AnonymousClassDeclaration n) {
+      addDefinedType(n.resolveBinding());
+    }
+   
+   @Override public void endVisit(EnumDeclaration n) {
+      addDefinedType(n.resolveBinding());
+    }
+   
+   @Override public void endVisit(TypeDeclaration n) {
+      addDefinedType(n.resolveBinding());
+    }
+   
+   @Override public void endVisit(TypeDeclarationStatement n) {
+      addDefinedType(n.resolveBinding());
+    }
+   
+   @Override public void endVisit(TypeParameter n) {
+      addDefinedType(n.resolveBinding());
+    }
+   
+   @Override public boolean visit(ImportDeclaration n) {
+      return false;
+    }
+   
+   @Override public boolean visit(QualifiedName n) {
+      noteVariable(n.resolveBinding());
+      return false;
+    }
+   
+   @Override public void endVisit(SimpleName n) {
+      noteVariable(n.resolveBinding());
+    }
+   
+   private void noteVariable(IBinding n) {
+      if (defining_types) return;
+      if (n.isSynthetic()) return;
+      if (n.isRecovered()) return;
+      switch (n.getKind()) {
+         case IBinding.METHOD :
+            IMethodBinding mthd = (IMethodBinding) n;
+            ITypeBinding cls = mthd.getDeclaringClass();
+            if (defined_types.contains(cls)) return;
+            break;
+         case IBinding.VARIABLE :
+            IVariableBinding var = (IVariableBinding) n;
+            if (!var.isField()) return;
+            ITypeBinding vtyp = var.getType();
+            if (defined_types.contains(vtyp)) return;
+            break;
+         default :
+            return;
+       }
+      static_imports.add(n);
+    }
+   
+   private void addDefinedType(ITypeBinding t) {
+      if (!defining_types) return;
+      if (t == null) return;
+      noteType(t.getSuperclass());
+      for (ITypeBinding intf : t.getInterfaces()) {
+         noteType(intf);
+       }
+      
+      String tnm = t.getQualifiedName(); 
+      BedrockPlugin.logD("Check import type: " + tnm);
+      if (t.isArray()) {
+         t = t.getElementType();
+       }
+      if (t.getErasure() != null) t = t.getErasure();
+      
+      tnm = t.getQualifiedName();
+      
+      BedrockPlugin.logD("Check erasure type: " + tnm);
+      
+      if (t.isTypeVariable()) return;
+      else if (t.isLocal()) return;
+      else if (t.isNullType()) return;
+      else if (t.isPrimitive()) return;
+      else if (t.isRawType()) return;
+      else if (t.isWildcardType()) return;
+      else if (t.getPackage().getName().equals("java.lang")) return;
+      
+      BedrockPlugin.logD("Add defined type: " + tnm);
+      defined_types.add(t);  
+    }
+   
+   private void noteType(ITypeBinding t) {
+      if (t == null) return;
+      
+      String tnm = t.getQualifiedName(); 
+      BedrockPlugin.logD("Check import type: " + tnm);
+      if (t.isArray()) {
+         t = t.getElementType();
+       }
+      if (t.getErasure() != null) t = t.getErasure();
+      
+      tnm = t.getQualifiedName();
+      
+      BedrockPlugin.logD("Check erasure type: " + tnm);
+      
+      if (t.isTypeVariable()) return;
+      else if (t.isLocal()) return;
+      else if (t.isNullType()) return;
+      else if (t.isPrimitive()) return;
+      else if (t.isRawType()) return;
+      else if (t.isWildcardType()) return;
+      else if (t.getPackage().getName().equals("java.lang")) return;
+      
+      BedrockPlugin.logD("Add defined type: " + tnm);
+      defined_types.add(t);
+    }
+   
+}	// end of inner class ImportFinder
 
 
 

@@ -2382,7 +2382,9 @@ public Element fixImports(String proj,File file,String order,int demand,int stat
 
    String rq = "";
    rq += "FILE='" + file.getPath() + "'";
-   if (order != null) rq += " ORDER='" + IvyXml.xmlSanitize(order,true) + "'";
+   if (order != null && !order.isEmpty()) {
+      rq += " ORDER='" + IvyXml.xmlSanitize(order,true) + "'";
+    }
    if (demand >= 0) rq += " DEMAND='" + demand + "'";
    if (staticdemand >= 0) rq += " STATICDEMAND='" + staticdemand + "'";
    if (add != null) rq += " ADD='" + IvyXml.xmlSanitize(add) + "'";
@@ -3810,10 +3812,15 @@ private void buildAllProjects(boolean clean,boolean full,boolean refresh,boolean
          // errors deferred -- will come later
        }
       else {
-         BoardLog.logD("BUMP","Start working on problems: " + IvyXml.convertXmlToString(probs));
+         BoardLog.logD("BUMP","Start working on problems: " + 
+               IvyXml.convertXmlToString(probs));
          if (clean || full || refresh) {
             problem_set.clearProblems(pnm,null,"IDE");
          }
+         else {
+            // this seems to be appropriate in all circumstances
+            problem_set.clearProblems(pnm,null,"IDE");
+          }
          problem_set.handleErrors(pnm,null,"IDE",0,probs);
        }
     }

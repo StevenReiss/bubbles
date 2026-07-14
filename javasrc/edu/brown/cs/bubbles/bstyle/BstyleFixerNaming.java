@@ -140,6 +140,7 @@ private String findNewName(String name,String pat)
       names.add("the_" + name);
       names.add("the_" + n0.toLowerCase());
       names.add("the_" + n0);
+      names.add(n0.toLowerCase() + "_value");
     }
    
    Pattern p = Pattern.compile(pat);

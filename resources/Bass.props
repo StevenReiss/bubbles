@@ -3,7 +3,6 @@
 <entry key="Bass.pack.onstart">true</entry>
 <entry key="Bass.doeshover">true</entry>
 <entry key="Bass.shown.in.overview">false</entry>
-<entry key="Bass.font.size">11</entry>
 <entry key="Bass.font">Monospaced/0/11</entry>
 <entry key="Bass.click.count">1</entry>
 <entry key="Bass.delete.package">false</entry>

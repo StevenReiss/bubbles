@@ -70,6 +70,7 @@ import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
@@ -1113,8 +1114,6 @@ public void handleFixImports(String proj,String bid,String file,int demand,int s
 	 " not available for import fixup");
 
    CompilationUnit cu = fd.getDefaultRoot(bid);
-   BedrockFixImports bfi = new BedrockFixImports();
-   Set<ITypeBinding> imports = bfi.findImports(cu);
 
    try {
       IJavaProject ijp = null;
@@ -1126,7 +1125,8 @@ public void handleFixImports(String proj,String bid,String file,int demand,int s
 	 order = PreferenceConstants.getPreference("org.eclipse.jdt.ui.importorder",ijp);
        }
       if (demand <= 0) {
-	 String s = PreferenceConstants.getPreference("org.eclipse.jdt.ui.ondemandthreshold",ijp);
+	 String s = PreferenceConstants.getPreference("org.eclipse.jdt.ui.ondemandthreshold",
+               ijp);
 	 if (s != null) {
 	    try {
 	       demand = Integer.parseInt(s);
@@ -1136,7 +1136,8 @@ public void handleFixImports(String proj,String bid,String file,int demand,int s
 	 if (demand <= 0) demand = 99;
        }
       if (staticdemand <= 0) {
-	 String s = PreferenceConstants.getPreference("org.eclipse.jdt.ui.ondemandthreshold",ijp);
+	 String s = PreferenceConstants.getPreference("org.eclipse.jdt.ui.ondemandthreshold",
+               ijp);
 	 if (s != null) {
 	    try {
 	       staticdemand = Integer.parseInt(s);
@@ -1156,9 +1157,9 @@ public void handleFixImports(String proj,String bid,String file,int demand,int s
       ImportRewrite imp = null;
       imp = ImportRewrite.create(cu,keepfg);
 
-      if (demand >= 0) imp.setOnDemandImportThreshold(demand);
-      if (staticdemand >= 0) imp.setStaticOnDemandImportThreshold(demand);
-      if (order != null) {
+      if (demand > 0) imp.setOnDemandImportThreshold(demand);
+      if (staticdemand > 0) imp.setStaticOnDemandImportThreshold(staticdemand);
+      if (order != null && !order.isEmpty()) {
 	 String [] ord = order.split("[;,]");
 	 imp.setImportOrder(ord);
        }
@@ -1176,10 +1177,18 @@ public void handleFixImports(String proj,String bid,String file,int demand,int s
 	  }
        }
       else {
-	 for (ITypeBinding tb : imports) {
+         BedrockFixImports bfi = new BedrockFixImports();
+         Set<ITypeBinding> imports = bfi.findImports(cu);
+         for (ITypeBinding tb : imports) {
 	    BedrockPlugin.logD("Add type to importrewrite: " + tb.getQualifiedName());
 	    imp.addImport(tb);
 	  }
+         Set<IBinding> statics = bfi.findStaticImports(cu);
+         for (IBinding sb : statics) {
+            BedrockPlugin.logD("Add static to importrewrite: " + sb.getName());
+            imp.addStaticImport(sb);
+          }
+         
        }
       TextEdit te = imp.rewriteImports(null);
       if (te != null) {

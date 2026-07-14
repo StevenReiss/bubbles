@@ -793,18 +793,18 @@ private class SocketClient {
       if (input_reader == null) return null;
       String cmd = null;
       try {
-	 if (!wait && !input_reader.ready()) return null;
-	 cmd = input_reader.readLine();
+         if (!wait && !input_reader.ready()) return null;
+         cmd = input_reader.readLine();
        }
       catch (IOException e) {
-	 System.err.println("BANDAID: Lost server connection: " + e);
+         System.err.println("BANDAID: Lost server connection: " + e);
        }
-
+   
       if (cmd == null) {
-	 input_reader = null;
-	 output_stream = null;
+         input_reader = null;
+         output_stream = null;
        }
-
+   
       return cmd;
     }
 
@@ -812,36 +812,36 @@ private class SocketClient {
       if (output_stream == null) return;
       int slen = 0;
       int xlen = 0;
-
+   
       if (msg != null) {
-	 slen = msg.length();
-	 if (msg.charAt(slen-1) != '\n') xlen = 1;
-	 // if (char_buf.length < slen+1) char_buf = new char[slen*2+1];
-	 // msg.getChars(0,slen,char_buf,0);
-	 // if (!msg.endsWith("\n")) char_buf[slen++] = '\n';
+         slen = msg.length();
+         if (msg.charAt(slen-1) != '\n') xlen = 1;
+         // if (char_buf.length < slen+1) char_buf = new char[slen*2+1];
+         // msg.getChars(0,slen,char_buf,0);
+         // if (!msg.endsWith("\n")) char_buf[slen++] = '\n';
        }
       if (slen + xlen + char_trailer.length > byte_buffer.length) {
-	 byte_buffer = new byte[slen*2 + char_trailer.length];
+         byte_buffer = new byte[slen*2 + char_trailer.length];
        }
       if (msg != null) {
-	 for (int i = 0; i < slen; ++i) {
-	    // byte_buffer[i] = (byte) char_buf[i];
-	    byte_buffer[i] = (byte) msg.charAt(i);
-	  }
-	 if (xlen > 0) {
-	    byte_buffer[slen++] = '\n';
-	  }
+         for (int i = 0; i < slen; ++i) {
+            // byte_buffer[i] = (byte) char_buf[i];
+            byte_buffer[i] = (byte) msg.charAt(i);
+          }
+         if (xlen > 0) {
+            byte_buffer[slen++] = '\n';
+          }
        }
       for (int i = 0; i < char_trailer.length; ++i) {
-	 byte_buffer[i+slen] = (byte) char_trailer[i];
+         byte_buffer[i+slen] = (byte) char_trailer[i];
        }
       try {
-	 output_stream.write(byte_buffer,0,slen+char_trailer.length);
-	 output_stream.flush();
+         output_stream.write(byte_buffer,0,slen+char_trailer.length);
+         output_stream.flush();
        }
       catch (IOException e) {
-	 System.err.println("BANDAID: problem writing output: " + e);
-	 output_stream = null;
+         System.err.println("BANDAID: problem writing output: " + e);
+         output_stream = null;
        }
     }
 

@@ -1224,7 +1224,10 @@ private class RunEventHandler implements BumpRunEventHandler {
       if (tct == 0) setLaunchState(LaunchState.TERMINATED);
       else if (rct == 0) setLaunchState(LaunchState.PAUSED);
       else if (rct == tct) setLaunchState(LaunchState.RUNNING);
-      else setLaunchState(LaunchState.PARTIAL_PAUSE,rct,tct);
+      else {
+         BoardLog.logD("BDDT","Pause for " + last_stopped.getId());
+         setLaunchState(LaunchState.PARTIAL_PAUSE,rct,tct);
+       }
    }
 
 }	// end of inner class RunEventHandler
