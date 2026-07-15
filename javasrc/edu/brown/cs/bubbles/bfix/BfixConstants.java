@@ -138,6 +138,13 @@ interface FixAdapter {
 }
 
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      Common code for fixing                                                  */
+/*                                                                              */
+/********************************************************************************/
+
 interface BfixRunnableFix extends Callable<Boolean>, Runnable {
 
    double getRegionOrder();
@@ -152,7 +159,7 @@ interface BfixRunnableFix extends Callable<Boolean>, Runnable {
        }
     }
 
-}
+}       // end of inner interface BfixRunnableFix
 
 }	// end of interface BfixConstants
 

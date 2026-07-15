@@ -201,26 +201,26 @@ private class SyntaxFixer extends BfixFixer {
          break;     
        }
       if (usepat == null) return null;
-
+   
       // ensure we cover complete input token
       if (ins != null && ins.length() == 2 && eoff-soff == 1) {
          String tok = usepat.getAltResult(msg);
-	 if (ins.startsWith(tok)) ++eoff;
+         if (ins.startsWith(tok)) ++eoff;
        }
-
+   
       // ignore if replacement is much shorter than original
       if (ins != null && ins.length() < eoff-soff-2) return null;
       // ignore if removing an actual keyword
       if (ins == null && eoff-soff >= 3) return null;
-
+   
       // ignore if suggesting a token type
       if (ins != null) {
-	 Matcher m = CONTAINS_TOKEN.matcher(ins);
-	 if (m.find()) return null;
+         Matcher m = CONTAINS_TOKEN.matcher(ins);
+         if (m.find()) return null;
        }
       // ignore if right brace -- eclipse usually gets this wrong
       if (ins != null && ins.equals("}")) return null;
-
+   
       BaleWindow win = for_corrector.getEditor();
       BaleWindowDocument doc = win.getWindowDocument();
       String proj = doc.getProjectName();
@@ -231,28 +231,28 @@ private class SyntaxFixer extends BfixFixer {
       if (pid == null) return null;
       BoardLog.logD("BFIX","SPELL: using private buffer " + pid);
       try {
-	 Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
-	 if (probs == null) {
-	    BoardLog.logE("BFIX","SPELL: Problem getting errors for " + pid);
-	    return null;
-	  }
-	 int probct = getErrorCount(probs);
-	 if (!checkProblemPresent(for_problem,probs)) return null;
-
-	 bc.beginPrivateEdit(filename,pid);
-	 BoardLog.logD("BFIX","SPELL: Try syntax edit " + soff + "," + eoff + "," + ins);
-	 int edelta = soff-eoff;
-	 if (ins != null) edelta += ins.length();
-	 bc.editPrivateFile(proj,file,pid,soff,eoff,ins);
-	 probs = bc.getPrivateProblems(filename,pid);
-	 bc.beginPrivateEdit(filename,pid);		// undo and wait
-	 if (probs == null || getErrorCount(probs) >= probct) return null;
-	 if (checkAnyProblemPresent(for_problem,probs,0,edelta)) return null;
+         Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
+         if (probs == null) {
+            BoardLog.logE("BFIX","SPELL: Problem getting errors for " + pid);
+            return null;
+          }
+         int probct = getErrorCount(probs);
+         if (!checkProblemPresent(for_problem,probs)) return null;
+   
+         bc.beginPrivateEdit(filename,pid);
+         BoardLog.logD("BFIX","SPELL: Try syntax edit " + soff + "," + eoff + "," + ins);
+         int edelta = soff-eoff;
+         if (ins != null) edelta += ins.length();
+         bc.editPrivateFile(proj,file,pid,soff,eoff,ins);
+         probs = bc.getPrivateProblems(filename,pid);
+         bc.beginPrivateEdit(filename,pid);		// undo and wait
+         if (probs == null || getErrorCount(probs) >= probct) return null;
+         if (checkAnyProblemPresent(for_problem,probs,0,edelta)) return null;
        }
       finally {
-	 bc.removePrivateBuffer(proj,filename,pid);
+         bc.removePrivateBuffer(proj,filename,pid);
        }
-
+   
       if (for_corrector.getStartTime() != initial_time) return null;
       BoardLog.logD("BFIX","SPELL: DO syntax edit");
       BoardMetrics.noteCommand("BFIX","SYNTAXFIX");

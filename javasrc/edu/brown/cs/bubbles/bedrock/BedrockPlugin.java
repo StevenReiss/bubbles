@@ -600,7 +600,8 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 break;
       case "PATTERNSEARCH" :
          logD("SEARCH: " + IvyXml.convertXmlToString(xml));
-	 bedrock_java.handlePatternSearch(proj,IvyXml.getAttrString(xml,"BID","*"),
+	 bedrock_java.handlePatternSearch(proj,
+               IvyXml.getAttrString(xml,"BID","*"),
 	       IvyXml.getAttrString(xml,"PATTERN"),
 	       IvyXml.getAttrString(xml,"FOR"),
 	       IvyXml.getAttrBool(xml,"DEFS",true),
@@ -1132,6 +1133,7 @@ Element getLanguageData()
       xml = lang_data;
     }
    else {
+      BedrockPlugin.logD("Language data: " + IvyXml.convertXmlToString(xml));
       lang_data = xml;
     }
 

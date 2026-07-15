@@ -341,7 +341,10 @@ Collection<BumpProblem> getPrivateErrors(String privid)
 
    synchronized (private_problems) {
       while (!private_problems.containsKey(privid)) {
-	 if ((System.currentTimeMillis() - start) > 10000) break;
+	 if ((System.currentTimeMillis() - start) > 10000) {
+            BoardLog.logE("BUMP","Timeout waiting for private errors");
+            break;
+          }
 	 try {
 	    private_problems.wait(1000);
 	  }

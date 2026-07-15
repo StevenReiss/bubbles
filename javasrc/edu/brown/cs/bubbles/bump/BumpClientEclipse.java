@@ -120,9 +120,13 @@ private void ensureRunning()
        }
     }
    
-   if (ef1 == null || !ef1.exists() || !ef1.canExecute()) ef1 = new File(ef,"eclipse");
+   if (ef1 == null || !ef1.exists() || !ef1.canExecute()) {
+      ef1 = new File(ef,"eclipse");
+    }
    String efp = ef1.getPath();
-   if (efp.endsWith(".app") || efp.endsWith(".exe")) efp = efp.substring(0,efp.length()-4);
+   if (efp.endsWith(".app") || efp.endsWith(".exe")) {
+      efp = efp.substring(0,efp.length()-4);
+    }
    String cmd = "'" + efp + "'";
    
    cmd += " -application edu.brown.cs.bubbles.bedrock.application";

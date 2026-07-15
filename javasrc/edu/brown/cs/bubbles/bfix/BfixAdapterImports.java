@@ -106,11 +106,11 @@ BfixAdapterImports()
 /*										*/
 /********************************************************************************/
 
-@Override public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explict,List<BfixFixer> rslt)
+@Override public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,List<BfixFixer> rslt)
 {
    String fix = getImportCandidate(corr,bp);
-   if (fix == null) {
-      handleImportNotUsed(corr,bp,explict,rslt);
+   if (fix == null && explicit) {
+      handleImportNotUsed(corr,bp,explicit,rslt);
       return;
     }
 
@@ -123,6 +123,13 @@ BfixAdapterImports()
 @Override protected String getMenuAction(BfixCorrector corr,BumpProblem bp)
 {
    String name = getImportCandidate(corr,bp);
+   if (name == null) {
+      for (BfixErrorPattern pat : unused_patterns) {
+         if (pat.testMatch(bp.getMessage())) {
+            return "Remove Import";
+          }
+       }
+    }
    return name;
 }
 
@@ -219,7 +226,7 @@ private static class ImportFixer extends BfixFixer {
       int soffset = for_document.mapOffsetToJava(for_problem.getStart());
       BaleWindowElement elt = for_document.getCharacterElement(soffset);
       if (!elt.isTypeIdentifier()) {
-         if (for_identifier.length() == 0) return null;
+         if (for_identifier == null || for_identifier.length() == 0) return null;
          if (!Character.isUpperCase(for_identifier.charAt(0))) return null;
          // return false;
        }
@@ -266,7 +273,8 @@ private static class ImportFixer extends BfixFixer {
                isokay = false;
              }
             else if (getErrorCount(probs) >= probct) {
-               if (getErrorCount(probs) == probct && !checkAnyProblemPresent(for_problem,probs,delta,delta)) {
+               if (getErrorCount(probs) == probct && 
+                     !checkAnyProblemPresent(for_problem,probs,delta,delta)) {
         	  if (badaccept == null) badaccept = type;
         	  else badaccept = "*";
         	}
@@ -297,24 +305,24 @@ private static class ImportFixer extends BfixFixer {
       BaleFileOverview base = for_document.getBaseWindowDocument();
       String body = null;
       try {
-	 body = base.getText(0,base.getLength());
+         body = base.getText(0,base.getLength());
        }
       catch (BadLocationException e) { }
-
+   
       if (body == null || body.length() == 0) return -1;
-
+   
       String pats = "\\s*((public|private|abstract|static)\\s+)*(class|interface|enum)" + 
             "\\s+(\\w+(<.*>)?)\\s+((extends\\s)|(implements\\s)|\\{)";
       Pattern pat = Pattern.compile(pats,Pattern.MULTILINE);
       Matcher mat = pat.matcher(body);
       if (!mat.find()) return -1;
-
+   
       for (int idx = mat.start(); idx < mat.end(); ++idx) {
-	 char c = body.charAt(idx);
-	 if (c == '\n') {
-	    int pos = idx+1;
-	    return base.mapOffsetToEclipse(pos);
-	  }
+         char c = body.charAt(idx);
+         if (c == '\n') {
+            int pos = idx+1;
+            return base.mapOffsetToEclipse(pos);
+          }
        }
       return 0;
     }
@@ -556,15 +564,61 @@ private static class UnusedImportFixer extends BfixFixer {
       
       int soffset = doc.mapOffsetToJava(for_problem.getStart());
       BaleWindowElement elt = doc.getCharacterElement(soffset);
-      BaleWindowElement pelt = elt.getPreviousCharacterElement();
-      BaleWindowElement nelt = elt.getNextCharacterElement();
-      if (pelt == null || pelt.getTokenType() != BaleTokenType.IMPORT) return null;
-      if (nelt == null || nelt.getTokenType() != BaleTokenType.SEMICOLON) return null;
-      BaleWindowElement nnelt = nelt.getNextCharacterElement();
+      if (elt == null) return null;
+      BaleWindowElement pelt = null;
+      for (BaleWindowElement xelt = elt; 
+                xelt != null && pelt == null;
+                xelt = xelt.getPreviousCharacterElement()) {
+         switch (xelt.getTokenType()) {
+            case IMPORT: 
+               pelt = xelt;
+               break;
+            case DOT :
+            case IDENTIFIER :
+            case SPACE :
+               break;
+            default :
+               return null;
+          }
+       }
+      if (pelt == null) return null;
+      BaleWindowElement nelt = null;
+      for (BaleWindowElement xelt = elt; 
+                xelt != null && nelt == null;
+                xelt = xelt.getNextCharacterElement()) {
+         switch (xelt.getTokenType()) {
+            case SEMICOLON : 
+               nelt = xelt;
+               break;
+            case DOT :
+            case IDENTIFIER :
+            case SPACE :
+               break;
+            default :
+               return null;
+          }
+       }
+      if (nelt == null) return null;
+      BaleWindowElement nnelt = null;
+      for (BaleWindowElement xelt = nelt.getNextCharacterElement(); 
+         xelt != null && nnelt == null;
+         xelt = xelt.getNextCharacterElement()) {
+         switch (xelt.getTokenType()) {
+            case EOL : 
+               nnelt = xelt;
+               break;
+            case SPACE :
+            case EOLCOMMENT :
+               break;
+            default :
+               nnelt = xelt.getPreviousCharacterElement();
+               break;
+          }
+       }
       if (nnelt == null) return null;
       
       int off = pelt.getStartOffset();
-      int eoff = nnelt.getStartOffset();
+      int eoff = nnelt.getEndOffset();
       off = doc.mapOffsetToEclipse(off);
       eoff = doc.mapOffsetToEclipse(eoff);
       
@@ -583,13 +637,12 @@ private static class UnusedImportFixer extends BfixFixer {
             BoardLog.logD("BFIX","UNUSEDIMPORT: Problem went away");
             return null;
           }
-         Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
          bc.beginPrivateEdit(filename,pid);
          bc.editPrivateFile(proj,file,pid,off,eoff,null);
-         bc.getPrivateProblems(filename,pid);
+         Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
          if (checkAnyProblemPresent(for_problem,probs,0,1)) return null;
          if (checkAnyProblemPresent(probs,for_problem.getFile(),off,eoff+1)) return null; 
-         if (probs == null || getErrorCount(probs) >= probct) return null;
+         if (probs == null || getErrorCount(probs) > probct) return null;
        }
       finally {
          bc.removePrivateBuffer(proj,filename,pid);
@@ -629,12 +682,10 @@ private static class UnusedImportDoer implements BfixRunnableFix {
       
       int inspos = doc.mapOffsetToEclipse(start_offset);
       int epos = doc.mapOffsetToEclipse(end_offset);
-      inspos = start_offset;
-      epos = end_offset;
       
-      BoardMetrics.noteCommand("BFIX","ChangeVisibility_" + for_corrector.getBubbleId());
+      BoardMetrics.noteCommand("BFIX","RemoveImport_" + for_corrector.getBubbleId());
       doc.replace(inspos,epos-inspos,null,true,true);
-      BoardMetrics.noteCommand("BFIX","DoneChangeVisibility_" + for_corrector.getBubbleId());
+      BoardMetrics.noteCommand("BFIX","DoneRemoveImport_" + for_corrector.getBubbleId());
       
       return true;
     }

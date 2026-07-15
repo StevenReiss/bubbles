@@ -152,7 +152,8 @@ void addPopupMenuItems(BaleContextConfig ctx,JPopupMenu menu)
       for (BumpProblem bp : probs) {
 	 String name = getFixForProblem(bp);
 	 if (name != null) {
-	    FixAction act = new FixAction(name,ctx.getOffset(),ctx.getOffset()+1);
+	    FixAction act = new FixAction(name,ctx.getOffset(),
+                  ctx.getOffset()+1);
 	    menu.add(act);
 	    add = true;
 	    break;
@@ -713,10 +714,12 @@ private synchronized void recordError(BumpProblem bp)
 	 if (BfixAdapter.checkProblemPresent(bp, active_problems)) {
 	    pw.println("------------------------");
 	    pw.println(bp.getMessage());
-	    pw.println(soff + " " + bp.getStart() + " " + bp.getEnd() + " " + bp.getLine() + " " +
-		     bp.getProblemId() + " " + bp.getErrorType() + " " + bp.getFile());
-	    pw.println(start_offset + " " + caret_position + " " + end_offset + " " +
-		     start_time + " " + lstart + " " + lnoerr + " " + lnocur);
+	    pw.println(soff + " " + bp.getStart() + " " + bp.getEnd() + " " +
+                  bp.getLine() + " " + bp.getProblemId() + " " + 
+                  bp.getErrorType() + " " + bp.getFile());
+	    pw.println(start_offset + " " + caret_position + " " + 
+                  end_offset + " " + start_time + " " + lstart + " " + 
+                  lnoerr + " " + lnocur);
 	    pw.println(s1);
 	    pw.close();
 	 }

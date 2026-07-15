@@ -218,6 +218,7 @@ private static class CatchFixer extends BfixFixer {
     }
    
    private boolean checkCatchInsert(BaleWindowElement pelt) {
+      String insert = " catch (" + for_type + " ___x___) { }";
       BumpClient bc = BumpClient.getBump();
       String proj = for_document.getProjectName();
       File file = for_document.getFile();
@@ -225,7 +226,6 @@ private static class CatchFixer extends BfixFixer {
       String pid = bc.createPrivateBuffer(proj, filename, null);
       int foff = pelt.getStartOffset();
       int eoff = pelt.getEndOffset();
-      String insert = " catch (" + for_type + " ___x___) { }";
       try {
          Collection<BumpProblem> probs = bc.getPrivateProblems(filename, pid);
          if (probs == null) return false;

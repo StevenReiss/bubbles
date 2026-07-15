@@ -2050,6 +2050,10 @@ private class ThreadData implements BumpThread {
       is_active = fg; 
       handleTargetThreadActive(this);
     }
+   
+   @Override public String toString() {
+      return getName() + ":" + getId();
+    }
 
 }	// end of inner class ThreadData
 

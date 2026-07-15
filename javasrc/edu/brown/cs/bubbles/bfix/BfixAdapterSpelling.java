@@ -347,16 +347,6 @@ private static class SpellFixer extends BfixFixer {
             it.remove();
             break;
           }
-         // if (for_identifier.equals("put") && txt.equals("get")) it.remove();
-         // else if (for_identifier.startsWith("set") && txt.startsWith("get")) it.remove();
-         // else if (for_identifier.equals("List") && txt.equals("int")) it.remove();
-         // else if (for_identifier.equals("is") && txt.equals("if")) it.remove();
-         // else if (txt.equals("if")) it.remove();
-         // else if (for_identifier.equals("add") && txt.equals("do")) it.remove();
-         // else if (for_identifier.equals("min") && txt.equals("sin")) it.remove();
-         // else if (for_identifier.equals(txt + "2D")) it.remove();
-         // else if (txt.equals(for_identifier + "2D")) it.remove();
-         // else if (for_identifier.equals("IOException")) it.remove();
        }
       
       if (totry.size() == 0) {

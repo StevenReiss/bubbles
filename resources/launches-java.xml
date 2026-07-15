@@ -27,7 +27,7 @@
    <CATCH USE='0'>Unhandled exception type {0}</CATCH>
    <SPELL IGNORE='T' ANYWHERE='T'>Syntax error</SPELL>
    <IMPORT IGNORE='T' ANYWHERE='T'>Syntax error</IMPORT>
-   <IMPORT UNUSED='T' ANYWHERE='T'>The import {0} is not used</IMPORT>
+   <IMPORT UNUSED='T' ANYWHERE='T'>The import {0} is never used</IMPORT>
    <NEWFIELD USE='0'>The value of the field {0} is not used</NEWFIELD>
    <RETURN USE='0'>This method must return a result of type {0}</RETURN>
    <SPELLLOOKUP TYPES='T' KEYWORDS='T' />
