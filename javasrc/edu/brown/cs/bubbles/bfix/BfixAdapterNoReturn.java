@@ -24,14 +24,13 @@
 
 package edu.brown.cs.bubbles.bfix;
 
+import edu.brown.cs.bubbles.bfix.BfixFixer.BfixBaseEdit;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.ivy.xml.IvyXml;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.w3c.dom.Element;
@@ -188,40 +187,19 @@ protected BfixRunnableFix findFix()
    }
    BoardMetrics.noteCommand("BFIX", "ReturnCheck");
    String stmt = "return " + value + ";\n";
-
-   BumpClient bc = BumpClient.getBump();
-   String proj = for_document.getProjectName();
-   File file = for_document.getFile();
-   String filename = file.getAbsolutePath();
-   String pid = createPrivateBuffer(proj, filename);
-   try {
-      Collection<BumpProblem> probs = bc.getPrivateProblems(filename, pid);
-      if (probs == null) {
-	 BoardLog.logE("BFIX", "SPELL: Problem getting errors for " + pid);
-	 return null;
-      }
-      int probct = getErrorCount(probs);
-      if (!checkProblemPresent(for_problem, probs)) {
-	 BoardLog.logD("BFIX", "SPELL: Problem went away");
-	 return null;
-      }
-      int inspos = for_document.mapOffsetToEclipse(foff + xpos);
-      bc.beginPrivateEdit(filename, pid);
-      bc.editPrivateFile(proj, file, pid, inspos, inspos, stmt);
-      probs = bc.getPrivateProblems(filename, pid);
-      if (probs == null || getErrorCount(probs) > probct) return null;
-      int delta = stmt.length();
-      if (checkAnyProblemPresent(for_problem, probs, delta, delta)) return null;
-   }
-   finally {
-      bc.removePrivateBuffer(proj, filename, pid);
-   }
-
-   if (for_corrector.getStartTime() != initial_time) return null;
+   
+   int usepos = foff + xpos;
+   BfixEdit edit = new BfixBaseEdit(for_corrector,usepos,usepos,stmt);
+   int delta = stmt.length();
+   BfixCheckAreas dareas = new BfixCheckAreas(delta,delta);
+   if (!checkPrivateEdit(edit,null,dareas,true)) {
+      return null;
+    }
+  
    BoardLog.logD("BFIX", "RETURN: DO " + stmt);
    BoardMetrics.noteCommand("BFIX", "RETURNFIX");
-   ReturnDoer rd = new ReturnDoer(for_corrector,for_document,for_problem,stmt,
-	    initial_time);
+   ReturnDoer rd = new ReturnDoer(for_corrector,for_document,for_problem,
+         stmt,initial_time);
 
    return rd;
 }
@@ -235,31 +213,21 @@ protected BfixRunnableFix findFix()
 /*                                                                              */
 /********************************************************************************/
 
-private static class ReturnDoer implements BfixRunnableFix {
+private static class ReturnDoer extends BfixFixDoer {
    
-   private BfixCorrector	   for_corrector;
-   private BaleWindowDocument for_document;
-   private BumpProblem	   for_problem;
-   private String		   insert_stmt;
-   private long		   initial_time;
+   private BaleWindowDocument  for_document;
+   private String	        insert_stmt;
    
    ReturnDoer(BfixCorrector corr,BaleWindowDocument doc,BumpProblem bp,String text,long time) {
-      for_corrector = corr;
+      super(corr,bp,time);
       for_document = doc;
-      for_problem = bp;
       insert_stmt = text;
-      initial_time = time;
     }
    
    @Override
    public Boolean call() {
-      BumpClient bc = BumpClient.getBump();
-      List<BumpProblem> probs = bc.getProblems(for_document.getFile());
-      if (!checkProblemPresent(for_problem, probs)) return false;
-      if (for_corrector.getStartTime() != initial_time) return false;
       int soff = for_document.mapOffsetToJava(for_problem.getStart());
       BaleWindowElement elt = for_document.getCharacterElement(soff);
-      
       BaleWindowElement pelt = elt;
       while (pelt != null) {
          if (pelt.getName().equals("Method")) break;
@@ -272,23 +240,18 @@ private static class ReturnDoer implements BfixRunnableFix {
       if (text.contains("return ")) return false;
       int xpos = text.lastIndexOf("}");
       int inspos = foff + xpos;
-      if (!checkSafePosition(for_corrector, inspos - 1, inspos + 1)) return false;
       
-      BoardMetrics.noteCommand("BFIX", "AddReturn_" + for_corrector.getBubbleId());
-      // int eoff0 = for_document.mapOffsetToJava(for_problem.getEnd());
-      for_document.replace(inspos, 0, insert_stmt, true, true);
-      BoardMetrics.noteCommand("BFIX", "DoneAddReturn_" + for_corrector.getBubbleId());
-      
-      return true;
+      BfixCheckAreas sareas = new BfixCheckAreas(inspos-1,inspos+1);
+      BfixEdit edit = new BfixBaseEdit(for_corrector,inspos,inspos,insert_stmt);
+      return testEdit(edit,sareas,"AddReturn");
     }
    
-   @Override
-   public double getRegionOrder()                  { return 0; }  
+   @Override public double getRegionOrder()             { return 0; }  
 
-} // end of inner class ReturnDoer
+}       // end of inner class ReturnDoer
 
 
-} // end of class BfixAdapterNoReturn
+}       // end of class BfixAdapterNoReturn
 
 
 

@@ -24,13 +24,12 @@
 
 package edu.brown.cs.bubbles.bfix;
 
+import edu.brown.cs.bubbles.bfix.BfixFixer.BfixBaseEdit;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.ivy.xml.IvyXml;
 
-import java.io.File;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -220,43 +219,18 @@ private class SyntaxFixer extends BfixFixer {
        }
       // ignore if right brace -- eclipse usually gets this wrong
       if (ins != null && ins.equals("}")) return null;
-   
-      BaleWindow win = for_corrector.getEditor();
-      BaleWindowDocument doc = win.getWindowDocument();
-      String proj = doc.getProjectName();
-      File file = doc.getFile();
-      String filename = file.getAbsolutePath();
-      BumpClient bc = BumpClient.getBump();
-      String pid = createPrivateBuffer(proj,filename);
-      if (pid == null) return null;
-      BoardLog.logD("BFIX","SPELL: using private buffer " + pid);
-      try {
-         Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
-         if (probs == null) {
-            BoardLog.logE("BFIX","SPELL: Problem getting errors for " + pid);
-            return null;
-          }
-         int probct = getErrorCount(probs);
-         if (!checkProblemPresent(for_problem,probs)) return null;
-   
-         bc.beginPrivateEdit(filename,pid);
-         BoardLog.logD("BFIX","SPELL: Try syntax edit " + soff + "," + eoff + "," + ins);
-         int edelta = soff-eoff;
-         if (ins != null) edelta += ins.length();
-         bc.editPrivateFile(proj,file,pid,soff,eoff,ins);
-         probs = bc.getPrivateProblems(filename,pid);
-         bc.beginPrivateEdit(filename,pid);		// undo and wait
-         if (probs == null || getErrorCount(probs) >= probct) return null;
-         if (checkAnyProblemPresent(for_problem,probs,0,edelta)) return null;
-       }
-      finally {
-         bc.removePrivateBuffer(proj,filename,pid);
+      
+      BfixEdit ed = new BfixBaseEdit(for_corrector,soff,eoff,ins);
+      BfixCheckAreas darea = new BfixCheckAreas(0,-1);
+      if (!checkPrivateEdit(ed,null,darea,false)) {
+         return null;
        }
    
       if (for_corrector.getStartTime() != initial_time) return null;
       BoardLog.logD("BFIX","SPELL: DO syntax edit");
       BoardMetrics.noteCommand("BFIX","SYNTAXFIX");
-      SyntaxDoer sd = new SyntaxDoer(for_corrector,for_problem,soff,eoff,ins,initial_time);
+      SyntaxDoer sd = new SyntaxDoer(for_corrector,for_problem,soff,eoff,
+            ins,initial_time);
       return sd;
     }
 
@@ -271,42 +245,23 @@ private class SyntaxFixer extends BfixFixer {
 /*										*/
 /********************************************************************************/
 
-private class SyntaxDoer implements BfixRunnableFix {
+private class SyntaxDoer extends BfixFixDoer {
 
-   private BfixCorrector for_corrector;
-   private BumpProblem for_problem;
    private int edit_start;
    private int edit_end;
    private String insert_text;
-   private long initial_time;
 
    SyntaxDoer(BfixCorrector corr,BumpProblem bp,int soff,int eoff,String txt,long t0) {
-      for_corrector = corr;
-      for_problem = bp;
+      super(corr,bp,t0);
       edit_start = soff;
       edit_end = eoff;
       insert_text = txt;
-      initial_time = t0;
     }
 
    @Override public Boolean call() {
-      BumpClient bc = BumpClient.getBump();
-      BaleWindow win = for_corrector.getEditor();
-      BaleWindowDocument doc = win.getWindowDocument();
-      List<BumpProblem> probs = bc.getProblems(doc.getFile());
-      if (!checkProblemPresent(for_problem,probs)) return false;
-      if (for_corrector.getStartTime() != initial_time) return false;
-      int soff = doc.mapOffsetToJava(edit_start);
-      int eoff = doc.mapOffsetToJava(edit_end);
-      if (!checkSafePosition(for_corrector,edit_start,edit_end)) return false;
-
-      BoardLog.logD("BFIX","SYNTAX: make fix using " + insert_text);
-
-      BoardMetrics.noteCommand("BFIX","SyntaxCorrection_" + for_corrector.getBubbleId());
-      doc.replace(soff,eoff-soff,insert_text,false,false);
-      BoardMetrics.noteCommand("BFIX","DoneSyntaxCorrection_" + for_corrector.getBubbleId());
-      
-      return true;
+      BfixEdit ed = new BfixBaseEdit(for_corrector,edit_start,edit_end,insert_text);
+      BfixCheckAreas areas = new BfixCheckAreas(edit_start,edit_end);
+      return testEdit(ed,areas,"SyntaxCorrection",false);
     }
 
    @Override public double getRegionOrder()                { return 0; } 

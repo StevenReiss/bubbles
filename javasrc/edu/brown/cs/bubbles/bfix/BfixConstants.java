@@ -24,10 +24,12 @@
 
 package edu.brown.cs.bubbles.bfix;
 
-import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
 
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 
@@ -146,20 +148,35 @@ interface FixAdapter {
 /********************************************************************************/
 
 interface BfixRunnableFix extends Callable<Boolean>, Runnable {
-
    double getRegionOrder();
+}
 
-   default void run() {
-      // only called when result isn't needed
-      try {
-         call();
-       }
-      catch (Exception e) {
-         BoardLog.logE("BFIX","Problem with fixer",e);
+
+interface BfixEdit {
+   void doEdit(boolean format,boolean indent);
+   boolean makeEdit(String pid);
+   boolean unmakeEdit(String pid);
+   
+   default int getDelta()       { return 0; }
+   
+}       // end of interface BfixEdit
+
+
+class BfixCheckAreas {
+   
+   private List<Point> check_areas;
+   
+   public BfixCheckAreas(int... bounds) {
+      check_areas = new ArrayList<>();
+      for (int i = 0; i+1 < bounds.length; i += 2) {
+         check_areas.add(new Point(bounds[i],bounds[i+1]));
        }
     }
+   
+   List<Point> getAreas()                       { return check_areas; }
+   
+}       // end of inner class CheckAreas+
 
-}       // end of inner interface BfixRunnableFix
 
 }	// end of interface BfixConstants
 

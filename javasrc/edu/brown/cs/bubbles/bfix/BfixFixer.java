@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.bfix;
 
+import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindowDocument;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
@@ -35,6 +36,8 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
+
+import org.w3c.dom.Element;
 
 public abstract class BfixFixer implements Runnable, BfixConstants
 {
@@ -145,7 +148,8 @@ protected String createPrivateBuffer(String proj,String filename)
 
 
 
-protected List<BfixEdit> findPrivateEdits(Collection<BfixEdit> edits,CheckAreas areas)
+protected List<BfixEdit> findPrivateEdits(Collection<BfixEdit> edits,
+      BfixCheckAreas safepos,BfixCheckAreas probareas) 
 {
    BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
    String proj = doc.getProjectName();
@@ -157,7 +161,8 @@ protected List<BfixEdit> findPrivateEdits(Collection<BfixEdit> edits,CheckAreas 
    List<BfixEdit> alt = null;
    try {
       for (BfixEdit edit : edits) {
-         Boolean fg = checkOneEdit(bc,pid,filename,doc,edit,areas);
+         Boolean fg = checkOneEdit(bc,pid,filename,doc,edit,
+               safepos,probareas);
          if (fg == null) {
             if (rslt == null) {
                if (alt == null) alt = new ArrayList<>();
@@ -181,7 +186,8 @@ protected List<BfixEdit> findPrivateEdits(Collection<BfixEdit> edits,CheckAreas 
 }
 
 
-protected boolean checkPrivateEdit(BfixEdit edit,CheckAreas areas)
+protected Boolean checkPrivateEdit(BfixEdit edit,BfixCheckAreas safepos,
+      BfixCheckAreas probareas,Boolean dflt)
 {
    BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
    String proj = doc.getProjectName();
@@ -190,8 +196,8 @@ protected boolean checkPrivateEdit(BfixEdit edit,CheckAreas areas)
    String filename = file.getAbsolutePath();
    String pid = bc.createPrivateBuffer(proj, filename, null);
    try {
-      Boolean fg = checkOneEdit(bc,pid,filename,doc,edit,areas);
-      if (fg == null) fg = false;
+      Boolean fg = checkOneEdit(bc,pid,filename,doc,edit,safepos,probareas);
+      if (fg == null) fg = dflt;
       return fg;
     }
    finally {
@@ -201,12 +207,21 @@ protected boolean checkPrivateEdit(BfixEdit edit,CheckAreas areas)
 
 
 private Boolean checkOneEdit(BumpClient bc,String pid,String filename,
-      BaleWindowDocument doc,BfixEdit edit,CheckAreas areas)
+      BaleWindowDocument doc,BfixEdit edit,
+      BfixCheckAreas safepos,BfixCheckAreas probareas)
 {
    Collection<BumpProblem> probs = bc.getPrivateProblems(filename, pid);
    if (probs == null) return false;
    int probct = BfixAdapter.getErrorCount(probs);
    if (!BfixAdapter.checkProblemPresent(for_problem,probs)) return false;
+   
+   if (safepos != null) {
+      for (Point p : safepos.getAreas()) {
+         if (!BfixAdapter.checkSafePosition(for_corrector,p.x,p.y)) {
+            return false;
+          }
+       }
+    }
    
    bc.beginPrivateEdit(filename, pid);
    edit.makeEdit(pid);
@@ -219,10 +234,16 @@ private Boolean checkOneEdit(BumpClient bc,String pid,String filename,
    if (probs == null || BfixAdapter.getErrorCount(probs) > probct) {
       return false;
     }
-   for (Point p : areas.getAreas()) {
-      if (BfixAdapter.checkAnyProblemPresent(for_problem,probs,
-            p.x,p.y)) {
-         return false;
+   if (probareas != null) {
+      for (Point p : probareas.getAreas()) {
+         int px = p.x;
+         if (px < 0) px = edit.getDelta();
+         int py = p.y;
+         if (py < 0) py = edit.getDelta();
+         if (BfixAdapter.checkAnyProblemPresent(for_problem,probs,
+              px,py)) {
+            return false;
+          }
        }
     }
    if (BfixAdapter.getErrorCount(probs) == probct) {
@@ -231,6 +252,107 @@ private Boolean checkOneEdit(BumpClient bc,String pid,String filename,
    
    return true;
 }
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Edit representation                                                     */
+/*                                                                              */
+/********************************************************************************/
+
+public static class BfixBaseEdit implements BfixEdit {
+   
+   private BfixCorrector for_corrector;
+   private int start_offset;
+   private int end_offset;
+   private String insert_text;
+   private String undo_text;
+   private boolean can_undo;
+   
+   public BfixBaseEdit(BfixCorrector corr,int soff,int eoff,String ins,String undo) {
+      for_corrector = corr;
+      start_offset = soff;
+      end_offset = eoff;
+      insert_text = ins;
+      undo_text = undo;
+      can_undo = true;
+    }
+   
+   public BfixBaseEdit(BfixCorrector corr,int soff,int eoff,String ins) {
+      for_corrector = corr;
+      start_offset = soff;
+      end_offset = eoff;
+      insert_text = ins;
+      undo_text = null;
+      can_undo = false;
+    }
+   
+   @Override public void doEdit(boolean format,boolean indent) {
+      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
+      doc.replace(start_offset,end_offset - start_offset, insert_text,
+            format,indent);
+    }
+   
+   @Override public boolean makeEdit(String pid) {
+      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
+      String proj = doc.getProjectName();
+      File file = doc.getFile();
+      int soff = doc.mapOffsetToEclipse(start_offset);
+      int eoff = doc.mapOffsetToEclipse(end_offset);
+      BumpClient bc = BumpClient.getBump();
+      bc.editPrivateFile(proj,file,pid,soff,eoff,insert_text);
+      return true;
+    }
+   
+   
+   @Override public boolean unmakeEdit(String pid) {
+      if (!can_undo) return false;
+      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
+      String proj = doc.getProjectName();
+      File file = doc.getFile();
+      int soff = doc.mapOffsetToEclipse(start_offset);
+      int eoff = end_offset;
+      if (insert_text != null) eoff += insert_text.length();
+      eoff = doc.mapOffsetToEclipse(eoff);
+      String txt = undo_text;
+      if (txt.isEmpty()) txt = null;
+      BumpClient bc = BumpClient.getBump();
+      bc.editPrivateFile(proj,file,pid,soff,eoff,txt);
+      return true;
+    }
+   
+   @Override public int getDelta() {
+      int delta = start_offset - end_offset;
+      if (insert_text != null) delta += insert_text.length();
+      return delta;
+    }
+   
+}       // end of inner class BfixBaseEdit
+
+
+
+public static class BfixGroupEdits implements BfixEdit {
+   
+   private BfixCorrector for_corrector;
+   private Element edit_set;
+   
+   public BfixGroupEdits(BfixCorrector corr,Element xml) {
+      for_corrector = corr;
+      edit_set = xml;
+    }
+   
+   @Override public void doEdit(boolean fmt,boolean indent) {
+      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
+      File file = doc.getFile();
+      BaleFactory.getFactory().applyEdits(file,edit_set);
+    }
+
+   @Override public boolean makeEdit(String pid)        { return false; }
+   
+   @Override public boolean unmakeEdit(String pid)      { return false; }
+   
+}       // end of inner class BfixGroupEdits
 
 
 
@@ -265,104 +387,8 @@ private class FutureCallback implements CanFixCallback
          SwingUtilities.invokeLater(fix_to_make);
        }
     }
-   
+
 }       // end of inner class FutureCallback
-
-
-/********************************************************************************/
-/*                                                                              */
-/*      Edit representation                                                     */
-/*                                                                              */
-/********************************************************************************/
-
-protected interface BfixEdit {
-   
-   
-   void doEdit(boolean format,boolean indent);
-   
-   void makeEdit(String pid);
-   
-   boolean unmakeEdit(String pid);
-   
-}       // end of interface BfixEdit
-
-
-
-protected class BfixBaseEdit implements BfixEdit {
-   
-   private int start_offset;
-   private int end_offset;
-   private String insert_text;
-   private String undo_text;
-   private boolean can_undo;
-   
-   BfixBaseEdit(int soff,int eoff,String ins,String undo) {
-      start_offset = soff;
-      end_offset = eoff;
-      insert_text = ins;
-      undo_text = undo;
-      can_undo = true;
-    }
-   
-   BfixBaseEdit(int soff,int eoff,String ins) {
-      start_offset = soff;
-      end_offset = eoff;
-      insert_text = ins;
-      undo_text = null;
-      can_undo = false;
-    }
-   
-   @Override public void doEdit(boolean format,boolean indent) {
-      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
-      doc.replace(start_offset,end_offset - start_offset, insert_text,
-            format,indent);
-    }
-   
-   @Override public void makeEdit(String pid) {
-      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
-      String proj = doc.getProjectName();
-      File file = doc.getFile();
-      int soff = doc.mapOffsetToEclipse(start_offset);
-      int eoff = doc.mapOffsetToEclipse(end_offset);
-      BumpClient bc = BumpClient.getBump();
-      bc.editPrivateFile(proj,file,pid,soff,eoff,insert_text);
-    }
-   
-   
-   @Override public boolean unmakeEdit(String pid) {
-      if (!can_undo) return false;
-      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
-      String proj = doc.getProjectName();
-      File file = doc.getFile();
-      int soff = doc.mapOffsetToEclipse(start_offset);
-      int eoff = end_offset;
-      if (insert_text != null) eoff += insert_text.length();
-      eoff = doc.mapOffsetToEclipse(eoff);
-      String txt = undo_text;
-      if (txt.isEmpty()) txt = null;
-      BumpClient bc = BumpClient.getBump();
-      bc.editPrivateFile(proj,file,pid,soff,eoff,txt);
-      return true;
-    }
-   
-}       // end of inner class BfixBaseEdit
-
-
-
-protected class CheckAreas {
-
-   private List<Point> check_areas;
-   
-   CheckAreas(int... bounds) {
-      check_areas = new ArrayList<>();
-      for (int i = 0; i+1 < bounds.length; i += 2) {
-         check_areas.add(new Point(bounds[i],bounds[i+1]));
-       }
-    }
-   
-   List<Point> getAreas()                       { return check_areas; }
-
-}       // end of inner class CheckAreas+
 
 
 }       // end of class BfixFixer

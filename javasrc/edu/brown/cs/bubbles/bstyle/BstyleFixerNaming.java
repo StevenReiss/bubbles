@@ -38,7 +38,7 @@ import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindow;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindowDocument;
 import edu.brown.cs.bubbles.bfix.BfixCorrector;
-import edu.brown.cs.bubbles.bfix.BfixConstants.BfixRunnableFix;
+import edu.brown.cs.bubbles.bfix.BfixFixDoer;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.buda.BudaRoot;
@@ -112,7 +112,7 @@ BstyleFixerNaming()
    if (newname == null) return null;
    if (newname.equals(name)) return null;
    
-   RenameDoer doer = new RenameDoer(bcorr,starttime,p0,p1,newname);
+   RenameDoer doer = new RenameDoer(bcorr,bp,starttime,p0,p1,newname);
    
    return doer;
 }
@@ -285,21 +285,19 @@ private BfixRunnableFix checkMakeStaticFinal(BfixCorrector corr,BumpProblem bp,
 /*                                                                              */
 /********************************************************************************/
 
-private class RenameDoer implements BfixRunnableFix {
+private class RenameDoer extends BfixFixDoer {
    
-   private BfixCorrector for_corrector;
    private int name_start;
    private int name_end;
    private String new_name;
    private long initial_time;
    private Element rename_edits;
    
-   RenameDoer(BfixCorrector corr,long start,int p0,int p1,String repl) {
+   RenameDoer(BfixCorrector corr,BumpProblem bp,long start,int p0,int p1,String repl) {
+      super(corr,bp,start);
       name_start = p0;
       name_end = p1;
       new_name = repl;
-      for_corrector = corr;
-      initial_time = start;
       rename_edits = null;
     }
    
@@ -328,8 +326,6 @@ private class RenameDoer implements BfixRunnableFix {
       BurpHistory.getHistory().beginEditAction(c);
       try {
          BaleFactory.getFactory().applyEdits(f,rename_edits);
-//       BaleApplyEdits bae = new BaleApplyEdits();
-//       bae.applyEdits(rename_edits);
          if (br != null) {
             br.handleSaveAllRequest();
             bc.compile(false,true,true);

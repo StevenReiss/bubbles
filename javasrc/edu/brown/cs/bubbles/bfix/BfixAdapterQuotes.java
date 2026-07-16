@@ -135,7 +135,7 @@ private List<QuoteFix> findFixes(BfixCorrector corr,BumpProblem bp)
       if (mrslt.equals("'")) {
          int idx = text.indexOf("\"");
          if (idx > 0 && (lnocur > lnoerr || soff + idx + 2 < corr.getCaretPosition())) {
-            QuoteFix qf = new QuoteFix(soff,soff+1,"\"","'");
+            QuoteFix qf = new QuoteFix(corr,soff,soff+1,"\"","'");
             rslt.add(qf);
           }
        }
@@ -143,11 +143,11 @@ private List<QuoteFix> findFixes(BfixCorrector corr,BumpProblem bp)
          for (int i = 1; i < text.length(); ++i) {
             char c = text.charAt(i);
             if (c == '\'') {
-               QuoteFix qf = new QuoteFix(soff+i,soff+i+1,"\"","'");
+               QuoteFix qf = new QuoteFix(corr,soff+i,soff+i+1,"\"","'");
                rslt.add(qf);
              }
             else if (";:+)\n".indexOf(c) >= 0) {
-               QuoteFix qf = new QuoteFix(soff+i-1,soff+i-1,"\"",null);
+               QuoteFix qf = new QuoteFix(corr,soff+i-1,soff+i-1,"\"",null);
                rslt.add(qf);
              }
           }
@@ -167,40 +167,53 @@ private List<QuoteFix> findFixes(BfixCorrector corr,BumpProblem bp)
 /*										*/
 /********************************************************************************/
 
-private static class QuoteFix {
+private static class QuoteFix implements BfixEdit {
 
+   private BfixCorrector for_corrector;
    private int edit_start;
    private int edit_end;
    private String edit_insert;
    private String edit_replace;
 
-   QuoteFix(int start,int end,String insert,String replace) {
+   QuoteFix(BfixCorrector corr,int start,int end,String insert,String replace) {
+      for_corrector = corr;
       edit_start = start;
       edit_end = end;
       edit_insert = insert;
       edit_replace = replace;
     }
-
-   void makeEdit(BaleWindowDocument doc) {
+   
+   @Override public void doEdit(boolean format,boolean indent) {
+      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
       doc.replace(edit_start,edit_end-edit_start,edit_insert,false,false);
     }
-
-   void makeEdit(BumpClient bc,String proj,File file,String pid,BaleWindowDocument doc) {
+   
+   @Override public boolean makeEdit(String pid) {
+      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
+      File file = doc.getFile();
+      String proj = doc.getProjectName();
       int soff = doc.mapOffsetToEclipse(edit_start);
-      int eoff = doc.mapOffsetToEclipse(edit_end);
+      int eoff = doc.mapOffsetToEclipse(edit_end); 
+      BumpClient bc = BumpClient.getBump();
       bc.editPrivateFile(proj,file,pid,soff,eoff,edit_insert);
+      return true;
     }
-
-   void undoEdit(BumpClient bc,String proj,File file,String pid,BaleWindowDocument doc) {
+   
+   @Override public boolean unmakeEdit(String pid) {
+      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
+      File file = doc.getFile();
+      String proj = doc.getProjectName();
       int soff = edit_start;
       int eoff = edit_start;
       if (edit_insert != null) eoff += edit_insert.length();
       soff = doc.mapOffsetToEclipse(soff);
-      eoff = doc.mapOffsetToEclipse(eoff);
+      eoff = doc.mapOffsetToEclipse(eoff); 
+      BumpClient bc = BumpClient.getBump();
       bc.editPrivateFile(proj,file,pid,soff,eoff,edit_replace);
+      return true;
     }
-
-   int getDelta() {
+   
+   @Override public int getDelta() {
       int delta = edit_start - edit_end;;
       if (edit_insert != null) delta += edit_insert.length();
       return delta;
@@ -241,45 +254,13 @@ private class QuoteFixer extends BfixFixer {
     }
    
    @Override protected BfixRunnableFix findFix() {
-      QuoteFix usefix = null;
-      BaleWindow win = for_corrector.getEditor();
-      BaleWindowDocument doc = win.getWindowDocument();
-      String proj = doc.getProjectName();
-      File file = doc.getFile();
-      String filename = file.getAbsolutePath();
-      BumpClient bc = BumpClient.getBump();
-      String pid = createPrivateBuffer(proj,filename);
-      if (pid == null) return null;
-      BoardLog.logD("BFIX","SPELL: using private buffer " + pid);
-
-      try {
-	 Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
-	 if (probs == null) {
-	    BoardLog.logE("BFIX","SPELL: Problem getting errors for " + pid);
-	    return null;
-	  }
-	 int probct = getErrorCount(probs);
-	 if (!checkProblemPresent(for_problem,probs)) return null;
-	 for (QuoteFix qf : potential_fixes) {
-	    bc.beginPrivateEdit(filename,pid);
-	    BoardLog.logD("BFIX","SPELL: Try quote edit " + qf);
-	    qf.makeEdit(bc,proj,file,pid,doc);
-	    probs = bc.getPrivateProblems(filename,pid);
-	    bc.beginPrivateEdit(filename,pid);		// undo and wait
-	    qf.undoEdit(bc,proj,file,pid,doc);
-	    bc.getPrivateProblems(filename,pid);
-	    if (probs == null || getErrorCount(probs) >= probct) continue;
-	    if (checkAnyProblemPresent(for_problem,probs,0,qf.getDelta())) continue;
-	    if (usefix != null) return null;
-	    usefix = qf;
-	  }
-       }
-      finally {
-	 bc.removePrivateBuffer(proj,filename,pid);
-       }
-
-      if (usefix == null) return null;
+      BfixCheckAreas darea = new BfixCheckAreas(0,-1);
+      Collection<BfixEdit> eds = new ArrayList<>(potential_fixes);
+      List<BfixEdit> useedits = findPrivateEdits(eds,null,darea);
+      if (useedits == null || useedits.size() != 1) return null;
+      QuoteFix usefix = (QuoteFix) useedits.get(0); 
       if (for_corrector.getStartTime() != initial_time) return null;
+      
       BoardLog.logD("BFIX","SPELL: DO quote edit " + usefix);
       BoardMetrics.noteCommand("BFIX","QUOTEFIX");
       QuoteDoer sd = new QuoteDoer(for_corrector,for_problem,usefix,initial_time);
@@ -296,34 +277,18 @@ private class QuoteFixer extends BfixFixer {
 /*										*/
 /********************************************************************************/
 
-private class QuoteDoer implements BfixRunnableFix {
+private class QuoteDoer extends BfixFixDoer {
 
-   private BfixCorrector for_corrector;
-   private BumpProblem for_problem;
    private QuoteFix using_fix;
-   private long initial_time;
 
    QuoteDoer(BfixCorrector corr,BumpProblem bp,QuoteFix qf,long t0) {
-      for_corrector = corr;
-      for_problem = bp;
+      super(corr,bp,t0);
       using_fix = qf;
-      initial_time = t0;
     }
 
    @Override public Boolean call() {
-      BumpClient bc = BumpClient.getBump();
-      BaleWindow win = for_corrector.getEditor();
-      BaleWindowDocument doc = win.getWindowDocument();
-      List<BumpProblem> probs = bc.getProblems(doc.getFile());
-      if (!checkProblemPresent(for_problem,probs)) return false;
-      if (for_corrector.getStartTime() != initial_time) return false;
-      if (!checkSafePosition(for_corrector,using_fix.getStart(),using_fix.getEnd())) return false;
-      
-      BoardMetrics.noteCommand("BFIX","QuoteCorrection");
-      
-      using_fix.makeEdit(doc);
-      BoardMetrics.noteCommand("BFIX","DoneQuoteCorrection");
-      return true;
+      BfixCheckAreas sareas = new BfixCheckAreas(using_fix.getStart(),using_fix.getEnd());
+      return testEdit(using_fix,sareas,"QuoteCorrection");
     }
 
    @Override public double getRegionOrder()                { return 0; } 

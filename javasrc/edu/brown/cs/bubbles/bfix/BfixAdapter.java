@@ -153,7 +153,8 @@ static boolean checkAnyProblemPresent(BumpProblem prob,Collection<BumpProblem> b
    for (BumpProblem bp : bpl) {
       if (!bp.getFile().equals(prob.getFile())) continue;
       if (bp.getErrorType() != BumpErrorType.ERROR) continue;
-      if (bp.getStart() < prob.getEnd()+edelta && bp.getEnd() > prob.getStart()+sdelta) return true;
+      if (bp.getStart() < prob.getEnd()+edelta && 
+            bp.getEnd() > prob.getStart()+sdelta) return true;
     }
 
    return false;

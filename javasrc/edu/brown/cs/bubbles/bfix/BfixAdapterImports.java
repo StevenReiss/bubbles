@@ -24,7 +24,8 @@
 
 package edu.brown.cs.bubbles.bfix;
 
-import edu.brown.cs.bubbles.bale.BaleFactory;
+import edu.brown.cs.bubbles.bfix.BfixFixer.BfixBaseEdit;
+import edu.brown.cs.bubbles.bfix.BfixFixer.BfixGroupEdits;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpClient;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -237,63 +239,22 @@ private static class ImportFixer extends BfixFixer {
             for_problem.getFile(),for_problem.getStart());
       if (types == null || types.size() == 0) return null;
    
-      String accept = null;
-      BumpClient bc = BumpClient.getBump();
-      String proj = for_document.getProjectName();
-      File file = for_document.getFile();
-      String filename = file.getAbsolutePath();
       BoardMetrics.noteCommand("BFIX","ImportCheck_" + types.size());
-      String badaccept = null;
-   
+      int inspos = findImportLocation();
+      if (inspos < 0) return null;
+      Map<BfixEdit,String> tryedits = new LinkedHashMap<>();
+      int mxdel = 0;
       for (String type : types) {
-         String pid = createPrivateBuffer(proj,filename);
-         if (pid == null) return null;
-         try {
-            boolean isokay = true;
-            BoardLog.logD("BFIX","IMPORT: using private buffer " + pid);
-            Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
-            if (probs == null) {
-               BoardLog.logE("BFIX","SPELL: Problem getting errors for " + pid);
-               return null;
-             }
-            int probct = getErrorCount(probs);
-            if (!checkProblemPresent(for_problem,probs)) {
-               BoardLog.logD("BFIX","SPELL: import Problem went away");
-               return null;
-             }
-            int inspos = findImportLocation();
-            if (inspos < 0) continue;
-            String impstr = "import " + type + ";\n";
-            bc.beginPrivateEdit(filename,pid);
-            BoardLog.logD("BFIX","IMPORT fix:  " + type);
-            bc.editPrivateFile(proj,file,pid,inspos,inspos,impstr);
-            int delta = impstr.length();
-            probs = bc.getPrivateProblems(filename,pid);
-            if (probs == null) {
-               isokay = false;
-             }
-            else if (getErrorCount(probs) >= probct) {
-               if (getErrorCount(probs) == probct && 
-                     !checkAnyProblemPresent(for_problem,probs,delta,delta)) {
-        	  if (badaccept == null) badaccept = type;
-        	  else badaccept = "*";
-        	}
-               isokay = false;
-             }
-            if (isokay && checkAnyProblemPresent(for_problem,probs,delta,delta)) isokay = false;
-            if (isokay) {
-               if (accept == null) accept = type;
-               else return null;
-             }
-          }
-         finally {
-            bc.removePrivateBuffer(proj,filename,pid);
-          }
+         String impstr = "import " + type + ";\n";
+         mxdel = Math.max(mxdel,impstr.length());
+         BfixEdit edit = new BfixBaseEdit(for_corrector,inspos,inspos,impstr);
+         tryedits.put(edit,type);
        }
-      if (accept == null && badaccept != null && !badaccept.equals("*")) accept = badaccept;
-      if (accept == null) return null;
-   
+      BfixCheckAreas pareas = new BfixCheckAreas(mxdel,mxdel);
+      List<BfixEdit> rslt = findPrivateEdits(tryedits.keySet(),null,pareas);
+      if (rslt == null || rslt.size() != 1) return null;
       if (for_corrector.getStartTime() != initial_time) return null;
+      String accept = tryedits.get(rslt.get(0));
       BoardLog.logD("BFIX","IMPORT: DO " + accept);
       BoardMetrics.noteCommand("BFIX","IMPORTFIX");
       ImportDoer id = new ImportDoer(for_corrector,for_document,for_problem,accept,initial_time);
@@ -321,7 +282,7 @@ private static class ImportFixer extends BfixFixer {
          char c = body.charAt(idx);
          if (c == '\n') {
             int pos = idx+1;
-            return base.mapOffsetToEclipse(pos);
+            return pos;
           }
        }
       return 0;
@@ -481,34 +442,20 @@ private static class ImportChecker {
 /*										*/
 /********************************************************************************/
 
-private static class ImportDoer implements BfixRunnableFix {
+private static class ImportDoer extends BfixFixDoer {
 
-   private BfixCorrector for_corrector;
    private BaleWindowDocument for_document;
-   private BumpProblem for_problem;
    private String import_type;
-   private long initial_time;
 
    ImportDoer(BfixCorrector cor,BaleWindowDocument doc,
-	 BumpProblem bp,String type,long time0) {
-      for_corrector = cor;
+         BumpProblem bp,String type,long time) {
+      super(cor,bp,time);
       for_document = doc;
-      for_problem = bp;
       import_type = type;
-      initial_time = time0;
     }
 
    @Override public Boolean call() {
       BumpClient bc = BumpClient.getBump();
-      List<BumpProblem> probs = bc.getProblems(for_document.getFile());
-      if (!checkProblemPresent(for_problem,probs)) {
-         BoardLog.logD("BFIX","Import problem went away");
-         return false;
-       }
-      if (for_corrector.getStartTime() != initial_time) {
-         BoardLog.logD("BFIX","Change since start time");
-         return false;
-       }
       synchronized (imports_added) {
          Set<String> impset = imports_added.get(for_corrector);
          if (impset == null) {
@@ -524,14 +471,14 @@ private static class ImportDoer implements BfixRunnableFix {
       BoardMetrics.noteCommand("BFIX","AddImport");
       Element edits = bc.fixImports(for_problem.getProject(),
             for_document.getFile(),null,0,0,import_type);
-      if (edits != null) {
-         BaleFactory.getFactory().applyEdits(for_document.getFile(),edits);
-       }
-      else {
+      if (edits == null) {
          BoardLog.logD("BFIX","No edits to add import");
+         return false;
        }
+      BfixEdit bedits = new BfixGroupEdits(for_corrector,edits);
+      boolean fg = testEdit(bedits,null,null);
       BoardMetrics.noteCommand("BFIX","DoneAddImport");
-      return true;
+      return fg;
     }
 
    @Override public double getRegionOrder()		{ return 0; } 
@@ -655,39 +602,21 @@ private static class UnusedImportFixer extends BfixFixer {
 
 
 
-private static class UnusedImportDoer implements BfixRunnableFix {
+private static class UnusedImportDoer extends BfixFixDoer {
 
-   private BfixCorrector for_corrector;
-   private BumpProblem for_problem;
    private int start_offset;
    private int end_offset;
-   private long initial_time;
    
    UnusedImportDoer(BfixCorrector corr,BumpProblem bp,int soff,int eoff,long time) {
-      for_corrector = corr;
-      for_problem = bp;
+      super(corr,bp,time);
       start_offset = soff;
       end_offset = eoff;
-      initial_time = time;
     }
    
    @Override public Boolean call() {
-      BumpClient bc = BumpClient.getBump();
-      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
-      File f = doc.getFile();
-      List<BumpProblem> probs = bc.getProblems(f);
-      if (!checkProblemPresent(for_problem,probs)) return false;
-      if (for_corrector.getStartTime() != initial_time) return false;
-      if (!checkSafePosition(for_corrector,start_offset,end_offset+1)) return false;
-      
-      int inspos = doc.mapOffsetToEclipse(start_offset);
-      int epos = doc.mapOffsetToEclipse(end_offset);
-      
-      BoardMetrics.noteCommand("BFIX","RemoveImport_" + for_corrector.getBubbleId());
-      doc.replace(inspos,epos-inspos,null,true,true);
-      BoardMetrics.noteCommand("BFIX","DoneRemoveImport_" + for_corrector.getBubbleId());
-      
-      return true;
+      BfixEdit edit = new BfixBaseEdit(for_corrector,start_offset,end_offset,null);
+      BfixCheckAreas areas = new BfixCheckAreas(start_offset,end_offset+1);
+      return testEdit(edit,areas,"RemoveImport");
     }
    
    @Override public double getRegionOrder()                { return 0; } 

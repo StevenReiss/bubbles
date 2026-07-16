@@ -179,18 +179,23 @@ private static class CatchFixer extends BfixFixer {
       if (for_corrector.getStartTime() != initial_time) return null;
       BoardLog.logD("BFIX","CATCH " + for_type);
       BoardMetrics.noteCommand("BFIX","CATCHFIX");
-      CatchDoer cd = new CatchDoer(for_corrector,for_document,for_problem,pelt,for_type,initial_time);
+      int eoff = pelt.getEndOffset();
+      String insert = "catch (" + for_type + " _ex) {\n}\n";
+      BfixEdit edit = new BfixBaseEdit(for_corrector,eoff,eoff,insert);
+      BfixCheckAreas areas = new BfixCheckAreas(eoff-1,eoff+1);
+      
+      CatchDoer cd = new CatchDoer(for_corrector,for_problem,edit,areas,initial_time);
       return cd; 
     }
    
    private void findTypeForCatch(BaleWindowElement pelt) {
+      int foff = pelt.getStartOffset();
+      int eoff = pelt.getEndOffset();
       BumpClient bc = BumpClient.getBump();
       String proj = for_document.getProjectName();
       File file = for_document.getFile();
       String filename = file.getAbsolutePath();
       String pid = bc.createPrivateBuffer(proj, filename, null);
-      int foff = pelt.getStartOffset();
-      int eoff = pelt.getEndOffset();
       try {
          Collection<BumpProblem> probs = bc.getPrivateProblems(filename, pid);
          if (probs == null) return;
@@ -219,29 +224,11 @@ private static class CatchFixer extends BfixFixer {
    
    private boolean checkCatchInsert(BaleWindowElement pelt) {
       String insert = " catch (" + for_type + " ___x___) { }";
-      BumpClient bc = BumpClient.getBump();
-      String proj = for_document.getProjectName();
-      File file = for_document.getFile();
-      String filename = file.getAbsolutePath();
-      String pid = bc.createPrivateBuffer(proj, filename, null);
       int foff = pelt.getStartOffset();
       int eoff = pelt.getEndOffset();
-      try {
-         Collection<BumpProblem> probs = bc.getPrivateProblems(filename, pid);
-         if (probs == null) return false;
-         int probct = getErrorCount(probs);
-         if (!checkProblemPresent(for_problem,probs)) return false;
-         int inspos = for_document.mapOffsetToEclipse(eoff);
-         bc.beginPrivateEdit(filename, pid);
-         bc.editPrivateFile(proj,file,pid,inspos,inspos,insert);
-         probs = bc.getPrivateProblems(filename,pid);
-         if (probs == null || getErrorCount(probs) > probct) return false;
-         if (checkAnyProblemPresent(for_problem,probs,foff,eoff)) return false;
-         return true;
-       }
-      finally {
-         bc.removePrivateBuffer(proj,filename,pid);
-       }
+      BfixEdit edit = new BfixBaseEdit(for_corrector,eoff,eoff,insert);
+      BfixCheckAreas areas = new BfixCheckAreas(foff,eoff);   
+      return checkPrivateEdit(edit,areas,null,true); 
     }
    
 }       // end of inner class CatchFixer
@@ -255,40 +242,20 @@ private static class CatchFixer extends BfixFixer {
 /*                                                                              */
 /********************************************************************************/
 
-private static class CatchDoer implements BfixRunnableFix {
+private static class CatchDoer extends BfixFixDoer { 
    
-   private BfixCorrector for_corrector;
-   private BaleWindowDocument for_document;
-   private BumpProblem for_problem;
-   private String catch_class;
-   private long initial_time;
+   private BfixEdit for_edit;
+   private BfixCheckAreas for_areas;
    
-   CatchDoer(BfixCorrector corr,BaleWindowDocument doc,BumpProblem bp,
-         BaleWindowElement stmt,String cls,long time) {
-      for_corrector = corr;
-      for_document = doc;
-      for_problem = bp;
-      catch_class = cls;
-      initial_time = time;
+   CatchDoer(BfixCorrector corr,BumpProblem bp,
+         BfixEdit edit,BfixCheckAreas areas,long time) {
+      super(corr,bp,time);
+      for_edit = edit;
+      for_areas = areas;
     }
 
    @Override public Boolean call() {
-      BumpClient bc = BumpClient.getBump();
-      List<BumpProblem> probs = bc.getProblems(for_document.getFile());
-      if (!checkProblemPresent(for_problem,probs)) return false;
-      if (for_corrector.getStartTime() != initial_time) return false;
-      int soff = for_document.mapOffsetToJava(for_problem.getStart());
-      BaleWindowElement trystmt = findTryStatement(for_document,soff);
-      if (trystmt == null) return false;
-      int eoff = trystmt.getEndOffset();
-      if (!checkSafePosition(for_corrector,eoff-1,eoff+1)) return false;
-      
-      // might want to find better insertion point here
-      String insert = "catch (" + catch_class + " _ex) {\n}\n";
-      BoardMetrics.noteCommand("BFIX","AddCatch_" + for_corrector.getBubbleId());
-      for_document.replace(eoff,0,insert,true,true);
-      BoardMetrics.noteCommand("BFIX","DoneAddCatch_" + for_corrector.getBubbleId());
-      return true;
+      return testEdit(for_edit,for_areas,"AddCatch");
     }
 
    @Override public double getRegionOrder()                        { return 0; } 

@@ -31,10 +31,8 @@ import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 import edu.brown.cs.ivy.xml.IvyXml;
 
-import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.w3c.dom.Element;
@@ -224,31 +222,12 @@ private static class VisibilityFixer extends BfixFixer {
     }
 
    @Override protected BfixRunnableFix findFix() {
-      if (for_corrector.getStartTime() != initial_time) return null;
-      BumpClient bc = BumpClient.getBump();
-      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
-      String proj = doc.getProjectName();
-      File file = doc.getFile();
-      String filename = file.getAbsolutePath();
-      String pid = bc.createPrivateBuffer(proj,filename,null);
-      try {
-	 Collection<BumpProblem> probs = bc.getPrivateProblems(filename, pid);
-	 if (probs == null) return null;
-	 if (!checkProblemPresent(for_problem,probs)) return null;
-	 int inspos = doc.mapOffsetToEclipse(start_pos);
-	 int epos = doc.mapOffsetToEclipse(end_pos);
-	 bc.beginPrivateEdit(filename, pid);
-	 bc.editPrivateFile(proj, file, pid, inspos, epos, new_token);
-	 Collection<BumpProblem> nprobs = bc.getPrivateProblems(filename,pid);
-	 if (nprobs.size() >= probs.size()) return null;
+      BfixEdit edit = new BfixBaseEdit(for_corrector,start_pos,end_pos,new_token);
+      BfixCheckAreas sarea = new BfixCheckAreas(start_pos,end_pos+1);
+      if (!checkPrivateEdit(edit,sarea,null,false)) {
+         return null;
        }
-      finally {
-	 bc.removePrivateBuffer(proj,filename,pid);
-       }
-
-      if (for_corrector.getStartTime() != initial_time) return null;
-      if (!checkSafePosition(for_corrector,start_pos,end_pos+1)) return null;
-
+      
       BoardLog.logD("BFIX","VISIBILITY FIX " + new_token);
       BoardMetrics.noteCommand("BFIX","VISIBILITYFIX");
       VisibilityDoer vd = new VisibilityDoer(for_corrector,for_problem,start_pos,end_pos,new_token,initial_time);
@@ -265,43 +244,23 @@ private static class VisibilityFixer extends BfixFixer {
 /*										*/
 /********************************************************************************/
 
-private static class VisibilityDoer implements BfixRunnableFix {
+private static class VisibilityDoer extends BfixFixDoer {
 
-   private BfixCorrector for_corrector;
-   private BumpProblem for_problem;
    private int start_offset;
    private int end_offset;
    private String new_token;
-   private long initial_time;
 
    VisibilityDoer(BfixCorrector corr,BumpProblem bp,int soff,int eoff,String what,long time) {
-      for_corrector = corr;
-      for_problem = bp;
+      super(corr,bp,time);
       start_offset = soff;
       end_offset = eoff;
       new_token = what;
-      initial_time = time;
     }
 
    @Override public Boolean call() {
-      BumpClient bc = BumpClient.getBump();
-      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
-      File f = doc.getFile();
-      List<BumpProblem> probs = bc.getProblems(f);
-      if (!checkProblemPresent(for_problem,probs)) return false;
-      if (for_corrector.getStartTime() != initial_time) return false;
-      if (!checkSafePosition(for_corrector,start_offset,end_offset+1)) return false;
-
-      int inspos = doc.mapOffsetToEclipse(start_offset);
-      int epos = doc.mapOffsetToEclipse(end_offset);
-      inspos = start_offset;
-      epos = end_offset;
-
-      BoardMetrics.noteCommand("BFIX","ChangeVisibility_" + for_corrector.getBubbleId());
-      doc.replace(inspos,epos-inspos,new_token,true,true);
-      BoardMetrics.noteCommand("BFIX","DoneChangeVisibility_" + for_corrector.getBubbleId());
-      
-      return true;
+      BfixEdit edit = new BfixFixer.BfixBaseEdit(for_corrector,start_offset,end_offset,new_token);
+      BfixCheckAreas area = new BfixCheckAreas(start_offset,end_offset+1);
+      return testEdit(edit,area,"ChangeVisibility",true);
     }
 
    @Override public double getRegionOrder()                { return 0; } 

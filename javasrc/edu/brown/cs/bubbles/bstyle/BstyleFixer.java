@@ -36,15 +36,15 @@ import java.util.regex.PatternSyntaxException;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleFileOverview;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindow;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindowDocument;
-import edu.brown.cs.bubbles.bfix.BfixAdapter;
+import edu.brown.cs.bubbles.bfix.BfixConstants;
 import edu.brown.cs.bubbles.bfix.BfixCorrector;
-import edu.brown.cs.bubbles.bfix.BfixConstants.BfixRunnableFix;
+import edu.brown.cs.bubbles.bfix.BfixFixDoer;
+import edu.brown.cs.bubbles.bfix.BfixFixer;
 import edu.brown.cs.bubbles.board.BoardLog;
-import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
 
 
-abstract class BstyleFixer
+abstract class BstyleFixer implements BstyleConstants, BfixConstants
 {
 
 
@@ -777,15 +777,12 @@ private static class VarDeclarations extends GenericPatternFixer {
 /*										*/
 /********************************************************************************/
 
-protected class StyleDoer implements BfixRunnableFix {
-
-   private BfixCorrector for_corrector;
+protected static class StyleDoer extends BfixFixDoer {
    private int range_start;
    private int range_end;
    private int edit_start;
    private int edit_end;
    private String insert_text;
-   private long initial_time;
    private boolean do_indent;
    private boolean do_format;
    
@@ -793,33 +790,22 @@ protected class StyleDoer implements BfixRunnableFix {
          BumpProblem bp,int rsoff,int reoff,
          int soff,int eoff,String txt,
          boolean indent,boolean format) {
+      super(corr,bp,start);
       for_corrector = corr;
       range_start = rsoff;
       range_end = reoff+1;
       edit_start = soff;
       edit_end = eoff;
       insert_text = txt;
-      initial_time = start;
       do_indent = indent;
       do_format = format;
     }
    
    @Override public Boolean call() {
-      BaleWindow win = for_corrector.getEditor();
-      BaleWindowDocument doc = win.getWindowDocument();
-      BaleFileOverview view = doc.getBaseWindowDocument();
-      if (for_corrector.getStartTime() != initial_time) return false;
-      int soff = view.mapOffsetToJava(edit_start);
-      int eoff = view.mapOffsetToJava(edit_end);
-      if (!BfixAdapter.checkSafePosition(for_corrector,range_start,range_end)) return false;
-      
-      BoardLog.logD("BSTYLE","Making style fix " + soff + " " + eoff + " " + insert_text);
-      
-      BoardMetrics.noteCommand("BSTYLE","StyleCorrection_" + for_corrector.getBubbleId());
-      doc.replace(soff,eoff-soff,insert_text,do_format,do_indent);
-      BoardMetrics.noteCommand("BSTYLE","DoneStyleCorrection_" + for_corrector.getBubbleId());
-      
-      return true;
+      BfixEdit edit = new BfixFixer.BfixBaseEdit(for_corrector,
+            edit_start,edit_end,insert_text); 
+      BfixCheckAreas areas = new BfixCheckAreas(range_start,range_end); 
+      return testEdit(edit,areas,"StyleCorrection",do_format|do_indent);
     }
    
    @Override public double getRegionOrder()			{ return 0; }

@@ -24,12 +24,12 @@
 
 package edu.brown.cs.bubbles.bfix;
 
+import edu.brown.cs.bubbles.bfix.BfixFixer.BfixBaseEdit;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpLocation;
-import edu.brown.cs.bubbles.burp.BurpHistory;
 import edu.brown.cs.ivy.file.IvyStringDiff;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -37,12 +37,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
-
-import javax.swing.text.JTextComponent;
 
 import org.w3c.dom.Element;
 
@@ -249,7 +249,6 @@ private static class SpellFixer extends BfixFixer {
    // CHECKSTYLE:ON   
       String proj = for_document.getProjectName();
       File file = for_document.getFile();
-      String filename = file.getAbsolutePath();
       Set<SpellFix> totry = new TreeSet<SpellFix>();
       int minsize = Math.min(fix_size, for_identifier.length()-1);
       minsize = Math.min(minsize,(for_identifier.length()+2)/3);
@@ -354,73 +353,32 @@ private static class SpellFixer extends BfixFixer {
          return null;
        }
       
-      String pid = createPrivateBuffer(proj,filename);
-      if (pid == null) return null;
-      BoardLog.logD("BFIX","SPELL: using private buffer " + pid);
+      Map<BfixEdit,SpellFix> edits = new LinkedHashMap<>();
+      int soff = for_document.mapOffsetToJava(for_problem.getStart());
+      int eoff = soff + for_identifier.length();
+      for (SpellFix sf : totry) {
+         BfixEdit edit = new BfixBaseEdit(for_corrector,soff,eoff,sf.getText());
+         edits.put(edit,sf);
+       }
+      BfixCheckAreas darea = new BfixCheckAreas(0,-1);
+      List<BfixEdit> useedits = findPrivateEdits(edits.keySet(),null,darea);
+      if (useedits == null || useedits.size() == 0) return null;
       SpellFix usefix = null;
-      BoardMetrics.noteCommand("BFIX","SpellCheck_" + totry.size());
-      SpellFix badfix = null;
-      boolean havebad = false;
-      
-      try {
-         Collection<BumpProblem> oprobs = bc.getPrivateProblems(filename,pid);
-         if (oprobs == null) {
-            BoardLog.logE("BFIX","SPELL: Problem getting errors for " + pid);
-            return null;
-          }
-         int probct = getErrorCount(oprobs,for_problem);
-         if (!checkProblemPresent(for_problem,oprobs)) {
-            BoardLog.logD("BFIX","SPELL: Spelling problem went away");
-            return null;
-          }
-         int soff = for_problem.getStart();
-         int eoff = soff + for_identifier.length();
-         
-         for (SpellFix sf : totry) {
-            if (usefix != null && sf.getEditCount() > usefix.getEditCount()) break;
-            bc.beginPrivateEdit(filename,pid);
-            BoardLog.logD("BFIX","SPELL: Try replacing " + for_identifier + " WITH " + sf.getText());
-            bc.editPrivateFile(proj,file,pid,soff,eoff,sf.getText());
-            Collection<BumpProblem> probs = bc.getPrivateProblems(filename,pid);
-            bc.beginPrivateEdit(filename,pid);		// undo and wait
-            bc.editPrivateFile(proj,file,pid,
-                  soff,soff+sf.getText().length(),for_identifier);
-            bc.getPrivateProblems(filename,pid);
-            
-            int edelta = sf.getText().length() - for_identifier.length();
-            if (checkAnyProblemPresent(for_problem,probs,0,edelta)) continue;
-            if (checkAnyProblemPresent(probs,for_problem.getFile(),soff,eoff+edelta)) continue;
-            if (probs == null || getErrorCount(probs) >= probct) continue;
-            else if (getErrorCount(probs) == probct) {
-               double score = sf.getEditCount();
-               score /= for_identifier.length();
-               if (score < 0.1) {
-                  if (havebad) badfix = null;
-                  else {
-                     havebad = true;
-                     badfix = sf;
-                   }
-                }
-               continue;
+      for (BfixEdit be : useedits) {
+         SpellFix sf = edits.get(be);
+         if (usefix != null) {
+            BoardLog.logD("BFIX","Multiple spelling corrections " + usefix.getText() + " " +
+                  sf.getText() + usefix.getEditCount() + " " + sf.getEditCount());
+            if (sf.getEditCount() == usefix.getEditCount()) {
+               BoardLog.logD("BFIX","Skip spelling correction due to mutliple edits with same delta");       
+               usefix = null;
+               break;
              }
-            
-            if (usefix != null) {
-               if (sf.getEditCount() == usefix.getEditCount()) {
-                  BoardLog.logD("BFIX","Skip spelling correction due to mutliple edits with same delta");       
-                  break;
-                }
-               // multiple edits of same length seem to work -- ignore.
-               return null;
-             }
-            else usefix = sf;
           }
+         else usefix = sf;
        }
-      finally {
-         bc.removePrivateBuffer(proj,filename,pid);
-       }
-      if (havebad && badfix != null && usefix == null) usefix = badfix;
-      
       if (usefix == null) return null;
+      
       if (for_corrector.getStartTime() != initial_time) return null;
       BoardLog.logD("BFIX","SPELL: DO replace " + for_identifier + " WITH " + usefix.getText());
       BoardMetrics.noteCommand("BFIX","SPELLFIX");
@@ -471,55 +429,27 @@ private static class SpellFix implements Comparable<SpellFix> {
 /*										*/
 /********************************************************************************/
 
-private static class SpellDoer implements BfixRunnableFix {
+private static class SpellDoer extends BfixFixDoer {
 
-   private BfixCorrector for_corrector;
    private BaleWindowDocument for_document;
-   private BumpProblem for_problem;
    private SpellFix for_fix;
-   private long initial_time;
 
    SpellDoer(BfixCorrector cor,BaleWindowDocument doc,
 	 BumpProblem bp,SpellFix fix,long time) {
-      for_corrector = cor;
+      super(cor,bp,time);
       for_document = doc;
-      for_problem = bp;
       for_fix = fix;
-      initial_time = time;
     }
 
    @Override public Boolean call() {
-      BumpClient bc = BumpClient.getBump();
-      List<BumpProblem> probs = bc.getProblems(for_document.getFile());
-      if (!checkProblemPresent(for_problem,probs)) return false;
-      if (for_corrector.getStartTime() != initial_time) return false;
-   
       int soff = for_document.mapOffsetToJava(for_problem.getStart());
       int eoff0 = for_document.mapOffsetToJava(for_problem.getEnd());
-      if (!checkSafePosition(for_corrector,soff,eoff0)) return false;
-   
-      BoardMetrics.noteCommand("BFIX","SpellingCorrection_" + for_corrector.getBubbleId());
-      BoardLog.logD("BFIX","SPELL Making correction " + for_fix.getText() + " for " + for_fix.getOriginalText());
-   
+      BfixCheckAreas sareas = new BfixCheckAreas(soff,eoff0);
       int len = for_fix.getOriginalText().length();
       int eoff = soff+len-1;
-      String txt = for_fix.getText();
-   
-      BaleWindow edwin = for_corrector.getEditor();
-      JTextComponent edcmp = edwin.getEditor();
-      BurpHistory bh = BurpHistory.getHistory();
-      if (edcmp != null) {
-         bh.beginEditAction(edcmp);
-       }
-      try {
-         for_document.replace(soff,eoff-soff+1,txt,false,false);
-         BoardMetrics.noteCommand("BFIX", "DoneSpellingCorrection_" + for_corrector.getBubbleId());
-       }
-      finally {
-         if (edcmp != null) bh.endEditAction(edcmp);
-       }
-      
-      return true;
+      String txt = for_fix.getText(); 
+      BfixEdit edit = new BfixBaseEdit(for_corrector,soff,eoff-soff+1,txt);
+      return testEdit(edit,sareas,"SpellingCorrection",false);
     }
 
    @Override public double getRegionOrder()		{ return 0; } 
