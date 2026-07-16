@@ -258,7 +258,8 @@ private static class VisibilityDoer extends BfixFixDoer {
     }
 
    @Override public Boolean call() {
-      BfixEdit edit = new BfixFixer.BfixBaseEdit(for_corrector,start_offset,end_offset,new_token);
+      BfixEdit edit = new BfixBaseEdit(for_corrector,start_offset,
+            end_offset,new_token);
       BfixCheckAreas area = new BfixCheckAreas(start_offset,end_offset+1);
       return testEdit(edit,area,"ChangeVisibility",true);
     }

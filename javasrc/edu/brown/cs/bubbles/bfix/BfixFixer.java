@@ -39,6 +39,7 @@ import javax.swing.SwingUtilities;
 
 import org.w3c.dom.Element;
 
+
 public abstract class BfixFixer implements Runnable, BfixConstants
 {
 
@@ -255,80 +256,7 @@ private Boolean checkOneEdit(BumpClient bc,String pid,String filename,
 
 
 
-/********************************************************************************/
-/*                                                                              */
-/*      Edit representation                                                     */
-/*                                                                              */
-/********************************************************************************/
 
-public static class BfixBaseEdit implements BfixEdit {
-   
-   private BfixCorrector for_corrector;
-   private int start_offset;
-   private int end_offset;
-   private String insert_text;
-   private String undo_text;
-   private boolean can_undo;
-   
-   public BfixBaseEdit(BfixCorrector corr,int soff,int eoff,String ins,String undo) {
-      for_corrector = corr;
-      start_offset = soff;
-      end_offset = eoff;
-      insert_text = ins;
-      undo_text = undo;
-      can_undo = true;
-    }
-   
-   public BfixBaseEdit(BfixCorrector corr,int soff,int eoff,String ins) {
-      for_corrector = corr;
-      start_offset = soff;
-      end_offset = eoff;
-      insert_text = ins;
-      undo_text = null;
-      can_undo = false;
-    }
-   
-   @Override public void doEdit(boolean format,boolean indent) {
-      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
-      doc.replace(start_offset,end_offset - start_offset, insert_text,
-            format,indent);
-    }
-   
-   @Override public boolean makeEdit(String pid) {
-      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
-      String proj = doc.getProjectName();
-      File file = doc.getFile();
-      int soff = doc.mapOffsetToEclipse(start_offset);
-      int eoff = doc.mapOffsetToEclipse(end_offset);
-      BumpClient bc = BumpClient.getBump();
-      bc.editPrivateFile(proj,file,pid,soff,eoff,insert_text);
-      return true;
-    }
-   
-   
-   @Override public boolean unmakeEdit(String pid) {
-      if (!can_undo) return false;
-      BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
-      String proj = doc.getProjectName();
-      File file = doc.getFile();
-      int soff = doc.mapOffsetToEclipse(start_offset);
-      int eoff = end_offset;
-      if (insert_text != null) eoff += insert_text.length();
-      eoff = doc.mapOffsetToEclipse(eoff);
-      String txt = undo_text;
-      if (txt.isEmpty()) txt = null;
-      BumpClient bc = BumpClient.getBump();
-      bc.editPrivateFile(proj,file,pid,soff,eoff,txt);
-      return true;
-    }
-   
-   @Override public int getDelta() {
-      int delta = start_offset - end_offset;
-      if (insert_text != null) delta += insert_text.length();
-      return delta;
-    }
-   
-}       // end of inner class BfixBaseEdit
 
 
 

@@ -24,7 +24,6 @@
 
 package edu.brown.cs.bubbles.bfix;
 
-import edu.brown.cs.bubbles.bfix.BfixFixer.BfixBaseEdit;
 import edu.brown.cs.bubbles.bfix.BfixFixer.BfixGroupEdits;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
@@ -247,7 +246,7 @@ private static class ImportFixer extends BfixFixer {
       for (String type : types) {
          String impstr = "import " + type + ";\n";
          mxdel = Math.max(mxdel,impstr.length());
-         BfixEdit edit = new BfixBaseEdit(for_corrector,inspos,inspos,impstr);
+         BfixEdit edit = new BfixBaseEdit(for_corrector,inspos,inspos,impstr,"");
          tryedits.put(edit,type);
        }
       BfixCheckAreas pareas = new BfixCheckAreas(mxdel,mxdel);
@@ -340,42 +339,42 @@ private static class ImportChecker {
       BumpClient bc = BumpClient.getBump();
       Element e = bc.getProjectData(for_project,false,false,true,false,true);
       if (e == null) return;
-
+   
       project_classes = new HashSet<String>();
       explicit_imports = new HashSet<String>();
       demand_imports = new HashSet<String>();
       implicit_imports = new HashSet<String>();
-
+   
       Element clss = IvyXml.getChild(e,"CLASSES");
       for (Element cls : IvyXml.children(clss,"TYPE")) {
-	 String nm = IvyXml.getTextElement(cls,"NAME");
-	 project_classes.add(nm);
+         String nm = IvyXml.getTextElement(cls,"NAME");
+         project_classes.add(nm);
        }
       for (Element refs : IvyXml.children(e,"REFERENCES")) {
-	 String rproj = IvyXml.getText(refs);
-	 ImportChecker nic = getImportCheckerForProject(rproj);
-	 for (String s : nic.project_classes) {
-	    project_classes.add(s);
-	  }
+         String rproj = IvyXml.getText(refs);
+         ImportChecker nic = getImportCheckerForProject(rproj);
+         for (String s : nic.project_classes) {
+            project_classes.add(s);
+          }
        }
       @SuppressWarnings("unused") String pkg = null;
       for (Element imps : IvyXml.children(e,"IMPORT")) {
-	 String npkg = IvyXml.getAttrString(imps,"PACKAGE");
-	 if (npkg !=  null) pkg = npkg;
-	 if (IvyXml.getAttrBool(imps,"STATIC")) continue;
-	 String imp = IvyXml.getText(imps);
-	 if (IvyXml.getAttrBool(imps,"DEMAND")) {
-	    int idx = imp.indexOf(".*");
-	    if (idx > 0) imp = imp.substring(0,idx);
-	    demand_imports.add(imp);
-	  }
-	 else {
-	    explicit_imports.add(imp);
-	    int idx = imp.lastIndexOf(".");
-	    if (idx >= 0) {
-	       implicit_imports.add(imp.substring(0,idx));
-	     }
-	  }
+         String npkg = IvyXml.getAttrString(imps,"PACKAGE");
+         if (npkg !=  null) pkg = npkg;
+         if (IvyXml.getAttrBool(imps,"STATIC")) continue;
+         String imp = IvyXml.getText(imps);
+         if (IvyXml.getAttrBool(imps,"DEMAND")) {
+            int idx = imp.indexOf(".*");
+            if (idx > 0) imp = imp.substring(0,idx);
+            demand_imports.add(imp);
+          }
+         else {
+            explicit_imports.add(imp);
+            int idx = imp.lastIndexOf(".");
+            if (idx >= 0) {
+               implicit_imports.add(imp.substring(0,idx));
+             }
+          }
        }
     }
 
@@ -383,50 +382,50 @@ private static class ImportChecker {
       String pat = "." + nm;
       Set<String> match = new HashSet<String>();
       for (String s : project_classes) {
-	 if (s.endsWith(pat) || s.equals(nm)) {
-	    match.add(s.replace("$","."));
-	  }
+         if (s.endsWith(pat) || s.equals(nm)) {
+            match.add(s.replace("$","."));
+          }
        }
       if (match.size() > 0) return match;
-
+   
       Set<String> dmatch = new HashSet<String>();
       Set<String> amatch = new HashSet<String>();
       Set<String> imatch = new HashSet<String>();
-
+   
       BumpClient bc = BumpClient.getBump();
       List<BumpLocation> typlocs = bc.findAllTypes(nm);
       if (typlocs == null) return null;
       if (typlocs.size() == 0) {
-	 typlocs = bc.findSystemDefinitions(proj,file,offset);
+         typlocs = bc.findSystemDefinitions(proj,file,offset);
        }
       if (typlocs != null) {
-	 for (BumpLocation bl : typlocs) {
-	    String tnm = bl.getSymbolName();
-	    int idx = tnm.indexOf("<");
-	    if (idx > 0) tnm = tnm.substring(0,idx).trim();
-	    if (explicit_imports.contains(tnm)) {
-	       match.add(tnm);
-	     }
-	    for (String s : demand_imports) {
-	       String dimp = s + "." + nm;
-	       if (dimp.equals(tnm)) {
-		  dmatch.add(tnm);
-		}
-	     }
-	    for (String s : implicit_imports) {
-	       String dimp = s + "." + nm;
-	       if (dimp.equals(tnm)) {
-		  imatch.add(tnm);
-		}
-	     }
-	    if (!tnm.contains("internal")) amatch.add(tnm);
-	  }
+         for (BumpLocation bl : typlocs) {
+            String tnm = bl.getSymbolName();
+            int idx = tnm.indexOf("<");
+            if (idx > 0) tnm = tnm.substring(0,idx).trim();
+            if (explicit_imports.contains(tnm)) {
+               match.add(tnm);
+             }
+            for (String s : demand_imports) {
+               String dimp = s + "." + nm;
+               if (dimp.equals(tnm)) {
+        	  dmatch.add(tnm);
+        	}
+             }
+            for (String s : implicit_imports) {
+               String dimp = s + "." + nm;
+               if (dimp.equals(tnm)) {
+        	  imatch.add(tnm);
+        	}
+             }
+            if (!tnm.contains("internal")) amatch.add(tnm);
+          }
        }
       if (match.size() > 0) return match;
       if (dmatch.size() > 0) return dmatch;
       if (imatch.size() > 0) return imatch;
       if (amatch.size() > 0) return amatch;
-
+   
       return null;
     }
 

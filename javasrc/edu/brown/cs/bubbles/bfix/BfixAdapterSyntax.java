@@ -24,7 +24,6 @@
 
 package edu.brown.cs.bubbles.bfix;
 
-import edu.brown.cs.bubbles.bfix.BfixFixer.BfixBaseEdit;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.bump.BumpClient;

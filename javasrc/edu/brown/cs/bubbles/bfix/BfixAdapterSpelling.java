@@ -24,7 +24,6 @@
 
 package edu.brown.cs.bubbles.bfix;
 
-import edu.brown.cs.bubbles.bfix.BfixFixer.BfixBaseEdit;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardProperties;
@@ -367,8 +366,8 @@ private static class SpellFixer extends BfixFixer {
       for (BfixEdit be : useedits) {
          SpellFix sf = edits.get(be);
          if (usefix != null) {
-            BoardLog.logD("BFIX","Multiple spelling corrections " + usefix.getText() + " " +
-                  sf.getText() + usefix.getEditCount() + " " + sf.getEditCount());
+            BoardLog.logD("BFIX","Multiple spelling corrections " + usefix.getText() +
+                  " " + sf.getText() + usefix.getEditCount() + " " + sf.getEditCount());
             if (sf.getEditCount() == usefix.getEditCount()) {
                BoardLog.logD("BFIX","Skip spelling correction due to mutliple edits with same delta");       
                usefix = null;
@@ -435,7 +434,7 @@ private static class SpellDoer extends BfixFixDoer {
    private SpellFix for_fix;
 
    SpellDoer(BfixCorrector cor,BaleWindowDocument doc,
-	 BumpProblem bp,SpellFix fix,long time) {
+         BumpProblem bp,SpellFix fix,long time) {
       super(cor,bp,time);
       for_document = doc;
       for_fix = fix;
@@ -446,9 +445,9 @@ private static class SpellDoer extends BfixFixDoer {
       int eoff0 = for_document.mapOffsetToJava(for_problem.getEnd());
       BfixCheckAreas sareas = new BfixCheckAreas(soff,eoff0);
       int len = for_fix.getOriginalText().length();
-      int eoff = soff+len-1;
+      int eoff = soff+len;              // Use our length for double ids
       String txt = for_fix.getText(); 
-      BfixEdit edit = new BfixBaseEdit(for_corrector,soff,eoff-soff+1,txt);
+      BfixEdit edit = new BfixBaseEdit(for_corrector,soff,eoff,txt);
       return testEdit(edit,sareas,"SpellingCorrection",false);
     }
 

@@ -36,10 +36,10 @@ import java.util.regex.PatternSyntaxException;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleFileOverview;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindow;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindowDocument;
+import edu.brown.cs.bubbles.bfix.BfixBaseEdit;
 import edu.brown.cs.bubbles.bfix.BfixConstants;
 import edu.brown.cs.bubbles.bfix.BfixCorrector;
 import edu.brown.cs.bubbles.bfix.BfixFixDoer;
-import edu.brown.cs.bubbles.bfix.BfixFixer;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
 
@@ -802,7 +802,7 @@ protected static class StyleDoer extends BfixFixDoer {
     }
    
    @Override public Boolean call() {
-      BfixEdit edit = new BfixFixer.BfixBaseEdit(for_corrector,
+      BfixEdit edit = new BfixBaseEdit(for_corrector,
             edit_start,edit_end,insert_text); 
       BfixCheckAreas areas = new BfixCheckAreas(range_start,range_end); 
       return testEdit(edit,areas,"StyleCorrection",do_format|do_indent);
