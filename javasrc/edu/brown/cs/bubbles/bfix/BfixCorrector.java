@@ -70,7 +70,7 @@ public final class BfixCorrector implements BfixConstants, BaleConstants
 private BaleWindow		for_editor;
 private BaleWindowDocument	for_document;
 private DocHandler		event_handler;
-private ProblemHandler		problem_handler;
+private ProblemHandler	problem_handler;
 private BfixSmartInsert 	smart_inserter;
 
 private int			start_offset;
@@ -79,6 +79,7 @@ private long			start_time;
 private int			caret_position;
 private Set<BumpProblem>	active_problems;
 private String			bubble_id;
+private int                     problem_count;
 
 private Set<BfixMemo>		pending_fixes;
 
@@ -106,6 +107,7 @@ BfixCorrector(BaleWindow ed,boolean auto)
    caret_position = -1;
    active_problems = new ConcurrentSkipListSet<>(new ProblemComparator());
    pending_fixes = new ConcurrentSkipListSet<>();
+   problem_count = 0;
 
    smart_inserter = new BfixSmartInsert(this);
 
@@ -291,6 +293,7 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
    catch (BadLocationException e) { }
    
    for ( ; ; ) {
+      int ct = problem_count;
       List<BumpProblem> totry = new ArrayList<>();
       List<BumpProblem> styletry = new ArrayList<>();
       BumpClient bc = BumpClient.getBump();
@@ -329,6 +332,13 @@ void fixErrorsInRegion(int startoff,int endoff,boolean force)
                   soff2 + " " + eoff2);
             startoff = soff2;
             endoff = eoff2;
+          }
+         for (int i = 0; i < 4; ++i) {
+            if (problem_count > ct) break;
+            try {
+               Thread.sleep(500);
+             }
+            catch (InterruptedException t) { }
           }
          continue;
        }
@@ -823,6 +833,7 @@ private final class ProblemHandler implements BumpConstants.BumpProblemHandler {
 
    @Override public void handleProblemsDone() {
       SwingUtilities.invokeLater(new Checker());
+      ++problem_count;
     }
 
 }	// end of inner class ProblemHandler
@@ -893,7 +904,6 @@ void removePending(BfixMemo bm)
 {
    pending_fixes.remove(bm);
 }
-
 
 
 
