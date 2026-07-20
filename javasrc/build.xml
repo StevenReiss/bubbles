@@ -34,10 +34,8 @@
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bbook" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bdyn" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bwiz" />
-      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bucs" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bhelp" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bfix" />
-      <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bpare" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bvfm" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bmvn" />
       <ant antfile="build.xml" dir="edu/brown/cs/bubbles/bstyle" />
@@ -94,7 +92,6 @@
 	 <package name='edu.brown.cs.bubbles.bueno' />
 	 <package name='edu.brown.cs.bubbles.bump' />
 	 <package name='edu.brown.cs.bubbles.burp' />
-	 <package name='edu.brown.cs.bubbles.bucs' />
 	 <package name='edu.brown.cs.bubbles.buss' />
 	 <package name='edu.brown.cs.bubbles.bvcr' />
 	 <package name='edu.brown.cs.bubbles.bwiz' />
