@@ -206,12 +206,9 @@ Font BWIZ_FONT_OPTION = BWIZ_FONT_SIZE_MAIN.deriveFont((float) 12);
 
 /********************************************************************************/
 /*										*/
-/*	bedu String text definitions						*/
+/*	String text definitions						*/
 /*										*/
 /********************************************************************************/
-
-String PAST_ASSIGNMENTS_TEXT = "Past Assignments";
-String CURRENT_ASSIGNMENTS_TEXT = "Current Assignments";
 
 String CREATE_WORKSPACE_TEXT = "Create New Workspace";
 String OPEN_WORKSPACE_TEXT = "Open Workspace";

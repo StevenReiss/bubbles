@@ -56,7 +56,7 @@ public final class BanalFactory implements BanalConstants, MintConstants
 /*										*/
 /********************************************************************************/
 
-private boolean 		server_running;
+private Boolean 		server_running;
 private boolean                 server_starting;
 
 private static BanalFactory	the_factory;
@@ -76,12 +76,12 @@ static {
 
 private BanalFactory()
 {
-   server_running = false;
+   server_running = null;
+   server_starting = false;
 }
 
 
 public static BanalFactory getFactory() 	{ return the_factory; }
-
 
 
 
@@ -105,14 +105,28 @@ public static void initialize(BudaRoot br)
    switch (BoardSetup.getSetup().getRunMode()) {
       case NORMAL :
       case SERVER :
-         BanalStarter bs = new BanalStarter();
-         bs.start();
+//       BanalStarter bs = new BanalStarter();
+//       bs.start();
          break;
       case CLIENT :
          break;
     }
 }
 
+
+public void ensureRunning()
+{
+   switch (BoardSetup.getSetup().getRunMode()) {
+      case NORMAL :
+      case SERVER :
+         if (server_running == null) {
+            server_running = false;
+            BanalStarter bs = new BanalStarter();     // sets server_starting
+            bs.start();
+          }
+         break;
+    }
+}
 
 
 /********************************************************************************/
@@ -258,6 +272,8 @@ void startBanalServer()
 
 private synchronized void waitForServer()
 {
+   ensureRunning();
+   
    while (server_starting) {
       try {
          wait(2000);

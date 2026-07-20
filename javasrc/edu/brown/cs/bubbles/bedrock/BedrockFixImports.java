@@ -37,6 +37,7 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MemberRef;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.QualifiedName;
@@ -292,6 +293,12 @@ private class StaticFinder extends ASTVisitor {
       if (defining_types) return;
       if (n.isSynthetic()) return;
       if (n.isRecovered()) return;
+      if (!Modifier.isStatic(n.getModifiers())) {
+         BedrockPlugin.logD("Attempt to add static import of non-static" +
+               n.getName());
+         return;
+       }
+      
       switch (n.getKind()) {
          case IBinding.METHOD :
             IMethodBinding mthd = (IMethodBinding) n;

@@ -25,6 +25,7 @@
 package edu.brown.cs.bubbles.bfix;
 
 import edu.brown.cs.bubbles.bale.BaleFactory;
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindowDocument;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpProblem;
@@ -150,7 +151,7 @@ protected String createPrivateBuffer(String proj,String filename)
 
 
 protected List<BfixEdit> findPrivateEdits(Collection<BfixEdit> edits,
-      BfixCheckAreas safepos,BfixCheckAreas probareas) 
+      BfixCheckAreas safepos,BfixCheckAreas probareas,boolean allowerror) 
 {
    BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
    String proj = doc.getProjectName();
@@ -164,7 +165,7 @@ protected List<BfixEdit> findPrivateEdits(Collection<BfixEdit> edits,
       for (BfixEdit edit : edits) {
          Boolean fg = checkOneEdit(bc,pid,filename,doc,edit,
                safepos,probareas);
-         if (fg == null) {
+         if (fg == null && allowerror) {
             if (rslt == null) {
                if (alt == null) alt = new ArrayList<>();
                alt.add(edit);
@@ -223,6 +224,8 @@ private Boolean checkOneEdit(BumpClient bc,String pid,String filename,
           }
        }
     }
+   
+   BoardLog.logD("BFIX","Check edit " + edit);
    
    bc.beginPrivateEdit(filename, pid);
    edit.makeEdit(pid);

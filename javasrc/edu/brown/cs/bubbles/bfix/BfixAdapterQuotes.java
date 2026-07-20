@@ -256,7 +256,7 @@ private class QuoteFixer extends BfixFixer {
    @Override protected BfixRunnableFix findFix() {
       BfixCheckAreas darea = new BfixCheckAreas(0,-1);
       Collection<BfixEdit> eds = new ArrayList<>(potential_fixes);
-      List<BfixEdit> useedits = findPrivateEdits(eds,null,darea);
+      List<BfixEdit> useedits = findPrivateEdits(eds,null,darea,false);
       if (useedits == null || useedits.size() != 1) return null;
       QuoteFix usefix = (QuoteFix) useedits.get(0); 
       if (for_corrector.getStartTime() != initial_time) return null;

@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.bdyn;
 
+import edu.brown.cs.bubbles.banal.BanalFactory;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -82,6 +83,8 @@ public static void initialize(BudaRoot br)
    getFactory().callback_set.setup();
 
    BumpClient.getBump().getTrieData(null);              // ensure we get trie data
+   
+   BanalFactory.getFactory().ensureRunning();
 }
 
 /**

@@ -24,8 +24,6 @@
 
 package edu.brown.cs.bubbles.bwiz;
 
-import edu.brown.cs.bubbles.bedu.BeduConstants.Assignment;
-import edu.brown.cs.bubbles.bedu.BeduFactory;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -42,8 +40,8 @@ import org.w3c.dom.Element;
 import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -133,14 +131,20 @@ private void setup()
       enumpanel = new WizardButton(new CreateEnumAction(bdata));
     }
    //UI Panel for opening an assignment
-   List<Assignment> asgs = BeduFactory.getFactory().getCreatableAssignments();
    bdata = types.get("NEWASSIGNMENT");
-   if (asgs != null && asgs.size() > 0 && bdata != null) {
-      assignmentpanel = new WizardButton(new OpenAssignmentAction(bdata));
+   if (bdata != null) {
+      try {
+         Class<?> cls = Class.forName("edu.brown.cs.bubbles.bedu.BeduFactory");
+         Method m = cls.getMethod("getAssignmentAction",Element.class);
+         Action act = (Action) m.invoke(null,bdata);
+         if (act != null) {
+            assignmentpanel = new WizardButton(act);
+          }
+       }
+      catch (Throwable e) { }
     }
 
    //UI layout
-   
    GroupLayout.SequentialGroup sg = layout.createSequentialGroup();
    GroupLayout.ParallelGroup pg = layout.createParallelGroup();
    if (classpanel != null) pg.addComponent(classpanel);
@@ -259,25 +263,7 @@ private class CreateEnumAction extends AbstractAction {
 }	// end of inner class CreateEnumAction
 
 
-private class OpenAssignmentAction extends AbstractAction {
 
-   private static final long serialVersionUID = 1;
-   
-   OpenAssignmentAction(Element bdata) {
-      super(OPEN_ASSIGNMENT_TEXT);
-      String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
-            "Create a new course assignment");
-      putValue(SHORT_DESCRIPTION,desc);
-      String lbl = IvyXml.getAttrString(bdata,"LABEL");
-      if (lbl != null) putValue(NAME,lbl);
-    }
-   
-   @Override public void actionPerformed(ActionEvent evt) {
-      BwizAssignmentWizard bcwiz = new BwizAssignmentWizard();
-      BwizFactory.getFactory().createBubble(bcwiz,null);
-    }
-
-}	// end of inner class OpenAssignmentAction
 
 
 

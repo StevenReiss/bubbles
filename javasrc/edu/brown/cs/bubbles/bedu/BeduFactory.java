@@ -38,6 +38,7 @@ import org.w3c.dom.Element;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
@@ -47,6 +48,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 public final class BeduFactory implements BeduConstants, BoardConstants {
 
@@ -58,8 +62,9 @@ public final class BeduFactory implements BeduConstants, BoardConstants {
 /*										*/
 /********************************************************************************/
 
-private BeduCourseData			course_data;
+private BeduCourseData		course_data;
 private boolean 			is_setup;
+private BudaRoot                        buda_root;
 
 private static BeduFactory		the_factory = null;
 
@@ -113,6 +118,7 @@ public static void setup()
 
 public static void initialize(BudaRoot br)
 {
+   the_factory.buda_root = br;
    the_factory.setupCourseButtons();
 }
 
@@ -150,6 +156,39 @@ public boolean useCourseChat()
    if (course_data == null) return false;
    return course_data.doChat();
 }
+
+
+public static Action getAssignmentAction(Element bdata)
+{
+   BeduFactory fac = getFactory();
+   List<Assignment> asgs = fac.getCreatableAssignments();
+   if (asgs == null || asgs.size() == 0) {
+      return new OpenAssignmentAction(bdata);
+    }
+   return null;
+}
+
+
+private static class OpenAssignmentAction extends AbstractAction {
+
+   private static final long serialVersionUID = 1;
+   
+   OpenAssignmentAction(Element bdata) {
+      super("Start Assignment");
+      String desc = IvyXml.getAttrString(bdata,"DESCRIPTION",
+            "Create a new course assignment");
+      putValue(SHORT_DESCRIPTION,desc);
+      String lbl = IvyXml.getAttrString(bdata,"LABEL");
+      if (lbl != null) putValue(NAME,lbl);
+    }
+   
+   @Override public void actionPerformed(ActionEvent evt) {
+      BeduAssignmentWizard bcwiz = new BeduAssignmentWizard();
+      BudaRoot br = the_factory.buda_root;
+      bcwiz.createBubble(br);
+    }
+
+}       // end of inner class OpenAssigmentAction
 
 
 

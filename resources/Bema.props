@@ -23,11 +23,44 @@
 <!-- <entry key="Bema.plugin.34">edu.brown.cs.bubbles.bucs.BucsFactory</entry> -->
 <!-- <entry key="Bema.plugin.35">edu.brown.cs.bubbles.bdyn.BdynFactory</entry>  -->
 <entry key="Bema.plugin.36">edu.brown.cs.bubbles.bfix.BfixFactory</entry>
-<!-- <entry key="Bema.plugin.37">edu.brown.cs.bubbles.bicex.BicexFactory</entry> -->
-<!-- <entry key="Bema.plugin.38">edu.brown.cs.bubbles.brepair.BrepairFactory</entry> -->
 <entry key="Bema.plugin.39">edu.brown.cs.bubbles.bvfm.BvfmFactory</entry>
 <entry key="Bema.web.url">http://bubbles.cs.brown.edu:8080/mint/mint</entry>
 <entry key="Bema.plugin.40">edu.brown.cs.bubbles.bmvn.BmvnFactory</entry>
 <entry key="Bema.plugin.41">edu.brown.cs.bubbles.bstyle.BstyleFactory</entry>
 <entry key="Bema.pluginfolder">dropins plugins</entry>
 </properties>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

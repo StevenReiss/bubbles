@@ -246,11 +246,12 @@ private static class ImportFixer extends BfixFixer {
       for (String type : types) {
          String impstr = "import " + type + ";\n";
          mxdel = Math.max(mxdel,impstr.length());
-         BfixEdit edit = new BfixBaseEdit(for_corrector,inspos,inspos,impstr,"");
+         BfixBaseEdit edit = new BfixBaseEdit(for_corrector,inspos,inspos,impstr,"");
+         edit.useFileDocument();
          tryedits.put(edit,type);
        }
       BfixCheckAreas pareas = new BfixCheckAreas(mxdel,mxdel);
-      List<BfixEdit> rslt = findPrivateEdits(tryedits.keySet(),null,pareas);
+      List<BfixEdit> rslt = findPrivateEdits(tryedits.keySet(),null,pareas,true);
       if (rslt == null || rslt.size() != 1) return null;
       if (for_corrector.getStartTime() != initial_time) return null;
       String accept = tryedits.get(rslt.get(0));
@@ -271,11 +272,13 @@ private static class ImportFixer extends BfixFixer {
    
       if (body == null || body.length() == 0) return -1;
    
-      String pats = "\\s*((public|private|abstract|static)\\s+)*(class|interface|enum)" + 
+      String pats = "\\s*((public|private|abstract|static|final)\\s+)*(class|interface|enum|record)" + 
             "\\s+(\\w+(<.*>)?)\\s+((extends\\s)|(implements\\s)|\\{)";
       Pattern pat = Pattern.compile(pats,Pattern.MULTILINE);
       Matcher mat = pat.matcher(body);
       if (!mat.find()) return -1;
+      
+      BoardLog.logD("BFIX","Find import location " + mat.start() + " " + mat.end());
    
       for (int idx = mat.start(); idx < mat.end(); ++idx) {
          char c = body.charAt(idx);
@@ -284,6 +287,7 @@ private static class ImportFixer extends BfixFixer {
             return pos;
           }
        }
+      
       return 0;
     }
 

@@ -28,6 +28,7 @@ package edu.brown.cs.bubbles.bcon;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleContextConfig;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleContextListener;
 import edu.brown.cs.bubbles.bale.BaleFactory;
+import edu.brown.cs.bubbles.banal.BanalFactory;
 import edu.brown.cs.bubbles.bass.BassFactory;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
@@ -91,6 +92,7 @@ public static void setup()
 public static void initialize(BudaRoot br)
 {
    BaleFactory.getFactory().addContextListener(new ContextHandler());
+   BanalFactory.getFactory().ensureRunning();
 }
 
 /**

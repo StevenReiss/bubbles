@@ -24,6 +24,7 @@ package edu.brown.cs.bubbles.bfix;
 
 import java.io.File;
 
+import edu.brown.cs.bubbles.bale.BaleConstants.BaleFileOverview;
 import edu.brown.cs.bubbles.bale.BaleConstants.BaleWindowDocument;
 import edu.brown.cs.bubbles.bfix.BfixConstants.BfixEdit;
 import edu.brown.cs.bubbles.bump.BumpClient;
@@ -44,6 +45,7 @@ private int end_offset;
 private String insert_text;
 private String undo_text;
 private boolean can_undo;
+private boolean use_base;
 
 
 
@@ -61,6 +63,7 @@ public BfixBaseEdit(BfixCorrector corr,int soff,int eoff,String ins,String undo)
    insert_text = ins;
    undo_text = undo;
    can_undo = true;
+   use_base = false;
 }
 
 
@@ -73,6 +76,14 @@ public BfixBaseEdit(BfixCorrector corr,int soff,int eoff,String ins)
    insert_text = ins;
    undo_text = null;
    can_undo = false;
+   use_base = false;
+}
+
+
+
+public void useFileDocument()
+{
+   use_base = true;
 }
 
 
@@ -85,8 +96,15 @@ public BfixBaseEdit(BfixCorrector corr,int soff,int eoff,String ins)
 @Override public void doEdit(boolean format,boolean indent)
 {
    BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
-   doc.replace(start_offset,end_offset - start_offset, insert_text,
-         format,indent);
+   if (use_base) {
+      BaleFileOverview fov = doc.getBaseWindowDocument();
+      fov.replace(start_offset,end_offset - start_offset,insert_text,
+            format,indent);
+    }
+   else {
+      doc.replace(start_offset,end_offset - start_offset, insert_text,
+            format,indent);
+    }
 }
 
 
@@ -102,8 +120,8 @@ public BfixBaseEdit(BfixCorrector corr,int soff,int eoff,String ins)
    BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
    String proj = doc.getProjectName();
    File file = doc.getFile();
-   int soff = doc.mapOffsetToEclipse(start_offset);
-   int eoff = doc.mapOffsetToEclipse(end_offset);
+   int soff = mapOffset(doc,start_offset);
+   int eoff = mapOffset(doc,end_offset);
    BumpClient bc = BumpClient.getBump();
    bc.editPrivateFile(proj,file,pid,soff,eoff,insert_text);
    return true;
@@ -116,10 +134,10 @@ public BfixBaseEdit(BfixCorrector corr,int soff,int eoff,String ins)
    BaleWindowDocument doc = for_corrector.getEditor().getWindowDocument();
    String proj = doc.getProjectName();
    File file = doc.getFile();
-   int soff = doc.mapOffsetToEclipse(start_offset);
-   int eoff = end_offset;
+   int soff = mapOffset(doc,start_offset);
+   int eoff = end_offset + (end_offset - start_offset);
    if (insert_text != null) eoff += insert_text.length();
-   eoff = doc.mapOffsetToEclipse(eoff);
+   eoff = mapOffset(doc,eoff);
    String txt = undo_text;
    if (txt.isEmpty()) txt = null;
    BumpClient bc = BumpClient.getBump();
@@ -140,6 +158,23 @@ public BfixBaseEdit(BfixCorrector corr,int soff,int eoff,String ins)
    int delta = start_offset - end_offset;
    if (insert_text != null) delta += insert_text.length();
    return delta;
+}
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Mapping methods                                                         */
+/*                                                                              */
+/********************************************************************************/
+
+private int mapOffset(BaleWindowDocument doc,int off)
+{
+   if (use_base) {
+      BaleFileOverview base = doc.getBaseWindowDocument();
+      return base.mapOffsetToEclipse(off);
+    }
+   
+   return doc.mapOffsetToEclipse(off);
 }
 
 

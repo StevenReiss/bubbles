@@ -949,12 +949,13 @@ private static class RegionFixer implements FixAdapter {
     }
 
    synchronized BfixRunnableFix waitForDone() {
-      while (!is_done && fix_found == null) {
+      for (int i = 0; i < 10 && !is_done && fix_found == null; ++i) {
          try {
             wait(5000);
           }
          catch (InterruptedException e) { }
        }
+      
       return fix_found;
     }
 

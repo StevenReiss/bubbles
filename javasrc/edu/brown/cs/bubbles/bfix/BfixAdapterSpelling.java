@@ -360,7 +360,7 @@ private static class SpellFixer extends BfixFixer {
          edits.put(edit,sf);
        }
       BfixCheckAreas darea = new BfixCheckAreas(0,-1);
-      List<BfixEdit> useedits = findPrivateEdits(edits.keySet(),null,darea);
+      List<BfixEdit> useedits = findPrivateEdits(edits.keySet(),null,darea,false);
       if (useedits == null || useedits.size() == 0) return null;
       SpellFix usefix = null;
       for (BfixEdit be : useedits) {

@@ -34,7 +34,6 @@ package edu.brown.cs.bubbles.bema;
 import edu.brown.cs.bubbles.bale.BaleFactory;
 import edu.brown.cs.bubbles.bass.BassFactory;
 import edu.brown.cs.bubbles.bdoc.BdocFactory;
-import edu.brown.cs.bubbles.bedu.BeduFactory;
 import edu.brown.cs.bubbles.board.BoardColors;
 import edu.brown.cs.bubbles.board.BoardConstants.BoardLanguage;
 import edu.brown.cs.bubbles.board.BoardConstants.RunMode;
@@ -544,7 +543,14 @@ private void setOptions(BoardSetup bs)
    if (no_bedrock) bs.setPluginRunning();
 
    if (bs.getCourseName() != null) {
-      BeduFactory.getFactory();
+      try {
+         Class<?> c = Class.forName("edu.brown.cs.bubbles.bedu.BeduFactoy");
+         Method m = c.getMethod("getFactory");
+         m.invoke(null);
+       }
+      catch (Throwable t) {
+         bs.setCourseName(null);
+       }
     }
 }
 
