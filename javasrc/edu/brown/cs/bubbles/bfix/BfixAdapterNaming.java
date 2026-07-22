@@ -84,6 +84,8 @@ public void addFixers(BfixCorrector corr,BumpProblem bp,boolean explicit,
 
 @Override protected String getMenuAction(BfixCorrector corr,BumpProblem bp)
 {
+   NamingFixer fixer = findFixer(corr,bp);
+   if (fixer != null) return "Fix Name";
    return null;
 }
 
@@ -144,7 +146,7 @@ private static class NamingFixer extends BfixFixer {
       if (for_corrector.getStartTime() != initial_time) return null;
       BfixEdit edit = new BfixBaseEdit(for_corrector,start_pos,end_pos,new_token);
       BfixCheckAreas areas = new BfixCheckAreas(start_pos,end_pos+1);
-      boolean fg = checkPrivateEdit(edit,areas,null,false);
+      boolean fg = checkPrivateEdit(edit,areas,null,true);
       if (!fg) return null;
       BoardLog.logD("BFIX","NAMING FIX " + new_token);
       BoardMetrics.noteCommand("BFIX","NAMINGFIX");

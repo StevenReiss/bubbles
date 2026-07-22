@@ -214,7 +214,7 @@ private Boolean checkOneEdit(BumpClient bc,String pid,String filename,
 {
    Collection<BumpProblem> probs = bc.getPrivateProblems(filename, pid);
    if (probs == null) return false;
-   int probct = BfixAdapter.getErrorCount(probs);
+   int probct = BfixAdapter.getErrorCount(probs,for_problem);
    if (!BfixAdapter.checkProblemPresent(for_problem,probs)) return false;
    
    if (safepos != null) {
@@ -235,7 +235,7 @@ private Boolean checkOneEdit(BumpClient bc,String pid,String filename,
       bc.getPrivateProblems(filename,pid);
     }
    
-   if (probs == null || BfixAdapter.getErrorCount(probs) > probct) {
+   if (probs == null || BfixAdapter.getErrorCount(probs,for_problem) > probct) {
       return false;
     }
    if (probareas != null) {
@@ -250,7 +250,7 @@ private Boolean checkOneEdit(BumpClient bc,String pid,String filename,
           }
        }
     }
-   if (BfixAdapter.getErrorCount(probs) == probct) {
+   if (BfixAdapter.getErrorCount(probs,for_problem) == probct) {
       return null;
     }
    

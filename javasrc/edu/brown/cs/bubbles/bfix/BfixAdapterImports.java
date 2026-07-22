@@ -582,7 +582,7 @@ private static class UnusedImportFixer extends BfixFixer {
             BoardLog.logE("BFIX","UNUSEDIMPORT: Problem getting errors for " + pid);
             return null;
           }
-         int probct = getErrorCount(oprobs,for_problem);
+         int probct = getErrorCountAtProblem(oprobs,for_problem);
          if (!checkProblemPresent(for_problem,oprobs)) {
             BoardLog.logD("BFIX","UNUSEDIMPORT: Problem went away");
             return null;

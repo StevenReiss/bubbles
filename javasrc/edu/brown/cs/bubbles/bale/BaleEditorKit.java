@@ -2589,13 +2589,21 @@ private static class FormatAction extends TextAction {
       super("FormatAction");
     }
 
-   @Override public void actionPerformed(ActionEvent e) {
-      BaleEditorPane target = getBaleEditor(e);
+   @Override public void actionPerformed(ActionEvent evt) {
+      BaleEditorPane target = getBaleEditor(evt);
       if (!checkEditor(target)) return;
       BaleDocument bd = target.getBaleDocument();
       BoardMetrics.noteCommand("BALE",String.valueOf(getValue(Action.NAME)));
-
+      
+      Position epos = null;
+      try {
+         epos = bd.createPosition(target.getSelectionEnd());
+       }
+      catch (BadLocationException e) { }
+      
       bd.format(target.getSelectionStart(),target.getSelectionEnd());
+      
+      if (epos != null) target.setSelectionEnd(epos.getOffset());
     }
 
 }	// end of inner class FormatAction

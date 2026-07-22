@@ -25,6 +25,7 @@
 package edu.brown.cs.bubbles.bedrock;
 
 
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
@@ -37,6 +38,7 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MemberRef;
+import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
@@ -162,7 +164,7 @@ private class ImportFinder extends ASTVisitor {
       n.getQualifier().accept(this);
       return false;
     }
-
+   
    @Override public void endVisit(SimpleName n) {
       noteType(n.resolveBinding());
     }
@@ -281,7 +283,22 @@ private class StaticFinder extends ASTVisitor {
     }
    
    @Override public boolean visit(QualifiedName n) {
-      noteVariable(n.resolveBinding());
+//    assume the qualifier is a type name -- imports would handle this
+//    noteVariable(n.resolveBinding());
+      return false;
+    }
+   
+   @Override public boolean visit(MethodInvocation n) {
+      for (Object o : n.arguments()) {
+         ASTNode n1 = (ASTNode) o;
+         n1.accept(this);
+       }
+      if (n.getExpression() == null) {
+         n.getName().accept(this);
+       }
+      else {
+         n.getExpression().accept(this);
+       }
       return false;
     }
    
@@ -293,11 +310,6 @@ private class StaticFinder extends ASTVisitor {
       if (defining_types) return;
       if (n.isSynthetic()) return;
       if (n.isRecovered()) return;
-      if (!Modifier.isStatic(n.getModifiers())) {
-         BedrockPlugin.logD("Attempt to add static import of non-static" +
-               n.getName());
-         return;
-       }
       
       switch (n.getKind()) {
          case IBinding.METHOD :
@@ -314,6 +326,14 @@ private class StaticFinder extends ASTVisitor {
          default :
             return;
        }
+      
+      if (!Modifier.isStatic(n.getModifiers())) {
+         BedrockPlugin.logD("Attempt to add static import of non-static: " +
+               n.getName());
+         return;
+       }
+      
+      BedrockPlugin.logD("Add potential static import " + n.getName());
       static_imports.add(n);
     }
    

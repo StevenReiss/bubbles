@@ -121,7 +121,28 @@ static int getErrorCount(Collection<BumpProblem> bpl)
 }
 
 
-static int getErrorCount(Collection<BumpProblem> bpl,BumpProblem base)
+static int getErrorCount(Collection<BumpProblem> bpl,BumpProblem orig)
+{
+   if (orig == null) return getErrorCount(bpl);
+   else return getErrorCount(bpl,orig.getErrorType());
+}
+
+
+static int getErrorCount(Collection<BumpProblem> bpl,BumpErrorType typ)
+{
+   int ct = 0;
+   if (bpl == null) return -1;
+   
+   for (BumpProblem bp : bpl) {
+      if (bp.getErrorType() == BumpErrorType.ERROR) ++ct;
+      else if (bp.getErrorType() == typ) ++ct;
+    }
+   
+   return ct;
+}
+
+
+static int getErrorCountAtProblem(Collection<BumpProblem> bpl,BumpProblem base)
 {
    int ct = 0;
    if (bpl == null) return -1;

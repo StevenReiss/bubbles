@@ -936,8 +936,12 @@ private Collection<String> getSetupPackageProperties()
    for (Iterator<String> it = loads.values().iterator(); it.hasNext(); ) {
       String key = it.next();
       String val = bp.getProperty(key);
-      if (done.contains(val)) it.remove();
-      else done.add(val);
+      if (val == null || val.isBlank() || done.contains(val)) {
+         it.remove();
+       }
+      else {
+         done.add(val);
+       }
     }
 
    return new LinkedHashSet<String>(loads.values());
