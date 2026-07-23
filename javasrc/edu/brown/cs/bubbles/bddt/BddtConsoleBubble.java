@@ -41,11 +41,14 @@ import edu.brown.cs.ivy.swing.SwingTextField;
 import edu.brown.cs.ivy.swing.SwingTextPane;
 
 import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -61,8 +64,11 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -82,7 +88,7 @@ class BddtConsoleBubble extends BudaBubble implements BddtConstants, BumpConstan
 
 private JScrollPane scroll_pane;
 private JTextPane text_pane;
-private JTextField input_pane;
+private HistoryTextField input_pane;
 private boolean   auto_scroll;
 private BddtConsoleController console_control;
 private StyledDocument console_doc;
@@ -130,11 +136,16 @@ BddtConsoleBubble(BddtConsoleController ctrl,StyledDocument doc)
 
    text_pane.setPreferredSize(d);
 
-   input_pane = new SwingTextField();
+   input_pane = new HistoryTextField();
    input_pane.setBackground(ibg);
    input_pane.setForeground(ifg);
+   Font ft1 = ft.deriveFont(Font.BOLD);
+   input_pane.setFont(ft1);
    input_pane.setCaretColor(icg);
-   input_pane.addActionListener(new InputHandler(doc));
+   InputHandler inh = new InputHandler(doc);
+   input_pane.addActionListener(inh);
+   
+   text_pane.addKeyListener(new OutputInputHandler(inh));
 
    SwingGridPanel pnl = new SwingGridPanel();
    pnl.addGBComponent(scroll_pane,0,0,1,1,10,10);
@@ -260,6 +271,7 @@ private class EndScroll implements DocumentListener, Runnable {
       d.readLock();
       try {
          int len = d.getLength();
+         BoardLog.logD("BDDT","Console window size " + len);
          try {
             Rectangle r = SwingText.modelToView2D(text_pane,len-1);
             if (r != null) {
@@ -268,6 +280,7 @@ private class EndScroll implements DocumentListener, Runnable {
                r.y += 20;
                if (r.y + r.height > sz.height) r.y = sz.height;
                text_pane.scrollRectToVisible(r);
+               BoardLog.logD("BDDT","Console window auto scroll " + r);
              }
          }
          catch (BadLocationException ex) {
@@ -321,12 +334,116 @@ private class InputHandler implements ActionListener {
     }
 
    @Override public void actionPerformed(ActionEvent e) {
-      String s = input_pane.getText() + "\n";
+      String txt = input_pane.getText();
+      input_pane.addHistory(txt);
+      String s = txt + "\n";
       input_pane.setText(null);
       console_control.handleInput(for_document,s);
     }
 
 }	// end of inner class InputHandler
+
+
+private final class OutputInputHandler implements KeyListener {
+   
+   private InputHandler input_handler;
+   
+   OutputInputHandler(InputHandler inh) {
+      input_handler = inh;
+    }
+   
+   @Override public void keyPressed(KeyEvent e) {
+      BoardLog.logD("BDDT","Text area key " + e.getKeyCode());
+      if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+         String txt = input_pane.getText();
+         if (!txt.isEmpty()) {
+            input_pane.setText(txt.substring(0,txt.length()-1));
+          }
+         e.consume();
+       }
+      else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+         input_handler.actionPerformed(null);
+         e.consume();
+       }
+    }
+   
+   @Override public void keyReleased(KeyEvent e) {  }
+   
+   @Override public void keyTyped(KeyEvent e) {
+      char c = e.getKeyChar();
+      if (c != KeyEvent.CHAR_UNDEFINED && !Character.isISOControl(c)) {
+         input_pane.setText(input_pane.getText() + c);
+       }
+      e.consume();
+    }
+   
+}       // end of inner class OutputINputHandler
+      
+
+
+
+/********************************************************************************/
+/*                                                                              */
+/*      Handle history in input_pane                                            */
+/*                                                                              */
+/********************************************************************************/
+
+private static class HistoryTextField extends SwingTextField {
+   
+   private List<String> history_texts;
+   private int history_index;
+   
+   HistoryTextField() {
+      super();
+      history_texts = new ArrayList<>();
+      history_index = 0;
+      setupKeyBindings();
+    }
+   
+   void addHistory(String txt) {
+      history_texts.add(txt);
+      history_index = history_texts.size();
+      // might want to remove the first if size is too large
+    }
+   
+   private void setupKeyBindings() {
+      InputMap inmap = getInputMap(JComponent.WHEN_FOCUSED); 
+      ActionMap actmap = getActionMap();
+      KeyStroke upkey = KeyStroke.getKeyStroke("UP");
+      KeyStroke rkey = KeyStroke.getKeyStroke("RIGHT");
+      inmap.put(upkey,"UpArrowAction");
+      inmap.put(rkey,"UpArrowAction");
+      actmap.put("UpArrowAction",new HistoryAction(-1));
+      KeyStroke downkey = KeyStroke.getKeyStroke("DOWN");
+      KeyStroke lkey = KeyStroke.getKeyStroke("LEFT");
+      inmap.put(downkey,"DownArrowAction");
+      inmap.put(lkey,"DownArrowAction");
+      actmap.put("DownArrowAction",new HistoryAction(1));
+    }
+   
+   private class HistoryAction extends AbstractAction {
+      
+      private int history_direction;
+      
+      HistoryAction(int dir) {
+         history_direction = dir;
+       }
+      
+      @Override public void actionPerformed(ActionEvent evt) {
+         int nidx = history_index + history_direction;
+         if (nidx < 0) return;
+         if (nidx >= history_texts.size()) {
+            setText("");
+            return;
+          }
+         history_index = nidx;
+         setText(history_texts.get(nidx));
+       }
+      
+    }   // end of inner inner class HistoryAction
+   
+}       // end of inner class HistoryTextField
+
 
 
 

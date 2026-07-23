@@ -70,7 +70,6 @@ BassCellRenderer()
 }
 
 
-
 }	// end of class BassCellRenderer
 
 

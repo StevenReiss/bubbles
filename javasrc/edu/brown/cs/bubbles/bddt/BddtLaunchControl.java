@@ -587,18 +587,18 @@ private class PauseAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent evt) {
       switch (launch_state) {
-	 case READY :
-	 case TERMINATED :
-	 case PAUSED :
-	    break;
-	 case STARTING :
-	 case RUNNING :
-	 case PARTIAL_PAUSE :
-	    if (cur_process != null) {
-	       BoardMetrics.noteCommand("BDDT","SuspendDebug");
-	       bump_client.suspend(cur_process);
-	     }
-	    break;
+         case READY :
+         case TERMINATED :
+         case PAUSED :
+            break;
+         case STARTING :
+         case RUNNING :
+         case PARTIAL_PAUSE :
+            if (cur_process != null) {
+               BoardMetrics.noteCommand("BDDT","SuspendDebug");
+               bump_client.suspend(cur_process);
+             }
+            break;
        }
     }
 
@@ -1214,18 +1214,29 @@ private class RunEventHandler implements BumpRunEventHandler {
             break;
        }
       
-      int tct = thread_states.size();
+      int tct = 0;
       int rct = 0;
       for (Map.Entry<BumpThread,BumpThreadState> ent : thread_states.entrySet()) {
+         ++tct;
          BumpThreadState bts = ent.getValue();
          if (bts.isStopped() && last_stopped == null) last_stopped = ent.getKey();
+         else if (bts.isStopped()) {
+            BoardLog.logD("BDDT","Thread " + ent.getKey().getId() + 
+               "is also stopped");
+          }
          else if (bts.isRunning()) ++rct;
+         else {
+            BoardLog.logD("BDDT","Thread " + ent.getKey().getId() + 
+                  " is neither running or stopped");
+            ++rct;
+          }
        }
       if (tct == 0) setLaunchState(LaunchState.TERMINATED);
       else if (rct == 0) setLaunchState(LaunchState.PAUSED);
       else if (rct == tct) setLaunchState(LaunchState.RUNNING);
       else {
-         BoardLog.logD("BDDT","Pause for " + last_stopped + " " + bt);
+         BoardLog.logD("BDDT","Pause for " + last_stopped + " " + bt + 
+               " " + rct + " " + tct);
          setLaunchState(LaunchState.PARTIAL_PAUSE,rct,tct);
        }
    }

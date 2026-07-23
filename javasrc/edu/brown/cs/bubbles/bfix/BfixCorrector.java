@@ -701,8 +701,10 @@ private void checkForElementToFix()
        }
     }
 
-   if (numfnd > 0) BoardMetrics.noteCommand("BFIX","StartImplicitFix" + "_" + numfnd +
+   if (numfnd > 0) {
+      BoardMetrics.noteCommand("BFIX","StartImplicitFix" + "_" + numfnd +
 	 "_" + start_offset + "_" + end_offset + "_" + caret_position);
+    }
 }
 
 

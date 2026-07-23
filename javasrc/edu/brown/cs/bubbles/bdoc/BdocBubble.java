@@ -88,6 +88,7 @@ BdocBubble(BdocReference br) throws BdocException
 
 BdocReference getReference()            { return for_ref; }
 
+
 }	// end of class BdocBubble
 
 

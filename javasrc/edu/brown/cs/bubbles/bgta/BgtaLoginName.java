@@ -133,6 +133,11 @@ void setHasBubble(boolean has)
 }
 
 
+@Override public String getDisplayName()
+{
+   return createPreviewString();
+}
+
 
 }       // end of class BgtaLoginName
 

@@ -268,7 +268,7 @@ private void setFile(String proj,File file)
 	  }
        }
     }
-   if (proj == null && file != null) {
+   if (proj == null && file != null && !file.getName().startsWith("BUBBLES_")) {
       BoardLog.logX("BALE","Attempt to open file outside of project " + file);
     }
 

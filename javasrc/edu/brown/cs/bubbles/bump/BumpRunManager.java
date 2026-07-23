@@ -2153,7 +2153,8 @@ private class StackFrame implements BumpStackFrame {
         	     if (idx >= 0) xnm = xnm.substring(0,idx);
         	     for_file = File.createTempFile("BUBBLES_" + xnm,".java");
         	     source_map.put(fnm,for_file);
-        	     byte [] data = IvyXml.stringToByteArray(IvyXml.getTextElement(xml,"SOURCE"));
+        	     byte [] data = IvyXml.stringToByteArray(IvyXml.getTextElement(xml,
+                      "SOURCE"));
         	     if (data == null) for_file = null;
         	     else {
         		FileOutputStream fos = new FileOutputStream(for_file);

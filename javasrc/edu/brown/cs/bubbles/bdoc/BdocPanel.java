@@ -190,6 +190,7 @@ private void setupPanel()
 
    desc_view = new DescriptionView(desc);
    the_panel.setDescriptionComponent(desc_view);
+   desc_view.addHyperlinkListener(new LinkListener());
 
    DefaultMutableTreeNode root = new DefaultMutableTreeNode();
    for (ItemRelation ir : ItemRelation.values()) {
@@ -547,13 +548,13 @@ private final class TitleMouser extends MouseAdapter {
 
    @Override public void mouseClicked(MouseEvent e) {
       try {
-	 URI ui = ref_item.getReferenceUrl();
-	 if (ui == null) return;
-	 URI uin = new URI(ui.getScheme(),ui.getUserInfo(),ui.getHost(),ui.getPort(),ui.getPath(),null,null);
-	 createLinkBubble(null,uin);
+         URI ui = ref_item.getReferenceUrl();
+         if (ui == null) return;
+         URI uin = new URI(ui.getScheme(),ui.getUserInfo(),ui.getHost(),ui.getPort(),ui.getPath(),null,null);
+         createLinkBubble(null,uin);
        }
       catch (Exception ex) {
-	 BoardLog.logE("BDOC","Problem handling title click",ex);
+         BoardLog.logE("BDOC","Problem handling title click",ex);
        }
     }
 
@@ -566,12 +567,12 @@ private final class ItemMouser extends MouseAdapter {
       JTree tree = (JTree) e.getSource();
       int selrow = tree.getRowForLocation(e.getX(),e.getY());
       if (selrow != -1 && e.getClickCount() == 1) {
-	 TreePath selpath = tree.getPathForRow(selrow);
-	 DefaultMutableTreeNode tn = (DefaultMutableTreeNode) selpath.getLastPathComponent();
-	 if (tn.isLeaf()) {
-	    SubItem sitm = (SubItem) tn.getUserObject();
-	    createLinkBubble(sitm.getRelativeUrl(),sitm.getItemUrl());
-	  }
+         TreePath selpath = tree.getPathForRow(selrow);
+         DefaultMutableTreeNode tn = (DefaultMutableTreeNode) selpath.getLastPathComponent();
+         if (tn.isLeaf()) {
+            SubItem sitm = (SubItem) tn.getUserObject();
+            createLinkBubble(sitm.getRelativeUrl(),sitm.getItemUrl());
+          }
        }
     }
 
@@ -579,6 +580,15 @@ private final class ItemMouser extends MouseAdapter {
 
 
 
+private final class LinkListener implements HyperlinkListener {
+   
+   @Override public void hyperlinkUpdate(HyperlinkEvent e) {
+      if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+         BoardLog.logD("BDOC","Hyperlink clicked: " + e.getDescription());
+         createLinkBubble(e.getDescription(),null);
+       }
+    }
+}
 
 
 }	// end of class BdocPanel

@@ -1559,7 +1559,9 @@ public List<BumpLocation> findClassDefinition(String proj,String clsn)
    waitForIDE();
 
    clsn = localFixupName(clsn);
-   if (clsn == null || clsn.length() == 0) return null;
+   if (clsn == null || clsn.isBlank()) {
+      return null;
+    }
 
    StringWriter sw = new StringWriter();
    sw.write("PATTERN='");
@@ -1586,7 +1588,7 @@ public List<BumpLocation> findPackages(String proj,String nm)
    waitForIDE();
 
    StringWriter sw = new StringWriter();
-   if (nm != null) {
+   if (nm != null && !nm.isBlank()) {
       sw.write("PATTERN='");
       IvyXml.outputXmlString(nm,sw);
       sw.write("' ");
@@ -1630,6 +1632,8 @@ public List<BumpLocation> findPackage(String proj,String nm)
 public List<BumpLocation> findTypes(String proj,String nm)
 {
    waitForIDE();
+   
+   if (nm == null || nm.isBlank()) return null;
 
    StringWriter sw = new StringWriter();
    sw.write("PATTERN='");
@@ -1701,6 +1705,10 @@ public Set<String> findAllSubclasses(String base)
 public List<BumpLocation> findAllTypes(String nm)
 {
    waitForIDE();
+   
+   if (nm == null || nm.isBlank()) {
+      return null;
+    }
 
    StringWriter sw = new StringWriter();
    sw.write("PATTERN='");
@@ -1787,7 +1795,7 @@ List<BumpLocation> findByKey(String proj,String key,File file)
 private static List<BumpLocation> getSearchResults(String proj,Element xml,boolean mtch)
 {
    if (!IvyXml.isElement(xml,"RESULT")) {
-      BoardLog.logE("BUMP","Search returned error " + IvyXml.convertXmlToString(xml));
+      BoardLog.logX("BUMP","Search returned error " + IvyXml.convertXmlToString(xml));
       return null;
     }
 

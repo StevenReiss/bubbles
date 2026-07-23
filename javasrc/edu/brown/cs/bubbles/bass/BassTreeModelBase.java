@@ -308,15 +308,15 @@ private static final class TreeSorter implements Comparator<BassName> {
       if (b1pfx == null && b2pfx != null) return -1;
       if (b1pfx != null && b2pfx == null) return 1;
       else if (b1pfx != null && b2pfx != null) {
-	 b1pfx = b1pfx.replace(":.",":");
-	 b2pfx = b2pfx.replace(":.",":");
-	 int pd = b1pfx.compareTo(b2pfx);
-	 if (pd != 0) return pd;
+         b1pfx = b1pfx.replace(":.",":");
+         b2pfx = b2pfx.replace(":.",":");
+         int pd = b1pfx.compareTo(b2pfx);
+         if (pd != 0) return pd;
       }
-
+   
       int d = b1.getSortPriority() - b2.getSortPriority();
       if (d != 0) return d;
-
+   
       return b1.getFullName().compareTo(b2.getFullName());
     }
 
