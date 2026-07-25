@@ -272,7 +272,7 @@ private class ConsoleAdder implements Runnable {
    @Override public void run() {
       console_document.addText(text_mode,add_message);
       BoardLog.logD("BDDT","Console add " + console_document.getLength() +
-            add_message.length());
+            " " + add_message.length());
     }
 
 }	// end of inner class ConsoleAdder

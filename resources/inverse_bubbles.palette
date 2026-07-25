@@ -320,7 +320,7 @@ Bddt.BreakpointTopColor	:	0xffff6d6d
 Bddt.ConfigTopColor	:	0xffb4b4ff
 Bddt.ProcessTopColor	:	0xff00a3ad
 Bucs.TestCaseInterior	:	0xffc09800
-Bddt.console.input.foreground	:	0xff008e8e
+Bddt.console.input.foreground	:	0xff007f7f
 Bted.bottom.color	:	0xff2eb5ff
 Batt.BarType.FAILURE	:	0xffffdede
 Bcon.PackageCallsArc	:	0xffffccff

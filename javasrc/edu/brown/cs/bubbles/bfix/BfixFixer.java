@@ -171,7 +171,7 @@ protected List<BfixEdit> findPrivateEdits(Collection<BfixEdit> edits,
                alt.add(edit);
              }
           }
-         else if (fg) {
+         else if (fg == Boolean.TRUE) {
             if (rslt == null) rslt = new ArrayList<>();
             alt = null;
             rslt.add(edit);

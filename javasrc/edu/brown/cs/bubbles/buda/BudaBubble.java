@@ -1594,14 +1594,12 @@ private final class ChildManager extends ComponentAdapter implements FocusListen
     }
 
    @Override public void focusGained(FocusEvent e) {
-      // System.err.println("FOCUS GAINED " + content_pane);
       has_focus = true;
       repaint();
       propogateFocus();
     }
 
    @Override public void focusLost(FocusEvent e) {
-      // System.err.println("FOCUS LOST " + content_pane);
       has_focus = false;
       repaint();
       propogateFocus();

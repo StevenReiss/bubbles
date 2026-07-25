@@ -2708,7 +2708,7 @@ private class PaletteDialog implements ActionListener {
       pnl.addBottomButton("OK","OK",this);
       pnl.addBottomButton("CANCEL","CANCEL",this);
       pnl.addBottomButtons();
-
+   
       working_dialog = new JDialog((JFrame) null,"Bubbles Palette Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();

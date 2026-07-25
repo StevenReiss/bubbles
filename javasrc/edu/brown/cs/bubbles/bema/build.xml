@@ -124,8 +124,6 @@
 	 <fileset dir='${BUBBLES}/' includes='lib/helpdoc.xml' />
 	 <fileset dir='${BUBBLES}/' includes='lib/helpdemos.xml' />
 	 <fileset dir='${BUBBLES}/' includes='lib/preferences.new.xml' />
-	 <fileset dir='${BUBBLES}/' includes='lib/bubbles.palette' />
-	 <fileset dir='${BUBBLES}/' includes='lib/inverse_bubbles.palette' />
 	 <fileset dir='${BUBBLES}/lib/' includes='mouseusage.html' />
 	 <fileset dir='${BUBBLES}/lib/' includes='helptext.html' />
 	 <fileset dir='${BUBBLES}' includes='images/**/*.png' />

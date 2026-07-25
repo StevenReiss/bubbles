@@ -64,6 +64,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -156,6 +158,7 @@ BddtConsoleBubble(BddtConsoleController ctrl,StyledDocument doc)
    doc.addDocumentListener(new EndScroll());
    text_pane.addMouseListener(new FocusOnEntry());
    text_pane.addMouseListener(new GotoMouser());
+   text_pane.addFocusListener(new ConsoleFocusHandler());
 }
 
 
@@ -268,14 +271,17 @@ private class EndScroll implements DocumentListener, Runnable {
        }
    
       AbstractDocument d = (AbstractDocument) text_pane.getDocument();
+      text_pane.validate();
+      
       d.readLock();
       try {
          int len = d.getLength();
-         BoardLog.logD("BDDT","Console window size " + len);
+         BoardLog.logD("BDDT","Console window size " + len + " " + text_pane.getSize() + 
+               " " + text_pane.getPreferredSize() + " " + text_pane.getMaximumSize());
          try {
             Rectangle r = SwingText.modelToView2D(text_pane,len-1);
             if (r != null) {
-               Dimension sz = text_pane.getSize();
+               Dimension sz = text_pane.getPreferredSize();
                r.x = 0;
                r.y += 20;
                if (r.y + r.height > sz.height) r.y = sz.height;
@@ -380,6 +386,18 @@ private final class OutputInputHandler implements KeyListener {
 }       // end of inner class OutputINputHandler
       
 
+private final class ConsoleFocusHandler extends FocusAdapter implements Runnable {
+   
+   @Override public void focusGained(FocusEvent e) {
+      SwingUtilities.invokeLater(this);
+    }
+   
+   @Override public void run() {
+      input_pane.requestFocusInWindow();
+    }
+   
+}
+
 
 
 /********************************************************************************/
@@ -410,14 +428,10 @@ private static class HistoryTextField extends SwingTextField {
       InputMap inmap = getInputMap(JComponent.WHEN_FOCUSED); 
       ActionMap actmap = getActionMap();
       KeyStroke upkey = KeyStroke.getKeyStroke("UP");
-      KeyStroke rkey = KeyStroke.getKeyStroke("RIGHT");
       inmap.put(upkey,"UpArrowAction");
-      inmap.put(rkey,"UpArrowAction");
       actmap.put("UpArrowAction",new HistoryAction(-1));
       KeyStroke downkey = KeyStroke.getKeyStroke("DOWN");
-      KeyStroke lkey = KeyStroke.getKeyStroke("LEFT");
       inmap.put(downkey,"DownArrowAction");
-      inmap.put(lkey,"DownArrowAction");
       actmap.put("DownArrowAction",new HistoryAction(1));
     }
    

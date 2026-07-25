@@ -255,7 +255,7 @@ Bddt.control.background :	#eeeeee
 
 Bddt.console.background :	#000000
 Bddt.console.input.background : #404040
-Bddt.console.input.foreground : #00ffff
+Bddt.console.input.foreground : #80ffff
 Bddt.console.input.caret :	#00ffff
 Bddt.ConsoleTextColor	:	white
 
