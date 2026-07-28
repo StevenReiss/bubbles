@@ -142,8 +142,10 @@ void outputActualChanges(BvcrVersionManager bvm,File f,IvyXmlWriter xw)
        }
       // Now we have to use ds to update the current set of differences
       IvyXmlWriter nxw = new IvyXmlWriter();
+      nxw.begin("DIFFSET");
       outputXml(nxw);
       ds.outputXml(nxw);
+      nxw.end("DIFFSET");
       IvyLog.logX("BVCR","NEED TO COMPUTE DIFFERENCES:" + nxw.toString());
       outputXml(xw);
     }
