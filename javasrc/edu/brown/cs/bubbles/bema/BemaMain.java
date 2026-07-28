@@ -650,7 +650,7 @@ private void loadPlugin(File jfn,BudaRoot root,List<String> names)
                 String basename = null;
                 if (dep != null && !dep.isBlank()) {
                     dep = dep.trim();
-                    if (dep.length() > 0) load += ":" + dep;
+                    if (dep.length() > 0) load += File.pathSeparator + dep;
                  }
                 if (res != null) {
                     StringTokenizer tok = new StringTokenizer(res);
@@ -752,7 +752,7 @@ private void setupPluginLibrary(JarFile jf,String res)
 
 private void setupPackage(String nm,String load)
 {
-   // BoardLog.logD("BEMA","Setup " + nm);
+   BoardLog.logD("BEMA","Setup " + nm + " " + load);
    ClassLoader cldr = BemaMain.class.getClassLoader();
 
    if (load != null) {
@@ -766,10 +766,10 @@ private void setupPackage(String nm,String load)
    if (load != null) {
       try {
 	 List<URL> urls = new ArrayList<>();
-	 StringTokenizer tok = new StringTokenizer(load,":");
+	 StringTokenizer tok = new StringTokenizer(load,File.pathSeparator);
 	 while (tok.hasMoreTokens()) {
 	    String path = tok.nextToken();
-	    if (path.startsWith("/")) {
+	    if (path.startsWith(File.separator)) {
 	       String pnm = "jar:file:" + path + "!/";
 	       URI u = new URI(pnm);
 	       urls.add(u.toURL());

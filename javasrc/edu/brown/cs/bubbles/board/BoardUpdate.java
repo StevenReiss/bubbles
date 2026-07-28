@@ -277,6 +277,8 @@ static void setVersion()
    catch (Throwable t) {
       System.err.println("BOARD: Problem setting version: " + t);
     }
+   
+   BoardLog.logA("BOARD","Version " + version_data);
 }
 
 

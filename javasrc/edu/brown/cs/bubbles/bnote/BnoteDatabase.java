@@ -78,7 +78,7 @@ class BnoteDatabase implements BnoteConstants
 /********************************************************************************/
 
 private Connection	note_conn;
-private List<TaskImpl>	all_tasks;
+private List<TaskImpl>  all_tasks;
 
 private long		id_count;
 private long		next_id;

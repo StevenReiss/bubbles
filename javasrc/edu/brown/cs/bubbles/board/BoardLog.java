@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 
 
 
@@ -185,7 +184,6 @@ private void setupLogger()
        }
     }
 
-   log(LogLevel.NONE,"BOARD","Start: " + new Date(),null);
    log(LogLevel.NONE,"BOARD","Version: " + BoardUpdate.getVersionData(),null);
    log(LogLevel.NONE,"BOARD","Logging: " + debug_log,null);
    log(LogLevel.NONE,"BOARD","Bedrock: " + bedrock_log,null);
@@ -253,6 +251,12 @@ public static void logX(String src,String msg)
 public static void logW(String src,String msg)
 {
    the_logger.log(LogLevel.WARNING,src,msg,null);
+}
+
+
+public static void logA(String src,String msg) 
+{
+   the_logger.log(LogLevel.NONE,src,msg,null);
 }
 
 

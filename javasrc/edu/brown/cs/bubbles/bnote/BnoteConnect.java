@@ -154,9 +154,12 @@ private boolean setupAccess()
 	 break;
       default :
       case "embed" :
-	 if (database_name == null || !database_name.contains("/")) {
-	    database_name = "$(WORK)/ProgrammersLog_$(WSNAME)";
+	 if (database_name == null || !database_name.contains(File.separator)) {
+	    database_name = "$(WORK)" + File.separator + "ProgrammersLog_$(WSNAME)";
 	  }
+         else {
+            database_name = database_name.replace("/",File.separator);
+          }
 	 break;
     }
 
@@ -246,7 +249,7 @@ Connection getLogDatabase()
       bnote_conn = DriverManager.getConnection(url,props);
     }
    catch (SQLException e) {
-      BoardLog.logW("BNOTE","Problem opening database: " + e);
+      BoardLog.logI("BNOTE","Problem opening database: " + e);
    }
 
    if (bnote_conn != null) return bnote_conn;

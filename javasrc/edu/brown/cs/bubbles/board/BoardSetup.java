@@ -1500,7 +1500,8 @@ public boolean doSetup()
 
    askworkspace |= !checkWorkspace();
 
-   BoardLog.logD("BOARD","In setup " + needsetup + " " + install_jar + " " + update_setup);
+   BoardLog.logD("BOARD","In setup " + needsetup + " " + 
+         install_jar + " " + update_setup);
 
    if (install_jar && !update_setup) {
       setSplashTask("Checking for newer version");
@@ -3208,86 +3209,88 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
       bubbles_field = null;
       baseide_button = null;
       SwingGridPanel pnl = new SwingGridPanel();
-
+   
    // BoardColors.setColors(pnl,"Buda.Bubbles.Color");
       BoardColors.setColors(pnl,new Color(211,232,248));
       pnl.setOpaque(true);
-
+   
       pnl.beginLayout();
       pnl.addBannerLabel("Bubbles Environment Setup");
-
+   
       pnl.addSeparator();
-
+   
       switch (board_language) {
-	 case JAVA :
-	    baseide_field = pnl.addFileField("Eclipse Installation Directory",baseide_directory,
-		  JFileChooser.DIRECTORIES_ONLY,
-		  new BaseIDEDirectoryFilter("Eclipse"),this,this,null);
-
-	    baseide_warning = new JLabel("Warning!");  //edited by amc6
-	    baseide_warning.setToolTipText("<html>Not a valid <b>Eclipse for Java Developers</b> installation " +
-		  "directory.<br>(This should be the directory containing the eclipse binary " +
-		  "and the plugins directory.)");
-	    baseide_warning.setForeground(WARNING_COLOR);
-	    pnl.add(baseide_warning);
-	    if (baseide_directory == null && install_jar) {
-	       // eclipse_button = pnl.addBottomButton("INSTALL ECLIPSE","ECLIPSE",this);
-	     }
-	    break;
-	 case JAVA_IDEA :
-	    baseide_field = pnl.addFileField("IntelliJ IDEA Installation Directory",baseide_directory,
-		  JFileChooser.DIRECTORIES_ONLY,
-		  new BaseIDEDirectoryFilter("IntelliJ IDEA"),this,this,null);
-	    baseide_warning = new JLabel("Warning!");  //edited by amc6
-	    baseide_warning.setToolTipText("<html>Not a valid <b>IntelliJ IDEA</b> installation " +
-		  "directory.<br>(This should be the directory containing the idea binary " +
-		  "and the plugins directory.)");
-	    baseide_warning.setForeground(WARNING_COLOR);
-	    pnl.add(baseide_warning);
-	    break;
-	 default :
-	    break;
+         case JAVA :
+            baseide_field = pnl.addFileField("Eclipse Installation Directory",
+                  baseide_directory,
+                  JFileChooser.DIRECTORIES_ONLY,
+                  new BaseIDEDirectoryFilter("Eclipse"),this,this,null);
+            
+            baseide_warning = new JLabel("Warning!");  //edited by amc6
+            baseide_warning.setToolTipText(
+                  "<html>Not a valid <b>Eclipse for Java Developers</b> installation " +
+                  "directory.<br>(This should be the directory containing the eclipse binary " +
+                  "and the plugins directory.)");
+            baseide_warning.setForeground(WARNING_COLOR);
+            pnl.add(baseide_warning);
+            if (baseide_directory == null && install_jar) {
+               // eclipse_button = pnl.addBottomButton("INSTALL ECLIPSE","ECLIPSE",this);
+             }
+            break;
+         case JAVA_IDEA :
+            baseide_field = pnl.addFileField("IntelliJ IDEA Installation Directory",baseide_directory,
+        	  JFileChooser.DIRECTORIES_ONLY,
+        	  new BaseIDEDirectoryFilter("IntelliJ IDEA"),this,this,null);
+            baseide_warning = new JLabel("Warning!");  //edited by amc6
+            baseide_warning.setToolTipText("<html>Not a valid <b>IntelliJ IDEA</b> installation " +
+        	  "directory.<br>(This should be the directory containing the idea binary " +
+        	  "and the plugins directory.)");
+            baseide_warning.setForeground(WARNING_COLOR);
+            pnl.add(baseide_warning);
+            break;
+         default :
+            break;
        }
-
+   
       bubbles_warning = new JLabel("Warning!");
       bubbles_warning.setToolTipText("Not a valid Code Bubbles installation directory");
       bubbles_warning.setForeground(WARNING_COLOR);
-
+   
       pnl.addSeparator();
-
+   
       if (!install_jar) {
-	 bubbles_field = pnl.addFileField("Bubbles Installation Directory",install_path,
-		  JFileChooser.DIRECTORIES_ONLY,
-		  new InstallDirectoryFilter(),this,null);
-	 pnl.add(bubbles_warning);
-	 pnl.addSeparator();
+         bubbles_field = pnl.addFileField("Bubbles Installation Directory",install_path,
+        	  JFileChooser.DIRECTORIES_ONLY,
+        	  new InstallDirectoryFilter(),this,null);
+         pnl.add(bubbles_warning);
+         pnl.addSeparator();
        }
-
+   
       if (getCourseName() == null) {
-	 pnl.addBoolean("Automatically Update Bubbles",auto_update,this);
+         pnl.addBoolean("Automatically Update Bubbles",auto_update,this);
        }
       else {
-	 auto_update = false;
+         auto_update = false;
        }
-
+   
       pnl.addSeparator();
-
+   
       switch (board_language) {
-	 case JAVA :
-	 case JAVA_IDEA :
-	    install_button = pnl.addBottomButton("INSTALL BUBBLES","INSTALL",this);
-	    break;
-	 default :
-	    break;
+         case JAVA :
+         case JAVA_IDEA :
+            install_button = pnl.addBottomButton("INSTALL BUBBLES","INSTALL",this);
+            break;
+         default :
+            break;
        }
-
+   
       accept_button = pnl.addBottomButton("OK","OK",this);
       pnl.addBottomButton("CANCEL","CANCEL",this);
       pnl.addBottomButtons();
       Dimension r = pnl.getPreferredSize();
       r.width = Math.max(r.width,500);
       pnl.setPreferredSize(r);
-
+   
       working_dialog = new JDialog((JFrame) null,"Bubbles Environment Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();
@@ -3303,79 +3306,79 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
 
    private void checkStatus() {
       if (baseide_field != null) {
-	 String txt = baseide_field.getText().trim();
-	 if (txt.length() > 0) {
-	    File ef = new File(txt);
-	    if (!ef.getAbsolutePath().equals(baseide_directory)) {
-	       baseide_directory = ef.getAbsolutePath();
-	       has_changed = true;
-	    }
-	 }
+         String txt = baseide_field.getText().trim();
+         if (txt.length() > 0) {
+            File ef = new File(txt);
+            if (!ef.getAbsolutePath().equals(baseide_directory)) {
+               baseide_directory = ef.getAbsolutePath();
+               has_changed = true;
+            }
+         }
       }
       if (bubbles_field != null) {
-	 String txt = bubbles_field.getText().trim();
-	 if (txt.length() > 0) {
-	    File inf = new File(txt);
-	    if (!inf.getAbsolutePath().equals(install_path)) {
-	       install_path = inf.getAbsolutePath();
-	       has_changed = true;
-	    }
-	 }
+         String txt = bubbles_field.getText().trim();
+         if (txt.length() > 0) {
+            File inf = new File(txt);
+            if (!inf.getAbsolutePath().equals(install_path)) {
+               install_path = inf.getAbsolutePath();
+               has_changed = true;
+            }
+         }
       }
-
+   
       switch (board_language) {
-	 case JAVA :
-	    if (checkEclipse() && baseide_button != null) {
-	       baseide_button.setEnabled(false);
-	     }
-	    if (checkEclipse() && checkEclipsePlugin() && (install_jar || checkInstall())) {
-	       accept_button.setEnabled(true);
-	     }
-	    else {
-	       accept_button.setEnabled(false);
-	     }
-	    if (checkEclipse() && !checkEclipsePlugin() && (install_jar || checkInstall())) {
-	       install_button.setEnabled(true);
-	     }
-	    else {
-	       install_button.setEnabled(false);
-	     }
-	    if (checkEclipse()) {
-	       baseide_warning.setVisible(false);
-	     }
-	    else {
-	       baseide_warning.setVisible(true);
-	     }
-	    break;
-	 case JAVA_IDEA :
-	    if (checkIntelliJ() && checkIdeaPlugin() && (install_jar || checkInstall())) {
-	       accept_button.setEnabled(true);
-	     }
-	    else {
-	       accept_button.setEnabled(false);
-	     }
-	    if (checkIntelliJ() && !checkIdeaPlugin() && (install_jar || checkInstall())) {
-	       install_button.setEnabled(true);
-	     }
-	    else {
-	       install_button.setEnabled(false);
-	     }
-	    if (checkIntelliJ()) {
-	       baseide_warning.setVisible(false);
-	     }
-	    else {
-	       baseide_warning.setVisible(true);
-	     }
-	    break;
-	 default :
-	    break;
+         case JAVA :
+            if (checkEclipse() && baseide_button != null) {
+               baseide_button.setEnabled(false);
+             }
+            if (checkEclipse() && checkEclipsePlugin() && (install_jar || checkInstall())) {
+               accept_button.setEnabled(true);
+             }
+            else {
+               accept_button.setEnabled(false);
+             }
+            if (checkEclipse() && !checkEclipsePlugin() && (install_jar || checkInstall())) {
+               install_button.setEnabled(true);
+             }
+            else {
+               install_button.setEnabled(false);
+             }
+            if (checkEclipse()) {
+               baseide_warning.setVisible(false);
+             }
+            else {
+               baseide_warning.setVisible(true);
+             }
+            break;
+         case JAVA_IDEA :
+            if (checkIntelliJ() && checkIdeaPlugin() && (install_jar || checkInstall())) {
+               accept_button.setEnabled(true);
+             }
+            else {
+               accept_button.setEnabled(false);
+             }
+            if (checkIntelliJ() && !checkIdeaPlugin() && (install_jar || checkInstall())) {
+               install_button.setEnabled(true);
+             }
+            else {
+               install_button.setEnabled(false);
+             }
+            if (checkIntelliJ()) {
+               baseide_warning.setVisible(false);
+             }
+            else {
+               baseide_warning.setVisible(true);
+             }
+            break;
+         default :
+            break;
        }
-
+   
       if (install_jar || checkInstall()) {
-	 bubbles_warning.setVisible(false);
+         bubbles_warning.setVisible(false);
        }
       else {
-	 bubbles_warning.setVisible(true);
+         bubbles_warning.setVisible(true);
        }
    }
 
