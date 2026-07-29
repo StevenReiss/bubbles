@@ -8,7 +8,7 @@ set vnm = V_$v
 git tag $vnm
 git push origin $vnm
 
-git commit -a
+git commit -a -m "new version"
 git push
 
 popd
