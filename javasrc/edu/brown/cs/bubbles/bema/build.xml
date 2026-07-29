@@ -193,6 +193,9 @@
       <copy file='${BUBBLES}/lib/version.xml' tofile='/pro/web/web/people/spr/bubbles/version.xml' />
       <copy file='updater.jar' tofile='/pro/web/web/people/spr/bubbles/updater.jar' />
       <antcall target='installplugins' />
+      <exec executable="/bin/csh" failonerror="true">
+	 <arg value='${BUBBLES}/noteversion.csh" />
+      </exec>
    </target>
 
    <target name ='installplugins' depends='init'>
