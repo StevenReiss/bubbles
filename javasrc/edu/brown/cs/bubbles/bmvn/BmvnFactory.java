@@ -214,7 +214,7 @@ private final class ModelSetup implements Runnable {
          files.add(f1);
          fnd = true;
        }
-      if (tool.useSubdirectories()) {
+      if (tool.useSubdirectories() && dir.listFiles() != null) {
          for (File subd : dir.listFiles()) {
             // skip links?
             if (subd.isDirectory() && subd.canRead() && subd.canWrite()) {
