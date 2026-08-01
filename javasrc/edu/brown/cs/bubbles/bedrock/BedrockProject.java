@@ -182,7 +182,7 @@ void initialize()
    IWorkspaceRoot wr = ws.getRoot();
 
    BedrockPlugin.logI("WORKSPACE = " + wr.getName() + " " + wr.getFullPath());
-
+   
    IProject[] projs = wr.getProjects();
    for (int i = 0; i < projs.length; ++i) {
       if (ignore_projects.contains(projs[i].getName())) continue;

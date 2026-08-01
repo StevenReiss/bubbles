@@ -106,6 +106,7 @@ private boolean shutdown_mint;
 private boolean doing_exit;
 private int	num_clients;
 private Element lang_data;
+private boolean for_bubbles;
 
 private static PrintStream log_file = null;
 private static BedrockLogLevel log_level = BedrockLogLevel.INFO;
@@ -223,7 +224,9 @@ private synchronized void setupMint()
    IvySetup.setup();
 
    if (mint_control != null) return;
-
+   
+   for_bubbles = true;
+   
    String mintname = System.getProperty("edu.brown.cs.bubbles.MINT");
    if (mintname == null) mintname = System.getProperty("edu.brown.cs.bubbles.mint");
    if (mintname == null) {
@@ -239,6 +242,7 @@ private synchronized void setupMint()
       BedrockPlugin.logI("Setting mint for " + wsname + " " + rootpath.toOSString());
       mintname = BEDROCK_MINT_ID;
       mintname = mintname.replace("@@@",wsname);
+      for_bubbles = false;
     }
    if (mintname == null) mintname = BEDROCK_MESSAGE_ID;
 
@@ -262,6 +266,8 @@ BedrockProject getProjectManager()			{ return bedrock_project; }
 BedrockEditManager getEditManager()			{ return bedrock_editor; }
 
 BedrockBreakpoint getBreakManager()			{ return bedrock_breakpoint; }
+
+boolean forBubbles()                                    { return for_bubbles; }
 
 
 void getActiveElements(IJavaElement elt,List<IJavaElement> rslt)
@@ -312,21 +318,16 @@ void addFixes(IProblem ip,IvyXmlWriter xw)
 
 
 
-
 void addFixes(IMarkerDelta ip,IvyXmlWriter xw)
 {
    bedrock_problem.addFixes(ip,xw);
 }
 
 
-
-
 void addFixes(IMarker ip,IvyXmlWriter xw)
 {
    bedrock_problem.addFixes(ip,xw);
 }
-
-
 
 
 /********************************************************************************/
@@ -372,15 +373,16 @@ private void startBedrock()
       BedrockPlugin.logI("Start called");
 
       initWorkbench();
-
-      bedrock_project.initialize();
-      bedrock_runtime.start();
-      bedrock_breakpoint.start();
-      bedrock_editor.start();
-
+      
       setupMint();
-
-      bedrock_project.register();
+      
+      if (for_bubbles) {
+         bedrock_project.initialize();
+         bedrock_runtime.start();
+         bedrock_breakpoint.start();
+         bedrock_editor.start();
+         bedrock_project.register();
+       }
     }
    catch (Throwable t) {
       BedrockPlugin.logE("Problem starting bedrock: " + t);
