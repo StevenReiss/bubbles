@@ -411,7 +411,13 @@ private final class ConsoleHandler implements BumpConstants.BumpRunEventHandler 
       TextMode md = TextMode.STDOUT;
       if (mode == BumpConsoleMode.STDERR) md = TextMode.STDERR;
       else if (mode == BumpConsoleMode.SYSTEM) md = TextMode.SYSTEM;
-      BoardLog.logD("BDDT","CONSOLE: " + md + " " + msg);
+      
+      String xmsg = null;
+      if (msg != null) {
+         xmsg = msg.replace(":E:",":Z:");   // remove spurrious errors from log
+       }
+      BoardLog.logD("BDDT","CONSOLE: " + md + " " + xmsg);
+      
       queueConsoleMessage(bp,md,eof,msg);
    }
 

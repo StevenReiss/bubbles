@@ -131,7 +131,7 @@ private static void loadAliases()
 {
    author_alias = new HashMap<>();
    
-   String prop = BoardProperties.getProperties("BVCR").getProperty("author.alias");
+   String prop = BoardProperties.getProperties("Bvcr").getProperty("author.alias");
    if (prop == null) return;
    
    StringTokenizer ltok = new StringTokenizer(prop,"\n\r");

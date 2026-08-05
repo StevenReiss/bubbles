@@ -3992,7 +3992,6 @@ protected class IDEHandler implements MintHandler {
 		}
 	       break;
 	    case "CONSOLE" :
-	       // BoardLog.logD("BUMP","CONSOLE: " + IvyXml.convertXmlToString(e));
 	       run_manager.handleConsoleEvent(e);
 	       msg.replyTo("<OK/>");
 	       break;
