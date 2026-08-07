@@ -1222,7 +1222,7 @@ private class RunEventHandler implements BumpRunEventHandler {
          if (bts.isStopped() && last_stopped == null) last_stopped = ent.getKey();
          else if (bts.isStopped()) {
             BoardLog.logD("BDDT","Thread " + ent.getKey().getId() + 
-               "is also stopped");
+               " is also stopped");
           }
          else if (bts.isRunning()) ++rct;
          else {
@@ -1459,7 +1459,7 @@ private class ExecutionAnnot implements BaleAnnotation {
       int off = for_document.findLineOffset(frm.getLineNumber());
       annot_color = BoardColors.getColor(BDDT_EXECUTE_ANNOT_COLOR_PROP);
       except_color = BoardColors.getColor(BDDT_EXECUTE_EXCEPT_COLOR_PROP);
-
+      
       execute_pos = null;
       try {
 	 execute_pos = for_document.createPosition(off);
@@ -1467,6 +1467,9 @@ private class ExecutionAnnot implements BaleAnnotation {
       catch (BadLocationException e) {
 	 BoardLog.logE("BDDT","Bad execution position",e);
        }
+      
+      BoardLog.logD("BDDT","Create execution annotatino " + for_file + " " + 
+            frm.getLineNumber() + " " + off);
     }
 
 

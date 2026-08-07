@@ -10,6 +10,7 @@
 <entry key="Limba.ollama.altport">11434</entry>
 <entry key="Limba.ollama.model">qwen3-coder:latest</entry>
 <entry key="Limba.rag.max">10000</entry>
+<entry key="Limba.start.rag">true</entry>
 </properties>
 
 
