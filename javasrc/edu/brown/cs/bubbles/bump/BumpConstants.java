@@ -721,7 +721,7 @@ interface BumpRunEventHandler extends EventListener {
 
 
    default void handleConsoleMessage(BumpProcess proc,
-	 BumpConsoleMode mode,boolean iseof,String msg) 		{ }
+         BumpConsoleMode mode,boolean iseof,String msg) 		{ }
 
 }	// end of inner interface BumpRunEventHandler
 
