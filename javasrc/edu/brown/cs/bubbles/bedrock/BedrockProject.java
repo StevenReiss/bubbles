@@ -1527,11 +1527,16 @@ IFile getProjectFile(String proj,String file) throws BedrockException
 IProject findProjectForFile(String proj,String file) throws BedrockException
 {
    if (proj == null && file != null) {
+      IProject last = null;
       for (IProject ip : open_projects) {
 	 IFile ifl = findProjectFile(ip,file,null);
 	 if (ifl != null) return ip;
+         last = ip;
        }
-      BedrockPlugin.logE("No project found for file " + file);
+      BedrockPlugin.logX("No project found for file " + file);
+      if (open_projects.size() == 1) {
+         return last;
+       }
       return null;
     }
 

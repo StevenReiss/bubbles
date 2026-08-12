@@ -389,7 +389,7 @@ private final class OutputInputHandler implements KeyListener {
 private final class ConsoleFocusHandler extends FocusAdapter implements Runnable {
    
    @Override public void focusGained(FocusEvent e) {
-      SwingUtilities.invokeLater(this);
+//    SwingUtilities.invokeLater(this);
     }
    
    @Override public void run() {
@@ -474,6 +474,10 @@ private final class GotoMouser extends BoardMouser {
       if (gl != null && gl.isValid() && evt.getClickCount() == 1) {
          gl.createBubble();
        }
+    }
+   
+   @Override public void mouseEntered(MouseEvent evt) {
+      input_pane.requestFocusInWindow();
     }
 
 }	// end of inner class GotoMouser
