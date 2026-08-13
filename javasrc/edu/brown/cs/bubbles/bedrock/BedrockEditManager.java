@@ -359,6 +359,8 @@ private void doneEdit()
 
 void waitForEdits()
 {
+   if (thread_pool == null) return; 
+   
    synchronized (thread_pool) {
       active_waits++;
       thread_pool.notifyAll();

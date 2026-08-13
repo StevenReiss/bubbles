@@ -29,4 +29,11 @@ java.base/jdk.internal.util java.base/java.time
 </entry>
 <entry key="Bicex.seede.open.23">java.base/sun.net.util
 </entry>
+<entry key="Bicex.seede.open.24">java.base/jdk.internal.access java.base/java.util
+	java.base/java.util.stream java.base/java.time.format java.base/java.time.chrono
+	java.base/java.time.zone
+	java.base/java.util.concurrent java.base/java.util.regex
+	java.base/java.util.random java.base/java.util.spi
+	java.base/java.util.zip java.base/java.math
+</entry>
 </properties>
