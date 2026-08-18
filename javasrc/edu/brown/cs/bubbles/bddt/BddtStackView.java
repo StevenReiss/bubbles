@@ -116,7 +116,7 @@ private BumpThread		for_thread;
 private boolean 		is_frozen;
 private boolean 		is_extinct;
 private boolean 		is_valid;
-private BddtStackModel		value_model;
+private BddtStackModel	value_model;
 private ValueTable		value_component;
 private RunEventHandler 	event_handler;
 private Expander		tree_expander;

@@ -1416,8 +1416,9 @@ ICompilationUnit getCompilationUnit(String proj,String file) throws BedrockExcep
     }
 
    IJavaProject ijp = JavaCore.create(ip);
-   if (ijp== null)
+   if (ijp== null) {
       BedrockPlugin.logD("Java project not created: " + ip);
+    }
    ICompilationUnit icu = checkFilePrefix(ijp,null,file);
    if (icu != null) return icu;
    if (ijp == null) return null;
@@ -1537,6 +1538,9 @@ IProject findProjectForFile(String proj,String file) throws BedrockException
       if (open_projects.size() == 1) {
          return last;
        }
+      if (file.contains("BUBBLES_")) {
+         return last;
+       }
       return null;
     }
 
@@ -1563,6 +1567,7 @@ private IFile findProjectFile(IResource ir,String name,String fname)
 	 if (f.getAbsolutePath().equals(name) || f.getPath().equals(name)) return ifl;
 	 f1 = IvyFile.getCanonical(f);
 	 if (f.getAbsolutePath().equals(name) || f1.getAbsolutePath().equals(name)) return ifl;
+         if (f.getPath().endsWith(name)) return ifl;
        }
       else if (ir instanceof IContainer) {
 	 IContainer ic = (IContainer) ir;

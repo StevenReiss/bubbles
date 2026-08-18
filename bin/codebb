@@ -47,10 +47,17 @@ set JBIN = $BROWN_JAVA_HOME/bin
 
 set JAVA = $JBIN/java
 set path = ($JBIN $path)
-set OUT =  ~/runlog.log 
-if ( $#argv >= 1 ) then
-   set OUT = ~/runlog_${argv[1]}.log
-
+set OUT =  ~/runlog.log
+set fnd = ""
+foreach arg ( $argv:q )
+   if ( "$arg" !~ -* ) then
+      set fnd = $arg
+      break
+   endif
+end
+if ( $fnd != "" ) then
+   set OUT = ~/runlog_$fnd.log
+endif
 
 # echo $JAVA -cp $CP -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain $*
 $JAVA -cp $CP -Dedu.brown.cs.bubbles.INSTALLDIR=$INS edu.brown.cs.bubbles.bema.BemaMain $* >&! $OUT &

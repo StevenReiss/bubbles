@@ -234,7 +234,7 @@ void handleStartFile(String proj,String bid,String file,String id,boolean cnts,I
    FileData fd = findFile(proj,file,bid);
 
    if (fd == null) {
-      throw new BedrockException("Compilation unit for file " + file + " not available in " + proj);
+      throw new BedrockException("Compilation unit for start file " + file + " not available in " + proj);
     }
 
    fd.getEditableUnit(bid);
@@ -280,7 +280,7 @@ void handleEdit(String proj,String sid,String file,String id,List<EditData> edit
    FileData fd = findFile(proj,file,sid);
 
    if (fd == null) {
-      throw new BedrockException("Compilation unit for file " + file + " not available");
+      throw new BedrockException("Compilation unit for edit file " + file + " not available");
     }
    
    BedrockPlugin.logD("EDIT COMMAND " + sid + " " + file + " " + id);
@@ -387,7 +387,7 @@ void handleGetCompletions(String proj,String bid,String file,int offset,IvyXmlWr
 {
    FileData fd = findFile(proj,file,bid);
 
-   if (fd == null) throw new BedrockException("Compilation unit for file " + file + " not available");
+   if (fd == null) throw new BedrockException("Compilation unit for completion file " + file + " not available");
 
    ICompilationUnit icu = fd.getEditableUnit(bid);
 

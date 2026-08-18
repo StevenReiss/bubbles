@@ -749,7 +749,8 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 **********/
 	 break;
       case "EVALUATE" :
-	 bedrock_runtime.evaluateExpression(proj,IvyXml.getAttrString(xml,"BID","*"),
+	 bedrock_runtime.evaluateExpression(proj,
+               IvyXml.getAttrString(xml,"BID","*"),
 	       IvyXml.getTextElement(xml,"EXPR"),
 	       IvyXml.getAttrString(xml,"THREAD"),
 	       IvyXml.getAttrString(xml,"FRAME"),

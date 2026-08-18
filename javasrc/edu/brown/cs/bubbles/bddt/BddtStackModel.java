@@ -64,7 +64,7 @@ class BddtStackModel implements SwingTreeTable.TreeTableModel, BddtConstants, Bu
 private SwingEventListenerList<TreeModelListener> model_listeners;
 private AbstractNode		root_node;
 private RunEventHandler 	event_handler;
-private BddtStackModel		parent_model;
+private BddtStackModel	parent_model;
 private List<BddtStackModel>	sub_models;
 private Lock			model_lock;
 
@@ -167,7 +167,7 @@ void dispose()
 /*										*/
 /********************************************************************************/
 
-BumpThread getThread()			{ return root_node.getThread(); }
+BumpThread getThread()		{ return root_node.getThread(); }
 BumpStackFrame getFrame()		{ return root_node.getFrame(); }
 
 
@@ -611,8 +611,8 @@ protected abstract class AbstractNode implements ValueTreeNode, TreeNode {
    protected void addChild(AbstractNode n) {
       if (sorted_children != null) sorted_children.add(n);
       else {
-	 if (child_nodes == null) child_nodes = new Vector<AbstractNode>();
-	 child_nodes.add(n);
+         if (child_nodes == null) child_nodes = new Vector<AbstractNode>();
+         child_nodes.add(n);
       }
     }
 
@@ -924,48 +924,48 @@ private class FrameNode extends AbstractNode {
       CategoryNode thisstatic = null;
       CategoryNode supernode = null;
       CategoryNode superstatic = null;
-
+   
       for (String s : for_frame.getVariables()) {
-	 if (s.startsWith("$")) continue;
-	 BumpRunValue v = for_frame.getValue(s);
-	 if (v == null) continue;
-	 AbstractNode an = getValueNode(this,v);
-	 if (an == null) continue;
-	 if (v.isLocal() || v.getDeclaredType() == null) addChild(an);
-	 else if (v.getDeclaredType().equals(for_frame.getFrameClass())) {
-	    if (v.isStatic()) {
-	       if (thisstatic == null) {
-		  thisstatic = new CategoryNode(this,"<this.static>");
-		  addChild(thisstatic);
-		}
-	       thisstatic.addChild(an);
-	     }
-	    else {
-	       if (thisnode == null) {
-		  thisnode = new CategoryNode(this,"this");
-		  addChild(thisnode);
-		}
-	       thisnode.addChild(an);
-	     }
-	  }
-	 else {
-	    if (v.isStatic()) {
-	       if (superstatic == null) {
-		  superstatic = new CategoryNode(this,"<super.static>");
-		  addChild(superstatic);
-		}
-	       superstatic.addChild(an);
-	     }
-	    else {
-	       if (supernode == null) {
-		  supernode = new CategoryNode(this,"<super>");
-		  addChild(supernode);
-		}
-	       supernode.addChild(an);
-	     }
-	  }
+         if (s.startsWith("$")) continue;
+         BumpRunValue v = for_frame.getValue(s);
+         if (v == null) continue;
+         AbstractNode an = getValueNode(this,v);
+         if (an == null) continue;
+         if (v.isLocal() || v.getDeclaredType() == null) addChild(an);
+         else if (v.getDeclaredType().equals(for_frame.getFrameClass())) {
+            if (v.isStatic()) {
+               if (thisstatic == null) {
+        	  thisstatic = new CategoryNode(this,"<this.static>");
+        	  addChild(thisstatic);
+        	}
+               thisstatic.addChild(an);
+             }
+            else {
+               if (thisnode == null) {
+        	  thisnode = new CategoryNode(this,"this");
+        	  addChild(thisnode);
+        	}
+               thisnode.addChild(an);
+             }
+          }
+         else {
+            if (v.isStatic()) {
+               if (superstatic == null) {
+                  superstatic = new CategoryNode(this,"<super.static>");
+                  addChild(superstatic);
+                }
+               superstatic.addChild(an);
+             }
+            else {
+               if (supernode == null) {
+                  supernode = new CategoryNode(this,"<super>");
+                  addChild(supernode);
+                }
+               supernode.addChild(an);
+             }
+          }
        }
-
+   
       if (thisnode != null) thisnode.sortChildren();
       if (thisstatic != null) thisstatic.sortChildren();
       if (supernode != null) supernode.sortChildren();

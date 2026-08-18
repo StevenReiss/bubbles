@@ -1183,7 +1183,7 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
    IStackFrame sfrm = null;
    boolean evaldone = false;
 
-   BedrockPlugin.logD("Evaluate " + tname + " " + frid + " " + eid + " " + expr);
+   BedrockPlugin.logD("Evaluate " + tname + " " + frid + " " + eid + " " + expr + " " + proj);
 
    int detail = (impl ? DebugEvent.EVALUATION_IMPLICIT : DebugEvent.EVALUATION);
 
@@ -1268,10 +1268,19 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 		}
 	     }
 	  }
-	 eeng.evaluateExpression(eexp,jsf,new EvalListener(origframe,bid,eid,saveid,lvl,arraysz),detail,bkpt);
+         if (eexp == null) {
+            throw new BedrockException("Error in exception: won't compile");
+          }
+	 eeng.evaluateExpression(eexp,jsf,
+               new EvalListener(origframe,bid,eid,
+                     saveid,lvl,arraysz),
+                     detail,bkpt);
 	 BedrockPlugin.logD("START EVALUATION OF " + expr + " " + bid + " " + eid + " " +
 	       jsf.hashCode() + " " + thrd.hashCode());
 	 evaldone = true;
+       }
+      catch (BedrockException e) {
+         throw e;
        }
       catch (Throwable e) {
 	 BedrockPlugin.logE("Problem evaluating expression: " + expr + ": " + e,e);
