@@ -1379,9 +1379,21 @@ private static class IndentLinesAction extends TextAction {
    
          // might want to do a few lines at a time by puttins
          // separate tasks into Swing event queue?
-   
-         for (int i = slno; i <= elno; ++i) {
-            bd.fixLineIndent(i);
+         if (elno - slno > 25) {
+            BowiFactory.startTask();
+            try {
+               for (int i = slno; i <= elno; ++i) {
+                  bd.fixLineIndent(i);
+                }
+             }
+            finally {
+               BowiFactory.stopTask();
+             }
+          }
+         else {
+            for (int i = slno; i <= elno; ++i) {
+               bd.fixLineIndent(i);
+             }
           }
        }
       finally { bd.baleWriteUnlock(); }
@@ -2601,7 +2613,13 @@ private static class FormatAction extends TextAction {
        }
       catch (BadLocationException e) { }
       
-      bd.format(target.getSelectionStart(),target.getSelectionEnd());
+      BowiFactory.startTask();
+      try {
+         bd.format(target.getSelectionStart(),target.getSelectionEnd());
+       }
+      finally {
+         BowiFactory.stopTask();
+       }
       
       if (epos != null) target.setSelectionEnd(epos.getOffset());
     }

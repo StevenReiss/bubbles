@@ -264,7 +264,8 @@ private class Searcher implements Runnable {
             bba.addBubble(bbl,null,pt,PLACEMENT_MOVETO);
           }
          else {
-            BaleFactory.getFactory().createBubbleStack(BassTextSearch.this,null,pt,false,
+            BaleFactory.getFactory().createBubbleStack(BassTextSearch.this,null,
+                  pt,false,
                   search_result,BudaLinkStyle.NONE);
           }
        }
