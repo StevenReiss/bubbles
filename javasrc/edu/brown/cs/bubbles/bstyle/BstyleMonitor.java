@@ -509,7 +509,8 @@ private final class EclipseHandler implements MintHandler {
             return;
        }
       
-      IvyLog.logD("BSTYLE","Message from eclipse: " + cmd + " " + msg.getText());
+      String disp = msg.getText().replace(":E:",";E;");
+      IvyLog.logD("BSTYLE","Message from eclipse: " + cmd + " " + disp);
       
       switch (cmd) {
          case "PING" :
