@@ -287,7 +287,7 @@ private void setFile(String proj,File file)
       if (project_name == null) project_name = IvyXml.getTextElement(xml,"PROJECT");
     }
    catch (BumpException e) {
-      BoardLog.logE("BALE","Problem loading file " + file + ": " + e);
+      BoardLog.logE("BALE","Problem loading file " + file,e);
     }
 
    if (linesep != null) {

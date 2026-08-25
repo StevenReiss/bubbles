@@ -457,6 +457,7 @@ public boolean isRemovable()			{ return true; }
 
 public void setFixed(boolean fg)
 {
+   BoardLog.logD("BUDA","Set FIXED " + fg + " " + this);
    is_fixed = fg;
    if (fg) setGroup(null);
 }

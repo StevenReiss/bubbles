@@ -472,7 +472,7 @@ public void removeCurrentBubble(MouseEvent e)
    c.setLocation(new Point(0,0));
    c.setLocation(loc);
 
-   if (bb != null && fixed) bb.setFixed(fixed);
+   if (bb != null) bb.setFixed(fixed);
 
    try {
       if (bb.getParent() != null) {
@@ -2620,7 +2620,7 @@ private void handleMouseEvent(MouseEvent e)
       if (mr.getBubble() != null) mouse_context = new BubbleConnectContext(mr.getBubble(),e);
     }
    else if (e.getID() == MouseEvent.MOUSE_PRESSED && e.getButton() == MouseEvent.BUTTON3) {
-      if (mr.getBubble() != null){
+      if (mr.getBubble() != null) {
 	 BudaBubble bubble = mr.getBubble();
 	 bubble = bubble.getActualBubble(e.getX(),e.getY(), true);
 	 if (!bubble.isFixed() || bubble.isUserPos()) {

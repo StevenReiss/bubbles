@@ -3147,14 +3147,14 @@ private static final class MouseEventQueue extends EventQueue {
 
    private void clearDragArea() {
       if (drag_area == null) return;
-
+   
       if (base_component != null) {
-	 for (Component comp = base_component; comp != drag_area; comp = comp.getParent()) {
-	    if (comp == null) break;
-	    comp.setEnabled(true);
-	  }
+         for (Component comp = base_component; comp != drag_area; comp = comp.getParent()) {
+            if (comp == null) break;
+            comp.setEnabled(true);
+          }
        }
-
+   
       drag_area = null;
     }
 

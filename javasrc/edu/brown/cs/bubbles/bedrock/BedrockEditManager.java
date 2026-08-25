@@ -231,6 +231,9 @@ void handleParameter(String bid,String name,String value) throws BedrockExceptio
 void handleStartFile(String proj,String bid,String file,String id,boolean cnts,IvyXmlWriter xw)
 		throws BedrockException
 {
+   if (proj == null && file.contains("/BUBBLES_")) {
+      
+    }
    FileData fd = findFile(proj,file,bid);
 
    if (fd == null) {
@@ -1969,7 +1972,11 @@ private synchronized FileData findFile(String proj,String file,String bid)
 	 file_map.put(file,fd);
        }
     }
-
+   
+   if (proj == null && file.contains("BUBBLES_")) {
+      proj = our_plugin.getProjectManager().getDefaultProject();
+    }
+   
    if (fd == null) {
       ICompilationUnit icu = null;
       icu = our_plugin.getProjectManager().getCompilationUnit(proj,file);

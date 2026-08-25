@@ -130,6 +130,7 @@ private BedrockPlugin our_plugin;
 private boolean projects_inited;
 private boolean projects_registered;
 private Set<IProject> open_projects;
+private String default_project;
 private boolean projects_setup;
 private boolean use_android;
 
@@ -174,6 +175,8 @@ BedrockProject(BedrockPlugin bp)
 void initialize()
 {
    if (projects_inited) return;
+   
+   default_project = null;
 
    IvyXmlWriter xw = new IvyXmlWriter();		// force loading
    xw.close();
@@ -420,6 +423,11 @@ private class BuildDoneThread extends Thread {
 }	// end of inner class BuildDoneThread
 
 
+
+String getDefaultProject()
+{
+   return default_project;
+}
 
 /********************************************************************************/
 /*										*/
@@ -868,6 +876,7 @@ private boolean attachProject(IProject p,boolean setup)
 
    if (!open_projects.contains(p)) {
       open_projects.add(p);
+      if (default_project == null) default_project = p.getName();
     }
 
    return true;

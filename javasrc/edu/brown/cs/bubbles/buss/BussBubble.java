@@ -30,6 +30,7 @@
 
 package edu.brown.cs.bubbles.buss;
 
+import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaBubbleLink;
@@ -308,19 +309,28 @@ BudaBubble getSourceBubble()		{ return source_bubble; }
       int locy = diffy + loc.y + (int) BudaConstants.BUBBLE_EDGE_SIZE + 1;
 
       int startx = Math.max(selecteditemrect.x, viewportrect.x);
-      int endx = Math.min(selecteditemrect.x + getEditorBubble().getPreferredSize().width,
-			     viewportrect.x + viewportrect.width);
+      int endx = Math.min(
+            selecteditemrect.x + getEditorBubble().getPreferredSize().width,
+            viewportrect.x + viewportrect.width);
 
       int starty = Math.max(selecteditemrect.y, viewportrect.y);
-      int endy = Math.min(selecteditemrect.y + getEditorBubble().getPreferredSize().height,
-			     viewportrect.y + viewportrect.height);
+      int endy = Math.min(
+            selecteditemrect.y + getEditorBubble().getPreferredSize().height,
+            viewportrect.y + viewportrect.height);
 
       int width = Math.max(0, endx - startx);
       int height = Math.max(0, endy - starty);
+      
+      BoardLog.logD("BUSS","Get actual bubble " + x + " " + y + " " +
+            width + " " + height + " " + locx + " " + locy + " " + moved);
 
       if (x >= locx && x <= (locx + width) && y >= locy && y <= (locy + height)){
-	 if (moved)
-	    tearOutEditorBubble();
+	 if (moved) {
+            tearOutEditorBubble();
+          }
+         else {
+            BoardLog.logD("BUSS","Bubble not moved");
+          }
 
 	 return getEditorBubble();
        }
@@ -407,6 +417,8 @@ void tearOutEditorBubble()
    BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
    Rectangle loc = BudaRoot.findBudaLocation(this);
    if (bba == null || loc == null) return;
+   
+   BoardLog.logD("BUSS","Tear out bubble " + getEditorBubble());
 
    Rectangle selecteditemrect = stack_box.getRowBounds(stack_box.getSelectionRows()[0]);
    Rectangle viewportrect = view_port.getViewRect();
@@ -420,21 +432,24 @@ void tearOutEditorBubble()
    int zindex = JLayeredPane.getLayer(this);
 
    getEditorBubble().setLocation(locx, locy);
-
+   
    bba.setLayer(getEditorBubble(), zindex + 1);
-
+   
    for (int i = 0; i < 3; ++i) {
       try {
 	 // this can fail when trying to sort bubbles on screen -- retry in that case
-	 bba.add(getEditorBubble(), new BudaConstraint(BudaBubblePosition.FIXED, locx, locy));
+	 bba.add(getEditorBubble(),
+               new BudaConstraint(BudaBubblePosition.FIXED,
+               locx, locy));
 	 break;
        }
-      catch (Throwable t) { }
+      catch (Throwable t) { 
+         BoardLog.logD("BUSS","Failed to add editor bubble",t);
+       }
     }
-
-
+   
    getEditorBubble().setFixed(false);
-
+   
    addLinks(getEditorBubble());
 }
 
