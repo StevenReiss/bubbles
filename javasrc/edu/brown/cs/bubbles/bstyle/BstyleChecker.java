@@ -319,14 +319,14 @@ private Configuration buildConfiguration(String proj,String configpath)
 
 @Override public void auditStarted(AuditEvent e)
 {
-   IvyLog.logD("BSTYLE","Event Audit Started " + e);
+   IvyLog.logD("BSTYLE","Event Audit Started " + e.getMessage());
    
    all_errors.clear();
 }
 
 @Override public void fileStarted(AuditEvent e)
 {
-   IvyLog.logD("BSTYLE","Event File Started " + e);
+   IvyLog.logD("BSTYLE","Event File Started " + e.getMessage());
    String fnm = e.getFileName();
    synchronized (all_errors) {
       Set<Violation> errs = all_errors.get(fnm);
@@ -379,13 +379,13 @@ private Configuration buildConfiguration(String proj,String configpath)
       Set<Violation> errs = all_errors.get(fnm);
       if (errs != null) ct = errs.size();
     }
-   IvyLog.logD("BSTYLE","Event File finished " + e + " " + ct);
+   IvyLog.logD("BSTYLE","Event File finished " + e.getMessage() + " " + ct);
    
 }
 
 @Override public void auditFinished(AuditEvent e)
 {
-   IvyLog.logD("BSTYLE","Event Audit finished " + e);
+   IvyLog.logD("BSTYLE","Event Audit finished " + e.getMessage());
 }
 
 @Override public void addException(AuditEvent e,Throwable t)

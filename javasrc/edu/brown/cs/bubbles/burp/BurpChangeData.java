@@ -279,8 +279,9 @@ UndoableEdit getRootEdit()
 
    if (link_back != null) {
       UndoableEdit ue = link_back.getRootEdit();
-      if (ue != link_back.base_edit) 
-         System.err.println("DOuble link");
+      if (ue != link_back.base_edit) {
+         BoardLog.logW("BURP","Double link found");
+       }
       return ue;
    }
 
