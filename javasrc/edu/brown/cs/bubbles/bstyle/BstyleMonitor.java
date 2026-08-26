@@ -334,6 +334,8 @@ private void handleStartFile(String proj,String fnm)
    File file = new File(fnm);
    file = IvyFile.getCanonical(file);
    
+   if (fnm.contains("BUBBLES_")) return;
+   
    BstyleFile bf = bstyle_main.getFileManager().findFile(file);
    if (bf == null) return;
    

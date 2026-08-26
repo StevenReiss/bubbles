@@ -2147,26 +2147,26 @@ private class StackFrame implements BumpStackFrame {
             synchronized (source_map) {
                for_file = source_map.get(fnm);
                if (for_file == null) {
-        	  try {
-        	     String xnm = fnm;
-        	     int idx = xnm.indexOf("<");
-        	     if (idx >= 0) xnm = xnm.substring(0,idx);
-        	     for_file = File.createTempFile("BUBBLES_" + xnm,".java");
-        	     source_map.put(fnm,for_file);
-        	     byte [] data = IvyXml.stringToByteArray(IvyXml.getTextElement(xml,
-                      "SOURCE"));
-        	     if (data == null) for_file = null;
-        	     else {
-        		FileOutputStream fos = new FileOutputStream(for_file);
-        		fos.write(data);
-        		fos.close();
-        	      }
-        	   }
-        	  catch (IOException e) {
-        	     BoardLog.logE("BUMP","Problem writing source file: " + e,e);
-        	   }
-        	  if (for_file != null) for_file.deleteOnExit();
-        	}
+                  try {
+                     String xnm = fnm;
+                     int idx = xnm.indexOf("<");
+                     if (idx >= 0) xnm = xnm.substring(0,idx);
+                     for_file = File.createTempFile("BUBBLES_" + xnm,".java");
+                     source_map.put(fnm,for_file);
+                     byte [] data = IvyXml.stringToByteArray(IvyXml.getTextElement(xml,
+                           "SOURCE"));
+                     if (data == null) for_file = null;
+                     else {
+                        FileOutputStream fos = new FileOutputStream(for_file);
+                        fos.write(data);
+                        fos.close();
+                      }
+                   }
+                  catch (IOException e) {
+                     BoardLog.logE("BUMP","Problem writing source file: " + e,e);
+                   }
+                  if (for_file != null) for_file.deleteOnExit();
+                }
              }
           }
        }
@@ -2174,7 +2174,7 @@ private class StackFrame implements BumpStackFrame {
          for_file = new File(fnm);
          is_classfile = false;
        }
-   
+      
       line_number = IvyXml.getAttrInt(xml,"LINENO");
       is_static = IvyXml.getAttrBool(xml,"STATIC");
       is_synthetic = IvyXml.getAttrBool(xml,"SYNTHETIC");
@@ -2184,15 +2184,15 @@ private class StackFrame implements BumpStackFrame {
          int sidx = sgn.lastIndexOf(")");
          if (sidx > 0) sgn = sgn.substring(0,sidx+1);
          method_signature = IvyFormat.formatTypeName(sgn);
-      }
+       }
       frame_level = lvl;
-   
+      
       variable_map = new HashMap<String,ValueData>();
       for (Element e : IvyXml.children(xml,"VALUE")) {
          ValueData vd = new ValueData(this,e,null);
          variable_map.put(vd.getName(),vd);
        }
-    }
+   }
 
    @Override public BumpThread getThread()		{ return for_thread; }
    @Override public String getFrameClass()		{ return class_name; }

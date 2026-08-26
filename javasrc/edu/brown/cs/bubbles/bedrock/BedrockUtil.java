@@ -626,7 +626,7 @@ static String findFileForClass(String cls)
 	     }
 	  }
          else {
-            BedrockPlugin.logD("Can't find type " + cls + " in " + ip.getName());
+//          BedrockPlugin.logD("Can't find type " + cls + " in " + ip.getName());
           }
        }
       catch (JavaModelException e) { 
@@ -635,6 +635,8 @@ static String findFileForClass(String cls)
     }
 
    if (result != null) return result.getAbsolutePath();
+   
+   BedrockPlugin.logD("Can't find file for class " + cls);
 
    return null;
 }

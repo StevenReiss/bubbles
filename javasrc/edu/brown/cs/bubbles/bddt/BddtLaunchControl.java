@@ -1313,28 +1313,51 @@ private class CreateBubble implements Runnable {
 
    private BumpThread for_thread;
    private int try_count;
+   private int stack_count;
 
    CreateBubble(BumpThread bt) {
       for_thread = bt;
       try_count = 0;
+      stack_count = 0;
     }
 
    @Override public void run() {
       BumpThreadStack stk = for_thread.getStack();
+      if (stk == null && stack_count < 5) {
+         waitForStackFrame();
+         ++stack_count;
+         return;
+       }
+      if (stk == null) {
+         BoardLog.logW("BDDT","Unable to find stack for stopped bubble " +
+               for_thread.getName());
+         return;
+       }
       BumpStackFrame usefrm = stk.getFrame(0);
       if (usefrm == null && try_count < 5) {
-         try {
-            Thread.sleep(100);
-          }
-         catch (InterruptedException e) { }
+         waitForStackFrame();
          ++try_count;
-         BoardLog.logD("BDDT","Waiting for stack frame " + try_count + 
-               " " + for_thread.getId());
-         SwingUtilities.invokeLater(this);
+         return;
+       }
+      if (usefrm == null) {
+         BoardLog.logW("BDDT","Unable to find frame for stopped bubble " +
+               for_thread.getName());
          return;
        }
       bubble_manager.createExecBubble(for_thread);
     }
+   
+   private void waitForStackFrame() {
+      try {
+         Thread.sleep(100);
+       }
+      catch (InterruptedException e) { }
+      BoardLog.logD("BDDT","Waiting for stack frame " + try_count + 
+            " " + for_thread.getId());
+      SwingUtilities.invokeLater(this);
+      return;
+    }
+   
 
 }	// end of inner class CreateBubble
 

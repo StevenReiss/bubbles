@@ -258,13 +258,21 @@ private static class SpellFixer extends BfixFixer {
       BumpClient bc = BumpClient.getBump();
       Collection<BumpCompletion> cmps = bc.getCompletions(proj,file,-1,for_problem.getStart()+1);
       if (cmps != null) {
+         String pfx = for_identifier;
+         if (pfx.length() > 2) pfx = pfx.substring(0,2);
          checkcomps = true;
          for (BumpCompletion bcm : cmps) {
             if (bcm.getType() == CompletionType.TYPE_REF) lookup_types = false;
             if (bcm.getType() == CompletionType.KEYWORD) checkkeys = false;
             String txt = bcm.getCompletion();
             if (txt == null || txt.length() == 0) continue;
-            double d = IvyStringDiff.stringDiff(for_identifier,txt);
+            String btxt = txt;
+            int idx = btxt.lastIndexOf(".");
+            if (idx > 0) {
+               btxt = btxt.substring(idx+1);
+             }
+            if (!btxt.startsWith(pfx)) continue;
+            double d = IvyStringDiff.stringDiff(for_identifier,btxt);
             if (d <= minsize && d > 0) {
                BoardLog.logD("BFIX","SPELL: Consider replacing " + for_identifier + " WITH " + txt);
                SpellFix sf = new SpellFix(for_identifier,txt,d);
@@ -273,8 +281,10 @@ private static class SpellFixer extends BfixFixer {
           }
        }
       if (totry.size() == 0) {
+         int osz = (cmps == null ? 0 : cmps.size());
          cmps = bc.getCompletions(proj,file,-1,for_problem.getStart());
          if (cmps != null) {
+            BoardLog.logD("BFIX","Check comps at start " + cmps.size() + " " + osz);
             checkcomps = true;
             for (BumpCompletion bcm : cmps) {
                String txt = bcm.getCompletion();
@@ -381,7 +391,8 @@ private static class SpellFixer extends BfixFixer {
       if (for_corrector.getStartTime() != initial_time) return null;
       BoardLog.logD("BFIX","SPELL: DO replace " + for_identifier + " WITH " + usefix.getText());
       BoardMetrics.noteCommand("BFIX","SPELLFIX");
-      SpellDoer sd = new SpellDoer(for_corrector,for_document,for_problem,usefix,initial_time);
+      SpellDoer sd = new SpellDoer(for_corrector,for_document,for_problem,
+            usefix,initial_time);
       return sd;
    }
 
@@ -447,6 +458,8 @@ private static class SpellDoer extends BfixFixDoer {
       int len = for_fix.getOriginalText().length();
       int eoff = soff+len;              // Use our length for double ids
       String txt = for_fix.getText(); 
+      // if txt is x.y.z then try to replace txt with z and add an edit to do import x.y.z
+      // if this doesn't work, then do the normal replacement
       BfixEdit edit = new BfixBaseEdit(for_corrector,soff,eoff,txt);
       return testEdit(edit,sareas,"SpellingCorrection",false);
     }

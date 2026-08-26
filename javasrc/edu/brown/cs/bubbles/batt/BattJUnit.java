@@ -886,28 +886,28 @@ private class TestListener extends RunListener {
       // Throwable t = f.getException();
       // if (t != null) t.printStackTrace();
       setTestStatus(f.getDescription(),STATUS_FAILURE);
-
+   
       if (f.getMessage() != null && bad_messages.contains(f.getMessage())) {
-	 removeTestCase(f.getDescription());
+         removeTestCase(f.getDescription());
        }
       else if (f.getMessage() != null &&
-		  (f.getMessage().startsWith("No tests found matching List test cases from org.junit.runner.Request") ||
-		      f.getMessage().startsWith("No runnable methods") ||
-		      f.getMessage().startsWith("No tests found in "))) {
-	 removeTestCase(f.getDescription());
-	 return;
+        	  (f.getMessage().startsWith("No tests found matching List test cases from org.junit.runner.Request") ||
+        	      f.getMessage().startsWith("No runnable methods") ||
+        	      f.getMessage().startsWith("No tests found in "))) {
+         removeTestCase(f.getDescription());
+         return;
        }
       else {
-	 logD("FAIL " + f.getTestHeader() + " " +
-	       f.getDescription() + " " + f.getException() + " " +
-	       f.getMessage() + "\nTRACE: " + f.getTrace());
-	 addTestCase(f.getDescription(),new JunitTestStatus(f));
+         logD("FAIL " + f.getTestHeader() + " " +
+               f.getDescription() + " " + f.getException() + " " +
+               f.getMessage() + "\nTRACE: " + f.getTrace());
+         addTestCase(f.getDescription(),new JunitTestStatus(f));
        }
-
+   
       JunitTest jt = test_cases.get(f.getDescription());
       if (jt != null) outputSingleTest(jt);
       else {
-	logE("Can't find failing test case " + f.getDescription());
+        logE("Can't find failing test case " + f.getDescription());
       }
     }
 

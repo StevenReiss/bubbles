@@ -440,7 +440,7 @@ void tearOutEditorBubble()
 	 // this can fail when trying to sort bubbles on screen -- retry in that case
 	 bba.add(getEditorBubble(),
                new BudaConstraint(BudaBubblePosition.FIXED,
-               locx, locy));
+                     locx, locy));
 	 break;
        }
       catch (Throwable t) { 

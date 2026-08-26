@@ -214,7 +214,12 @@ private void fireAuditStarted()
 {
    final AuditEvent event = new AuditEvent(this);
    for (final AuditListener listener : audit_listeners) {
-      listener.auditStarted(event);
+      try {
+         listener.auditStarted(event);
+       }
+      catch (Throwable t) {
+         IvyLog.logE("BSTYLE","Problem with audit start event",t);
+       }
     }
 }
 
@@ -222,7 +227,12 @@ private void fireAuditFinished()
 {
    final AuditEvent event = new AuditEvent(this);
    for (final AuditListener listener : audit_listeners) {
-      listener.auditFinished(event);
+      try {
+         listener.auditFinished(event);
+       }
+      catch (Throwable t) {
+         IvyLog.logE("BSTYLE","Problem with audit finish event",t);
+       }
     }
 }
 
@@ -232,7 +242,12 @@ public void fireFileStarted(String filename) {
    String stripped = filename;
    final AuditEvent event = new AuditEvent(this, stripped);
    for (final AuditListener listener : audit_listeners) {
-      listener.fileStarted(event);
+      try {
+         listener.fileStarted(event);
+       }
+      catch (Throwable t) {
+         IvyLog.logE("BSTYLE","Problem with file start event",t);
+       }
     }
 }
 
@@ -242,7 +257,12 @@ public void fireErrors(String filename, SortedSet<Violation> errors) {
    for (final Violation element : errors) {
       final AuditEvent event = new AuditEvent(this, stripped, element);
       for (final AuditListener listener : audit_listeners) {
-         listener.addError(event);
+         try {
+            listener.addError(event);
+          }
+         catch (Throwable t) {
+            IvyLog.logE("BSTYLE","Problem with add error event",t);
+          }
        }
     }
 }
@@ -258,7 +278,12 @@ public void fireFileFinished(String filename) {
    final String stripped = CommonUtil.relativizePath(base_directory, filename);
    final AuditEvent event = new AuditEvent(this, stripped);
    for (final AuditListener listener : audit_listeners) {
-      listener.fileFinished(event);
+      try {
+         listener.fileFinished(event);
+       }
+      catch (Throwable t) {
+         IvyLog.logE("BSTYLE","Problem with file finish event",t);
+       }
     }
 }
 

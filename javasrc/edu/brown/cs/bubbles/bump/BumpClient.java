@@ -29,7 +29,6 @@ import edu.brown.cs.bubbles.board.BoardConstants;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
 import edu.brown.cs.bubbles.board.BoardSetup;
-
 import edu.brown.cs.ivy.exec.IvyExecQuery;
 import edu.brown.cs.ivy.file.IvyFormat;
 import edu.brown.cs.ivy.mint.MintArguments;
@@ -2935,19 +2934,25 @@ public BumpRunModel getRunModel()
 
 public void addJvmDebugArgument(String arg)
 {
-   if (!debug_jvm_args.contains(arg)) {
-      debug_jvm_args.add(arg);
+   if (arg == null) return;
+   
+   synchronized (debug_jvm_args) {
+      if (!debug_jvm_args.contains(arg)) {
+         debug_jvm_args.add(arg);
+       }
     }
 }
+
+
+
+
+
 
 Element getRunConfigurations()
 {
    Element e = getXmlReply("GETRUNCONFIG",null, null, null, 0);
    return e;
 }
-
-
-
 
 
 Element getNewRunConfiguration(String name,String clone,BumpLaunchType typ)
@@ -3083,9 +3088,11 @@ private String getDebugArgs(String id)
 	 break;
     }
 
-   for (String s : debug_jvm_args) {
-      if (xtr == null) xtr = s;
-      else xtr += " " + s;
+   synchronized (debug_jvm_args) {
+      for (String s : debug_jvm_args) {
+         if (xtr == null) xtr = s;
+         else xtr += " " + s;
+       }
     }
 
    return xtr;
@@ -4117,13 +4124,6 @@ private final class CloseIDE extends Thread {
     }
 
 }	// end of inner class CloseIDE
-
-
-
-
-
-
-
 
 
 

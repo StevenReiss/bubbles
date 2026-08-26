@@ -96,6 +96,7 @@ public final class BemaMain implements BemaConstants
 {
 
 
+
 /********************************************************************************/
 /*										*/
 /*	Main program								*/
