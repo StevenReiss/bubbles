@@ -1082,7 +1082,16 @@ void formatCode(String proj,String bid,String file,int spos,int epos,IvyXmlWrite
    IRegion [] irgns = new IRegion[1];
    if (spos < 0) spos = 0;
    if (epos <= 0) epos = cnts.length();
-   if (epos <= spos) throw new BedrockException("Bad region to format");
+   if (epos < spos) {
+      int xpos = spos;
+      spos = epos;
+      epos = xpos;
+    }
+   if (epos == spos) {
+      BedrockPlugin.logD("Nothing to format " + epos + " " + spos);
+      return;
+    }
+   if (epos <= spos) throw new BedrockException("Bad region to format " + spos + " " + epos);
    irgns[0] = new Region(spos,epos-spos);
 
    if (code_formatter == null) {
