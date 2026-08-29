@@ -140,7 +140,7 @@ private BudaTopBar		bubble_topbar;
 private BudaBubble		search_bubble;
 private BudaBubble		docsearch_bubble;
 private JPanel			button_panel;
-private List<Component>         button_panels;
+private List<Component> 	button_panels;
 private Collection<BudaTask>	task_shelf;
 private BudaRelations		relation_data;
 private BudaChannelSet		cur_channels;
@@ -280,10 +280,10 @@ void setBudaTitle()
    if (!version.startsWith("Build")) {
       title += " - " + version;
     }
-       
+
    String ttl = BoardSetup.getSetup().getLanguage().getTitle();
    title += " (" + ttl + ")";
-   
+
    String ws = BoardSetup.getSetup().getDefaultWorkspace();
    if (ws != null) {
       int idx = ws.lastIndexOf(File.separator);
@@ -379,7 +379,7 @@ private void initialize(Element e)
 
    setupGlobalActions();
    new CheckpointTimer();		// start checkpointing
-   new BubbleRemover();                 // remove old bubbles if desired
+   new BubbleRemover(); 		// remove old bubbles if desired
 
    BoardMetrics.setRootWindow(this);
    share_manager = new BudaShareManager();
@@ -448,7 +448,7 @@ BudaBubbleArea getDefaultBubbleArea()
 }
 
 
-public BudaBubbleArea getBubbleArea()	                { return bubble_area; }
+public BudaBubbleArea getBubbleArea()			{ return bubble_area; }
 
 BudaShareManager getShareManager()		{ return share_manager; }
 
@@ -484,23 +484,23 @@ public void removeLink(BudaBubbleLink lnk)
 }
 
 
-public void removeCurrentBubble() 
+public void removeCurrentBubble()
 {
    BudaBubbleArea bba = getCurrentBubbleArea();
    MouseEvent me = last_mouse;
    if (me == null) return;
-   
+
    Component c = (Component) me.getSource();
    if (c != null && c instanceof JDialog) {
       JDialog jd = (JDialog) c;
       jd.setVisible(false);
       return;
     }
-   
+
    Point pt = SwingUtilities.convertPoint(c,me.getPoint(),bba);
    me = new MouseEvent(bba,me.getID(),me.getWhen(),me.getModifiersEx(),
-         pt.x,pt.y,me.getClickCount(),me.isPopupTrigger(),
-         me.getButton());
+	 pt.x,pt.y,me.getClickCount(),me.isPopupTrigger(),
+	 me.getButton());
    bba.removeCurrentBubble(me);
 }
 
@@ -632,7 +632,7 @@ public static DataFlavor getBubbleTransferFlavor()	{ return bubble_flavor; }
 
 
 /**
- *      Return the data transfer flavor for drag and drop bubble groups
+ *	Return the data transfer flavor for drag and drop bubble groups
  **/
 
 public static DataFlavor getBubbleGroupTransferFlavor() { return bubble_group_flavor; }
@@ -952,7 +952,7 @@ public void createDocSearchBubble(Point pt,String proj,String pfx)
 
    BudaBubble bb = search_creator.createSearch(SearchType.SEARCH_DOC,proj,pfx);
    if (bb == null) return;
-   
+
    bb.addComponentListener(new SearchSingleton());
    if (!BUDA_PROPERTIES.getBoolean(SEARCH_ALLOW_MULTIPLE)) docsearch_bubble = bb;
 
@@ -994,7 +994,7 @@ private final class SearchSingleton extends ComponentAdapter {
 public String findProjectForFile(File f)
 {
    if (search_creator == null) return null;
-   
+
    return search_creator.findProjectForFile(f);
 }
 
@@ -1338,12 +1338,12 @@ private final class ViewportHandler implements ChangeListener {
 
    @Override public void stateChanged(ChangeEvent e) {
       Rectangle vr = bubble_view.getViewRect();
-   
+
       // if (scale_factor != 1) {
-         // vr.x /= scale_factor;
-         // vr.y /= scale_factor;
-         // vr.width /= scale_factor;
-         // vr.height /= scale_factor;
+	 // vr.x /= scale_factor;
+	 // vr.y /= scale_factor;
+	 // vr.width /= scale_factor;
+	 // vr.height /= scale_factor;
        // }
       bubble_area.setViewPosition(vr);
       bubble_overview.setViewPosition(vr);
@@ -1430,32 +1430,32 @@ private void setupGlobalActions()
    SwingKey.registerKeyAction("ROOT",jc,new RemoveHandler(),"menu W");
    SwingKey.registerKeyAction("ROOT",jc,new EscapeHandler(),"ESCAPE");
    SwingKey.registerKeyAction("ROOT",jc,"Group Adjacent Search",
-         new SearchKeyHandler(true,true,true),"menu F10");
+	 new SearchKeyHandler(true,true,true),"menu F10");
    SwingKey.registerKeyAction("ROOT",jc,"Nongroup Adjacent Search",
-         new SearchKeyHandler(true,true,true,true),"menu shift F10");
+	 new SearchKeyHandler(true,true,true,true),"menu shift F10");
    SwingKey.registerKeyAction("ROOT",jc,"Search in Project",
-         new SearchKeyHandler(true,false,false),"F10","menu O");
+	 new SearchKeyHandler(true,false,false),"F10","menu O");
    SwingKey.registerKeyAction("ROOT",jc,"Search",
-         new SearchKeyHandler(true,true,false),"F11");
+	 new SearchKeyHandler(true,true,false),"F11");
    SwingKey.registerKeyAction("ROOT",jc,"Search for Documentation",
-         new SearchKeyHandler(false,true,false),"F12");
+	 new SearchKeyHandler(false,true,false),"F12");
    SwingKey.registerKeyAction("ROOT",jc,new FloaterHandler(),"menu F12");
    SwingKey.registerKeyAction("ROOT",jc,"Move focus left",
-         new FocusDirectionHandler(FocusDirectionHandler.LEFT,0.5f),"alt menu LEFT");
+	 new FocusDirectionHandler(FocusDirectionHandler.LEFT,0.5f),"alt menu LEFT");
    SwingKey.registerKeyAction("ROOT",jc,"Move focus right",
-         new FocusDirectionHandler(FocusDirectionHandler.RIGHT,0.5f),"alt menu RIGHT"); 
+	 new FocusDirectionHandler(FocusDirectionHandler.RIGHT,0.5f),"alt menu RIGHT");
    SwingKey.registerKeyAction("ROOT",jc,"Move focus up",
-         new FocusDirectionHandler(FocusDirectionHandler.UP,0.5f),"alt menu UP");
+	 new FocusDirectionHandler(FocusDirectionHandler.UP,0.5f),"alt menu UP");
    SwingKey.registerKeyAction("ROOT",jc,"Move focus down",
-         new FocusDirectionHandler(FocusDirectionHandler.DOWN,0.5f),"alt menu DOWN");
+	 new FocusDirectionHandler(FocusDirectionHandler.DOWN,0.5f),"alt menu DOWN");
    SwingKey.registerKeyAction("ROOT",jc,"Pan left",
-         new PanHandler(-1,0),"menu LEFT");
+	 new PanHandler(-1,0),"menu LEFT");
    SwingKey.registerKeyAction("ROOT",jc,"Pan right",
-         new PanHandler(1,0),"menu RIGHT");
+	 new PanHandler(1,0),"menu RIGHT");
    SwingKey.registerKeyAction("ROOT",jc,"Pan up",
-         new PanHandler(0,-1),"menu UP");
+	 new PanHandler(0,-1),"menu UP");
    SwingKey.registerKeyAction("ROOT",jc,"Pan down",
-         new PanHandler(0,1),"menu DOWN");
+	 new PanHandler(0,1),"menu DOWN");
    SwingKey.registerKeyAction("ROOT",jc,new SaveHandler(),"menu S");
    SwingKey.registerKeyAction("ROOT",jc,new CommitHandler(),"F5");
    SwingKey.registerKeyAction("ROOT",jc,new MetricsHandler(),"ctrl shift PRINTSCREEN");
@@ -1463,17 +1463,17 @@ private void setupGlobalActions()
    SwingKey.registerKeyAction("ROOT",jc,new PrintHandler(),"menu P");
    SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(true),"xalt Z");
    SwingKey.registerKeyAction("ROOT",jc,new UndoHandler(false),"xalt Y");
-   
+
    if (BUDA_PROPERTIES.getBoolean("Buda.enable.zoom")) {
       SwingKey.registerKeyAction("ROOT",jc, new ZoomHandler(1),
-            "menu EQUALS");
+	    "menu EQUALS");
       SwingKey.registerKeyAction("ROOT",jc,new ZoomHandler(-1),
-            "menu MINUS");
+	    "menu MINUS");
       SwingKey.registerKeyAction("ROOT",jc,new ZoomHandler(0),
-            "menu shift EQUALS");
+	    "menu shift EQUALS");
     }
 // registerKeyAction(new BudaExpose(this,bubble_area),"EXPOSE",
-//              KeyStroke.getKeyStroke(KeyEvent.VK_F9,0));
+//		KeyStroke.getKeyStroke(KeyEvent.VK_F9,0));
 }
 
 
@@ -1526,7 +1526,7 @@ public void handleSaveAllRequest()
    for (BudaFileHandler bfh : file_handlers) {
       bfh.handleSaveDone();
     }
-   
+
    SwingKey.saveKeyDefinitions();
 }
 
@@ -1605,7 +1605,7 @@ MouseMotionAdapter getShadeMotionAdapter()
    if (BUDA_PROPERTIES.getBoolean("Buda.overview.shades")) {
       return new OverviewListener();
     }
-   
+
    return null;
 }
 
@@ -1690,31 +1690,31 @@ private class ShadeUpdater implements ActionListener {
       long now = System.currentTimeMillis();
       long delta = now-last_time;
       int move = (int) (move_delta * delta * shade_delta);
-   
+
       boolean done = false;
       int curht = bubble_overview.getHeight() + bubble_topbar.getHeight();
       int startht = curht;
       curht += move;
       if (curht < 1) {
-         curht = 1;
-         move = curht - startht;
-         done = true;
+	 curht = 1;
+	 move = curht - startht;
+	 done = true;
        }
       else if (curht > BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT) {
-         curht = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
-         move = curht - startht;
-         done = true;
+	 curht = BUBBLE_OVERVIEW_HEIGHT + BUBBLE_TOP_BAR_HEIGHT;
+	 move = curht - startht;
+	 done = true;
        }
-   
+
       for (Component c : button_panels) {
-         Dimension csz = c.getSize();
-         csz.height = curht;
-         c.setSize(csz);
-         c.setMinimumSize(csz);
-         c.setMaximumSize(csz);
-         c.setPreferredSize(csz);
+	 Dimension csz = c.getSize();
+	 csz.height = curht;
+	 c.setSize(csz);
+	 c.setMinimumSize(csz);
+	 c.setMaximumSize(csz);
+	 c.setPreferredSize(csz);
        }
-   
+
       Dimension topsz = bubble_topbar.getSize();
       if (curht < BUBBLE_TOP_BAR_HEIGHT) topsz.height = curht;
       else topsz.height = BUBBLE_TOP_BAR_HEIGHT;
@@ -1722,7 +1722,7 @@ private class ShadeUpdater implements ActionListener {
       bubble_topbar.setPreferredSize(topsz);
       bubble_topbar.setMaximumSize(topsz);
       bubble_topbar.setSize(topsz);
-   
+
       Dimension ovrsz = bubble_overview.getSize();
       if (curht <= BUBBLE_TOP_BAR_HEIGHT) ovrsz.height = 0;
       else ovrsz.height = curht - BUBBLE_TOP_BAR_HEIGHT;
@@ -1730,43 +1730,43 @@ private class ShadeUpdater implements ActionListener {
       bubble_overview.setPreferredSize(ovrsz);
       bubble_overview.setMaximumSize(ovrsz);
       bubble_overview.setSize(ovrsz);
-   
+
       shade_safe = false;
       Point rv = bubble_view.getViewPosition();
       rv.y += move;
       bubble_view.setViewPosition(rv);
-   
+
       Rectangle r = bubble_view.getBounds();
       Rectangle rtop = bubble_view.getParent().getBounds();
       r.height = rtop.height - curht;
       r.y = curht;
       bubble_view.setBounds(r);
       shade_safe = done;
-   
+
       BudaBubble toolbar = BudaToolbar.getToolbar(bubble_area);
       for (BudaBubble bbl : bubble_area.getBubbles()) {
-         if (bbl.isFloating() && bbl != toolbar) {
-            Rectangle rbbl = bbl.getBounds();
-            rbbl.y -= move;
-            bbl.setBounds(rbbl);
-          }
+	 if (bbl.isFloating() && bbl != toolbar) {
+	    Rectangle rbbl = bbl.getBounds();
+	    rbbl.y -= move;
+	    bbl.setBounds(rbbl);
+	  }
        }
       if (toolbar.isVisible()) {
-         Rectangle rbbl = toolbar.getBounds();
-         rbbl.y -= move;
-         // System.err.println("TOOL BOUNDS " + rbbl + " " + move);
-         toolbar.setBounds(rbbl);
+	 Rectangle rbbl = toolbar.getBounds();
+	 rbbl.y -= move;
+	 // System.err.println("TOOL BOUNDS " + rbbl + " " + move);
+	 toolbar.setBounds(rbbl);
        }
-   
+
       // revalidate();
-   
+
       synchronized (BudaRoot.this) {
-         if (shade_delta == 0 || done) {
-            shade_delta = 0;
-            Timer nt = (Timer) e.getSource();
-            nt.stop();
-            return;
-          }
+	 if (shade_delta == 0 || done) {
+	    shade_delta = 0;
+	    Timer nt = (Timer) e.getSource();
+	    nt.stop();
+	    return;
+	  }
        }
     }
 
@@ -1788,13 +1788,13 @@ private class EscapeHandler extends AbstractAction {
    EscapeHandler() {
       super("Remove Bubble or Stop Help");
     }
-   
+
    @Override public void actionPerformed(ActionEvent e) {
       if (demo_thread != null) {
-         demo_thread.stopDemonstration();
-         return;
+	 demo_thread.stopDemonstration();
+	 return;
        }
-   
+
       removeCurrentBubble();
     }
 
@@ -1809,7 +1809,7 @@ private class RemoveHandler extends AbstractAction {
    RemoveHandler() {
       super("Remove Bubble");
     }
-   
+
    @Override public void actionPerformed(ActionEvent e) {
       removeCurrentBubble();
     }
@@ -1846,18 +1846,18 @@ private class SearchKeyHandler extends AbstractAction {
       Point pt = MouseInfo.getPointerInfo().getLocation(); //getCurrentBubbleArea().getCurrentMouse();
       SwingUtilities.convertPointFromScreen(pt, getCurrentBubbleArea());
       if (pt == null) return;
-   
+
       BudaBubble focbub = getCurrentBubbleArea().getFocusBubble();
       if (focbub != null) {
-         Rectangle bubarea = focbub.getBounds();
-         SwingUtilities.convertRectangle(BudaRoot.this, bubarea, getCurrentBubbleArea());
-         if (from_bubble && bubarea.contains(pt) && focbub != search_bubble) {
-            if (!non_grouping) pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_NEAR_SPACE;
-            else pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_SPACE;
-            pt.y = bubarea.y;
-          }
+	 Rectangle bubarea = focbub.getBounds();
+	 SwingUtilities.convertRectangle(BudaRoot.this, bubarea, getCurrentBubbleArea());
+	 if (from_bubble && bubarea.contains(pt) && focbub != search_bubble) {
+	    if (!non_grouping) pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_NEAR_SPACE;
+	    else pt.x = bubarea.x+bubarea.width+BUBBLE_CREATION_SPACE;
+	    pt.y = bubarea.y;
+	  }
        }
-   
+
       if (doc_search && proj_search) createMergedSearchBubble(pt,null,null);
       else if (proj_search) createSearchBubble(pt,null,null,false);
       else createDocSearchBubble(pt,null,null);
@@ -1870,11 +1870,11 @@ private class SearchKeyHandler extends AbstractAction {
 private static class MetricsHandler extends AbstractAction {
 
    private static final long serialVersionUID = 1;
-   
+
    MetricsHandler() {
       super("Force metrics dump");
     }
-  
+
    @Override public void actionPerformed(ActionEvent e) {
       BoardMetrics.forceDump();
     }
@@ -1934,18 +1934,18 @@ private class CommitHandler extends AbstractAction {
 
 
 private class UndoHandler extends AbstractAction {
-   
+
    private boolean is_undo;
-   
+
    private static final long serialVersionUID = 1;
-   
+
    UndoHandler(boolean undo) {
       super((undo ? "Undo" : "Redo") + " Window Action");
       is_undo = undo;
     }
-   
-   @Override public void actionPerformed(ActionEvent e) { 
-      getCurrentBubbleArea().handleUndoAction(is_undo); 
+
+   @Override public void actionPerformed(ActionEvent e) {
+      getCurrentBubbleArea().handleUndoAction(is_undo);
     }
 }
 
@@ -1975,7 +1975,7 @@ private class ZoomHandler extends AbstractAction implements ActionListener {
       else v = 1.0;
       getCurrentBubbleArea().setScaleFactor(v);
     }
-   
+
 
 }	// end of inner class ZoomHandler
 
@@ -1996,7 +1996,7 @@ private class FloaterHandler extends AbstractAction implements ActionListener {
    FloaterHandler() {
       super("Toggle Bubble Floating");
     }
-   
+
    @Override public void actionPerformed(ActionEvent e) {
       Point pt = bubble_area.getCurrentMouse();
       if (pt == null) return;
@@ -2059,8 +2059,8 @@ private class FocusDirectionHandler extends AbstractAction implements ActionList
 		  baddist = Math.abs(focbub.getX() - bb.getX());
 		  break;
 	    }
-	    if (appropriatecalc < shortdist && appropriatecalc > 0 && 
-                  (int) (baddist*bad_dist_factor) < appropriatecalc) {
+	    if (appropriatecalc < shortdist && appropriatecalc > 0 &&
+		  (int) (baddist*bad_dist_factor) < appropriatecalc) {
 	       bestcandidate = bb;
 	       shortdist = appropriatecalc;
 	       badshortdist = appropriatecalc;
@@ -2114,7 +2114,7 @@ private class PrintHandler extends AbstractAction  {
    PrintHandler() {
       super("Print bubble");
     }
-   
+
    @Override public void actionPerformed(ActionEvent e) {
       BudaBubbleArea bba = getCurrentBubbleArea();
       BudaBubble bbl = bba.getFocusBubble();
@@ -2257,7 +2257,7 @@ BudaBubble createBubble(BudaBubbleArea bba,Element e,Rectangle delta,int dx,bool
    boolean docked = IvyXml.getAttrBool(e,"DOCKED");
    if (IvyXml.getAttrBool(e,"FIXED")) pos = BudaBubblePosition.FIXED;
    else if (!IvyXml.getAttrBool(e,"FLOAT")) docked = false;
-   
+
    if (IvyXml.getAttrBool(e,"FLOAT") || docked) {
       Rectangle va = bubble_view.getViewRect();
       pos = docked ? BudaBubblePosition.DOCKED : BudaBubblePosition.FLOAT;
@@ -2481,7 +2481,7 @@ private class RestoreSession implements Runnable {
    @Override public void run() {
       setupSession(session_config);
       setupView(session_config);
-      
+
       doneSetup();
     }
 
@@ -2807,7 +2807,7 @@ void noteNamedGroup(BudaBubbleGroup grp,String oldname)
 
 
 
-void addGroupButtons(BudaBubbleGroup grp,JPopupMenu menu) 
+void addGroupButtons(BudaBubbleGroup grp,JPopupMenu menu)
 {
    for (BubbleViewCallback cb : view_callbacks) {
       cb.addGroupButtons(grp,menu);
@@ -2955,10 +2955,10 @@ private class Stopper implements Runnable {
    @Override public void run() {
       BoardLog.logD("BUDA","Starting stopper " + stop_delay);
       if (stop_delay > 0) {
-         try {
-            Thread.sleep(stop_delay);
-          }
-         catch (InterruptedException e) {  }
+	 try {
+	    Thread.sleep(stop_delay);
+	  }
+	 catch (InterruptedException e) {  }
        }
       System.exit(0);
     }
@@ -3051,9 +3051,9 @@ private class CheckpointTimer implements ActionListener {
 
    CheckpointTimer() {
       if (BUBBLE_CHECKPOINT_TIME > 0) {
-         javax.swing.Timer timer = new javax.swing.Timer(BUBBLE_CHECKPOINT_TIME,this);
-         timer.setRepeats(true);
-         timer.start();
+	 javax.swing.Timer timer = new javax.swing.Timer(BUBBLE_CHECKPOINT_TIME,this);
+	 timer.setRepeats(true);
+	 timer.start();
        }
     }
 
@@ -3078,92 +3078,94 @@ private static final class MouseEventQueue extends EventQueue {
    private Component base_component = null;
 
    @Override protected void dispatchEvent(AWTEvent e) {
+//    BoardLog.logD("BUDA","EVENT " + e);
+
       // only want mouse events for buttons other than 1
       if (!(e instanceof MouseEvent)) {
-         if (e instanceof InputEvent) {
-            BudaHover.removeHovers();
-            InputEvent ie = (InputEvent) e;
-            BoardMetrics.noteActive(ie.getWhen());
-          }
-         resend(e);
-         return;
+	 if (e instanceof InputEvent) {
+	    BudaHover.removeHovers();
+	    InputEvent ie = (InputEvent) e;
+	    BoardMetrics.noteActive(ie.getWhen());
+	  }
+	 resend(e);
+	 return;
        }
-   
+
       MouseEvent me = (MouseEvent) e;
       BoardMetrics.noteActive(me.getWhen());
       last_mouse = me;
-   
+
       if (drag_area == null) {
-         if (me.getButton() == MouseEvent.BUTTON1 ||
-        	(me.getID() != MouseEvent.MOUSE_CLICKED && me.getID() != MouseEvent.MOUSE_PRESSED)) {
-            resend(e);
-            return;
-          }
+	 if (me.getButton() == MouseEvent.BUTTON1 ||
+		(me.getID() != MouseEvent.MOUSE_CLICKED && me.getID() != MouseEvent.MOUSE_PRESSED)) {
+	    resend(e);
+	    return;
+	  }
        }
-   
+
       if (me.getID() == MouseEvent.MOUSE_DRAGGED || me.getID() == MouseEvent.MOUSE_RELEASED) {
-         if (drag_area == null) {
-            resend(e);
-            return;
-          }
+	 if (drag_area == null) {
+	    resend(e);
+	    return;
+	  }
        }
       else if (drag_area != null && me.getID() != MouseEvent.MOUSE_EXITED) {
-         clearDragArea();
+	 clearDragArea();
        }
-   
+
       if (drag_area == null) setDragArea(me);
-   
+
       if (drag_area != null) {
-         Point pt = SwingUtilities.convertPoint(me.getComponent(),me.getPoint(),drag_area);
-         me.translatePoint(pt.x-me.getX(),pt.y-me.getY());
-         if (me.getID() == MouseEvent.MOUSE_DRAGGED || me.getID() == MouseEvent.MOUSE_MOVED)
-            drag_area.processMouseMotionEvent(me);
-         else
-            drag_area.processMouseEvent(me);
-         if (me.getID() == MouseEvent.MOUSE_RELEASED || me.getID() == MouseEvent.MOUSE_CLICKED)
-            clearDragArea();
-   
-         return;
+	 Point pt = SwingUtilities.convertPoint(me.getComponent(),me.getPoint(),drag_area);
+	 me.translatePoint(pt.x-me.getX(),pt.y-me.getY());
+	 if (me.getID() == MouseEvent.MOUSE_DRAGGED || me.getID() == MouseEvent.MOUSE_MOVED)
+	    drag_area.processMouseMotionEvent(me);
+	 else
+	    drag_area.processMouseEvent(me);
+	 if (me.getID() == MouseEvent.MOUSE_RELEASED || me.getID() == MouseEvent.MOUSE_CLICKED)
+	    clearDragArea();
+
+	 return;
        }
-   
+
       resend(e);
       return;
     }
 
    private void setDragArea(MouseEvent me) {
       if (drag_area != null) return;
-   
+
       base_component = SwingUtilities.getDeepestComponentAt(me.getComponent(),me.getX(),me.getY());
       for (Component comp = base_component; comp != null; comp = comp.getParent()) {
-         if (!base_component.isEnabled()) base_component = comp;
-         if (comp instanceof BudaBubbleArea) {
-            drag_area = (BudaBubbleArea) comp;
-            break;
-          }
+	 if (!base_component.isEnabled()) base_component = comp;
+	 if (comp instanceof BudaBubbleArea) {
+	    drag_area = (BudaBubbleArea) comp;
+	    break;
+	  }
        }
-   
+
       if (drag_area == null) base_component = null;
     }
 
    private void clearDragArea() {
       if (drag_area == null) return;
-   
+
       if (base_component != null) {
-         for (Component comp = base_component; comp != drag_area; comp = comp.getParent()) {
-            if (comp == null) break;
-            comp.setEnabled(true);
-          }
+	 for (Component comp = base_component; comp != drag_area; comp = comp.getParent()) {
+	    if (comp == null) break;
+	    comp.setEnabled(true);
+	  }
        }
-   
+
       drag_area = null;
     }
 
    private void resend(AWTEvent e) {
       try {
-         super.dispatchEvent(e);
+	 super.dispatchEvent(e);
        }
       catch (Throwable t) {
-         BoardLog.logE("BUDA","Problem processing user interface event: " + t,t);
+	 BoardLog.logE("BUDA","Problem processing user interface event: " + t,t);
        }
     }
 
@@ -3211,22 +3213,22 @@ private final class ClientHandler implements MintHandler {
 
 
 /********************************************************************************/
-/*                                                                              */
-/*      Remove old bubbles                                                      */
-/*                                                                              */
+/*										*/
+/*	Remove old bubbles							*/
+/*										*/
 /********************************************************************************/
 
 private class BubbleRemover implements ActionListener {
-   
-   private long         remove_time;
-   private long         active_time;
-   private long         last_active;
-   private boolean      first_time;
-   
-   
+
+   private long 	remove_time;
+   private long 	active_time;
+   private long 	last_active;
+   private boolean	first_time;
+
+
    BubbleRemover() {
       long delay = BUDA_PROPERTIES.getLong("Buda.remove.old.time",168);  // hours
-      remove_time = delay * 60*60*1000;                                          // in ms
+      remove_time = delay * 60*60*1000; 					 // in ms
       long adelay = BUDA_PROPERTIES.getLong("Buda.remove.old.active.time",96);
       active_time = adelay * 60*60*1000;
       if (delay <= 0 && adelay <= 0) return;
@@ -3237,55 +3239,55 @@ private class BubbleRemover implements ActionListener {
       last_active = BoardMetrics.getLastActive();
       first_time = true;
     }
-   
+
    @Override public void actionPerformed(ActionEvent e) {
       Rectangle cur = bubble_area.getVisibleRect();
-    
+
       if (first_time) {
-         for (BudaBubble bb : bubble_area.getBubbles()) {
-            if (bb.isFixed() || bb.isFloating()) continue;
-            boolean show = bb.getBounds().intersects(cur);
-            if (show) bb.noteViewed();
-          }
-         first_time = false;
+	 for (BudaBubble bb : bubble_area.getBubbles()) {
+	    if (bb.isFixed() || bb.isFloating()) continue;
+	    boolean show = bb.getBounds().intersects(cur);
+	    if (show) bb.noteViewed();
+	  }
+	 first_time = false;
        }
-      
+
       List<BudaBubble> remove = new ArrayList<>();
       long maxcheck = -1;
       long maxopen = -1;
       long now = System.currentTimeMillis();
       long delta = 0;
       if (last_active > 0) {
-         long when = BoardMetrics.getLastActive();
-         if (when > last_active) {
-            last_active = when;
-            delta = REMOVAL_CHECK_TIME;
-          }
+	 long when = BoardMetrics.getLastActive();
+	 if (when > last_active) {
+	    last_active = when;
+	    delta = REMOVAL_CHECK_TIME;
+	  }
        }
       for (BudaBubble bb : bubble_area.getBubbles()) {
-         if (bb.isFixed() || bb.isFloating()) continue;
-         long viewed = bb.getLastViewed();
-         if (viewed <= 0) continue;
-         long checktime = now - viewed;
-         long unviewedtime = bb.getUnviewedTime();
-         maxcheck = Math.max(maxcheck,checktime);
-         maxopen = Math.max(maxopen,unviewedtime);
-         if (remove_time > 0 && checktime > remove_time) remove.add(bb);
-         else if (active_time > 0 && unviewedtime > active_time) remove(bb);
-         else if (delta > 0) {
-            boolean show = bb.getBounds().intersects(cur);
-            if (!show) bb.noteUnviewed(delta);
-          }
+	 if (bb.isFixed() || bb.isFloating()) continue;
+	 long viewed = bb.getLastViewed();
+	 if (viewed <= 0) continue;
+	 long checktime = now - viewed;
+	 long unviewedtime = bb.getUnviewedTime();
+	 maxcheck = Math.max(maxcheck,checktime);
+	 maxopen = Math.max(maxopen,unviewedtime);
+	 if (remove_time > 0 && checktime > remove_time) remove.add(bb);
+	 else if (active_time > 0 && unviewedtime > active_time) remove(bb);
+	 else if (delta > 0) {
+	    boolean show = bb.getBounds().intersects(cur);
+	    if (!show) bb.noteUnviewed(delta);
+	  }
        }
       BoardLog.logD("BUDA","Check remove " + maxcheck + " " + maxopen + " " +
-            remove.size());
+	    remove.size());
       for (BudaBubble bb : remove) {
-         BoardLog.logD("BUDA","Auto remove " + bb);
-         bubble_area.removeBubble(bb);
+	 BoardLog.logD("BUDA","Auto remove " + bb);
+	 bubble_area.removeBubble(bb);
        }
     }
-   
-}       // end of inner class BubbleRemover
+
+}	// end of inner class BubbleRemover
 
 
 
@@ -3300,3 +3302,4 @@ private class BubbleRemover implements ActionListener {
 
 
 /* end of BudaRoot.java */
+

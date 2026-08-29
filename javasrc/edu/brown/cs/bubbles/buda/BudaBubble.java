@@ -1053,6 +1053,26 @@ private void setSizeFromContent()
 }
 
 
+@Override public void setSize(Dimension d)
+{
+   super.setSize(d);
+}
+
+@Override public void setSize(int w,int h)
+{
+   super.setSize(w,h);
+}
+
+@Override public void setBounds(int x,int y,int w,int h)
+{
+   super.setBounds(x,y,w,h);
+}
+
+@Override public void setBounds(Rectangle r)
+{
+   super.setBounds(r);
+}
+
 
 /********************************************************************************/
 /*										*/

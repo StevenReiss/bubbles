@@ -1277,56 +1277,56 @@ private class BubbleScaler implements BudaBubbleScaler {
 
    @Override public Rectangle getScaledBounds(BudaBubble bb) {
       Rectangle bnds = bb.getBounds();
-
+   
       if (bb.isFixed() || bb.isFloating() || bb.isDocked()) {
-	 double x1a = bnds.getMinX();
-	 double x2a = bnds.getMaxX();
-	 double x1b = rescaleX(x1a,old_scale,new_scale);
-	 if (x1a >= cur_viewport.getMinX() && x1b < cur_viewport.getMinX()) x1b = cur_viewport.getMinX();
-	 double xda = x1a - cur_viewport.getMinX();
-	 double xdb = x1b - cur_viewport.getMinX();
-	 if (xda < 5 && xdb > 5) x1b = x1a;
-	 double x2b = x1b + bnds.getWidth() * new_scale/old_scale;
-	 double x2c = x2b;
-	 if (x2a <= cur_viewport.getMaxX() && x2b > cur_viewport.getMaxX()) x2b = cur_viewport.getMaxX();
-	 double xda1 = cur_viewport.getMaxX() - x2a;
-	 double xdb1 = cur_viewport.getMaxX() - x2b;
-	 if (xda1 < 5 && xdb1 > 5) x2b = x2a;
-	 if (x2b != x2c) {
-	    double x1c = x2b - bnds.getWidth() * new_scale/old_scale;
-	    if (x1c > cur_viewport.getMinX() && xda > 5) x1b = x1c;
-	    else x1b = cur_viewport.getMinX();
-	  }
-
-	 double y1a = bnds.getMinY();
-	 double y2a = bnds.getMaxY();
-	 double y1b = rescaleY(x1a,old_scale,new_scale);
-	 if (y1a >= cur_viewport.getMinY() && y1b < cur_viewport.getMinY()) y1b = cur_viewport.getMinX();
-	 double yda = y1a - cur_viewport.getMinY();
-	 double ydb = y1b - cur_viewport.getMinY();
-	 if (yda < 5 && ydb > 5) y1b = y1a;
-	 double y2b = y1b + bnds.getHeight() * new_scale/old_scale;
-	 double y2c = y2b;
-	 if (y2a <= cur_viewport.getMaxY() && y2b > cur_viewport.getMaxY()) y2b = cur_viewport.getMaxY();
-	 double yda1 = cur_viewport.getMaxY() - y2a;
-	 double ydb1 = cur_viewport.getMaxY() - y2b;
-	 if (yda1 < 5 && ydb1 > 5) y2b = y2a;
-	 if (y2b != y2c) {
-	    double y1c = y2b - bnds.getHeight() * new_scale/old_scale;
-	    if (y1c > cur_viewport.getMinY() && yda > 5) y1b = y1c;
-	    else y1b = cur_viewport.getMinY();
-	  }
-
-	 bnds.setFrameFromDiagonal(x1b,y1b,x2b,y2b);
+         double x1a = bnds.getMinX();
+         double x2a = bnds.getMaxX();
+         double x1b = rescaleX(x1a,old_scale,new_scale);
+         if (x1a >= cur_viewport.getMinX() && x1b < cur_viewport.getMinX()) x1b = cur_viewport.getMinX();
+         double xda = x1a - cur_viewport.getMinX();
+         double xdb = x1b - cur_viewport.getMinX();
+         if (xda < 5 && xdb > 5) x1b = x1a;
+         double x2b = x1b + bnds.getWidth() * new_scale/old_scale;
+         double x2c = x2b;
+         if (x2a <= cur_viewport.getMaxX() && x2b > cur_viewport.getMaxX()) x2b = cur_viewport.getMaxX();
+         double xda1 = cur_viewport.getMaxX() - x2a;
+         double xdb1 = cur_viewport.getMaxX() - x2b;
+         if (xda1 < 5 && xdb1 > 5) x2b = x2a;
+         if (x2b != x2c) {
+            double x1c = x2b - bnds.getWidth() * new_scale/old_scale;
+            if (x1c > cur_viewport.getMinX() && xda > 5) x1b = x1c;
+            else x1b = cur_viewport.getMinX();
+          }
+   
+         double y1a = bnds.getMinY();
+         double y2a = bnds.getMaxY();
+         double y1b = rescaleY(x1a,old_scale,new_scale);
+         if (y1a >= cur_viewport.getMinY() && y1b < cur_viewport.getMinY()) y1b = cur_viewport.getMinX();
+         double yda = y1a - cur_viewport.getMinY();
+         double ydb = y1b - cur_viewport.getMinY();
+         if (yda < 5 && ydb > 5) y1b = y1a;
+         double y2b = y1b + bnds.getHeight() * new_scale/old_scale;
+         double y2c = y2b;
+         if (y2a <= cur_viewport.getMaxY() && y2b > cur_viewport.getMaxY()) y2b = cur_viewport.getMaxY();
+         double yda1 = cur_viewport.getMaxY() - y2a;
+         double ydb1 = cur_viewport.getMaxY() - y2b;
+         if (yda1 < 5 && ydb1 > 5) y2b = y2a;
+         if (y2b != y2c) {
+            double y1c = y2b - bnds.getHeight() * new_scale/old_scale;
+            if (y1c > cur_viewport.getMinY() && yda > 5) y1b = y1c;
+            else y1b = cur_viewport.getMinY();
+          }
+   
+         bnds.setFrameFromDiagonal(x1b,y1b,x2b,y2b);
        }
       else {
-	 double x1 = rescaleX(bnds.getMinX(),old_scale,new_scale);
-	 double y1 = rescaleY(bnds.getMinY(),old_scale,new_scale);
-	 double x2 = rescaleX(bnds.getMaxX(),old_scale,new_scale);
-	 double y2 = rescaleY(bnds.getMaxY(),old_scale,new_scale);
-	 bnds.setFrameFromDiagonal(x1,y1,x2,y2);
+         double x1 = rescaleX(bnds.getMinX(),old_scale,new_scale);
+         double y1 = rescaleY(bnds.getMinY(),old_scale,new_scale);
+         double x2 = rescaleX(bnds.getMaxX(),old_scale,new_scale);
+         double y2 = rescaleY(bnds.getMaxY(),old_scale,new_scale);
+         bnds.setFrameFromDiagonal(x1,y1,x2,y2);
        }
-
+   
       return bnds;
     }
 
@@ -2190,12 +2190,14 @@ private Point setDockedLocation(BudaBubble bb)
       if (r1 == null) return null;
     }
 
+   boolean sized = false;
    for (int i = 0; i < bbd.length; i++) {
       BudaBubbleDock bbdi = bbd[i];
       if (bbdi == BudaBubbleDock.EAST) {
 	 if (havehadhoriz) {
 	    bb.setSize(cur_viewport.width, bb.getHeight());
 	    bb.setLocation(new Point(cur_viewport.x,p.y));
+            sized = true;
 	  }
 	 else bb.setLocation(
                new Point(cur_viewport.x + cur_viewport.width - bb.getWidth(),p.y));
@@ -2217,6 +2219,7 @@ private Point setDockedLocation(BudaBubble bb)
 	    if (havehadvert) {
 	       bb.setSize(bb.getWidth(), r1.height);
 	       bb.setLocation(new Point(p.x,r1.y));
+               sized = true;
 	     }
 	    else bb.setLocation(new Point(p.x,r1.y + r1.height - bb.getHeight()));
 	    havehadvert = true;
@@ -2227,6 +2230,11 @@ private Point setDockedLocation(BudaBubble bb)
    p.x -= cur_viewport.x;
    p.y -= cur_viewport.y;
    floating_bubbles.put(bb, p);
+   
+   if (sized) {
+      bb.validate();
+    }
+   
    return bb.getLocation();
 }
 
@@ -3108,6 +3116,7 @@ private class BubbleResizeContext extends MouseContext {
                area_history.addBubbleShapeEvent(for_bubble,initial_bounds);
              }
           }
+         setupDockedBubble(for_bubble);
        }
       finally {
          area_history.end(begin_event);
