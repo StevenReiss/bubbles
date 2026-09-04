@@ -676,11 +676,7 @@ static int outputResource(IResourceDelta rd,IvyXmlWriter xw)
    if (out && rd.getFullPath() == null) out = false;
    if (out && !rd.getFullPath().toString().endsWith(".java")) out = false;
    if (out) {
-      int fgs = rd.getFlags();
-      if (fgs != 0) {
-	 fgs &= ~IResourceDelta.MARKERS;	  // ignore markers
-	 if (fgs == 0) out = false;
-       }
+      if (rd.getFlags() == IResourceDelta.MARKERS) out = false;
     }
 
    if (out) {

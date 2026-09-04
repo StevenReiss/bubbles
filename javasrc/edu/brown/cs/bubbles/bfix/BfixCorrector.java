@@ -679,7 +679,8 @@ private void checkForElementToFix()
 	       fixfactory.startTask(fix);
 	     }
 	    else {
-	       BoardLog.logD("BFIX", "Discard duplicate fix " + fix);
+	       BoardLog.logD("BFIX", "Discard duplicate fix " + fix + " " +
+                     pending_fixes.size() + " " + fix.getMemoId());
 	     }
 	  }
 	 break;

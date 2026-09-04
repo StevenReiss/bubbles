@@ -271,7 +271,9 @@ private static class SpellFixer extends BfixFixer {
             if (idx > 0) {
                btxt = btxt.substring(idx+1);
              }
-            if (!btxt.startsWith(pfx)) continue;
+            if (!btxt.startsWith(pfx)) {
+               if (!btxt.toLowerCase().startsWith(pfx.toLowerCase())) continue;
+             }
             double d = IvyStringDiff.stringDiff(for_identifier,btxt);
             if (d <= minsize && d > 0) {
                BoardLog.logD("BFIX","SPELL: Consider replacing " + for_identifier + " WITH " + txt);
@@ -358,7 +360,7 @@ private static class SpellFixer extends BfixFixer {
        }
       
       if (totry.size() == 0) {
-         BoardLog.logD("BFIX", "SPELL: No spelling correction found");
+         BoardLog.logD("BFIX", "SPELL: No spelling correction found for " + for_identifier);
          return null;
        }
       
@@ -396,6 +398,10 @@ private static class SpellFixer extends BfixFixer {
       return sd;
    }
 
+   @Override public String toString() {
+      return "SpellFixer: " + for_identifier;
+    }
+   
 }	// end of class BfixAdapterSpelling
 
 
