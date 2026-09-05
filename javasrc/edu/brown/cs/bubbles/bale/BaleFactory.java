@@ -903,6 +903,8 @@ synchronized BaleHighlightContext getGlobalHighlightContext()
 
 BaleDocumentIde getDocument(String proj,File f)
 {
+   if (f.getName().contains("BUBBLES_")) return null;
+   
    return getDocument(proj,f,false);
 }
 

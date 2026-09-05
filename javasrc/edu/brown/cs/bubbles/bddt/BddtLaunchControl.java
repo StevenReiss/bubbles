@@ -1559,12 +1559,12 @@ private class FrameAnnot implements BaleAnnotation {
       if (for_document == null) return;
       int off = for_document.findLineOffset(frm.getLineNumber());
       annot_color = BoardColors.getColor(BDDT_FRAME_ANNOT_COLOR_PROP);
-
+   
       try {
-	 execute_pos = for_document.createPosition(off);
+         execute_pos = for_document.createPosition(off);
        }
       catch (BadLocationException e) {
-	 BoardLog.logE("BDDT","Bad execution position",e);
+         BoardLog.logE("BDDT","Bad execution position",e);
        }
     }
 

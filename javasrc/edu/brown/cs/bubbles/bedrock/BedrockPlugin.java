@@ -503,7 +503,8 @@ String finishMessageWait(IvyXmlWriter xw,long delay)
 private String handleCommand(String cmd,String proj,Element xml) throws BedrockException
 // CHECKSTYLE:ON
 {
-   BedrockPlugin.logI("Handle command " + cmd + " for " + proj);
+   BedrockPlugin.logI("Handle command " + cmd + " for " + proj + " " + 
+         IvyXml.getAttrString(xml,"BID"));
    long start = System.currentTimeMillis();
    String h1;
    String h2;
