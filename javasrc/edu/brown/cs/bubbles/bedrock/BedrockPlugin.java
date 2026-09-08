@@ -962,6 +962,9 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	 break;
       case "HOVERDATA" :
 	 break;
+      case "BEGINTASK" :
+      case "ENDTASK" :
+         break;
       case "ENTER" :
 	 BedrockApplication.enterApplication();
 	 ++num_clients;

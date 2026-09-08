@@ -21,6 +21,7 @@
 package edu.brown.cs.bubbles.bowi;
 
 import edu.brown.cs.bubbles.buda.BudaRoot;
+import edu.brown.cs.bubbles.bump.BumpClient;
 
 
 /**
@@ -92,8 +93,11 @@ public static void initialize(BudaRoot br)
  * Method to start a task
  */
 public static void startTask() {
-   if (my_task_manager != null)
+   if (my_task_manager != null) {
       my_task_manager.startTask();
+      BumpClient bc = BumpClient.getBump();
+      bc.beginTask();
+    }
 }
 
 /**
@@ -101,8 +105,11 @@ public static void startTask() {
  * @param tostop
  */
 public static void stopTask() {
-   if (my_task_manager != null)
+   if (my_task_manager != null) {
       my_task_manager.stopTask();
+      BumpClient bc = BumpClient.getBump();
+      bc.endTask();
+    }
 }
 
 }

@@ -2812,6 +2812,20 @@ public void removeCategoryProblemsForFile(File f,String category)
 }
 
 
+
+public void beginTask()
+{
+   sendMessage("BEGINTASK");
+}
+
+
+public void endTask()
+{
+   sendMessage("ENDTASK");
+}
+
+
+
 /********************************************************************************/
 /*										*/
 /*	Breakpoint repository access						*/

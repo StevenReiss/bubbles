@@ -122,7 +122,7 @@ boolean setHasErrors(boolean fg)
    boolean rslt = (fg != has_errors);
    
    has_errors = fg;
-   if (fg) {
+   if (rslt) {
       file_text = null;
       List<BstyleFile> redo = List.of(this);
       bstyle_main.getStyleChecker().processProject(getProject(),redo);

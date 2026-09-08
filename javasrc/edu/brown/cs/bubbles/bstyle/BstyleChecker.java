@@ -62,11 +62,12 @@ class BstyleChecker implements BstyleConstants, AuditListener
 /********************************************************************************/
 
 private BstyleMain			bstyle_main;
-private Map<String,ConfigData>	        project_configs;
+private Map<String,ConfigData>	 project_configs;
 private ConfigData    			default_config;
 private Map<String,ProjectChecker>      project_checkers;
 private Map<String,Set<Violation>>      all_errors; 
 private Map<Violation,String>           module_names;
+private int                             task_count;
 
 private static final long               CHANGE_TIME = 50;
 
@@ -86,6 +87,7 @@ BstyleChecker(BstyleMain bm)
    project_checkers = new HashMap<>();
    all_errors = new HashMap<>();
    module_names = new ConcurrentHashMap<>();
+   task_count = 0;
 
    BoardProperties bp = BoardProperties.getProperties("Bstyle");
 
@@ -119,11 +121,14 @@ BstyleChecker(BstyleMain bm)
 
 void processProject(String proj,Collection<BstyleFile> files)
 {
-   ProjectChecker pc = project_checkers.get(proj);
-   if (pc == null) {
-      pc = new ProjectChecker(proj);
-      project_checkers.put(proj,pc);
-      pc.start();
+   ProjectChecker pc = null;
+   synchronized (project_checkers) {
+      pc = project_checkers.get(proj);
+      if (pc == null) {
+         pc = new ProjectChecker(proj);
+         project_checkers.put(proj,pc);
+         pc.start();
+       }
     }
    
    pc.processFiles(files);
@@ -241,6 +246,28 @@ private void outputViolation(Violation v,BstyleFile bf,String mod,IvyXmlWriter x
    xw.field("COLIDX",v.getColumnCharIndex());
   
    xw.end("PROBLEM");
+}
+
+
+void startTask()
+{
+   if (task_count >= 0) ++task_count;
+}
+
+
+void endTask() 
+{
+   if (task_count > 0) {
+      --task_count;
+      IvyLog.logD("End task, count = " + task_count);
+      if (task_count == 0) {
+         synchronized (project_checkers) {
+            for (ProjectChecker pc : project_checkers.values()) {
+               pc.noteTaskComplete();
+             }
+          }
+       }
+    }
 }
 
 
@@ -473,11 +500,17 @@ private final class ProjectChecker extends Thread {
       notifyAll();
     }
    
+   synchronized void noteTaskComplete() {
+      if (todo_files != null) {
+         BstyleChecker.this.notifyAll();
+       }
+    }
+   
    public void run() {
       for ( ; ; ) {
          List<BstyleFile> todo = null;
          synchronized (this) {
-            while (todo_files == null) {
+            while (todo_files == null && task_count <= 0) {
                try {
                   wait(5000);
                 }

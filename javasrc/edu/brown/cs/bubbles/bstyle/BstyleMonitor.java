@@ -392,7 +392,7 @@ private void handleResourceChange(Element res)
 {
    String k = IvyXml.getAttrString(res,"KIND");
    Element re = IvyXml.getChild(res,"RESOURCE");
-   String rtyp = IvyXml.getAttrString(res,"TYPE");
+   String rtyp = IvyXml.getAttrString(re,"TYPE");
    BstyleFile bf = null;
    List<BstyleFile> redo = new ArrayList<>();
    if (rtyp != null && rtyp.equals("FILE")) {
@@ -606,6 +606,12 @@ private final class BubblesHandler implements MintHandler {
                      IvyXml.getAttrString(xml,"FILE"));
                // handle close file
              } 
+            break;
+         case "BEGINTASK" :
+            bstyle_main.getStyleChecker().startTask();
+            break;
+         case "ENDTASK" :
+            bstyle_main.getStyleChecker().endTask();
             break;
          case "EXIT" :
             serverDone();

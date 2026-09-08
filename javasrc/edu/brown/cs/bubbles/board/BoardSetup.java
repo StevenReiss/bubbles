@@ -1775,14 +1775,17 @@ private void saveProperties()
       system_properties.setProperty(BOARD_PROP_LOG_LEVEL,logl);
     }
 
-   if (jar_directory != null) system_properties.setProperty(BOARD_PROP_JAR_DIR,jar_directory);
+   if (jar_directory != null) {
+      system_properties.setProperty(BOARD_PROP_JAR_DIR,jar_directory);
+    }
    if (!recent_workspaces.isEmpty()) {
+      
       StringBuffer buf = new StringBuffer();
       int ct = 0;
       for (String s : recent_workspaces) {
 	 if (ct++ > 0) buf.append(";");
 	 buf.append(s);
-	 if (ct >= 10) break;
+	 if (ct >= 15) break;
        }
       system_properties.setProperty(BOARD_PROP_RECENT_WS,buf.toString());
     }
@@ -2567,6 +2570,9 @@ private boolean checkDates()
    File pdf = getPluginDirectory();
    File bdf = new File(pdf,BOARD_BUBBLES_PLUGIN_ECLIPSE);
    long edlm = bdf.lastModified();
+   
+   BoardLog.logD("BOARD","Check plugin date " + dlm + " " + edlm + " " + auto_update + 
+         " " + pdf + " " + bdf);
 
    if (dlm > 0 && edlm > 0 && edlm >= dlm) return true;
    if (edlm > 0 && !auto_update) return true;
@@ -3499,40 +3505,40 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
    WorkspaceDialog() {
       BoardLog.logD("BOARD","Asking for workspace");
       SwingGridPanel pnl = new SwingGridPanel();
-
+   
       // library might not be set up here -- can't use BoardColors
       // pnl.setBackground(BoardColors.getColor("Buda.Bubbles.Color"));
       pnl.setBackground(WORKSPACE_DIALOG_COLOR);
       pnl.setOpaque(true);
-
+   
       pnl.beginLayout();
       pnl.addBannerLabel("Bubbles Workspace Setup");
-
+   
       pnl.addSeparator();
-
+   
       workspace_field = null;
       workspace_warning = new JLabel("Warning");
-
+   
       String lbl = board_language.getWorkspaceLabel();
       workspace_field = pnl.addFileField(lbl,default_workspace,
-	    JFileChooser.DIRECTORIES_ONLY,
-	    new WorkspaceDirectoryFilter(),this,null);
+            JFileChooser.DIRECTORIES_ONLY,
+            new WorkspaceDirectoryFilter(),this,null);
       workspace_field.setActionCommand("WORKSPACE");
       workspace_field.addKeyListener(this);
       workspace_warning.setToolTipText("Not a valid " + lbl);
       workspace_warning.setForeground(WARNING_COLOR);
       pnl.add(workspace_warning);
       pnl.addSeparator();
-
+   
       if (recent_workspaces.size() > 0) {
-	 List<String> recents = new ArrayList<String>(recent_workspaces);
-	 recents.add(0,RECENT_HEADER);
-	 pnl.addChoice("Recent Workspaces",recents,0,true,this);
+         List<String> recents = new ArrayList<String>(recent_workspaces);
+         recents.add(0,RECENT_HEADER);
+         pnl.addChoice("Recent Workspaces",recents,0,true,this);
        }
-
+   
       pnl.addBoolean("Create New Workspace",create_workspace,this);
       pnl.addBoolean("Always Ask for Workspace",ask_workspace,this);
-
+   
       pnl.addSeparator();
       accept_button = pnl.addBottomButton("OK","OK",this);
       pnl.addBottomButton("CANCEL","CANCEL",this);
@@ -3540,7 +3546,7 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
       Dimension d = pnl.getPreferredSize();
       d.width = Math.max(d.width,500);
       pnl.setPreferredSize(d);
-
+   
       working_dialog = new JDialog((JFrame) null,"Bubbles Workspace Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();

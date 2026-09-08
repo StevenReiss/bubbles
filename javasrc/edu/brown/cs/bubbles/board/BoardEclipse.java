@@ -487,24 +487,24 @@ private class EclipseDownloader extends Thread {
     }
 
    private void installEclipseFromJar(InputStream fis,File dir)
-	throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
       dir.mkdir();
       GZIPInputStream gis = new GZIPInputStream(fis);
       TarArchiveInputStream tis = new TarArchiveInputStream(gis);
       TarArchiveEntry tent = null;
       while ((tent = tis.getNextTarEntry()) != null) {
-	 String nm = tent.getName();
-	 if (nm == null || !nm.startsWith("eclipse")) continue;
-	 File f2 = getNestedFile(dir,nm);
-	 int mode = tent.getMode();
-	 if (nm.endsWith("/")) f2.mkdir();
-	 else {
-	    IvyFile.copyFileNoClose(tis,f2);
-	    f2.setExecutable((mode & 0100) != 0,false);
-	    f2.setReadable((mode & 0400) != 0,false);
-	    f2.setWritable((mode & 02) != 0,false);
-	    f2.setWritable((mode & 0200) != 0,true);
-	  }
+         String nm = tent.getName();
+         if (nm == null || !nm.startsWith("eclipse")) continue;
+         File f2 = getNestedFile(dir,nm);
+         int mode = tent.getMode();
+         if (nm.endsWith("/")) f2.mkdir();
+         else {
+            IvyFile.copyFileNoClose(tis,f2);
+            f2.setExecutable((mode & 0100) != 0,false);
+            f2.setReadable((mode & 0400) != 0,false);
+            f2.setWritable((mode & 02) != 0,false);
+            f2.setWritable((mode & 0200) != 0,true);
+          }
        }
     }
 
