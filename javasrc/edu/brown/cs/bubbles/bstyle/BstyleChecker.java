@@ -67,9 +67,8 @@ private ConfigData    			default_config;
 private Map<String,ProjectChecker>      project_checkers;
 private Map<String,Set<Violation>>      all_errors; 
 private Map<Violation,String>           module_names;
-private int                             task_count;
 
-private static final long               CHANGE_TIME = 50;
+private static final long               CHANGE_TIME = 100;
 
 
 
@@ -87,7 +86,6 @@ BstyleChecker(BstyleMain bm)
    project_checkers = new HashMap<>();
    all_errors = new HashMap<>();
    module_names = new ConcurrentHashMap<>();
-   task_count = 0;
 
    BoardProperties bp = BoardProperties.getProperties("Bstyle");
 
@@ -164,7 +162,7 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
    module_names.clear();
    List<File> base = new ArrayList<>();
    for (BstyleFile bf : files) {
-      base.add(bf.getFile());
+      if (!bf.getHasErrors()) base.add(bf.getFile());
     }
    try {
       int ct = root.process(base);
@@ -248,27 +246,6 @@ private void outputViolation(Violation v,BstyleFile bf,String mod,IvyXmlWriter x
    xw.end("PROBLEM");
 }
 
-
-void startTask()
-{
-   if (task_count >= 0) ++task_count;
-}
-
-
-void endTask() 
-{
-   if (task_count > 0) {
-      --task_count;
-      IvyLog.logD("End task, count = " + task_count);
-      if (task_count == 0) {
-         synchronized (project_checkers) {
-            for (ProjectChecker pc : project_checkers.values()) {
-               pc.noteTaskComplete();
-             }
-          }
-       }
-    }
-}
 
 
 
@@ -485,6 +462,7 @@ private final class ProjectChecker extends Thread {
    private long last_change;
    
    private ProjectChecker(String proj) {
+      super("Style checker for " + proj);
       project_name = proj;
       last_change = 0;
     }
@@ -494,33 +472,35 @@ private final class ProjectChecker extends Thread {
       if (todo_files == null) {
          todo_files = new HashSet<>();
        }
-      todo_files.addAll(files);
-      last_change = System.currentTimeMillis();
-      IvyLog.logD("BSTYLE","Add " + files.size() + " to process set for " + project_name);
-      notifyAll();
-    }
-   
-   synchronized void noteTaskComplete() {
-      if (todo_files != null) {
-         BstyleChecker.this.notifyAll();
+      for (BstyleFile bf : files) {
+         if (!bf.getHasErrors()) todo_files.add(bf);
        }
+      last_change = System.currentTimeMillis();
+      IvyLog.logD("BSTYLE","Add " + files.size() + " " + todo_files +
+            " to process set for " + project_name);
+      notifyAll();
     }
    
    public void run() {
       for ( ; ; ) {
+         IvyLog.logD("BSTYLE","Begin project checker " + project_name);
          List<BstyleFile> todo = null;
+         long last = 0;
          synchronized (this) {
-            while (todo_files == null && task_count <= 0) {
-               try {
-                  wait(5000);
+            while (last != last_change) {
+               while (todo_files == null || todo_files.isEmpty()) {
+                  try {
+                     wait(5000);
+                   }
+                  catch (InterruptedException e) { }
                 }
-               catch (InterruptedException e) { }
-             }
-            while ((System.currentTimeMillis() - last_change) < CHANGE_TIME) {
-               try {
-                  wait(CHANGE_TIME);
+               last = last_change;
+               while ((System.currentTimeMillis() - last_change) < CHANGE_TIME) {
+                  try {
+                     wait(CHANGE_TIME);
+                   }
+                  catch (InterruptedException e) { }
                 }
-               catch (InterruptedException e) { }
              }
             todo = new ArrayList<>(todo_files);
             todo_files = null;
@@ -530,6 +510,7 @@ private final class ProjectChecker extends Thread {
                   todo.size());
             runCheckerOnProject(project_name,todo);
           }
+         IvyLog.logD("BSTYLE","End project checker " + project_name);
        }
     }
    

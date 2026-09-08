@@ -278,13 +278,10 @@ private void handleErrors(String proj,String filename,Element messages)
    for (Map.Entry<BstyleFile,Boolean> ent : errmap.entrySet()) {
       BstyleFile bf = ent.getKey();
       boolean errs = ent.getValue();
-      boolean chng = bf.setHasErrors(errs);
-      if (chng) {
-         redo.add(bf);
-       }
+      bf.setHasErrors(errs);
+      redo.add(bf);
     }
    
-   // this is wrong
    if (!redo.isEmpty()) {
       bstyle_main.getStyleChecker().processProject(proj,redo);
     }
@@ -314,8 +311,8 @@ private void handleEdit(MintMessage msg,String bid,File file,int len,int offset,
       return;
     }
    
-   bf.editFile(len,offset,txt,complete);
    bf.setHasErrors(true);
+   bf.editFile(len,offset,txt,complete);
    
 // List<BstyleFile> redo = null;   
 // if (len != 0 || (txt != null && !txt.isEmpty())) {
@@ -608,10 +605,8 @@ private final class BubblesHandler implements MintHandler {
              } 
             break;
          case "BEGINTASK" :
-            bstyle_main.getStyleChecker().startTask();
             break;
          case "ENDTASK" :
-            bstyle_main.getStyleChecker().endTask();
             break;
          case "EXIT" :
             serverDone();

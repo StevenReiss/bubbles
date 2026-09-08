@@ -155,13 +155,13 @@ private static final class ConfigAction implements BudaConstants.ButtonListener 
       Element projs = bc.getAllProjects();
       Set<String> projects = new TreeSet<>();
       for (Element proj : IvyXml.children(projs,"PROJECT")) {
-	 projects.add(IvyXml.getAttrString(proj,"NAME"));
+         projects.add(IvyXml.getAttrString(proj,"NAME"));
        }
       if (projects.size() == 0) return;
       BstyleConfigBubble bbl = new BstyleConfigBubble(projects);
       bba.addBubble(bbl,null,pt,
-	    BudaConstants.PLACEMENT_LOGICAL|BudaConstants.PLACEMENT_MOVETO|
-	    BudaConstants.PLACEMENT_NEW|BudaConstants.PLACEMENT_USER);
+            BudaConstants.PLACEMENT_LOGICAL|BudaConstants.PLACEMENT_MOVETO|
+            BudaConstants.PLACEMENT_NEW|BudaConstants.PLACEMENT_USER);
     }
 
 }	// end of inner class ConfigAction
