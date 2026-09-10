@@ -487,21 +487,22 @@ private final class ProjectChecker extends Thread {
          List<BstyleFile> todo = null;
          long last = 0;
          synchronized (this) {
-            while (last != last_change) {
-               while (todo_files == null || todo_files.isEmpty()) {
-                  try {
-                     wait(5000);
-                   }
-                  catch (InterruptedException e) { }
+            while (todo_files == null || todo_files.isEmpty()) {
+               try {
+                  wait(5000);
                 }
-               last = last_change;
-               while ((System.currentTimeMillis() - last_change) < CHANGE_TIME) {
-                  try {
-                     wait(CHANGE_TIME);
-                   }
-                  catch (InterruptedException e) { }
-                }
+               catch (InterruptedException e) { }
              }
+            last = last_change;
+            while ((System.currentTimeMillis() - last_change) < CHANGE_TIME) {
+               try {
+                  wait(CHANGE_TIME);
+                }
+               catch (InterruptedException e) { }
+             }
+            // check for change while we were waiting
+            if (last != last_change) continue;
+            // commit to update now
             todo = new ArrayList<>(todo_files);
             todo_files = null;
           }
