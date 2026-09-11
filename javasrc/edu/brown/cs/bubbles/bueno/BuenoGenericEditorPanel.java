@@ -58,6 +58,7 @@ import org.w3c.dom.Element;
 import edu.brown.cs.bubbles.board.BoardFileSystemView;
 import edu.brown.cs.bubbles.board.BoardLog;
 import edu.brown.cs.bubbles.board.BoardProperties;
+import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -288,20 +289,20 @@ private class PathPanel extends EditPanel implements ActionListener, ListSelecti
       BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(this);
       BudaBubble rbb = BudaRoot.findBudaBubble(this);
       if (bba != null) bba.addBubble(bb,rbb,null,dialog_placement,
-	    BudaConstants.BudaBubblePosition.STATIC);
+            BudaConstants.BudaBubblePosition.STATIC);
     }
 
    private void updateButtons() {
       List<BuenoPathEntry> sels = path_display.getSelectedValuesList();
       boolean edok = false;
       for (BuenoPathEntry pe : sels) {
-	 if (pe.getPathType() == PathType.LIBRARY) {
-	    if (edok) {
-	       edok = false;
-	       break;
-	     }
-	    edok = true;
-	  }
+         if (pe.getPathType() == PathType.LIBRARY) {
+            if (edok) {
+               edok = false;
+               break;
+             }
+            edok = true;
+          }
        }
       edit_button.setEnabled(edok);
       delete_button.setEnabled(sels.size() >= 1);
@@ -820,14 +821,14 @@ private class FieldsPanel extends EditPanel implements ActionListener {
           JCheckBox cbx = null;
           switch (typ) {
              case "OPTIONSET" :
-        	addOptionSet(name,lbl,felt);
-        	break;
+                addOptionSet(name,lbl,felt);
+                break;
              case "BOOLEAN" :
-        	cbx = addBoolean(name,lbl,felt);
-        	break;
+                cbx = addBoolean(name,lbl,felt);
+                break;
              case "CHOICE" :
-        	addChoice(name,lbl,felt);
-        	break;
+                addChoice(name,lbl,felt);
+                break;
            }
           if (IvyXml.getAttrBool(felt,"SETONLY")) {
              String opt = IvyXml.getAttrString(felt,"OPTION");
@@ -835,56 +836,59 @@ private class FieldsPanel extends EditPanel implements ActionListener {
              String val = project_editor.getOptions().get(opt);
              if (val == null || val.isEmpty()) continue;
              if ("1tTyY".indexOf(val.substring(0,1)) >= 0) {
-        	if (cbx != null) cbx.setEnabled(false);
+                if (cbx != null) cbx.setEnabled(false);
               }
            }
         }
        addExpander();
-     }
+    }
 
     @Override public void actionPerformed(ActionEvent evt) {
        String cmd = evt.getActionCommand();
        JComboBox<?> cbx;
        for (Element felt : IvyXml.children(tab_xml,"FIELD")) {
-	  String typ = IvyXml.getAttrString(felt,"TYPE");
-	  String name = IvyXml.getAttrString(felt,"NAME");
-	  String lbl = IvyXml.getAttrString(felt,"DESCRIPTION");
-	  if (name == null) name = lbl;
-	  if (cmd.equals(lbl)) {
-	     switch (typ) {
-		case "OPTIONSET" :
-		   cbx = (JComboBox<?>) evt.getSource();
-		   String nopt = (String) cbx.getSelectedItem();
-		   String cur = (String) cur_values.get(name);
-		   if (nopt == null || nopt.equals(cur)) return;
-		   cur_values.put(name,nopt);
-		   Map<String,String> opts = project_editor.getOptions();
-		   for (Map.Entry<String,String> ent : option_sets.get(nopt).entrySet()) {
-		      opts.put(ent.getKey(),ent.getValue());
-		    }
-		   force_update = true;
-		   break;
-		case "BOOLEAN" :
-		   JCheckBox chbx = (JCheckBox) evt.getSource();
-		   boolean fg = chbx.isSelected();
-		   boolean cvl = (Boolean) cur_values.get(name);
-		   if (cvl == fg) return;
-		   cur_values.put(name,fg);
-		   force_update = true;
-		   break;
-		case "CHOICE" :
-		   cbx = (JComboBox<?>) evt.getSource();
-		   String nval = (String) cbx.getSelectedItem();
-		   String optnm = IvyXml.getAttrString(felt,"OPTION");
-		   String oval = (String) cur_values.get(name);
-		   if (nval == null || nval.equals(oval)) return;
-		   project_editor.getOptions().put(optnm,nval);
-		   cur_values.put(name,nval);
-		   force_update = true;
-		   break;
-	      }
-	   }
-	}
+          String typ = IvyXml.getAttrString(felt,"TYPE");
+          String name = IvyXml.getAttrString(felt,"NAME");
+          String lbl = IvyXml.getAttrString(felt,"DESCRIPTION");
+          if (name == null) name = lbl;
+          if (cmd.equals(lbl)) {
+             switch (typ) {
+                case "OPTIONSET" :
+                   cbx = (JComboBox<?>) evt.getSource();
+                   String nopt = (String) cbx.getSelectedItem();
+                   String cur = (String) cur_values.get(name);
+                   if (nopt == null || nopt.equals(cur)) return;
+                   cur_values.put(name,nopt);
+                   Map<String,String> opts = project_editor.getOptions();
+                   for (Map.Entry<String,String> ent : option_sets.get(nopt).entrySet()) {
+                      opts.put(ent.getKey(),ent.getValue());
+                    }
+                   force_update = true;
+                   break;
+                case "BOOLEAN" :
+                   JCheckBox chbx = (JCheckBox) evt.getSource();
+                   boolean fg = chbx.isSelected();
+                   boolean cvl = (Boolean) cur_values.get(name);
+                   if (cvl == fg) return;
+                   cur_values.put(name,fg);
+                   opts = project_editor.getOptions();
+                   String bopt = IvyXml.getAttrString(felt,"OPTION");
+                   if (bopt != null) opts.put(bopt,String.valueOf(fg));
+                   force_update = true;
+                   break;
+                case "CHOICE" :
+                   cbx = (JComboBox<?>) evt.getSource();
+                   String nval = (String) cbx.getSelectedItem();
+                   String optnm = IvyXml.getAttrString(felt,"OPTION");
+                   String oval = (String) cur_values.get(name);
+                   if (nval == null || nval.equals(oval)) return;
+                   project_editor.getOptions().put(optnm,nval);
+                   cur_values.put(name,nval);
+                   force_update = true;
+                   break;
+              }
+           }
+        }
      }
 
     private void addOptionSet(String name,String label,Element felt) {
@@ -947,12 +951,12 @@ private class FieldsPanel extends EditPanel implements ActionListener {
        boolean fg = false;
        String opt = IvyXml.getAttrString(felt,"OPTION");
        if (opt != null) {
-	  String oval = project_editor.getOptions().get(opt);
-	  String tr = IvyXml.getAttrString(felt,"TRUE");
-	  if (oval == null || oval.isEmpty()) fg = false;
-	  else if (tr != null) fg = oval.equals(tr);
-	  else fg = "1TtYy".indexOf(oval.substring(0,1)) >= 0;
-	}
+          String oval = project_editor.getOptions().get(opt);
+          String tr = IvyXml.getAttrString(felt,"TRUE");
+          if (oval == null || oval.isEmpty()) fg = false;
+          else if (tr != null) fg = oval.equals(tr);
+          else fg = "1TtYy".indexOf(oval.substring(0,1)) >= 0;
+        }
        cur_values.put(name,fg);
        return addBoolean(label,fg,this);
      }
@@ -961,22 +965,59 @@ private class FieldsPanel extends EditPanel implements ActionListener {
        List<String> opts = new ArrayList<>();
        String lst = IvyXml.getAttrString(felt,"CHOICES");
        if (lst != null) {
-	  BoardProperties bp = BoardProperties.getProperties("Bueno");
-	  String vals = bp.getString(lst);
-	  StringTokenizer tok = new StringTokenizer(vals);
-	  while (tok.hasMoreTokens()) {
-	     String v = tok.nextToken();
-	     opts.add(v);
-	   }
-	}
+          BoardProperties bp = BoardProperties.getProperties("Bueno");
+          String vals = bp.getString(lst);
+          StringTokenizer tok = new StringTokenizer(vals);
+          while (tok.hasMoreTokens()) {
+             String v = tok.nextToken();
+             opts.add(v);
+           }
+        }
        String optnm = IvyXml.getAttrString(felt,"OPTION");
        String val = project_editor.getOptions().get(optnm);
        addChoice(label,opts,val,this);
        cur_values.put(name,val);
      }
+    
+    @Override void doUpdate() {
+       String desc = IvyXml.getAttrString(tab_xml,"DESCRIPTION");
+       if (desc != null) addBannerLabel(desc);
+       for (Element felt : IvyXml.children(tab_xml,"FIELD")) {
+          String name = IvyXml.getAttrString(felt,"NAME");
+          if (name == null) continue;
+          Object val = cur_values.get(name);
+          if (val != Boolean.TRUE) continue;
+          Element pelt = IvyXml.getChild(felt,"PATH");
+          if (pelt == null) continue; 
+          String check = IvyXml.getAttrString(pelt,"CHECK");
+          String lib = IvyXml.getAttrString(pelt,"LIBRARY");
+          if (check == null) check = lib;
+          if (checkPathContains(check)) continue;
+          BoardSetup bs = BoardSetup.getSetup();
+          String pnm = bs.getLibraryPath(lib);
+          File pfl = new File(pnm);
+          if (!pfl.exists()) continue;
+          BuenoPathEntry pe = new BuenoPathEntry(pfl,PathType.LIBRARY,false);
+          if (panel_paths != null) panel_paths.addElement(pe);
+          if (base_paths == null) {
+             base_paths = project_editor.getLibraryPaths();
+           }
+          base_paths.add(pe);
+        }
+     }
+    
+    private boolean checkPathContains(String check) {
+       if (check == null) return false;
+       
+       for (BuenoPathEntry ent : project_editor.getLibraryPaths()) {
+          String bp = ent.getBinaryPath();
+          if (bp == null) continue;
+          if (bp.contains(check)) return true;
+        }
+       return false;
+     }
 
-
-}
+}       // end of innter calss FieldsPanel
 
 
 

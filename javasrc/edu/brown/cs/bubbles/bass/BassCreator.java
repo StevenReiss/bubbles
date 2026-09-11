@@ -36,6 +36,7 @@ import edu.brown.cs.bubbles.board.BoardMetrics;
 import edu.brown.cs.bubbles.board.BoardSetup;
 import edu.brown.cs.bubbles.board.BoardThreadPool;
 import edu.brown.cs.bubbles.board.BoardConstants.BoardLanguage;
+import edu.brown.cs.bubbles.bowi.BowiFactory;
 import edu.brown.cs.bubbles.buda.BudaBubble;
 import edu.brown.cs.bubbles.buda.BudaBubbleArea;
 import edu.brown.cs.bubbles.buda.BudaConstants;
@@ -887,16 +888,16 @@ private static class FormatAction extends AbstractAction {
 
    @Override public void actionPerformed(ActionEvent e) {
       if (file_name != null) {
-	 Formatter fixer = new Formatter(project_name,file_name);
-	 BoardThreadPool.start(fixer);
+         Formatter fixer = new Formatter(project_name,file_name);
+         BoardThreadPool.start(fixer);
        }
       else if (name_prefix != null) {
-	 BassFactory bf = BassFactory.getFactory();
-	 Collection<File> files = bf.findAssociatedFiles(project_name,name_prefix);
-	 for (File f : files) {
-	    Formatter fixer = new Formatter(project_name,f);
-	    BoardThreadPool.start(fixer);
-	 }
+         BassFactory bf = BassFactory.getFactory();
+         Collection<File> files = bf.findAssociatedFiles(project_name,name_prefix);
+         for (File f : files) {
+            Formatter fixer = new Formatter(project_name,f);
+            BoardThreadPool.start(fixer);
+         }
       }
     }
 
@@ -950,6 +951,7 @@ private static class Formatter implements Runnable  {
    }
 
    @Override public void run() {
+      BowiFactory.startTask(); 
       if (edit_result == null) {
          BumpClient bc = BumpClient.getBump();
          Element edits = bc.format(project_name,file_name,0,(int) file_name.length());
@@ -957,10 +959,14 @@ private static class Formatter implements Runnable  {
             edit_result = edits;
             SwingUtilities.invokeLater(this);
          }
+         else {
+            BowiFactory.stopTask();
+          }
       }
       else {
          BaleFactory.getFactory().applyEdits(file_name,edit_result);
          edit_result = null;
+         BowiFactory.stopTask();
       }
    }
 

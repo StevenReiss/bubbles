@@ -501,7 +501,10 @@ private final class ProjectChecker extends Thread {
                catch (InterruptedException e) { }
              }
             // check for change while we were waiting
-            if (last != last_change) continue;
+            if (last != last_change) {
+               IvyLog.logD("BSTYLE","Chenge occurred during wait");
+               continue;
+             }
             // commit to update now
             todo = new ArrayList<>(todo_files);
             todo_files = null;

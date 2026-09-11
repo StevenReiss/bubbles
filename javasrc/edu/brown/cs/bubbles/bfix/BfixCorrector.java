@@ -472,7 +472,10 @@ private class RunAndWait implements BumpProblemHandler {
 	handleProblemsDone();
       }
 
-     if (!done_status) handleProblemsDone();
+     if (!done_status) {
+        num_waits = 1;
+        handleProblemsDone();
+      }
    }
 
    synchronized boolean waitForDone() {

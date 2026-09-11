@@ -516,7 +516,8 @@ void localEditProject(Element pxml,IvyXmlWriter xw) throws BedrockException
 	 String v = IvyXml.getAttrString(oe,"VALUE");
 	 if (k.startsWith("edu.brown.cs.bubbles.bedrock.")) {
 	    String sfx = k.substring(29);
-	    QualifiedName qn = new QualifiedName("edu.brown.cs.bubbles.bedrock",sfx);
+	    QualifiedName qn = new QualifiedName("edu.brown.cs.bubbles.bedrock",
+                  sfx);
 	    try {
 	       ip.setPersistentProperty(qn,v);
 	     }

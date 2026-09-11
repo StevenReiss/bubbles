@@ -275,7 +275,7 @@ private BfixRunnableFix checkMakeStaticFinal(BfixCorrector corr,BumpProblem bp,
    int rs0 = s0;
    int re0 = e0;
    
-   return new StyleDoer(corr,starttime,bp, rs0,re0,s0,e0,txt,false,false);
+   return new StyleDoer(corr,starttime,bp, rs0,re0,s0,e0,txt,false,false,explicit);
 }
 
 

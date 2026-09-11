@@ -304,7 +304,7 @@ abstract static class GenericPatternFixer extends BstyleFixer {
           }
          if (!checkStillApplicable(text)) return null;
        }
-      return buildFix(corr,start,bp,lsoff,m1);
+      return buildFix(corr,start,bp,lsoff,m1,explicit);
     }
    
    protected Matcher useFix(BumpProblem bp,boolean explicit) {
@@ -322,7 +322,7 @@ abstract static class GenericPatternFixer extends BstyleFixer {
     }
 
    protected BfixRunnableFix buildFix(BfixCorrector corr,long start,BumpProblem bp,
-         int lsoff,Matcher m1) {
+         int lsoff,Matcher m1,boolean explicit) {
       String txt = getEditReplace(m1);
       if (txt == null) return null;
       if (txt.isEmpty()) txt = null;
@@ -331,7 +331,7 @@ abstract static class GenericPatternFixer extends BstyleFixer {
       int rs0 = getCheckStart(m1)+lsoff;
       int re0 = getCheckEnd(m1)+lsoff;
       return new StyleDoer(corr,start,bp,rs0,re0,
-            s0,e0,txt,doIndent(),doFormat()); 
+            s0,e0,txt,doIndent(),doFormat(),explicit); 
     }
    
    protected String getEditReplace(Matcher m1)          { return ""; }
@@ -429,7 +429,7 @@ private static class FileNewline extends GenericPatternFixer {
       BaleFileOverview doc0 = doc.getBaseWindowDocument();
       int off = doc0.getLength();
       return new StyleDoer(corr,start,bp,off,off,off,off,
-            "\n",false,false);
+            "\n",false,false,explicit);
     }
    
 }       // end of inner class FileNewline
@@ -785,11 +785,14 @@ protected static class StyleDoer extends BfixFixDoer {
    private String insert_text;
    private boolean do_indent;
    private boolean do_format;
+   private boolean is_explicit;
    
+   //CHECKSTYLE:OFF
    StyleDoer(BfixCorrector corr,long start,
          BumpProblem bp,int rsoff,int reoff,
          int soff,int eoff,String txt,
-         boolean indent,boolean format) {
+         boolean indent,boolean format,boolean explicit) {
+   //CHECKSTYLE:ON
       super(corr,bp,start);
       for_corrector = corr;
       range_start = rsoff;
@@ -799,12 +802,16 @@ protected static class StyleDoer extends BfixFixDoer {
       insert_text = txt;
       do_indent = indent;
       do_format = format;
+      is_explicit = explicit;
     }
    
    @Override public Boolean call() {
       BfixEdit edit = new BfixBaseEdit(for_corrector,
             edit_start,edit_end,insert_text); 
-      BfixCheckAreas areas = new BfixCheckAreas(range_start,range_end); 
+      BfixCheckAreas areas = null;
+      if (!is_explicit) {
+         areas = new BfixCheckAreas(range_start,range_end); 
+       }
       return testEdit(edit,areas,"StyleCorrection",do_format|do_indent);
     }
    
