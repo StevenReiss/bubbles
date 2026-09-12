@@ -185,6 +185,8 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
    
    BstyleFileManager bfm = bstyle_main.getFileManager();
    
+   Set<BstyleFile> allfiles = new HashSet<>(files);
+   
    IvyXmlWriter xw = bstyle_main.beginMessage("FILEERRORS");
    for (Map.Entry<String,Set<Violation>> ent : errs.entrySet()) {
       xw.begin("FILEERROR");
@@ -192,11 +194,21 @@ void runCheckerOnProject(String proj,List<BstyleFile> files)
       xw.field("PROJECT",proj);
       String fnm = ent.getKey();
       BstyleFile bf = bfm.findFile(fnm);
+      allfiles.remove(bf);
       xw.field("FILE",bf.getUserFile());
       xw.begin("MESSAGES");
       for (Violation v : ent.getValue()) {
          outputViolation(v,bf,mods.get(v),xw);
        }
+      xw.end("MESSAGES");
+      xw.end("FILEERROR");
+    }
+   for (BstyleFile bf : allfiles) {
+      xw.begin("FILEERROR");
+      xw.field("CATEGORY","BSTYLE");
+      xw.field("PROJECT",proj);
+      xw.field("FILE",bf.getUserFile());
+      xw.begin("MESSAGES");
       xw.end("MESSAGES");
       xw.end("FILEERROR");
     }
@@ -473,7 +485,7 @@ private final class ProjectChecker extends Thread {
          todo_files = new HashSet<>();
        }
       for (BstyleFile bf : files) {
-         if (!bf.getHasErrors()) todo_files.add(bf);
+         todo_files.add(bf);
        }
       last_change = System.currentTimeMillis();
       IvyLog.logD("BSTYLE","Add " + files.size() + " " + todo_files +

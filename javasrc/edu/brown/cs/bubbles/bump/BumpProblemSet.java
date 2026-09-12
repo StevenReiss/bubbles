@@ -225,7 +225,7 @@ void handleErrors(String proj,File forfile,String cat,int eid,Element ep)
           }
        }
 //    if (ct > 0) bph.handleProblemsDone();
-      BoardLog.logD("BUMP","FINISHED WITH PROBLEMS " + ct);
+      BoardLog.logD("BUMP","FINISHED WITH PROBLEMS " + ct + " " + forfile + " " + bph);
       bph.handleProblemsDone();
     }
 }

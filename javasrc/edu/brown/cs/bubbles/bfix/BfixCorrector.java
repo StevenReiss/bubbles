@@ -448,14 +448,14 @@ private class RunAndWait implements BumpProblemHandler {
       is_done = false;
       done_status = false;
       num_waits = nwait;
+      BumpClient.getBump().addProblemHandler(for_document.getFile(),this);
     }
 
   void runFix() {
      is_done = false;
      done_status = false;
-     BumpClient.getBump().addProblemHandler(for_document.getFile(),this);
      try {
-	BoardLog.logD("BFIX","Run fixer " +
+	BoardLog.logD("BFIX","Run fixer " + num_waits + " " + 
 	      SwingUtilities.isEventDispatchThread());
 
 	if (SwingUtilities.isEventDispatchThread()) {
@@ -469,7 +469,7 @@ private class RunAndWait implements BumpProblemHandler {
       }
      catch (Throwable e) {
 	BoardLog.logE("BSTYLE","Problem with corrector",e);
-	handleProblemsDone();
+        done_status = false;
       }
 
      if (!done_status) {
