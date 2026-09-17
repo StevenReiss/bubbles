@@ -116,7 +116,7 @@ public static void main(String [] args)
 	 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
        }
       catch (Throwable t) {
-	 System.err.println("BEMA: Problem setting l&f: " + t);
+	 System.err.println("BEMA: Problem setting l&f: " + t); 
        }
     }
 

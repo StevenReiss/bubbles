@@ -373,92 +373,92 @@ private final class EclipseHandler implements MintHandler {
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
       Element e = msg.getXml();
-
+   
       try {
-	 if (cmd == null) return;
-	 else if (cmd.equals("FILECHANGE")) {
-	    setFileState(IvyXml.getAttrString(e,"FILE"),FileState.EDITED);
-	    updateTestState();
-	  }
-	 else if (cmd.equals("FILEERROR")) {
-	    FileState fs = null;
-	    Element msgs = IvyXml.getChild(e,"MESSAGES");
-	    if (msgs != null) {
-	       for (Element pm : IvyXml.children(msgs,"PROBLEM")) {
-		  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
-		}
-	     }
-	    if (fs != null) {
-	       setFileState(IvyXml.getAttrString(e,"FILE"),fs);
-	       updateTestState();
-	     }
-	  }
-	 else if (cmd.equals("EDITERROR")) {
-	    FileState fs = FileState.EDITED;
-	    Element msgs = IvyXml.getChild(e,"MESSAGES");
-	    if (msgs != null) {
-	       for (Element pm : IvyXml.children(msgs,"PROBLEM")) {
-		  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
-		}
-	     }
-	    setFileState(IvyXml.getAttrString(e,"FILE"),fs);
-	    updateTestState();
-	  }
-	 else if (cmd.equals("BUILDDONE")) {
-	    String proj = IvyXml.getAttrString(e,"PROJECT");
-	    BattProject bp = project_set.get(proj);
-	    if (bp == null) {
-	      IvyLog.logD("BATTM","Can't find project " + proj);
-	     }
-	    if (bp != null) {
-	       Map<File,FileState> fsmap = new HashMap<>();
-	       for (File fp : bp.getSourceFiles()) {
-		  fsmap.put(fp,FileState.STABLE);
-		}
-	       Element probs = IvyXml.getChild(e,"PROBLEMS");
-	       for (Element pe : IvyXml.children(probs,"PROBLEM")) {
-		  if (IvyXml.getAttrBool(pe,"ERROR")) {
-		     String fn = IvyXml.getAttrString(pe,"FILE");
-		     File f1 = new File(fn);
-		     f1 = IvyFile.getCanonical(f1);
-		     fsmap.put(f1,FileState.ERRORS);
-		   }
-		}
-	       for (Map.Entry<File,FileState> ent : fsmap.entrySet()) {
-		  File f1 = ent.getKey();
-		  setFileState(f1.getPath(),ent.getValue());
-		}
-	       updateTestState();
-	     }
-	  }
-	 else if (cmd.equals("LAUNCHCONFIGEVENT")) {
-	    // handle changes to saved launch configurations
-	  }
-	 else if (cmd.equals("RESOURCE")) {
-	    for (Element de : IvyXml.children(e,"DELTA")) {
-	       Element re = IvyXml.getChild(de,"RESOURCE");
-	       String rtyp = IvyXml.getAttrString(re,"TYPE");
-	       if (rtyp != null && rtyp.equals("FILE")) {
-		  String fp = IvyXml.getAttrString(re,"LOCATION");
-		  IvyLog.logD("BATTM","Note " + fp + " CHANGED");
-		  setFileState(fp,FileState.CHANGED);
-		}
-	     }
-	    updateTestState();
-	  }
-	 else if (cmd.equals("STOP")) {
-	    serverDone();
-	  }
-	 else if (cmd.equals("EDIT")) {
-	    msg.replyTo();
-	  }
-	 else {
-	    msg.replyTo();
-	  }
+         if (cmd == null) return;
+         else if (cmd.equals("FILECHANGE")) {
+            setFileState(IvyXml.getAttrString(e,"FILE"),FileState.EDITED);
+            updateTestState();
+          }
+         else if (cmd.equals("FILEERROR")) {
+            FileState fs = null;
+            Element msgs = IvyXml.getChild(e,"MESSAGES");
+            if (msgs != null) {
+               for (Element pm : IvyXml.children(msgs,"PROBLEM")) {
+        	  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
+        	}
+             }
+            if (fs != null) {
+               setFileState(IvyXml.getAttrString(e,"FILE"),fs);
+               updateTestState();
+             }
+          }
+         else if (cmd.equals("EDITERROR")) {
+            FileState fs = FileState.EDITED;
+            Element msgs = IvyXml.getChild(e,"MESSAGES");
+            if (msgs != null) {
+               for (Element pm : IvyXml.children(msgs,"PROBLEM")) {
+        	  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
+        	}
+             }
+            setFileState(IvyXml.getAttrString(e,"FILE"),fs);
+            updateTestState();
+          }
+         else if (cmd.equals("BUILDDONE")) {
+            String proj = IvyXml.getAttrString(e,"PROJECT");
+            BattProject bp = project_set.get(proj);
+            if (bp == null) {
+              IvyLog.logD("BATTM","Can't find project " + proj);
+             }
+            if (bp != null) {
+               Map<File,FileState> fsmap = new HashMap<>();
+               for (File fp : bp.getSourceFiles()) {
+        	  fsmap.put(fp,FileState.STABLE);
+        	}
+               Element probs = IvyXml.getChild(e,"PROBLEMS");
+               for (Element pe : IvyXml.children(probs,"PROBLEM")) {
+        	  if (IvyXml.getAttrBool(pe,"ERROR")) {
+        	     String fn = IvyXml.getAttrString(pe,"FILE");
+        	     File f1 = new File(fn);
+        	     f1 = IvyFile.getCanonical(f1);
+        	     fsmap.put(f1,FileState.ERRORS);
+        	   }
+        	}
+               for (Map.Entry<File,FileState> ent : fsmap.entrySet()) {
+        	  File f1 = ent.getKey();
+        	  setFileState(f1.getPath(),ent.getValue());
+        	}
+               updateTestState();
+             }
+          }
+         else if (cmd.equals("LAUNCHCONFIGEVENT")) {
+            // handle changes to saved launch configurations
+          }
+         else if (cmd.equals("RESOURCE")) {
+            for (Element de : IvyXml.children(e,"DELTA")) {
+               Element re = IvyXml.getChild(de,"RESOURCE");
+               String rtyp = IvyXml.getAttrString(re,"TYPE");
+               if (rtyp != null && rtyp.equals("FILE")) {
+        	  String fp = IvyXml.getAttrString(re,"LOCATION");
+        	  IvyLog.logD("BATTM","Note " + fp + " CHANGED");
+        	  setFileState(fp,FileState.CHANGED);
+        	}
+             }
+            updateTestState();
+          }
+         else if (cmd.equals("STOP")) {
+            serverDone();
+          }
+         else if (cmd.equals("EDIT")) {
+            msg.replyTo();
+          }
+         else {
+            msg.replyTo();
+          }
        }
       catch (Throwable t) {
-	 IvyLog.logD("BATTM","Problem processing Eclipse command: " + t);
-	 t.printStackTrace();
+         IvyLog.logD("BATTM","Problem processing Eclipse command: " + t);
+         t.printStackTrace();
        }
     }
 

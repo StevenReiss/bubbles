@@ -578,32 +578,38 @@ private int getBlockIndent(boolean ismethodbody,boolean istypebody,boolean isinn
 
 private boolean isConditional()
 {
-   while (true) {
-      previousToken();
-      switch (cur_token) {
-	 // search for case labels,which consist of (possibly qualified) identifiers or numbers
-	 case IDENTIFIER :
-	 case KEYWORD :
-	 case TYPEKEY :
-	 case OTHER :			      // dots for qualified constants
-	 case DOT :
-	 case NUMBER :
-	 case CHARLITERAL :
-	 case STRING :
-	 case LONGSTRING :
-	 case CONTINUE :
-	 case PASS :
-	 case RAISE :
-	 case IMPORT :
-	 case PACKAGE :
-	 case THROWS :
-	    continue;
-	 case CASE:
-	 case DEFAULT :
-	    return false;
-	 default:
-	    return true;
+   BaleElement ce = cur_element; 
+   try {
+      while (true) {
+         previousToken();
+         switch (cur_token) {
+            // search for case labels,which consist of (possibly qualified) identifiers or numbers
+            case IDENTIFIER :
+            case KEYWORD :
+            case TYPEKEY :
+            case OTHER :			      // dots for qualified constants
+            case DOT :
+            case NUMBER :
+            case CHARLITERAL :
+            case STRING :
+            case LONGSTRING :
+            case CONTINUE :
+            case PASS :
+            case RAISE :
+            case IMPORT :
+            case PACKAGE :
+            case THROWS :
+               continue;
+            case CASE:
+            case DEFAULT :
+               return false;
+            default:
+               return true;
+          }
        }
+    }
+   finally {
+      setCurrent(ce);
     }
 }
 

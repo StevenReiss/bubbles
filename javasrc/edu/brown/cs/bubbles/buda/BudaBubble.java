@@ -1629,8 +1629,8 @@ private final class ChildManager extends ComponentAdapter implements FocusListen
    private void propogateFocus() {
       Component par = BudaBubble.this.getParent();
       if (par != null && par instanceof BudaBubbleArea) {
-	 BudaBubbleArea bba = (BudaBubbleArea) par;
-	 bba.setFocusBubble(BudaBubble.this,has_focus);
+         BudaBubbleArea bba = (BudaBubbleArea) par;
+         bba.setFocusBubble(BudaBubble.this,has_focus);
        }
     }
 
