@@ -185,6 +185,7 @@ private synchronized void setFileState(String file,FileState state)
 
 private synchronized void setErrorFiles(Collection<String> files)
 {
+   IvyLog.logD("BATTM","Error files " + files);
    for (Map.Entry<String,FileState> ent : file_states.entrySet()) {
       String f = ent.getKey();
       FileState fs = ent.getValue();
@@ -192,6 +193,7 @@ private synchronized void setErrorFiles(Collection<String> files)
       else if (fs == FileState.ERRORS) {
 	 setFileState(f,FileState.STABLE);
        }
+     IvyLog.logD("BATTM","File state " + file_states.get(f) + " " + f);
     }
 }
 
@@ -488,101 +490,101 @@ private final class CommandHandler implements MintHandler {
       String cmd = args.getArgument(0);
       Element e = msg.getXml();
       String rply = null;
-
+   
       IvyLog.logD("BATTM","RECEIVED COMMAND " + cmd + ": " + msg.getText());
-
+   
       try {
-	 if (cmd == null) return;
-	 else if (cmd.equals("SETMODE")) {
-	    String v = IvyXml.getAttrString(e,"VALUE");
-	    if (v.equals("DEMAND")) for_batt.setMode(TestMode.ON_DEMAND);
-	    else if (v.equals("ON_DEMAND")) for_batt.setMode(TestMode.ON_DEMAND);
-	    else if (v.equals("CONTINUOUS")) for_batt.setMode(TestMode.CONTINUOUS);
-	  }
-	 else if (cmd.equals("RUNTESTS")) {
-	    String v = IvyXml.getAttrString(e,"TYPE");
-	    if (v == null || v.equals("ALL")) {
-	       for_batt.runAllTests();
-	     }
-	    else if (v.equals("FAIL")) {
-	       Collection<BattTestCase> fails = for_batt.findFailingTests();
-	       for_batt.runSelectedTests(fails);
-	     }
-	    else if (v.equals("PENDING")) {
-	       Collection<BattTestCase> pends = for_batt.findPendingTests();
-	       for_batt.runSelectedTests(pends);
-	     }
-	    else {
-	       for_batt.runAllTests();
-	     }
-	    for_batt.doTests();
-	  }
-	 else if (cmd.equals("RUNTEST")) {
-	    Collection<BattTestCase> lst = new ArrayList<>();
-	    String t = IvyXml.getAttrString(e,"TEST");
-	    BattTestCase btc = null;
-	    if (t != null) btc = for_batt.findTestCase(t);
-	    if (btc != null) {
-	       lst.add(btc);
-	     }
-	    else {
-	       for (Element telt : IvyXml.children(e,"TEST")) {
-		  String t1 = IvyXml.getAttrString(telt,"NAME");
-		  if (t1 != null) {
-		     BattTestCase btc1 = for_batt.findTestCase(t1);
-		     if (btc1 != null) lst.add(btc1);
-		   }
-		}
-	     }
-	    if (!lst.isEmpty()) {
-	       for_batt.runSelectedTests(lst);
-	       for_batt.doTests();
-	     }
-	  }
-	 else if (cmd.equals("STOPTEST")) {
-	    for_batt.stopTests();
-	  }
-	 else if (cmd.equals("SHOWALL")) {
-	    rply = for_batt.showAllTests();
-	  }
-	 else if (cmd.equals("SHOW")) {
-	    String t = IvyXml.getAttrString(e,"TEST");
-	    BattTestCase btc = for_batt.findTestCase(t);
-	    if (btc != null) {
-	       Collection<BattTestCase> lst = new ArrayList<>();
-	       lst.add(btc);
-	       rply = for_batt.showSelectedTests(lst);
-	     }
-	  }
-	 else if (cmd.equals("ERRORS")) {
-	    Set<String> files = new HashSet<>();
-	    for (Element fe : IvyXml.children(e,"FILE")) {
-	       files.add(IvyXml.getText(fe));
-	     }
-	    setErrorFiles(files);
-	  }
-	 else if (cmd.equals("UPDATE")) {
-	    for_batt.updateTests();
-	  }
-	 else if (cmd.equals("PING")) {
-	    rply = "PONG";
-	  }
-	 else if (cmd.equals("MODE")) {
-	    rply = for_batt.getMode().toString();
-	  }
-	 else if (cmd.equals("EXIT")) {
-	    serverDone();
-	  }
+         if (cmd == null) return;
+         else if (cmd.equals("SETMODE")) {
+            String v = IvyXml.getAttrString(e,"VALUE");
+            if (v.equals("DEMAND")) for_batt.setMode(TestMode.ON_DEMAND);
+            else if (v.equals("ON_DEMAND")) for_batt.setMode(TestMode.ON_DEMAND);
+            else if (v.equals("CONTINUOUS")) for_batt.setMode(TestMode.CONTINUOUS);
+          }
+         else if (cmd.equals("RUNTESTS")) {
+            String v = IvyXml.getAttrString(e,"TYPE");
+            if (v == null || v.equals("ALL")) {
+               for_batt.runAllTests();
+             }
+            else if (v.equals("FAIL")) {
+               Collection<BattTestCase> fails = for_batt.findFailingTests();
+               for_batt.runSelectedTests(fails);
+             }
+            else if (v.equals("PENDING")) {
+               Collection<BattTestCase> pends = for_batt.findPendingTests();
+               for_batt.runSelectedTests(pends);
+             }
+            else {
+               for_batt.runAllTests();
+             }
+            for_batt.doTests();
+          }
+         else if (cmd.equals("RUNTEST")) {
+            Collection<BattTestCase> lst = new ArrayList<>();
+            String t = IvyXml.getAttrString(e,"TEST");
+            BattTestCase btc = null;
+            if (t != null) btc = for_batt.findTestCase(t);
+            if (btc != null) {
+               lst.add(btc);
+             }
+            else {
+               for (Element telt : IvyXml.children(e,"TEST")) {
+        	  String t1 = IvyXml.getAttrString(telt,"NAME");
+        	  if (t1 != null) {
+        	     BattTestCase btc1 = for_batt.findTestCase(t1);
+        	     if (btc1 != null) lst.add(btc1);
+        	   }
+        	}
+             }
+            if (!lst.isEmpty()) {
+               for_batt.runSelectedTests(lst);
+               for_batt.doTests();
+             }
+          }
+         else if (cmd.equals("STOPTEST")) {
+            for_batt.stopTests();
+          }
+         else if (cmd.equals("SHOWALL")) {
+            rply = for_batt.showAllTests();
+          }
+         else if (cmd.equals("SHOW")) {
+            String t = IvyXml.getAttrString(e,"TEST");
+            BattTestCase btc = for_batt.findTestCase(t);
+            if (btc != null) {
+               Collection<BattTestCase> lst = new ArrayList<>();
+               lst.add(btc);
+               rply = for_batt.showSelectedTests(lst);
+             }
+          }
+         else if (cmd.equals("ERRORS")) {
+            Set<String> files = new HashSet<>();
+            for (Element fe : IvyXml.children(e,"FILE")) {
+               files.add(IvyXml.getText(fe));
+             }
+            setErrorFiles(files);
+          }
+         else if (cmd.equals("UPDATE")) {
+            for_batt.updateTests();
+          }
+         else if (cmd.equals("PING")) {
+            rply = "PONG";
+          }
+         else if (cmd.equals("MODE")) {
+            rply = for_batt.getMode().toString();
+          }
+         else if (cmd.equals("EXIT")) {
+            serverDone();
+          }
        }
       catch (Throwable t) {
-	 IvyLog.logD("BATTM","Problem processing BATT command: " + t);
-	 t.printStackTrace();
+         IvyLog.logD("BATTM","Problem processing BATT command: " + t);
+         t.printStackTrace();
        }
-
+   
       if (rply != null) {
-	 rply = "<RESULT>" + rply + "</RESULT>";
+         rply = "<RESULT>" + rply + "</RESULT>";
        }
-
+   
       msg.replyTo(rply);
     }
 

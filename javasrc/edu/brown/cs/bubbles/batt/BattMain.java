@@ -744,10 +744,17 @@ private boolean initializeTests(BattProject bp,Set<String> testclss)
    
    Set<String> run = new HashSet<>();
    for (String s : bp.getClassNames()) {
-      if (error_classes.contains(s)) err = true;
+      if (error_classes.contains(s)) {
+         err = true;
+         IvyLog.logD("BATTM","Class " + s + " has errors");
+       }
       if (testclss == null || testclss.contains(s)) use = true;
       run.add(s);
     }
+   
+   IvyLog.logD("BATTM","Initialize test " + (testclss == null) + 
+         " " + use + " " + err + " " + bp.getClassNames().size());
+   
    if (err) {
       synchronized (this) {
          for (BattTestCase btc : test_cases.values()) {
@@ -757,7 +764,7 @@ private boolean initializeTests(BattProject bp,Set<String> testclss)
              }
           }
        }
-      return false;
+      use = false;
     }
    
    return use;
