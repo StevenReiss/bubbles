@@ -59,8 +59,8 @@
 <entry key="Bddt.console.height">200</entry>
 <entry key="Bddt.perf.width">600</entry>
 <entry key="Bddt.perf.height">200</entry>
-<entry key="Bddt.break.width">320</entry>
-<entry key="Bddt.break.height">130</entry>
+<entry key="Bddt.break.width">400</entry>
+<entry key="Bddt.break.height">160</entry>
 <entry key="Bddt.evaluation.width">400</entry>
 <entry key="Bddt.evaluation.height">130</entry>
 <entry key="Bddt.interaction.width">320</entry>

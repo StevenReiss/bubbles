@@ -209,8 +209,8 @@ String BDDT_PERF_BOTTOM_COLOR_PROP = "Bddt.PerfBottomColor";
  * Initial size of the breakpoint bubble
  **/
 Dimension BDDT_BREAKPOINT_INITIAL_SIZE = new Dimension(
-      BDDT_PROPERTIES.getInt("Bddt.break.width",320),
-      BDDT_PROPERTIES.getInt("Bddt.break.height",130));
+      BDDT_PROPERTIES.getInt("Bddt.break.width",400),
+      BDDT_PROPERTIES.getInt("Bddt.break.height",160));
 
 /**
  * Minimum width of columns
@@ -401,6 +401,8 @@ String BDDT_LAUNCH_CONFIG_PREFIX = "zzzzzz#@Launch Configurations.";
  **/
 
 String BDDT_PROCESS_PREFIX = "zzzzzz#@Processes.";
+
+
 
 
 

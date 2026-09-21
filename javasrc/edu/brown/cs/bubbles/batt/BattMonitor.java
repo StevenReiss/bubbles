@@ -186,6 +186,7 @@ private synchronized void setFileState(String file,FileState state)
 private synchronized void setErrorFiles(Collection<String> files)
 {
    IvyLog.logD("BATTM","Error files " + files);
+   Set<String> clear = new HashSet<>();
    for (Map.Entry<String,FileState> ent : file_states.entrySet()) {
       String f = ent.getKey();
       FileState fs = ent.getValue();
@@ -193,7 +194,14 @@ private synchronized void setErrorFiles(Collection<String> files)
       else if (fs == FileState.ERRORS) {
 	 setFileState(f,FileState.STABLE);
        }
+      else if (fs == FileState.EDITED) {
+         clear.add(f);
+       }
      IvyLog.logD("BATTM","File state " + file_states.get(f) + " " + f);
+    }
+   
+   if (!clear.isEmpty()) {
+      for_batt.removeErrors(clear);
     }
 }
 
@@ -410,26 +418,26 @@ private final class EclipseHandler implements MintHandler {
             String proj = IvyXml.getAttrString(e,"PROJECT");
             BattProject bp = project_set.get(proj);
             if (bp == null) {
-              IvyLog.logD("BATTM","Can't find project " + proj);
+               IvyLog.logD("BATTM","Can't find project " + proj);
              }
             if (bp != null) {
                Map<File,FileState> fsmap = new HashMap<>();
                for (File fp : bp.getSourceFiles()) {
-        	  fsmap.put(fp,FileState.STABLE);
-        	}
+                  fsmap.put(fp,FileState.STABLE);
+                }
                Element probs = IvyXml.getChild(e,"PROBLEMS");
                for (Element pe : IvyXml.children(probs,"PROBLEM")) {
-        	  if (IvyXml.getAttrBool(pe,"ERROR")) {
-        	     String fn = IvyXml.getAttrString(pe,"FILE");
-        	     File f1 = new File(fn);
-        	     f1 = IvyFile.getCanonical(f1);
-        	     fsmap.put(f1,FileState.ERRORS);
-        	   }
-        	}
+                  if (IvyXml.getAttrBool(pe,"ERROR")) {
+                     String fn = IvyXml.getAttrString(pe,"FILE");
+                     File f1 = new File(fn);
+                     f1 = IvyFile.getCanonical(f1);
+                     fsmap.put(f1,FileState.ERRORS);
+                   }
+                }
                for (Map.Entry<File,FileState> ent : fsmap.entrySet()) {
-        	  File f1 = ent.getKey();
-        	  setFileState(f1.getPath(),ent.getValue());
-        	}
+                  File f1 = ent.getKey();
+                  setFileState(f1.getPath(),ent.getValue());
+                }
                updateTestState();
              }
           }

@@ -401,9 +401,13 @@ private class BreakpointTable extends JTable {
       setDefaultRenderer(Integer.class, new BreakpointTableRenderer(getDefaultRenderer(Integer.class)));
       setDefaultRenderer(Boolean.class, new BreakpointTableRenderer(getDefaultRenderer(Boolean.class)));
       getColumnModel().getColumn(0).setPreferredWidth(BDDT_BREAKPOINT_COLUMN_WIDTHS[0]);
+      getColumnModel().getColumn(0).setMaxWidth(BDDT_BREAKPOINT_COLUMN_WIDTHS[0]);
       getColumnModel().getColumn(1).setPreferredWidth(BDDT_BREAKPOINT_COLUMN_WIDTHS[1]);
       getColumnModel().getColumn(2).setPreferredWidth(BDDT_BREAKPOINT_COLUMN_WIDTHS[2]);
+      getColumnModel().getColumn(2).setMaxWidth(BDDT_BREAKPOINT_COLUMN_WIDTHS[2]);
       getColumnModel().getColumn(3).setPreferredWidth(BDDT_BREAKPOINT_COLUMN_WIDTHS[3]);
+      getColumnModel().getColumn(3).setMaxWidth(BDDT_BREAKPOINT_COLUMN_WIDTHS[3]);
+      
       setOpaque(false);
       setToolTipText("");
       setAutoCreateRowSorter(true);
