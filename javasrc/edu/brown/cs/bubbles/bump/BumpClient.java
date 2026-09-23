@@ -2161,7 +2161,14 @@ public String getFullyQualifiedName(String proj,File file,int start,int end,long
 }
 
 
-
+public List<BumpLocation> findByLineOffset(String proj,File file,int line,int offset)
+{
+   String flds = "FILE='" + file.getPath() + "' LINE='" + line + "' OFFSET='" + offset + "'";
+   Element xml = getXmlReply("FINDBYLINE",proj,flds,null,0);
+   BoardLog.logD("BUMP","Find by line returned " + IvyXml.convertXmlToString(xml));
+   
+   return getSearchResults(proj,xml,false);
+}
 
 /********************************************************************************/
 /*										*/

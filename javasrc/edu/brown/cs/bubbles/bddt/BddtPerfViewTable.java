@@ -41,7 +41,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
-
+import edu.brown.cs.bubbles.bump.BumpLocation;
 import edu.brown.cs.ivy.file.IvyFormat;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -289,9 +289,9 @@ private class ClickHandler extends BoardMouser {
          fct += "." + pn.getMethodName();
          int lno = pn.getLineNumber();
          String file = pn.getFileName();
-   
+         
          BudaBubble bb = null;
-   
+         
          BaleFactory bf = BaleFactory.getFactory();
          if (lno > 0 && file != null) {
             FileSystemView fsv = BoardFileSystemView.getFileSystemView();
@@ -299,25 +299,34 @@ private class ClickHandler extends BoardMouser {
             if (launch_control.fileExists(f)) {
                BaleConstants.BaleFileOverview bfo = bf.getFileOverview(null,f);
                if (bfo != null) {
-        	  int loff = bfo.findLineOffset(lno);
-        	  int eoff = bfo.mapOffsetToEclipse(loff);
-        	  BassFactory bsf = BassFactory.getFactory();
-        	  BassName bn = bsf.findBubbleName(f,eoff);
-        	  if (bn != null) bb = bn.createBubble();
-               }
+                  int loff = bfo.findLineOffset(lno);
+                  int eoff = bfo.mapOffsetToEclipse(loff);
+                  BumpClient bc = BumpClient.getBump();
+                  List<BumpLocation> locs = bc.findByLineOffset(null,f,
+                        lno,eoff);
+                  if (locs != null && !locs.isEmpty()) {
+                     BaleFactory bale = BaleFactory.getFactory();
+                     bale.createBubbleStack(perf_table,null,
+                           null,false,locs,BudaLinkStyle.NONE);
+                     return;
+                   }
+                  BassFactory bsf = BassFactory.getFactory();
+                  BassName bn = bsf.findBubbleName(f,eoff);
+                  if (bn != null) bb = bn.createBubble();
+                }
              }
           }
          if (bb == null) {
             bb = bf.createMethodBubble(launch_control.getProject(), fct);
           }
-   
+         
          if (bb == null) return;
          BudaBubbleArea bba = BudaRoot.findBudaBubbleArea(perf_table);
          if (bba != null) {
             bba.addBubble(bb,perf_table,null,PLACEMENT_LOGICAL|PLACEMENT_MOVETO);
           }
        }
-    }
+   }
 
 }	// end of inner class ClickHandler
 

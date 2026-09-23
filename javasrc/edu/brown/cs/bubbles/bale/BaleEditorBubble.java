@@ -50,6 +50,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
+import javax.swing.text.View;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -147,6 +148,19 @@ BaleEditorBubble(BaleFragmentEditor bfe)
    DisplayMode dm = gd.getDisplayMode();
    maxwd = Math.min(maxwd, dm.getWidth()/2);
    maxht = Math.min(maxht, dm.getHeight()*2/3);
+   
+   if (BALE_PROPERTIES.getBoolean("Bale.auto.expand")) {
+      BaleEditorPane target = bfe.getEditor();
+      javax.swing.plaf.TextUI tui = target.getUI();
+      View root = tui.getRootView(target);
+      View v1 = root.getView(0);
+      int vx = (int) (Math.ceil(v1.getMaximumSpan(View.X_AXIS)+0.5));
+      int vy = (int) (Math.ceil(v1.getMaximumSpan(View.Y_AXIS)+0.5));
+      vy = Math.min(vy,800);
+      maxwd = vx;
+      maxht = vy;
+      maxbht = Math.max(maxht,BALE_MAX_INITIAL_BUBBLE_HEIGHT);
+    }
 
    bd.baleWriteLock();
    try {

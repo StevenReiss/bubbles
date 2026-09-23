@@ -208,16 +208,19 @@ static void checkUpdate(String jarfile,List<String> javaargs)
    try {
       InputStream vins = BoardUpdate.class.getClassLoader().getResourceAsStream(VERSION_RESOURCE);
       Element ve = getVersionXml(vins);
+      System.err.println("BOARD: This version XML: " + ve);
       if (ve == null) return;
       version_data = getMajor(ve) + "." + getMinor(ve) + " @ " + getBubblesDir(ve);
       vins.close();
       bubbles_dir = getBubblesDir(ve);
 
       URL u = new URI(bubbles_dir + VERSION_URL).toURL();
+      System.err.println("BOARD: Version url " + u);
       HttpURLConnection huc = (HttpURLConnection) u.openConnection(update_proxy);
       huc.setInstanceFollowRedirects(true);
       InputStream uins = huc.getInputStream();
       Element ue = getVersionXml(uins);
+      System.err.println("BOARD: Active version XML: " + ue);
       if (ue == null) {
          System.err.println("BOARD: Can't connect to bubbles to get version: " + u);
          return;

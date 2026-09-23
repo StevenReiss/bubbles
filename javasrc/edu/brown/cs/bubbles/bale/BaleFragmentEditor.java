@@ -268,8 +268,12 @@ void setInitialSize(Dimension d)
       eps = editor_pane.getPreferredSize();
    }
    
-   if (eps0.height > 400 && eps.height < 50) {
+   if ((eps0.height > 400 && eps.height < 50) || 
+         BALE_PROPERTIES.getBoolean("Bale.auto.expand")) {
       String nm = "RemoveCodeElisionAction";    // RemoveElisionAction
+      if (BALE_PROPERTIES.getBoolean("Bale.auto.expand")) {
+         nm = "RemoveElisionAction";
+       }
       Action act = BaleEditorKit.findAction(nm);
       if (act != null) {
          ActionEvent evt = new ActionEvent(editor_pane,0,nm);

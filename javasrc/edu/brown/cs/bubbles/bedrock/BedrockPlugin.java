@@ -896,6 +896,13 @@ private String handleCommand(String cmd,String proj,Element xml) throws BedrockE
 	       IvyXml.getAttrString(xml,"KEY"),
 	       IvyXml.getAttrString(xml,"FILE"), xw);
 	 break;
+      case "FINDBYLINE" :
+         bedrock_editor.findByLine(proj,
+               IvyXml.getAttrString(xml,"BID","*"),
+	       IvyXml.getAttrString(xml,"FILE"),
+	       IvyXml.getAttrInt(xml,"LINE"),
+               IvyXml.getAttrInt(xml,"OFFSET"),xw);
+         break;
       case "CALLPATH" :
 	 bedrock_call.getCallPath(proj,IvyXml.getAttrString(xml,"FROM"),
 	       IvyXml.getAttrString(xml,"TO"),

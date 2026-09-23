@@ -36,7 +36,7 @@ import edu.brown.cs.bubbles.buda.BudaCursorManager;
 import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
-
+import edu.brown.cs.bubbles.bump.BumpLocation;
 import edu.brown.cs.ivy.swing.SwingGridPanel;
 import edu.brown.cs.ivy.xml.IvyXml;
 
@@ -66,6 +66,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.List;
 
 
 class BddtSwingPanel extends BudaBubble implements BddtConstants, BumpConstants, BudaConstants,
@@ -530,6 +531,15 @@ private class StackNode extends CommonNode {
          if (bfo != null) {
             int loff = bfo.findLineOffset(line_number);
             int eoff = bfo.mapOffsetToEclipse(loff);
+            BumpClient bc = BumpClient.getBump();
+            List<BumpLocation> locs0 = bc.findByLineOffset(null,file_name,
+                  line_number,eoff);
+            if (locs0 != null && !locs0.isEmpty()) {
+               BaleFactory bale = BaleFactory.getFactory();
+               bale.createBubbleStack(BddtSwingPanel.this,null,null,false,
+                     locs0,BudaLinkStyle.NONE);
+               return;
+             }
             BassFactory bsf = BassFactory.getFactory();
             BassName bn = bsf.findBubbleName(file_name,eoff);
             if (bn != null) bb = bn.createBubble();

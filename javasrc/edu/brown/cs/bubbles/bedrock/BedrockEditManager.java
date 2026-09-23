@@ -777,8 +777,6 @@ void renameResource(String proj,String bid,String file,String newname,IvyXmlWrit
 }
 
 
-
-
 /********************************************************************************/
 /*										*/
 /*	Move refactoring commands						*/
@@ -906,7 +904,6 @@ void moveElement(String proj,String bid,String what,
       throw new BedrockException("Problem with move",e);
    }
 }
-
 
 
 
@@ -1583,7 +1580,6 @@ void removePrivateBuffer(String proj,String bid,String file) throws BedrockExcep
 
 
 
-
 /********************************************************************************/
 /*										*/
 /*	Delete commands 							*/
@@ -1683,6 +1679,40 @@ void handleDelete(String proj,String what,String path)
 }
 
 
+/********************************************************************************/
+/*                                                                              */
+/*      Find by line command                                                    */
+/*                                                                              */
+/********************************************************************************/
+
+void findByLine(String proj,String bid,String file,int line,int offset,IvyXmlWriter xw)
+   throws BedrockException
+{
+   FileData fd = findFile(proj,file,bid);
+   if (fd == null) return;
+   if (offset < 0) {
+      CompilationUnit cu = fd.getAstRoot(bid);
+      offset = cu.getPosition(line,0);
+    }
+   if (offset < 0) return;
+   
+   ICompilationUnit icu = fd.getSearchUnit();
+   IJavaElement elt = null;
+   try {
+      elt = icu.getElementAt(offset);
+    }
+   catch (JavaModelException e) {
+      BedrockPlugin.logE("Problem getting java unit " + file + " " + line,e);
+      return;
+    }
+   if (elt == null) {
+      BedrockPlugin.logE("No element found " + file + " " + line);
+      return;
+    }
+   
+   BedrockUtil.outputJavaElement(elt,xw);
+}
+   
 
 /********************************************************************************/
 /*										*/
@@ -1980,7 +2010,6 @@ private synchronized FileData findFile(String proj,String file,String bid)
     }
    
    if (proj == null && file.contains("BUBBLES_")) {
-      
       proj = our_plugin.getProjectManager().getDefaultProject();
     }
    
@@ -2199,7 +2228,7 @@ private class FileData implements IBufferChangedListener {
 
    FileData(String proj,String nm,ICompilationUnit cu) {
       try {
-	 for_project = our_plugin.getProjectManager().findProjectForFile(proj,nm);
+         for_project = our_plugin.getProjectManager().findProjectForFile(proj,nm);
        }
       catch (BedrockException e) { }
       if (for_project == null) BedrockPlugin.logE("File " + nm + " has no associated project");
@@ -2217,18 +2246,18 @@ private class FileData implements IBufferChangedListener {
       copy_owner = new DefaultCopyOwner(this);
       copy_owner.suppressErrors(true);
       try {
-	 working_unit = comp_unit.getWorkingCopy(copy_owner,null);
-	 default_buffer = working_unit.getBuffer();
-	 default_buffer.addBufferChangedListener(this);
+         working_unit = comp_unit.getWorkingCopy(copy_owner,null);
+         default_buffer = working_unit.getBuffer();
+         default_buffer.addBufferChangedListener(this);
        }
       catch (JavaModelException e) {
-	 BedrockPlugin.logE("Problem creating working copy: " + e,e);
+         BedrockPlugin.logE("Problem creating working copy: " + e,e);
        }
       catch (Throwable t) {
-	 throw new Error("Problem getting editable unit: " + t,t);
+         throw new Error("Problem getting editable unit: " + t,t);
        }
       finally {
-	 copy_owner.suppressErrors(false);
+         copy_owner.suppressErrors(false);
        }
     }
 
@@ -2255,9 +2284,9 @@ private class FileData implements IBufferChangedListener {
     }
 
    CompilationUnit getAstRoot(String bid) {
-      if (buffer_map.get(bid) != null) {
-	 PrivateBufferData bd = buffer_map.get(bid);
-	 return bd.getAstRoot();
+      if (bid != null && buffer_map.get(bid) != null) {
+         PrivateBufferData bd = buffer_map.get(bid);
+         return bd.getAstRoot();
        }
       return getDefaultRoot(bid);
     }

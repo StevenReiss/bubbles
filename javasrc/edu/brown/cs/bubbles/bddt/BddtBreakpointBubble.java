@@ -43,6 +43,7 @@ import edu.brown.cs.bubbles.buda.BudaRoot;
 import edu.brown.cs.bubbles.buda.BudaXmlWriter;
 import edu.brown.cs.bubbles.bump.BumpClient;
 import edu.brown.cs.bubbles.bump.BumpConstants;
+import edu.brown.cs.bubbles.bump.BumpLocation;
 import edu.brown.cs.bubbles.bump.BumpConstants.BumpBreakpointHandler;
 
 import javax.swing.AbstractAction;
@@ -289,6 +290,14 @@ private void showBubble(File f,int line)
    if (bfo == null) return;
    int loff = bfo.findLineOffset(line);
    int eoff = bfo.mapOffsetToEclipse(loff);
+   
+   BumpClient bc = BumpClient.getBump();
+   List<BumpLocation> locs0 = bc.findByLineOffset(null,f,line,eoff);
+   if (locs0 != null && !locs0.isEmpty()) {
+      BaleFactory bale = BaleFactory.getFactory();
+      bale.createBubbleStack(this,null,null,false,locs0,BudaLinkStyle.NONE);
+      return;
+    }
 
    BassFactory bsf = BassFactory.getFactory();
    BassName bn = bsf.findBubbleName(f, eoff);
