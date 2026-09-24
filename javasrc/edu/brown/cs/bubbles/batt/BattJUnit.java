@@ -101,6 +101,7 @@ private String		single_test;
 private Map<Description,JunitTest> test_cases;
 private PrintStream     log_stream;
 private boolean         log_debug;
+private boolean         use_stderr;
 
 private static final JunitTestStatus STATUS_RUNNING;
 private static final JunitTestStatus STATUS_UNKNOWN;
@@ -152,6 +153,7 @@ private BattJUnit(String [] args)
 {
    log_stream = System.err;
    log_debug = false;
+   use_stderr = true;
 
    list_only = false;
    class_set = null;
@@ -206,21 +208,25 @@ private void scanArgs(String [] args)
             log_debug = true;
           }
          else if (args[i].startsWith("-O")) {                           // -Output
-//          useStdErr(true);
+            use_stderr = true;
           }
          else if (args[i].startsWith("-L") && i+1 < args.length) {      // -L logfile
             File logf = new File(args[++i]);
-            try (FileOutputStream fos = new FileOutputStream(logf,true)) {
+            try {
+               FileOutputStream fos = new FileOutputStream(logf,true);
                log_stream = new PrintStream(fos,true);
+               System.err.println("BATTJ: Log file set to " + logf);
              }
-            catch (IOException e) { }
+            catch (IOException e) { 
+               System.err.println("BATTJ: Problem opening log file " + e);
+               logE("Problem opening log file",e);
+             }
           }
 	 else badArgs();
        }
       else if (args[i].startsWith("-test") && i+1 < args.length) {   // -test <testname>
 	 single_test = args[++i];
        }
-     
       else {
 	 havecls = true;
 	 String clsnm = args[i];
@@ -464,6 +470,7 @@ private static String fixHost(String h)
 
 private void badArgs()
 {
+   System.err.println("BATTJ: battjunit [-list] [-o output] class...");
    logI("battjunit [-list] [-o output] class...");
 }
 
@@ -738,26 +745,26 @@ private String shortenTrace(String t)
 private void logD(String msg)
 {
    if (log_debug) {
-      log_stream.println("BATTJ:D: " + msg);
+      log("BATTJ:D: " + msg);
     }
 }
 
 private void logI(String msg)
 {
-   log_stream.println("BATTJ:I: " + msg);
+   log("BATTJ:I: " + msg);
 }
 
 
 
 private void logE(String msg)
 {
-   log_stream.println("BATTJ:E: " + msg);
+   log("BATTJ:E: " + msg);
 }
 
 
 private void logW(String msg)
 {
-   log_stream.println("BATTJ:W: " + msg);
+   log("BATTJ:W: " + msg);
 }
 
 
@@ -766,9 +773,24 @@ private void logE(String msg,Throwable t)
    logE(msg);
    if (t != null) {
       t.printStackTrace(log_stream);
+      log_stream.flush();
+      if (use_stderr && log_stream != System.err) {
+         t.printStackTrace();
+       }
     }
 }
 
+private void log(String msg)
+{
+   log_stream.println(msg);
+   boolean fg = log_stream.checkError();
+   if (fg) {
+      System.err.println("Error on log file");
+    }
+   if (use_stderr && log_stream != System.err) {
+      System.err.println(msg);
+    }
+}
 
 /********************************************************************************/
 /*										*/
@@ -827,13 +849,13 @@ private class TestListener extends RunListener {
       noteStart(d);
       logD("TEST " + bts + " " + jt.getDescription() + " " + bts.getType());
       switch (bts.getType()) {
-	 case FAILURE :
-	 case SUCCESS :
-	 case LISTING :
-	    if (d.isTest()) outputSingleTest(jt);
-	    break;
-	 default:
-	    break;
+         case FAILURE :
+         case SUCCESS :
+         case LISTING :
+            if (d.isTest()) outputSingleTest(jt);
+            break;
+         default:
+            break;
        }
     }
 
@@ -841,50 +863,57 @@ private class TestListener extends RunListener {
       logD("IGNORED " + d);
       addTestCase(d,STATUS_IGNORED);
     }
+   
+   @Override public void testAssumptionFailure(Failure f) {
+      logD("Assumption failed " + f);
+      testFailure(f);
+    }
 
    @Override public void testFinished(Description d) {
       logD("FINISH " + d + " " + test_cases.containsKey(d));
-
+   
       JunitTest jt = test_cases.get(d);
       if (jt == null) {
-	 logD("No test case found");
-	 return;
+         logD("No test case found");
+         return;
        }
       noteFinish(d);
-
+   
       JunitTestStatus bts = getTestStatus(d);
-      logD("STATUS " + bts.getType() + " " + result_stream
-	       );
-
+      logD("STATUS " + bts.getType() + " " + result_stream);
+   
       switch (bts.getType()) {
-	 case IGNORED :
-	 case LISTING :
-	    break;
-	 case FAILURE :
-	    setTestStatus(d,STATUS_FAILURE);
-	    break;
-	 default :
-	    setTestStatus(d,STATUS_SUCCESS);
-	    break;
+         case IGNORED :
+         case LISTING :
+            break;
+         case FAILURE :
+            setTestStatus(d,STATUS_FAILURE);
+            break;
+         default :
+            setTestStatus(d,STATUS_SUCCESS);
+            break;
        }
-
+   
       outputSingleTest(jt);
     }
 
    @Override public void testRunStarted(Description d) {
+      logD("Test run started " + d);
    // System.setSecurityManager(new NoExitManager());
     }
 
-   @SuppressWarnings("removal")
    @Override public void testRunFinished(Result r) {
-      System.setSecurityManager(null);
+//    System.setSecurityManager(null);
       noteDone();
     }
-
+   
+   
+   
+   
+   
+   
    @Override public void testFailure(Failure f) {
       logD("Test failure: " + f);
-      // Throwable t = f.getException();
-      // if (t != null) t.printStackTrace();
       setTestStatus(f.getDescription(),STATUS_FAILURE);
    
       if (f.getMessage() != null && bad_messages.contains(f.getMessage())) {
@@ -900,7 +929,7 @@ private class TestListener extends RunListener {
       else {
          logD("FAIL " + f.getTestHeader() + " " +
                f.getDescription() + " " + f.getException() + " " +
-               f.getMessage() + "\nTRACE: " + f.getTrace());
+               f.getMessage() + "\n   TRACE: " + f.getTrace());
          addTestCase(f.getDescription(),new JunitTestStatus(f));
        }
    
@@ -932,14 +961,13 @@ private static class JunitTest {
     }
 
    Description getDescription() 		{ return test_info; }
-   JunitTestStatus getStatus()			{ return test_status; }
-   void setStatus(JunitTestStatus sts)	
-   {
+   JunitTestStatus getStatus()		{ return test_status; }
+   void setStatus(JunitTestStatus sts) {
       if (sts == STATUS_FAILURE) {
-	 if (test_status.getType() == StatusType.FAILURE) return;
+         if (test_status.getType() == StatusType.FAILURE) return;
        }
       test_status = sts;
-   }
+    }
 
 }	// end of inner class JunitTest
 
@@ -966,6 +994,8 @@ private static class JunitTestStatus {
    @Override public String toString()		{ return status_type.toString(); }
 
 }	// end of inner class JunitTestStatus
+
+
 
 
 

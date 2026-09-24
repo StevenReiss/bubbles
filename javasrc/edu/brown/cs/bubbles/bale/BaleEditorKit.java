@@ -2683,13 +2683,13 @@ private static class ExpandXYAction extends TextAction {
       BudaBubble bb = BudaRoot.findBudaBubble(target);
       if (bb == null) return;
       Dimension d1 = bb.getSize();
-
+   
       if (vx > d1.width || vy >= d1.height) {
-	 d1.width += Math.max(0,vx - d1.width + 10);
-	 d1.height += Math.max(0, vy - d1.height + 30);
-	 bb.setSize(d1);
+         d1.width += Math.max(0,vx - d1.width + 10);
+         d1.height += Math.max(0, vy - d1.height + 30);
+         bb.setSize(d1);
        }
-
+   
       if (code_only) remove_code_elision_action.actionPerformed(e);
       else remove_elision_action.actionPerformed(e);
    }

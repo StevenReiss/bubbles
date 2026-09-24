@@ -133,12 +133,16 @@ void removeFile(BstyleFile bf)
 
 BstyleFile findFile(String filename)
 {
+   if (filename == null) return null;
+   
    return findFile(new File(filename));
 }
 
 
 BstyleFile findFile(File f)
 {
+   if (f == null) return null;
+
    File fc = IvyFile.getCanonical(f);
    
    return file_map.get(fc);

@@ -71,9 +71,11 @@ private BstyleChecker bstyle_checker;
 
 private BstyleMain(String [] args) 
 {
-   our_monitor = null;
+   IvyLog.setupLogging("BSTYLE",false);
+   IvyLog.useStdErr(false);
+   IvyLog.setLogLevel(IvyLog.LogLevel.INFO);
    
-   // setup logger
+   our_monitor = null;
    
    scanArgs(args);
 }

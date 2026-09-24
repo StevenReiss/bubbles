@@ -99,6 +99,7 @@ private IvyExec 	current_test;
 private long		last_report;
 private Object		message_lock;
 private File            log_file;
+private File            junit_log;
 
 
 
@@ -139,6 +140,8 @@ private BattMain(String [] args)
    current_test = null;
    last_report = 0;
    message_lock = new Object();
+   log_file = null;
+   junit_log = null;
 
    junit_jar = null;
    String s = System.getProperty("java.class.path");
@@ -150,6 +153,8 @@ private BattMain(String [] args)
 	 break;
        }
     }
+   
+   java_args.add("-ea");
 
    scanArgs(args);
    
@@ -213,8 +218,10 @@ private void scanArgs(String [] args)
             IvyLog.useStdErr(true);
           }
          else if (args[i].startsWith("-L") && i+1 < args.length) {      // -L logfile
-            log_file = new File(args[++i]);
+            String path = args[++i];
+            log_file = new File(path);
             IvyLog.setLogFile(log_file);
+            junit_log = log_file;
           }
 	 else badArgs();
        }
@@ -659,9 +666,9 @@ private void processRun(boolean listonly,Set<String> testclss)
       else args.add("-output");
       args.add(fnm);
       
-      if (log_file != null) {
+      if (junit_log != null) {
          args.add("-L");
-         args.add(log_file.getPath());
+         args.add(junit_log.getPath());
        }
       if (IvyLog.useStdErr()) { 
          args.add("-O");
@@ -867,13 +874,13 @@ private boolean runOneTest(BattTestCase testcase)
 
       args.add("-cp");
       args.add(buf.toString());
-//	args.add("-verbose");
+//    args.add("-verbose");
       
       args.add("edu.brown.cs.bubbles.batt.BattJUnit");
       
-      if (log_file != null) {
+      if (junit_log != null) {
          args.add("-L");
-         args.add(log_file.getPath());
+         args.add(junit_log.getPath());
        }
       if (IvyLog.useStdErr()) {
          args.add("-O");

@@ -501,10 +501,10 @@ private static class IndexTable {
 
    void outputCounts(XMLStreamWriter xw) throws XMLStreamException {
       for (int i = 0; i < the_table.length; ++i) {
-	 if (the_table[i] != null && the_table[i] instanceof RtMethod) {
-	    RtMethod rm = (RtMethod) the_table[i];
-	    rm.outputCounts(xw);
-	  }
+         if (the_table[i] != null && the_table[i] instanceof RtMethod) {
+            RtMethod rm = (RtMethod) the_table[i];
+            rm.outputCounts(xw);
+          }
        }
     }
 

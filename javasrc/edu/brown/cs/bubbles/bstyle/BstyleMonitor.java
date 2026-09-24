@@ -366,7 +366,7 @@ private void handleBuildDone(Element xml)
    Element probs = IvyXml.getChild(xml,"PROBLEMS");
    for (Element pe : IvyXml.children(probs,"PROBLEM")) {
       if (IvyXml.getAttrBool(pe,"ERROR")) {
-         String fnm = IvyXml.getAttrString(pe,"FILE");
+         String fnm = IvyXml.getTextElement(pe,"FILE");
          BstyleFile bf = bstyle_main.getFileManager().findFile(fnm);
          if (bf == null) continue;
          boolean chng = bf.setHasErrors(true);
@@ -511,71 +511,76 @@ private final class EclipseHandler implements MintHandler {
       String disp = msg.getText().replace(":E:",";E;");
       IvyLog.logD("BSTYLE","Message from eclipse: " + cmd + " " + disp);
       
-      switch (cmd) {
-         case "PING" :
-         case "PING1" :
-         case "PING2" :
-         case "PING3" :
-            msg.replyTo("<PONG/>");
-            break;
-         case "EDITERROR" :
-         case "FILEERROR" :
-            try {
-               handleErrors(IvyXml.getAttrString(e,"PROJECT"),
-                     IvyXml.getAttrString(e,"FILE"),
-                     IvyXml.getChild(e,"MESSAGES"));
-             }
-            catch (Throwable t) {
-               IvyLog.logE("BSTYLE","Problem handling errors",t);
-             }
-            break;
-         case "EDIT" :
-            String bid = IvyXml.getAttrString(e,"BID");
-            if (bid != null && !bid.equals(SOURCE_ID)) {
+      try {
+         switch (cmd) {
+            case "PING" :
+            case "PING1" :
+            case "PING2" :
+            case "PING3" :
+               msg.replyTo("<PONG/>");
+               break;
+            case "EDITERROR" :
+            case "FILEERROR" :
+               try {
+                  handleErrors(IvyXml.getAttrString(e,"PROJECT"),
+                        IvyXml.getAttrString(e,"FILE"),
+                        IvyXml.getChild(e,"MESSAGES"));
+                }
+               catch (Throwable t) {
+                  IvyLog.logE("BSTYLE","Problem handling errors",t);
+                }
+               break;
+            case "EDIT" :
+               String bid = IvyXml.getAttrString(e,"BID");
+               if (bid != null && !bid.equals(SOURCE_ID)) {
+                  msg.replyTo();
+                  break;
+                }
+               String txt = IvyXml.getText(e);
+               boolean complete = IvyXml.getAttrBool(e,"COMPLETE");
+               boolean remove = IvyXml.getAttrBool(e,"REMOVE");
+               if (complete) {
+                  byte [] data = IvyXml.getBytesElement(e,"CONTENTS");
+                  if (data != null) txt = new String(data);
+                  else remove = true;
+                }
+               try {
+                  handleEdit(msg,bid,
+                        new File(IvyXml.getAttrString(e,"FILE")),
+                        IvyXml.getAttrInt(e,"LENGTH"),
+                        IvyXml.getAttrInt(e,"OFFSET"),
+                        complete,remove,txt);
+                }
+               catch (Throwable t) {
+                  IvyLog.logE("BSTYLE","Problem handling edits",t);
+                }
+               msg.replyTo("<OK/>");
+               break;
+            case "RESOURCE" :
+               for (Element re : IvyXml.children(e,"DELTA")) {
+                  handleResourceChange(re);
+                }
+               break;
+            case "PROGRESS" :
                msg.replyTo();
                break;
-             }
-            String txt = IvyXml.getText(e);
-            boolean complete = IvyXml.getAttrBool(e,"COMPLETE");
-            boolean remove = IvyXml.getAttrBool(e,"REMOVE");
-            if (complete) {
-               byte [] data = IvyXml.getBytesElement(e,"CONTENTS");
-               if (data != null) txt = new String(data);
-               else remove = true;
-             }
-            try {
-               handleEdit(msg,bid,
-                     new File(IvyXml.getAttrString(e,"FILE")),
-                     IvyXml.getAttrInt(e,"LENGTH"),
-                     IvyXml.getAttrInt(e,"OFFSET"),
-                     complete,remove,txt);
-             }
-            catch (Throwable t) {
-               IvyLog.logE("BSTYLE","Problem handling edits",t);
-             }
-            msg.replyTo("<OK/>");
-            break;
-         case "RESOURCE" :
-            for (Element re : IvyXml.children(e,"DELTA")) {
-               handleResourceChange(re);
-             }
-            break;
-         case "PROGRESS" :
-            msg.replyTo();
-            break;
-         case "BUILDDONE" :
-            handleBuildDone(e);
-            break;
-         default :
-         case "EVALUATION" :
-         case "CONSOLE" :
-            msg.replyTo();
-            break;
-         case "STOP" :
-            IvyLog.logD("BSTYLE","Eclipse Message: " + msg.getText());
-            serverDone();
-            msg.replyTo();
-            break;
+            case "BUILDDONE" :
+               handleBuildDone(e);
+               break;
+            default :
+            case "EVALUATION" :
+            case "CONSOLE" :
+               msg.replyTo();
+               break;
+            case "STOP" :
+               IvyLog.logD("BSTYLE","Eclipse Message: " + msg.getText());
+               serverDone();
+               msg.replyTo();
+               break;
+          }
+       }
+      catch (Throwable t) {
+         IvyLog.logE("BSTYLE","Problem processing Eclipse command",t);
        }
     }
 

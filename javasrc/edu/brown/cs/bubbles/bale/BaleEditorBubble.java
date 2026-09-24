@@ -157,7 +157,7 @@ BaleEditorBubble(BaleFragmentEditor bfe)
       int vx = (int) (Math.ceil(v1.getMaximumSpan(View.X_AXIS)+0.5));
       int vy = (int) (Math.ceil(v1.getMaximumSpan(View.Y_AXIS)+0.5));
       vy = Math.min(vy,800);
-      maxwd = vx;
+      maxwd = vx+32;
       maxht = vy;
       maxbht = Math.max(maxht,BALE_MAX_INITIAL_BUBBLE_HEIGHT);
     }

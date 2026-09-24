@@ -222,8 +222,7 @@ void startBstyleServer()
       
       String lvl = BoardLog.getLogLevel().toString();
       lvl = bp.getProperty("Bstyle.log.level",lvl);
-      boolean stderr = BoardLog.getUseStdErr();
-      stderr = bp.getBoolean("Bstyle.use.stderr",stderr);
+      boolean stderr = bp.getBoolean("Bstyle.use.stderr");
       File log = BoardLog.getBubblesLogFile();
       String nm = log.getName();
       String nm1 = nm.replace("bubbles","bstyle");
