@@ -1172,7 +1172,11 @@ private class RunEventHandler implements BumpRunEventHandler {
       BumpThread bt = evt.getThread();
       BumpThreadState ost = thread_states.get(bt);
       BumpThreadState nst = bt.getThreadState();
-   
+      
+      BoardLog.logD("BUMP","Handle thread event " + bt.getId() + " " +
+            evt.getEventType() + " " + ost + " " + nst + " " +
+            bt.getThreadDetails());
+      
       switch (evt.getEventType()) {
          case THREAD_ADD :
             nst = BumpThreadState.RUNNING;
@@ -1191,7 +1195,7 @@ private class RunEventHandler implements BumpRunEventHandler {
                    }
                   break;
                default :
-        	  break;
+                  break;
              }
             if (nst != ost) {
                handleThreadStateChange(bt,ost);
@@ -1222,7 +1226,7 @@ private class RunEventHandler implements BumpRunEventHandler {
          if (bts.isStopped() && last_stopped == null) last_stopped = ent.getKey();
          else if (bts.isStopped()) {
             BoardLog.logD("BDDT","Thread " + ent.getKey().getId() + 
-               " is also stopped");
+                  " is also stopped");
           }
          else if (bts.isRunning()) ++rct;
          else {
@@ -1253,7 +1257,7 @@ private class RunEventHandler implements BumpRunEventHandler {
 
 private void handleThreadStateChange(BumpThread bt,BumpThreadState ost)
 {
-   // BoardLog.logD("BDDT","Thread state change " + bt.getThreadState() + " " + ost);
+   BoardLog.logD("BDDT","Thread state change " + bt.getThreadState() + " " + ost);
    if (bt.getThreadState().isStopped() && (ost != null && !ost.isStopped())) {
       addExecutionAnnot(bt);
       if (autoCreateBubble(bt)) {
@@ -1261,7 +1265,8 @@ private void handleThreadStateChange(BumpThread bt,BumpThreadState ost)
 	 SwingUtilities.invokeLater(cb);
        }
       else {
-         BoardLog.logD("BDDT","NO Need to create bubble based on thread state and stack");
+         BoardLog.logD("BDDT","NO Need to create bubble based " +
+               ost + " " + bt.getThreadState() + " " + bt.getThreadType());
        }
     }
    else if (!bt.getThreadState().isStopped()) {

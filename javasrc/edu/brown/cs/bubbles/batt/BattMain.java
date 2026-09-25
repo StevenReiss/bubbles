@@ -367,7 +367,10 @@ synchronized void addErrors(Set<String> clss)
 synchronized void removeErrors(Set<String> clss)
 {
    for (String s : clss) {
-      IvyLog.logD("BATTM","Remove error in " + s);
+      IvyLog.logD("BATTM","Remove error in class " + s);
+      if (s.contains(".java")) {
+         IvyLog.logE("BATTM","File passed to remove errors");
+       }
     }
 
    error_classes.removeAll(clss);

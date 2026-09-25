@@ -158,7 +158,9 @@ private synchronized void setFileState(String file,FileState state)
 
    if (rslt != null) {
       if (state == FileState.CHANGED) {
-	 for (String s : rslt) changed_classes.put(s,state);
+	 for (String s : rslt)  {
+            changed_classes.put(s,state);
+          }
        }
       else if (state == FileState.ERRORS) {
 	 for_batt.addErrors(rslt);
@@ -173,7 +175,7 @@ private synchronized void setFileState(String file,FileState state)
 	 for_batt.removeErrors(rslt);
        }
       else if (state == FileState.EDITED) {
-	 for_batt.addErrors(rslt);		// mark the classes as invalid until compile
+ 	 for_batt.addErrors(rslt);		// mark the classes as invalid until compile
 	 for (String s : rslt) changed_classes.put(s,state);
        }
     }
@@ -195,7 +197,9 @@ private synchronized void setErrorFiles(Collection<String> files)
 	 setFileState(f,FileState.STABLE);
        }
       else if (fs == FileState.EDITED) {
-         clear.add(f);
+         for (BattProject bp : project_set.values()) {
+            clear = bp.getClassesForFile(f,clear);
+          }
        }
      IvyLog.logD("BATTM","File state " + file_states.get(f) + " " + f);
     }
@@ -383,7 +387,9 @@ private final class EclipseHandler implements MintHandler {
    @Override public void receive(MintMessage msg,MintArguments args) {
       String cmd = args.getArgument(0);
       Element e = msg.getXml();
-   
+      
+      IvyLog.logD("BATTM","Eclipse message " + msg.getText());
+      
       try {
          if (cmd == null) return;
          else if (cmd.equals("FILECHANGE")) {
@@ -395,8 +401,8 @@ private final class EclipseHandler implements MintHandler {
             Element msgs = IvyXml.getChild(e,"MESSAGES");
             if (msgs != null) {
                for (Element pm : IvyXml.children(msgs,"PROBLEM")) {
-        	  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
-        	}
+                  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
+                }
              }
             if (fs != null) {
                setFileState(IvyXml.getAttrString(e,"FILE"),fs);
@@ -408,8 +414,8 @@ private final class EclipseHandler implements MintHandler {
             Element msgs = IvyXml.getChild(e,"MESSAGES");
             if (msgs != null) {
                for (Element pm : IvyXml.children(msgs,"PROBLEM")) {
-        	  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
-        	}
+                  if (IvyXml.getAttrBool(pm,"ERROR")) fs = FileState.ERRORS;
+                }
              }
             setFileState(IvyXml.getAttrString(e,"FILE"),fs);
             updateTestState();
@@ -449,10 +455,10 @@ private final class EclipseHandler implements MintHandler {
                Element re = IvyXml.getChild(de,"RESOURCE");
                String rtyp = IvyXml.getAttrString(re,"TYPE");
                if (rtyp != null && rtyp.equals("FILE")) {
-        	  String fp = IvyXml.getAttrString(re,"LOCATION");
-        	  IvyLog.logD("BATTM","Note " + fp + " CHANGED");
-        	  setFileState(fp,FileState.CHANGED);
-        	}
+                  String fp = IvyXml.getAttrString(re,"LOCATION");
+                  IvyLog.logD("BATTM","Note " + fp + " CHANGED");
+                  setFileState(fp,FileState.CHANGED);
+                }
              }
             updateTestState();
           }
@@ -470,7 +476,7 @@ private final class EclipseHandler implements MintHandler {
          IvyLog.logD("BATTM","Problem processing Eclipse command: " + t);
          t.printStackTrace();
        }
-    }
+   }
 
 }	// end of inner class EclipseHandler
 
