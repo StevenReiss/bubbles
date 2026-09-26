@@ -1609,7 +1609,7 @@ static {
 
    BedrockPlugin.logD("RUNEVENT: " + xw.toString());
 
-   our_plugin.finishMessageWait(xw);
+   our_plugin.finishMessageWait(xw,300000);
    
    BedrockPlugin.logD("FINISHED RUNEVENT");
 }
@@ -2048,7 +2048,7 @@ private class ConsoleThread extends Thread {
       txt = txt.replace("\010"," ");
       if (txt.length() == 0) return;
       xw.cdataElement("TEXT",txt);
-      our_plugin.finishMessageWait(xw);
+      our_plugin.finishMessageWait(xw,300000);
       BedrockPlugin.logD("Console write " + txt.length());
     }
 

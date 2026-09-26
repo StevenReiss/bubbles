@@ -116,7 +116,7 @@ public static void main(String [] args)
 	 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
        }
       catch (Throwable t) {
-	 System.err.println("BEMA: Problem setting l&f: " + t); 
+	 System.err.println("BEMA: Problem setting l&f: " + t);
        }
     }
 
@@ -545,12 +545,12 @@ private void setOptions(BoardSetup bs)
 
    if (bs.getCourseName() != null) {
       try {
-         Class<?> c = Class.forName("edu.brown.cs.bubbles.bedu.BeduFactoy");
-         Method m = c.getMethod("getFactory");
-         m.invoke(null);
+	 Class<?> c = Class.forName("edu.brown.cs.bubbles.bedu.BeduFactoy");
+	 Method m = c.getMethod("getFactory");
+	 m.invoke(null);
        }
       catch (Throwable t) {
-         bs.setCourseName(null);
+	 bs.setCourseName(null);
        }
     }
 }
@@ -633,75 +633,75 @@ private void loadPlugins(File dir,BudaRoot root,List<String> names)
 private void loadPlugin(File jfn,BudaRoot root,List<String> names)
 {
     if (jfn.isDirectory()) {
-        // assume all plugins are at top level, rather than inside directories
-        // loadPlugins(jfn,root);
+	// assume all plugins are at top level, rather than inside directories
+	// loadPlugins(jfn,root);
      }
     else if (jfn.getPath().endsWith(".jar")) {
-        BoardLog.logD("BEMA","Load plugin " + jfn);
-        try (JarFile jf = new JarFile(jfn)) {
-            Manifest mf = jf.getManifest();
-            if (mf != null) {
-                Attributes at = mf.getMainAttributes();
-                String starts = at.getValue("Bubbles-start");
-                String dep = at.getValue("Bubbles-depends");
-                String palette = at.getValue("Bubbles-palette");
-                String res = at.getValue("Bubbles-resource");
-                String lib = at.getValue("Bubbles-lib");
-                String load = jfn.getAbsolutePath();
-                String basename = null;
-                if (dep != null && !dep.isBlank()) {
-                    dep = dep.trim();
-                    if (dep.length() > 0) load += File.pathSeparator + dep;
-                 }
-                if (res != null) {
-                    StringTokenizer tok = new StringTokenizer(res);
-                    while (tok.hasMoreTokens()) {
-                        String nm = tok.nextToken();
-                        setupPluginResource(jf,nm);
-                     }
-                 }
-                if (lib != null) {
-                    StringTokenizer tok = new StringTokenizer(lib);
-                    while (tok.hasMoreTokens()) {
-                        String nm = tok.nextToken();
-                        setupPluginLibrary(jf,nm);
-                     }
-                 }
-                if (starts != null) {
-                    StringTokenizer tok = new StringTokenizer(starts);
-                    while (tok.hasMoreTokens()) {
-                        String nm = tok.nextToken();
-                        if (basename == null) basename = nm;
-                        setupPackage(nm,load);
-                        initializePackage(nm,root);
-                        names.add(nm);
-                     }
-                 }
-                if (basename != null && palette != null) {
-                    ClassLoader cldr = class_loaders.get(basename);
-                    if (cldr == null) cldr = BemaMain.class.getClassLoader();
-                    URL u = cldr.getResource(palette);
-                    if (u != null) {
-                        BoardLog.logD("BEMA","Add plugin palette " + u);
-                        BoardColors.addPalette(u);
-                     }
-                    else {
-                        String s1 = "jar:file:" + jfn + "!/" + palette;
-                        try {
-                            URL u1 = new URI(s1).toURL();
-                            BoardColors.addPalette(u1);
-                         }
-                        catch (URISyntaxException e) { }
-                     }
-                 }
-             }
-         }
-        catch (IOException e) {
-            BoardLog.logE("BEMA","Can't access plugin jar file " + jfn,e);
-            JOptionPane.showMessageDialog(null,
-                    "Problem loading plugin " + jfn,
-                    "Bubbles Plugin Problem",JOptionPane.WARNING_MESSAGE);
-         }
+	BoardLog.logD("BEMA","Load plugin " + jfn);
+	try (JarFile jf = new JarFile(jfn)) {
+	    Manifest mf = jf.getManifest();
+	    if (mf != null) {
+		Attributes at = mf.getMainAttributes();
+		String starts = at.getValue("Bubbles-start");
+		String dep = at.getValue("Bubbles-depends");
+		String palette = at.getValue("Bubbles-palette");
+		String res = at.getValue("Bubbles-resource");
+		String lib = at.getValue("Bubbles-lib");
+		String load = jfn.getAbsolutePath();
+		String basename = null;
+		if (dep != null && !dep.isBlank()) {
+		    dep = dep.trim();
+		    if (dep.length() > 0) load += File.pathSeparator + dep;
+		 }
+		if (res != null) {
+		    StringTokenizer tok = new StringTokenizer(res);
+		    while (tok.hasMoreTokens()) {
+			String nm = tok.nextToken();
+			setupPluginResource(jf,nm);
+		     }
+		 }
+		if (lib != null) {
+		    StringTokenizer tok = new StringTokenizer(lib);
+		    while (tok.hasMoreTokens()) {
+			String nm = tok.nextToken();
+			setupPluginLibrary(jf,nm);
+		     }
+		 }
+		if (starts != null) {
+		    StringTokenizer tok = new StringTokenizer(starts);
+		    while (tok.hasMoreTokens()) {
+			String nm = tok.nextToken();
+			if (basename == null) basename = nm;
+			setupPackage(nm,load);
+			initializePackage(nm,root);
+			names.add(nm);
+		     }
+		 }
+		if (basename != null && palette != null) {
+		    ClassLoader cldr = class_loaders.get(basename);
+		    if (cldr == null) cldr = BemaMain.class.getClassLoader();
+		    URL u = cldr.getResource(palette);
+		    if (u != null) {
+			BoardLog.logD("BEMA","Add plugin palette " + u);
+			BoardColors.addPalette(u);
+		     }
+		    else {
+			String s1 = "jar:file:" + jfn + "!/" + palette;
+			try {
+			    URL u1 = new URI(s1).toURL();
+			    BoardColors.addPalette(u1);
+			 }
+			catch (URISyntaxException e) { }
+		     }
+		 }
+	     }
+	 }
+	catch (IOException e) {
+	    BoardLog.logE("BEMA","Can't access plugin jar file " + jfn,e);
+	    JOptionPane.showMessageDialog(null,
+		    "Problem loading plugin " + jfn,
+		    "Bubbles Plugin Problem",JOptionPane.WARNING_MESSAGE);
+	 }
      }
 }
 
@@ -712,8 +712,8 @@ private void setupPluginResource(JarFile jf,String res)
    try {
       ZipEntry ze = jf.getEntry(res);
       if (ze == null) {
-          BoardLog.logE("BEMA","Resource " + res + " not found");
-          return;
+	  BoardLog.logE("BEMA","Resource " + res + " not found");
+	  return;
        }
       File resdir = BoardSetup.getSetup().getResourceDirectory();
       File tgt = new File(resdir,res);
@@ -938,10 +938,10 @@ private Collection<String> getSetupPackageProperties()
       String key = it.next();
       String val = bp.getProperty(key);
       if (val == null || val.isBlank() || done.contains(val)) {
-         it.remove();
+	 it.remove();
        }
       else {
-         done.add(val);
+	 done.add(val);
        }
     }
 

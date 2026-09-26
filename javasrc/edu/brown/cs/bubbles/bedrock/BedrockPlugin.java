@@ -158,7 +158,7 @@ public BedrockPlugin()
 	    else logfile = "bedrock_log_" + i + ".log";
 	    File lf = new File(ws.getRoot().getLocation().append(logfile).toOSString());
 	    if (!lf.exists()) break;
-	    if (now - lf.lastModified() > 30000) break;
+	    if (now - lf.lastModified() > 5000) break;
 	 }
 	 String filename = ws.getRoot().getLocation().append(logfile).toOSString();
 	 log_file = new PrintStream(new FileOutputStream(filename),true);

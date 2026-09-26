@@ -112,6 +112,7 @@ private JPanel replace_panel;
 private Dimension find_size;
 private Dimension replace_size;
 
+private static String last_search = null;
 
 private static Icon cancel_icon;
 private static Icon next_icon;
@@ -157,7 +158,10 @@ BaleFindReplaceBar(BaleEditorPane edt,boolean dorep)
 
    text_field = createTextField(10);
    text_field.setAction(new SearchAction());
-   text_field.requestFocusInWindow();                           
+   text_field.requestFocusInWindow();     
+   if (last_search != null) {
+      text_field.setText(last_search);
+    }
    topbox.addGBComponent(text_field,0,0,1,1,10,0);
    
    JButton b2 = createButton("Prev",prev_icon,"LAST");
@@ -337,6 +341,7 @@ private JTextField createTextField(int ln)
             searched_for = search_for;
             // find and store the indices of all the occurrences so that going back 
             //    and forth doesn't require a new search
+            last_search = search_for;
             findAllOccurences(search_for, dir);
             number_label.setText("Matches: " + occurrences_set.size());
             //current_index = -1;
