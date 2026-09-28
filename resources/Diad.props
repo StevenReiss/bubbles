@@ -16,7 +16,58 @@
 <entry key="Diad.max.seede.depth">100</entry>
 <entry key="Diad.eclipse.binary">/pro/eclipse/java-2023-12/eclipse/eclipse</entry>
 <entry key="Diad.eclipse.wsdir">/home/spr/Eclipse</entry>
-</properties>					
+<entry key="Diad.name.ignore">java.lang.Throwable.depth java.lang.Throwable.backtrace</entry>
+<entry key="Diad.text.ignore">time id</entry>
+<entry key="Diad.type.ignore">java.util.Date java.sql.Date java.time.Instant java.sql.Time</entry>
+</properties>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
