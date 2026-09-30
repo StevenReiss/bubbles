@@ -36,6 +36,7 @@ import edu.brown.cs.bubbles.org.objectweb.asm.Opcodes;
 import edu.brown.cs.bubbles.org.objectweb.asm.Type;
 
 import edu.brown.cs.ivy.file.IvyFormat;
+import edu.brown.cs.ivy.file.IvyLog;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,7 +92,7 @@ void process()
    user_visitor.begin();
    
    for (BanalClassData bcd : project_manager.getClassData()) {
-      System.err.println("BANAL: Work on class " + bcd.getName() + " " + bcd.getProject());
+      IvyLog.logD("BANAL","Work on class " + bcd.getName() + " " + bcd.getProject());
       if (!user_visitor.checkUseProject(bcd.getProject())) continue;
       if (!user_visitor.checkUseClass(bcd.getName())) continue;
       processClass(bcd);
@@ -106,7 +107,7 @@ private void processClass(BanalClassData cd)
 {
    InputStream ins = cd.getClassStream();
    if (ins == null) {
-      System.err.println("BANAL: No input found for " + cd.getName());
+      IvyLog.logD("BANAL","No input found for " + cd.getName());
       return;
     }
 
@@ -117,7 +118,7 @@ private void processClass(BanalClassData cd)
       cr.accept(acv,0);
     }
    catch (IOException e) {
-      System.err.println("BANAL: Problem reading class file: " + e);
+      IvyLog.logE("BANAL","Problem reading class file: ",e);
     }
    finally {
       try {

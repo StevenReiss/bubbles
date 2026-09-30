@@ -25,7 +25,10 @@
 
 package edu.brown.cs.bubbles.banal;
 
+import java.io.File;
+
 import edu.brown.cs.ivy.exec.IvySetup;
+import edu.brown.cs.ivy.file.IvyLog;
 
 
 
@@ -67,12 +70,16 @@ private BanalMonitor	the_monitor;
 
 private BanalMain(String [] args)
 {
+   IvyLog.setupLogging("BANAL",false);
+   
    mint_handle = null;
    the_monitor = null;
 
    scanArgs(args);
 
    IvySetup.setup();
+   
+   IvyLog.logD("BANAL","BANAL server starting");
 }
 
 
@@ -90,8 +97,20 @@ private void scanArgs(String [] args)
 	 if (args[i].startsWith("-m") && i+1 < args.length) {   // -m <mint handle>
 	    mint_handle = args[++i];
 	  }
-	 else if (args[i].startsWith("-S")) {                   // -SERVER
+	 else if (args[i].startsWith("-S")) {                           // -SERVER
 	  }
+         else if (args[i].startsWith("-D")) {                           // -Debug
+            IvyLog.setLogLevel(IvyLog.LogLevel.DEBUG);
+          }
+         else if (args[i].startsWith("-O")) {                           // -Output
+            IvyLog.useStdErr(true);
+          }
+         else if (args[i].startsWith("-L") && i+1 < args.length) {      // -L logfile
+            String path = args[++i];
+            File logf = new File(path);
+            IvyLog.setLogFile(logf);
+            IvyLog.useStdErr(false);
+          }
 	 else badArgs();
        }
       else {
@@ -106,7 +125,7 @@ private void scanArgs(String [] args)
 
 private void badArgs()
 {
-   System.err.println("BANALMAIN: banalmain -m <mint_handle>");
+   IvyLog.logE("BANAL","banalmain -m <mint_handle>");
    System.exit(1);
 }
 
@@ -123,7 +142,7 @@ private void process()
    the_monitor = new BanalMonitor(this,mint_handle);
    the_monitor.server();
 
-   System.err.println("BANAL: Server exiting");
+   IvyLog.logI("BANAL","Server exiting");
 
    System.exit(0);
 }

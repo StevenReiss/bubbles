@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.banal;
 
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.mint.MintArguments;
 import edu.brown.cs.ivy.mint.MintConstants;
 import edu.brown.cs.ivy.mint.MintControl;
@@ -113,7 +114,9 @@ private boolean checkEclipse()
    String msg = "<BUBBLES DO='PING' />";
    mint_control.send(msg,rply,MINT_MSG_FIRST_NON_NULL);
    String r = rply.waitForString(30000);
-   if (r == null) System.err.println("BANAL: No ping response from Eclipse");
+   if (r == null) {
+      IvyLog.logD("BANAL","No ping response from Eclipse");
+    }
    if (r == null) return false;
    return true;
 }
@@ -131,7 +134,7 @@ private String computePackageGraph(String proj,String pkg,boolean mthds,boolean 
    BanalPackageGraph pg = new BanalPackageGraph(proj,pkg,mthds,samecls);
    BanalStaticLoader bsl = new BanalStaticLoader(project_manager,pg);
    
-   System.err.println("BANAL: compute package graph " + proj + " " + pkg + " " + mthds + " " + samecls);
+   IvyLog.logD("BANAL","Compute package graph " + proj + " " + pkg + " " + mthds + " " + samecls);
    
    bsl.process();
 
@@ -249,8 +252,7 @@ private final class EclipseHandler implements MintHandler {
           }
        }
       catch (Throwable t) {
-         System.err.println("BANAL: Problem processing Eclipse command: " + t);
-         t.printStackTrace();
+         IvyLog.logE("BANAL","Problem processing Eclipse command",t);
        }
     }
 
@@ -282,7 +284,7 @@ private final class CommandHandler implements MintHandler {
       Element e = msg.getXml();
       String rply = null;
    
-      System.err.println("BANAL: RECEIVED COMMAND " + cmd + ": " + msg.getText());
+      IvyLog.logD("BANAL","RECEIVED COMMAND " + cmd + ": " + msg.getText());
    
       try {
          if (cmd == null) return;
@@ -310,8 +312,7 @@ private final class CommandHandler implements MintHandler {
           }
        }
       catch (Throwable t) {
-         System.err.println("BANAL: Problem processing BANALcommand: " + t);
-         t.printStackTrace();
+         IvyLog.logE("BANAL","Problem processing BANALcommand: ",t);
        }
    
       if (rply != null) {

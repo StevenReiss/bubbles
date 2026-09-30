@@ -38,6 +38,7 @@ import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -223,6 +224,12 @@ void startBanalServer()
       args.add("-S");
       args.add("-m");
       args.add(bs.getMintName());
+    
+      File wd = new File(bs.getDefaultWorkspace());
+      File logf = new File(wd,"banal.log");
+      args.add("-L");
+      args.add(logf.getPath());
+      args.add("-D");
 
       for (int i = 0; i < 100; ++i) {
 	 MintDefaultReply rply = new MintDefaultReply();

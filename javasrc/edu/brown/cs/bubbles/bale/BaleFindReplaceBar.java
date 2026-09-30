@@ -161,6 +161,7 @@ BaleFindReplaceBar(BaleEditorPane edt,boolean dorep)
    text_field.requestFocusInWindow();     
    if (last_search != null) {
       text_field.setText(last_search);
+      text_field.selectAll();
     }
    topbox.addGBComponent(text_field,0,0,1,1,10,0);
    

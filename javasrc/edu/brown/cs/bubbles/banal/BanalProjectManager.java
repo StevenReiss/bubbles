@@ -26,7 +26,7 @@
 package edu.brown.cs.bubbles.banal;
 
 import edu.brown.cs.bubbles.bump.BumpConstants;
-
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 
 import org.w3c.dom.Element;
@@ -123,17 +123,16 @@ private void checkClassData()
    for ( ; ; ) {
       Element projs = getAllProjects();
       if (projs == null) {
-	 System.err.println("BANAL: No projects found");
+	 IvyLog.logE("BANAL","No projects found");
 	 return;
        }
 
       for (Element pe : IvyXml.children(projs,"PROJECT")) {
 	 String pnm = IvyXml.getAttrString(pe,"NAME");
-         System.err.println("BANAL: Work on project " + pnm);
+         IvyLog.logD("BANAL","Work on project " + pnm);
 	 if (user_classes.get(pnm) != null) continue;
 
 	 Element pinfo = openProject(pnm);
-         System.err.println("BANAL: Open Project: " + IvyXml.convertXmlToString(pinfo));
 	 if (pinfo == null) continue;
 
 	 Map<String,ClassData> mcd = new HashMap<>();

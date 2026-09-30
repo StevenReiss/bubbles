@@ -24,6 +24,7 @@
 
 package edu.brown.cs.bubbles.banal;
 
+import edu.brown.cs.ivy.file.IvyLog;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -297,7 +298,7 @@ private void doAnalysis()
 	 DependNode nd = work.remove();
 	 todo.remove(nd);
 	 done.add(nd);
-         System.err.println("BANAL: Work on " + nd.getName());
+         IvyLog.logD("BANAL","Work on " + nd.getName());
 	 Collection<DependNode> next = nd.useNode();
 	 if (next != null) work.addAll(next);
        }
@@ -326,7 +327,7 @@ private Collection<DependNode> removeCycle(Set<DependNode> nodes)
    Collection<DependNode> rslt = new HashSet<DependNode>();
 
    if (best == null) {
-      System.err.println("BANAL: Problem computing cycles");
+      IvyLog.logW("BANAL","Problem computing cycles");
       rslt.addAll(nodes);
     }
    else {
@@ -427,14 +428,14 @@ private class DependNode implements BanalHierarchyNode {
    void addDepend(DependNode n) {
       if (depends_on.add(n)) {
          ++n.num_depend;
-         System.err.println("BANAL: ADD " + getName() + " <== " + n.getName());
+         IvyLog.logD("BANAL","ADD " + getName() + " <== " + n.getName());
        }
     }
 
    Collection<DependNode> useNode() {
       Collection<DependNode> rslt = null;
       for (DependNode dn : depends_on) {
-         System.err.println("BANAL: USE " + getName() + " : " + dn.getName() + " " +
+         IvyLog.logD("BANAL","USE " + getName() + " : " + dn.getName() + " " +
                dn.node_level + " " + node_level + " " + dn.num_depend);
          dn.node_level = Math.max(dn.node_level,node_level+1);
          if (dn.num_depend == 0) continue;
@@ -453,7 +454,7 @@ private class DependNode implements BanalHierarchyNode {
       for (DependNode dn : cyc) {
          node_level = Math.max(node_level,dn.node_level);
          if (depends_on.remove(dn)) {
-            System.err.println("BANAL: REMOVE " + dn.getName() + " FROM " + getName());
+            IvyLog.logD("BANAL","REMOVE " + dn.getName() + " FROM " + getName());
             if (--dn.num_depend == 0) rslt.add(dn);
           }
        }

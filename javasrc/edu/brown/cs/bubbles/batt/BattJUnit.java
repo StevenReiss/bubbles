@@ -153,7 +153,7 @@ private BattJUnit(String [] args)
 {
    log_stream = System.err;
    log_debug = false;
-   use_stderr = true;
+   use_stderr = false;
 
    list_only = false;
    class_set = null;
@@ -215,10 +215,9 @@ private void scanArgs(String [] args)
             try {
                FileOutputStream fos = new FileOutputStream(logf,true);
                log_stream = new PrintStream(fos,true);
-               System.err.println("BATTJ: Log file set to " + logf);
+               logI("Log file set to " + logf);
              }
             catch (IOException e) { 
-               System.err.println("BATTJ: Problem opening log file " + e);
                logE("Problem opening log file",e);
              }
           }
@@ -936,7 +935,7 @@ private class TestListener extends RunListener {
       JunitTest jt = test_cases.get(f.getDescription());
       if (jt != null) outputSingleTest(jt);
       else {
-        logE("Can't find failing test case " + f.getDescription());
+        logI("Can't find failing test case " + f.getDescription());
       }
     }
 
