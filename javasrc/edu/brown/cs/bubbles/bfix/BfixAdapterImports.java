@@ -391,11 +391,11 @@ private static class ImportChecker {
           }
        }
       if (match.size() > 0) return match;
-   
+      
       Set<String> dmatch = new HashSet<String>();
       Set<String> amatch = new HashSet<String>();
       Set<String> imatch = new HashSet<String>();
-   
+      
       BumpClient bc = BumpClient.getBump();
       List<BumpLocation> typlocs = bc.findAllTypes(nm);
       if (typlocs == null) return null;
@@ -413,14 +413,14 @@ private static class ImportChecker {
             for (String s : demand_imports) {
                String dimp = s + "." + nm;
                if (dimp.equals(tnm)) {
-        	  dmatch.add(tnm);
-        	}
+                  dmatch.add(tnm);
+                }
              }
             for (String s : implicit_imports) {
                String dimp = s + "." + nm;
                if (dimp.equals(tnm)) {
-        	  imatch.add(tnm);
-        	}
+                  imatch.add(tnm);
+                }
              }
             if (!tnm.contains("internal")) amatch.add(tnm);
           }
@@ -431,7 +431,7 @@ private static class ImportChecker {
       if (amatch.size() > 0) return amatch;
       
       return null;
-       }
+   }
 
 }	// end of inner class ImportChecker
 

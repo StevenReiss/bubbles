@@ -212,7 +212,7 @@ List<String> getSpellingCandidates(BfixCorrector corr,BumpProblem bp)
 	  }
        }
     }
-   if (txt1 != null) rslt.add(txt1);
+   if (txt1 != null && !txt1.contains(" ")) rslt.add(txt1);
 
    return rslt;
 }
@@ -254,6 +254,7 @@ private static class SpellFixer extends BfixFixer {
       boolean checktypes = lookup_types;
       boolean checkkeys = lookup_keys;
       boolean checkcomps = false;
+      boolean exactmatch = false;
       
       BumpClient bc = BumpClient.getBump();
       Collection<BumpCompletion> cmps = bc.getCompletions(proj,file,-1,for_problem.getStart()+1);
@@ -280,6 +281,7 @@ private static class SpellFixer extends BfixFixer {
                SpellFix sf = new SpellFix(for_identifier,txt,d);
                totry.add(sf);
              }
+            else if (d == 0) exactmatch = true;
           }
        }
       if (totry.size() == 0) {
@@ -297,6 +299,7 @@ private static class SpellFixer extends BfixFixer {
                   SpellFix sf = new SpellFix(for_identifier,txt,d);
                   totry.add(sf);
                 }
+               else if (d == 0) exactmatch = true;
              }
           }
        }
@@ -323,6 +326,7 @@ private static class SpellFixer extends BfixFixer {
                   SpellFix sf = new SpellFix(for_identifier,nm,d);
                   totry.add(sf);
                 }
+               else if (d == 0) exactmatch = true;
              }
           }
        }
@@ -339,6 +343,7 @@ private static class SpellFixer extends BfixFixer {
                SpellFix sf = new SpellFix(for_identifier,s,d);
                totry.add(sf);
              }
+            else if (d == 0) exactmatch = true;
           }
        }
       
@@ -364,10 +369,15 @@ private static class SpellFixer extends BfixFixer {
          return null;
        }
       
+      if (exactmatch) return null;
+      
       Map<BfixEdit,SpellFix> edits = new LinkedHashMap<>();
       int soff = for_document.mapOffsetToJava(for_problem.getStart());
       int eoff = soff + for_identifier.length();
       for (SpellFix sf : totry) {
+         if (exactmatch && sf.getText().contains(".")) {
+            continue;
+          }
          BfixEdit edit = new BfixBaseEdit(for_corrector,soff,eoff,sf.getText());
          edits.put(edit,sf);
        }

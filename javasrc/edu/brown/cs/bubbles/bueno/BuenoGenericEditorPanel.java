@@ -980,8 +980,6 @@ private class FieldsPanel extends EditPanel implements ActionListener {
      }
     
     @Override void doUpdate() {
-       String desc = IvyXml.getAttrString(tab_xml,"DESCRIPTION");
-       if (desc != null) addBannerLabel(desc);
        for (Element felt : IvyXml.children(tab_xml,"FIELD")) {
           String name = IvyXml.getAttrString(felt,"NAME");
           if (name == null) continue;

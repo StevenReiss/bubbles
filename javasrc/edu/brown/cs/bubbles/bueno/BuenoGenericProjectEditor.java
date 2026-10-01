@@ -150,7 +150,7 @@ void saveProject()
       pnl.doUpdate();
     }
    
-   Set<BuenoPathEntry> dels = new HashSet<BuenoPathEntry>(initial_paths);
+   Set<BuenoPathEntry> dels = new HashSet<>(initial_paths);
    
    String pnm = IvyXml.getAttrString(project_data,"NAME");
    

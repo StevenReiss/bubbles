@@ -341,7 +341,7 @@ private static class SubPanel {
       option_panel.removeAll();
       option_panel.beginLayout();
       for (BoppOptionNew op : panel_options) {
-	 op.addButton(option_panel);
+         op.addButton(option_panel);
        }
       option_panel.addExpander();
       return option_panel;
