@@ -169,6 +169,7 @@
 	 <fileset dir='${BUBBLES}/bin' includes='extcodebb' />
 	 <fileset dir='${BUBBLES}/bin' includes='say' />
 	 <fileset dir='${BUBBLES}/lib' includes='speech.properties' />
+	 <fileset dir='${BUBBLES}/lib' includes='slf4j-api.jar' />
       </jar>
       <copy file='bubbles.jar' tofile='${BUBBLES}/bubbles.jar' />
       <copy file='bubbles.jar' tofile='${BUBBLES}/suds/bubbles.jar' />
