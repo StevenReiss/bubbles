@@ -800,7 +800,7 @@ public static File getBubblesWorkingDirectory(File wsd)
  *	Get a string describing this version of bubbles.
  **/
 
-public static String getVersionData()					
+public static String getVersionData()				
 {
    return BoardUpdate.getVersionData();
 }
@@ -1500,8 +1500,8 @@ public boolean doSetup()
 
    askworkspace |= !checkWorkspace();
 
-   BoardLog.logD("BOARD","In setup " + needsetup + " " + 
-         install_jar + " " + update_setup);
+   BoardLog.logD("BOARD","In setup " + needsetup + " " +
+	 install_jar + " " + update_setup);
 
    if (install_jar && !update_setup) {
       setSplashTask("Checking for newer version");
@@ -1779,7 +1779,7 @@ private void saveProperties()
       system_properties.setProperty(BOARD_PROP_JAR_DIR,jar_directory);
     }
    if (!recent_workspaces.isEmpty()) {
-      
+
       StringBuffer buf = new StringBuffer();
       int ct = 0;
       for (String s : recent_workspaces) {
@@ -2570,9 +2570,9 @@ private boolean checkDates()
    File pdf = getPluginDirectory();
    File bdf = new File(pdf,BOARD_BUBBLES_PLUGIN_ECLIPSE);
    long edlm = bdf.lastModified();
-   
-   BoardLog.logD("BOARD","Check plugin date " + dlm + " " + edlm + " " + auto_update + 
-         " " + pdf + " " + bdf);
+
+   BoardLog.logD("BOARD","Check plugin date " + dlm + " " + edlm + " " + auto_update +
+	 " " + pdf + " " + bdf);
 
    if (dlm > 0 && edlm > 0 && edlm >= dlm) return true;
    if (edlm > 0 && !auto_update) return true;
@@ -2715,7 +2715,7 @@ private class PaletteDialog implements ActionListener {
       pnl.addBottomButton("OK","OK",this);
       pnl.addBottomButton("CANCEL","CANCEL",this);
       pnl.addBottomButtons();
-   
+
       working_dialog = new JDialog((JFrame) null,"Bubbles Palette Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();
@@ -3050,6 +3050,10 @@ private void restartBubbles()
        }
       String arg = board_language.getBubblesArg();
       if (arg != null) args.add(idx++,arg);
+      if (default_workspace != null) {
+	 args.add("-w");
+	 args.add(default_workspace);
+       }
 
       switch (run_mode) {
 	 case CLIENT :
@@ -3215,88 +3219,88 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
       bubbles_field = null;
       baseide_button = null;
       SwingGridPanel pnl = new SwingGridPanel();
-   
+
    // BoardColors.setColors(pnl,"Buda.Bubbles.Color");
       BoardColors.setColors(pnl,new Color(211,232,248));
       pnl.setOpaque(true);
-   
+
       pnl.beginLayout();
       pnl.addBannerLabel("Bubbles Environment Setup");
-   
+
       pnl.addSeparator();
-   
+
       switch (board_language) {
-         case JAVA :
-            baseide_field = pnl.addFileField("Eclipse Installation Directory",
-                  baseide_directory,
-                  JFileChooser.DIRECTORIES_ONLY,
-                  new BaseIDEDirectoryFilter("Eclipse"),this,this,null);
-            
-            baseide_warning = new JLabel("Warning!");  //edited by amc6
-            baseide_warning.setToolTipText(
-                  "<html>Not a valid <b>Eclipse for Java Developers</b> installation " +
-                  "directory.<br>(This should be the directory containing the eclipse binary " +
-                  "and the plugins directory.)");
-            baseide_warning.setForeground(WARNING_COLOR);
-            pnl.add(baseide_warning);
-            if (baseide_directory == null && install_jar) {
-               // eclipse_button = pnl.addBottomButton("INSTALL ECLIPSE","ECLIPSE",this);
-             }
-            break;
-         case JAVA_IDEA :
-            baseide_field = pnl.addFileField("IntelliJ IDEA Installation Directory",baseide_directory,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new BaseIDEDirectoryFilter("IntelliJ IDEA"),this,this,null);
-            baseide_warning = new JLabel("Warning!");  //edited by amc6
-            baseide_warning.setToolTipText("<html>Not a valid <b>IntelliJ IDEA</b> installation " +
-        	  "directory.<br>(This should be the directory containing the idea binary " +
-        	  "and the plugins directory.)");
-            baseide_warning.setForeground(WARNING_COLOR);
-            pnl.add(baseide_warning);
-            break;
-         default :
-            break;
+	 case JAVA :
+	    baseide_field = pnl.addFileField("Eclipse Installation Directory",
+		  baseide_directory,
+		  JFileChooser.DIRECTORIES_ONLY,
+		  new BaseIDEDirectoryFilter("Eclipse"),this,this,null);
+	
+	    baseide_warning = new JLabel("Warning!");  //edited by amc6
+	    baseide_warning.setToolTipText(
+		  "<html>Not a valid <b>Eclipse for Java Developers</b> installation " +
+		  "directory.<br>(This should be the directory containing the eclipse binary " +
+		  "and the plugins directory.)");
+	    baseide_warning.setForeground(WARNING_COLOR);
+	    pnl.add(baseide_warning);
+	    if (baseide_directory == null && install_jar) {
+	       // eclipse_button = pnl.addBottomButton("INSTALL ECLIPSE","ECLIPSE",this);
+	     }
+	    break;
+	 case JAVA_IDEA :
+	    baseide_field = pnl.addFileField("IntelliJ IDEA Installation Directory",baseide_directory,
+		  JFileChooser.DIRECTORIES_ONLY,
+		  new BaseIDEDirectoryFilter("IntelliJ IDEA"),this,this,null);
+	    baseide_warning = new JLabel("Warning!");  //edited by amc6
+	    baseide_warning.setToolTipText("<html>Not a valid <b>IntelliJ IDEA</b> installation " +
+		  "directory.<br>(This should be the directory containing the idea binary " +
+		  "and the plugins directory.)");
+	    baseide_warning.setForeground(WARNING_COLOR);
+	    pnl.add(baseide_warning);
+	    break;
+	 default :
+	    break;
        }
-   
+
       bubbles_warning = new JLabel("Warning!");
       bubbles_warning.setToolTipText("Not a valid Code Bubbles installation directory");
       bubbles_warning.setForeground(WARNING_COLOR);
-   
+
       pnl.addSeparator();
-   
+
       if (!install_jar) {
-         bubbles_field = pnl.addFileField("Bubbles Installation Directory",install_path,
-        	  JFileChooser.DIRECTORIES_ONLY,
-        	  new InstallDirectoryFilter(),this,null);
-         pnl.add(bubbles_warning);
-         pnl.addSeparator();
+	 bubbles_field = pnl.addFileField("Bubbles Installation Directory",install_path,
+		  JFileChooser.DIRECTORIES_ONLY,
+		  new InstallDirectoryFilter(),this,null);
+	 pnl.add(bubbles_warning);
+	 pnl.addSeparator();
        }
-   
+
       if (getCourseName() == null) {
-         pnl.addBoolean("Automatically Update Bubbles",auto_update,this);
+	 pnl.addBoolean("Automatically Update Bubbles",auto_update,this);
        }
       else {
-         auto_update = false;
+	 auto_update = false;
        }
-   
+
       pnl.addSeparator();
-   
+
       switch (board_language) {
-         case JAVA :
-         case JAVA_IDEA :
-            install_button = pnl.addBottomButton("INSTALL BUBBLES","INSTALL",this);
-            break;
-         default :
-            break;
+	 case JAVA :
+	 case JAVA_IDEA :
+	    install_button = pnl.addBottomButton("INSTALL BUBBLES","INSTALL",this);
+	    break;
+	 default :
+	    break;
        }
-   
+
       accept_button = pnl.addBottomButton("OK","OK",this);
       pnl.addBottomButton("CANCEL","CANCEL",this);
       pnl.addBottomButtons();
       Dimension r = pnl.getPreferredSize();
       r.width = Math.max(r.width,500);
       pnl.setPreferredSize(r);
-   
+
       working_dialog = new JDialog((JFrame) null,"Bubbles Environment Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();
@@ -3312,79 +3316,79 @@ private class SetupDialog implements ActionListener, CaretListener, UndoableEdit
 
    private void checkStatus() {
       if (baseide_field != null) {
-         String txt = baseide_field.getText().trim();
-         if (txt.length() > 0) {
-            File ef = new File(txt);
-            if (!ef.getAbsolutePath().equals(baseide_directory)) {
-               baseide_directory = ef.getAbsolutePath();
-               has_changed = true;
-            }
-         }
+	 String txt = baseide_field.getText().trim();
+	 if (txt.length() > 0) {
+	    File ef = new File(txt);
+	    if (!ef.getAbsolutePath().equals(baseide_directory)) {
+	       baseide_directory = ef.getAbsolutePath();
+	       has_changed = true;
+	    }
+	 }
       }
       if (bubbles_field != null) {
-         String txt = bubbles_field.getText().trim();
-         if (txt.length() > 0) {
-            File inf = new File(txt);
-            if (!inf.getAbsolutePath().equals(install_path)) {
-               install_path = inf.getAbsolutePath();
-               has_changed = true;
-            }
-         }
+	 String txt = bubbles_field.getText().trim();
+	 if (txt.length() > 0) {
+	    File inf = new File(txt);
+	    if (!inf.getAbsolutePath().equals(install_path)) {
+	       install_path = inf.getAbsolutePath();
+	       has_changed = true;
+	    }
+	 }
       }
-   
+
       switch (board_language) {
-         case JAVA :
-            if (checkEclipse() && baseide_button != null) {
-               baseide_button.setEnabled(false);
-             }
-            if (checkEclipse() && checkEclipsePlugin() && (install_jar || checkInstall())) {
-               accept_button.setEnabled(true);
-             }
-            else {
-               accept_button.setEnabled(false);
-             }
-            if (checkEclipse() && !checkEclipsePlugin() && (install_jar || checkInstall())) {
-               install_button.setEnabled(true);
-             }
-            else {
-               install_button.setEnabled(false);
-             }
-            if (checkEclipse()) {
-               baseide_warning.setVisible(false);
-             }
-            else {
-               baseide_warning.setVisible(true);
-             }
-            break;
-         case JAVA_IDEA :
-            if (checkIntelliJ() && checkIdeaPlugin() && (install_jar || checkInstall())) {
-               accept_button.setEnabled(true);
-             }
-            else {
-               accept_button.setEnabled(false);
-             }
-            if (checkIntelliJ() && !checkIdeaPlugin() && (install_jar || checkInstall())) {
-               install_button.setEnabled(true);
-             }
-            else {
-               install_button.setEnabled(false);
-             }
-            if (checkIntelliJ()) {
-               baseide_warning.setVisible(false);
-             }
-            else {
-               baseide_warning.setVisible(true);
-             }
-            break;
-         default :
-            break;
+	 case JAVA :
+	    if (checkEclipse() && baseide_button != null) {
+	       baseide_button.setEnabled(false);
+	     }
+	    if (checkEclipse() && checkEclipsePlugin() && (install_jar || checkInstall())) {
+	       accept_button.setEnabled(true);
+	     }
+	    else {
+	       accept_button.setEnabled(false);
+	     }
+	    if (checkEclipse() && !checkEclipsePlugin() && (install_jar || checkInstall())) {
+	       install_button.setEnabled(true);
+	     }
+	    else {
+	       install_button.setEnabled(false);
+	     }
+	    if (checkEclipse()) {
+	       baseide_warning.setVisible(false);
+	     }
+	    else {
+	       baseide_warning.setVisible(true);
+	     }
+	    break;
+	 case JAVA_IDEA :
+	    if (checkIntelliJ() && checkIdeaPlugin() && (install_jar || checkInstall())) {
+	       accept_button.setEnabled(true);
+	     }
+	    else {
+	       accept_button.setEnabled(false);
+	     }
+	    if (checkIntelliJ() && !checkIdeaPlugin() && (install_jar || checkInstall())) {
+	       install_button.setEnabled(true);
+	     }
+	    else {
+	       install_button.setEnabled(false);
+	     }
+	    if (checkIntelliJ()) {
+	       baseide_warning.setVisible(false);
+	     }
+	    else {
+	       baseide_warning.setVisible(true);
+	     }
+	    break;
+	 default :
+	    break;
        }
-   
+
       if (install_jar || checkInstall()) {
-         bubbles_warning.setVisible(false);
+	 bubbles_warning.setVisible(false);
        }
       else {
-         bubbles_warning.setVisible(true);
+	 bubbles_warning.setVisible(true);
        }
    }
 
@@ -3505,40 +3509,40 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
    WorkspaceDialog() {
       BoardLog.logD("BOARD","Asking for workspace");
       SwingGridPanel pnl = new SwingGridPanel();
-   
+
       // library might not be set up here -- can't use BoardColors
       // pnl.setBackground(BoardColors.getColor("Buda.Bubbles.Color"));
       pnl.setBackground(WORKSPACE_DIALOG_COLOR);
       pnl.setOpaque(true);
-   
+
       pnl.beginLayout();
       pnl.addBannerLabel("Bubbles Workspace Setup");
-   
+
       pnl.addSeparator();
-   
+
       workspace_field = null;
       workspace_warning = new JLabel("Warning");
-   
+
       String lbl = board_language.getWorkspaceLabel();
       workspace_field = pnl.addFileField(lbl,default_workspace,
-            JFileChooser.DIRECTORIES_ONLY,
-            new WorkspaceDirectoryFilter(),this,null);
+	    JFileChooser.DIRECTORIES_ONLY,
+	    new WorkspaceDirectoryFilter(),this,null);
       workspace_field.setActionCommand("WORKSPACE");
       workspace_field.addKeyListener(this);
       workspace_warning.setToolTipText("Not a valid " + lbl);
       workspace_warning.setForeground(WARNING_COLOR);
       pnl.add(workspace_warning);
       pnl.addSeparator();
-   
+
       if (recent_workspaces.size() > 0) {
-         List<String> recents = new ArrayList<String>(recent_workspaces);
-         recents.add(0,RECENT_HEADER);
-         pnl.addChoice("Recent Workspaces",recents,0,true,this);
+	 List<String> recents = new ArrayList<String>(recent_workspaces);
+	 recents.add(0,RECENT_HEADER);
+	 pnl.addChoice("Recent Workspaces",recents,0,true,this);
        }
-   
+
       pnl.addBoolean("Create New Workspace",create_workspace,this);
       pnl.addBoolean("Always Ask for Workspace",ask_workspace,this);
-   
+
       pnl.addSeparator();
       accept_button = pnl.addBottomButton("OK","OK",this);
       pnl.addBottomButton("CANCEL","CANCEL",this);
@@ -3546,7 +3550,7 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
       Dimension d = pnl.getPreferredSize();
       d.width = Math.max(d.width,500);
       pnl.setPreferredSize(d);
-   
+
       working_dialog = new JDialog((JFrame) null,"Bubbles Workspace Setup",true);
       working_dialog.setContentPane(pnl);
       working_dialog.pack();
@@ -3577,42 +3581,42 @@ private class WorkspaceDialog implements ActionListener, KeyListener {
    @Override public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if (cmd.equals("WORKSPACE") || cmd.equals(board_language.getWorkspaceLabel())) {
-         JTextField tf = (JTextField) e.getSource();
-         File ef = new File(tf.getText());
-         String np = ef.getPath();
-         if (!np.equals(default_workspace)) ws_changed = true;
-         default_workspace = np;
+	 JTextField tf = (JTextField) e.getSource();
+	 File ef = new File(tf.getText());
+	 String np = ef.getPath();
+	 if (!np.equals(default_workspace)) ws_changed = true;
+	 default_workspace = np;
        }
       else if (cmd.equals("Always Ask for Workspace")) {
-         JCheckBox cbx = (JCheckBox) e.getSource();
-         if (ask_workspace != cbx.isSelected()) ws_changed = true;
-         ask_workspace = cbx.isSelected();
+	 JCheckBox cbx = (JCheckBox) e.getSource();
+	 if (ask_workspace != cbx.isSelected()) ws_changed = true;
+	 ask_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Create New Workspace")) {
-         JCheckBox cbx = (JCheckBox) e.getSource();
-         create_workspace = cbx.isSelected();
+	 JCheckBox cbx = (JCheckBox) e.getSource();
+	 create_workspace = cbx.isSelected();
        }
       else if (cmd.equals("Recent Workspaces")) {
-         JComboBox<?> cbx = (JComboBox<?>) e.getSource();
-         String rslt = (String) cbx.getSelectedItem();
-         if (rslt != null && !rslt.trim().equals("") && !rslt.trim().equals(RECENT_HEADER)) {
-            if (!rslt.equals(default_workspace)) {
-               ws_changed = true;
-               default_workspace = rslt;
-               workspace_field.setText(rslt);
-             }
-          }
+	 JComboBox<?> cbx = (JComboBox<?>) e.getSource();
+	 String rslt = (String) cbx.getSelectedItem();
+	 if (rslt != null && !rslt.trim().equals("") && !rslt.trim().equals(RECENT_HEADER)) {
+	    if (!rslt.equals(default_workspace)) {
+	       ws_changed = true;
+	       default_workspace = rslt;
+	       workspace_field.setText(rslt);
+	     }
+	  }
        }
       else if (cmd.equals("OK")) {
-         result_status = true;
-         working_dialog.setVisible(false);
+	 result_status = true;
+	 working_dialog.setVisible(false);
        }
       else if (cmd.equals("CANCEL")) {
-         result_status = false;
-         working_dialog.setVisible(false);
+	 result_status = false;
+	 working_dialog.setVisible(false);
        }
       else {
-         BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
+	 BoardLog.logE("BOARD","Unknown WORKSPACE DIALOG command: " + cmd);
        }
       checkStatus();
     }
