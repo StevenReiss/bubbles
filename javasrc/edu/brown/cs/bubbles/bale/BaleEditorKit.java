@@ -658,7 +658,7 @@ private static class DefaultKeyAction extends TextAction {
          Dimension d0 = target.getSize();
          if (d0.height >= BALE_MAX_GROW_HEIGHT) d0 = null;
          else d0 = target.getPreferredSize();
-   
+         
          String content = e.getActionCommand();
          String postcontent = null;
          int mod = e.getModifiers();
@@ -667,65 +667,80 @@ private static class DefaultKeyAction extends TextAction {
             char c = content.charAt(0);
             int soff = target.getSelectionStart();
             int eoff = target.getSelectionEnd();
-   
+            
             if ((c >= 0x20) && (c != 0x7F)) {
                boolean overwrite = target.getOverwriteMode();
                if (soff == eoff && !overwrite) {
-        	  if (language_kit.checkContent(content) &&
-        		bd.checkTypeover(content,soff)) {
-        	     overwrite = true;
-        	   }
-        	  else {
-        	     postcontent = language_kit.getPostContent(content);
-        	     if (postcontent != null &&
-        		   BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_SPACES_ONLY)) {
-        		String follow = null;
-        		try {
-        		   follow = target.getText(eoff,1);
-        		 }
-        		catch (BadLocationException ex) { }
-        		if (follow != null && !Character.isWhitespace(follow.charAt(0))) {
-        		   postcontent = null;
-        		 }
-        	      }
-        	   }
-        	}
+                  if (language_kit.checkContent(content) &&
+                        bd.checkTypeover(content,soff)) {
+                     overwrite = true;
+                   }
+                  else {
+                     postcontent = language_kit.getPostContent(content);
+                     if (postcontent != null &&
+                           BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_SPACES_ONLY)) {
+                        String follow = null;
+                        try {
+                           follow = target.getText(eoff,1);
+                         }
+                        catch (BadLocationException ex) { }
+                        if (follow != null && !Character.isWhitespace(follow.charAt(0))) {
+                           postcontent = null;
+                         }
+                      }
+                   }
+                }
+               else if (!overwrite && language_kit.checkContent(content) &&
+                     !bd.checkTypeover(content,soff)) {
+                  // check for block to include in between start/end characters
+                  String txt = null;
+                  try {
+                     txt = target.getText(soff,eoff);
+                   }
+                  catch (BadLocationException ex) { } 
+                  if (txt != null && txt.contains("\n") || txt.length() > 16) {
+                     // get start point and string (might contain\n), 
+                     // end string (might contain \n) and end point (eoff)
+                     // set eoff/soff to start point, remove selection
+                     // unset overwrite
+                   }
+                }
                if (overwrite) {
-        	  if (soff == target.getSelectionEnd()) {
-        	     String prev = null;
-        	     try {
-        		prev = target.getText(soff,1);
-        	      }
-        	     catch (BadLocationException ex) { }
-        	     eoff = soff+1;
-        	     if (prev == null || prev.equals("\n"));
-        	     else if (prev.equals("\t")) {
-        		int cpos = bd.getColumnPosition(soff);
-        		int npos = bd.getNextTabPosition(cpos);
-        		StringBuilder buf = new StringBuilder();
-        		for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
-        		target.setSelectionEnd(eoff);
-        		target.replaceSelection(buf.toString());
-        		target.setSelectionStart(soff);
-        		target.setSelectionEnd(eoff);
-        	      }
-        	     else target.setSelectionEnd(eoff);
-        	   }
-        	}
+                  if (soff == target.getSelectionEnd()) {
+                     String prev = null;
+                     try {
+                        prev = target.getText(soff,1);
+                      }
+                     catch (BadLocationException ex) { }
+                     eoff = soff+1;
+                     if (prev == null || prev.equals("\n"));
+                     else if (prev.equals("\t")) {
+                        int cpos = bd.getColumnPosition(soff);
+                        int npos = bd.getNextTabPosition(cpos);
+                        StringBuilder buf = new StringBuilder();
+                        for (int i = 0; i < npos-cpos; ++i) buf.append(" ");
+                        target.setSelectionEnd(eoff);
+                        target.replaceSelection(buf.toString());
+                        target.setSelectionStart(soff);
+                        target.setSelectionEnd(eoff);
+                      }
+                     else target.setSelectionEnd(eoff);
+                   }
+                }
                if (soff != eoff) bd.handleReplaceTypeover(soff,eoff);
-   
+               
                target.replaceSelection(content);
                if (postcontent != null) {
-        	  int off = target.getSelectionEnd();
-        	  try {
-        	     bd.insertString(off,postcontent,null);
-        	   }
-        	  catch (BadLocationException ex) { }
-        	  bd.setCreatedTypeover(postcontent,off);
-        	  target.setSelectionStart(off);
-        	  target.setSelectionEnd(off);
-        	}
-   
+                  int off = target.getSelectionEnd();
+                  try {
+                     bd.insertString(off,postcontent,null);
+                   }
+                  catch (BadLocationException ex) { }
+                  bd.setCreatedTypeover(postcontent,off);
+                  target.setSelectionStart(off);
+                  target.setSelectionEnd(off);
+                }
+               
                if (content != null && shouldAutoIndent(target,content,soff)) {
                   // TODO: check that this is the only thing on the line
                   indent_lines_action.actionPerformed(e);
