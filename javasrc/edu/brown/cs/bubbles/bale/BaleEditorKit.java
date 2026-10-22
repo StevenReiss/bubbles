@@ -670,13 +670,14 @@ private static class DefaultKeyAction extends TextAction {
             
             if ((c >= 0x20) && (c != 0x7F)) {
                boolean overwrite = target.getOverwriteMode();
+               String pc = language_kit.getPostContent(content);
                if (soff == eoff && !overwrite) {
                   if (language_kit.checkContent(content) &&
                         bd.checkTypeover(content,soff)) {
                      overwrite = true;
                    }
                   else {
-                     postcontent = language_kit.getPostContent(content);
+                     postcontent = pc;
                      if (postcontent != null &&
                            BALE_PROPERTIES.getBoolean(BALE_AUTO_INSERT_SPACES_ONLY)) {
                         String follow = null;
@@ -690,20 +691,8 @@ private static class DefaultKeyAction extends TextAction {
                       }
                    }
                 }
-               else if (!overwrite && language_kit.checkContent(content) &&
-                     !bd.checkTypeover(content,soff)) {
-                  // check for block to include in between start/end characters
-                  String txt = null;
-                  try {
-                     txt = target.getText(soff,eoff);
-                   }
-                  catch (BadLocationException ex) { } 
-                  if (txt != null && txt.contains("\n") || txt.length() > 16) {
-                     // get start point and string (might contain\n), 
-                     // end string (might contain \n) and end point (eoff)
-                     // set eoff/soff to start point, remove selection
-                     // unset overwrite
-                   }
+               else if (!overwrite && pc != null) {
+                  if (handleBlockCreation(target,content,e)) return;
                 }
                if (overwrite) {
                   if (soff == target.getSelectionEnd()) {
@@ -761,7 +750,80 @@ private static class DefaultKeyAction extends TextAction {
        }
       finally { bd.baleWriteUnlock(); }
    }
-
+   
+   private boolean handleBlockCreation(BaleEditorPane target,String content,
+         ActionEvent e) {
+      String txt = target.getSelectedText();
+      int soff = target.getSelectionStart();
+      int eoff = target.getSelectionEnd();
+      String pc = language_kit.getPostContent(content);    if (txt != null && txt.contains("\n") || txt.length() > 10) {
+         try {
+            int noff = Math.max(0,soff-128);
+            String prev = target.getText(noff,soff-noff);
+            // find start of first line and previous character
+            int nlct = 0;
+            int n1off = -1;
+            int n2off = -1;
+            for (int i = prev.length()-1; i >= 0; --i) {
+               char c1 = prev.charAt(i);
+               if (c1 == '\n') {
+                  n1off = noff + i;
+                  nlct++;
+                  continue;
+                }
+               else if (nlct > 0 && !Character.isWhitespace(c1)) {
+                  if (c1 == ')') {
+                     n2off = noff + i + 1;
+                   }
+                  break;
+                }
+             }
+            // find end of last line
+            int n3off = -1;
+            for (int i = txt.length()-1; i >= 0; --i) {
+               char c2 = txt.charAt(i);
+               if (c2 == '\n') {
+                  n3off = i;
+                  break;
+                }
+               else if (!Character.isWhitespace(c2)) {
+                  break;
+                }
+             }
+            if (n3off < 0) {
+               int noffa = Math.min(target.getText().length(),eoff+128);
+               String next = target.getText(eoff,noffa);
+               for (int i = 0; i < next.length(); ++i) {
+                  char c3 = next.charAt(i);
+                  if (c3 == '\n') {
+                     n3off = i + eoff;
+                     break;
+                   }
+                }
+             } 
+            if (n1off >= 0 && n3off >= 0) {
+               String ins = content;
+               if (n2off >= 0) {
+                  n1off = n2off;
+                  ins = " " + ins;
+                }
+               String inslines = target.getText(n1off+1,n3off-n1off+1);
+               ins += inslines + pc;
+               target.setSelectionStart(n1off);
+               target.setSelectionEnd(n3off);
+               target.replaceSelection(ins);
+               target.setSelectionStart(n1off);
+               target.setSelectionEnd(n1off + ins.length());
+               indent_lines_action.actionPerformed(e);
+               target.setSelectionStart(target.getSelectionEnd());
+               return true;
+             }
+          }
+         catch (BadLocationException t) { }
+       }
+      return false;
+    }
+      
 }	// end of inner class DefaultKeyAction
 
 

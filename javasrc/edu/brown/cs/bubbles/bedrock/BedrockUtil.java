@@ -1983,9 +1983,22 @@ static void outputValue(IEvaluationResult rslt,int lvl,int arraysz,IvyXmlWriter 
       BedrockPlugin.logE("Problem with evaluation",ex);
    }
    else if (rslt.hasErrors()) {
+      int ct = 0;
       for (String s : rslt.getErrorMessages()) {
+         if (s.contains("The blank final field") &&
+               s.contains("may not have been initialized")) {
+            continue;
+          }
+         if (s.contains("The import ") && s.contains(" cannot be resolved")) {
+            continue;
+          }
+         ++ct;
 	 xw.textElement("ERROR",s);
        }
+      if (ct == 0) {
+         xw.textElement("ERROR","Bad experession");
+       }
+
     }
 
    IJavaValue val = rslt.getValue();

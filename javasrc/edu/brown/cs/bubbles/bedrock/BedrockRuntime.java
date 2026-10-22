@@ -1268,7 +1268,7 @@ void evaluateExpression(String proj,String bid,String expr,String tname,String f
 		}
 	     }
 	  }
-         if (eexp == null) {
+         if (eexp == null || eexp.hasErrors()) {
             throw new BedrockException("Error in exception: won't compile");
           }
 	 eeng.evaluateExpression(eexp,jsf,
