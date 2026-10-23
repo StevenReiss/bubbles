@@ -428,6 +428,18 @@ void handleContextMenu(MouseEvent evt)
 }
 
 
+BaleContextConfig getContextConfig()
+{
+   int loc = getCaretPosition();
+   BaleDocument bd = getBaleDocument();
+   if (bd == null || bd.isOrphan()) return null;
+   BaleElement be = bd.getCharacterElement(loc);
+   if (be == null) return null;
+   
+   return new ContextData(loc,be);
+}
+
+
 
 private void addButton(JPopupMenu m,String txt,boolean enable,ActionListener hdlr,String tt)
 {
@@ -446,7 +458,8 @@ private final class ContextMenuHandler implements ActionListener {
       String cmd = e.getActionCommand();
       String acmd = context_names.get(cmd);
       if (acmd != null) {
-	 ActionEvent nevt = new ActionEvent(BaleEditorPane.this,e.getID(),acmd,e.getWhen(),e.getModifiers());
+	 ActionEvent nevt = new ActionEvent(BaleEditorPane.this,e.getID(),acmd,
+               e.getWhen(),e.getModifiers());
 	 Action a = BaleEditorKit.findAction(acmd);
 	 if (a != null) {
 	    a.actionPerformed(nevt);

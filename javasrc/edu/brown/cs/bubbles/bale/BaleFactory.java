@@ -51,6 +51,7 @@ import edu.brown.cs.bubbles.bump.BumpConstants;
 import edu.brown.cs.bubbles.bump.BumpLocation;
 import edu.brown.cs.bubbles.buss.BussBubble;
 import edu.brown.cs.ivy.swing.SwingEventListenerList;
+import edu.brown.cs.ivy.swing.SwingKey;
 import edu.brown.cs.ivy.xml.IvyXml;
 import edu.brown.cs.ivy.xml.IvyXmlWriter;
 
@@ -390,6 +391,26 @@ private Element findMethodElement(Element e,int off)
    return null;
 }
 
+
+/********************************************************************************/
+/*                                                                              */
+/*      Factory method to add to key map                                        */
+/*                                                                              */
+/********************************************************************************/
+
+public void addToKeyMap(SwingKey sk)
+{
+  BaleEditorKit.addToKeymap(sk);
+}
+
+
+public BaleContextConfig getEditConfig(ActionEvent e)
+{
+   BaleEditorPane target = BaleEditorKit.getBaleEditor(e);
+   if (!BaleEditorKit.checkReadEditor(target)) return null;
+   
+   return target.getContextConfig();
+}
 
 
 /********************************************************************************/

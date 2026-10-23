@@ -1189,9 +1189,10 @@ interface BaleFileOverview extends Document {
    int findLineOffset(int line);
 
 /**
- *
+ *      Get the position of the fragment for this editor
  **/
    int getFragmentOffset(int off);
+   
 
 /**
  *	Find the line number for the line that contains the given file position.

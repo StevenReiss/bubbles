@@ -1612,7 +1612,6 @@ private void outputProject(IProject p,boolean fil,boolean pat,boolean cls,boolea
    xw.field("NAME",p.getName());
    xw.field("PATH",p.getLocation().toOSString());
    xw.field("WORKSPACE",p.getWorkspace().getRoot().getLocation().toOSString());
-// xw.field("BEDROCKDIR",p.getWorkingLocation(BEDROCK_PLUGIN).toOSString());
    try {
       if (p.hasNature("org.eclipse.jdt.core.javanature"))
 	 xw.field("ISJAVA",true);

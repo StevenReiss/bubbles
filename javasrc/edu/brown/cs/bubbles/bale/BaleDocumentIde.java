@@ -260,7 +260,7 @@ private void setFile(String proj,File file)
    if (proj == null && file != null) {
       BudaRoot br = BaleFactory.getFactory().getBudaRoot();
       proj = br.findProjectForFile(file);
-      if (proj == null) {
+      if (proj == null) { 
 	 File f1 = IvyFile.getCanonical(file);
 	 if (!f1.equals(file)) {
 	    proj = br.findProjectForFile(f1);
